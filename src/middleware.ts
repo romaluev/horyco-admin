@@ -16,7 +16,6 @@ export default async function middleware(req: NextRequest) {
   // Get the token from cookies
   const token = req.cookies.get('access_token')?.value;
   const isAuthenticated = !!token;
-
   // Check if the current route is protected or public
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route)
