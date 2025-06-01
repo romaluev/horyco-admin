@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useAuthStore } from '@/features/auth/model/store';
 import { Button } from '@/components/ui/button';
 import {
   Form,

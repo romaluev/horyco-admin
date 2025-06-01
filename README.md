@@ -83,7 +83,7 @@ src/
 │ └── dashboard-store.ts
 │
 └── types/ # TypeScript types
-└── index.ts
+└── api.ts
 ```
 
 ## Getting Started

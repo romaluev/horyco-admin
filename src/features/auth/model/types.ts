@@ -1,5 +1,3 @@
-// Authentication types based on backend DTOs
-
 /**
  * Authentication request payload
  * Corresponds to AuthDto in the backend
@@ -28,4 +26,12 @@ export interface ErrorResponse {
   statusCode: number;
   message: string | string[];
   error?: string;
+}
+
+// Define the User type
+export interface IUser {
+  id: string;
+  username: string;
+  email: string;
+  fullName?: string;
 }

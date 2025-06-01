@@ -45,7 +45,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
-import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useAuthStore } from '@/features/auth/model/store';
 export const company = {
   name: 'Acme Inc',
   logo: IconPhotoUp,

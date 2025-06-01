@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { IUser } from '@/features/auth/store/auth-store';
+import { IUser } from '@/features/auth/model/store';
 
 interface UserAvatarProfileProps {
   className?: string;

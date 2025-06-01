@@ -41,7 +41,7 @@ export default function BranchForm({
 }) {
   const router = useRouter();
 
-  // Get actions and loading state from the branch store
+  // Get actions and loading state from the branch model
   const { createBranch, updateBranch, isLoading } = useBranchStore();
 
   // Set default values based on initialData
@@ -58,7 +58,7 @@ export default function BranchForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (initialData) {
-        // Update existing branch using the store action
+        // Update existing branch using the model action
         const result = await updateBranch(
           initialData.id,
           values as UpdateBranchRequest

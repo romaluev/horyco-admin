@@ -1,15 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import Cookies from 'js-cookie';
-import { login } from '@/api/auth';
-
-// Define the User type
-export interface IUser {
-  id: string;
-  username: string;
-  email: string;
-  fullName?: string;
-}
+import { IUser, login } from '.';
 
 // Define the AuthState type
 interface AuthState {
@@ -25,7 +17,7 @@ interface AuthState {
   clearError: () => void;
 }
 
-// Create the auth store
+// Create the auth model
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({

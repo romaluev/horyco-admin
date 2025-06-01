@@ -13,7 +13,7 @@ export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
   const [loading, setLoading] = useState(true);
   const [branch, setBranch] = useState<IBranch | null>(null);
 
-  // Get state and actions from the branch store
+  // Get state and actions from the branch model
   const { getBranchById, error } = useBranchStore();
 
   let pageTitle = 'Create New Branch';
@@ -27,14 +27,14 @@ export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
       }
 
       try {
-        // Fetch branch using the store action
+        // Fetch branch using the model action
         const data = await getBranchById(Number(branchId));
         if (data) {
           setBranch(data);
         }
       } catch (error) {
         console.error('Error fetching branch:', error);
-        // Error handling is done in the store action
+        // Error handling is done in the model action
       }
       setLoading(false);
     };

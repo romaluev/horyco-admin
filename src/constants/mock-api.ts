@@ -20,7 +20,7 @@ export type Product = {
   updated_at: string;
 };
 
-// Mock product data store
+// Mock product data model
 export const fakeProducts = {
   records: [] as Product[], // Holds the list of product objects
 

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useAuthStore } from '@/features/auth/model/store';
 import { useRouter } from 'next/navigation';
 import { LogOut, User as UserIcon, Settings, CreditCard } from 'lucide-react';
 
