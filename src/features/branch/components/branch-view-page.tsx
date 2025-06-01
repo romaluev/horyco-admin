@@ -1,9 +1,8 @@
 'use client';
 
-import { Branch } from '@/api/branches/types';
+import { IBranch, useBranchStore } from '../model';
 import BranchForm from './branch-form';
 import { useEffect, useState } from 'react';
-import { useBranchesStore } from '../store/branches-store';
 import BaseLoading from '@/components/base-loading';
 
 type TBranchViewPageProps = {
@@ -12,10 +11,10 @@ type TBranchViewPageProps = {
 
 export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
   const [loading, setLoading] = useState(true);
-  const [branch, setBranch] = useState<Branch | null>(null);
+  const [branch, setBranch] = useState<IBranch | null>(null);
 
-  // Get state and actions from the branches store
-  const { getBranchById, isLoading, error } = useBranchesStore();
+  // Get state and actions from the branch store
+  const { getBranchById, error } = useBranchStore();
 
   let pageTitle = 'Create New Branch';
 

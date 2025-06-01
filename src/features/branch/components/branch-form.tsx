@@ -11,16 +11,16 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Branch,
-  CreateBranchRequest,
-  UpdateBranchRequest
-} from '@/api/branches/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
-import { useBranchesStore } from '../store/branches-store';
+import {
+  CreateBranchRequest,
+  IBranch,
+  UpdateBranchRequest,
+  useBranchStore
+} from '@/features/branch/model';
 
 // Form schema with validation
 const formSchema = z.object({
@@ -36,13 +36,13 @@ export default function BranchForm({
   initialData,
   pageTitle
 }: {
-  initialData: Branch | null;
+  initialData: IBranch | null;
   pageTitle: string;
 }) {
   const router = useRouter();
 
-  // Get actions and loading state from the branches store
-  const { createBranch, updateBranch, isLoading } = useBranchesStore();
+  // Get actions and loading state from the branch store
+  const { createBranch, updateBranch, isLoading } = useBranchStore();
 
   // Set default values based on initialData
   const defaultValues = {
@@ -64,12 +64,12 @@ export default function BranchForm({
           values as UpdateBranchRequest
         );
         if (result) {
-          router.push('/dashboard/branches');
+          router.push('/dashboard/branch');
         }
       } else {
         const result = await createBranch(values as CreateBranchRequest);
         if (result) {
-          router.push('/dashboard/branches');
+          router.push('/dashboard/branch');
         }
       }
     } catch (error) {

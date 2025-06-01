@@ -1,22 +1,22 @@
 'use client';
-import { Badge } from '@/components/ui/badge';
+
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
-import { Branch } from '@/api/branches/types';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import { Text } from 'lucide-react';
 import { CellAction } from './cell-action';
+import { IBranch } from '../../model';
 
-export const columns: ColumnDef<Branch>[] = [
+export const columns: ColumnDef<IBranch>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: ({ column }: { column: Column<Branch, unknown> }) => (
+    header: ({ column }: { column: Column<IBranch, unknown> }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    cell: ({ cell }) => <div>{cell.getValue<Branch['name']>()}</div>,
+    cell: ({ cell }) => <div>{cell.getValue<IBranch['name']>()}</div>,
     meta: {
       label: 'Name',
-      placeholder: 'Search branches...',
+      placeholder: 'Search branch...',
       variant: 'text',
       icon: Text
     },
@@ -25,10 +25,10 @@ export const columns: ColumnDef<Branch>[] = [
   {
     id: 'address',
     accessorKey: 'address',
-    header: ({ column }: { column: Column<Branch, unknown> }) => (
+    header: ({ column }: { column: Column<IBranch, unknown> }) => (
       <DataTableColumnHeader column={column} title='Address' />
     ),
-    cell: ({ cell }) => <div>{cell.getValue<Branch['address']>()}</div>,
+    cell: ({ cell }) => <div>{cell.getValue<IBranch['address']>()}</div>,
     meta: {
       label: 'Address',
       placeholder: 'Search by address...',
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Branch>[] = [
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
-    header: ({ column }: { column: Column<Branch, unknown> }) => (
+    header: ({ column }: { column: Column<IBranch, unknown> }) => (
       <DataTableColumnHeader column={column} title='Created At' />
     ),
     cell: ({ cell }) => {

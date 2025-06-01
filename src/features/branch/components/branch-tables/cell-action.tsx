@@ -8,34 +8,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Branch } from '@/api/branches/types';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useBranchesStore } from '../../store/branches-store';
+import { IBranch, useBranchStore } from '../../model';
 
 interface CellActionProps {
-  data: Branch;
+  data: IBranch;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const router = useRouter();
 
-  // Get deleteBranch action and isLoading state from the branches store
-  const { deleteBranch, isLoading } = useBranchesStore();
+  const { deleteBranch, isLoading } = useBranchStore();
 
   const onConfirm = async () => {
     try {
-      // Use the store action to delete the branch
       const success = await deleteBranch(data.id);
       if (success) {
         setIsDeleteModalVisible(false);
-        // No need to refresh the router as the store will update the state
       }
     } catch (error) {
       console.error(error);
-      // Error handling is done in the store action
     }
   };
 
@@ -58,7 +53,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/branches/${data.id}`)}
+            onClick={() => router.push(`/dashboard/branch/${data.id}`)}
           >
             <IconEdit className='mr-2 h-4 w-4' /> Update
           </DropdownMenuItem>

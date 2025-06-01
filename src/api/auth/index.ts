@@ -1,6 +1,6 @@
-import api from '../index';
 import { AuthRequest, AuthResponse } from './types';
 import Cookies from 'js-cookie';
+import api from '@/lib/axios';
 
 /**
  * Authentication API functions

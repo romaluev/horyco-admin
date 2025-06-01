@@ -1,6 +1,4 @@
 import axios from 'axios';
-import authApi from './auth';
-import branchesApi from './branches';
 import Cookies from 'js-cookie';
 
 const api = axios.create({
@@ -40,9 +38,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Export the API modules
-export { authApi, branchesApi };
 
 // Export the axios instance as default
 export default api;

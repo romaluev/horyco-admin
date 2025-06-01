@@ -1,25 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  Branch,
-  CreateBranchRequest,
-  UpdateBranchRequest,
-  PaginationParams,
-  SortingParams,
-  FilteringParams
-} from '@/api/branches/types';
+import { IBranch, CreateBranchRequest, UpdateBranchRequest } from './types';
 import {
   getBranches,
   createBranch as apiCreateBranch,
   updateBranch as apiUpdateBranch,
   deleteBranch as apiDeleteBranch,
   getBranchById
-} from '@/api/branches';
+} from './api';
 import { toast } from 'sonner';
+import { FilteringParams, PaginationParams, SortingParams } from '@/types';
 
-// Define the BranchesState type
-interface BranchesState {
-  branches: Branch[];
+interface BranchState {
+  branches: IBranch[];
   totalItems: number;
   isLoading: boolean;
   error: string | null;
@@ -29,19 +22,18 @@ interface BranchesState {
     pagination?: PaginationParams,
     sorting?: SortingParams,
     filtering?: FilteringParams[]
-  ) => Promise<Branch[]>;
-  getBranchById: (id: number) => Promise<Branch | null>;
-  createBranch: (data: CreateBranchRequest) => Promise<Branch | null>;
+  ) => Promise<IBranch[]>;
+  getBranchById: (id: number) => Promise<IBranch | null>;
+  createBranch: (data: CreateBranchRequest) => Promise<IBranch | null>;
   updateBranch: (
     id: number,
     data: UpdateBranchRequest
-  ) => Promise<Branch | null>;
+  ) => Promise<IBranch | null>;
   deleteBranch: (id: number) => Promise<boolean>;
   clearError: () => void;
 }
 
-// Create the branches store
-export const useBranchesStore = create<BranchesState>()(
+export const useBranchStore = create<BranchState>()(
   persist(
     (set, get) => ({
       branches: [],
@@ -49,12 +41,12 @@ export const useBranchesStore = create<BranchesState>()(
       isLoading: false,
       error: null,
 
-      // Fetch branches
+      // Fetch branch
       fetchBranches: async (
         pagination,
         sorting,
         filtering
-      ): Promise<Branch[]> => {
+      ): Promise<IBranch[]> => {
         try {
           set({ isLoading: true, error: null });
           const response = await getBranches(pagination, sorting, filtering);
@@ -67,9 +59,9 @@ export const useBranchesStore = create<BranchesState>()(
         } catch (error: any) {
           set({
             isLoading: false,
-            error: error.message || 'Failed to fetch branches'
+            error: error.message || 'Failed to fetch branch'
           });
-          toast.error('Failed to fetch branches');
+          toast.error('Failed to fetch branch');
           return [];
         }
       },
@@ -173,9 +165,9 @@ export const useBranchesStore = create<BranchesState>()(
       }
     }),
     {
-      name: 'branches-storage', // name of the item in localStorage
+      name: 'branch-storage', // name of the item in localStorage
       partialize: (state) => ({
-        // Only persist branches and totalItems
+        // Only persist branch and totalItems
         branches: state.branches,
         totalItems: state.totalItems
       })

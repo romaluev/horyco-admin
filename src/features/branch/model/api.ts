@@ -1,13 +1,11 @@
-import api from '../index';
+import { IBranch, CreateBranchRequest, UpdateBranchRequest } from './types';
+import api from '@/lib/axios';
 import {
-  Branch,
-  CreateBranchRequest,
-  UpdateBranchRequest,
-  PaginationParams,
-  SortingParams,
   FilteringParams,
-  PaginatedResponse
-} from './types';
+  PaginatedResponse,
+  PaginationParams,
+  SortingParams
+} from '@/types';
 
 /**
  * Branch API functions
@@ -20,23 +18,23 @@ import {
  */
 export const createBranch = async (
   branchData: CreateBranchRequest
-): Promise<Branch> => {
-  const response = await api.post<Branch>('/branch', branchData);
+): Promise<IBranch> => {
+  const response = await api.post<IBranch>('/branch', branchData);
   return response.data;
 };
 
 /**
- * Get all branches with pagination, sorting, and filtering
+ * Get all branch with pagination, sorting, and filtering
  * @param pagination - Pagination parameters
  * @param sorting - Sorting parameters
  * @param filtering - Filtering parameters
- * @returns Promise with paginated branches
+ * @returns Promise with paginated branch
  */
 export const getBranches = async (
   pagination?: PaginationParams,
   sorting?: SortingParams,
   filtering?: FilteringParams[]
-): Promise<PaginatedResponse<Branch>> => {
+): Promise<PaginatedResponse<IBranch>> => {
   // Build query parameters
   const params = new URLSearchParams();
 
@@ -61,7 +59,7 @@ export const getBranches = async (
     });
   }
 
-  const response = await api.get<PaginatedResponse<Branch>>('/branch', {
+  const response = await api.get<PaginatedResponse<IBranch>>('/branch', {
     params
   });
   return response.data;
@@ -72,8 +70,8 @@ export const getBranches = async (
  * @param id - The branch ID
  * @returns Promise with the branch
  */
-export const getBranchById = async (id: number): Promise<Branch> => {
-  const response = await api.get<Branch>(`/branch/${id}`);
+export const getBranchById = async (id: number): Promise<IBranch> => {
+  const response = await api.get<IBranch>(`/branch/${id}`);
   return response.data;
 };
 
@@ -86,8 +84,8 @@ export const getBranchById = async (id: number): Promise<Branch> => {
 export const updateBranch = async (
   id: number,
   branchData: UpdateBranchRequest
-): Promise<Branch> => {
-  const response = await api.put<Branch>(`/branch/${id}`, branchData);
+): Promise<IBranch> => {
+  const response = await api.put<IBranch>(`/branch/${id}`, branchData);
   return response.data;
 };
 

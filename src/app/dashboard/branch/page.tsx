@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import BranchListingPage from '@/features/branches/components/branch-listing';
+import BranchListingPage from '@/features/branch/components/branch-listing';
 import { searchParamsCache } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
@@ -36,7 +36,7 @@ export default async function Page(props: pageProps) {
             description='Manage branches for your organization'
           />
           <Link
-            href='/dashboard/branches/new'
+            href='/dashboard/branch/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
             <IconPlus className='mr-2 h-4 w-4' /> Add New

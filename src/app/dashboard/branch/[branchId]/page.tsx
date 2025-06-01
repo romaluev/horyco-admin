@@ -1,7 +1,7 @@
 import FormCardSkeleton from '@/components/form-card-skeleton';
 import PageContainer from '@/components/layout/page-container';
 import { Suspense } from 'react';
-import BranchViewPage from '@/features/branches/components/branch-view-page';
+import BranchViewPage from '@/features/branch/components/branch-view-page';
 
 export const metadata = {
   title: 'Dashboard : Branch View'

@@ -23,7 +23,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Products',
-    url: '/dashboard/products',
+    url: '/dashboard/product',
     icon: 'product',
     shortcut: ['p', 'p'],
     isActive: false,
@@ -39,7 +39,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Branches',
-    url: '/dashboard/branches',
+    url: '/dashboard/branch',
     icon: 'product',
     shortcut: ['p', 'p'],
     isActive: false,
