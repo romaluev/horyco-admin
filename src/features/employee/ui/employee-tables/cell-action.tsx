@@ -8,29 +8,39 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Product } from '@/constants/data';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { IEmployee, useEmployeeStore } from '../../model';
 
 interface CellActionProps {
-  data: Product;
+  data: IEmployee;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const { deleteEmployee, isLoading } = useEmployeeStore();
+
+  const onConfirm = async () => {
+    try {
+      const success = await deleteEmployee(data.id);
+      if (success) {
+        setIsDeleteModalVisible(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
       <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
+        isOpen={isDeleteModalVisible}
+        onClose={() => setIsDeleteModalVisible(false)}
         onConfirm={onConfirm}
-        loading={loading}
+        loading={isLoading}
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
@@ -43,11 +53,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/product/${data.id}`)}
+            onClick={() => router.push(`/dashboard/employee/${data.id}`)}
           >
             <IconEdit className='mr-2 h-4 w-4' /> Update
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setIsDeleteModalVisible(true)}>
             <IconTrash className='mr-2 h-4 w-4' /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

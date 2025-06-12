@@ -7,31 +7,34 @@ import { useDataTable } from '@/hooks/use-data-table';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { parseAsInteger, useQueryState } from 'nuqs';
-interface ProductTableParams<TData, TValue> {
+
+interface EmployeeTableParams<TData, TValue> {
   data: TData[];
   totalItems: number;
   columns: ColumnDef<TData, TValue>[];
 }
-export function ProductTable<TData, TValue>({
+
+export function EmployeeTable<TData, TValue>({
   data,
   totalItems,
   columns
-}: ProductTableParams<TData, TValue>) {
+}: EmployeeTableParams<TData, TValue>) {
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
 
   const pageCount = Math.ceil(totalItems / pageSize);
 
   const { table } = useDataTable({
-    data, // product data
-    columns, // product columns
+    data,
+    columns,
     pageCount: pageCount,
-    shallow: false, //Setting to false triggers a network request with the updated querystring.
+    shallow: false,
     debounceMs: 500
   });
 
   return (
     <DataTable table={table}>
-      <DataTableToolbar table={table} />
+      {/* TO-DO: Implement filter */}
+      {/*<DataTableToolbar table={table} />*/}
     </DataTable>
   );
 }
