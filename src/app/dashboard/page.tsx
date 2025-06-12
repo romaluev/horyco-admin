@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 export default async function Dashboard() {
   // Check if user is authenticated by looking for the access_token cookie
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
   const isAuthenticated = !!token;
 

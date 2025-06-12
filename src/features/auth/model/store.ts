@@ -12,7 +12,7 @@ interface AuthState {
   token: string | null;
 
   // Actions
-  login: (username: string, password: string) => Promise<void>;
+  login: (phone: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
 }

@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Authentication',
-  description: 'Authentication forms built using the components.'
+  description: 'Authentication forms built using the ui.'
 };
 
 export default function SignUpViewPage({ stars }: { stars: number }) {

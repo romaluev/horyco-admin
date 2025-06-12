@@ -1,5 +1,23 @@
 import { NavItem } from '@/types';
 
+export const MAX_FILE_SIZE = 5000000;
+export const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp'
+];
+export const STATUSES = [
+  {
+    value: 'active',
+    label: 'Active'
+  },
+  {
+    value: 'archived',
+    label: 'Archived'
+  }
+];
+
 export type Product = {
   photo_url: string;
   name: string;
@@ -31,7 +49,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Employees',
-    url: '/dashboard/employees',
+    url: '/dashboard/employee',
     icon: 'product',
     shortcut: ['p', 'p'],
     isActive: false,

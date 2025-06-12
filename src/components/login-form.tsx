@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -26,13 +25,15 @@ import {
 } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { PhoneInput } from '@/components/ui/phone-input';
+import PasswordInput from '@/components/ui/passsword-input';
 
 // Define the form schema with Zod
 const loginFormSchema = z.object({
-  username: z
+  phone: z
     .string()
-    .min(3, { message: 'Username must be at least 3 characters' })
-    .max(50, { message: 'Username must be less than 50 characters' }),
+    .min(4, { message: 'Password must be at least 6 characters' })
+    .max(13, { message: 'Password must be less than 13 characters' }),
   password: z
     .string()
     .min(4, { message: 'Password must be at least 6 characters' })
@@ -52,7 +53,7 @@ const LoginForm = () => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: '',
+      phone: '',
       password: ''
     }
   });
@@ -62,7 +63,7 @@ const LoginForm = () => {
     try {
       setGeneralError(null);
       clearError();
-      await login(data.username, data.password);
+      await login(data.phone, data.password);
 
       // Check if there's a redirect parameter and use it for navigation
       const redirectPath = searchParams?.get('redirect');
@@ -106,15 +107,17 @@ const LoginForm = () => {
 
             <FormField
               control={form.control}
-              name='username'
+              name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Phone number</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='Enter your username'
+                    <PhoneInput
+                      defaultCountry={'UZ'}
+                      placeholder={'90 123 45 67'}
+                      limitMaxLength={true}
+                      countries={['UZ']}
                       {...field}
-                      autoComplete='username'
                       disabled={isLoading}
                     />
                   </FormControl>
@@ -130,7 +133,7 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
+                    <PasswordInput
                       type='password'
                       placeholder='Enter your password'
                       {...field}
