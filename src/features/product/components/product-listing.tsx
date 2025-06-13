@@ -13,7 +13,7 @@ export default function ProductListingPage({}: ProductListingPage) {
     <ProductTable
       data={data?.items || []}
       totalItems={data?.totalItems || 0}
-      columns={columns}
+      columns={[]}
     />
   );
 }
