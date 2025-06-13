@@ -11,18 +11,18 @@ export interface IProduct {
   createdBy: number;
 }
 
-export interface CreateProductRequest {
+export interface ICreateProductDto {
   name: string;
   price: number;
   description: string;
   image?: string;
   stock?: number | null;
   status: string | null;
-  isMultiple?: boolean;
+  isMultiple: boolean;
   productTypeId?: number;
 }
 
-export interface UpdateProductRequest {
+export interface IUpdateProductDto {
   name?: string;
   price?: number;
   description?: string;
@@ -31,4 +31,17 @@ export interface UpdateProductRequest {
   status?: string;
   isMultiple?: boolean;
   productTypeId?: number;
+}
+
+export interface IProductType {
+  id: number;
+  image?: string;
+  name: string;
+  description: string;
+  createdAd: string;
+}
+export interface IProductTypeRequest {
+  image?: string;
+  name: string;
+  description: string;
 }

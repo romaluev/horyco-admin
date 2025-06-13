@@ -251,7 +251,7 @@ export function FileUploader(props: FileUploaderProps) {
       )}
       {files?.length ? (
         <ScrollArea className='h-fit w-full px-3'>
-          <div className='max-h-72 space-y-4'>
+          <div className='flex max-h-72 flex-wrap gap-2 space-y-4'>
             {files?.map((file, index) =>
               variant === 'image' ? (
                 <ImageCard
