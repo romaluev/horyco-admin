@@ -2,6 +2,7 @@
 import React from 'react';
 import { ActiveThemeProvider } from '../active-theme';
 import { AuthProvider } from '@/features/auth/components/auth-provider';
+import ReactQueryProvider from '@/app/providers/ReactQueryProvider';
 
 export default function Providers({
   activeThemeValue,
@@ -13,7 +14,9 @@ export default function Providers({
   return (
     <>
       <ActiveThemeProvider initialTheme={activeThemeValue}>
-        <AuthProvider>{children}</AuthProvider>
+        <ReactQueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ReactQueryProvider>
       </ActiveThemeProvider>
     </>
   );

@@ -32,7 +32,9 @@ api.interceptors.response.use(
     // Handle unauthorized errors (401)
     if (error.response && error.response.status === 401) {
       Cookies.remove('access_token');
-      window.location.href = '/auth/sigh-in';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/sign-in';
+      }
     }
 
     return Promise.reject(error);
