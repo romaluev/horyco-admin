@@ -11,7 +11,7 @@ import {
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { IEmployee, useEmployeeStore } from '../../model';
+import { IEmployee, useDeleteEmployer } from '../../model';
 
 interface CellActionProps {
   data: IEmployee;
@@ -21,14 +21,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const router = useRouter();
 
-  const { deleteEmployee, isLoading } = useEmployeeStore();
+  const { mutateAsync: deleteEmployee, isPending } = useDeleteEmployer();
 
   const onConfirm = async () => {
     try {
-      const success = await deleteEmployee(data.id);
-      if (success) {
+      await deleteEmployee(data.id).then(() => {
         setIsDeleteModalVisible(false);
-      }
+      });
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +39,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={isDeleteModalVisible}
         onClose={() => setIsDeleteModalVisible(false)}
         onConfirm={onConfirm}
-        loading={isLoading}
+        loading={isPending}
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>

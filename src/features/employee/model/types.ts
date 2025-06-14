@@ -7,7 +7,7 @@ export interface IEmployee {
   branchId: number;
 }
 
-export interface IEmployeeRequest {
+export interface IEmployeeDto {
   phone: string;
   password: string;
   fullName: string;

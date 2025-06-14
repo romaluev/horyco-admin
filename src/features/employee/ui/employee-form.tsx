@@ -14,13 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
-import {
-  employeeAPi,
-  IEmployee,
-  IEmployeeRequest,
-  useEmployeeStore
-} from '../model';
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/constants/data';
+import { IEmployee, IEmployeeDto } from '../model';
 import {
   Select,
   SelectContent,
@@ -28,13 +22,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useBranchStore } from '@/features/branch/model';
 import { PhoneInput } from '@/components/ui/phone-input';
 import PasswordInput from '@/components/ui/passsword-input';
-import { FileUploader } from '@/components/file-uploader';
-import { useEffect } from 'react';
+import {
+  useCreateEmployer,
+  useUpdateEmployer,
+  useGetAllEmployee
+} from '../model';
 
-// Form schema with validation
 const formSchema = z.object({
   fullName: z.string().min(2, {
     message: 'Branch name must be at least 2 characters.'
@@ -43,43 +38,24 @@ const formSchema = z.object({
   password: z.string().min(4),
   confirmPassword: z.string(),
   branchId: z.number()
-  //   To-Do: Add photo
-  //   photo: z
-  //     .any()
-  //     .optional()
-  //     .refine((files) => !files?.[0] || files[0].size <= MAX_FILE_SIZE, {
-  //       message: 'Max file size is 5MB.'
-  //     })
-  //     .refine(
-  //       (files) => !files?.[0] || ACCEPTED_IMAGE_TYPES.includes(files[0].type),
-  //       { message: '.jpg, .jpeg, .png and .webp files are accepted.' }
-  //     )
-  // })
-  // .refine((data) => data.password === data.confirmPassword, {
-  //   path: ['confirmPassword'],
-  //   message: 'Passwords do not match'
 });
 
 export default function EmployeeForm({
   initialData
 }: {
-  initialData: IEmployee | null;
+  initialData?: IEmployee;
 }) {
   const router = useRouter();
 
-  const { branches, fetchBranches } = useBranchStore();
-  const { createEmployee, updateEmployee, isLoading } = useEmployeeStore();
-
-  useEffect(() => {
-    fetchBranches({ page: 0, size: 100 });
-  }, []);
+  const { data: employee } = useGetAllEmployee();
+  const { mutateAsync: createEmployer, isPending } = useCreateEmployer();
+  const { mutateAsync: updateEmployer } = useUpdateEmployer();
 
   const defaultValues = {
     fullName: initialData?.fullName || '',
     phone: initialData?.phone || '',
     password: '',
     branchId: initialData?.branchId || undefined
-    // photo: initialData?.photoUrl || ''
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -89,23 +65,23 @@ export default function EmployeeForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const body: IEmployeeRequest = {
+      const body: IEmployeeDto = {
         fullName: values.fullName,
         branchId: values.branchId,
         password: values.password,
         phone: values.phone
       };
 
+      let response;
+
       if (initialData) {
-        const result = await updateEmployee(initialData.id, body);
-        if (result) {
-          router.push('/dashboard/employee');
-        }
+        response = await updateEmployer({ id: initialData.id, data: body });
       } else {
-        const result = await createEmployee(body);
-        if (result) {
-          router.push('/dashboard/employee');
-        }
+        response = await createEmployer(body);
+      }
+
+      if (response) {
+        router.push('/dashboard/employee');
       }
     } catch (error) {
       console.error('Error saving branch:', error);
@@ -126,7 +102,7 @@ export default function EmployeeForm({
                   <Input
                     placeholder='Enter full name'
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -147,7 +123,6 @@ export default function EmployeeForm({
                     limitMaxLength={true}
                     countries={['UZ']}
                     {...field}
-                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -162,7 +137,7 @@ export default function EmployeeForm({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} disabled={isLoading} />
+                  <PasswordInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,7 +151,7 @@ export default function EmployeeForm({
               <FormItem>
                 <FormLabel>Repeat password</FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} disabled={isLoading} />
+                  <PasswordInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -199,9 +174,12 @@ export default function EmployeeForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {branches.map((branch) => (
-                      <SelectItem key={branch.id} value={branch.id.toString()}>
-                        {branch.name}
+                    {employee?.items.map((employer) => (
+                      <SelectItem
+                        key={employer.id}
+                        value={employer.id.toString()}
+                      >
+                        {employer.fullName}
                       </SelectItem>
                     ))}
                   </SelectContent>

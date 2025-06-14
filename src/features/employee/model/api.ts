@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import { IEmployee, IEmployeeRequest } from './types';
+import { IEmployee, IEmployeeDto } from './types';
 import {
   FilteringParams,
   PaginatedResponse,
@@ -17,9 +17,7 @@ export const employeeAPi = {
    * @param employeeData - The employee data to create
    * @returns Promise with the created employee
    */
-  createEmployee: async (
-    employeeData: IEmployeeRequest
-  ): Promise<IEmployee> => {
+  createEmployee: async (employeeData: IEmployeeDto): Promise<IEmployee> => {
     const response = await api.post<IEmployee>('/employee', employeeData);
     return response.data;
   },
@@ -37,6 +35,9 @@ export const employeeAPi = {
     filtering?: FilteringParams[]
   ): Promise<PaginatedResponse<IEmployee>> => {
     const params = new URLSearchParams();
+
+    params.append('page', '0');
+    params.append('size', '100');
 
     if (pagination) {
       if (Number.isInteger(pagination.page))
@@ -82,7 +83,7 @@ export const employeeAPi = {
    */
   updateEmployee: async (
     id: number,
-    employeeData: IEmployeeRequest
+    employeeData: IEmployeeDto
   ): Promise<IEmployee> => {
     const response = await api.put<IEmployee>(`/employee/${id}`, employeeData);
     return response.data;
@@ -93,7 +94,7 @@ export const employeeAPi = {
    * @param id - The employee ID
    * @returns Promise with the deleted employee
    */
-  deleteEmployee: async (id: number): Promise<void> => {
+  deleteEmployer: async (id: number): Promise<void> => {
     await api.delete(`/employee/${id}`);
   }
 };

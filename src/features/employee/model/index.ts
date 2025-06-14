@@ -1,3 +1,4 @@
 export * from './types';
 export * from './api';
-export * from './store';
+export * from './mutations';
+export * from './queries';
