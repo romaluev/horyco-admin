@@ -7,7 +7,7 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-    // Add optional integrations for additional features
+    // Add optional integrations for additional entities
     integrations: [Sentry.replayIntegration()],
 
     // Adds request headers and IP for users, for more info visit

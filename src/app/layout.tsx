@@ -1,8 +1,8 @@
-import Providers from '@/components/layout/providers';
-import { Toaster } from '@/components/ui/sonner';
-import { fontVariables } from '@/lib/font';
-import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider';
-import { cn } from '@/lib/utils';
+import Providers from '@/shared/ui/layout/providers';
+import { Toaster } from '@/shared/ui/base/sonner';
+import { fontVariables } from '@/shared/lib/font';
+import ThemeProvider from '@/shared/ui/layout/ThemeToggle/theme-provider';
+import { cn } from '@/shared/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';

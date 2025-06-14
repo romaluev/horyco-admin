@@ -1,7 +1,7 @@
-import FormCardSkeleton from '@/components/form-card-skeleton';
-import PageContainer from '@/components/layout/page-container';
+import FormCardSkeleton from '@/shared/ui/form-card-skeleton';
+import PageContainer from '@/shared/ui/layout/page-container';
 import { Suspense } from 'react';
-import { EmployerViewPage } from '@/features/employee/ui';
+import { EmployerViewPage } from '@/entities/employee/ui';
 
 export const metadata = {
   title: 'Dashboard : Branch View'
