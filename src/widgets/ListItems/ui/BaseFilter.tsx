@@ -158,7 +158,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
           </div>
           {filters.length === 0 ? (
             <p className='text-muted-foreground text-sm'>
-              No filters applied. Click "Add Filter" to start.
+              No filters applied. Click &#34;Add Filter&#34; to start.
             </p>
           ) : (
             filters.map((filter, index) => (
