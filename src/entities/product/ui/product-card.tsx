@@ -42,12 +42,14 @@ const ProductCard = ({ product }: { product: IProduct }) => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <Image
-          width={300}
-          height={400}
-          src={`${BASE_API_URL}/files/${product.files[0]?.originalName}`}
-          alt='product-image'
-        />
+        {product.files[0]?.originalName ? (
+          <Image
+            width={300}
+            height={400}
+            src={`${BASE_API_URL}/file/${product.files[0]?.originalName}`}
+            alt='product-image'
+          />
+        ) : null}
         <CardDescription>{product.description}</CardDescription>
       </CardContent>
       <AlertModal

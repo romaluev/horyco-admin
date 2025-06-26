@@ -58,8 +58,6 @@ const formSchema = z.object({
   price: z.number(),
   stock: z.number(),
   description: z.string(),
-  // To-Do: Add
-  isMultiple: z.boolean()
 });
 
 export default function ProductForm({
@@ -80,7 +78,6 @@ export default function ProductForm({
     price: initialData?.price || 0,
     stock: initialData?.stock || 0,
     description: initialData?.description || '',
-    isMultiple: initialData?.isMultiple || false
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
