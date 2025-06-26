@@ -6,8 +6,8 @@ const baseConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'api.slingacademy.com',
+        protocol: 'http',
+        hostname: 'oshposapi.021.uz',
         port: ''
       }
     ]

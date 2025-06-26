@@ -1,31 +1,52 @@
+'use client';
+
 import PageContainer from '@/shared/ui/layout/page-container';
 import { buttonVariants } from '@/shared/ui/base/button';
 import { Heading } from '@/shared/ui/base/heading';
 import { Separator } from '@/shared/ui/base/separator';
-import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton';
-import ProductListingPage from '@/entities/product/ui/product-listing';
-import { searchParamsCache } from '@/shared/lib/searchparams';
 import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { SearchParams } from 'nuqs/server';
-import { Suspense } from 'react';
+import { Suspense, useMemo, useState } from 'react';
+import { BaseFilter, BasePagination } from '@/widgets/ListItems';
+import BaseLoading from '@/shared/ui/base-loading';
+import ProductCard from '@/entities/product/ui/product-card';
+import { useGetAllProducts } from '@/entities/product/model';
+import { ApiParams } from '@/shared/types';
 
-export const metadata = {
-  title: 'Dashboard: Products'
-};
+// export const metadata = {
+//   title: 'Dashboard: Products'
+// };
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
 };
 
-export default async function Page(props: pageProps) {
-  const searchParams = await props.searchParams;
-  // Allow nested RSCs to access the search params (in a type-safe way)
-  searchParamsCache.parse(searchParams);
+const filterProperties: { value: string; label: string }[] = [
+  {
+    value: 'name',
+    label: 'Name'
+  }
+];
 
-  // This key is used for invoke suspense if any of the search params changed (used for filters).
-  // const key = serialize({ ...searchParams });
+export default function Page() {
+  const [filters, setFilters] = useState('');
+  const [pagination, setPagination] = useState<{
+    page: number;
+    size: number;
+  } | null>(null);
+
+  const params = useMemo(() => {
+    let params: ApiParams = {};
+
+    if (filters) params.filters = filters;
+    if (pagination) params = { ...params, ...pagination };
+
+    return params;
+  }, [filters, pagination]);
+
+  const { data: products, isLoading } = useGetAllProducts(params);
 
   return (
     <PageContainer scrollable={false}>
@@ -35,22 +56,35 @@ export default async function Page(props: pageProps) {
             title='Products'
             description='Manage products (Server side table functionalities.)'
           />
-          <Link
-            href='/dashboard/products/new'
-            className={cn(buttonVariants(), 'text-xs md:text-sm')}
-          >
-            <IconPlus className='mr-2 h-4 w-4' /> Add New
-          </Link>
+          <div className='flex gap-2'>
+            <Link
+              href='/dashboard/products/new'
+              className={cn(buttonVariants(), 'text-xs md:text-sm')}
+            >
+              <IconPlus className='mr-2 h-4 w-4' /> Add New
+            </Link>
+            <BaseFilter
+              properties={filterProperties}
+              onChange={(value) => setFilters(value)}
+            />
+          </div>
         </div>
         <Separator />
-        <Suspense
-          // key={key}
-          fallback={
-            <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
-          }
-        >
-          <ProductListingPage />
+        <Suspense fallback={<BaseLoading className='py-20' />}>
+          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4'>
+            {products?.items.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </Suspense>
+        {products ? (
+          <BasePagination
+            page={products?.page}
+            size={products?.size}
+            total={products?.totalItems}
+            onChange={(value) => setPagination(value)}
+          />
+        ) : null}
       </div>
     </PageContainer>
   );

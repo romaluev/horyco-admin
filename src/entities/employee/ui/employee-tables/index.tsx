@@ -6,6 +6,7 @@ import { useDataTable } from '@/shared/hooks/use-data-table';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { parseAsInteger, useQueryState } from 'nuqs';
+import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar';
 
 interface EmployeeTableParams<TData, TValue> {
   data: TData[];
@@ -20,20 +21,17 @@ export function EmployeeTable<TData, TValue>({
 }: EmployeeTableParams<TData, TValue>) {
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
 
-  const pageCount = Math.ceil(totalItems / pageSize);
-
   const { table } = useDataTable({
     data,
     columns,
-    pageCount: pageCount,
+    pageCount: Math.ceil(totalItems / pageSize),
     shallow: false,
     debounceMs: 500
   });
 
   return (
     <DataTable table={table}>
-      {/* TO-DO: Implement filter */}
-      {/*<DataTableToolbar table={table} />*/}
+      <DataTableToolbar table={table} />
     </DataTable>
   );
 }

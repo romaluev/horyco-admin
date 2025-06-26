@@ -9,6 +9,9 @@ export interface IProduct {
   isMultiple: boolean;
   productTypeId: number;
   createdBy: number;
+  files: {
+    originalName: string;
+  }[];
 }
 
 export interface ICreateProductDto {

@@ -7,6 +7,7 @@ import {
   IUpdateProductDto
 } from './types';
 import {
+  ApiParams,
   FilteringParams,
   PaginatedResponse,
   PaginationParams,
@@ -26,43 +27,12 @@ export const productAPi = {
 
   /**
    * Get all products with pagination, sorting, and filtering
-   * @param pagination - Pagination parameters
-   * @param sorting - Sorting parameters
-   * @param filtering - Filtering parameters
+   * @param params - Params
    * @returns Promise with paginated branches
    */
-  async getProducts(
-    pagination?: PaginationParams,
-    sorting?: SortingParams,
-    filtering?: FilteringParams[]
-  ): Promise<PaginatedResponse<IProduct>> {
-    const params = new URLSearchParams();
-
-    params.append('page', '0');
-    params.append('size', '10');
-
-    if (pagination) {
-      if (Number.isInteger(pagination.page))
-        params.append('page', pagination.page + '');
-      if (pagination.size) params.append('size', pagination.size.toString());
-    }
-
-    // Add sorting params
-    // if (sorting) {
-    //   params.append('sortBy', sorting.field);
-    //   params.append('sortOrder', sorting.order);
-    // }
-
-    // Add filtering params
-    if (filtering && filtering.length > 0) {
-      filtering.forEach((filter, index) => {
-        params.append(`filters[${index}][field]`, filter.field);
-        params.append(`filters[${index}][value]`, filter.value.toString());
-      });
-    }
-
+  async getProducts(params?: ApiParams): Promise<PaginatedResponse<IProduct>> {
     const response = await api.get<PaginatedResponse<IProduct>>('/product', {
-      params
+      params: params
     });
     return response.data;
   },
@@ -87,7 +57,7 @@ export const productAPi = {
     id: number,
     productData: IUpdateProductDto
   ): Promise<IProduct> {
-    const response = await api.put<IProduct>(`/product/${id}`, productData);
+    const response = await api.patch<IProduct>(`/product/${id}`, productData);
     return response.data;
   },
 
@@ -121,12 +91,12 @@ export const productAPi = {
   },
 
   async getAllProductTypes(
-    pagination?: PaginationParams,
-    sorting?: SortingParams,
-    filtering?: FilteringParams[]
+    params?: string
   ): Promise<PaginatedResponse<IProductType>> {
-    const response =
-      await api.get<PaginatedResponse<IProductType>>(`/product-type/`);
+    const response = await api.get<PaginatedResponse<IProductType>>(
+      `/product-type/`,
+      { params }
+    );
     return response.data;
   },
 
@@ -136,7 +106,7 @@ export const productAPi = {
   },
 
   async updateProductTypes(body: IProductTypeRequest): Promise<IProductType> {
-    const response = await api.put<IProductType>(`/product-type/`, body);
+    const response = await api.patch<IProductType>(`/product-type/`, body);
     return response.data;
   },
 

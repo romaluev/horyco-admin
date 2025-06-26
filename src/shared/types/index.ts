@@ -67,3 +67,9 @@ export interface PaginatedResponse<T> {
   page: number;
   size: number;
 }
+
+export interface ApiParams {
+  filters?: string;
+  page?: number;
+  size?: number;
+}

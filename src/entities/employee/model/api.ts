@@ -85,7 +85,10 @@ export const employeeAPi = {
     id: number,
     employeeData: IEmployeeDto
   ): Promise<IEmployee> => {
-    const response = await api.put<IEmployee>(`/employee/${id}`, employeeData);
+    const response = await api.patch<IEmployee>(
+      `/employee/${id}`,
+      employeeData
+    );
     return response.data;
   },
 

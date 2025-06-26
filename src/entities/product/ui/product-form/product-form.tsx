@@ -36,6 +36,8 @@ import {
   STATUSES
 } from '@/shared/config/data';
 import { useState } from 'react';
+import { router } from 'next/client';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   image: z
@@ -55,9 +57,7 @@ const formSchema = z.object({
   status: z.string(),
   price: z.number(),
   stock: z.number(),
-  description: z.string().min(10, {
-    message: 'Description must be at least 10 characters.'
-  }),
+  description: z.string(),
   // To-Do: Add
   isMultiple: z.boolean()
 });
@@ -71,6 +71,7 @@ export default function ProductForm({
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+  const router = useRouter();
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -116,6 +117,8 @@ export default function ProductForm({
         await attachImages({ id: res.id, files: values.image });
       }
     }
+
+    router.push('/dashboard/products');
   };
 
   return (

@@ -1,19 +1,18 @@
 'use client';
 
-import { ProductTable } from './product-tables';
-import { columns } from './product-tables/columns';
-import { useGetAllProducts } from '../model/queries';
+import ProductCard from '@/entities/product/ui/product-card';
+import { IProduct } from '@/entities/product/model';
 
-type ProductListingPage = {};
+type ProductListingPage = {
+  products: IProduct[];
+};
 
-export default function ProductListingPage({}: ProductListingPage) {
-  const { data } = useGetAllProducts();
-
+export default function ProductListingPage({ products }: ProductListingPage) {
   return (
-    <ProductTable
-      data={data?.items || []}
-      totalItems={data?.totalItems || 0}
-      columns={columns}
-    />
+    <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
   );
 }
