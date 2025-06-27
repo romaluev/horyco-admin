@@ -31,7 +31,7 @@ export const BasePagination = ({
 
   useEffect(() => {
     onChange({ page: currentPage, size: pageSize });
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, onChange]);
 
   return (
     <Pagination>

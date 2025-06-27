@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "next dev --turbopack -p 3035",
     "build": "next build",
+    "build:prod": "next build",
     "start": "next start",
+    "start:prod": "next start",
     "lint": "next lint",
     "lint:fix": "eslint src --fix && pnpm format",
     "lint:strict": "eslint --max-warnings=0 src",
