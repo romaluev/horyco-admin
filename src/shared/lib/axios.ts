@@ -36,7 +36,9 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       Cookies.remove('access_token');
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/sign-in';
+        if (!window.location.href.includes('/auth/sign')) {
+          window.location.href = '/auth/sign-in';
+        }
       }
     }
 
