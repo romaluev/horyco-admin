@@ -48,6 +48,14 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
+    title: 'Categories',
+    url: '/dashboard/categories',
+    icon: 'pizza',
+    shortcut: ['c', 'c'],
+    isActive: false,
+    items: [] // No child items
+  },
+  {
     title: 'Employee',
     url: '/dashboard/employee',
     icon: 'product',
@@ -59,7 +67,15 @@ export const navItems: NavItem[] = [
     title: 'Branches',
     url: '/dashboard/branches',
     icon: 'product',
-    shortcut: ['p', 'p'],
+    shortcut: ['b', 'r'],
+    isActive: false,
+    items: [] // No child items
+  },
+  {
+    title: 'Залы',
+    url: '/dashboard/halls',
+    icon: 'kanban',
+    shortcut: ['h', 'l'],
     isActive: false,
     items: [] // No child items
   }

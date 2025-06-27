@@ -105,8 +105,11 @@ export const productAPi = {
     return response.data;
   },
 
-  async updateProductTypes(body: IProductTypeRequest): Promise<IProductType> {
-    const response = await api.patch<IProductType>(`/product-type/`, body);
+  async updateProductTypes(
+    id: string,
+    body: IProductTypeRequest
+  ): Promise<IProductType> {
+    const response = await api.put<IProductType>(`/product-type/${id}`, body);
     return response.data;
   },
 
