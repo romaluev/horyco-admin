@@ -1,6 +1,7 @@
 import { IBranch, ICreateBranchDto, IUpdateBranchDto } from './types';
 import api from '@/shared/lib/axios';
 import {
+  ApiParams,
   FilteringParams,
   PaginatedResponse,
   PaginationParams,
@@ -22,40 +23,16 @@ export const branchApi = {
     return response.data;
   },
 
-  /**
-   * Get all branches with pagination, sorting, and filtering
-   * @param pagination - Pagination parameters
-   * @param sorting - Sorting parameters
-   * @param filtering - Filtering parameters
-   * @returns Promise with paginated branches
-   */
   getBranches: async (
-    pagination?: PaginationParams,
-    sorting?: SortingParams,
-    filtering?: FilteringParams[]
+    searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IBranch>> => {
     // Build query parameters
     const params = new URLSearchParams();
 
-    // Add pagination params
-    if (pagination) {
-      if (Number.isInteger(pagination.page))
-        params.append('page', pagination.page + '');
-      if (pagination.size) params.append('size', pagination.size.toString());
-    }
-
-    // Add sorting params
-    // if (sorting) {
-    //   params.append('sortBy', sorting.field);
-    //   params.append('sortOrder', sorting.order);
-    // }
-
-    // Add filtering params
-    if (filtering && filtering.length > 0) {
-      filtering.forEach((filter, index) => {
-        params.append(`filters[${index}][field]`, filter.field);
-        params.append(`filters[${index}][value]`, filter.value.toString());
-      });
+    params.append('page', String(searchParams.page) || '0');
+    params.append('size', String(searchParams.size) || '100');
+    if (searchParams.filters) {
+      params.append('filters', searchParams.filters);
     }
 
     const response = await api.get<PaginatedResponse<IBranch>>('/branch', {

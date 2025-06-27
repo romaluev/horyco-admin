@@ -1,62 +1,26 @@
 import api from '@/shared/lib/axios';
 import { IEmployee, IEmployeeDto } from './types';
-import {
-  FilteringParams,
-  PaginatedResponse,
-  PaginationParams,
-  SortingParams
-} from '@/shared/types';
+import { ApiParams, PaginatedResponse } from '@/shared/types';
 
 /**
  * Employee API functions
  */
 
 export const employeeAPi = {
-  /**
-   * Create a new employee
-   * @param employeeData - The employee data to create
-   * @returns Promise with the created employee
-   */
   createEmployee: async (employeeData: IEmployeeDto): Promise<IEmployee> => {
     const response = await api.post<IEmployee>('/employee', employeeData);
     return response.data;
   },
 
-  /**
-   * Get all employee with pagination, sorting, and filtering
-   * @param pagination - Pagination parameters
-   * @param sorting - Sorting parameters
-   * @param filtering - Filtering parameters
-   * @returns Promise with paginated employee
-   */
   getEmployee: async (
-    pagination?: PaginationParams,
-    sorting?: SortingParams,
-    filtering?: FilteringParams[]
+    searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IEmployee>> => {
     const params = new URLSearchParams();
 
-    params.append('page', '0');
-    params.append('size', '100');
-
-    if (pagination) {
-      if (Number.isInteger(pagination.page))
-        params.append('page', pagination.page + '');
-      if (pagination.size) params.append('size', pagination.size.toString());
-    }
-
-    // Add sorting params
-    // if (sorting) {
-    //   params.append('sortBy', sorting.field);
-    //   params.append('sortOrder', sorting.order);
-    // }
-
-    // Add filtering params
-    if (filtering && filtering.length > 0) {
-      filtering.forEach((filter, index) => {
-        params.append(`filters[${index}][field]`, filter.field);
-        params.append(`filters[${index}][value]`, filter.value.toString());
-      });
+    params.append('page', String(searchParams.page) || '0');
+    params.append('size', String(searchParams.size) || '100');
+    if (searchParams.filters) {
+      params.append('filters', searchParams.filters);
     }
 
     const response = await api.get<PaginatedResponse<IEmployee>>('/employee', {

@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { employeeAPi } from './api';
 import { queryKeys } from './query-keys';
+import { ApiParams } from '@/shared/types';
 
-export const useGetAllEmployee = () => {
+export const useGetAllEmployee = (params: ApiParams) => {
   return useQuery({
-    queryKey: queryKeys.all(),
-    queryFn: () => employeeAPi.getEmployee()
+    queryKey: [...queryKeys.all(), params],
+    queryFn: () => employeeAPi.getEmployee(params)
   });
 };
 

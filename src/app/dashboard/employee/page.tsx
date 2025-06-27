@@ -4,25 +4,16 @@ import { Heading } from '@/shared/ui/base/heading';
 import { EmployeeList } from '@/entities/employee/ui';
 import { Separator } from '@/shared/ui/base/separator';
 import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton';
-import { searchParamsCache } from '@/shared/lib/searchparams';
 import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
-import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Dashboard: Employee'
 };
 
-type pageProps = {
-  searchParams: Promise<SearchParams>;
-};
-
-export default async function Page(props: pageProps) {
-  const searchParams = await props.searchParams;
-  searchParamsCache.parse(searchParams);
-
+export default function Page() {
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
