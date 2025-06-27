@@ -1,9 +1,7 @@
-import { PropertyMetadata } from '@/shared/lib/table-params';
-
 /**
  * Branch properties for filtering and sorting
  */
-export const branchProperties: PropertyMetadata[] = [
+export const branchProperties = [
   {
     key: 'name',
     label: 'Name',
