@@ -123,8 +123,8 @@ export const HallTable = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Удалить зал?</AlertDialogTitle>
             <AlertDialogDescription>
-              Вы уверены, что хотите удалить зал "{currentHall?.name}"? Это
-              действие нельзя отменить.
+              Вы уверены, что хотите удалить зал &ldquo;{currentHall?.name}
+              &rdquo;? Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

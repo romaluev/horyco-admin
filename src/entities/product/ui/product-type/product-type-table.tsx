@@ -124,8 +124,8 @@ export const ProductTypeTable = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Удалить категорию?</AlertDialogTitle>
             <AlertDialogDescription>
-              Вы уверены, что хотите удалить категорию "
-              {currentProductType?.name}"? Это действие нельзя отменить.
+              Вы уверены, что хотите удалить категорию &ldquo;
+              {currentProductType?.name}&rdquo;? Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -32,7 +32,7 @@ export const useDeleteProduct = () => {
 
   return useMutation({
     mutationFn: (id: number) => productAPi.deleteProduct(id),
-    onSuccess: (_) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: productKeys.all() });
     }
   });

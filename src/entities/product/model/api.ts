@@ -6,13 +6,7 @@ import {
   ICreateProductDto,
   IUpdateProductDto
 } from './types';
-import {
-  ApiParams,
-  FilteringParams,
-  PaginatedResponse,
-  PaginationParams,
-  SortingParams
-} from '@/shared/types';
+import { ApiParams, PaginatedResponse } from '@/shared/types';
 
 export const productAPi = {
   /**

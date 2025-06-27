@@ -17,9 +17,8 @@ export const useCreateProductType = () => {
       toast.success('Категория успешно создана');
       queryClient.invalidateQueries({ queryKey: productKeys.productTypes() });
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Ошибка при создании категории');
-      console.error('Create product type error:', error);
     }
   });
 };
@@ -37,9 +36,8 @@ export const useUpdateProductType = (id: string) => {
       toast.success('Категория успешно обновлена');
       queryClient.invalidateQueries({ queryKey: productKeys.productTypes() });
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении категории');
-      console.error(`Update product type error (ID: ${id}):`, error);
     }
   });
 };
@@ -56,9 +54,8 @@ export const useDeleteProductType = () => {
       toast.success('Категория успешно удалена');
       queryClient.invalidateQueries({ queryKey: productKeys.productTypes() });
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Ошибка при удалении категории');
-      console.error('Delete product type error:', error);
     }
   });
 };

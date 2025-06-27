@@ -36,7 +36,6 @@ import {
   STATUSES
 } from '@/shared/config/data';
 import { useState } from 'react';
-import { router } from 'next/client';
 import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
@@ -57,7 +56,7 @@ const formSchema = z.object({
   status: z.string(),
   price: z.number(),
   stock: z.number(),
-  description: z.string(),
+  description: z.string()
 });
 
 export default function ProductForm({
@@ -68,7 +67,7 @@ export default function ProductForm({
   const { mutateAsync: createProductMutation } = useCreateProduct();
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
   const { mutateAsync: attachImages } = useAttachProductImages();
-  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+  const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
 
   const defaultValues = {
@@ -77,7 +76,7 @@ export default function ProductForm({
     status: '',
     price: initialData?.price || 0,
     stock: initialData?.stock || 0,
-    description: initialData?.description || '',
+    description: initialData?.description || ''
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
