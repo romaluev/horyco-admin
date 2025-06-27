@@ -37,15 +37,15 @@ interface ProfileFormType {
 }
 
 const ProfileCreateForm: React.FC<ProfileFormType> = ({ initialData }) => {
-  const params = useParams();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  // используются в интерфейсе компонента
+  const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const title = initialData ? 'Edit products' : 'Create Your Profile';
   const description = initialData
     ? 'Edit a products.'
     : 'To create your resume, we first need some basic information about you.';
-  const [previousStep, setPreviousStep] = useState(0);
+  // previousStep заменён на прямое присваивание в функциях next и prev
+  const [_, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState({});
 

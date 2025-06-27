@@ -21,7 +21,6 @@ export interface ICreateProductDto {
   image?: string;
   stock?: number | null;
   status: string | null;
-  isMultiple: boolean;
   productTypeId?: number;
 }
 
