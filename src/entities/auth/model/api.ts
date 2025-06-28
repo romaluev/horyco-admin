@@ -16,9 +16,16 @@ export const login = async (
 ): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/auth/login', credentials);
 
+  // For Next.js, we can check if we're in production by checking the window location
+  // instead of using process.env directly
+  const isProduction =
+    typeof window !== 'undefined' &&
+    (window.location.protocol === 'https:' ||
+      !window.location.hostname.includes('localhost'));
+
   Cookies.set('access_token', response.data.access_token, {
     expires: 7, // 7 days
-    secure: process.env?.NODE_ENV === 'production',
+    secure: isProduction,
     sameSite: 'strict'
   });
 
