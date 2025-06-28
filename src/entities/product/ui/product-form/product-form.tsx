@@ -15,6 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { ProductFormType } from './product-form-type';
 import ProductFormImages from './product-form-images';
+import { ProductFormAdditions } from './product-form-additions';
 import {
   IProduct,
   productAPi,
@@ -23,21 +24,28 @@ import {
   useUpdateProduct
 } from '@/entities/product/model';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Check } from 'lucide-react';
-import {
   ACCEPTED_IMAGE_TYPES,
-  MAX_FILE_SIZE,
-  getStatuses
+  getStatuses,
+  MAX_FILE_SIZE
 } from '@/shared/config/data';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+
+const additionProductSchema = z.object({
+  name: z.string().min(1, { message: 'Item name is required' }),
+  price: z.number().min(0, { message: 'Price must be a positive number' })
+});
+
+const additionSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Addition name must be at least 2 characters' }),
+  isRequired: z.boolean(),
+  isMultiple: z.boolean(),
+  limit: z.number().min(1, { message: 'Limit must be at least 1' }),
+  additionProducts: z.array(additionProductSchema).min(0)
+});
 
 const formSchema = z.object({
   image: z
@@ -57,7 +65,8 @@ const formSchema = z.object({
   status: z.string(),
   price: z.number(),
   stock: z.number(),
-  description: z.string()
+  description: z.string(),
+  additions: z.array(additionSchema).optional().default([])
 });
 
 export default function ProductForm({
@@ -79,7 +88,8 @@ export default function ProductForm({
     status: '',
     price: initialData?.price || 0,
     stock: initialData?.stock || 0,
-    description: initialData?.description || ''
+    description: initialData?.description || '',
+    additions: initialData?.additions || []
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -131,9 +141,12 @@ export default function ProductForm({
             name='name'
             render={({ field }) => (
               <FormItem className='md:col-span-3'>
-                <FormLabel>Product Name</FormLabel>
+                <FormLabel>{t('dashboard.products.form.name.label')}</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product name' {...field} />
+                  <Input
+                    placeholder={t('dashboard.products.form.name.placeholder')}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,11 +160,13 @@ export default function ProductForm({
             name='price'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>
+                  {t('dashboard.products.form.price.label')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder='Enter price'
+                    placeholder={t('dashboard.products.form.price.placeholder')}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -160,47 +175,23 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='stock'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>Stock</FormLabel>
+                <FormLabel>
+                  {t('dashboard.products.form.stock.label')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder='Enter stock'
+                    placeholder={t('dashboard.products.form.stock.placeholder')}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='status'
-            render={({ field }) => (
-              <FormItem className='md:col-span-2'>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select status' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {statuses.map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
-                        {status.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -211,10 +202,14 @@ export default function ProductForm({
             name='description'
             render={({ field }) => (
               <FormItem className='md:col-span-6'>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  {t('dashboard.products.form.description.label')}
+                </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Enter product description'
+                    placeholder={t(
+                      'dashboard.products.form.description.placeholder'
+                    )}
                     className='resize-none'
                     {...field}
                   />
@@ -223,11 +218,15 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+
+          <ProductFormAdditions />
+
+          <Button type='submit' className='w-full md:w-auto'>
+            {initialData
+              ? t('dashboard.products.form.actions.update')
+              : t('dashboard.products.form.actions.create')}
+          </Button>
         </div>
-        <Button type='submit'>
-          Add Product
-          <Check />
-        </Button>
       </form>
     </FormProvider>
   );
