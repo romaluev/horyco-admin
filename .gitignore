@@ -26,6 +26,8 @@ yarn-error.log*
 
 # local env files
 .env
+.env.production
+.env.development
 .env*.local
 
 # vercel
@@ -40,7 +42,7 @@ next-env.d.ts
 /.clerk/
 
 
-# cursor 
+# cursor
 .cursorrules
 /memory-bank
 

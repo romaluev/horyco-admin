@@ -1,5 +1,5 @@
 import { delay } from '@/shared/config/mock-api';
-import { RecentSales } from '@/entities/overview/components/recent-sales';
+import { RecentSales } from '@/widgets/overview';
 
 export default async function Sales() {
   await delay(3000);

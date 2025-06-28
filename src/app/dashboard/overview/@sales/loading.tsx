@@ -1,5 +1,4 @@
-import { RecentSalesSkeleton } from '@/entities/overview/components/recent-sales-skeleton';
-import React from 'react';
+import { RecentSalesSkeleton } from '@/widgets/overview';
 
 export default function Loading() {
   return <RecentSalesSkeleton />;
