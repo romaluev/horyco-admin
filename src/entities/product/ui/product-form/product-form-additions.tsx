@@ -175,8 +175,8 @@ export function ProductFormAdditions() {
 
       {fields.length === 0 && (
         <div className='rounded-md border border-dashed p-4 text-center text-gray-500'>
-          No additions added. Click "Add Option" to create product variations or
-          additions.
+          No additions added. Click `&quot; `Add Option `&quot;` to create
+          product variations or additions.
         </div>
       )}
     </div>
