@@ -33,10 +33,11 @@ import { Check } from 'lucide-react';
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
-  STATUSES
+  getStatuses
 } from '@/shared/config/data';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 const formSchema = z.object({
   image: z
@@ -64,11 +65,13 @@ export default function ProductForm({
 }: {
   initialData?: IProduct;
 }) {
+  const { t } = useTranslation();
   const { mutateAsync: createProductMutation } = useCreateProduct();
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
+  const statuses = getStatuses(t);
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -191,7 +194,7 @@ export default function ProductForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {STATUSES.map((status) => (
+                    {statuses.map((status) => (
                       <SelectItem key={status.value} value={status.value}>
                         {status.label}
                       </SelectItem>

@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   FormControl,
@@ -20,8 +22,10 @@ import { useFormContext } from 'react-hook-form';
 import { productAPi, useGetAllProductTypes } from '@/entities/product/model';
 import { useQueryClient } from '@tanstack/react-query';
 import { productKeys } from '../../model/query-keys';
+import { useTranslation } from 'react-i18next';
 
 export const ProductFormType = () => {
+  const { t } = useTranslation();
   const form = useFormContext();
   const queryClient = useQueryClient();
   const { data: productTypes } = useGetAllProductTypes();
@@ -58,13 +62,15 @@ export const ProductFormType = () => {
       name='productTypeId'
       render={({ field }) => (
         <FormItem className='md:col-span-3'>
-          <FormLabel>Product Type</FormLabel>
+          <FormLabel>{t('dashboard.products.form.type.label')}</FormLabel>
           <div className='flex gap-1'>
             {newCategory ? (
               <>
                 <FormControl>
                   <Input
-                    placeholder='Name'
+                    placeholder={t(
+                      'dashboard.products.form.type.newType.name.placeholder'
+                    )}
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewName(e.target.value)
                     }
@@ -72,7 +78,9 @@ export const ProductFormType = () => {
                 </FormControl>
                 <FormControl>
                   <Input
-                    placeholder='Description'
+                    placeholder={t(
+                      'dashboard.products.form.type.newType.description.placeholder'
+                    )}
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewDescription(e.target.value)
                     }
@@ -106,7 +114,11 @@ export const ProductFormType = () => {
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
-                        <SelectValue placeholder='Enter product type' />
+                        <SelectValue
+                          placeholder={t(
+                            'dashboard.products.form.type.placeholder'
+                          )}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -126,7 +138,7 @@ export const ProductFormType = () => {
                   onClick={handleNewCategory}
                   variant='outline'
                 >
-                  New <Plus />
+                  {t('common.actions.new')} <Plus />
                 </Button>
               </>
             )}

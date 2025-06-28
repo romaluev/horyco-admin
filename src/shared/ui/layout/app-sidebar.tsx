@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -28,7 +29,7 @@ import {
   SidebarRail
 } from '@/shared/ui/base/sidebar';
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile';
-import { navItems } from '@/shared/config/data';
+import { getNavItems } from '@/shared/config/data';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
 import {
   IconBell,
@@ -44,6 +45,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { useAuthStore } from '@/entities/auth/model/store';
+import { useTranslation } from 'react-i18next';
 export const company = {
   name: 'Acme Inc',
   logo: IconPhotoUp,
@@ -56,6 +58,8 @@ export default function AppSidebar() {
   const { isOpen } = useMediaQuery();
   const { user } = useAuthStore();
   const router = useRouter();
+  const { t } = useTranslation();
+  const navItems = getNavItems(t);
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes

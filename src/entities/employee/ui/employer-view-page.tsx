@@ -9,12 +9,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
+import { useTranslation } from 'react-i18next';
 
 type TBranchViewPageProps = {
   employerId: string;
 };
 
 export default function EmployerViewPage({ employerId }: TBranchViewPageProps) {
+  const { t } = useTranslation();
   const isNew = employerId === 'new';
   const {
     data: employer,
@@ -27,20 +29,26 @@ export default function EmployerViewPage({ employerId }: TBranchViewPageProps) {
   }
 
   if (isError && !isNew) {
-    return <div className='p-4 text-red-500'>Error: {isError}</div>;
+    return (
+      <div className='p-4 text-red-500'>
+        {t('dashboard.employee.errors.loadError', { message: isError })}
+      </div>
+    );
   }
 
   if (!isNew && !employer) {
-    return <div className='p-4'>The employer doesn&#39;t exist</div>;
+    return <div className='p-4'>{t('dashboard.employee.errors.notFound')}</div>;
   }
 
   return (
     <Card className='mx-auto w-full'>
       <CardHeader>
         <CardTitle className='text-left text-2xl font-bold'>
-          {employerId === 'new'
-            ? 'Create New Employer'
-            : `Edit Employer: ${employer?.fullName}`}
+          {isNew
+            ? t('dashboard.employee.form.title.create')
+            : t('dashboard.employee.form.title.edit', {
+                name: employer?.fullName
+              })}
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -46,7 +46,7 @@ const ProductCard = ({ product }: { product: IProduct }) => {
           <Image
             width={300}
             height={400}
-            src={`${BASE_API_URL}/file/${product.files[0]?.originalName}`}
+            src={`${BASE_API_URL}/file/${product.files[0].originalName}`}
             alt='product-image'
           />
         ) : null}

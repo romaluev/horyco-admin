@@ -1,4 +1,5 @@
 import { NavItem } from '../types';
+import i18next from 'i18next';
 
 export const MAX_FILE_SIZE = 5000000;
 export const ACCEPTED_IMAGE_TYPES = [
@@ -7,14 +8,15 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp'
 ];
-export const STATUSES = [
+
+export const getStatuses = (t: (key: string) => string) => [
   {
     value: 'active',
-    label: 'Active'
+    label: t('common.status.active')
   },
   {
     value: 'archived',
-    label: 'Archived'
+    label: t('common.status.archived')
   }
 ];
 
@@ -30,9 +32,9 @@ export type Product = {
 };
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
-export const navItems: NavItem[] = [
+export const getNavItems = (t: (key: string) => string): NavItem[] => [
   {
-    title: 'Dashboard',
+    title: t('common.navigation.dashboard'),
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
@@ -40,7 +42,7 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Products',
+    title: t('common.navigation.products'),
     url: '/dashboard/products',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -48,7 +50,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Categories',
+    title: t('common.navigation.categories'),
     url: '/dashboard/categories',
     icon: 'pizza',
     shortcut: ['c', 'c'],
@@ -56,7 +58,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Employee',
+    title: t('common.navigation.employee'),
     url: '/dashboard/employee',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -64,7 +66,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Branches',
+    title: t('common.navigation.branches'),
     url: '/dashboard/branches',
     icon: 'product',
     shortcut: ['b', 'r'],
@@ -72,7 +74,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Залы',
+    title: t('common.navigation.halls'),
     url: '/dashboard/halls',
     icon: 'kanban',
     shortcut: ['h', 'l'],

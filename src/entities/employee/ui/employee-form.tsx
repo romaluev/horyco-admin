@@ -26,27 +26,31 @@ import { PhoneInput } from '@/shared/ui/base/phone-input';
 import PasswordInput from '@/shared/ui/base/passsword-input';
 import { useCreateEmployer, useUpdateEmployer } from '../model';
 import { useGetAllBranches } from '@/entities/branch/model/queries';
-
-const formSchema = z.object({
-  fullName: z.string().min(2, {
-    message: 'Branch name must be at least 2 characters.'
-  }),
-  phone: z.string().min(4),
-  password: z.string().min(4),
-  confirmPassword: z.string(),
-  branchId: z.number()
-});
+import { useTranslation } from 'react-i18next';
 
 export default function EmployeeForm({
   initialData
 }: {
   initialData?: IEmployee;
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const { data: branches } = useGetAllBranches();
   const { mutateAsync: createEmployer, isPending } = useCreateEmployer();
   const { mutateAsync: updateEmployer } = useUpdateEmployer();
+
+  const formSchema = z.object({
+    fullName: z.string().min(2, {
+      message: t('dashboard.employee.form.fields.fullName.validation')
+    }),
+    phone: z.string().min(4),
+    password: z.string().min(4, {
+      message: t('dashboard.employee.form.fields.password.validation')
+    }),
+    confirmPassword: z.string(),
+    branchId: z.number()
+  });
 
   const defaultValues = {
     fullName: initialData?.fullName || '',
@@ -81,7 +85,7 @@ export default function EmployeeForm({
         router.push('/dashboard/employee');
       }
     } catch (error) {
-      console.error('Error saving branches:', error);
+      console.error('Error saving employee:', error);
     }
   }
 
@@ -94,10 +98,14 @@ export default function EmployeeForm({
             name='fullName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>
+                  {t('dashboard.employee.form.fields.fullName.label')}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='Enter full name'
+                    placeholder={t(
+                      'dashboard.employee.form.fields.fullName.placeholder'
+                    )}
                     {...field}
                     disabled={isPending}
                   />
@@ -112,11 +120,15 @@ export default function EmployeeForm({
             name='phone'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone</FormLabel>
+                <FormLabel>
+                  {t('dashboard.employee.form.fields.phone.label')}
+                </FormLabel>
                 <FormControl>
                   <PhoneInput
                     defaultCountry={'UZ'}
-                    placeholder={'90 123 45 67'}
+                    placeholder={t(
+                      'dashboard.employee.form.fields.phone.placeholder'
+                    )}
                     limitMaxLength={true}
                     countries={['UZ']}
                     {...field}
@@ -132,9 +144,16 @@ export default function EmployeeForm({
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>
+                  {t('dashboard.employee.form.fields.password.label')}
+                </FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} />
+                  <PasswordInput
+                    placeholder={t(
+                      'dashboard.employee.form.fields.password.placeholder'
+                    )}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,9 +165,16 @@ export default function EmployeeForm({
             name='confirmPassword'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Repeat password</FormLabel>
+                <FormLabel>
+                  {t('dashboard.employee.form.fields.confirmPassword.label')}
+                </FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} />
+                  <PasswordInput
+                    placeholder={t(
+                      'dashboard.employee.form.fields.confirmPassword.placeholder'
+                    )}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,14 +186,20 @@ export default function EmployeeForm({
             name='branchId'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Branch</FormLabel>
+                <FormLabel>
+                  {t('dashboard.employee.form.fields.branch.label')}
+                </FormLabel>
                 <Select
                   onValueChange={(v) => field.onChange(Number(v))}
                   defaultValue={String(field.value || '')}
                 >
                   <FormControl>
                     <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select the branch' />
+                      <SelectValue
+                        placeholder={t(
+                          'dashboard.employee.form.fields.branch.placeholder'
+                        )}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -182,29 +214,11 @@ export default function EmployeeForm({
               </FormItem>
             )}
           />
-
-          {/*<FormField*/}
-          {/*  control={form.control}*/}
-          {/*  name='photo'*/}
-          {/*  render={({ field }) => (*/}
-          {/*    <FormItem>*/}
-          {/*      <FormLabel>Profile photo</FormLabel>*/}
-          {/*      <FormControl>*/}
-          {/*        <FileUploader*/}
-          {/*          variant='image'*/}
-          {/*          value={field.value}*/}
-          {/*          onValueChange={field.onChange}*/}
-          {/*          maxFiles={1}*/}
-          {/*          maxSize={MAX_FILE_SIZE}*/}
-          {/*        />*/}
-          {/*      </FormControl>*/}
-          {/*      <FormMessage />*/}
-          {/*    </FormItem>*/}
-          {/*  )}*/}
-          {/*/>*/}
         </div>
         <Button type='submit' disabled={isPending}>
-          {initialData ? 'Update employer info' : 'Create employer'}
+          {initialData
+            ? t('dashboard.employee.form.submit.update')
+            : t('dashboard.employee.form.submit.create')}
         </Button>
       </form>
     </Form>

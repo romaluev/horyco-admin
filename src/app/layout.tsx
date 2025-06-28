@@ -1,5 +1,3 @@
-import Providers from '@/shared/ui/layout/providers';
-import { Toaster } from '@/shared/ui/base/sonner';
 import { fontVariables } from '@/shared/lib/font';
 import ThemeProvider from '@/shared/ui/layout/ThemeToggle/theme-provider';
 import { cn } from '@/shared/lib/utils';
@@ -7,6 +5,7 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import Providers from '@/app/providers/Providers';
 import './globals.css';
 import './theme.css';
 
@@ -66,7 +65,6 @@ export default async function RootLayout({
             enableColorScheme
           >
             <Providers activeThemeValue={activeThemeValue as string}>
-              <Toaster />
               {children}
             </Providers>
           </ThemeProvider>

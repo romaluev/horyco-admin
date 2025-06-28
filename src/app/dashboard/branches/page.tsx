@@ -1,3 +1,5 @@
+'use client';
+
 import PageContainer from '@/shared/ui/layout/page-container';
 import { buttonVariants } from '@/shared/ui/base/button';
 import { Heading } from '@/shared/ui/base/heading';
@@ -8,30 +10,29 @@ import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-
-export const metadata = {
-  title: 'Dashboard: Branches'
-};
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
+
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title='Branches'
-            description='Manage branches for your organization'
+            title={t('dashboard.branches.title')}
+            description={t('dashboard.branches.description')}
           />
           <Link
             href='/dashboard/branches/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
-            <IconPlus className='mr-2 h-4 w-4' /> Add New
+            <IconPlus className='mr-2 h-4 w-4' />{' '}
+            {t('dashboard.branches.addNew')}
           </Link>
         </div>
         <Separator />
         <Suspense
-          // key={key}
           fallback={
             <DataTableSkeleton columnCount={4} rowCount={8} filterCount={2} />
           }
