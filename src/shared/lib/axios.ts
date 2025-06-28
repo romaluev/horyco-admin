@@ -8,7 +8,6 @@ const api = axios.create({
   baseURL: BASE_API_URL,
   headers: {
     'Content-Type': 'application/json',
-    Referer: 'https://oshpos.vercel.app/',
     credentials: 'include'
   }
 });
