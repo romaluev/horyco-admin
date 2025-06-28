@@ -1,4 +1,4 @@
-import { BarGraphSkeleton } from '@/entities/overview/components/bar-graph-skeleton';
+import { BarGraphSkeleton } from '@/widgets/overview';
 
 export default function Loading() {
   return <BarGraphSkeleton />;
