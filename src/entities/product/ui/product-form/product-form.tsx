@@ -80,7 +80,6 @@ export default function ProductForm({
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
-  const statuses = getStatuses(t);
 
   const defaultValues = {
     name: initialData?.name || '',

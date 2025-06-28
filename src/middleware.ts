@@ -40,12 +40,6 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Case 2: Authenticated user trying to access auth pages - redirect to dashboard
-  if (isAuthenticated && isPublicRoute) {
-    const url = new URL('/dashboard', req.url);
-    return NextResponse.redirect(url);
-  }
-
   // For all other cases, proceed normally
   return NextResponse.next();
 }

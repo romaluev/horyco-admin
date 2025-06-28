@@ -25,6 +25,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       !redirectPath.startsWith('//') &&
       !redirectPath.includes(':')
     ) {
+      console.log('login');
       router.push(redirectPath);
     }
   }, [isAuthenticated, isLoading, router, searchParams]);

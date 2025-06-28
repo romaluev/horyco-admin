@@ -15,22 +15,21 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Oshpos',
+  description: 'Oshpos'
 };
 
 export const viewport: Viewport = {
   themeColor: META_THEME_COLORS.light
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const activeThemeValue = cookieStore.get('active_theme')?.value;
-  const isScaled = activeThemeValue?.endsWith('-scaled');
+  const activeThemeValue = '';
+  const isScaled = '';
 
   return (
     <html lang='en' suppressHydrationWarning>

@@ -1,13 +1,15 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import config from '../../../environments';
 
-export const BASE_API_URL = config.api_url;
+export const BASE_API_URL =
+  process.env?.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 const api = axios.create({
-  baseURL: config.api_url || 'http://localhost:3000',
+  baseURL: BASE_API_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    Referer: 'https://oshpos.vercel.app/',
+    credentials: 'include'
   }
 });
 
