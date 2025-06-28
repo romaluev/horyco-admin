@@ -15,6 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { ProductFormType } from './product-form-type';
 import ProductFormImages from './product-form-images';
+import { ProductFormAdditions } from './product-form-additions';
 import {
   IProduct,
   productAPi,
@@ -38,6 +39,21 @@ import {
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const additionProductSchema = z.object({
+  name: z.string().min(1, { message: 'Item name is required' }),
+  price: z.number().min(0, { message: 'Price must be a positive number' })
+});
+
+const additionSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Addition name must be at least 2 characters' }),
+  isRequired: z.boolean(),
+  isMultiple: z.boolean(),
+  limit: z.number().min(1, { message: 'Limit must be at least 1' }),
+  additionProducts: z.array(additionProductSchema).min(0)
+});
+
 const formSchema = z.object({
   image: z
     .any()
@@ -56,7 +72,8 @@ const formSchema = z.object({
   status: z.string(),
   price: z.number(),
   stock: z.number(),
-  description: z.string()
+  description: z.string(),
+  additions: z.array(additionSchema).optional().default([])
 });
 
 export default function ProductForm({
@@ -76,7 +93,8 @@ export default function ProductForm({
     status: '',
     price: initialData?.price || 0,
     stock: initialData?.stock || 0,
-    description: initialData?.description || ''
+    description: initialData?.description || '',
+    additions: initialData?.additions || []
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -220,9 +238,11 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+
+          <ProductFormAdditions />
         </div>
         <Button type='submit'>
-          Add Product
+          {initialData ? 'Update Product' : 'Add Product'}
           <Check />
         </Button>
       </form>
