@@ -23,13 +23,14 @@ export const viewport: Viewport = {
   themeColor: META_THEME_COLORS.light
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
-  const activeThemeValue = '';
-  const isScaled = '';
+  const cookieStore = await cookies();
+  const activeThemeValue = cookieStore.get('active_theme')?.value;
+  const isScaled = activeThemeValue?.endsWith('-scaled');
 
   return (
     <html lang='en' suppressHydrationWarning>
