@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 import { matchSorter } from 'match-sorter'; // For filtering
 
 export const delay = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, 0));
 
 // Define the shape of Product data
 export type Product = {
