@@ -21,24 +21,26 @@ import {
   useCreateBranch,
   useUpdateBranch
 } from '@/entities/branch/model';
-
-// Form schema with validation
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Branch name must be at least 2 characters.'
-  }),
-  address: z.string().min(5, {
-    message: 'Address must be at least 5 characters.'
-  })
-});
+import { useTranslation } from 'react-i18next';
 
 export default function BranchForm({ initialData }: { initialData?: IBranch }) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const { mutateAsync: createBranch, isPending: isCreatePending } =
     useCreateBranch();
   const { mutateAsync: updateBranch, isPending: isUpdatePending } =
     useUpdateBranch();
+
+  // Form schema with validation
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: t('dashboard.branches.form.fields.name.validation')
+    }),
+    address: z.string().min(5, {
+      message: t('dashboard.branches.form.fields.address.validation')
+    })
+  });
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -80,9 +82,16 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Branch Name</FormLabel>
+                <FormLabel>
+                  {t('dashboard.branches.form.fields.name.label')}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter branch name' {...field} />
+                  <Input
+                    placeholder={t(
+                      'dashboard.branches.form.fields.name.placeholder'
+                    )}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,9 +102,16 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='address'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>
+                  {t('dashboard.branches.form.fields.address.label')}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter branch address' {...field} />
+                  <Input
+                    placeholder={t(
+                      'dashboard.branches.form.fields.address.placeholder'
+                    )}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,7 +119,9 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
           />
         </div>
         <Button type='submit' disabled={isCreatePending || isUpdatePending}>
-          {initialData ? 'Update Branch' : 'Create Branch'}
+          {initialData
+            ? t('common.actions.update')
+            : t('common.actions.create')}
         </Button>
       </form>
     </Form>

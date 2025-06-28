@@ -1,5 +1,6 @@
 'use client';
-import { navItems } from '@/shared/config/data';
+
+import { getNavItems } from '@/shared/config/data';
 import {
   KBarAnimator,
   KBarPortal,
@@ -11,9 +12,12 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import RenderResults from './render-result';
 import useThemeSwitching from './use-theme-switching';
+import { useTranslation } from 'react-i18next';
 
 export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { t } = useTranslation();
+  const navItems = getNavItems(t);
 
   // These action are for the navigation
   const actions = useMemo(() => {

@@ -17,31 +17,14 @@ import {
 } from '@/shared/ui/base/popover';
 import { X, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
-// Filter rules matching backend FilterRule enum
-const filterRules = [
-  { value: 'eq', label: 'Equals' },
-  { value: 'neq', label: 'Not Equals' },
-  { value: 'gt', label: 'Greater Than' },
-  { value: 'gte', label: 'Greater Than or Equals' },
-  { value: 'lt', label: 'Less Than' },
-  { value: 'lte', label: 'Less Than or Equals' },
-  { value: 'like', label: 'Like' },
-  { value: 'nlike', label: 'Not Like' },
-  { value: 'in', label: 'In' },
-  { value: 'nin', label: 'Not In' },
-  { value: 'isnull', label: 'Is Null' },
-  { value: 'isnotnull', label: 'Is Not Null' }
-];
-
-// Type for individual ListItems
 interface Filter {
   property: string;
   rule: string;
   value: string;
 }
 
-// Props for the FilterComponent
 interface FilterComponentProps {
   properties: string[] | { value: string; label: string }[];
   onChange: (filterString: string, filters: Filter[]) => void;
@@ -51,16 +34,33 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
   properties,
   onChange
 }) => {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<Filter[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  // Filter rules matching backend FilterRule enum
+  const filterRules = [
+    { value: 'eq', label: t('common.filters.rules.eq') },
+    { value: 'neq', label: t('common.filters.rules.neq') },
+    { value: 'gt', label: t('common.filters.rules.gt') },
+    { value: 'gte', label: t('common.filters.rules.gte') },
+    { value: 'lt', label: t('common.filters.rules.lt') },
+    { value: 'lte', label: t('common.filters.rules.lte') },
+    { value: 'like', label: t('common.filters.rules.like') },
+    { value: 'nlike', label: t('common.filters.rules.nlike') },
+    { value: 'in', label: t('common.filters.rules.in') },
+    { value: 'nin', label: t('common.filters.rules.nin') },
+    { value: 'isnull', label: t('common.filters.rules.isnull') },
+    { value: 'isnotnull', label: t('common.filters.rules.isnotnull') }
+  ];
 
   // Normalize properties to { value, label } format
   const normalizedProperties = properties.map((prop) =>
     typeof prop === 'string' ? { value: prop, label: prop } : prop
   );
 
-  // Emit ListItems string to parent via onChange
+  // Emit filter string to parent via onChange
   const emitFilterString = useCallback(
     (filters: Filter[]) => {
       const validFilters = filters.filter(
@@ -106,26 +106,26 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
         });
         setFilters(parsedFilters);
       } catch (error) {
-        console.error('Invalid ListItems parameter in URL:', error);
+        console.error('Invalid filter parameter in URL:', error);
       }
     }
   }, []);
 
-  // Add a new ListItems
+  // Add a new filter
   const addFilter = () => {
     const newFilters = [...filters, { property: '', rule: '', value: '' }];
     setFilters(newFilters);
     emitFilterString(newFilters);
   };
 
-  // Remove a ListItems by index
+  // Remove a filter by index
   const removeFilter = (index: number) => {
     const newFilters = filters.filter((_, i) => i !== index);
     setFilters(newFilters);
     emitFilterString(newFilters);
   };
 
-  // Update a ListItems field
+  // Update a filter field
   const updateFilter = (index: number, field: keyof Filter, value: string) => {
     const newFilters = [...filters];
     newFilters[index][field] = value;
@@ -138,13 +138,14 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
       <PopoverTrigger asChild>
         <Button variant='outline' className='flex items-center gap-2'>
           <Filter className='h-4 w-4' />
-          Filters {filters.length > 0 && `(${filters.length})`}
+          {t('common.filters.title')}{' '}
+          {filters.length > 0 && `(${filters.length})`}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='mr-5 w-[600px] p-4'>
         <div className='space-y-4'>
           <div className='flex items-center justify-between'>
-            <h4 className='font-medium'>Filters</h4>
+            <h4 className='font-medium'>{t('common.filters.title')}</h4>
             <Button
               variant='ghost'
               size='sm'
@@ -153,12 +154,12 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                 onChange('', []);
               }}
             >
-              Clear All
+              {t('common.actions.clearAll')}
             </Button>
           </div>
           {filters.length === 0 ? (
             <p className='text-muted-foreground text-sm'>
-              No filters applied. Click &#34;Add Filter&#34; to start.
+              {t('common.filters.noFilters')}
             </p>
           ) : (
             filters.map((filter, index) => (
@@ -170,7 +171,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                   }
                 >
                   <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Property' />
+                    <SelectValue placeholder={t('common.filters.property')} />
                   </SelectTrigger>
                   <SelectContent>
                     {normalizedProperties.map((prop) => (
@@ -185,7 +186,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                   onValueChange={(value) => updateFilter(index, 'rule', value)}
                 >
                   <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Rule' />
+                    <SelectValue placeholder={t('common.filters.rule')} />
                   </SelectTrigger>
                   <SelectContent>
                     {filterRules.map((rule) => (
@@ -197,7 +198,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                 </Select>
                 {filter.rule !== 'isnull' && filter.rule !== 'isnotnull' && (
                   <Input
-                    placeholder='Value'
+                    placeholder={t('common.filters.value')}
                     value={filter.value}
                     onChange={(e) =>
                       updateFilter(index, 'value', e.target.value)
@@ -217,9 +218,11 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
           )}
           <div className='flex gap-2'>
             <Button variant='outline' onClick={addFilter}>
-              Add Filter
+              {t('common.filters.addFilter')}
             </Button>
-            <Button onClick={() => setIsOpen(false)}>Save</Button>
+            <Button onClick={() => setIsOpen(false)}>
+              {t('common.actions.save')}
+            </Button>
           </div>
         </div>
       </PopoverContent>

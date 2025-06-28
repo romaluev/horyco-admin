@@ -1,3 +1,5 @@
+'use client';
+
 import PageContainer from '@/shared/ui/layout/page-container';
 import { Badge } from '@/shared/ui/base/badge';
 import {
@@ -9,7 +11,7 @@ import {
   CardFooter
 } from '@/shared/ui/base/card';
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react';
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function OverViewLayout({
   sales,
@@ -22,12 +24,14 @@ export default function OverViewLayout({
   bar_stats: React.ReactNode;
   area_stats: React.ReactNode;
 }) {
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between space-y-2'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Hi, Welcome back 👋
+            {t('dashboard.title')}
           </h2>
         </div>
 
