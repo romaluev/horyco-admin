@@ -30,8 +30,11 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
   '/dashboard/products': [
     { title: 'Панель управления', link: '/dashboard' },
     { title: 'Продукты', link: '/dashboard/products' }
+  ],
+  '/dashboard/table': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Стол менеджмент', link: '/dashboard/table' }
   ]
-  // Add more custom mappings as needed
 };
 
 export function useBreadcrumbs() {
