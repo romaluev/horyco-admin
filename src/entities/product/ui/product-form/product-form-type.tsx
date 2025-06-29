@@ -22,6 +22,7 @@ import { useFormContext } from 'react-hook-form';
 import { productAPi, useGetAllProductTypes } from '@/entities/product/model';
 import { useQueryClient } from '@tanstack/react-query';
 import { productKeys } from '../../model/query-keys';
+import { toast } from 'sonner';
 
 export const ProductFormType = () => {
   const form = useFormContext();
@@ -44,7 +45,10 @@ export const ProductFormType = () => {
         queryClient.invalidateQueries({ queryKey: productKeys.productTypes() });
         clearNewCategory();
         form.setValue('productTypeId', res.id);
-      } catch {}
+        toast.success('Тип продукта успешно создано');
+      } catch {
+        toast.error('Что-то пошло не так');
+      }
     }
   };
 
@@ -60,13 +64,13 @@ export const ProductFormType = () => {
       name='productTypeId'
       render={({ field }) => (
         <FormItem className='md:col-span-3'>
-          <FormLabel>Категория</FormLabel>
+          <FormLabel>Тип продукта</FormLabel>
           <div className='flex gap-1'>
             {newCategory ? (
               <>
                 <FormControl>
                   <Input
-                    placeholder='Название категории'
+                    placeholder='Название'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewName(e.target.value)
                     }
@@ -74,7 +78,7 @@ export const ProductFormType = () => {
                 </FormControl>
                 <FormControl>
                   <Input
-                    placeholder='Описание категории'
+                    placeholder='Описание'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewDescription(e.target.value)
                     }
