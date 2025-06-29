@@ -32,6 +32,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { productKeys } from '@/entities/product/model/query-keys';
+import { toast } from 'sonner';
 
 const additionProductSchema = z.object({
   name: z.string().min(1, { message: 'Название элемента обязательно' }),
@@ -39,11 +40,9 @@ const additionProductSchema = z.object({
 });
 
 const additionSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название дополнения должно содержать минимум 2 символа'
-    }),
+  name: z.string().min(2, {
+    message: 'Название дополнения должно содержать минимум 2 символа'
+  }),
   isRequired: z.boolean(),
   isMultiple: z.boolean(),
   limit: z.number().min(1, { message: 'Лимит должен быть не менее 1' }),
@@ -82,7 +81,6 @@ export default function ProductForm({
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -103,33 +101,38 @@ export default function ProductForm({
     const body = { ...values };
     delete body.image;
 
-    // Update
-    const productId = initialData?.id;
-    if (productId) {
-      await updateProductMutation({
-        id: productId,
-        data: body
-      });
-
-      if (deletedImageIds.length) {
-        deletedImageIds.forEach((id) => {
-          productAPi.deleteFile(productId, id);
+    try {
+      // Update
+      const productId = initialData?.id;
+      if (productId) {
+        await updateProductMutation({
+          id: productId,
+          data: body
         });
-      }
-      if (values.image.length) {
-        await attachImages({ id: productId, files: values.image });
-      }
-    }
-    // Create
-    else {
-      const res = await createProductMutation(body);
 
-      if (values.image.length && res) {
-        await attachImages({ id: res.id, files: values.image });
+        if (deletedImageIds.length) {
+          deletedImageIds.forEach((id) => {
+            productAPi.deleteFile(productId, id);
+          });
+        }
+        if (values.image.length) {
+          await attachImages({ id: productId, files: values.image });
+        }
+        toast.success('Продукт успешно обновлен');
       }
+      // Create
+      else {
+        const res = await createProductMutation(body);
+
+        if (values.image.length && res) {
+          await attachImages({ id: res.id, files: values.image });
+        }
+        toast.success('Продукт успешно создан');
+      }
+    } catch (e) {
+      toast.error('Что-то пошло не так');
     }
 
-    queryClient.invalidateQueries({ queryKey: productKeys.all() });
     router.push('/dashboard/products');
   };
 
