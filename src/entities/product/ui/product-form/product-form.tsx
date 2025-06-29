@@ -15,6 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { ProductFormType } from './product-form-type';
 import ProductFormImages from './product-form-images';
+import { ProductFormAdditions } from './product-form-additions';
 import {
   IProduct,
   productAPi,
@@ -23,40 +24,50 @@ import {
   useUpdateProduct
 } from '@/entities/product/model';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Check } from 'lucide-react';
-import {
   ACCEPTED_IMAGE_TYPES,
-  MAX_FILE_SIZE,
-  STATUSES
+  getStatuses,
+  MAX_FILE_SIZE
 } from '@/shared/config/data';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+import { productKeys } from '@/entities/product/model/query-keys';
+
+const additionProductSchema = z.object({
+  name: z.string().min(1, { message: 'Название элемента обязательно' }),
+  price: z.number().min(0, { message: 'Цена должна быть положительным числом' })
+});
+
+const additionSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Название дополнения должно содержать минимум 2 символа'
+  }),
+  isRequired: z.boolean(),
+  isMultiple: z.boolean(),
+  limit: z.number().min(1, { message: 'Лимит должен быть не менее 1' }),
+  additionProducts: z.array(additionProductSchema).min(0)
+});
 
 const formSchema = z.object({
   image: z
     .any()
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`
+      'Максимальный размер файла 5MB.'
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.'
+      'Допускаются файлы .jpg, .jpeg, .png и .webp'
     ),
   name: z.string().min(2, {
-    message: 'Product name must be at least 2 characters.'
+    message: 'Название должно содержать минимум 2 символа'
   }),
   productTypeId: z.number().min(1),
   status: z.string(),
   price: z.number(),
   stock: z.number(),
-  description: z.string()
+  description: z.string(),
+  additions: z.array(additionSchema).optional().default([])
 });
 
 export default function ProductForm({
@@ -69,6 +80,7 @@ export default function ProductForm({
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -76,7 +88,8 @@ export default function ProductForm({
     status: '',
     price: initialData?.price || 0,
     stock: initialData?.stock || 0,
-    description: initialData?.description || ''
+    description: initialData?.description || '',
+    additions: initialData?.additions || []
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -114,6 +127,7 @@ export default function ProductForm({
       }
     }
 
+    queryClient.invalidateQueries({ queryKey: productKeys.all() });
     router.push('/dashboard/products');
   };
 
@@ -128,9 +142,9 @@ export default function ProductForm({
             name='name'
             render={({ field }) => (
               <FormItem className='md:col-span-3'>
-                <FormLabel>Product Name</FormLabel>
+                <FormLabel>Название</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product name' {...field} />
+                  <Input placeholder='Введите название продукта' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,11 +158,11 @@ export default function ProductForm({
             name='price'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Цена</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder='Enter price'
+                    placeholder='Введите цену'
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -157,47 +171,21 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='stock'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>Stock</FormLabel>
+                <FormLabel>Количество</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder='Enter stock'
+                    placeholder='Введите количество'
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='status'
-            render={({ field }) => (
-              <FormItem className='md:col-span-2'>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select status' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {STATUSES.map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
-                        {status.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -208,10 +196,10 @@ export default function ProductForm({
             name='description'
             render={({ field }) => (
               <FormItem className='md:col-span-6'>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Описание</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Enter product description'
+                    placeholder='Введите описание продукта'
                     className='resize-none'
                     {...field}
                   />
@@ -220,11 +208,13 @@ export default function ProductForm({
               </FormItem>
             )}
           />
+
+          <ProductFormAdditions />
+
+          <Button type='submit' className='w-full md:w-auto'>
+            {initialData ? 'Обновить продукт' : 'Создать продукт'}
+          </Button>
         </div>
-        <Button type='submit'>
-          Add Product
-          <Check />
-        </Button>
       </form>
     </FormProvider>
   );

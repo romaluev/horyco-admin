@@ -1,3 +1,5 @@
+'use client';
+
 import PageContainer from '@/shared/ui/layout/page-container';
 import { buttonVariants } from '@/shared/ui/base/button';
 import { Heading } from '@/shared/ui/base/heading';
@@ -9,24 +11,20 @@ import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-export const metadata = {
-  title: 'Dashboard: Employee'
-};
-
 export default function Page() {
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title='Employee'
-            description='Manage employee for your organization'
+            title='Сотрудники'
+            description='Управление сотрудниками вашей организации'
           />
           <Link
             href='/dashboard/employee/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
-            <IconPlus className='mr-2 h-4 w-4' /> Add New
+            <IconPlus className='mr-2 h-4 w-4' /> Добавить сотрудника
           </Link>
         </div>
         <Separator />

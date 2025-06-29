@@ -27,20 +27,20 @@ export default function EmployerViewPage({ employerId }: TBranchViewPageProps) {
   }
 
   if (isError && !isNew) {
-    return <div className='p-4 text-red-500'>Error: {isError}</div>;
+    return <div className='p-4 text-red-500'>Ошибка: {isError}</div>;
   }
 
   if (!isNew && !employer) {
-    return <div className='p-4'>The employer doesn&#39;t exist</div>;
+    return <div className='p-4'>Сотрудник не существует</div>;
   }
 
   return (
     <Card className='mx-auto w-full'>
       <CardHeader>
         <CardTitle className='text-left text-2xl font-bold'>
-          {employerId === 'new'
-            ? 'Create New Employer'
-            : `Edit Employer: ${employer?.fullName}`}
+          {isNew
+            ? 'Создать нового сотрудника'
+            : `Редактировать сотрудника: ${employer?.fullName}`}
         </CardTitle>
       </CardHeader>
       <CardContent>

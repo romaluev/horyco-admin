@@ -22,16 +22,6 @@ import {
   useUpdateBranch
 } from '@/entities/branch/model';
 
-// Form schema with validation
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Branch name must be at least 2 characters.'
-  }),
-  address: z.string().min(5, {
-    message: 'Address must be at least 5 characters.'
-  })
-});
-
 export default function BranchForm({ initialData }: { initialData?: IBranch }) {
   const router = useRouter();
 
@@ -39,6 +29,16 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
     useCreateBranch();
   const { mutateAsync: updateBranch, isPending: isUpdatePending } =
     useUpdateBranch();
+
+  // Form schema with validation
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: 'Название филиала должно содержать минимум 2 символа'
+    }),
+    address: z.string().min(5, {
+      message: 'Адрес должен содержать минимум 5 символов'
+    })
+  });
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -80,9 +80,9 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Branch Name</FormLabel>
+                <FormLabel>Название филиала</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter branch name' {...field} />
+                  <Input placeholder='Введите название филиала' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,9 +93,9 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='address'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>Адрес</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter branch address' {...field} />
+                  <Input placeholder='Введите адрес филиала' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,7 +103,7 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
           />
         </div>
         <Button type='submit' disabled={isCreatePending || isUpdatePending}>
-          {initialData ? 'Update Branch' : 'Create Branch'}
+          {initialData ? 'Обновить' : 'Создать'}
         </Button>
       </form>
     </Form>

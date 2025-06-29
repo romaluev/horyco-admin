@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   FormControl,
@@ -58,13 +60,13 @@ export const ProductFormType = () => {
       name='productTypeId'
       render={({ field }) => (
         <FormItem className='md:col-span-3'>
-          <FormLabel>Product Type</FormLabel>
+          <FormLabel>Категория</FormLabel>
           <div className='flex gap-1'>
             {newCategory ? (
               <>
                 <FormControl>
                   <Input
-                    placeholder='Name'
+                    placeholder='Название категории'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewName(e.target.value)
                     }
@@ -72,7 +74,7 @@ export const ProductFormType = () => {
                 </FormControl>
                 <FormControl>
                   <Input
-                    placeholder='Description'
+                    placeholder='Описание категории'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewDescription(e.target.value)
                     }
@@ -106,7 +108,7 @@ export const ProductFormType = () => {
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
-                        <SelectValue placeholder='Enter product type' />
+                        <SelectValue placeholder='Выберите категорию' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -126,7 +128,7 @@ export const ProductFormType = () => {
                   onClick={handleNewCategory}
                   variant='outline'
                 >
-                  New <Plus />
+                  Новая <Plus />
                 </Button>
               </>
             )}

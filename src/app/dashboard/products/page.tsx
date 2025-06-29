@@ -7,7 +7,6 @@ import { Separator } from '@/shared/ui/base/separator';
 import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
-import { SearchParams } from 'nuqs/server';
 import { Suspense, useMemo, useState } from 'react';
 import { BaseFilter, BasePagination } from '@/widgets/ListItems';
 import BaseLoading from '@/shared/ui/base-loading';
@@ -15,18 +14,10 @@ import ProductCard from '@/entities/product/ui/product-card';
 import { useGetAllProducts } from '@/entities/product/model';
 import { ApiParams } from '@/shared/types';
 
-// export const metadata = {
-//   title: 'Dashboard: Products'
-// };
-
-type pageProps = {
-  searchParams: Promise<SearchParams>;
-};
-
 const filterProperties: { value: string; label: string }[] = [
   {
     value: 'name',
-    label: 'Name'
+    label: 'Название'
   }
 ];
 
@@ -38,33 +29,36 @@ export default function Page() {
   } | null>(null);
 
   const params = useMemo(() => {
-    let params: ApiParams = {};
+    const params: ApiParams = {};
 
     if (filters) params.filters = filters;
-    if (pagination) params = { ...params, ...pagination };
+    // if (pagination) params = { ...params, ...pagination };
 
     return params;
   }, [filters, pagination]);
 
-  const { data: products, isLoading } = useGetAllProducts(params);
+  const { data: products, isLoading } = useGetAllProducts();
 
   return (
-    <PageContainer scrollable={false}>
+    <PageContainer>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title='Products'
-            description='Manage products (Server side table functionalities.)'
+            title='Продукты'
+            description='Управление продуктами (Серверные функции таблицы.)'
           />
           <div className='flex gap-2'>
             <Link
               href='/dashboard/products/new'
               className={cn(buttonVariants(), 'text-xs md:text-sm')}
             >
-              <IconPlus className='mr-2 h-4 w-4' /> Add New
+              <IconPlus className='mr-2 h-4 w-4' /> Добавить новый
             </Link>
             <BaseFilter
-              properties={filterProperties}
+              properties={filterProperties.map((prop) => ({
+                ...prop,
+                label: 'Фильтры'
+              }))}
               onChange={(value) => setFilters(value)}
             />
           </div>
@@ -77,14 +71,6 @@ export default function Page() {
             ))}
           </div>
         </Suspense>
-        {products ? (
-          <BasePagination
-            page={products?.page}
-            size={products?.size}
-            total={products?.totalItems}
-            onChange={(value) => setPagination(value)}
-          />
-        ) : null}
       </div>
     </PageContainer>
   );

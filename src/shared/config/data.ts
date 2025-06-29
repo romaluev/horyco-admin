@@ -7,14 +7,15 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp'
 ];
-export const STATUSES = [
+
+export const getStatuses = () => [
   {
     value: 'active',
-    label: 'Active'
+    label: 'Активный'
   },
   {
     value: 'archived',
-    label: 'Archived'
+    label: 'Архивирован'
   }
 ];
 
@@ -30,9 +31,9 @@ export type Product = {
 };
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
-export const navItems: NavItem[] = [
+export const getNavItems = (): NavItem[] => [
   {
-    title: 'Dashboard',
+    title: 'Панель управления',
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
@@ -40,7 +41,7 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Products',
+    title: 'Продукты',
     url: '/dashboard/products',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -48,7 +49,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Categories',
+    title: 'Категории',
     url: '/dashboard/categories',
     icon: 'pizza',
     shortcut: ['c', 'c'],
@@ -56,7 +57,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Employee',
+    title: 'Сотрудники',
     url: '/dashboard/employee',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -64,7 +65,7 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'Branches',
+    title: 'Филиалы',
     url: '/dashboard/branches',
     icon: 'product',
     shortcut: ['b', 'r'],

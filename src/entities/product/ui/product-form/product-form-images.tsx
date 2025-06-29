@@ -1,3 +1,5 @@
+'use client';
+
 import { FileUploader } from '@/shared/ui/file-uploader';
 import {
   FormControl,
@@ -18,7 +20,7 @@ export default function ProductFormImages() {
       name='image'
       render={({ field }) => (
         <FormItem className='md:col-span-6'>
-          <FormLabel>Images</FormLabel>
+          <FormLabel>Картинки продукта</FormLabel>
           <FormControl>
             <FileUploader
               variant='image'

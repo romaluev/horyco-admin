@@ -1,5 +1,5 @@
 import { delay } from '@/shared/config/mock-api';
-import { PieGraph } from '@/entities/overview/components/pie-graph';
+import { PieGraph } from '@/widgets/overview';
 
 export default async function Stats() {
   await delay(1000);

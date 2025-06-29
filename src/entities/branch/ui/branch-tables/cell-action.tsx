@@ -43,20 +43,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='h-8 w-8 p-0'>
-            <span className='sr-only'>Open menu</span>
+            <span className='sr-only'>Действия</span>
             <IconDotsVertical className='h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Действия</DropdownMenuLabel>
 
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/branches/${data.id}`)}
           >
-            <IconEdit className='mr-2 h-4 w-4' /> Update
+            <IconEdit className='mr-2 h-4 w-4' /> Редактировать
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsDeleteModalVisible(true)}>
-            <IconTrash className='mr-2 h-4 w-4' /> Delete
+            <IconTrash className='mr-2 h-4 w-4' /> Удалить
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

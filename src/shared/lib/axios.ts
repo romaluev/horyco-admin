@@ -1,13 +1,13 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import config from '../../../environments';
 
-export const BASE_API_URL = config.api_url;
+export const BASE_API_URL = 'https://oshposapi.021.uz';
 
 const api = axios.create({
-  baseURL: config.api_url || 'http://localhost:3000',
+  baseURL: BASE_API_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    credentials: 'include'
   }
 });
 
@@ -36,7 +36,9 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       Cookies.remove('access_token');
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/sign-in';
+        if (!window.location.href.includes('/auth/sign')) {
+          window.location.href = '/auth/sign-in';
+        }
       }
     }
 

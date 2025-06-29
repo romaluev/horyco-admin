@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { ProductTypeTable } from './product-type-table';
 import { ProductTypeForm } from './product-type-form';
@@ -25,7 +27,6 @@ export const ProductTypePage = () => {
 
       <ProductTypeTable />
 
-      {/* Диалог с формой добавления */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
           <DialogHeader>

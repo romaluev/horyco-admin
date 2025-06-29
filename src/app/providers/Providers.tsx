@@ -1,8 +1,8 @@
-'use client';
 import React from 'react';
-import { ActiveThemeProvider } from '../active-theme';
 import { AuthProvider } from '@/entities/auth/ui/auth-provider';
 import ReactQueryProvider from '@/app/providers/ReactQueryProvider';
+import { ActiveThemeProvider } from '@/shared/ui/active-theme';
+import { Toaster } from '@/shared/ui/base/sonner';
 
 export default function Providers({
   activeThemeValue,
@@ -13,6 +13,7 @@ export default function Providers({
 }) {
   return (
     <>
+      <Toaster />
       <ActiveThemeProvider initialTheme={activeThemeValue}>
         <ReactQueryProvider>
           <AuthProvider>{children}</AuthProvider>

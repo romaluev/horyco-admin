@@ -11,12 +11,12 @@ export const columns: ColumnDef<IEmployee>[] = [
     id: 'fullName',
     accessorKey: 'fullName',
     header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Имя' />
     ),
     cell: ({ cell }) => <div>{cell.getValue<IEmployee['fullName']>()}</div>,
     meta: {
-      label: 'Name',
-      placeholder: 'Search employer...',
+      label: 'Имя',
+      placeholder: 'Поиск сотрудника...',
       variant: 'text',
       icon: Text
     },
@@ -26,12 +26,12 @@ export const columns: ColumnDef<IEmployee>[] = [
     id: 'phone',
     accessorKey: 'phone',
     header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Phone' />
+      <DataTableColumnHeader column={column} title='Телефон' />
     ),
     cell: ({ cell }) => <div>{cell.getValue<IEmployee['phone']>()}</div>,
     meta: {
-      label: 'Phone',
-      placeholder: 'Search by phone...',
+      label: 'Телефон',
+      placeholder: 'Поиск по телефону...',
       variant: 'text',
       icon: Text
     },
@@ -41,7 +41,7 @@ export const columns: ColumnDef<IEmployee>[] = [
     id: 'createdAt',
     accessorKey: 'createdAt',
     header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Дата создания' />
     ),
     cell: ({ cell }) => {
       const date = new Date(cell.getValue<Date>());

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { IProductType } from '../../model/types';
 import { useDeleteProductType } from '../../model/mutations-product-type';
@@ -98,14 +100,13 @@ export const ProductTypeTable = () => {
         </TableBody>
       </Table>
 
-      {/* Диалог с формой редактирования */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
               {currentProductType
                 ? 'Редактирование категории'
-                : 'Добавление категории'}
+                : 'Добавление новой категории'}
             </DialogTitle>
           </DialogHeader>
           <ProductTypeForm
@@ -115,7 +116,6 @@ export const ProductTypeTable = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Диалог подтверждения удаления */}
       <AlertDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
@@ -124,8 +124,8 @@ export const ProductTypeTable = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Удалить категорию?</AlertDialogTitle>
             <AlertDialogDescription>
-              Вы уверены, что хотите удалить категорию &ldquo;
-              {currentProductType?.name}&rdquo;? Это действие нельзя отменить.
+              Вы уверены, что хотите удалить категорию &#34;
+              {currentProductType?.name}&#34;? Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

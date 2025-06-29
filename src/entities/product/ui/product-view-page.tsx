@@ -27,18 +27,18 @@ export default function ProductViewPage({ productId }: TProductViewPageProps) {
   }
 
   if (isError && !isNew) {
-    return <div className='p-4 text-red-500'>Error: {isError}</div>;
+    return <div className='p-4 text-red-500'>Ошибка: {isError}</div>;
   }
 
   if (!isNew && !product) {
-    return <div className='p-4'>The product doesn&#39;t exist</div>;
+    return <div className='p-4'>Продукт не существует</div>;
   }
 
   return (
     <Card className='mx-auto w-full'>
       <CardHeader>
         <CardTitle className='text-left text-2xl font-bold'>
-          {isNew ? 'Create New Product' : 'Edit Product'}
+          {isNew ? 'Создать новый продукт' : 'Редактировать продукт'}
         </CardTitle>
       </CardHeader>
       <CardContent>

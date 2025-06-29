@@ -1,3 +1,18 @@
+export interface IAdditionProduct {
+  name: string;
+  price: number;
+}
+
+export interface IAddition {
+  id: number;
+  name: string;
+  isRequired: boolean;
+  isMultiple: boolean;
+  productId: number;
+  limit: number;
+  additionProducts: IAdditionProduct[];
+}
+
 export interface IProduct {
   id: number;
   name: string;
@@ -12,6 +27,20 @@ export interface IProduct {
   files: {
     originalName: string;
   }[];
+  additions?: IAddition[];
+}
+
+export interface ICreateAdditionProductDto {
+  name: string;
+  price: number;
+}
+
+export interface ICreateAdditionDto {
+  name: string;
+  isRequired: boolean;
+  isMultiple: boolean;
+  limit: number;
+  additionProducts: ICreateAdditionProductDto[];
 }
 
 export interface ICreateProductDto {
@@ -22,6 +51,7 @@ export interface ICreateProductDto {
   stock?: number | null;
   status: string | null;
   productTypeId?: number;
+  additions?: ICreateAdditionDto[];
 }
 
 export interface IUpdateProductDto {
@@ -33,6 +63,7 @@ export interface IUpdateProductDto {
   status?: string;
   isMultiple?: boolean;
   productTypeId?: number;
+  additions?: ICreateAdditionDto[];
 }
 
 export interface IProductType {

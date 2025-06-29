@@ -1,4 +1,4 @@
-import { PieGraphSkeleton } from '@/entities/overview/components/pie-graph-skeleton';
+import { PieGraphSkeleton } from '@/widgets/overview';
 
 export default function Loading() {
   return <PieGraphSkeleton />;

@@ -15,33 +15,33 @@ export const columns: ColumnDef<IBranch>[] = [
     ),
     cell: ({ cell }) => <div>{cell.getValue<IBranch['name']>()}</div>,
     meta: {
-      label: 'Name',
-      placeholder: 'Search branches...',
+      label: 'Название',
+      placeholder: 'Поиск филиалов...',
       variant: 'text',
       icon: Text
     },
     enableColumnFilter: true
   },
   {
-    id: 'address',
+    id: 'Адрес',
     accessorKey: 'address',
     header: ({ column }: { column: Column<IBranch, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Address' />
+      <DataTableColumnHeader column={column} title='Адрес' />
     ),
     cell: ({ cell }) => <div>{cell.getValue<IBranch['address']>()}</div>,
     meta: {
-      label: 'Address',
-      placeholder: 'Search by address...',
+      label: 'Адрес',
+      placeholder: 'Поиск по адресу...',
       variant: 'text',
       icon: Text
     },
     enableColumnFilter: true
   },
   {
-    id: 'createdAt',
+    id: 'Дата создание',
     accessorKey: 'createdAt',
     header: ({ column }: { column: Column<IBranch, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Дата создание' />
     ),
     cell: ({ cell }) => {
       const date = new Date(cell.getValue<Date>());

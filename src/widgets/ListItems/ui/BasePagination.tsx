@@ -29,9 +29,9 @@ export const BasePagination = ({
 
   const totalPages = Math.ceil(total / pageSize);
 
-  useEffect(() => {
-    onChange({ page: currentPage, size: pageSize });
-  }, [currentPage, pageSize, onChange]);
+  // useEffect(() => {
+  //   onChange({ page: currentPage, size: pageSize });
+  // }, [currentPage, pageSize, onChange]);
 
   return (
     <Pagination>

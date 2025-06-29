@@ -18,7 +18,7 @@ export const login = async (
 
   Cookies.set('access_token', response.data.access_token, {
     expires: 7, // 7 days
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'strict'
   });
 
