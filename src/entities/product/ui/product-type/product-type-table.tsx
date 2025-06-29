@@ -31,10 +31,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
-import { useTranslation } from 'react-i18next';
 
 export const ProductTypeTable = () => {
-  const { t } = useTranslation();
   const { data: response, isLoading } = useGetAllProductTypes();
   const { mutate: deleteProductType } = useDeleteProductType();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -43,7 +41,7 @@ export const ProductTypeTable = () => {
     useState<IProductType | null>(null);
 
   if (isLoading) {
-    return <div>{t('dashboard.products.types.table.loading')}</div>;
+    return <div>Загрузка категорий...</div>;
   }
 
   const handleEdit = (productType: IProductType) => {
@@ -68,18 +66,10 @@ export const ProductTypeTable = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-              {t('dashboard.products.types.table.columns.id')}
-            </TableHead>
-            <TableHead>
-              {t('dashboard.products.types.table.columns.name')}
-            </TableHead>
-            <TableHead>
-              {t('dashboard.products.types.table.columns.description')}
-            </TableHead>
-            <TableHead>
-              {t('dashboard.products.types.table.columns.actions')}
-            </TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Название</TableHead>
+            <TableHead>Описание</TableHead>
+            <TableHead>Действия</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,8 +105,8 @@ export const ProductTypeTable = () => {
           <DialogHeader>
             <DialogTitle>
               {currentProductType
-                ? t('dashboard.products.types.form.title.edit')
-                : t('dashboard.products.types.form.title.create')}
+                ? 'Редактирование категории'
+                : 'Добавление новой категории'}
             </DialogTitle>
           </DialogHeader>
           <ProductTypeForm
@@ -132,19 +122,16 @@ export const ProductTypeTable = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('dashboard.products.types.delete.title')}
-            </AlertDialogTitle>
+            <AlertDialogTitle>Удалить категорию?</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('dashboard.products.types.delete.description', {
-                name: currentProductType?.name
-              })}
+              Вы уверены, что хотите удалить категорию "
+              {currentProductType?.name}"? Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('common.actions.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete}>
-              {t('common.actions.delete')}
+              Удалить
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

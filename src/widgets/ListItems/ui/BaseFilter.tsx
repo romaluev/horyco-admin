@@ -17,7 +17,6 @@ import {
 } from '@/shared/ui/base/popover';
 import { X, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
 
 interface Filter {
   property: string;
@@ -34,25 +33,24 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
   properties,
   onChange
 }) => {
-  const { t } = useTranslation();
   const [filters, setFilters] = useState<Filter[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   // Filter rules matching backend FilterRule enum
   const filterRules = [
-    { value: 'eq', label: t('common.filters.rules.eq') },
-    { value: 'neq', label: t('common.filters.rules.neq') },
-    { value: 'gt', label: t('common.filters.rules.gt') },
-    { value: 'gte', label: t('common.filters.rules.gte') },
-    { value: 'lt', label: t('common.filters.rules.lt') },
-    { value: 'lte', label: t('common.filters.rules.lte') },
-    { value: 'like', label: t('common.filters.rules.like') },
-    { value: 'nlike', label: t('common.filters.rules.nlike') },
-    { value: 'in', label: t('common.filters.rules.in') },
-    { value: 'nin', label: t('common.filters.rules.nin') },
-    { value: 'isnull', label: t('common.filters.rules.isnull') },
-    { value: 'isnotnull', label: t('common.filters.rules.isnotnull') }
+    { value: 'eq', label: 'равно' },
+    { value: 'neq', label: 'не равно' },
+    { value: 'gt', label: 'больше' },
+    { value: 'gte', label: 'больше или равно' },
+    { value: 'lt', label: 'меньше' },
+    { value: 'lte', label: 'меньше или равно' },
+    { value: 'like', label: 'содержит' },
+    { value: 'nlike', label: 'не содержит' },
+    { value: 'in', label: 'в списке' },
+    { value: 'nin', label: 'не в списке' },
+    { value: 'isnull', label: 'пусто' },
+    { value: 'isnotnull', label: 'не пусто' }
   ];
 
   // Normalize properties to { value, label } format
@@ -138,14 +136,13 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
       <PopoverTrigger asChild>
         <Button variant='outline' className='flex items-center gap-2'>
           <Filter className='h-4 w-4' />
-          {t('common.filters.title')}{' '}
-          {filters.length > 0 && `(${filters.length})`}
+          Фильтры {filters.length > 0 && `(${filters.length})`}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='mr-5 w-[600px] p-4'>
         <div className='space-y-4'>
           <div className='flex items-center justify-between'>
-            <h4 className='font-medium'>{t('common.filters.title')}</h4>
+            <h4 className='font-medium'>Фильтры</h4>
             <Button
               variant='ghost'
               size='sm'
@@ -154,12 +151,12 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                 onChange('', []);
               }}
             >
-              {t('common.actions.clearAll')}
+              Очистить все
             </Button>
           </div>
           {filters.length === 0 ? (
             <p className='text-muted-foreground text-sm'>
-              {t('common.filters.noFilters')}
+              Нет активных фильтров
             </p>
           ) : (
             filters.map((filter, index) => (
@@ -171,7 +168,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                   }
                 >
                   <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder={t('common.filters.property')} />
+                    <SelectValue placeholder='Выберите поле' />
                   </SelectTrigger>
                   <SelectContent>
                     {normalizedProperties.map((prop) => (
@@ -186,7 +183,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                   onValueChange={(value) => updateFilter(index, 'rule', value)}
                 >
                   <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder={t('common.filters.rule')} />
+                    <SelectValue placeholder='Выберите правило' />
                   </SelectTrigger>
                   <SelectContent>
                     {filterRules.map((rule) => (
@@ -198,7 +195,7 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                 </Select>
                 {filter.rule !== 'isnull' && filter.rule !== 'isnotnull' && (
                   <Input
-                    placeholder={t('common.filters.value')}
+                    placeholder='Введите значение'
                     value={filter.value}
                     onChange={(e) =>
                       updateFilter(index, 'value', e.target.value)
@@ -218,11 +215,9 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
           )}
           <div className='flex gap-2'>
             <Button variant='outline' onClick={addFilter}>
-              {t('common.filters.addFilter')}
+              Добавить фильтр
             </Button>
-            <Button onClick={() => setIsOpen(false)}>
-              {t('common.actions.save')}
-            </Button>
+            <Button onClick={() => setIsOpen(false)}>Сохранить</Button>
           </div>
         </div>
       </PopoverContent>

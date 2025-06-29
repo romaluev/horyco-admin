@@ -22,10 +22,8 @@ import { useFormContext } from 'react-hook-form';
 import { productAPi, useGetAllProductTypes } from '@/entities/product/model';
 import { useQueryClient } from '@tanstack/react-query';
 import { productKeys } from '../../model/query-keys';
-import { useTranslation } from 'react-i18next';
 
 export const ProductFormType = () => {
-  const { t } = useTranslation();
   const form = useFormContext();
   const queryClient = useQueryClient();
   const { data: productTypes } = useGetAllProductTypes();
@@ -62,15 +60,13 @@ export const ProductFormType = () => {
       name='productTypeId'
       render={({ field }) => (
         <FormItem className='md:col-span-3'>
-          <FormLabel>{t('dashboard.products.form.type.label')}</FormLabel>
+          <FormLabel>Категория</FormLabel>
           <div className='flex gap-1'>
             {newCategory ? (
               <>
                 <FormControl>
                   <Input
-                    placeholder={t(
-                      'dashboard.products.form.type.newType.name.placeholder'
-                    )}
+                    placeholder='Название категории'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewName(e.target.value)
                     }
@@ -78,9 +74,7 @@ export const ProductFormType = () => {
                 </FormControl>
                 <FormControl>
                   <Input
-                    placeholder={t(
-                      'dashboard.products.form.type.newType.description.placeholder'
-                    )}
+                    placeholder='Описание категории'
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNewDescription(e.target.value)
                     }
@@ -114,11 +108,7 @@ export const ProductFormType = () => {
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
-                        <SelectValue
-                          placeholder={t(
-                            'dashboard.products.form.type.placeholder'
-                          )}
-                        />
+                        <SelectValue placeholder='Выберите категорию' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -138,7 +128,7 @@ export const ProductFormType = () => {
                   onClick={handleNewCategory}
                   variant='outline'
                 >
-                  {t('common.actions.new')} <Plus />
+                  Новая <Plus />
                 </Button>
               </>
             )}

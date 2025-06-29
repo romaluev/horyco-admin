@@ -9,14 +9,12 @@ import {
 import { useGetBranchById } from '../model';
 import BranchForm from './branch-form';
 import BaseLoading from '@/shared/ui/base-loading';
-import { useTranslation } from 'react-i18next';
 
 type TBranchViewPageProps = {
   branchId: string;
 };
 
 export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
-  const { t } = useTranslation();
   const isNew = branchId === 'new';
   const {
     data: branch,
@@ -25,11 +23,7 @@ export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
   } = useGetBranchById(Number(branchId));
 
   if (isError && !isNew) {
-    return (
-      <div className='p-4 text-red-500'>
-        {t('dashboard.branches.errors.loadError', { message: isError })}
-      </div>
-    );
+    return <div className='p-4 text-red-500'>Создать {isError}</div>;
   }
 
   if (!isNew && isLoading) {
@@ -37,7 +31,7 @@ export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
   }
 
   if (!isNew && !branch) {
-    return <div className='p-4'>{t('dashboard.branches.errors.notFound')}</div>;
+    return <div className='p-4'>Филиал не существует</div>;
   }
 
   return (
@@ -45,8 +39,8 @@ export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
       <CardHeader>
         <CardTitle className='text-left text-2xl font-bold'>
           {isNew
-            ? t('dashboard.branches.form.title.create')
-            : t('dashboard.branches.form.title.edit', { name: branch?.name })}
+            ? 'Создать новый филиал'
+            : `Редактировать филиал: ${branch?.name}`}
         </CardTitle>
       </CardHeader>
       <CardContent>

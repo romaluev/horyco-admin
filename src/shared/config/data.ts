@@ -1,5 +1,4 @@
 import { NavItem } from '../types';
-import i18next from 'i18next';
 
 export const MAX_FILE_SIZE = 5000000;
 export const ACCEPTED_IMAGE_TYPES = [
@@ -9,14 +8,14 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/webp'
 ];
 
-export const getStatuses = (t: (key: string) => string) => [
+export const getStatuses = () => [
   {
     value: 'active',
-    label: t('common.status.active')
+    label: 'Активный'
   },
   {
     value: 'archived',
-    label: t('common.status.archived')
+    label: 'Архивирован'
   }
 ];
 
@@ -32,9 +31,9 @@ export type Product = {
 };
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
-export const getNavItems = (t: (key: string) => string): NavItem[] => [
+export const getNavItems = (): NavItem[] => [
   {
-    title: t('common.navigation.dashboard'),
+    title: 'Панель управления',
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
@@ -42,7 +41,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: t('common.navigation.products'),
+    title: 'Продукты',
     url: '/dashboard/products',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -50,7 +49,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [] // No child items
   },
   {
-    title: t('common.navigation.categories'),
+    title: 'Категории',
     url: '/dashboard/categories',
     icon: 'pizza',
     shortcut: ['c', 'c'],
@@ -58,7 +57,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [] // No child items
   },
   {
-    title: t('common.navigation.employee'),
+    title: 'Сотрудники',
     url: '/dashboard/employee',
     icon: 'product',
     shortcut: ['p', 'p'],
@@ -66,7 +65,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [] // No child items
   },
   {
-    title: t('common.navigation.branches'),
+    title: 'Филиалы',
     url: '/dashboard/branches',
     icon: 'product',
     shortcut: ['b', 'r'],
@@ -74,7 +73,7 @@ export const getNavItems = (t: (key: string) => string): NavItem[] => [
     items: [] // No child items
   },
   {
-    title: t('common.navigation.halls'),
+    title: 'Залы',
     url: '/dashboard/halls',
     icon: 'kanban',
     shortcut: ['h', 'l'],

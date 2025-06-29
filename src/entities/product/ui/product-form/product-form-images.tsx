@@ -10,10 +10,8 @@ import {
 } from '@/shared/ui/base/form';
 import { useFormContext } from 'react-hook-form';
 import { MAX_FILE_SIZE } from '@/shared/config/data';
-import { useTranslation } from 'react-i18next';
 
 export default function ProductFormImages() {
-  const { t } = useTranslation();
   const form = useFormContext();
 
   return (
@@ -22,7 +20,7 @@ export default function ProductFormImages() {
       name='image'
       render={({ field }) => (
         <FormItem className='md:col-span-6'>
-          <FormLabel>{t('dashboard.products.form.images.label')}</FormLabel>
+          <FormLabel>Картинки продукта</FormLabel>
           <FormControl>
             <FileUploader
               variant='image'

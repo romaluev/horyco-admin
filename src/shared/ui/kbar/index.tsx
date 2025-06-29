@@ -12,12 +12,10 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import RenderResults from './render-result';
 import useThemeSwitching from './use-theme-switching';
-import { useTranslation } from 'react-i18next';
 
 export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { t } = useTranslation();
-  const navItems = getNavItems(t);
+  const navItems = getNavItems();
 
   // These action are for the navigation
   const actions = useMemo(() => {
@@ -35,8 +33,8 @@ export default function KBar({ children }: { children: React.ReactNode }) {
               name: navItem.title,
               shortcut: navItem.shortcut,
               keywords: navItem.title.toLowerCase(),
-              section: 'Navigation',
-              subtitle: `Go to ${navItem.title}`,
+              section: 'Навигация',
+              subtitle: `Перейти к ${navItem.title}`,
               perform: () => navigateTo(navItem.url)
             }
           : null;
@@ -49,7 +47,7 @@ export default function KBar({ children }: { children: React.ReactNode }) {
           shortcut: childItem.shortcut,
           keywords: childItem.title.toLowerCase(),
           section: navItem.title,
-          subtitle: `Go to ${childItem.title}`,
+          subtitle: `Перейти к ${childItem.title}`,
           perform: () => navigateTo(childItem.url)
         })) ?? [];
 

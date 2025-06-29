@@ -15,11 +15,9 @@ import { Label } from '@/shared/ui/base/label';
 import { Card, CardContent } from '@/shared/ui/base/card';
 import { useState } from 'react';
 import { Switch } from '@/shared/ui/base/switch';
-import { useTranslation } from 'react-i18next';
 
 export function ProductFormAdditions() {
   const form = useFormContext();
-  const { t } = useTranslation();
   const [expandedAddition, setExpandedAddition] = useState<number | null>(null);
 
   const { fields, append, remove } = useFieldArray({
@@ -49,9 +47,7 @@ export function ProductFormAdditions() {
   return (
     <div className='space-y-4 md:col-span-6'>
       <div className='flex items-center justify-between'>
-        <h3 className='text-lg font-medium'>
-          {t('dashboard.products.form.additions.title')}
-        </h3>
+        <h3 className='text-lg font-medium'>Дополнения</h3>
         <Button
           type='button'
           variant='outline'
@@ -59,7 +55,7 @@ export function ProductFormAdditions() {
           size='sm'
         >
           <Plus className='mr-1 h-4 w-4' />
-          {t('dashboard.products.form.additions.addNew')}
+          Добавить опцию
         </Button>
       </div>
 
@@ -76,7 +72,7 @@ export function ProductFormAdditions() {
                 <ChevronDown className='mr-1 h-4 w-4' />
               )}
               {form.watch(`additions.${index}.name`) ||
-                `${t('dashboard.products.form.additions.name.label')} ${index + 1}`}
+                `Название дополнения ${index + 1}`}
             </span>
             <Button
               variant='secondary'
@@ -99,16 +95,9 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.name`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t('dashboard.products.form.additions.name.label')}
-                      </FormLabel>
+                      <FormLabel>Название дополнения</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder={t(
-                            'dashboard.products.form.additions.name.placeholder'
-                          )}
-                          {...field}
-                        />
+                        <Input placeholder='Например: Выбор мяса' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,16 +108,12 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.limit`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t('dashboard.products.form.additions.limit.label')}
-                      </FormLabel>
+                      <FormLabel>Лимит выбора</FormLabel>
                       <FormControl>
                         <Input
                           type='number'
                           min='1'
-                          placeholder={t(
-                            'dashboard.products.form.additions.limit.placeholder'
-                          )}
+                          placeholder='Максимальное количество'
                           {...field}
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value) || 1)
@@ -153,9 +138,7 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>
-                        {t('dashboard.products.form.additions.required.label')}
-                      </FormLabel>
+                      <FormLabel>Обязательный выбор</FormLabel>
                     </FormItem>
                   )}
                 />
@@ -171,9 +154,7 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>
-                        {t('dashboard.products.form.additions.multiple.label')}
-                      </FormLabel>
+                      <FormLabel>Множественный выбор</FormLabel>
                     </FormItem>
                   )}
                 />
@@ -187,7 +168,8 @@ export function ProductFormAdditions() {
 
       {fields.length === 0 && (
         <div className='rounded-md border border-dashed p-4 text-center text-gray-500'>
-          {t('dashboard.products.form.additions.noAdditions')}
+          Нет дополнений. Нажмите «Добавить опцию» для создания вариаций
+          продукта.
         </div>
       )}
     </div>
@@ -195,7 +177,6 @@ export function ProductFormAdditions() {
 }
 
 function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
-  const { t } = useTranslation();
   const form = useFormContext();
   const { fields, remove, append } = useFieldArray({
     control: form.control,
@@ -212,17 +193,18 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
   return (
     <div className='mt-4 mb-2'>
       <div className='mb-3 flex items-center justify-between'>
-        <Label>{t('dashboard.products.form.additions.products.title')}</Label>
+        <Label>Элементы дополнения</Label>
         <Button type='button' variant='outline' onClick={addItem} size='sm'>
           <Plus className='mr-1 h-4 w-4' />
-          {t('dashboard.products.form.additions.products.addNew')}
+          Добавить элемент
         </Button>
       </div>
 
       <div className='space-y-3'>
         {!fields.length ? (
           <div className='rounded-md border border-dashed p-3 text-center text-gray-500'>
-            {t('dashboard.products.form.additions.products.noItems')}
+            Элементы не добавлены. Добавьте элементы, которые клиенты смогут
+            выбрать.
           </div>
         ) : (
           fields.map((field, productIndex) => (
@@ -233,12 +215,7 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                 render={({ field }) => (
                   <FormItem className='flex-1'>
                     <FormControl>
-                      <Input
-                        placeholder={t(
-                          'dashboard.products.form.additions.products.name.placeholder'
-                        )}
-                        {...field}
-                      />
+                      <Input placeholder='Название элемента' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -252,9 +229,7 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                     <FormControl>
                       <Input
                         type='number'
-                        placeholder={t(
-                          'dashboard.products.form.additions.products.price.placeholder'
-                        )}
+                        placeholder='Цена'
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />

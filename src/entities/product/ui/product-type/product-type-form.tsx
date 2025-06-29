@@ -20,17 +20,13 @@ import {
 import { Input } from '@/shared/ui/base/input';
 import { Textarea } from '@/shared/ui/base/textarea';
 import { Button } from '@/shared/ui/base/button';
-import { useTranslation } from 'react-i18next';
 
-const formSchema = (t: any) =>
-  z.object({
-    name: z.string().min(1, t('dashboard.products.types.form.name.validation')),
-    description: z
-      .string()
-      .min(1, t('dashboard.products.types.form.description.validation'))
-  });
+const formSchema = z.object({
+  name: z.string().min(1, 'Название обязательно'),
+  description: z.string().min(1, 'Описание обязательно')
+});
 
-type FormValues = z.infer<ReturnType<typeof formSchema>>;
+type FormValues = z.infer<typeof formSchema>;
 
 interface ProductTypeFormProps {
   initialData?: IProductType | null;
@@ -41,7 +37,6 @@ export const ProductTypeForm = ({
   initialData,
   onSuccess
 }: ProductTypeFormProps) => {
-  const { t } = useTranslation();
   const { mutate: createProductType, isPending: isCreating } =
     useCreateProductType();
   const { mutate: updateProductType, isPending: isUpdating } =
@@ -50,7 +45,7 @@ export const ProductTypeForm = ({
   const isSubmitting = isCreating || isUpdating;
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema(t)),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || '',
       description: initialData?.description || ''
@@ -82,16 +77,9 @@ export const ProductTypeForm = ({
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t('dashboard.products.types.form.name.label')}
-              </FormLabel>
+              <FormLabel>Название</FormLabel>
               <FormControl>
-                <Input
-                  placeholder={t(
-                    'dashboard.products.types.form.name.placeholder'
-                  )}
-                  {...field}
-                />
+                <Input placeholder='Введите название категории' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,16 +91,9 @@ export const ProductTypeForm = ({
           name='description'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t('dashboard.products.types.form.description.label')}
-              </FormLabel>
+              <FormLabel>Описание</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder={t(
-                    'dashboard.products.types.form.description.placeholder'
-                  )}
-                  {...field}
-                />
+                <Textarea placeholder='Введите описание категории' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -121,10 +102,10 @@ export const ProductTypeForm = ({
 
         <Button type='submit' disabled={isSubmitting}>
           {isSubmitting
-            ? t('common.actions.saving')
+            ? 'Сохранение...'
             : initialData
-              ? t('common.actions.update')
-              : t('common.actions.create')}
+              ? 'Обновить'
+              : 'Создать'}
         </Button>
       </form>
     </Form>

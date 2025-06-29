@@ -13,17 +13,15 @@ import BaseLoading from '@/shared/ui/base-loading';
 import ProductCard from '@/entities/product/ui/product-card';
 import { useGetAllProducts } from '@/entities/product/model';
 import { ApiParams } from '@/shared/types';
-import { useTranslation } from 'react-i18next';
 
 const filterProperties: { value: string; label: string }[] = [
   {
     value: 'name',
-    label: 'name'
+    label: 'Название'
   }
 ];
 
 export default function Page() {
-  const { t } = useTranslation();
   const [filters, setFilters] = useState('');
   const [pagination, setPagination] = useState<{
     page: number;
@@ -46,21 +44,20 @@ export default function Page() {
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title={t('dashboard.products.title')}
-            description={t('dashboard.products.description')}
+            title='Продукты'
+            description='Управление продуктами (Серверные функции таблицы.)'
           />
           <div className='flex gap-2'>
             <Link
               href='/dashboard/products/new'
               className={cn(buttonVariants(), 'text-xs md:text-sm')}
             >
-              <IconPlus className='mr-2 h-4 w-4' />{' '}
-              {t('dashboard.products.actions.addNew')}
+              <IconPlus className='mr-2 h-4 w-4' /> Добавить новый
             </Link>
             <BaseFilter
               properties={filterProperties.map((prop) => ({
                 ...prop,
-                label: t(`dashboard.products.form.${prop.value}.label`)
+                label: 'Фильтры'
               }))}
               onChange={(value) => setFilters(value)}
             />

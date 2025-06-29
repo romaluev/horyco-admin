@@ -10,25 +10,21 @@ import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export default function Page() {
-  const { t } = useTranslation();
-
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title={t('dashboard.employee.title')}
-            description={t('dashboard.employee.description')}
+            title='Сотрудники'
+            description='Управление сотрудниками вашей организации'
           />
           <Link
             href='/dashboard/employee/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
-            <IconPlus className='mr-2 h-4 w-4' />{' '}
-            {t('dashboard.employee.addNew')}
+            <IconPlus className='mr-2 h-4 w-4' /> Добавить сотрудника
           </Link>
         </div>
         <Separator />

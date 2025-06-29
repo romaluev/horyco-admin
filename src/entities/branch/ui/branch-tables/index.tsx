@@ -7,7 +7,6 @@ import { useDataTable } from '@/shared/hooks/use-data-table';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { parseAsInteger, useQueryState } from 'nuqs';
-import { useTranslation } from 'react-i18next';
 
 interface BranchTableParams<TData, TValue> {
   data: TData[];
@@ -20,7 +19,6 @@ export function BranchTable<TData, TValue>({
   totalItems,
   columns
 }: BranchTableParams<TData, TValue>) {
-  const { t } = useTranslation();
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
 
   const pageCount = Math.ceil(totalItems / pageSize);

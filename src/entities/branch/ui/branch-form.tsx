@@ -21,10 +21,8 @@ import {
   useCreateBranch,
   useUpdateBranch
 } from '@/entities/branch/model';
-import { useTranslation } from 'react-i18next';
 
 export default function BranchForm({ initialData }: { initialData?: IBranch }) {
-  const { t } = useTranslation();
   const router = useRouter();
 
   const { mutateAsync: createBranch, isPending: isCreatePending } =
@@ -35,10 +33,10 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
   // Form schema with validation
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: t('dashboard.branches.form.fields.name.validation')
+      message: 'Название филиала должно содержать минимум 2 символа'
     }),
     address: z.string().min(5, {
-      message: t('dashboard.branches.form.fields.address.validation')
+      message: 'Адрес должен содержать минимум 5 символов'
     })
   });
 
@@ -82,16 +80,9 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.branches.form.fields.name.label')}
-                </FormLabel>
+                <FormLabel>Название филиала</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={t(
-                      'dashboard.branches.form.fields.name.placeholder'
-                    )}
-                    {...field}
-                  />
+                  <Input placeholder='Введите название филиала' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,16 +93,9 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
             name='address'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.branches.form.fields.address.label')}
-                </FormLabel>
+                <FormLabel>Адрес</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={t(
-                      'dashboard.branches.form.fields.address.placeholder'
-                    )}
-                    {...field}
-                  />
+                  <Input placeholder='Введите адрес филиала' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,9 +103,7 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
           />
         </div>
         <Button type='submit' disabled={isCreatePending || isUpdatePending}>
-          {initialData
-            ? t('common.actions.update')
-            : t('common.actions.create')}
+          {initialData ? 'Обновить' : 'Создать'}
         </Button>
       </form>
     </Form>

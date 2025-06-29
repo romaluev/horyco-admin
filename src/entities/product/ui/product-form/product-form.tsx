@@ -30,20 +30,23 @@ import {
 } from '@/shared/config/data';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+import { productKeys } from '@/entities/product/model/query-keys';
 
 const additionProductSchema = z.object({
-  name: z.string().min(1, { message: 'Item name is required' }),
-  price: z.number().min(0, { message: 'Price must be a positive number' })
+  name: z.string().min(1, { message: 'Название элемента обязательно' }),
+  price: z.number().min(0, { message: 'Цена должна быть положительным числом' })
 });
 
 const additionSchema = z.object({
   name: z
     .string()
-    .min(2, { message: 'Addition name must be at least 2 characters' }),
+    .min(2, {
+      message: 'Название дополнения должно содержать минимум 2 символа'
+    }),
   isRequired: z.boolean(),
   isMultiple: z.boolean(),
-  limit: z.number().min(1, { message: 'Limit must be at least 1' }),
+  limit: z.number().min(1, { message: 'Лимит должен быть не менее 1' }),
   additionProducts: z.array(additionProductSchema).min(0)
 });
 
@@ -52,14 +55,14 @@ const formSchema = z.object({
     .any()
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`
+      'Максимальный размер файла 5MB.'
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.'
+      'Допускаются файлы .jpg, .jpeg, .png и .webp'
     ),
   name: z.string().min(2, {
-    message: 'Product name must be at least 2 characters.'
+    message: 'Название должно содержать минимум 2 символа'
   }),
   productTypeId: z.number().min(1),
   status: z.string(),
@@ -74,12 +77,12 @@ export default function ProductForm({
 }: {
   initialData?: IProduct;
 }) {
-  const { t } = useTranslation();
   const { mutateAsync: createProductMutation } = useCreateProduct();
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
   const { mutateAsync: attachImages } = useAttachProductImages();
   const [deletedImageIds] = useState<number[]>([]);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -126,6 +129,7 @@ export default function ProductForm({
       }
     }
 
+    queryClient.invalidateQueries({ queryKey: productKeys.all() });
     router.push('/dashboard/products');
   };
 
@@ -140,12 +144,9 @@ export default function ProductForm({
             name='name'
             render={({ field }) => (
               <FormItem className='md:col-span-3'>
-                <FormLabel>{t('dashboard.products.form.name.label')}</FormLabel>
+                <FormLabel>Название</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={t('dashboard.products.form.name.placeholder')}
-                    {...field}
-                  />
+                  <Input placeholder='Введите название продукта' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,13 +160,11 @@ export default function ProductForm({
             name='price'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>
-                  {t('dashboard.products.form.price.label')}
-                </FormLabel>
+                <FormLabel>Цена</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder={t('dashboard.products.form.price.placeholder')}
+                    placeholder='Введите цену'
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -180,13 +179,11 @@ export default function ProductForm({
             name='stock'
             render={({ field }) => (
               <FormItem className='md:col-span-2'>
-                <FormLabel>
-                  {t('dashboard.products.form.stock.label')}
-                </FormLabel>
+                <FormLabel>Количество</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder={t('dashboard.products.form.stock.placeholder')}
+                    placeholder='Введите количество'
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -201,14 +198,10 @@ export default function ProductForm({
             name='description'
             render={({ field }) => (
               <FormItem className='md:col-span-6'>
-                <FormLabel>
-                  {t('dashboard.products.form.description.label')}
-                </FormLabel>
+                <FormLabel>Описание</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder={t(
-                      'dashboard.products.form.description.placeholder'
-                    )}
+                    placeholder='Введите описание продукта'
                     className='resize-none'
                     {...field}
                   />
@@ -221,9 +214,7 @@ export default function ProductForm({
           <ProductFormAdditions />
 
           <Button type='submit' className='w-full md:w-auto'>
-            {initialData
-              ? t('dashboard.products.form.actions.update')
-              : t('dashboard.products.form.actions.create')}
+            {initialData ? 'Обновить продукт' : 'Создать продукт'}
           </Button>
         </div>
       </form>

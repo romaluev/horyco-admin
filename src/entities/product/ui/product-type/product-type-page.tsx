@@ -11,21 +11,17 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/shared/ui/base/dialog';
-import { useTranslation } from 'react-i18next';
 
 export const ProductTypePage = () => {
-  const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
     <div className='container mx-auto space-y-4 p-4'>
       <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>
-          {t('dashboard.products.types.title')}
-        </h1>
+        <h1 className='text-2xl font-bold'>Категории продуктов</h1>
         <Button onClick={() => setIsFormOpen(true)}>
           <IconPlus className='mr-2' size={18} />
-          {t('dashboard.products.types.addNew')}
+          Добавить категорию
         </Button>
       </div>
 
@@ -34,9 +30,7 @@ export const ProductTypePage = () => {
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {t('dashboard.products.types.form.title.create')}
-            </DialogTitle>
+            <DialogTitle>Добавление новой категории</DialogTitle>
           </DialogHeader>
           <ProductTypeForm onSuccess={() => setIsFormOpen(false)} />
         </DialogContent>

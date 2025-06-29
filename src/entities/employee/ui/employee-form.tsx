@@ -26,14 +26,12 @@ import { PhoneInput } from '@/shared/ui/base/phone-input';
 import PasswordInput from '@/shared/ui/base/passsword-input';
 import { useCreateEmployer, useUpdateEmployer } from '../model';
 import { useGetAllBranches } from '@/entities/branch/model/queries';
-import { useTranslation } from 'react-i18next';
 
 export default function EmployeeForm({
   initialData
 }: {
   initialData?: IEmployee;
 }) {
-  const { t } = useTranslation();
   const router = useRouter();
 
   const { data: branches } = useGetAllBranches();
@@ -42,11 +40,11 @@ export default function EmployeeForm({
 
   const formSchema = z.object({
     fullName: z.string().min(2, {
-      message: t('dashboard.employee.form.fields.fullName.validation')
+      message: 'Имя должно содержать минимум 2 символа'
     }),
     phone: z.string().min(4),
     password: z.string().min(4, {
-      message: t('dashboard.employee.form.fields.password.validation')
+      message: 'Пароль должен содержать минимум 4 символа'
     }),
     confirmPassword: z.string(),
     branchId: z.number()
@@ -98,14 +96,10 @@ export default function EmployeeForm({
             name='fullName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.employee.form.fields.fullName.label')}
-                </FormLabel>
+                <FormLabel>Полное имя</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t(
-                      'dashboard.employee.form.fields.fullName.placeholder'
-                    )}
+                    placeholder='Введите полное имя'
                     {...field}
                     disabled={isPending}
                   />
@@ -120,15 +114,11 @@ export default function EmployeeForm({
             name='phone'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.employee.form.fields.phone.label')}
-                </FormLabel>
+                <FormLabel>Телефон</FormLabel>
                 <FormControl>
                   <PhoneInput
                     defaultCountry={'UZ'}
-                    placeholder={t(
-                      'dashboard.employee.form.fields.phone.placeholder'
-                    )}
+                    placeholder='90 123 45 67'
                     limitMaxLength={true}
                     countries={['UZ']}
                     {...field}
@@ -144,16 +134,9 @@ export default function EmployeeForm({
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.employee.form.fields.password.label')}
-                </FormLabel>
+                <FormLabel>Пароль</FormLabel>
                 <FormControl>
-                  <PasswordInput
-                    placeholder={t(
-                      'dashboard.employee.form.fields.password.placeholder'
-                    )}
-                    {...field}
-                  />
+                  <PasswordInput placeholder='Введите пароль' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,16 +148,9 @@ export default function EmployeeForm({
             name='confirmPassword'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.employee.form.fields.confirmPassword.label')}
-                </FormLabel>
+                <FormLabel>Повторите пароль</FormLabel>
                 <FormControl>
-                  <PasswordInput
-                    placeholder={t(
-                      'dashboard.employee.form.fields.confirmPassword.placeholder'
-                    )}
-                    {...field}
-                  />
+                  <PasswordInput placeholder='Повторите пароль' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -186,20 +162,14 @@ export default function EmployeeForm({
             name='branchId'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t('dashboard.employee.form.fields.branch.label')}
-                </FormLabel>
+                <FormLabel>Филиал</FormLabel>
                 <Select
                   onValueChange={(v) => field.onChange(Number(v))}
                   defaultValue={String(field.value || '')}
                 >
                   <FormControl>
                     <SelectTrigger className='w-full'>
-                      <SelectValue
-                        placeholder={t(
-                          'dashboard.employee.form.fields.branch.placeholder'
-                        )}
-                      />
+                      <SelectValue placeholder='Выберите филиал' />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -216,9 +186,7 @@ export default function EmployeeForm({
           />
         </div>
         <Button type='submit' disabled={isPending}>
-          {initialData
-            ? t('dashboard.employee.form.submit.update')
-            : t('dashboard.employee.form.submit.create')}
+          {initialData ? 'Обновить информацию' : 'Создать сотрудника'}
         </Button>
       </form>
     </Form>
