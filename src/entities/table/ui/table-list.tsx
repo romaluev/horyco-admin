@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import BaseLoading from '@/shared/ui/base-loading';
 import { useTableList } from '../model';
-import { TableCard } from './TableCard';
+import { TableCard } from './table-card';
 
 type TableListProps = {
   UpdateButton?: React.ComponentType<{ id: number }>;
@@ -9,10 +9,11 @@ type TableListProps = {
 };
 
 export const TableList = ({ UpdateButton, DeleteButton }: TableListProps) => {
-  const { data: tables } = useTableList();
+  const { data: tables, isLoading } = useTableList();
 
   return (
     <Suspense fallback={<BaseLoading className='py-20' />}>
+      {isLoading && <BaseLoading />}
       {tables?.items.length === 0 && (
         <p className='text-center'>Вы еще не добавили столы</p>
       )}

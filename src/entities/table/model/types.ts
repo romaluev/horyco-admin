@@ -6,6 +6,7 @@ export interface ITable {
   xPosition: number;
   yPosition: number;
   hallId: number;
+  number: number;
   isAvailable: boolean;
 }
 
@@ -17,6 +18,7 @@ export interface ICreateTableDto {
   yPosition: number;
   hallId: number;
   isAvailable: boolean;
+  number: number;
 }
 
 export interface IUpdateTableDto {
@@ -27,4 +29,5 @@ export interface IUpdateTableDto {
   yPosition?: number;
   hallId?: number;
   isAvailable?: boolean;
+  number: number;
 }

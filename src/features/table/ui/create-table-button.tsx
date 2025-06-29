@@ -49,6 +49,7 @@ export const CreateTableButton = () => {
       name: '',
       size: 1,
       shape: 'circle',
+      number: 0,
       xPosition: 0,
       yPosition: 0,
       hallId: 1,
@@ -96,6 +97,19 @@ export const CreateTableButton = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name='number'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Номер стола</FormLabel>
+                  <FormControl>
+                    <Input type='number' min={1} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className='grid grid-cols-2 gap-2'>
               <FormField
                 control={form.control}
@@ -133,34 +147,6 @@ export const CreateTableButton = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className='grid grid-cols-2 gap-4'>
-              <FormField
-                control={form.control}
-                name='xPosition'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Позиция X</FormLabel>
-                    <FormControl>
-                      <Input type='number' min={0} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='yPosition'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Позиция Y</FormLabel>
-                    <FormControl>
-                      <Input type='number' min={0} {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

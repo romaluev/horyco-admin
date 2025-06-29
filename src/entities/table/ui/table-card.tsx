@@ -2,6 +2,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
@@ -23,13 +24,20 @@ export const TableCard = ({
   return (
     <Card className={className}>
       <CardHeader className='grid-rows-1 items-center'>
-        <CardTitle>{table.name}</CardTitle>
+        <CardTitle>Стол: #{table.number}</CardTitle>
         <CardAction className='row-span-1 grid grid-cols-2 gap-2'>
           {UpdateButton && <UpdateButton id={table.id} />}
           {DeleteButton && <DeleteButton id={table.id} />}
         </CardAction>
       </CardHeader>
-      <CardContent>{<Armchair />}</CardContent>
+      <CardContent>
+        <CardDescription>
+          <p className='text-md flex items-center gap-1'>
+            <Armchair size={18} />
+            Количество мест: <strong>{table.size}</strong>
+          </p>
+        </CardDescription>
+      </CardContent>
     </Card>
   );
 };

@@ -11,5 +11,6 @@ export const tableSchema = z.object({
     .number()
     .min(0, 'Позиция Y должна быть больше или равна 0'),
   hallId: z.coerce.number().min(1, 'Зал обязателен'),
+  number: z.coerce.number().min(1),
   isAvailable: z.boolean()
 });

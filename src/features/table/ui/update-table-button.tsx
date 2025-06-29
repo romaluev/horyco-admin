@@ -31,9 +31,11 @@ import {
 import { useUpdateTable } from '@/entities/table/model/mutations';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { Checkbox } from '@/shared/ui/base/checkbox';
 import { useTableById } from '@/entities/table/model';
 import { tableSchema } from '../model/contract';
+import { TABLE_SHAPES } from '@/features/table/model/constants';
+import { useGetAllHalls } from '@/entities/hall/model/queries';
+import { Switch } from '@/shared/ui/base/switch';
 
 type FormValues = z.infer<typeof tableSchema>;
 
@@ -41,6 +43,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
   const [open, setOpen] = useState(false);
   const { data: table } = useTableById(id);
   const { mutate: updateTable, isPending } = useUpdateTable();
+  const { data: halls } = useGetAllHalls();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(tableSchema),
@@ -51,7 +54,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
       xPosition: table?.xPosition,
       yPosition: table?.yPosition,
       hallId: table?.hallId,
-      isAvailable: table?.isAvailable
+      isAvailable: !!table?.isAvailable
     }
   });
 
@@ -64,7 +67,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
         xPosition: table?.xPosition,
         yPosition: table?.yPosition,
         hallId: table?.hallId,
-        isAvailable: table?.isAvailable
+        isAvailable: !!table?.isAvailable
       });
     }
   }, [open, table, form]);
@@ -72,7 +75,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
   const onSubmit = (data: FormValues) => {
     if (table?.id) {
       updateTable(
-        { id: table?.id, data },
+        { id: table.id, data },
         {
           onSuccess: () => {
             toast.success('Стол успешно обновлен');
@@ -114,10 +117,10 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
             />
             <FormField
               control={form.control}
-              name='size'
+              name='number'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Размер</FormLabel>
+                  <FormLabel>Номер стола</FormLabel>
                   <FormControl>
                     <Input type='number' min={1} {...field} />
                   </FormControl>
@@ -125,40 +128,15 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='shape'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Форма</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='circle'>Круглый</SelectItem>
-                      <SelectItem value='square'>Квадратный</SelectItem>
-                      <SelectItem value='rectangle'>Прямоугольный</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-2 gap-2'>
               <FormField
                 control={form.control}
-                name='xPosition'
+                name='size'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Позиция X</FormLabel>
+                    <FormLabel>Размер</FormLabel>
                     <FormControl>
-                      <Input type='number' min={0} {...field} />
+                      <Input type='number' min={1} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,13 +144,27 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
               />
               <FormField
                 control={form.control}
-                name='yPosition'
+                name='shape'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Позиция Y</FormLabel>
-                    <FormControl>
-                      <Input type='number' min={0} {...field} />
-                    </FormControl>
+                    <FormLabel>Форма</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Выберите форму' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {TABLE_SHAPES.map((shape) => (
+                          <SelectItem key={shape.value} value={shape.value}>
+                            {shape.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -184,9 +176,23 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Зал</FormLabel>
-                  <FormControl>
-                    <Input type='number' min={1} {...field} />
-                  </FormControl>
+                  <Select
+                    onValueChange={(value) => field.onChange(+value)}
+                    defaultValue={String(field.value)}
+                  >
+                    <FormControl>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='Выберите залл' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {halls?.items.map((hall) => (
+                        <SelectItem key={hall.id} value={String(hall.id)}>
+                          {hall.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -197,7 +203,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
               render={({ field }) => (
                 <FormItem className='flex flex-row items-start space-y-0 space-x-3'>
                   <FormControl>
-                    <Checkbox
+                    <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
