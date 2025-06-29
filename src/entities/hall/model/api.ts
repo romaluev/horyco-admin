@@ -14,7 +14,7 @@ export const hallApi = {
    */
   async getAllHalls(params?: ApiParams): Promise<PaginatedResponse<IHall>> {
     // Обязательно используем page и size параметры, как показано в примере cURL
-    const defaultParams = { page: 0, size: 10 };
+    const defaultParams = { page: 0, size: 100 };
     const queryParams = { ...defaultParams, ...params };
 
     const response = await api.get<PaginatedResponse<IHall>>('/hall', {
