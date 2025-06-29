@@ -11,8 +11,7 @@ const nextConfig: NextConfig = {
     ]
   },
   transpilePackages: ['geist'],
-  reactStrictMode: true, // Enable strict mode for development
-  swcMinify: true // Enable minification for production
+  reactStrictMode: true // Enable strict mode for development
 };
 
 export default nextConfig;
