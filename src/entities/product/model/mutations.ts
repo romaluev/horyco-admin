@@ -4,13 +4,8 @@ import { ICreateProductDto, IUpdateProductDto } from './types';
 import { productKeys } from './query-keys';
 
 export const useCreateProduct = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (data: ICreateProductDto) => productAPi.createProduct(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all() });
-    }
+    mutationFn: (data: ICreateProductDto) => productAPi.createProduct(data)
   });
 };
 

@@ -37,7 +37,6 @@ import {
   IconChevronsDown,
   IconCreditCard,
   IconLogout,
-  IconPhotoUp,
   IconUserCircle
 } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -46,12 +45,6 @@ import * as React from 'react';
 import { Icons } from '../icons';
 import { useAuthStore } from '@/entities/auth/model/store';
 
-export const company = {
-  name: 'Acme Inc',
-  logo: IconPhotoUp,
-  plan: 'Enterprise'
-};
-
 export default function AppSidebar() {
   const pathname = usePathname();
   const authStore = useAuthStore();
@@ -59,10 +52,6 @@ export default function AppSidebar() {
   const { user } = useAuthStore();
   const router = useRouter();
   const navItems = getNavItems();
-
-  React.useEffect(() => {
-    // Side effects based on sidebar state changes
-  }, [isOpen]);
 
   const handleLogout = () => {
     authStore.logout();
