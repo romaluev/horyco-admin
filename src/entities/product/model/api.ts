@@ -19,12 +19,17 @@ export const productAPi = {
     return response.data;
   },
 
-  /**
-   * Get all products with pagination, sorting, and filtering
-   * @param params - Params
-   * @returns Promise with paginated branches
-   */
-  async getProducts(params?: ApiParams): Promise<PaginatedResponse<IProduct>> {
+  async getProducts(
+    searchParams: ApiParams = {}
+  ): Promise<PaginatedResponse<IProduct>> {
+    const params = new URLSearchParams();
+
+    params.append('page', String(searchParams.page || '0'));
+    params.append('size', String(searchParams.size || '100'));
+
+    if (searchParams.filters) {
+      params.append('filters', searchParams.filters);
+    }
     const response = await api.get<PaginatedResponse<IProduct>>('/product', {
       params: params
     });

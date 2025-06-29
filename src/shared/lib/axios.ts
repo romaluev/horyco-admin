@@ -1,12 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// In Next.js, NEXT_PUBLIC_ variables are inlined during build time
-// This means the actual value replaces the reference at build time
-// and no reference to `process` remains in the client bundle
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export const BASE_API_URL = NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+export const BASE_API_URL = 'https://oshposapi.021.uz';
 
 const api = axios.create({
   baseURL: BASE_API_URL,

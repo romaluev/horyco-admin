@@ -29,7 +29,7 @@ export default function Page() {
   } | null>(null);
 
   const params = useMemo(() => {
-    let params: ApiParams = {};
+    const params: ApiParams = {};
 
     if (filters) params.filters = filters;
     // if (pagination) params = { ...params, ...pagination };
@@ -40,7 +40,7 @@ export default function Page() {
   const { data: products, isLoading } = useGetAllProducts();
 
   return (
-    <PageContainer scrollable={false}>
+    <PageContainer>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading

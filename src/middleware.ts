@@ -24,23 +24,21 @@ export default async function middleware(req: NextRequest) {
     pathname.startsWith(route)
   );
 
-  // Case 1: Unauthenticated user trying to access protected route - redirect to login
   if (!isAuthenticated && isProtectedRoute) {
     const url = new URL('/auth/sign-in', req.url);
 
-    // Only set redirect for valid internal paths
-    if (
-      pathname.startsWith('/') &&
-      !pathname.startsWith('//') &&
-      !pathname.includes(':')
-    ) {
-      url.searchParams.set('redirect', pathname);
-    }
+    // if (
+    //   pathname.startsWith('/') &&
+    //   !pathname.startsWith('//') &&
+    //   !pathname.includes(':')
+    // ) {
+    //   url.searchParams.set('redirect', pathname);
+    // }
 
+    console.log('url', url);
     return NextResponse.redirect(url);
   }
 
-  // For all other cases, proceed normally
   return NextResponse.next();
 }
 
