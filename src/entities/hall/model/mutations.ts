@@ -4,9 +4,6 @@ import { hallKeys } from './query-keys';
 import { IHallRequest } from './types';
 import { toast } from 'sonner';
 
-/**
- * Хук для создания нового зала
- */
 export const useCreateHall = () => {
   const queryClient = useQueryClient();
 
@@ -23,9 +20,6 @@ export const useCreateHall = () => {
   });
 };
 
-/**
- * Хук для обновления зала
- */
 export const useUpdateHall = (id: string) => {
   const queryClient = useQueryClient();
 
@@ -43,9 +37,6 @@ export const useUpdateHall = (id: string) => {
   });
 };
 
-/**
- * Хук для удаления зала
- */
 export const useDeleteHall = () => {
   const queryClient = useQueryClient();
 

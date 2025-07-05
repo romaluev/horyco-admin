@@ -73,3 +73,16 @@ export interface ApiParams {
   page?: number;
   size?: number;
 }
+
+export interface IFile {
+  createdAt: string;
+  createdBy: number;
+  deletedAt: null | string;
+  deletedBy: null | number;
+  entityId: number;
+  entityType: 'PRODUCT';
+  id: number;
+  mimeType: string;
+  originalName: string;
+  size: number;
+}

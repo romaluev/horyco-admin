@@ -44,6 +44,12 @@ export function ProductFormAdditions() {
     setExpandedAddition(fields.length);
   };
 
+  const hasAdditionError = (index: number) => {
+    // @ts-ignore
+    const errors = form.formState.errors.additions?.[index];
+    return errors && Object.keys(errors).length > 0;
+  };
+
   return (
     <div className='space-y-4 md:col-span-6'>
       <div className='flex items-center justify-between'>
@@ -60,7 +66,10 @@ export function ProductFormAdditions() {
       </div>
 
       {fields.map((field, index) => (
-        <Card key={field.id} className='gap-2 overflow-hidden p-2'>
+        <Card
+          key={field.id}
+          className={`${hasAdditionError(index) ? 'border-destructive' : ''} gap-2 overflow-hidden p-2`}
+        >
           <div
             className='flex cursor-pointer items-center justify-between'
             onClick={() => toggleExpanded(index)}

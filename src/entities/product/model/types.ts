@@ -1,6 +1,11 @@
+import { IFile } from '@/shared/types';
+
 export interface IAdditionProduct {
+  id: number;
   name: string;
   price: number;
+  isDeleted?: boolean;
+  additionId?: number;
 }
 
 export interface IAddition {
@@ -11,8 +16,34 @@ export interface IAddition {
   productId: number;
   limit: number;
   additionProducts: IAdditionProduct[];
+  isDeleted?: boolean;
 }
 
+export interface IUpdatedAddition {
+  id: number;
+  name?: string;
+  isRequired?: boolean;
+  isMultiple?: boolean;
+  productId: number;
+  limit?: number;
+  additionProducts?: IAdditionProduct[];
+  isDeleted?: boolean;
+}
+
+export interface IUpdatedProduct {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  stock: number;
+  status: string;
+  isMultiple: boolean;
+  productTypeId: number;
+  createdBy: number;
+  files: IFile[];
+  additions?: IUpdatedAddition[];
+}
 export interface IProduct {
   id: number;
   name: string;
@@ -24,9 +55,7 @@ export interface IProduct {
   isMultiple: boolean;
   productTypeId: number;
   createdBy: number;
-  files: {
-    originalName: string;
-  }[];
+  files: IFile[];
   additions?: IAddition[];
 }
 

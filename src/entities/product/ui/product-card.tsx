@@ -9,13 +9,18 @@ import {
 } from '@/shared/ui/base/card';
 import Image from 'next/image';
 import { Button } from '@/shared/ui/base/button';
-import { Pen, Trash } from 'lucide-react';
+import { Pen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { BASE_API_URL } from '@/shared/lib/axios';
 import { useState } from 'react';
 import { AlertModal } from '@/shared/ui/modal/alert-modal';
 
-const ProductCard = ({ product }: { product: IProduct }) => {
+type ProductCardProps = {
+  DeleteButton?: React.ComponentType<{ id: number }>;
+  product: IProduct;
+};
+
+const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const router = useRouter();
   const { mutateAsync: deleteProduct } = useDeleteProduct();
@@ -32,13 +37,7 @@ const ProductCard = ({ product }: { product: IProduct }) => {
           >
             <Pen />
           </Button>
-          <Button
-            variant='secondary'
-            onClick={() => setDeleteModal(true)}
-            size='sm'
-          >
-            <Trash />
-          </Button>
+          {DeleteButton && <DeleteButton id={product.id} />}
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -46,6 +45,7 @@ const ProductCard = ({ product }: { product: IProduct }) => {
           <Image
             width={300}
             height={400}
+            unoptimized
             src={`${BASE_API_URL}/file/${product.files[0].originalName}`}
             alt='product-image'
           />

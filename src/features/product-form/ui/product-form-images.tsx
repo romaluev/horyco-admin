@@ -10,8 +10,16 @@ import {
 } from '@/shared/ui/base/form';
 import { useFormContext } from 'react-hook-form';
 import { MAX_FILE_SIZE } from '@/shared/config/data';
+import { IFile } from '@/shared/types';
+import * as React from 'react';
 
-export default function ProductFormImages() {
+export function ProductFormImages({
+  images,
+  setDeletedImages
+}: {
+  images?: IFile[];
+  setDeletedImages?: React.Dispatch<React.SetStateAction<number[]>>;
+}) {
   const form = useFormContext();
 
   return (
@@ -23,7 +31,9 @@ export default function ProductFormImages() {
           <FormLabel>Картинки продукта</FormLabel>
           <FormControl>
             <FileUploader
+              setDeletedFiles={setDeletedImages}
               variant='image'
+              uploadedFiles={images}
               value={field.value}
               onValueChange={field.onChange}
               maxFiles={4}
