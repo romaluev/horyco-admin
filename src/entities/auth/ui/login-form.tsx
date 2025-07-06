@@ -19,7 +19,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
@@ -40,16 +39,14 @@ const loginFormSchema = z.object({
     .max(100, { message: 'Password must be less than 100 characters' })
 });
 
-// Infer the type from the schema
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError, me } = useAuthStore();
   const [generalError, setGeneralError] = useState<string | null>(null);
 
-  // Initialize the form
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -64,12 +61,10 @@ const LoginForm = () => {
       setGeneralError(null);
       clearError();
       await login(data.phone, data.password);
+      me();
 
-      // Check if there's a redirect parameter and use it for navigation
       const redirectPath = searchParams?.get('redirect');
 
-      // Validate the redirect path to prevent open redirect vulnerabilities
-      // Only allow redirects to relative paths within our application
       if (
         redirectPath &&
         redirectPath.startsWith('/') &&
@@ -91,9 +86,7 @@ const LoginForm = () => {
     <Card className='mx-auto w-full max-w-md'>
       <CardHeader>
         <CardTitle className='text-2xl font-bold'>Sign In</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your account
-        </CardDescription>
+        <CardDescription>Введите свои данные, чтобы войти</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -110,7 +103,7 @@ const LoginForm = () => {
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone number</FormLabel>
+                  <FormLabel>Телефон номер</FormLabel>
                   <FormControl>
                     <PhoneInput
                       defaultCountry={'UZ'}
@@ -131,11 +124,11 @@ const LoginForm = () => {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Пароль</FormLabel>
                   <FormControl>
                     <PasswordInput
                       type='password'
-                      placeholder='Enter your password'
+                      placeholder='Введите свой пароль'
                       {...field}
                       autoComplete='current-password'
                       disabled={isLoading}
@@ -150,27 +143,15 @@ const LoginForm = () => {
               {isLoading ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                  Signing in...
+                  Вход...
                 </>
               ) : (
-                'Sign In'
+                'Войти'
               )}
             </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter className='flex justify-center'>
-        <p className='text-muted-foreground text-sm'>
-          Don&#39;t have an account?{' '}
-          <Button
-            variant='link'
-            className='p-0'
-            onClick={() => router.push('/auth/sign-up')}
-          >
-            Sign up
-          </Button>
-        </p>
-      </CardFooter>
     </Card>
   );
 };

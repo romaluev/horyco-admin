@@ -26,11 +26,10 @@ export const branchApi = {
   getBranches: async (
     searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IBranch>> => {
-    // Build query parameters
     const params = new URLSearchParams();
 
-    params.append('page', String(searchParams.page) || '0');
-    params.append('size', String(searchParams.size) || '100');
+    params.append('page', String(searchParams.page || '0'));
+    params.append('size', String(searchParams.size || '100'));
     if (searchParams.filters) {
       params.append('filters', searchParams.filters);
     }

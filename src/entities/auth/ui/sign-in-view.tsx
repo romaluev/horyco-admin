@@ -2,7 +2,7 @@ import { buttonVariants } from '@/shared/ui/base/button';
 import { cn } from '@/shared/lib/utils';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import LoginForm from '@/shared/ui/login-form';
+import LoginForm from './login-form';
 
 export const metadata: Metadata = {
   title: 'Sign In',
