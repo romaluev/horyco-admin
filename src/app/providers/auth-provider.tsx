@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuthStore } from '@/entities/auth/model/store';
+import { useAuthStore } from '@/entities/auth';
 import { BaseLoading } from '@/shared/ui';
 
 interface AuthProviderProps {
