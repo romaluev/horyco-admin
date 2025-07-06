@@ -1,6 +1,17 @@
 import * as z from 'zod';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/shared/config/data';
 
+export type ProductFormValues = {
+  name: string;
+  productTypeId: number;
+  status: string;
+  price?: number;
+  stock?: number;
+  description: string;
+  additions: z.infer<typeof additionSchema>[];
+  image?: File[];
+};
+
 const additionProductSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: 'Название элемента обязательно' }),
@@ -27,10 +38,7 @@ const additionSchema = z.object({
 export const productSchema = z.object({
   image: z
     .any()
-    .refine((files) => {
-      if (!files?.length) return true; // Allow empty for existing products
-      return true;
-    }, 'Добавьте картинки к продукту')
+    .refine((files) => files?.length, 'Добавьте картинки к продукту')
     .refine((files) => {
       if (!files?.length) return true;
       return files[0]?.size <= MAX_FILE_SIZE;
@@ -48,8 +56,8 @@ export const productSchema = z.object({
   }),
   productTypeId: z.number().min(1, { message: 'Укажите тип продукта' }),
   status: z.string(),
-  price: z.number(),
-  stock: z.number(),
+  price: z.number({ message: 'Укажите цену' }),
+  stock: z.number({ message: 'Укажите количество' }),
   description: z.string(),
   additions: z.array(additionSchema).optional().default([])
 });

@@ -76,7 +76,6 @@ export interface ICreateProductDto {
   name: string;
   price: number;
   description: string;
-  image?: string;
   stock?: number | null;
   status: string | null;
   productTypeId?: number;

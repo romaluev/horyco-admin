@@ -47,10 +47,8 @@ export const ProductFormType = () => {
         await refetchProductTypes();
         clearNewCategory();
         form.setValue('productTypeId', res.id);
-        toast.success('Тип продукта успешно создано');
-      } catch {
-        toast.error('Что-то пошло не так');
-      }
+        form.trigger('productTypeId');
+      } catch {}
     }
   };
 
@@ -106,9 +104,10 @@ export const ProductFormType = () => {
               <>
                 <div className='w-full'>
                   <Select
-                    onValueChange={(value) =>
-                      form.setValue('productTypeId', Number(value))
-                    }
+                    onValueChange={(value) => {
+                      form.setValue('productTypeId', Number(value));
+                      form.trigger('productTypeId');
+                    }}
                     defaultValue={field.value ? field.value + '' : undefined}
                     value={field.value ? field.value + '' : undefined}
                   >

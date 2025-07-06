@@ -3,24 +3,22 @@
 import { useAttachProductImages, useCreateProduct } from '@/entities/product';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
-import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import {} from '@/shared/ui/base/form';
 import { ProductFormType } from './product-form-type';
 import { ProductFormAdditions } from './product-form-additions';
 import { ProductFormImages } from './product-form-images';
 import {
   Button,
-  Textarea,
-  Input,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  Input,
+  Textarea
 } from '@/shared/ui';
-import { productSchema } from '../model/contract';
+import { ProductFormValues, productSchema } from '../model/contract';
 import { useState } from 'react';
 
 export const CreateProductForm = () => {
@@ -33,26 +31,25 @@ export const CreateProductForm = () => {
     name: '',
     productTypeId: 0,
     status: '',
-    price: 0,
-    stock: 0,
     description: '',
-    additions: []
+    additions: [],
+    image: []
   };
 
-  const form = useForm<z.infer<typeof productSchema>>({
+  const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     values: defaultValues
   });
 
-  const onSubmit = async (values: z.infer<typeof productSchema>) => {
-    const body = { ...values };
+  const onSubmit = async (values: ProductFormValues) => {
+    const body = { ...values, price: values.price || 0 };
     delete body.image;
     setSending(true);
 
     try {
       const res = await createProductMutation(body);
 
-      if (values.image.length && res) {
+      if (values.image?.length && res) {
         await attachImages({ id: res.id, files: values.image });
       }
       setSending(false);

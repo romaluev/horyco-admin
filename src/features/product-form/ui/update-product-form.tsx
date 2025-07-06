@@ -17,7 +17,6 @@ import { ProductFormType } from './product-form-type';
 import { ProductFormAdditions } from './product-form-additions';
 import { ProductFormImages } from './product-form-images';
 import {
-  BaseLoading,
   Button,
   FormControl,
   FormField,
@@ -28,8 +27,6 @@ import {
   Textarea
 } from '@/shared/ui';
 import { getChangedAdditions } from '@/features/product-form/lib/get-changed-additions';
-import { IFile } from '@/shared/types';
-import { IUpdatedProduct } from '@/entities/product/model';
 
 export const UpdateProductForm = ({ productId }: { productId: number }) => {
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
@@ -37,11 +34,7 @@ export const UpdateProductForm = ({ productId }: { productId: number }) => {
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const router = useRouter();
 
-  const { data: product, isLoading } = useGetProductById(productId);
-
-  if (isLoading) {
-    <BaseLoading />;
-  }
+  const { data: product } = useGetProductById(productId);
 
   const defaultValues = {
     image: product?.files || [],
