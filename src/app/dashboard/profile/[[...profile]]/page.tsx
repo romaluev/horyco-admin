@@ -1,9 +1,9 @@
-import ProfileViewPage from '@/entities/profile/components/profile-view-page';
+import { ProfileView } from '@/entities/auth';
 
 export const metadata = {
   title: 'Dashboard : Profile'
 };
 
 export default async function Page() {
-  return <ProfileViewPage />;
+  return <ProfileView />;
 }

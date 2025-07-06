@@ -30,12 +30,9 @@ import {
 } from '@/shared/ui/base/sidebar';
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile';
 import { getNavItems } from '@/shared/config/data';
-import { useMediaQuery } from '@/shared/hooks/use-media-query';
 import {
-  IconBell,
   IconChevronRight,
   IconChevronsDown,
-  IconCreditCard,
   IconLogout,
   IconUserCircle
 } from '@tabler/icons-react';
@@ -48,7 +45,6 @@ import { useAuthStore } from '@/entities/auth/model/store';
 export default function AppSidebar() {
   const pathname = usePathname();
   const authStore = useAuthStore();
-  const { isOpen } = useMediaQuery();
   const { user } = useAuthStore();
   const router = useRouter();
   const navItems = getNavItems();
@@ -62,7 +58,9 @@ export default function AppSidebar() {
     <Sidebar collapsible='icon'>
       <SidebarContent className='overflow-x-hidden'>
         <SidebarGroup>
-          <SidebarGroupLabel>Overview</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            {/* ToDo: Add restaurant logo */}
+          </SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
@@ -163,21 +161,13 @@ export default function AppSidebar() {
                     onClick={() => router.push('/dashboard/profile')}
                   >
                     <IconUserCircle className='mr-2 h-4 w-4' />
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <IconCreditCard className='mr-2 h-4 w-4' />
-                    Billing
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <IconBell className='mr-2 h-4 w-4' />
-                    Notifications
+                    Профиль
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <IconLogout className='mr-2 h-4 w-4' />
-                  Log out
+                  Выход из системы
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -27,15 +27,6 @@ export default async function middleware(req: NextRequest) {
   if (!isAuthenticated && isProtectedRoute) {
     const url = new URL('/auth/sign-in', req.url);
 
-    // if (
-    //   pathname.startsWith('/') &&
-    //   !pathname.startsWith('//') &&
-    //   !pathname.includes(':')
-    // ) {
-    //   url.searchParams.set('redirect', pathname);
-    // }
-
-    console.log('url', url);
     return NextResponse.redirect(url);
   }
 

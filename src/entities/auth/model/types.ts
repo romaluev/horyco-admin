@@ -30,8 +30,9 @@ export interface ErrorResponse {
 
 // Define the User type
 export interface IUser {
-  id: string;
-  username: string;
-  email: string;
-  fullName?: string;
+  id: number;
+  fullName: string;
+  password: string;
+  phone: string;
+  photoUrl: null | string;
 }

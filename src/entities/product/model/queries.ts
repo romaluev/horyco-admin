@@ -5,7 +5,7 @@ import { ApiParams } from '@/shared/types';
 
 export const useGetAllProducts = (params?: ApiParams) => {
   return useQuery({
-    queryKey: [...productKeys.all(), params],
+    queryKey: [...productKeys.all(), JSON.stringify(params)],
     queryFn: () => productAPi.getProducts(params)
   });
 };

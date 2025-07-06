@@ -12,34 +12,20 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
 import { useAuthStore } from '@/entities/auth/model/store';
 import { useRouter } from 'next/navigation';
-import { LogOut, User as UserIcon, Settings, CreditCard } from 'lucide-react';
+import { LogOut, User as UserIcon } from 'lucide-react';
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { getNameInitials } from '@/shared/lib/utils';
 
 export function UserNav() {
-  const { user, logout, isAuthenticated } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const router = useRouter();
-
-  if (!isAuthenticated || !user) {
-    return null;
-  }
-
-  // Get initials for avatar fallback
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((part) => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  };
 
   const handleLogout = () => {
     logout();
     router.push('/auth/sign-in');
   };
 
-  const userInitials = user.fullName
-    ? getInitials(user.fullName)
-    : user.username.substring(0, 2).toUpperCase();
+  const userInitials = getNameInitials(user?.fullName);
 
   return (
     <DropdownMenu>
@@ -47,10 +33,14 @@ export function UserNav() {
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar>
             <AvatarImage
-              src={`https://api.dicebear.com/7.x/initials/svg?seed=${userInitials}`}
-              alt={user.username}
+              src={
+                user?.photoUrl
+                  ? `${BASE_API_URL}/file/${user.photoUrl}`
+                  : undefined
+              }
+              alt={user?.fullName}
             />
-            <AvatarFallback>{userInitials}</AvatarFallback>
+            <AvatarFallback>{userInitials || <UserIcon />}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -62,11 +52,9 @@ export function UserNav() {
       >
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm leading-none font-medium'>
-              {user.fullName || user.username}
-            </p>
+            <p className='text-sm leading-none font-medium'>{user?.fullName}</p>
             <p className='text-muted-foreground text-xs leading-none'>
-              {user.email}
+              {user?.phone}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -74,21 +62,13 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
             <UserIcon className='mr-2 h-4 w-4' />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/billing')}>
-            <CreditCard className='mr-2 h-4 w-4' />
-            <span>Billing</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/settings')}>
-            <Settings className='mr-2 h-4 w-4' />
-            <span>Settings</span>
+            <span>Профиль</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className='mr-2 h-4 w-4' />
-          <span>Log out</span>
+          <span>Выход из системы</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
