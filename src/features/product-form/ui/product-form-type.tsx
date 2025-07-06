@@ -19,15 +19,17 @@ import {
 import { Check, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { productAPi, useGetAllProductTypes } from '@/entities/product/model';
-import { useQueryClient } from '@tanstack/react-query';
-import { productKeys } from '../../model/query-keys';
+import {
+  useCreateProductType,
+  useGetAllProductTypes
+} from '@/entities/product';
 import { toast } from 'sonner';
 
 export const ProductFormType = () => {
   const form = useFormContext();
-  const queryClient = useQueryClient();
-  const { data: productTypes } = useGetAllProductTypes();
+  const { data: productTypes, refetch: refetchProductTypes } =
+    useGetAllProductTypes();
+  const { mutateAsync: createProductType } = useCreateProductType();
 
   const [newCategory, setNewCategory] = useState(false);
   const [newName, setNewName] = useState('');
@@ -41,14 +43,12 @@ export const ProductFormType = () => {
 
       const newType = { name: newName, description: newDescription };
       try {
-        const res = await productAPi.createProductTypes(newType);
-        queryClient.invalidateQueries({ queryKey: productKeys.productTypes() });
+        const res = await createProductType(newType);
+        await refetchProductTypes();
         clearNewCategory();
         form.setValue('productTypeId', res.id);
-        toast.success('Тип продукта успешно создано');
-      } catch {
-        toast.error('Что-то пошло не так');
-      }
+        form.trigger('productTypeId');
+      } catch {}
     }
   };
 
@@ -104,11 +104,12 @@ export const ProductFormType = () => {
               <>
                 <div className='w-full'>
                   <Select
-                    onValueChange={(value) =>
-                      form.setValue('productTypeId', Number(value))
-                    }
-                    defaultValue={field.value}
-                    value={field.value + ''}
+                    onValueChange={(value) => {
+                      form.setValue('productTypeId', Number(value));
+                      form.trigger('productTypeId');
+                    }}
+                    defaultValue={field.value ? field.value + '' : undefined}
+                    value={field.value ? field.value + '' : undefined}
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>

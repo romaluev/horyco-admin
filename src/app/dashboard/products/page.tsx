@@ -7,12 +7,12 @@ import { Separator } from '@/shared/ui/base/separator';
 import { cn } from '@/shared/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
-import { Suspense, useMemo, useState } from 'react';
-import { BaseFilter, BasePagination } from '@/widgets/ListItems';
-import BaseLoading from '@/shared/ui/base-loading';
-import ProductCard from '@/entities/product/ui/product-card';
+import { useMemo, useState } from 'react';
+import { BaseFilter } from '@/widgets/ListItems';
 import { useGetAllProducts } from '@/entities/product/model';
 import { ApiParams } from '@/shared/types';
+import { ProductList } from '@/entities/product';
+import { DeleteProductButton } from '@/features/product-form';
 
 const filterProperties: { value: string; label: string }[] = [
   {
@@ -37,7 +37,7 @@ export default function Page() {
     return params;
   }, [filters, pagination]);
 
-  const { data: products, isLoading } = useGetAllProducts();
+  const products = useGetAllProducts();
 
   return (
     <PageContainer>
@@ -64,13 +64,7 @@ export default function Page() {
           </div>
         </div>
         <Separator />
-        <Suspense fallback={<BaseLoading className='py-20' />}>
-          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4'>
-            {products?.items.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </Suspense>
+        <ProductList DeleteButton={DeleteProductButton} products={products} />
       </div>
     </PageContainer>
   );

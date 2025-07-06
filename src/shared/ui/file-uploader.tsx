@@ -14,6 +14,8 @@ import { Progress } from '@/shared/ui/base/progress';
 import { ScrollArea } from '@/shared/ui/base/scroll-area';
 import { useControllableState } from '@/shared/hooks/use-controllable-state';
 import { cn, formatBytes } from '@/shared/lib/utils';
+import { IFile } from '@/shared/types';
+import { BASE_API_URL } from '@/shared/lib/axios';
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -92,6 +94,10 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
    * @example disabled
    */
   disabled?: boolean;
+
+  uploadedFiles?: IFile[];
+
+  setDeletedFiles?: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 export function FileUploader(props: FileUploaderProps) {
@@ -107,6 +113,8 @@ export function FileUploader(props: FileUploaderProps) {
     disabled = false,
     variant = 'file',
     className,
+    uploadedFiles = [],
+    setDeletedFiles,
     ...dropzoneProps
   } = props;
 
@@ -272,6 +280,21 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         </ScrollArea>
       ) : null}
+
+      {uploadedFiles.length ? (
+        <ScrollArea className='h-fit w-full px-3'>
+          {uploadedFiles.map((file) => (
+            <UploadedFileCard
+              file={file}
+              onRemove={() =>
+                setDeletedFiles &&
+                setDeletedFiles((ids: number[]) => [...ids, file.id])
+              }
+              key={file.id}
+            />
+          ))}
+        </ScrollArea>
+      ) : null}
     </div>
   );
 }
@@ -353,6 +376,35 @@ function ImageCard({ file, progress, onRemove }: FileCardProps) {
   );
 }
 
+const UploadedFileCard = ({
+  file,
+  onRemove
+}: {
+  file: IFile;
+  onRemove: () => void;
+}) => {
+  return (
+    <div className='relative w-max'>
+      <Image
+        src={`${BASE_API_URL}/file/${file.originalName}`}
+        alt={file.originalName}
+        width={120}
+        unoptimized
+        height={120}
+      />
+      <Button
+        type='button'
+        variant='secondary'
+        size='icon'
+        onClick={onRemove}
+        className='absolute top-1 right-0 size-5 rounded-full'
+      >
+        <IconX className='text-foreground size-3.5' />
+        <span className='sr-only'>Удалить файл</span>
+      </Button>
+    </div>
+  );
+};
 function isFileWithPreview(file: File): file is File & { preview: string } {
   return 'preview' in file && typeof file.preview === 'string';
 }

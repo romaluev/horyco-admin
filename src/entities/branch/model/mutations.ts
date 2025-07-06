@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { branchApi } from './api';
 import { ICreateBranchDto, IUpdateBranchDto } from './types';
 import { queryKeys } from './query-keys';
+import { toast } from 'sonner';
 
 export const useCreateBranch = () => {
   const queryClient = useQueryClient();
@@ -9,7 +10,11 @@ export const useCreateBranch = () => {
   return useMutation({
     mutationFn: (data: ICreateBranchDto) => branchApi.createBranch(data),
     onSuccess: () => {
+      toast.success('Филиал успешно создан');
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
+    },
+    onError: () => {
+      toast.error('При создании филиала произошла ошибка');
     }
   });
 };
@@ -21,8 +26,12 @@ export const useUpdateBranch = () => {
     mutationFn: ({ id, data }: { id: number; data: IUpdateBranchDto }) =>
       branchApi.updateBranch(id, data),
     onSuccess: (_, { id }) => {
+      toast.error('Филиал успешно обновлен');
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
       queryClient.invalidateQueries({ queryKey: queryKeys.byId(id) });
+    },
+    onError: () => {
+      toast.error('При обновлении филиала произошла ошибка');
     }
   });
 };
@@ -34,6 +43,10 @@ export const useDeleteBranch = () => {
     mutationFn: (id: number) => branchApi.deleteBranch(id),
     onSuccess: (_) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
+      toast.success('Филиал успешно удален');
+    },
+    onError: () => {
+      toast.error('При удалении филиала произошла ошибка');
     }
   });
 };
