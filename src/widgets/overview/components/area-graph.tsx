@@ -32,11 +32,11 @@ const chartConfig = {
     label: 'Visitors'
   },
   desktop: {
-    label: 'Desktop',
+    label: 'Десктоп',
     color: 'var(--primary)'
   },
   mobile: {
-    label: 'Mobile',
+    label: 'Мобильный',
     color: 'var(--primary)'
   }
 } satisfies ChartConfig;
@@ -45,10 +45,8 @@ export function AreaGraph() {
   return (
     <Card className='@container/card'>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+        <CardTitle>Количество посещении</CardTitle>
+        <CardDescription>Количество посещении за 6 месяцев</CardDescription>
       </CardHeader>
       <CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
         <ChartContainer
@@ -122,8 +120,7 @@ export function AreaGraph() {
         <div className='flex w-full items-start gap-2 text-sm'>
           <div className='grid gap-2'>
             <div className='flex items-center gap-2 leading-none font-medium'>
-              Trending up by 5.2% this month{' '}
-              <IconTrendingUp className='h-4 w-4' />
+              Рост в 5.2% в этом месяце <IconTrendingUp className='h-4 w-4' />
             </div>
             <div className='text-muted-foreground flex items-center gap-2 leading-none'>
               January - June 2024

@@ -163,16 +163,16 @@ export function BarGraph() {
     <Card className='@container/card !pt-3'>
       <CardHeader className='flex flex-col items-stretch space-y-0 border-b !p-0 sm:flex-row'>
         <div className='flex flex-1 flex-col justify-center gap-1 px-6 !py-0'>
-          <CardTitle>Bar Chart - Interactive</CardTitle>
+          <CardTitle>Активность в системе</CardTitle>
           <CardDescription>
             <span className='hidden @[540px]/card:block'>
-              Total for the last 3 months
+              Всего за 3 месяца
             </span>
             <span className='@[540px]/card:hidden'>Last 3 months</span>
           </CardDescription>
         </div>
         <div className='flex'>
-          {['desktop', 'mobile', 'error'].map((key) => {
+          {['desktop', 'mobile'].map((key) => {
             const chart = key as keyof typeof chartConfig;
             if (!chart || total[key as keyof typeof total] === 0) return null;
             return (
