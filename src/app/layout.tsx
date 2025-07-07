@@ -5,7 +5,6 @@ import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Providers from '@/app/providers/providers';
 import './globals.css';
-import './theme.css';
 
 const META_THEME_COLORS = {
   light: '#ffffff',

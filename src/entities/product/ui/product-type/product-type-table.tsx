@@ -31,6 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
+import { BaseLoading } from '@/shared/ui';
 
 export const ProductTypeTable = () => {
   const { data: response, isLoading } = useGetAllProductTypes();
@@ -41,7 +42,7 @@ export const ProductTypeTable = () => {
     useState<IProductType | null>(null);
 
   if (isLoading) {
-    return <div>Загрузка категорий...</div>;
+    return <BaseLoading />;
   }
 
   const handleEdit = (productType: IProductType) => {
