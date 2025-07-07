@@ -1,17 +1,21 @@
 'use client';
 
 import PageContainer from '@/shared/ui/layout/page-container';
-import { buttonVariants } from '@/shared/ui/base/button';
 import { Heading } from '@/shared/ui/base/heading';
-import { EmployeeList } from '@/entities/employee/ui';
 import { Separator } from '@/shared/ui/base/separator';
 import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton';
-import { cn } from '@/shared/lib/utils';
-import { IconPlus } from '@tabler/icons-react';
-import Link from 'next/link';
 import { Suspense } from 'react';
+import { CreateEmployeeButton } from '@/features/employee';
+import { EmployeeTable } from '@/entities/employee/ui/employee-tables';
+import { columns } from '@/entities/employee/ui/employee-tables/columns';
+import { parseAsInteger, useQueryState } from 'nuqs';
+import { useGetAllEmployee } from '@/entities/employee/model';
 
 export default function Page() {
+  const [size] = useQueryState('perPage', parseAsInteger.withDefault(10));
+  const [page] = useQueryState('page', parseAsInteger.withDefault(0));
+
+  const { data: employee } = useGetAllEmployee({ size, page });
   return (
     <PageContainer scrollable={false}>
       <div className='flex flex-1 flex-col space-y-4'>
@@ -20,12 +24,7 @@ export default function Page() {
             title='Сотрудники'
             description='Управление сотрудниками вашей организации'
           />
-          <Link
-            href='/dashboard/employee/new'
-            className={cn(buttonVariants(), 'text-xs md:text-sm')}
-          >
-            <IconPlus className='mr-2 h-4 w-4' /> Добавить сотрудника
-          </Link>
+          <CreateEmployeeButton />
         </div>
         <Separator />
         <Suspense
@@ -33,7 +32,11 @@ export default function Page() {
             <DataTableSkeleton columnCount={4} rowCount={8} filterCount={2} />
           }
         >
-          <EmployeeList />
+          <EmployeeTable
+            data={employee?.items || []}
+            totalItems={employee?.totalItems || 0}
+            columns={columns}
+          />
         </Suspense>
       </div>
     </PageContainer>

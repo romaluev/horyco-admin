@@ -1,5 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
 import { IUser } from '@/entities/auth/model';
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { getNameInitials } from '@/shared/lib/utils';
+import { UserIcon } from 'lucide-react';
 
 interface UserAvatarProfileProps {
   className?: string;
@@ -16,18 +19,19 @@ export function UserAvatarProfile({
     <div className='flex items-center gap-2'>
       <Avatar className={className}>
         <AvatarImage
-          src={'@/public/images/avatar.png'}
-          alt={user?.username || ''}
+          src={
+            user?.photoUrl ? `${BASE_API_URL}/file/${user.photoUrl}` : undefined
+          }
+          alt={user?.fullName || ''}
         />
         <AvatarFallback className='rounded-lg'>
-          {user?.username?.slice(0, 2)?.toUpperCase() || 'CN'}
+          {getNameInitials(user?.fullName) || <UserIcon />}
         </AvatarFallback>
       </Avatar>
 
       {showInfo && (
         <div className='grid flex-1 text-left text-sm leading-tight'>
-          <span className='truncate font-semibold'>{user?.username || ''}</span>
-          <span className='truncate text-xs'>{user?.username || ''}</span>
+          <span className='truncate font-semibold'>{user?.fullName || ''}</span>
         </div>
       )}
     </div>

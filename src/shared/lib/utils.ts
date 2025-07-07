@@ -24,3 +24,13 @@ export function formatBytes(
       : (sizes[i] ?? 'Bytes')
   }`;
 }
+
+export const getNameInitials = (name: string | undefined) => {
+  if (!name) return '';
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
+    .substring(0, 2);
+};

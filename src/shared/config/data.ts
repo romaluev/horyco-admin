@@ -25,14 +25,12 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
-    shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
     title: 'Продукты',
     url: '/dashboard/products',
     icon: 'product',
-    shortcut: ['p', 'p'],
     isActive: false,
     items: [] // No child items
   },
@@ -40,7 +38,6 @@ export const getNavItems = (): NavItem[] => [
     title: 'Категории',
     url: '/dashboard/categories',
     icon: 'pizza',
-    shortcut: ['c', 'c'],
     isActive: false,
     items: [] // No child items
   },
@@ -48,7 +45,6 @@ export const getNavItems = (): NavItem[] => [
     title: 'Сотрудники',
     url: '/dashboard/employee',
     icon: 'product',
-    shortcut: ['p', 'p'],
     isActive: false,
     items: [] // No child items
   },
@@ -56,7 +52,6 @@ export const getNavItems = (): NavItem[] => [
     title: 'Филиалы',
     url: '/dashboard/branches',
     icon: 'product',
-    shortcut: ['b', 'r'],
     isActive: false,
     items: [] // No child items
   },
@@ -64,7 +59,6 @@ export const getNavItems = (): NavItem[] => [
     title: 'Залы',
     url: '/dashboard/halls',
     icon: 'kanban',
-    shortcut: ['h', 'l'],
     isActive: false,
     items: [] // No child items
   },
@@ -72,7 +66,6 @@ export const getNavItems = (): NavItem[] => [
     title: 'Стол менеджмент',
     url: '/dashboard/table',
     icon: 'kanban',
-    shortcut: ['h', 'l'],
     isActive: false,
     items: [] // No child items
   }

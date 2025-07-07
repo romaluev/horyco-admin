@@ -5,7 +5,7 @@ import { ApiParams } from '@/shared/types';
 
 export const useGetAllBranches = (params?: ApiParams) => {
   return useQuery({
-    queryKey: [...queryKeys.all(), params],
+    queryKey: [...queryKeys.all(), JSON.stringify(params)],
     queryFn: () => branchApi.getBranches(params)
   });
 };

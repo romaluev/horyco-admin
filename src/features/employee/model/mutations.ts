@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { employeeAPi } from './api';
-import { IEmployeeDto } from './types';
-import { queryKeys } from './query-keys';
+import { toast } from 'sonner';
+import { IEmployeeDto, queryKeys } from '@/entities/employee';
 
 export const useCreateEmployer = () => {
   const queryClient = useQueryClient();
@@ -9,7 +9,11 @@ export const useCreateEmployer = () => {
   return useMutation({
     mutationFn: (data: IEmployeeDto) => employeeAPi.createEmployee(data),
     onSuccess: () => {
+      toast.success('Сотрудник успешно создан');
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
+    },
+    onError: () => {
+      toast.error('При создании сотрудника произошла ошибка');
     }
   });
 };
@@ -23,6 +27,10 @@ export const useUpdateEmployer = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
       queryClient.invalidateQueries({ queryKey: queryKeys.byId(id) });
+      toast.success('Сотрудник успешно обновлен');
+    },
+    onError: () => {
+      toast.error('При обновлении сотрудника произошла ошибка');
     }
   });
 };
@@ -33,7 +41,11 @@ export const useDeleteEmployer = () => {
   return useMutation({
     mutationFn: (id: number) => employeeAPi.deleteEmployer(id),
     onSuccess: (_) => {
+      toast.success('Сотрудник успешно удален');
       queryClient.invalidateQueries({ queryKey: queryKeys.all() });
+    },
+    onError: () => {
+      toast.error('При удалении сотрудника произошла ошибка');
     }
   });
 };

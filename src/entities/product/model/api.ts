@@ -15,7 +15,7 @@ export const productAPi = {
    * @returns Promise with the created products
    */
   async createProduct(productData: ICreateProductDto): Promise<IProduct> {
-    const response = await api.post<IProduct>('/product', productData);
+    const response = await api.post<IProduct>('/pos/product', productData);
     return response.data;
   },
 
@@ -30,9 +30,12 @@ export const productAPi = {
     if (searchParams.filters) {
       params.append('filters', searchParams.filters);
     }
-    const response = await api.get<PaginatedResponse<IProduct>>('/product', {
-      params: params
-    });
+    const response = await api.get<PaginatedResponse<IProduct>>(
+      '/pos/product',
+      {
+        params: params
+      }
+    );
     return response.data;
   },
 
@@ -42,7 +45,7 @@ export const productAPi = {
    * @returns Promise with the products
    */
   async getProductById(id: number): Promise<IProduct> {
-    const response = await api.get<IProduct>(`/product/${id}`);
+    const response = await api.get<IProduct>(`/pos/product/${id}`);
     return response.data;
   },
 
@@ -56,7 +59,7 @@ export const productAPi = {
     id: number,
     productData: IUpdateProductDto
   ): Promise<IProduct> {
-    const response = await api.patch<IProduct>(`/product/${id}`, productData);
+    const response = await api.put<IProduct>(`/pos/product/${id}`, productData);
     return response.data;
   },
 
@@ -66,7 +69,7 @@ export const productAPi = {
    * @returns Promise with the deleted products
    */
   async deleteProduct(id: number): Promise<void> {
-    await api.delete(`/product/${id}`);
+    await api.delete(`/pos/product/${id}`);
   },
 
   async attachFiles(id: number, files: File[]): Promise<number> {
@@ -74,33 +77,33 @@ export const productAPi = {
     files.forEach((file) => {
       formData.append('files', file);
     });
-    await api.post(`/product/${id}/attach-files`, formData, {
+    await api.post(`/pos/product/${id}/attach-files`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     return id;
   },
 
   async getFiles(id: number) {
-    const { data } = await api.get(`/product/${id}/files`);
+    const { data } = await api.get(`/pos/product/${id}/files`);
     return data;
   },
 
   async deleteFile(productId: number, fileId: number): Promise<void> {
-    await api.delete(`/product/${productId}/delete-file/${fileId}`);
+    await api.delete(`/pos/product/${productId}/delete-file/${fileId}`);
   },
 
   async getAllProductTypes(
     params?: string
   ): Promise<PaginatedResponse<IProductType>> {
     const response = await api.get<PaginatedResponse<IProductType>>(
-      `/product-type/`,
+      `/pos/product-type/`,
       { params }
     );
     return response.data;
   },
 
   async createProductTypes(body: IProductTypeRequest): Promise<IProductType> {
-    const response = await api.post<IProductType>(`/product-type/`, body);
+    const response = await api.post<IProductType>(`/pos/product-type/`, body);
     return response.data;
   },
 
@@ -108,7 +111,10 @@ export const productAPi = {
     id: string,
     body: IProductTypeRequest
   ): Promise<IProductType> {
-    const response = await api.put<IProductType>(`/product-type/${id}`, body);
+    const response = await api.put<IProductType>(
+      `/pos/product-type/${id}`,
+      body
+    );
     return response.data;
   },
 

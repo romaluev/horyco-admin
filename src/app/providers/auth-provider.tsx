@@ -2,16 +2,21 @@
 
 import { ReactNode, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuthStore } from '@/entities/auth/model/store';
+import { useAuthStore } from '@/entities/auth';
+import { BaseLoading } from '@/shared/ui';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { setUser, me, isLoading, user } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    me();
+  }, [me]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -19,16 +24,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const redirectPath = searchParams?.get('redirect');
 
     if (
-      isAuthenticated &&
+      !user &&
       redirectPath &&
       redirectPath.startsWith('/') &&
       !redirectPath.startsWith('//') &&
       !redirectPath.includes(':')
     ) {
-      console.log('login');
       router.push(redirectPath);
     }
-  }, [isAuthenticated, isLoading, router, searchParams]);
+  }, [user, isLoading, router, searchParams, setUser]);
 
+  if (isLoading) {
+    return <BaseLoading className='min-h-screen items-center' />;
+  }
   return <>{children}</>;
 }
