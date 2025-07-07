@@ -13,6 +13,7 @@ import { useGetAllProducts } from '@/entities/product/model';
 import { ApiParams } from '@/shared/types';
 import { ProductList } from '@/entities/product';
 import { DeleteProductButton } from '@/features/product-form';
+import { AiImportButton } from '@/features/product-form/ui/ai-import-button';
 
 const filterProperties: { value: string; label: string }[] = [
   {
@@ -48,6 +49,7 @@ export default function Page() {
             description='Управление продуктами (Серверные функции таблицы.)'
           />
           <div className='flex gap-2'>
+            <AiImportButton />
             <Link
               href='/dashboard/products/new'
               className={cn(buttonVariants(), 'text-xs md:text-sm')}
