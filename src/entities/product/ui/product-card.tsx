@@ -26,7 +26,7 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
   const { mutateAsync: deleteProduct } = useDeleteProduct();
 
   return (
-    <Card>
+    <Card className='gap-4'>
       <CardHeader className='grid-rows-1 items-center'>
         <CardTitle>{product.name}</CardTitle>
         <CardAction className='row-span-1 grid grid-cols-2 gap-2'>
@@ -42,15 +42,15 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
       </CardHeader>
       <CardContent>
         {product.files[0]?.originalName ? (
-          <Image
-            width={300}
-            height={400}
-            unoptimized
+          <img
+            className='h-[200px] rounded-md object-cover'
             src={`${BASE_API_URL}/file/${product.files[0].originalName}`}
             alt='product-image'
           />
         ) : null}
-        <CardDescription>{product.description}</CardDescription>
+        <CardDescription className='pt-2'>
+          {product.description}
+        </CardDescription>
       </CardContent>
       <AlertModal
         isOpen={deleteModal}

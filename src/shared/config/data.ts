@@ -51,7 +51,7 @@ export const getNavItems = (): NavItem[] => [
   {
     title: 'Филиалы',
     url: '/dashboard/branches',
-    icon: 'product',
+    icon: 'hierarchy',
     isActive: false,
     items: [] // No child items
   },
@@ -65,7 +65,7 @@ export const getNavItems = (): NavItem[] => [
   {
     title: 'Стол менеджмент',
     url: '/dashboard/table',
-    icon: 'kanban',
+    icon: 'layoutGrid',
     isActive: false,
     items: [] // No child items
   }

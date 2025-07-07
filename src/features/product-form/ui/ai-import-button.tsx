@@ -11,7 +11,7 @@ import {
   DialogTrigger
 } from '@/shared/ui/base/dialog';
 import { Button } from '@/shared/ui/base/button';
-import { Upload } from 'lucide-react';
+import { StarsIcon, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { FileUploader } from '@/shared/ui/file-uploader';
@@ -125,20 +125,20 @@ export const AiImportButton = () => {
       {usageCount < MAX_USAGE ? (
         <DialogTrigger asChild>
           <Button className='relative inline-flex h-9 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'>
-            <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ffd2d2_0%,#fe4a49_50%,#ffd2d2_100%)]' />
-            <span className='bg-background text-primary inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium backdrop-blur-3xl'>
-              <Upload size={16} />
-              Извлечь из фото
+            <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]' />
+            <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl'>
+              <StarsIcon size={16} />
+              Добавить с AI
             </span>
           </Button>
         </DialogTrigger>
       ) : null}
       <DialogContent className='max-w-3xl'>
         <DialogHeader>
-          <DialogTitle>Импорт товаров из изображений</DialogTitle>
+          <DialogTitle>Импортируйте меню прямо из фото</DialogTitle>
           <DialogDescription>
             Загрузите до 4 изображений меню или товаров для автоматического
-            извлечения данных
+            извлечения данных с помощью AI
           </DialogDescription>
         </DialogHeader>
 
@@ -230,15 +230,19 @@ export const AiImportButton = () => {
               onClick={handleCreateProduct}
               disabled={creating}
             >
-              {creating ? 'Создание...' : 'Создать товары'}
+              {creating ? 'Сохранение...' : 'Сохранить товары'}
             </Button>
           ) : (
             <Button
               type='button'
               onClick={extractProducts}
-              disabled={loading || files.length === 0}
+              className='relative inline-flex h-9 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
             >
-              {loading ? 'Извлечение...' : 'Извлечь данные'}
+              <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]' />
+              <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl'>
+                <StarsIcon size={16} />
+                {loading ? 'Обработка...' : 'Начать обработку'}
+              </span>
             </Button>
           )}
         </DialogFooter>
