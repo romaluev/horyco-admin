@@ -1,5 +1,6 @@
 'use client';
 
+import logo from '@/shared/assets/logo.png';
 import {
   Collapsible,
   CollapsibleContent,
@@ -41,6 +42,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { useAuthStore } from '@/entities/auth/model/store';
+import Image from 'next/image';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -58,8 +60,15 @@ export default function AppSidebar() {
     <Sidebar collapsible='icon'>
       <SidebarContent className='overflow-x-hidden'>
         <SidebarGroup>
-          <SidebarGroupLabel>
-            {/* ToDo: Add restaurant logo */}
+          <SidebarGroupLabel className='my-4'>
+            <Image
+              className='mr-1 !h-10 !w-10 overflow-hidden rounded-2xl'
+              src={logo}
+              alt=''
+            />
+            <h1 className='py-4 text-2xl font-semibold text-[#023055]'>
+              OshPos
+            </h1>
           </SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map((item) => {
@@ -77,7 +86,7 @@ export default function AppSidebar() {
                         tooltip={item.title}
                         isActive={pathname === item.url}
                       >
-                        {item.icon && <Icon />}
+                        {item.icon && <Icon size={30} />}
                         <span>{item.title}</span>
                         <IconChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                       </SidebarMenuButton>
@@ -101,15 +110,15 @@ export default function AppSidebar() {
                   </SidebarMenuItem>
                 </Collapsible>
               ) : (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className='my-1'>
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
                     isActive={pathname === item.url}
                   >
                     <Link href={item.url}>
-                      <Icon />
-                      <span className='text-md'>{item.title}</span>
+                      <Icon size={30} className='!h-6 !w-6' />
+                      <span className='text-[18px]'>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

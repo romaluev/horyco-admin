@@ -74,8 +74,8 @@ export function ProfileView() {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      const response = await authApi.attachAvatar(file);
-      setUser(response);
+      await authApi.attachAvatar(file);
+      me();
       toast.success('Фото профиля успешно обновлено');
     } catch (error) {
       console.error('Error uploading avatar:', error);

@@ -171,7 +171,7 @@ export const UpdateProductForm = ({ productId }: { productId: number }) => {
 
           <ProductFormAdditions />
 
-          <Button type='submit' className='w-full md:w-auto'>
+          <Button type='submit' className='w-full px-4 md:w-auto'>
             Обновить продукт
           </Button>
         </div>
