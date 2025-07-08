@@ -43,12 +43,12 @@ export default function Page() {
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-4'>
-        <div className='flex items-start justify-between'>
+        <div className='flex flex-wrap-reverse items-start justify-between gap-2'>
           <Heading
             title='Продукты'
             description='Управление продуктами (Серверные функции таблицы.)'
           />
-          <div className='flex gap-2'>
+          <div className='flex flex-wrap gap-2'>
             <AiImportButton />
             <Link
               href='/dashboard/products/new'

@@ -12,8 +12,8 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Oshpos',
-  description: 'Oshpos'
+  title: 'OshXona',
+  description: 'OshXona - Админ панель для управление ресторанами'
 };
 
 export const viewport: Viewport = {

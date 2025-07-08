@@ -17,7 +17,7 @@ export const ProductTypePage = () => {
 
   return (
     <div className='container mx-auto space-y-4 p-4'>
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-wrap items-center justify-between'>
         <h1 className='text-2xl font-bold'>Категории продуктов</h1>
         <Button onClick={() => setIsFormOpen(true)}>
           <IconPlus className='mr-2' size={18} />

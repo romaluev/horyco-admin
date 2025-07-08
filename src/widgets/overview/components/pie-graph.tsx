@@ -61,12 +61,14 @@ export function PieGraph() {
   return (
     <Card className='@container/card'>
       <CardHeader>
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
+        <CardTitle>Количество посетителей на вебсайт</CardTitle>
         <CardDescription>
           <span className='hidden @[540px]/card:block'>
-            Total visitors by browser for the last 6 months
+            За последние 6 месяцев
           </span>
-          <span className='@[540px]/card:hidden'>Browser distribution</span>
+          <span className='@[540px]/card:hidden'>
+            Распространение в браузере
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
@@ -137,7 +139,7 @@ export function PieGraph() {
                           y={(viewBox.cy || 0) + 24}
                           className='fill-muted-foreground text-sm'
                         >
-                          Total Visitors
+                          Количество посещении
                         </tspan>
                       </text>
                     );
