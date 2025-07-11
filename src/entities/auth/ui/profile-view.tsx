@@ -98,7 +98,7 @@ export function ProfileView() {
       </CardHeader>
       <CardContent>
         <div className='flex flex-col gap-8'>
-          <div className='flex items-center gap-4'>
+          <div className='flex flex-wrap items-center gap-4 max-md:justify-center'>
             <div className='group relative'>
               <Avatar className='h-40 w-40'>
                 <AvatarImage

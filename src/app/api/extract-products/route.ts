@@ -70,12 +70,14 @@ export async function POST(req: NextRequest) {
       const products = JSON.parse(cleanContent);
       return NextResponse.json(Array.isArray(products) ? products : [products]);
     } catch (error) {
+      console.log(error);
       throw new Error('Неверный формат данных от OpenAI');
     }
   } catch (error) {
+    console.log(error);
     console.error('Error processing images:', error);
     return NextResponse.json(
-      { error: 'Ошибка при обработке изображений' },
+      { error: 'Ошибка при обработке изображений', msg: JSON.stringify(error) },
       { status: 500 }
     );
   }

@@ -11,7 +11,7 @@ import {
   DialogTrigger
 } from '@/shared/ui/base/dialog';
 import { Button } from '@/shared/ui/base/button';
-import { StarsIcon, Upload } from 'lucide-react';
+import { StarsIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { FileUploader } from '@/shared/ui/file-uploader';
@@ -234,6 +234,7 @@ export const AiImportButton = () => {
             </Button>
           ) : (
             <Button
+              disabled={loading}
               type='button'
               onClick={extractProducts}
               className='relative inline-flex h-9 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
