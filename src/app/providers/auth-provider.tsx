@@ -10,7 +10,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { setUser, me, isLoading, user } = useAuthStore();
+  const { setUser, me, isLoading, user, error } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -36,6 +36,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   if (isLoading) {
     return <BaseLoading className='min-h-screen items-center' />;
+  }
+  if (error) {
+    return <div>Что-то пошло не так, попробуйте перезагрузить страницу</div>;
   }
   return <>{children}</>;
 }
