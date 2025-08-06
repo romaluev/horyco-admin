@@ -21,7 +21,6 @@ before_script:
 deploy_dev:
   <<: *deploy_template
   variables:
-    API_CONTAINER_NAME: "oshxona-dev"
     DEPLOY_HOST: "157.173.202.24"
     DEPLOY_DIR: "/www/wwwroot/oshlab/oshxona/dev"
   only:
@@ -30,7 +29,6 @@ deploy_dev:
 deploy_prod:
   <<: *deploy_template
   variables:
-    API_CONTAINER_NAME: "oshxona-prod"
     DEPLOY_HOST: "157.173.202.24"
     DEPLOY_DIR: "/www/wwwroot/oshlab/oshxona/prod"
   only:
