@@ -1,27 +1,23 @@
-FROM node:20 as base
-RUN apt-get update && apt-get install -y \
-  g++ \
-  make \
-  python3-pip \
-  libc6 \
-  && rm -rf /var/lib/apt/lists/*
-WORKDIR /app
-COPY package*.json ./
-EXPOSE 3002
+# Базовый образ
+FROM node:20-alpine
 
-FROM base as builder
+# Устанавливаем рабочую директорию
 WORKDIR /app
+
+# Копируем зависимости
+COPY package*.json ./
+
+# Устанавливаем зависимости
+RUN npm ci --legacy-peer-deps
+
+# Копируем остальные файлы
 COPY . .
+
+# Собираем приложение
 RUN npm run build
 
+# Указываем порт (если используешь кастомный, замени)
+EXPOSE 3002
 
-FROM base as production
-WORKDIR /app
-
-RUN npm install --legacy-peer-deps
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-CMD npm start
+# Запуск
+CMD ["npm", "start"]
