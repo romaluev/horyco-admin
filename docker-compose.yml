@@ -1,19 +1,16 @@
 version: '3.8'
 services:
   app:
-    container_name: osh-management-container
-    image: osh-management
+    container_name: ${API_CONTAINER_NAME}
     build:
       context: ./
       target: dev
       dockerfile: Dockerfile
+    env_file:
+      - .env
     volumes:
       - .:/app
       - /app/node_modules
       - /app/.next
     ports:
-      - "3002:3002"
-    environment:
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - "4003:3002"
