@@ -1,3 +1,5 @@
+'use client';
+
 import type { ActionId, ActionImpl } from 'kbar';
 import * as React from 'react';
 

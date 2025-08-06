@@ -1,3 +1,5 @@
+'use client';
+
 import { KBarResults, useMatches } from 'kbar';
 import ResultItem from './result-item';
 

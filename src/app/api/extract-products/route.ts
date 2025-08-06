@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import Cookies from 'js-cookie';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
