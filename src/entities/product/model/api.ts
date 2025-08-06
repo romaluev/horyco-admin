@@ -119,6 +119,6 @@ export const productAPi = {
   },
 
   async deleteProductTypes(id: string) {
-    await api.delete(`/product-type/${id}`);
+    await api.delete(`/pos/product-type/${id}`);
   }
 };
