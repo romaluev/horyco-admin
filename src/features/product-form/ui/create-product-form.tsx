@@ -22,6 +22,8 @@ import { ProductFormValues, productSchema } from '../model/contract';
 import { useState } from 'react';
 import { StarsIcon } from 'lucide-react';
 
+const EXPAND_USAGE_KEY = 'expand_usage';
+
 export const CreateProductForm = () => {
   const { mutateAsync: createProductMutation } = useCreateProduct();
   const { mutateAsync: attachImages } = useAttachProductImages();
@@ -29,6 +31,9 @@ export const CreateProductForm = () => {
   const [sending, setSending] = useState(false);
   const [expandLoading, setExpandLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const expandUsageCount = parseInt(
+    localStorage.getItem(EXPAND_USAGE_KEY) || '0'
+  );
 
   const defaultValues = {
     name: '',
@@ -45,6 +50,9 @@ export const CreateProductForm = () => {
   });
 
   const handleExpandDescription = async () => {
+    const usageCount = parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0');
+    if (usageCount <= 5) return;
+
     const description = form.getValues('description');
 
     if (description.length < 10) {
@@ -54,6 +62,7 @@ export const CreateProductForm = () => {
 
     setExpandLoading(true);
     try {
+      localStorage.setItem(EXPAND_USAGE_KEY, (usageCount + 1).toString());
       const res = await fetch('/api/expand-description', {
         method: 'POST',
         body: JSON.stringify({ description })
@@ -62,6 +71,7 @@ export const CreateProductForm = () => {
       const body = await res.json();
 
       form.setValue('description', body.description);
+      toast.success('Описание успешно расширено!');
       setExpanded(true);
     } catch (e) {
       toast.error('Что-то пошло не так');
@@ -166,15 +176,15 @@ export const CreateProductForm = () => {
               </FormItem>
             )}
           />
-          {!expanded && (
+          {!expanded && expandUsageCount < 5 && (
             <Button
               onClick={handleExpandDescription}
               type='button'
               disabled={expandLoading}
-              className='relative inline-flex h-9 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
+              className='relative inline-flex h-9 w-60 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
             >
               <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]' />
-              <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl'>
+              <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl transition hover:text-[#fe4a49]'>
                 <StarsIcon size={16} />
                 {expandLoading ? 'Обрабатывается...' : 'Расширить с AI'}
               </span>

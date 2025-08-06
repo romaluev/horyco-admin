@@ -25,23 +25,23 @@ import { ScrollArea } from '@/shared/ui/base/scroll-area';
 import { IMAGE_PROMPT } from '@/features/product-form/config/constants';
 import { Input, Textarea } from '@/shared/ui';
 
-const MAX_USAGE = 5;
-const AI_USAGE_KEY = 'ai_import_usage';
+const MAX_USAGE = 3;
+const IMPORT_USAGE_KEY = 'ai_import_usage';
 
 export const AiImportButton = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [usageCount, setUsageCount] = useState(() => {
     if (typeof window !== 'undefined') {
-      return parseInt(localStorage.getItem(AI_USAGE_KEY) || '0');
+      return parseInt(localStorage.getItem(IMPORT_USAGE_KEY) || '0');
     }
     return 0;
   });
 
   const incrementUsage = () => {
-    const usageCount = parseInt(localStorage.getItem(AI_USAGE_KEY) || '0');
+    const usageCount = parseInt(localStorage.getItem(IMPORT_USAGE_KEY) || '0');
     const newCount = usageCount + 1;
     setUsageCount(newCount);
-    localStorage.setItem(AI_USAGE_KEY, newCount.toString());
+    localStorage.setItem(IMPORT_USAGE_KEY, newCount.toString());
   };
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -61,7 +61,9 @@ export const AiImportButton = () => {
     setError(null);
 
     try {
-      const usageCount = parseInt(localStorage.getItem(AI_USAGE_KEY) || '0');
+      const usageCount = parseInt(
+        localStorage.getItem(IMPORT_USAGE_KEY) || '0'
+      );
       if (usageCount >= MAX_USAGE) {
         toast.error('Достигнут лимит использования AI импорта');
         return;
