@@ -1,13 +1,28 @@
+image: debian:bookworm
+
 stages:
-  - build
   - deploy
 
-build-job:
-  stage: build
-  script:
-    - docker compose build
+before_script:
+  - apt-get update -y && apt-get install -y openssh-client util-linux
+  - eval "$(ssh-agent -s)"
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - cat "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+  - chmod 600 ~/.ssh/deploy_key
+  - ssh-add ~/.ssh/deploy_key
+  - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
 
-deploy-job:
+.deploy_template: &deploy_template
   stage: deploy
   script:
-    - docker compose up -d
+    - ssh root@$DEPLOY_HOST "cd $DEPLOY_DIR && git config --global --add safe.directory $DEPLOY_DIR && git pull && docker-compose down && docker-compose up -d --build"
+
+deploy_prod:
+  <<: *deploy_template
+  variables:
+    API_CONTAINER_NAME: "osh-management-prod"
+    DEPLOY_HOST: "157.173.202.24"
+    DEPLOY_DIR: "/www/wwwroot/oshlab/osh-management"
+  only:
+    - main

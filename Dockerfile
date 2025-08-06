@@ -1,5 +1,10 @@
-FROM node:20-alpine as base
-RUN apk add --no-cache g++ make py3-pip libc6-compat
+FROM node:20 as base
+RUN apt-get update && apt-get install -y \
+      g++ \
+      make \
+      python3-pip \
+      libc6 \
+      && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
 EXPOSE 3002
