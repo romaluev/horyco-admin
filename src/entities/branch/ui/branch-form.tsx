@@ -52,10 +52,8 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      let result;
-
-      if (initialData) {
-        result = await updateBranch({
+      if (initialData?.id) {
+        await updateBranch({
           id: initialData.id,
           data: values as IUpdateBranchDto
         });
@@ -63,9 +61,7 @@ export default function BranchForm({ initialData }: { initialData?: IBranch }) {
         await createBranch(values as ICreateBranchDto);
       }
 
-      if (result) {
-        router.push('/dashboard/branches');
-      }
+      router.push('/dashboard/branches');
     } catch (error) {
       console.error('Error saving branches:', error);
     }
