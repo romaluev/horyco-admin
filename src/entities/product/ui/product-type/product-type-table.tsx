@@ -32,6 +32,7 @@ import {
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
 import { BaseLoading } from '@/shared/ui';
+import PageContainer from '@/shared/ui/layout/page-container';
 
 export const ProductTypeTable = () => {
   const { data: response, isLoading } = useGetAllProductTypes();
@@ -64,42 +65,44 @@ export const ProductTypeTable = () => {
 
   return (
     <div className='space-y-4'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Название</TableHead>
-            <TableHead>Описание</TableHead>
-            <TableHead>Действия</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {response?.items &&
-            response.items.map((productType: IProductType) => (
-              <TableRow key={productType.id}>
-                <TableCell>{productType.id}</TableCell>
-                <TableCell>{productType.name}</TableCell>
-                <TableCell>{productType.description}</TableCell>
-                <TableCell className='space-x-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleEdit(productType)}
-                  >
-                    <IconEdit size={16} />
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleDelete(productType)}
-                  >
-                    <IconTrash size={16} />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
+      <PageContainer scrollable={true}>
+        <Table className='!mb-15'>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Название</TableHead>
+              <TableHead>Описание</TableHead>
+              <TableHead>Действия</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {response?.items &&
+              response.items.map((productType: IProductType) => (
+                <TableRow key={productType.id}>
+                  <TableCell>{productType.id}</TableCell>
+                  <TableCell>{productType.name}</TableCell>
+                  <TableCell>{productType.description}</TableCell>
+                  <TableCell className='space-x-2'>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handleEdit(productType)}
+                    >
+                      <IconEdit size={16} />
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handleDelete(productType)}
+                    >
+                      <IconTrash size={16} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </PageContainer>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
