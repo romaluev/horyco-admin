@@ -17,7 +17,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const getMe = async () => {
     try {
-      console.log(true);
       setLoading(true);
       await me();
       setLoading(false);
