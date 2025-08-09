@@ -201,5 +201,3 @@ export const CreateProductForm = () => {
     </FormProvider>
   );
 };
-
-export default CreateProductForm;
