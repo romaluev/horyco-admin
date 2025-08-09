@@ -9,9 +9,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <>
       <Toaster />
       <ReactQueryProvider>
-        <Suspense fallback={<BaseLoading />}>
-          <AuthProvider>{children}</AuthProvider>
-        </Suspense>
+        <AuthProvider>{children}</AuthProvider>
       </ReactQueryProvider>
     </>
   );

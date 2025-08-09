@@ -73,14 +73,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   me: async () => {
-    set({ isLoading: true, error: null });
-
     try {
       const myProfile = await authApi.myProfile();
 
       set({
-        user: myProfile,
-        isLoading: false
+        user: myProfile
       });
     } catch (error: any) {
       toast.error('Не удалось получить данные о вас');
