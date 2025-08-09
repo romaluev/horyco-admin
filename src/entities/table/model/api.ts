@@ -9,7 +9,7 @@ export const tableApi = {
    * @returns Promise with the created table
    */
   async createTable(tableData: ICreateTableDto): Promise<ITable> {
-    const response = await api.post<ITable>('/table', tableData);
+    const response = await api.post<ITable>('/pos/table', tableData);
     return response.data;
   },
 
@@ -24,7 +24,7 @@ export const tableApi = {
     if (searchParams.filters) {
       params.append('filters', searchParams.filters);
     }
-    const response = await api.get<PaginatedResponse<ITable>>('/table', {
+    const response = await api.get<PaginatedResponse<ITable>>('/pos/table', {
       params: params
     });
     return response.data;
@@ -36,7 +36,7 @@ export const tableApi = {
    * @returns Promise with the table
    */
   async getTableById(id: number): Promise<ITable> {
-    const response = await api.get<ITable>(`/table/${id}`);
+    const response = await api.get<ITable>(`/pos/table/${id}`);
     return response.data;
   },
 
@@ -47,7 +47,7 @@ export const tableApi = {
    * @returns Promise with the updated table
    */
   async updateTable(id: number, tableData: IUpdateTableDto): Promise<ITable> {
-    const response = await api.patch<ITable>(`/table/${id}`, tableData);
+    const response = await api.patch<ITable>(`/pos/table/${id}`, tableData);
     return response.data;
   },
 
@@ -57,6 +57,6 @@ export const tableApi = {
    * @returns Promise with void
    */
   async deleteTable(id: number): Promise<void> {
-    await api.delete(`/table/${id}`);
+    await api.delete(`/pos/table/${id}`);
   }
 };
