@@ -45,6 +45,9 @@ export const CreateProductForm = () => {
   });
 
   const handleExpandDescription = async () => {
+    if (expandLoading || expanded) {
+      return;
+    }
     const description = form.getValues('description');
 
     if (description.length < 10) {
@@ -171,7 +174,7 @@ export const CreateProductForm = () => {
               onClick={handleExpandDescription}
               type='button'
               disabled={expandLoading}
-              className='relative inline-flex h-9 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
+              className='relative inline-flex h-9 w-52 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
             >
               <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]' />
               <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl'>
