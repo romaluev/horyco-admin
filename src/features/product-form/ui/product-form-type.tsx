@@ -23,7 +23,6 @@ import {
   useCreateProductType,
   useGetAllProductTypes
 } from '@/entities/product';
-import { toast } from 'sonner';
 
 export const ProductFormType = () => {
   const form = useFormContext();

@@ -30,7 +30,7 @@ const additionSchema = z.object({
   isRequired: z.boolean(),
   isMultiple: z.boolean(),
   limit: z.number().min(1, { message: 'Лимит должен быть не менее 1' }),
-  additionProducts: z.array(additionProductSchema).min(0),
+  additionProducts: z.array(additionProductSchema).min(1),
   productId: z.number().optional(),
   isDeleted: z.boolean().optional()
 });
