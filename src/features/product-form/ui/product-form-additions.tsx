@@ -39,7 +39,12 @@ export function ProductFormAdditions() {
       isRequired: false,
       isMultiple: false,
       limit: 1,
-      additionProducts: []
+      additionProducts: [
+        {
+          name: '',
+          price: 0
+        }
+      ]
     });
     setExpandedAddition(fields.length);
   };
@@ -217,7 +222,7 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
           </div>
         ) : (
           fields.map((field, productIndex) => (
-            <div key={field.id} className='flex items-center gap-3'>
+            <div key={field.id} className='flex gap-3'>
               <FormField
                 control={form.control}
                 name={`additions.${additionIndex}.additionProducts.${productIndex}.name`}
@@ -247,14 +252,16 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                   </FormItem>
                 )}
               />
-              <Button
-                type='button'
-                variant='ghost'
-                size='sm'
-                onClick={() => remove(productIndex)}
-              >
-                <Trash2 className='h-4 w-4' />
-              </Button>
+              {fields.length > 1 && (
+                <Button
+                  type='button'
+                  variant='ghost'
+                  size='sm'
+                  onClick={() => remove(productIndex)}
+                >
+                  <Trash2 className='h-4 w-4' />
+                </Button>
+              )}
             </div>
           ))
         )}

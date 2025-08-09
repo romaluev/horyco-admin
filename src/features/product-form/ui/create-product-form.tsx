@@ -51,7 +51,7 @@ export const CreateProductForm = () => {
 
   const handleExpandDescription = async () => {
     const usageCount = parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0');
-    if (usageCount <= 5) return;
+    if (usageCount <= 5 || expandLoading || expanded) return;
 
     const description = form.getValues('description');
 

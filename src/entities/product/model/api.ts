@@ -89,12 +89,21 @@ export const productAPi = {
   },
 
   async deleteFile(productId: number, fileId: number): Promise<void> {
-    await api.delete(`/pos/product/${productId}/delete-file/${fileId}`);
+    await api.delete(`/pos/product/${productId}/delete-file-module/${fileId}`);
   },
 
   async getAllProductTypes(
-    params?: string
+    searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IProductType>> {
+    const params = new URLSearchParams();
+
+    params.append('page', String(searchParams.page || '0'));
+    params.append('size', String(searchParams.size || '100'));
+
+    if (searchParams.filters) {
+      params.append('filters', searchParams.filters);
+    }
+
     const response = await api.get<PaginatedResponse<IProductType>>(
       `/pos/product-type/`,
       { params }

@@ -93,7 +93,10 @@ export const UpdateProductForm = ({ productId }: { productId: number }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <div className='grid grid-cols-1 items-start gap-x-2 gap-y-4 md:grid-cols-6'>
           <ProductFormImages
-            images={product?.files || []}
+            images={
+              product?.files.filter((f) => !deletedImageIds.includes(f.id)) ||
+              []
+            }
             setDeletedImages={setDeletedImageIds}
           />
 

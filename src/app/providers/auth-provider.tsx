@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/entities/auth';
 import { BaseLoading } from '@/shared/ui';
@@ -11,12 +11,23 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { setUser, me, isLoading, user, error } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const getMe = async () => {
+    try {
+      setLoading(true);
+      await me();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    me();
-  }, [me]);
+    getMe();
+  }, []);
 
   useEffect(() => {
     if (isLoading) return;
@@ -34,7 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [user, isLoading, router, searchParams, setUser]);
 
-  if (isLoading) {
+  if (loading) {
     return <BaseLoading className='min-h-screen items-center' />;
   }
   if (error) {

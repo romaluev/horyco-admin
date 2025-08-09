@@ -24,49 +24,56 @@ export const getNavItems = (): NavItem[] => [
     title: 'Панель управления',
     url: '/dashboard/overview',
     icon: 'dashboard',
+    shortcut: ['D'],
     isActive: false,
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
     title: 'Продукты',
+    shortcut: ['P'],
     url: '/dashboard/products',
     icon: 'product',
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Категории',
+    shortcut: ['C'],
     url: '/dashboard/categories',
     icon: 'pizza',
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Сотрудники',
+    shortcut: ['E'],
     url: '/dashboard/employee',
     icon: 'product',
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Филиалы',
+    shortcut: ['B'],
     url: '/dashboard/branches',
     icon: 'hierarchy',
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Залы',
+    shortcut: ['H'],
     url: '/dashboard/halls',
     icon: 'kanban',
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
     title: 'Стол менеджмент',
+    shortcut: ['cmd', 'SHIFT', 'T'],
     url: '/dashboard/table',
     icon: 'layoutGrid',
     isActive: false,
-    items: [] // No child items
+    items: []
   }
 ];

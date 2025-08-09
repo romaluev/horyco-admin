@@ -30,7 +30,7 @@ const additionSchema = z.object({
   isRequired: z.boolean(),
   isMultiple: z.boolean(),
   limit: z.number().min(1, { message: 'Лимит должен быть не менее 1' }),
-  additionProducts: z.array(additionProductSchema).min(0),
+  additionProducts: z.array(additionProductSchema).min(1),
   productId: z.number().optional(),
   isDeleted: z.boolean().optional()
 });
@@ -38,7 +38,6 @@ const additionSchema = z.object({
 export const productSchema = z.object({
   image: z
     .any()
-    .refine((files) => files?.length, 'Добавьте картинки к продукту')
     .refine((files) => {
       if (!files?.length) return true;
       return files[0]?.size <= MAX_FILE_SIZE;

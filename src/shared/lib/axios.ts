@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-export const BASE_API_URL = 'https://dev-api.oshlab.uz';
+export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
   baseURL: BASE_API_URL,
@@ -46,5 +46,4 @@ api.interceptors.response.use(
   }
 );
 
-// Export the axios instance as default
 export default api;
