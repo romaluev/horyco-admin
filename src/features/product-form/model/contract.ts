@@ -38,7 +38,6 @@ const additionSchema = z.object({
 export const productSchema = z.object({
   image: z
     .any()
-    .refine((files) => files?.length, 'Добавьте картинки к продукту')
     .refine((files) => {
       if (!files?.length) return true;
       return files[0]?.size <= MAX_FILE_SIZE;

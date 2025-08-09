@@ -89,7 +89,7 @@ export const productAPi = {
   },
 
   async deleteFile(productId: number, fileId: number): Promise<void> {
-    await api.delete(`/pos/product/${productId}/delete-file/${fileId}`);
+    await api.delete(`/pos/product/${productId}/delete-file-module/${fileId}`);
   },
 
   async getAllProductTypes(
