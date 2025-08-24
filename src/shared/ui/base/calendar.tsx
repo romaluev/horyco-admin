@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { DayPicker } from 'react-day-picker';
 import type { ComponentProps } from 'react';
+import { ru, Locale } from 'date-fns/locale';
+import { format } from 'date-fns';
 
 import { cn } from '@/shared/lib/utils';
 import { buttonVariants } from '@/shared/ui/base/button';
@@ -12,21 +14,40 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 const LeftIcon = () => <ChevronLeftIcon className='size-4' />;
 const RightIcon = () => <ChevronRightIcon className='size-4' />;
 
+// Форматирование месяца на русском языке с заглавной буквы
+const formatCaption = (date: Date, options?: { locale?: Locale }) => {
+  const formatted = format(date, 'LLLL yyyy', { locale: options?.locale });
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+};
+
+// Форматирование дней недели на русском языке
+const formatWeekdayName = (date: Date, options?: { locale?: Locale }) => {
+  return format(date, 'EEEEEE', { locale: options?.locale }).toUpperCase();
+};
+
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  locale = ru,
+  weekStartsOn = 1,
   ...props
 }: ComponentProps<typeof DayPicker>) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      locale={locale}
+      weekStartsOn={weekStartsOn}
+      formatters={{
+        formatCaption,
+        formatWeekdayName
+      }}
       className={cn('p-3', className)}
       classNames={{
         months: 'flex flex-col sm:flex-row gap-2',
         month: 'flex flex-col gap-4',
         caption: 'flex justify-center pt-1 relative items-center w-full',
-        caption_label: 'text-sm font-medium',
+        caption_label: 'text-sm font-medium capitalize',
         nav: 'flex items-center gap-1',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
@@ -65,8 +86,9 @@ function Calendar({
         ...classNames
       }}
       components={{
-        IconLeft: LeftIcon,
-        IconRight: RightIcon
+        // В версии 9 react-day-picker используется компонент Chevron вместо IconLeft и IconRight
+        Chevron: ({ orientation }: { orientation: 'left' | 'right' }) =>
+          orientation === 'left' ? <LeftIcon /> : <RightIcon />
       }}
       {...props}
     />
