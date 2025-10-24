@@ -86,9 +86,8 @@ function Calendar({
         ...classNames
       }}
       components={{
-        // В версии 9 react-day-picker используется компонент Chevron вместо IconLeft и IconRight
-        Chevron: ({ orientation }: { orientation: 'left' | 'right' }) =>
-          orientation === 'left' ? <LeftIcon /> : <RightIcon />
+        IconRight: () => <RightIcon />,
+        IconLeft: () => <LeftIcon />
       }}
       {...props}
     />
