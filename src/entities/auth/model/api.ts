@@ -1,4 +1,11 @@
-import { AuthRequest, AuthResponse } from '.';
+import {
+  AuthRequest,
+  AuthResponse,
+  SendOTPRequest,
+  SendOTPResponse,
+  VerifyOTPRequest,
+  VerifyOTPResponse
+} from '.';
 import Cookies from 'js-cookie';
 import api from '@/shared/lib/axios';
 import { IEmployee } from '@/entities/employee';
@@ -18,6 +25,40 @@ export const authApi = {
 
     Cookies.set('access_token', response.data.access_token, {
       expires: 7, // 7 days
+      secure: true,
+      sameSite: 'strict'
+    });
+
+    return response.data;
+  },
+
+  /**
+   * Send OTP code for registration
+   * @param data - Phone number and business name
+   * @returns Promise with OTP send response
+   */
+  sendOTP: async (data: SendOTPRequest): Promise<SendOTPResponse> => {
+    const response = await api.post<SendOTPResponse>(
+      '/auth/register/send-otp',
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Verify OTP and complete registration
+   * @param data - OTP verification data
+   * @returns Promise with registration response
+   */
+  verifyOTP: async (data: VerifyOTPRequest): Promise<VerifyOTPResponse> => {
+    const response = await api.post<VerifyOTPResponse>(
+      '/auth/register/verify-otp',
+      data
+    );
+
+    // Store tokens
+    Cookies.set('access_token', response.data.accessToken, {
+      expires: 7,
       secure: true,
       sameSite: 'strict'
     });

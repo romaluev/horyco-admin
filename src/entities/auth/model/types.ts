@@ -20,6 +20,65 @@ export interface AuthResponse {
 }
 
 /**
+ * Registration OTP - Send OTP request
+ */
+export interface SendOTPRequest {
+  phone: string;
+  businessName: string;
+}
+
+/**
+ * Registration OTP - Send OTP response
+ */
+export interface SendOTPResponse {
+  success: boolean;
+  message: string;
+  otpSentAt: string;
+  expiresIn: number;
+  maskedPhone: string;
+}
+
+/**
+ * Registration - Verify OTP request
+ */
+export interface VerifyOTPRequest {
+  phone: string;
+  otp: string;
+  businessName: string;
+  ownerName: string;
+  password: string;
+}
+
+/**
+ * Registration - Verify OTP response
+ */
+export interface VerifyOTPResponse {
+  success: boolean;
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    tenantId: number;
+    phone: string;
+    fullName: string;
+    roles: string[];
+    permissions: string[];
+  };
+  tenant: {
+    id: number;
+    businessName: string;
+    status: string;
+    createdAt: string;
+  };
+  onboardingProgress: {
+    currentStep: string;
+    completedSteps: string[];
+    completionPercentage: number;
+    isCompleted: boolean;
+  };
+}
+
+/**
  * Error response structure
  */
 export interface ErrorResponse {

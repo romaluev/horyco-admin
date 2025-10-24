@@ -1,17 +1,15 @@
 import { Metadata } from 'next';
+import RegisterForm from '@/entities/auth/ui/register-form';
 import Link from 'next/link';
-import LoginForm from './login-form';
-import LogoIcon from '@/shared/ui/base/LogoIcon';
-import * as React from 'react';
 import Image from 'next/image';
 import logo from '@/shared/assets/logo.png';
 
 export const metadata: Metadata = {
-  title: 'Sign In',
-  description: 'Sign in to your account'
+  title: 'Регистрация',
+  description: 'Создайте аккаунт для вашего ресторана'
 };
 
-export default function SignInViewPage() {
+export default function RegisterPage() {
   return (
     <div className='relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none'>
       <div className='flex items-center justify-center p-4 text-lg font-medium'>
@@ -24,20 +22,20 @@ export default function SignInViewPage() {
       </div>
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
-          <LoginForm />
+          <RegisterForm />
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            Нет аккаунта?{' '}
+            Уже есть аккаунт?{' '}
             <Link
-              href='/auth/register'
-              className='hover:text-primary font-medium underline underline-offset-4'
+              href='/auth/sign-in'
+              className='hover:text-primary underline underline-offset-4'
             >
-              Зарегистрироваться
+              Войти
             </Link>
           </p>
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            Входя в аккаунт, вы соглашаетесь с{' '}
+            Регистрируясь, вы соглашаетесь с{' '}
             <Link
               href='/terms'
               className='hover:text-primary underline underline-offset-4'

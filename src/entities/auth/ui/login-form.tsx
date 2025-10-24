@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/entities/auth/model/store';
+import { onboardingApi } from '@/entities/onboarding';
 import { Button } from '@/shared/ui/base/button';
 import {
   Form,
@@ -61,8 +62,42 @@ const LoginForm = () => {
       setGeneralError(null);
       clearError();
       await login(data.phone, data.password);
-      me();
+      await me();
 
+      // TODO: Uncomment when API is ready
+      // Check onboarding status
+      // try {
+      //   const onboardingProgress = await onboardingApi.getProgress();
+      //
+      //   // If onboarding is not completed, redirect to appropriate step
+      //   if (!onboardingProgress.isCompleted) {
+      //     const currentStep = onboardingProgress.currentStep;
+      //
+      //     // Map backend step names to routes
+      //     const stepRoutes: Record<string, string> = {
+      //       'REGISTRATION_COMPLETE': '/onboarding/business-info',
+      //       'BUSINESS_INFO_VERIFIED': '/onboarding/branch-setup',
+      //       'BRANCH_SETUP': '/onboarding/menu-template',
+      //       'MENU_TEMPLATE': '/onboarding/payment-setup',
+      //       'PAYMENT_SETUP': '/onboarding/staff-invite',
+      //       'STAFF_INVITED': '/onboarding/complete',
+      //       'GO_LIVE': '/dashboard'
+      //     };
+      //
+      //     const nextRoute = stepRoutes[currentStep] || '/onboarding/business-info';
+      //     router.push(nextRoute);
+      //     return;
+      //   }
+      // } catch (err) {
+      //   // If onboarding check fails, proceed to normal redirect
+      //   console.log('Could not check onboarding status:', err);
+      // }
+
+      // TEMPORARY: For testing UI, redirect to onboarding by default
+      router.push('/onboarding/business-info');
+      return;
+
+      // Normal redirect logic for completed onboarding
       const redirectPath = searchParams?.get('redirect');
 
       if (
