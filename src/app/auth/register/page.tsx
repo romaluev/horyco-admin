@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import RegisterForm from '@/entities/auth/ui/register-form';
+import { RegistrationFlow } from '@/features/auth';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '@/shared/assets/logo.png';
@@ -16,13 +16,13 @@ export default function RegisterPage() {
         <Image
           className='mr-1 !h-10 !w-10 overflow-hidden rounded-2xl'
           src={logo}
-          alt=''
+          alt='OshXona'
         />
         <h1 className='py-4 text-2xl font-semibold text-[#023055]'>OshXona</h1>
       </div>
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
-          <RegisterForm />
+          <RegistrationFlow />
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
             Уже есть аккаунт?{' '}

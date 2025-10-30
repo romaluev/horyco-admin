@@ -1,55 +1,22 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { ReactNode, useEffect } from 'react';
 import { useAuthStore } from '@/entities/auth';
-import { BaseLoading } from '@/shared/ui';
+import Cookies from 'js-cookie';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { setUser, me, isLoading, user, error } = useAuthStore();
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const getMe = async () => {
-    try {
-      setLoading(true);
-      await me();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
+  const { me } = useAuthStore();
 
   useEffect(() => {
-    getMe();
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    const redirectPath = searchParams?.get('redirect');
-
-    if (
-      !user &&
-      redirectPath &&
-      redirectPath.startsWith('/') &&
-      !redirectPath.startsWith('//') &&
-      !redirectPath.includes(':')
-    ) {
-      router.push(redirectPath);
+    const token = Cookies.get('access_token');
+    if (token) {
+      me();
     }
-  }, [user, isLoading, router, searchParams, setUser]);
+  }, [me]);
 
-  if (loading) {
-    return <BaseLoading className='min-h-screen items-center' />;
-  }
-  if (error) {
-    return <div>Что-то пошло не так, попробуйте перезагрузить страницу</div>;
-  }
   return <>{children}</>;
 }

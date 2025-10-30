@@ -4,7 +4,9 @@ import {
   SendOTPRequest,
   SendOTPResponse,
   VerifyOTPRequest,
-  VerifyOTPResponse
+  VerifyOTPResponse,
+  CompleteRegistrationRequest,
+  CompleteRegistrationResponse
 } from '.';
 import Cookies from 'js-cookie';
 import api from '@/shared/lib/axios';
@@ -23,11 +25,33 @@ export const authApi = {
   login: async (credentials: AuthRequest): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/login', credentials);
 
-    Cookies.set('access_token', response.data.access_token, {
-      expires: 7, // 7 days
-      secure: true,
-      sameSite: 'strict'
-    });
+    console.log('Login response:', response.data);
+
+    // Store tokens from nested data structure
+    if (response.data.success && response.data.data) {
+      const accessToken = response.data.data.accessToken;
+      const refreshToken = response.data.data.refreshToken;
+
+      console.log('Saving access token:', accessToken);
+      console.log('Saving refresh token:', refreshToken);
+
+      Cookies.set('access_token', accessToken, {
+        expires: 7, // 7 days
+        secure: false, // Changed to false for localhost
+        sameSite: 'lax'
+      });
+
+      Cookies.set('refresh_token', refreshToken, {
+        expires: 7,
+        secure: false, // Changed to false for localhost
+        sameSite: 'lax'
+      });
+
+      // Verify cookie was set
+      console.log('Cookie after setting:', Cookies.get('access_token'));
+    } else {
+      console.error('Login response structure is wrong:', response.data);
+    }
 
     return response.data;
   },
@@ -39,35 +63,67 @@ export const authApi = {
    */
   sendOTP: async (data: SendOTPRequest): Promise<SendOTPResponse> => {
     const response = await api.post<SendOTPResponse>(
-      '/auth/register/send-otp',
+      '/auth/register/request-otp',
       data
     );
     return response.data;
   },
 
   /**
-   * Verify OTP and complete registration
-   * @param data - OTP verification data
-   * @returns Promise with registration response
+   * Verify OTP code (Step 2 of registration)
+   * @param data - Phone and OTP code
+   * @returns Promise with verification result
    */
   verifyOTP: async (data: VerifyOTPRequest): Promise<VerifyOTPResponse> => {
     const response = await api.post<VerifyOTPResponse>(
       '/auth/register/verify-otp',
       data
     );
+    return response.data;
+  },
 
-    // Store tokens
-    Cookies.set('access_token', response.data.accessToken, {
-      expires: 7,
-      secure: true,
-      sameSite: 'strict'
-    });
+  /**
+   * Complete registration (Step 3 of registration)
+   * @param data - Registration completion data
+   * @returns Promise with registration response
+   */
+  completeRegistration: async (
+    data: CompleteRegistrationRequest
+  ): Promise<CompleteRegistrationResponse> => {
+    const response = await api.post<CompleteRegistrationResponse>(
+      '/auth/register/complete',
+      data
+    );
+
+    console.log('Registration response:', response.data);
+
+    // Store tokens from nested data structure
+    if (response.data.success && response.data.data) {
+      const accessToken = response.data.data.accessToken;
+      const refreshToken = response.data.data.refreshToken;
+
+      console.log('Saving access token:', accessToken);
+
+      Cookies.set('access_token', accessToken, {
+        expires: 7,
+        secure: false, // Changed to false for localhost
+        sameSite: 'lax'
+      });
+
+      Cookies.set('refresh_token', refreshToken, {
+        expires: 7,
+        secure: false, // Changed to false for localhost
+        sameSite: 'lax'
+      });
+
+      console.log('Cookie after setting:', Cookies.get('access_token'));
+    }
 
     return response.data;
   },
 
   myProfile: async (): Promise<IEmployee> => {
-    const response = await api.get<IEmployee>('/dashboard/profile');
+    const response = await api.get<IEmployee>('/auth/me');
     return response.data;
   },
 

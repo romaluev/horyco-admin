@@ -32,13 +32,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       set({ isLoading: true, error: null });
 
-      const { access_token } = await authApi.login({
+      const response = await authApi.login({
         phone,
         password
       });
 
+      // Extract token from nested structure
+      const accessToken = response.data?.accessToken;
+
       set({
-        token: access_token,
+        token: accessToken,
         isAuthenticated: true,
         isLoading: false
       });

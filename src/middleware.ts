@@ -16,7 +16,6 @@ const ONBOARDING_ROUTES = [
   '/onboarding/business-info',
   '/onboarding/branch-setup',
   '/onboarding/menu-template',
-  '/onboarding/payment-setup',
   '/onboarding/staff-invite',
   '/onboarding/complete'
 ];

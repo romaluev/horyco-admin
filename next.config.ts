@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'oshposapi.021.uz',
         port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'ooni.com',
+        port: ''
       }
     ]
   },

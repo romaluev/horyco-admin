@@ -9,14 +9,26 @@ export interface AuthRequest {
 
 /**
  * Authentication response
- * The structure is inferred from the backend auth.service.ts
+ * Updated to match new API structure
  */
 export interface AuthResponse {
-  access_token: string;
-  user: {
-    id: number;
-    // Add other user properties as needed
+  success: boolean;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    tokenType: string;
+    expiresIn: number;
+    employee: {
+      id: number;
+      phone: string;
+      fullName: string;
+      roles: string[];
+      tenantId: number;
+      activeBranchId: number;
+    };
   };
+  timestamp: string;
+  requestId: string;
 }
 
 /**
@@ -28,54 +40,65 @@ export interface SendOTPRequest {
 }
 
 /**
- * Registration OTP - Send OTP response
+ * Registration OTP - Send OTP response (actual API structure)
  */
 export interface SendOTPResponse {
   success: boolean;
-  message: string;
-  otpSentAt: string;
-  expiresIn: number;
-  maskedPhone: string;
+  data: {
+    message: string;
+    expiresAt: string; // ISO date string
+  };
+  timestamp: string;
+  requestId: string;
 }
 
 /**
- * Registration - Verify OTP request
+ * Registration - Verify OTP request (Step 2)
  */
 export interface VerifyOTPRequest {
   phone: string;
-  otp: string;
-  businessName: string;
-  ownerName: string;
+  code: string;
+}
+
+/**
+ * Registration - Verify OTP response (Step 2)
+ */
+export interface VerifyOTPResponse {
+  verified: boolean;
+  message: string;
+}
+
+/**
+ * Registration - Complete registration request (Step 3)
+ */
+export interface CompleteRegistrationRequest {
+  phone: string;
+  fullName: string;
+  email?: string;
   password: string;
 }
 
 /**
- * Registration - Verify OTP response
+ * Registration - Complete registration response (Step 3)
  */
-export interface VerifyOTPResponse {
+export interface CompleteRegistrationResponse {
   success: boolean;
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: number;
-    tenantId: number;
-    phone: string;
-    fullName: string;
-    roles: string[];
-    permissions: string[];
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    tokenType: string;
+    expiresIn: number;
+    employee: {
+      id: number;
+      phone: string;
+      fullName: string;
+      roles: string[];
+      tenantId: number;
+      activeBranchId: number;
+    };
   };
-  tenant: {
-    id: number;
-    businessName: string;
-    status: string;
-    createdAt: string;
-  };
-  onboardingProgress: {
-    currentStep: string;
-    completedSteps: string[];
-    completionPercentage: number;
-    isCompleted: boolean;
-  };
+  timestamp: string;
+  requestId: string;
 }
 
 /**

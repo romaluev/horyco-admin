@@ -1,5 +1,5 @@
 {
-  "name": "next-shadcn-dashboard-starter",
+  "name": "osh-manager",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,15 +9,21 @@
     "start": "next start -p 3002",
     "start:prod": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint src --fix && pnpm format",
-    "lint:strict": "eslint --max-warnings=0 src",
-    "format": "prettier --write .",
-    "format:check": "prettier -c -w .",
+    "lint:fix": "next lint --fix",
+    "lint:strict": "next lint --max-warnings=0",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" \"*.{js,ts,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" \"*.{js,ts,json,md}\"",
+    "type-check": "tsc --noEmit",
+    "check": "pnpm run type-check && pnpm run lint:strict && pnpm run format:check",
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
-      "prettier --write --no-error-on-unmatched-pattern"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
     ]
   },
   "dependencies": {
@@ -109,7 +115,14 @@
     "@types/react-dom": "19.0.2",
     "@types/sort-by": "^1.2.3",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "prettier": "3.4.2",
