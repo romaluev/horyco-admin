@@ -1,6 +1,8 @@
 import React from 'react';
-import { SidebarTrigger } from '@/shared/ui/base/sidebar';
+
 import { Separator } from '@/shared/ui/base/separator';
+import { SidebarTrigger } from '@/shared/ui/base/sidebar';
+
 import { Breadcrumbs } from '../breadcrumbs';
 import SearchInput from '../search-input';
 import { UserNav } from './user-nav';

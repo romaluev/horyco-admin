@@ -1,26 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { IProductType } from '../../model/types';
-import { useDeleteProductType } from '../../model/mutations-product-type';
-import { useGetAllProductTypes } from '../../model/queries';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/shared/ui/base/table';
-import { Button } from '@/shared/ui/base/button';
+
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { ProductTypeForm } from './product-type-form';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+
+import { BaseLoading } from '@/shared/ui';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,8 +15,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
-import { BaseLoading } from '@/shared/ui';
+import { Button } from '@/shared/ui/base/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/shared/ui/base/dialog';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/shared/ui/base/table';
 import PageContainer from '@/shared/ui/layout/page-container';
+
+import { ProductTypeForm } from './product-type-form';
+import { useDeleteProductType } from '../../model/mutations-product-type';
+import { useGetAllProductTypes } from '../../model/queries';
+
+import type { IProductType } from '../../model/types';
 
 export const ProductTypeTable = () => {
   const { data: response, isLoading } = useGetAllProductTypes();
@@ -65,7 +69,7 @@ export const ProductTypeTable = () => {
 
   return (
     <div className='space-y-4'>
-      <PageContainer scrollable={true}>
+      <PageContainer scrollable>
         <Table className='!mb-15'>
           <TableHeader>
             <TableRow>

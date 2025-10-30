@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
 import { AlertCircle, X } from 'lucide-react';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Card,
@@ -11,6 +14,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
+
 import { useGetOnboardingProgress } from '@/entities/onboarding';
 
 export function OnboardingReminderDialog() {

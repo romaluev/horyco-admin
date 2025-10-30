@@ -1,12 +1,24 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
 import { useRouter } from 'next/navigation';
-import { authApi } from '@/entities/auth/model/api';
-import { useAuthStore } from '@/entities/auth/model/store';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircle, Loader2, Check, X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+import { Alert, AlertDescription } from '@/shared/ui/base/alert';
 import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
+import { Checkbox } from '@/shared/ui/base/checkbox';
 import {
   Form,
   FormControl,
@@ -16,21 +28,14 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { AlertCircle, Loader2, Check, X } from 'lucide-react';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
-import PasswordInput from '@/shared/ui/base/passsword-input';
 import { Input } from '@/shared/ui/base/input';
-import { Checkbox } from '@/shared/ui/base/checkbox';
-import { toast } from 'sonner';
+import PasswordInput from '@/shared/ui/base/passsword-input';
+import { PhoneInput } from '@/shared/ui/base/phone-input';
 import { Progress } from '@/shared/ui/base/progress';
+
+import { authApi } from '@/entities/auth/model/api';
+import { useAuthStore } from '@/entities/auth/model/store';
+
 import {
   checkPasswordStrength,
   registrationStep1Schema,
@@ -102,6 +107,7 @@ export const RegistrationFlow = () => {
     } else if (otpExpiry === 0) {
       setCanResend(true);
     }
+    return undefined;
   }, [step, otpExpiry]);
 
   // Cooldown timer after max attempts
@@ -117,6 +123,7 @@ export const RegistrationFlow = () => {
       setOtpAttempts(0);
       setCanResend(true);
     }
+    return undefined;
   }, [cooldownTime, maxAttemptsReached]);
 
   // Auto-submit when OTP is complete
@@ -442,7 +449,7 @@ export const RegistrationFlow = () => {
                       <PhoneInput
                         defaultCountry={'UZ'}
                         placeholder={'90 123 45 67'}
-                        limitMaxLength={true}
+                        limitMaxLength
                         countries={['UZ']}
                         {...field}
                         disabled={isLoading}

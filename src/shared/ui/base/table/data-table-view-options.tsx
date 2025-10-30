@@ -1,8 +1,11 @@
 'use client';
 
-import type { Table } from '@tanstack/react-table';
+import * as React from 'react';
+
+import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
 import { Settings2 } from 'lucide-react';
 
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/base/button';
 import {
   Command,
@@ -17,9 +20,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/shared/ui/base/popover';
-import { cn } from '@/shared/lib/utils';
-import * as React from 'react';
-import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
+
+import type { Table } from '@tanstack/react-table';
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;

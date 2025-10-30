@@ -1,51 +1,54 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+
+import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
+import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations'
+import { useFormPersist } from '@/shared/hooks/use-form-persist'
+import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { Button } from '@/shared/ui/base/button'
 import {
-  useGetOnboardingProgress,
-  useSubmitBranchSetup
-} from '@/entities/onboarding';
-import {
-  type BranchSetupFormValues,
-  branchSetupSchema
-} from '@/features/onboarding/model';
-import { OnboardingLayout } from '@/shared/ui/onboarding';
-import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations';
-import BaseLoading from '@/shared/ui/base-loading';
-import { Button } from '@/shared/ui/base/button';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Checkbox } from '@/shared/ui/base/checkbox';
-import { TimePicker } from '@/shared/ui/base/time-picker';
-import { Loader2 } from 'lucide-react';
-import { getNextStep, getPreviousStep } from '@/shared/config/onboarding';
-import { useFormPersist } from '@/shared/hooks/use-form-persist';
-import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
+  SelectValue,
+} from '@/shared/ui/base/select'
+import { Switch } from '@/shared/ui/base/switch'
+import { TimePicker } from '@/shared/ui/base/time-picker'
+import BaseLoading from '@/shared/ui/base-loading'
+import { OnboardingLayout } from '@/shared/ui/onboarding'
+
+import {
+  useGetOnboardingProgress,
+  useSubmitBranchSetup,
+} from '@/entities/onboarding'
+import {
+  type BranchSetupFormValues,
+  branchSetupSchema,
+} from '@/features/onboarding/model'
 
 const DAYS_OF_WEEK = [
   { key: 'monday', label: 'Понедельник' },
@@ -54,19 +57,19 @@ const DAYS_OF_WEEK = [
   { key: 'thursday', label: 'Четверг' },
   { key: 'friday', label: 'Пятница' },
   { key: 'saturday', label: 'Суббота' },
-  { key: 'sunday', label: 'Воскресенье' }
-];
+  { key: 'sunday', label: 'Воскресенье' },
+]
 
 export default function BranchSetupPage() {
-  const router = useRouter();
-  const [selectedCity, setSelectedCity] = useState<string>('');
+  const router = useRouter()
+  const [selectedCity, setSelectedCity] = useState<string>('')
   const [availableRegions, setAvailableRegions] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
+    { id: string; name: string }[]
+  >([])
 
   // Fetch onboarding progress
-  const { data: progress, isLoading: progressLoading } =
-    useGetOnboardingProgress();
+  const { data: progress, isLoading: isProgressLoading } =
+    useGetOnboardingProgress()
 
   // Form initialization
   const form = useForm<BranchSetupFormValues>({
@@ -83,50 +86,48 @@ export default function BranchSetupPage() {
         thursday: { open: '09:00', close: '23:00', isClosed: false },
         friday: { open: '09:00', close: '01:00', isClosed: false },
         saturday: { open: '10:00', close: '01:00', isClosed: false },
-        sunday: { open: '10:00', close: '23:00', isClosed: false }
+        sunday: { open: '10:00', close: '23:00', isClosed: false },
       },
       dineInEnabled: true,
       takeawayEnabled: true,
-      deliveryEnabled: false
-    }
-  });
+      deliveryEnabled: false,
+    },
+  })
 
   // Draft saving functionality
   const { clearDraft } = useFormPersist(form, 'onboarding-branch-setup-draft', {
-    exclude: ['dineInEnabled', 'takeawayEnabled', 'deliveryEnabled']
-  });
+    exclude: ['dineInEnabled', 'takeawayEnabled', 'deliveryEnabled'],
+  })
 
   // Unsaved changes warning
-  const { confirmNavigation } = useUnsavedChangesWarning(
-    form.formState.isDirty
-  );
+  const { confirmNavigation } = useUnsavedChangesWarning(form.formState.isDirty)
 
   // Submit mutation
   const { mutate: submitBranchSetup, isPending: isSubmitting } =
     useSubmitBranchSetup({
       onSuccess: () => {
-        clearDraft();
-        const nextStep = getNextStep('BRANCH_SETUP');
-        router.push(nextStep?.route || '/onboarding/menu-template');
-      }
-    });
+        clearDraft()
+        const nextStep = getNextStep('BRANCH_SETUP')
+        router.push(nextStep?.route || '/onboarding/menu-template')
+      },
+    })
 
   const handleCityChange = (cityId: string) => {
-    setSelectedCity(cityId);
-    const city = UZBEKISTAN_CITIES.find((c) => c.id === cityId);
+    setSelectedCity(cityId)
+    const city = UZBEKISTAN_CITIES.find((c) => c.id === cityId)
     if (city) {
-      form.setValue('city', city.name);
-      form.setValue('region', ''); // Clear region when city changes
-      setAvailableRegions(city.regions);
+      form.setValue('city', city.name)
+      form.setValue('region', '') // Clear region when city changes
+      setAvailableRegions(city.regions)
     }
-  };
+  }
 
   const handleRegionChange = (regionId: string) => {
-    const region = availableRegions.find((r) => r.id === regionId);
+    const region = availableRegions.find((r) => r.id === regionId)
     if (region) {
-      form.setValue('region', region.name);
+      form.setValue('region', region.name)
     }
-  };
+  }
 
   const onSubmit = async (data: BranchSetupFormValues) => {
     // Filter out isClosed field for API submission
@@ -134,12 +135,12 @@ export default function BranchSetupPage() {
       (acc, [day, hours]) => {
         acc[day as keyof typeof data.businessHours] = {
           open: hours.open,
-          close: hours.close
-        };
-        return acc;
+          close: hours.close,
+        }
+        return acc
       },
       {} as Record<string, { open: string; close: string }>
-    );
+    )
 
     submitBranchSetup({
       branchName: data.branchName,
@@ -149,30 +150,30 @@ export default function BranchSetupPage() {
       businessHours: businessHours as any,
       dineInEnabled: data.dineInEnabled,
       takeawayEnabled: data.takeawayEnabled,
-      deliveryEnabled: data.deliveryEnabled
-    });
-  };
+      deliveryEnabled: data.deliveryEnabled,
+    })
+  }
 
   const handleBack = async () => {
-    const canLeave = await confirmNavigation();
+    const canLeave = await confirmNavigation()
     if (canLeave) {
-      const previousStep = getPreviousStep('BRANCH_SETUP');
-      router.push(previousStep?.route || '/onboarding/business-info');
+      const previousStep = getPreviousStep('BRANCH_SETUP')
+      router.push(previousStep?.route || '/onboarding/business-info')
     }
-  };
+  }
 
-  if (progressLoading) {
-    return <BaseLoading />;
+  if (isProgressLoading) {
+    return <BaseLoading />
   }
 
   return (
     <OnboardingLayout
-      currentStep='BRANCH_SETUP'
+      currentStep="BRANCH_SETUP"
       completedSteps={['BUSINESS_INFO_VERIFIED']}
-      title='Настройка филиала'
-      description='Укажите информацию о вашем первом филиале'
+      title="Настройка филиала"
+      description="Укажите информацию о вашем первом филиале"
     >
-      <Card className='mx-auto w-full max-w-3xl'>
+      <Card className="mx-auto w-full max-w-3xl">
         <CardHeader>
           <CardTitle>Настройка филиала</CardTitle>
           <CardDescription>
@@ -181,18 +182,18 @@ export default function BranchSetupPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* Branch Name */}
               <FormField
                 control={form.control}
-                name='branchName'
+                name="branchName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Название филиала *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder='Главный филиал'
+                        placeholder="Главный филиал"
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -202,10 +203,10 @@ export default function BranchSetupPage() {
               />
 
               {/* City and Region Selection */}
-              <div className='grid gap-4 sm:grid-cols-2'>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
-                  name='city'
+                  name="city"
                   render={() => (
                     <FormItem>
                       <FormLabel>Город *</FormLabel>
@@ -216,7 +217,7 @@ export default function BranchSetupPage() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder='Выберите город' />
+                            <SelectValue placeholder="Выберите город" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -234,7 +235,7 @@ export default function BranchSetupPage() {
 
                 <FormField
                   control={form.control}
-                  name='region'
+                  name="region"
                   render={() => (
                     <FormItem>
                       <FormLabel>Район *</FormLabel>
@@ -244,7 +245,7 @@ export default function BranchSetupPage() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder='Выберите район' />
+                            <SelectValue placeholder="Выберите район" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -264,14 +265,14 @@ export default function BranchSetupPage() {
               {/* Address */}
               <FormField
                 control={form.control}
-                name='address'
+                name="address"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Полный адрес *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder='ул. Мустакиллик, д. 45'
+                        placeholder="ул. Мустакиллик, д. 45"
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -281,187 +282,201 @@ export default function BranchSetupPage() {
               />
 
               {/* Business Hours */}
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 <div>
-                  <h3 className='mb-2 text-sm font-medium'>Часы работы</h3>
-                  <p className='text-muted-foreground text-sm'>
+                  <h3 className="mb-2 text-sm font-medium">Часы работы</h3>
+                  <p className="text-muted-foreground text-sm">
                     Настройте график работы для каждого дня недели
                   </p>
                 </div>
 
-                <div className='space-y-3'>
+                <div className="space-y-3">
                   {DAYS_OF_WEEK.map(({ key, label }) => {
                     const dayKey =
-                      key as keyof BranchSetupFormValues['businessHours'];
+                      key as keyof BranchSetupFormValues['businessHours']
                     return (
                       <div
                         key={key}
-                        className='flex items-center gap-4 rounded-lg border p-3'
+                        className="flex items-center gap-4 rounded-lg border p-3"
                       >
-                        <div className='w-32'>
-                          <span className='text-sm font-medium'>{label}</span>
+                        <div className="w-32">
+                          <span className="text-sm font-medium">{label}</span>
+                        </div>
+
+                        <div className="flex flex-1 items-center gap-2">
+                          <FormField
+                            control={form.control}
+                            name={`businessHours.${dayKey}.open`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormControl>
+                                  <TimePicker
+                                    {...field}
+                                    disabled={
+                                      form.watch(
+                                        `businessHours.${dayKey}.isClosed`
+                                      ) || isSubmitting
+                                    }
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <span className="text-muted-foreground">—</span>
+                          <FormField
+                            control={form.control}
+                            name={`businessHours.${dayKey}.close`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormControl>
+                                  <TimePicker
+                                    {...field}
+                                    disabled={
+                                      form.watch(
+                                        `businessHours.${dayKey}.isClosed`
+                                      ) || isSubmitting
+                                    }
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
                         </div>
 
                         <FormField
                           control={form.control}
                           name={`businessHours.${dayKey}.isClosed`}
                           render={({ field }) => (
-                            <FormItem className='flex items-center space-x-2'>
+                            <FormItem className="flex items-center gap-2">
+                              <FormLabel className="text-sm font-normal">
+                                Выходной
+                              </FormLabel>
                               <FormControl>
-                                <Checkbox
+                                <Switch
                                   checked={field.value}
                                   onCheckedChange={field.onChange}
                                   disabled={isSubmitting}
                                 />
                               </FormControl>
-                              <FormLabel className='cursor-pointer text-sm font-normal'>
-                                Выходной
-                              </FormLabel>
                             </FormItem>
                           )}
                         />
-
-                        <div className='flex flex-1 items-center gap-2'>
-                          <FormField
-                            control={form.control}
-                            name={`businessHours.${dayKey}.open`}
-                            render={({ field }) => (
-                              <FormItem className='flex-1'>
-                                <FormControl>
-                                  <TimePicker
-                                    {...field}
-                                    disabled={
-                                      form.watch(
-                                        `businessHours.${dayKey}.isClosed`
-                                      ) || isSubmitting
-                                    }
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <span className='text-muted-foreground'>—</span>
-                          <FormField
-                            control={form.control}
-                            name={`businessHours.${dayKey}.close`}
-                            render={({ field }) => (
-                              <FormItem className='flex-1'>
-                                <FormControl>
-                                  <TimePicker
-                                    {...field}
-                                    disabled={
-                                      form.watch(
-                                        `businessHours.${dayKey}.isClosed`
-                                      ) || isSubmitting
-                                    }
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
                       </div>
-                    );
+                    )
                   })}
                 </div>
               </div>
 
               {/* Service Types */}
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 <div>
-                  <h3 className='mb-2 text-sm font-medium'>
+                  <h3 className="mb-2 text-sm font-medium">
                     Типы обслуживания
                   </h3>
-                  <p className='text-muted-foreground text-sm'>
+                  <p className="text-muted-foreground text-sm">
                     Выберите доступные способы обслуживания клиентов
                   </p>
                 </div>
 
-                <FormField
-                  control={form.control}
-                  name='dineInEnabled'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                      <div className='space-y-0.5'>
-                        <FormLabel className='text-base'>
-                          Обслуживание в зале (Dine-in)
-                        </FormLabel>
-                        <p className='text-muted-foreground text-sm'>
-                          Управление столами и обслуживание официантами
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          disabled={isSubmitting}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <FormField
+                    control={form.control}
+                    name="dineInEnabled"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Card className="h-full p-0">
+                          <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
+                            <div className="space-y-1">
+                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                                В зале
+                              </FormLabel>
+                              <p className="text-muted-foreground text-xs">
+                                Можно заказать в зал
+                              </p>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={isSubmitting}
+                              />
+                            </FormControl>
+                          </CardContent>
+                        </Card>
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name='takeawayEnabled'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                      <div className='space-y-0.5'>
-                        <FormLabel className='text-base'>
-                          На вынос (Takeaway)
-                        </FormLabel>
-                        <p className='text-muted-foreground text-sm'>
-                          Заказы для самовывоза клиентами
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          disabled={isSubmitting}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="takeawayEnabled"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Card className="h-full p-0">
+                          <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
+                            <div className="space-y-1">
+                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                                Собой
+                              </FormLabel>
+                              <p className="text-muted-foreground text-xs">
+                                Можно забрать с собой
+                              </p>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={isSubmitting}
+                              />
+                            </FormControl>
+                          </CardContent>
+                        </Card>
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name='deliveryEnabled'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                      <div className='space-y-0.5'>
-                        <FormLabel className='text-base'>
-                          Доставка (Delivery)
-                        </FormLabel>
-                        <p className='text-muted-foreground text-sm'>
-                          Доставка заказов курьерами
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          disabled={isSubmitting}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="deliveryEnabled"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Card className="h-full p-0">
+                          <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
+                            <div className="space-y-1">
+                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                                Доставка
+                              </FormLabel>
+                              <p className="text-muted-foreground text-xs">
+                                Можно заказать доставку
+                              </p>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={isSubmitting}
+                              />
+                            </FormControl>
+                          </CardContent>
+                        </Card>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <div className='flex justify-end gap-4 pt-4'>
+              <div className="flex justify-end gap-4 pt-4">
                 <Button
-                  type='button'
-                  variant='outline'
+                  type="button"
+                  variant="outline"
                   onClick={handleBack}
                   disabled={isSubmitting}
                 >
                   Назад
                 </Button>
-                <Button type='submit' disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting && (
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Продолжить
                 </Button>
@@ -471,5 +486,5 @@ export default function BranchSetupPage() {
         </CardContent>
       </Card>
     </OnboardingLayout>
-  );
+  )
 }

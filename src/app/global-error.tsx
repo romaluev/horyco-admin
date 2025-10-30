@@ -1,15 +1,14 @@
-'use client';
+'use client'
 
-import NextError from 'next/error';
-import { useEffect } from 'react';
+import NextError from 'next/error'
 
 export default function GlobalError({
-  error
+  error: _error,
 }: {
-  error: Error & { digest?: string };
+  error: Error & { digest?: string }
 }) {
   return (
-    <html>
+    <html lang="en">
       <body>
         {/* `NextError` is the default Next.js error page component. Its type
         definition requires a `statusCode` prop. However, since the App Router
@@ -18,5 +17,5 @@ export default function GlobalError({
         <NextError statusCode={0} />
       </body>
     </html>
-  );
+  )
 }

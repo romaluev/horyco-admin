@@ -1,16 +1,19 @@
 'use client';
 
-import ProductCard from '@/entities/product/ui/product-card';
-import { PaginatedResponse } from '@/shared/types';
-import { IProduct } from '@/entities/product';
-import { BaseError, BaseLoading } from '@/shared/ui';
-import { UseQueryResult } from '@tanstack/react-query';
 
-type ProductListProps = {
+import { BaseError, BaseLoading } from '@/shared/ui';
+
+import ProductCard from '@/entities/product/ui/product-card';
+
+import type { IProduct } from '@/entities/product';
+import type { PaginatedResponse } from '@/shared/types';
+import type { UseQueryResult } from '@tanstack/react-query';
+
+interface ProductListProps {
   isLoading?: boolean;
   products?: UseQueryResult<PaginatedResponse<IProduct>>;
   DeleteButton?: React.ComponentType<{ id: number }>;
-};
+}
 
 export function ProductList({ products, DeleteButton }: ProductListProps) {
   if (products?.isLoading) return <BaseLoading />;

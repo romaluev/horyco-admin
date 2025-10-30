@@ -1,24 +1,28 @@
 import {
   useMutation,
-  useQueryClient,
-  UseMutationOptions
+  useQueryClient
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
+
 import { onboardingApi } from './api';
 import { onboardingKeys } from './query-keys';
+
 import type {
   BusinessInfoRequest,
   BusinessInfoResponse,
   BranchSetupRequest,
   BranchSetupResponse,
-  ApplyMenuTemplateRequest,
-  ApplyMenuTemplateResponse,
+  MenuSetupRequest,
+  MenuSetupResponse,
   StaffInviteRequest,
   StaffInviteResponse,
   CompleteOnboardingResponse,
   SkipStepRequest,
   SkipStepResponse
 } from './types';
+import type {
+  UseMutationOptions
+} from '@tanstack/react-query';
 
 // Submit business info
 export const useSubmitBusinessInfo = (
@@ -70,30 +74,47 @@ export const useSubmitBranchSetup = (
   });
 };
 
-// Apply menu template
-export const useApplyMenuTemplate = (
+// Submit menu setup
+export const useSubmitMenuSetup = (
   options?: Omit<
-    UseMutationOptions<
-      ApplyMenuTemplateResponse,
-      Error,
-      ApplyMenuTemplateRequest
-    >,
+    UseMutationOptions<MenuSetupResponse, Error, MenuSetupRequest>,
     'mutationFn'
   >
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ApplyMenuTemplateRequest) =>
-      onboardingApi.applyMenuTemplate(data),
+    mutationFn: (data: MenuSetupRequest) =>
+      onboardingApi.submitMenuSetup(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success(data.message);
+      toast.success(
+        `Меню создано: ${data.categoriesCreated} категорий, ${data.productsCreated} блюд`
+      );
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || 'Не удалось применить шаблон'
+        error.response?.data?.message || 'Не удалось создать меню'
       );
+    },
+    ...options
+  });
+};
+
+// Skip menu setup
+export const useSkipMenuSetup = (
+  options?: Omit<UseMutationOptions<SkipStepResponse, Error, void>, 'mutationFn'>
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => onboardingApi.skipMenuSetup(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
+      toast.info('Меню будет настроено позже');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Не удалось пропустить шаг');
     },
     ...options
   });

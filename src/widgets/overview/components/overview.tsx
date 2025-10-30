@@ -1,4 +1,6 @@
-import PageContainer from '@/shared/ui/layout/page-container';
+import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react';
+
+import { Badge } from '@/shared/ui/base/badge';
 import { Button } from '@/shared/ui/base/button';
 import {
   Card,
@@ -14,12 +16,14 @@ import {
   TabsList,
   TabsTrigger
 } from '@/shared/ui/base/tabs';
+import PageContainer from '@/shared/ui/layout/page-container';
+
 import { AreaGraph } from './area-graph';
 import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
 import { RecentSales } from './recent-sales';
-import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react';
-import { Badge } from '@/shared/ui/base/badge';
+
+
 
 export default function OverViewPage() {
   return (

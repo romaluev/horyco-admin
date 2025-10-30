@@ -1,7 +1,8 @@
 'use client';
 
-import type { ActionId, ActionImpl } from 'kbar';
 import * as React from 'react';
+
+import type { ActionId, ActionImpl } from 'kbar';
 
 const ResultItem = React.forwardRef(
   (
@@ -33,7 +34,7 @@ const ResultItem = React.forwardRef(
           <div
             id='kbar-result-item'
             className='border-primary bg-accent/50 absolute inset-0 z-[-1]! border-l-4'
-          ></div>
+           />
         )}
         <div className='relative z-10 flex items-center gap-2'>
           {action.icon && action.icon}

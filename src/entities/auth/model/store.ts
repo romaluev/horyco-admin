@@ -1,8 +1,11 @@
-import { create } from 'zustand';
 import Cookies from 'js-cookie';
-import { IEmployee } from '@/entities/employee';
-import { authApi } from '@/entities/auth/model/api';
 import { toast } from 'sonner';
+import { create } from 'zustand';
+
+import { authApi } from '@/entities/auth/model/api';
+
+import type { IEmployee } from '@/entities/employee';
+
 
 interface AuthState {
   user: IEmployee | null;

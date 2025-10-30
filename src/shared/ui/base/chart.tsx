@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+
 import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/shared/lib/utils';
@@ -18,9 +19,9 @@ export type ChartConfig = {
   );
 };
 
-type ChartContextProps = {
+interface ChartContextProps {
   config: ChartConfig;
-};
+}
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
 

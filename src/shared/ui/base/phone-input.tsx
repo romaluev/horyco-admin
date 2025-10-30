@@ -1,8 +1,10 @@
 import * as React from 'react';
+
 import { CheckIcon, ChevronsUpDown } from 'lucide-react';
 import * as RPNInput from 'react-phone-number-input';
 import flags from 'react-phone-number-input/flags';
 
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/base/button';
 import {
   Command,
@@ -19,7 +21,6 @@ import {
   PopoverTrigger
 } from '@/shared/ui/base/popover';
 import { ScrollArea } from '@/shared/ui/base/scroll-area';
-import { cn } from '@/shared/lib/utils';
 
 type PhoneInputProps = Omit<
   React.ComponentProps<'input'>,
@@ -70,14 +71,14 @@ const InputComponent = React.forwardRef<
 ));
 InputComponent.displayName = 'InputComponent';
 
-type CountryEntry = { label: string; value: RPNInput.Country | undefined };
+interface CountryEntry { label: string; value: RPNInput.Country | undefined }
 
-type CountrySelectProps = {
+interface CountrySelectProps {
   disabled?: boolean;
   value: RPNInput.Country;
   options: CountryEntry[];
   onChange: (country: RPNInput.Country) => void;
-};
+}
 
 const CountrySelect = ({
   disabled,

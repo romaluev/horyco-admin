@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import {
@@ -11,11 +12,13 @@ import {
   CardTitle
 } from '@/shared/ui/base/card';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
 } from '@/shared/ui/base/chart';
+
+import type {
+  ChartConfig} from '@/shared/ui/base/chart';
 
 export const description = 'An interactive bar chart';
 

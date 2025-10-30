@@ -1,21 +1,13 @@
 'use client';
 
-import {
-  productAPi,
-  useAttachProductImages,
-  useGetProductById,
-  useUpdateProduct
-} from '@/entities/product';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { FormProvider, useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { productSchema } from '../model/contract';
 
-import { ProductFormType } from './product-form-type';
-import { ProductFormAdditions } from './product-form-additions';
-import { ProductFormImages } from './product-form-images';
+import { useRouter } from 'next/navigation';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm } from 'react-hook-form';
+
+
 import {
   Button,
   FormControl,
@@ -26,7 +18,21 @@ import {
   Input,
   Textarea
 } from '@/shared/ui';
+
+import {
+  productAPi,
+  useAttachProductImages,
+  useGetProductById,
+  useUpdateProduct
+} from '@/entities/product';
 import { getChangedAdditions } from '@/features/product-form/lib/get-changed-additions';
+
+import { ProductFormAdditions } from './product-form-additions';
+import { ProductFormImages } from './product-form-images';
+import { ProductFormType } from './product-form-type';
+import { productSchema } from '../model/contract';
+
+import type * as z from 'zod';
 
 export const UpdateProductForm = ({ productId }: { productId: number }) => {
   const { mutateAsync: updateProductMutation } = useUpdateProduct();

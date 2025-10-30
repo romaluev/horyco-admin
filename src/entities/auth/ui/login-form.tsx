@@ -1,13 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuthStore } from '@/entities/auth/model/store';
-import { onboardingApi } from '@/entities/onboarding';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+
+import { Alert, AlertDescription } from '@/shared/ui/base/alert';
 import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
 import {
   Form,
   FormControl,
@@ -16,17 +27,12 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
 import PasswordInput from '@/shared/ui/base/passsword-input';
+import { PhoneInput } from '@/shared/ui/base/phone-input';
+
+import { useAuthStore } from '@/entities/auth/model/store';
+import { onboardingApi } from '@/entities/onboarding';
+
 
 // Define the form schema with Zod
 const loginFormSchema = z.object({
@@ -95,21 +101,19 @@ const LoginForm = () => {
 
       // TEMPORARY: For testing UI, redirect to onboarding by default
       router.push('/onboarding/business-info');
-      return;
 
-      // Normal redirect logic for completed onboarding
-      const redirectPath = searchParams?.get('redirect');
-
-      if (
-        redirectPath &&
-        redirectPath.startsWith('/') &&
-        !redirectPath.startsWith('//') &&
-        !redirectPath.includes(':')
-      ) {
-        router.push(redirectPath);
-      } else {
-        router.push('/dashboard');
-      }
+      // Normal redirect logic for completed onboarding (currently unreachable)
+      // const redirectPath = searchParams?.get('redirect');
+      // if (
+      //   redirectPath &&
+      //   redirectPath.startsWith('/') &&
+      //   !redirectPath.startsWith('//') &&
+      //   !redirectPath.includes(':')
+      // ) {
+      //   router.push(redirectPath);
+      // } else {
+      //   router.push('/dashboard');
+      // }
     } catch (error: any) {
       setGeneralError(
         error.response?.data?.message || 'Failed to login. Please try again.'
@@ -143,7 +147,7 @@ const LoginForm = () => {
                     <PhoneInput
                       defaultCountry={'UZ'}
                       placeholder={'90 123 45 67'}
-                      limitMaxLength={true}
+                      limitMaxLength
                       countries={['UZ']}
                       {...field}
                       disabled={isLoading}

@@ -1,4 +1,13 @@
-import { IProduct, useDeleteProduct } from '@/entities/product/model';
+
+import { useState } from 'react';
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+import { Pen } from 'lucide-react';
+
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { Button } from '@/shared/ui/base/button';
 import {
   Card,
   CardAction,
@@ -7,18 +16,16 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import Image from 'next/image';
-import { Button } from '@/shared/ui/base/button';
-import { Pen } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { BASE_API_URL } from '@/shared/lib/axios';
-import { useState } from 'react';
 import { AlertModal } from '@/shared/ui/modal/alert-modal';
 
-type ProductCardProps = {
+import { useDeleteProduct } from '@/entities/product/model';
+
+import type { IProduct} from '@/entities/product/model';
+
+interface ProductCardProps {
   DeleteButton?: React.ComponentType<{ id: number }>;
   product: IProduct;
-};
+}
 
 const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
   const [deleteModal, setDeleteModal] = useState(false);

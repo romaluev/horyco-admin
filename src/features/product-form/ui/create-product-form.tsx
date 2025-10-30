@@ -1,13 +1,14 @@
 'use client';
 
-import { useAttachProductImages, useCreateProduct } from '@/entities/product';
+import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-import { FormProvider, useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { StarsIcon } from 'lucide-react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ProductFormType } from './product-form-type';
-import { ProductFormAdditions } from './product-form-additions';
-import { ProductFormImages } from './product-form-images';
+
 import {
   Button,
   FormControl,
@@ -18,9 +19,17 @@ import {
   Input,
   Textarea
 } from '@/shared/ui';
-import { ProductFormValues, productSchema } from '../model/contract';
-import { useState } from 'react';
-import { StarsIcon } from 'lucide-react';
+
+import { useAttachProductImages, useCreateProduct } from '@/entities/product';
+
+import { ProductFormAdditions } from './product-form-additions';
+import { ProductFormImages } from './product-form-images';
+import { ProductFormType } from './product-form-type';
+import { productSchema } from '../model/contract';
+
+import type { ProductFormValues} from '../model/contract';
+
+
 
 const EXPAND_USAGE_KEY = 'expand_usage';
 

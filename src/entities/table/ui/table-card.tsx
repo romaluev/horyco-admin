@@ -1,3 +1,5 @@
+import { Armchair } from 'lucide-react';
+
 import {
   Card,
   CardAction,
@@ -6,15 +8,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import { Armchair } from 'lucide-react';
-import { ITable } from '../model';
 
-type TableCardProps = {
+import type { ITable } from '../model';
+
+interface TableCardProps {
   table: ITable;
   className?: string;
   UpdateButton?: React.ComponentType<{ id: number }>;
   DeleteButton?: React.ComponentType<{ id: number }>;
-};
+}
 export const TableCard = ({
   table,
   className,

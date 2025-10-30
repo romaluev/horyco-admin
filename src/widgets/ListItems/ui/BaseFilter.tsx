@@ -1,7 +1,18 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { X, Filter } from 'lucide-react';
+
 import { Button } from '@/shared/ui/base/button';
+import { Input } from '@/shared/ui/base/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/shared/ui/base/popover';
 import {
   Select,
   SelectContent,
@@ -9,14 +20,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { Input } from '@/shared/ui/base/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/shared/ui/base/popover';
-import { X, Filter } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface Filter {
   property: string;
@@ -97,9 +100,9 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
         const parsedFilters = filterParam.split(';').map((filter) => {
           const [property, rule, value] = filter.split(':');
           return {
-            property,
-            rule,
-            value: value || '' // Empty string for isnull/isnotnull
+            property: property ?? '',
+            rule: rule ?? '',
+            value: value ?? '' // Empty string for isnull/isnotnull
           };
         });
         setFilters(parsedFilters);
@@ -126,7 +129,9 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
   // Update a filter field
   const updateFilter = (index: number, field: keyof Filter, value: string) => {
     const newFilters = [...filters];
-    newFilters[index][field] = value;
+    if (newFilters[index]) {
+      newFilters[index][field] = value;
+    }
     setFilters(newFilters);
     emitFilterString(newFilters);
   };

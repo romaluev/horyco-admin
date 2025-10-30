@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { IconTrendingUp } from '@tabler/icons-react';
+
 import { Label, Pie, PieChart } from 'recharts';
 
 import {
@@ -13,11 +13,13 @@ import {
   CardTitle
 } from '@/shared/ui/base/card';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
 } from '@/shared/ui/base/chart';
+
+import type {
+  ChartConfig} from '@/shared/ui/base/chart';
 
 const chartData = [
   { browser: 'chrome', visitors: 275, fill: 'var(--primary)' },
@@ -144,6 +146,7 @@ export function PieGraph() {
                       </text>
                     );
                   }
+                  return null;
                 }}
               />
             </Pie>

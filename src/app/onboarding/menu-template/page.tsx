@@ -1,60 +1,123 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { useGetOnboardingProgress, useSkipStep } from '@/entities/onboarding';
-import { OnboardingLayout } from '@/shared/ui/onboarding';
-import BaseLoading from '@/shared/ui/base-loading';
-import { Button } from '@/shared/ui/base/button';
+import { useState, useEffect } from 'react'
+
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+
+import { Loader2, Check, Edit2, X } from 'lucide-react'
+
+import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Input } from '@/shared/ui/base/input';
-import { Textarea } from '@/shared/ui/base/textarea';
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter
-} from '@/shared/ui/base/dialog';
-import { Loader2, Check, Edit2, X } from 'lucide-react';
-import { getNextStep, getPreviousStep } from '@/shared/config/onboarding';
+  DialogFooter,
+} from '@/shared/ui/base/dialog'
+import { Input } from '@/shared/ui/base/input'
+import { Textarea } from '@/shared/ui/base/textarea'
+import BaseLoading from '@/shared/ui/base-loading'
+import { OnboardingLayout } from '@/shared/ui/onboarding'
+
 import {
-  MOCK_POPULAR_MENU,
-  type MockCategory,
-  type MockProduct
-} from '@/shared/lib/mock-menu-data';
+  useGetOnboardingProgress,
+  useGetDefaultProducts,
+  useSubmitMenuSetup,
+  useSkipMenuSetup,
+  type DefaultCategory,
+  type MenuSetupRequest,
+} from '@/entities/onboarding'
+
+// Local types for frontend menu management
+interface MenuProduct {
+  id: string
+  name: string
+  price: number
+  description?: string
+  image?: string
+  isSelected: boolean
+  preparationTime?: number
+  calories?: number
+  allergens?: string[]
+}
+
+interface MenuCategory {
+  id: string
+  name: string
+  description?: string
+  products: MenuProduct[]
+}
 
 export default function MenuTemplatePage() {
-  const router = useRouter();
-  const [categories, setCategories] =
-    useState<MockCategory[]>(MOCK_POPULAR_MENU);
-  const [editingProduct, setEditingProduct] = useState<MockProduct | null>(
-    null
-  );
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedName, setEditedName] = useState('');
-  const [editedPrice, setEditedPrice] = useState('');
-  const [editedDescription, setEditedDescription] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter()
+  const [categories, setCategories] = useState<MenuCategory[]>([])
+  const [editingProduct, setEditingProduct] = useState<MenuProduct | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [editedName, setEditedName] = useState('')
+  const [editedPrice, setEditedPrice] = useState('')
+  const [editedDescription, setEditedDescription] = useState('')
 
   // Fetch onboarding progress
   const { data: progress, isLoading: progressLoading } =
-    useGetOnboardingProgress();
+    useGetOnboardingProgress()
 
-  const { mutate: skipStep, isPending: isSkipping } = useSkipStep({
-    onSuccess: () => {
-      const nextStep = getNextStep('MENU_TEMPLATE');
-      router.push(nextStep?.route || '/onboarding/staff-invite');
+  // Fetch default products based on business type
+  const businessType = progress?.stepData?.businessType || 'restaurant'
+  const {
+    data: defaultProducts,
+    isLoading: productsLoading,
+    error: productsError,
+  } = useGetDefaultProducts(businessType)
+
+  // Transform default products to frontend format on load
+  useEffect(() => {
+    if (defaultProducts?.categories) {
+      const transformed: MenuCategory[] = defaultProducts.categories.map(
+        (cat, catIndex) => ({
+          id: `category-${catIndex}`,
+          name: cat.name,
+          description: cat.description,
+          products: cat.products.map((prod, prodIndex) => ({
+            id: `product-${catIndex}-${prodIndex}`,
+            name: prod.name,
+            price: prod.suggestedPrice,
+            description: prod.description,
+            image: prod.image,
+            isSelected: false,
+            preparationTime: prod.preparationTime,
+            calories: prod.calories,
+            allergens: prod.allergens,
+          })),
+        })
+      )
+      setCategories(transformed)
     }
-  });
+  }, [defaultProducts])
+
+  // Mutations
+  const { mutate: submitMenu, isPending: isSubmitting } = useSubmitMenuSetup({
+    onSuccess: () => {
+      const nextStep = getNextStep('MENU_TEMPLATE')
+      router.push(nextStep?.route || '/onboarding/staff-invite')
+    },
+  })
+
+  const { mutate: skipMenu, isPending: isSkipping } = useSkipMenuSetup({
+    onSuccess: () => {
+      const nextStep = getNextStep('MENU_TEMPLATE')
+      router.push(nextStep?.route || '/onboarding/staff-invite')
+    },
+  })
 
   const handleToggleProduct = (categoryId: string, productId: string) => {
     setCategories((prev) =>
@@ -66,23 +129,23 @@ export default function MenuTemplatePage() {
                 prod.id === productId
                   ? { ...prod, isSelected: !prod.isSelected }
                   : prod
-              )
+              ),
             }
           : cat
       )
-    );
-  };
+    )
+  }
 
-  const handleEditProduct = (product: MockProduct) => {
-    setEditingProduct(product);
-    setEditedName(product.name);
-    setEditedPrice(product.price.toString());
-    setEditedDescription(product.description || '');
-    setEditDialogOpen(true);
-  };
+  const handleEditProduct = (product: MenuProduct) => {
+    setEditingProduct(product)
+    setEditedName(product.name)
+    setEditedPrice(product.price.toString())
+    setEditedDescription(product.description || '')
+    setEditDialogOpen(true)
+  }
 
   const handleSaveEdit = () => {
-    if (!editingProduct) return;
+    if (!editingProduct) return
 
     setCategories((prev) =>
       prev.map((cat) => ({
@@ -93,69 +156,84 @@ export default function MenuTemplatePage() {
                 ...prod,
                 name: editedName,
                 price: Number(editedPrice),
-                description: editedDescription
+                description: editedDescription,
               }
             : prod
-        )
+        ),
       }))
-    );
+    )
 
-    setEditDialogOpen(false);
-    setEditingProduct(null);
-  };
+    setEditDialogOpen(false)
+    setEditingProduct(null)
+  }
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-
+  const handleSubmit = () => {
     // Prepare data: only selected products grouped by category
-    const selectedMenu = categories
-      .map((cat) => ({
-        categoryId: cat.id,
-        categoryName: cat.name,
-        products: cat.products
-          .filter((p) => p.isSelected)
-          .map((p) => ({
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            description: p.description
-          }))
-      }))
-      .filter((cat) => cat.products.length > 0);
+    const menuData: MenuSetupRequest = {
+      categories: categories
+        .map((cat) => ({
+          name: cat.name,
+          description: cat.description,
+          products: cat.products
+            .filter((p) => p.isSelected)
+            .map((p) => ({
+              name: p.name,
+              price: p.price,
+              description: p.description,
+              image: p.image,
+              preparationTime: p.preparationTime,
+              calories: p.calories,
+              allergens: p.allergens,
+            })),
+        }))
+        .filter((cat) => cat.products.length > 0),
+    }
 
-    // Mock API call - in real implementation, send to backend
-    console.log('Submitting menu:', selectedMenu);
-
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsSubmitting(false);
-
-    // Navigate to next step
-    const nextStep = getNextStep('MENU_TEMPLATE');
-    router.push(nextStep?.route || '/onboarding/staff-invite');
-  };
+    submitMenu(menuData)
+  }
 
   const handleSkip = () => {
-    skipStep({
-      step: 'MENU_TEMPLATE',
-      reason: 'Создам меню позже'
-    });
-  };
+    skipMenu()
+  }
 
   const handleBack = () => {
-    const prevStep = getPreviousStep('MENU_TEMPLATE');
-    router.push(prevStep?.route || '/onboarding/branch-setup');
-  };
+    const prevStep = getPreviousStep('MENU_TEMPLATE')
+    router.push(prevStep?.route || '/onboarding/branch-setup')
+  }
 
   const selectedCount = categories.reduce(
     (total, cat) => total + cat.products.filter((p) => p.isSelected).length,
     0
-  );
+  )
 
-  if (progressLoading) {
-    return <BaseLoading />;
+  if (progressLoading || productsLoading) {
+    return <BaseLoading />
   }
+
+  if (productsError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-500">
+            Ошибка загрузки меню
+          </h2>
+          <p className="text-muted-foreground mt-2">
+            Не удалось загрузить шаблоны меню. Попробуйте обновить страницу.
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="mt-4"
+            variant="outline"
+          >
+            Обновить
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // Empty state when no categories available
+  const hasNoProducts = categories.length === 0
 
   return (
     <OnboardingLayout
@@ -163,26 +241,26 @@ export default function MenuTemplatePage() {
       completedSteps={
         progress?.completedSteps || ['BUSINESS_INFO_VERIFIED', 'BRANCH_SETUP']
       }
-      title='Настройка меню'
-      description='Выберите популярные блюда для вашего заведения'
+      title="Настройка меню"
+      description="Выберите популярные блюда для вашего заведения"
     >
       {/* Selected count badge */}
       {selectedCount > 0 && (
-        <div className='bg-muted/50 mb-4 flex items-center justify-between rounded-lg border p-3'>
-          <span className='text-sm font-medium'>
+        <div className="bg-muted/50 mb-4 flex items-center justify-between rounded-lg border p-3">
+          <span className="text-sm font-medium">
             Выбрано блюд: {selectedCount}
           </span>
           <Button
-            size='sm'
-            variant='ghost'
+            size="sm"
+            variant="ghost"
             onClick={() =>
               setCategories((prev) =>
                 prev.map((cat) => ({
                   ...cat,
                   products: cat.products.map((p) => ({
                     ...p,
-                    isSelected: false
-                  }))
+                    isSelected: false,
+                  })),
                 }))
               )
             }
@@ -192,119 +270,128 @@ export default function MenuTemplatePage() {
         </div>
       )}
 
+      {/* Empty state */}
+      {hasNoProducts && (
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+          <h3 className="mb-2 text-xl font-semibold">
+            Нет доступных шаблонов меню
+          </h3>
+          <p className="text-muted-foreground mb-4 max-w-md">
+            К сожалению, для вашего типа бизнеса пока нет готовых шаблонов. Вы
+            можете пропустить этот шаг и создать меню позже.
+          </p>
+        </div>
+      )}
+
       {/* Categories with products */}
-      <div className='space-y-8'>
-        {categories.map((category) => (
+      {!hasNoProducts && (
+        <div className="space-y-8">
+          {categories.map((category) => (
           <div key={category.id}>
-            <div className='mb-4 flex items-center justify-between'>
-              <h2 className='text-xl font-semibold'>{category.name}</h2>
-              <span className='text-muted-foreground text-sm'>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-semibold">{category.name}</h2>
+              <span className="text-muted-foreground text-sm">
                 {category.products.filter((p) => p.isSelected).length} /{' '}
                 {category.products.length}
               </span>
             </div>
 
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {category.products.map((product) => (
                 <Card
                   key={product.id}
-                  className={`relative overflow-hidden transition-all ${
+                  className={`relative overflow-hidden transition-all p-0 ${
                     product.isSelected ? 'ring-primary ring-2' : ''
                   }`}
                 >
                   {product.isSelected && (
-                    <div className='bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full'>
-                      <Check className='h-4 w-4 text-white' />
+                    <div className="bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full">
+                      <Check className="h-4 w-4 text-white" />
                     </div>
                   )}
 
                   {/* Product Image */}
-                  <div className='bg-muted relative h-40 w-full overflow-hidden'>
+                  <div className="bg-muted relative h-40 w-full overflow-hidden">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className='object-cover'
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
-                    ) : (
-                      <div className='bg-muted flex h-full w-full items-center justify-center'>
-                        <span className='text-muted-foreground text-4xl'>
-                          🍽️
-                        </span>
-                      </div>
-                    )}
+                    ) : null}
                   </div>
 
-                  <CardHeader className='space-y-2 p-4'>
-                    <CardTitle className='line-clamp-1 text-base'>
+                  <CardHeader className="space-y-2 p-4">
+                    <CardTitle className="line-clamp-1 text-base">
                       {product.name}
                     </CardTitle>
-                    <CardDescription className='line-clamp-2 text-xs'>
+                    <CardDescription className="line-clamp-2 text-xs">
                       {product.description}
                     </CardDescription>
-                    <div className='text-primary text-lg font-bold'>
+                    <div className="text-primary text-lg font-bold">
                       {new Intl.NumberFormat('ru-RU').format(product.price)} сум
                     </div>
                   </CardHeader>
 
-                  <CardContent className='flex gap-2 p-4 pt-0'>
+                  <CardContent className="flex gap-2 p-4 pt-0">
                     <Button
-                      size='sm'
+                      size="sm"
                       variant={product.isSelected ? 'secondary' : 'default'}
-                      className='flex-1'
+                      className="flex-1"
                       onClick={() =>
                         handleToggleProduct(category.id, product.id)
                       }
                     >
                       {product.isSelected ? (
                         <>
-                          <X className='mr-1 h-3 w-3' />
+                          <X className="mr-1 h-3 w-3" />
                           Убрать
                         </>
                       ) : (
                         <>
-                          <Check className='mr-1 h-3 w-3' />
+                          <Check className="mr-1 h-3 w-3" />
                           Выбрать
                         </>
                       )}
                     </Button>
                     <Button
-                      size='sm'
-                      variant='outline'
+                      size="sm"
+                      variant="outline"
                       onClick={() => handleEditProduct(product)}
                     >
-                      <Edit2 className='h-3 w-3' />
+                      <Edit2 className="h-3 w-3" />
                     </Button>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Navigation */}
-      <div className='mt-8 flex justify-between border-t pt-6'>
+      <div className="mt-8 flex justify-between border-t pt-6">
         <Button
-          type='button'
-          variant='outline'
+          type="button"
+          variant="outline"
           onClick={handleBack}
           disabled={isSubmitting || isSkipping}
         >
           Назад
         </Button>
-        <div className='flex gap-4'>
+        <div className="flex gap-4">
           <Button
-            type='button'
-            variant='ghost'
+            type="button"
+            variant="ghost"
             onClick={handleSkip}
             disabled={isSubmitting || isSkipping}
           >
             {isSkipping ? (
               <>
-                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Пропуск...
               </>
             ) : (
@@ -317,7 +404,7 @@ export default function MenuTemplatePage() {
           >
             {isSubmitting ? (
               <>
-                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Сохранение...
               </>
             ) : (
@@ -336,38 +423,38 @@ export default function MenuTemplatePage() {
               Измените название, цену или описание блюда
             </DialogDescription>
           </DialogHeader>
-          <div className='space-y-4 py-4'>
+          <div className="space-y-4 py-4">
             <div>
-              <label className='mb-2 block text-sm font-medium'>Название</label>
+              <label className="mb-2 block text-sm font-medium">Название</label>
               <Input
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                placeholder='Название блюда'
+                placeholder="Название блюда"
               />
             </div>
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className="mb-2 block text-sm font-medium">
                 Цена (сум)
               </label>
               <Input
-                type='number'
+                type="number"
                 value={editedPrice}
                 onChange={(e) => setEditedPrice(e.target.value)}
-                placeholder='25000'
+                placeholder="25000"
               />
             </div>
             <div>
-              <label className='mb-2 block text-sm font-medium'>Описание</label>
+              <label className="mb-2 block text-sm font-medium">Описание</label>
               <Textarea
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
-                placeholder='Описание блюда'
+                placeholder="Описание блюда"
                 rows={3}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant='outline' onClick={() => setEditDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
               Отмена
             </Button>
             <Button onClick={handleSaveEdit}>Сохранить</Button>
@@ -375,5 +462,5 @@ export default function MenuTemplatePage() {
         </DialogContent>
       </Dialog>
     </OnboardingLayout>
-  );
+  )
 }

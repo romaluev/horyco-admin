@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { tableApi } from './api';
 import { tableKeys } from './query-keys';
-import { ICreateTableDto, IUpdateTableDto } from './types';
+
+import type { ICreateTableDto, IUpdateTableDto } from './types';
 
 export const useCreateTable = () => {
   const queryClient = useQueryClient();

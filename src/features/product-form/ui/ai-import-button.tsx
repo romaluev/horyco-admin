@@ -1,5 +1,14 @@
 'use client';
 
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { StarsIcon } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { Input, Textarea } from '@/shared/ui';
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogClose,
@@ -10,20 +19,20 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Button } from '@/shared/ui/base/button';
-import { StarsIcon } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { ScrollArea } from '@/shared/ui/base/scroll-area';
 import { FileUploader } from '@/shared/ui/file-uploader';
+
 import {
-  IProduct,
   useCreateProduct,
   useGetAllProductTypes
 } from '@/entities/product';
-import { useRouter } from 'next/navigation';
-import { ScrollArea } from '@/shared/ui/base/scroll-area';
 import { IMAGE_PROMPT } from '@/features/product-form/config/constants';
-import { Input, Textarea } from '@/shared/ui';
+
+import type {
+  IProduct} from '@/entities/product';
+
+
+
 
 const MAX_USAGE = 3;
 const IMPORT_USAGE_KEY = 'ai_import_usage';
@@ -177,7 +186,9 @@ export const AiImportButton = () => {
                             value={product.name}
                             onChange={(e) => {
                               const newProducts = [...products];
-                              newProducts[index].name = e.target.value;
+                              if (newProducts[index]) {
+                                newProducts[index].name = e.target.value;
+                              }
                               setProducts(newProducts);
                             }}
                             className='mt-1 w-full rounded-md border px-3 py-2'
@@ -190,7 +201,9 @@ export const AiImportButton = () => {
                             value={product.price}
                             onChange={(e) => {
                               const newProducts = [...products];
-                              newProducts[index].price = Number(e.target.value);
+                              if (newProducts[index]) {
+                                newProducts[index].price = Number(e.target.value);
+                              }
                               setProducts(newProducts);
                             }}
                             className='mt-1 w-full rounded-md border px-3 py-2'
@@ -205,7 +218,9 @@ export const AiImportButton = () => {
                             value={product.description}
                             onChange={(e) => {
                               const newProducts = [...products];
-                              newProducts[index].description = e.target.value;
+                              if (newProducts[index]) {
+                                newProducts[index].description = e.target.value;
+                              }
                               setProducts(newProducts);
                             }}
                             className='mt-1 w-full rounded-md border px-3 py-2'

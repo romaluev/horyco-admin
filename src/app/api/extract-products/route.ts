@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
 import OpenAI from 'openai';
-import Cookies from 'js-cookie';
+
+import type { NextRequest } from 'next/server';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -36,16 +39,16 @@ export async function POST(req: NextRequest) {
     );
 
     // Create messages array with system prompt and image inputs
-    const messages = [
+    const messages: ChatCompletionMessageParam[] = [
       {
         role: 'system',
         content: prompt
       },
       ...base64Images.map((base64Image) => ({
-        role: 'user',
+        role: 'user' as const,
         content: [
           {
-            type: 'image_url',
+            type: 'image_url' as const,
             image_url: {
               url: `data:image/jpeg;base64,${base64Image}`
             }
@@ -56,10 +59,10 @@ export async function POST(req: NextRequest) {
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      messages: messages as any
+      messages
     });
 
-    const content = response.choices[0].message.content;
+    const content = response.choices[0]?.message.content;
     if (!content) {
       throw new Error('Не удалось извлечь данные из изображений');
     }

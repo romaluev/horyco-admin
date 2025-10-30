@@ -1,12 +1,14 @@
 'use client';
 
-import { DataTable } from '@/shared/ui/base/table/data-table';
+
+
+import { parseAsInteger, useQueryState } from 'nuqs';
 
 import { useDataTable } from '@/shared/hooks/use-data-table';
-
-import { ColumnDef } from '@tanstack/react-table';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { DataTable } from '@/shared/ui/base/table/data-table';
 import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar';
+
+import type { ColumnDef } from '@tanstack/react-table';
 
 interface EmployeeTableParams<TData, TValue> {
   data: TData[];

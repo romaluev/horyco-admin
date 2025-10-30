@@ -1,4 +1,11 @@
 'use client';
+import { Fragment } from 'react';
+
+import Link from 'next/link';
+
+import { IconSlash } from '@tabler/icons-react';
+
+import { useBreadcrumbs } from '@/shared/hooks/use-breadcrumbs';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,10 +14,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/shared/ui/base/breadcrumb';
-import { useBreadcrumbs } from '@/shared/hooks/use-breadcrumbs';
-import { IconSlash } from '@tabler/icons-react';
-import { Fragment } from 'react';
-import Link from 'next/link';
 
 export function Breadcrumbs() {
   const items = useBreadcrumbs();

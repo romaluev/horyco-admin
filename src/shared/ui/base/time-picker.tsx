@@ -1,10 +1,13 @@
 'use client';
 
 import * as React from 'react';
+
+import { Clock } from 'lucide-react';
+
 import { cn } from '@/shared/lib/utils';
+
 import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Clock } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
 
 interface TimePickerProps {
@@ -30,19 +33,21 @@ export function TimePicker({
 }: TimePickerProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedHour, setSelectedHour] = React.useState<string>(
-    value ? value.split(':')[0] : '09'
+    value ? value.split(':')[0] ?? '09' : '09'
   );
   const [selectedMinute, setSelectedMinute] = React.useState<string>(
-    value ? value.split(':')[1] : '00'
+    value ? value.split(':')[1] ?? '00' : '00'
   );
 
   React.useEffect(() => {
     if (value) {
       const [hour, minute] = value.split(':');
-      setSelectedHour(hour);
+      if (hour) setSelectedHour(hour);
       // Round to nearest 5 minutes
-      const roundedMinute = Math.round(parseInt(minute) / 5) * 5;
-      setSelectedMinute(roundedMinute.toString().padStart(2, '0'));
+      if (minute) {
+        const roundedMinute = Math.round(parseInt(minute) / 5) * 5;
+        setSelectedMinute(roundedMinute.toString().padStart(2, '0'));
+      }
     }
   }, [value]);
 

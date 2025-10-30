@@ -1,10 +1,10 @@
 'use client';
 
-import type { Column } from '@tanstack/react-table';
-import { CalendarIcon, XCircle } from 'lucide-react';
 import * as React from 'react';
-import type { DateRange } from 'react-day-picker';
 
+import { CalendarIcon, XCircle } from 'lucide-react';
+
+import { formatDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/base/button';
 import { Calendar } from '@/shared/ui/base/calendar';
 import {
@@ -13,7 +13,9 @@ import {
   PopoverTrigger
 } from '@/shared/ui/base/popover';
 import { Separator } from '@/shared/ui/base/separator';
-import { formatDate } from '@/shared/lib/format';
+
+import type { Column } from '@tanstack/react-table';
+import type { DateRange } from 'react-day-picker';
 
 type DateSelection = Date[] | DateRange;
 

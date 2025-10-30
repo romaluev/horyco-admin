@@ -1,4 +1,4 @@
-import { IEmployee } from '@/entities/employee/model/types';
+import type { IEmployee } from '@/entities/employee/model/types';
 
 /**
  * Branch entity interface

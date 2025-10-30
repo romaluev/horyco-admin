@@ -18,7 +18,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/shared/ui/base/sidebar';
-import { Icon } from '@/shared/ui/icons';
+
+import type { Icon } from '@/shared/ui/icons';
 
 export function NavMain({
   items

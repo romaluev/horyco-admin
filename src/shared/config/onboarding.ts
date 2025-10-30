@@ -1,4 +1,4 @@
-import { OnboardingStep } from '@/entities/onboarding/model/types';
+import type { OnboardingStep } from '@/entities/onboarding/model/types';
 
 /**
  * Onboarding configuration and constants

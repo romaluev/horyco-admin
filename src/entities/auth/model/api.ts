@@ -1,4 +1,8 @@
-import {
+import Cookies from 'js-cookie';
+
+import api from '@/shared/lib/axios';
+
+import type {
   AuthRequest,
   AuthResponse,
   SendOTPRequest,
@@ -8,9 +12,8 @@ import {
   CompleteRegistrationRequest,
   CompleteRegistrationResponse
 } from '.';
-import Cookies from 'js-cookie';
-import api from '@/shared/lib/axios';
-import { IEmployee } from '@/entities/employee';
+import type { IEmployee } from '@/entities/employee';
+
 
 /**
  * Authentication API functions

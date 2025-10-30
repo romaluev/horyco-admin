@@ -1,5 +1,12 @@
 'use client';
 
+
+import { useState } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
@@ -8,10 +15,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -21,6 +24,8 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
+import PasswordInput from '@/shared/ui/base/passsword-input';
+import { PhoneInput } from '@/shared/ui/base/phone-input';
 import {
   Select,
   SelectContent,
@@ -28,13 +33,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { useState } from 'react';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
-import PasswordInput from '@/shared/ui/base/passsword-input';
+
 import { useGetAllBranches } from '@/entities/branch/model';
+
+
 import { employeeSchema } from '../model/contract';
 import { useCreateEmployer } from '../model/mutations';
-import { IEmployeeDto } from '@/entities/employee';
+
+import type { IEmployeeDto } from '@/entities/employee';
+import type * as z from 'zod';
 
 export const CreateEmployeeButton = () => {
   const [open, setOpen] = useState(false);
@@ -109,7 +116,7 @@ export const CreateEmployeeButton = () => {
                       <PhoneInput
                         defaultCountry={'UZ'}
                         placeholder='90 123 45 67'
-                        limitMaxLength={true}
+                        limitMaxLength
                         countries={['UZ']}
                         {...field}
                       />

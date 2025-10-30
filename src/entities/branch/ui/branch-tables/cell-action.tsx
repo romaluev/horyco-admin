@@ -1,5 +1,10 @@
 'use client';
-import { AlertModal } from '@/shared/ui/modal/alert-modal';
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   DropdownMenu,
@@ -8,10 +13,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/shared/ui/base/dropdown-menu';
-import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { IBranch, useDeleteBranch } from '../../model';
+import { AlertModal } from '@/shared/ui/modal/alert-modal';
+
+
+
+
+import { useDeleteBranch } from '../../model';
+
+import type { IBranch} from '../../model';
 
 interface CellActionProps {
   data: IBranch;

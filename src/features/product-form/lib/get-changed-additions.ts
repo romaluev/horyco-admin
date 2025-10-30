@@ -1,6 +1,9 @@
 import {
+  IAdditionProduct
+} from '@/entities/product/model';
+
+import type {
   IAddition,
-  IAdditionProduct,
   IUpdatedAddition
 } from '@/entities/product/model';
 

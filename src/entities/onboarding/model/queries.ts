@@ -1,12 +1,15 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+
 import { onboardingApi } from './api';
 import { onboardingKeys } from './query-keys';
+
 import type {
   OnboardingProgress,
-  MenuTemplate,
+  DefaultProductsResponse,
   Region,
   District
 } from './types';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 // Get onboarding progress
 export const useGetOnboardingProgress = (
@@ -20,15 +23,18 @@ export const useGetOnboardingProgress = (
   });
 };
 
-// Get menu templates
-export const useGetMenuTemplates = (
+// Get default products for menu setup
+export const useGetDefaultProducts = (
   businessType?: string,
-  options?: Omit<UseQueryOptions<MenuTemplate[]>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<DefaultProductsResponse>,
+    'queryKey' | 'queryFn'
+  >
 ) => {
   return useQuery({
-    queryKey: onboardingKeys.templatesByType(businessType),
-    queryFn: () => onboardingApi.getMenuTemplates(businessType),
-    staleTime: 1000 * 60 * 30, // 30 minutes (templates don't change often)
+    queryKey: onboardingKeys.defaultProducts(businessType),
+    queryFn: () => onboardingApi.getDefaultProducts(businessType),
+    staleTime: 1000 * 60 * 30, // 30 minutes (defaults don't change often)
     ...options
   });
 };

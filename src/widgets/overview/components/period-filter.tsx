@@ -1,12 +1,14 @@
 'use client';
 
 import * as React from 'react';
+
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/base/button';
+import { Calendar } from '@/shared/ui/base/calendar';
 import {
   Popover,
   PopoverContent,
@@ -19,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { Calendar } from '@/shared/ui/base/calendar';
 
 export type PeriodType = 'hour' | 'day' | 'week';
 

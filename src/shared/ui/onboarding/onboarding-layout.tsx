@@ -1,9 +1,13 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { OnboardingProgress } from './onboarding-progress';
+
 import Image from 'next/image';
+
 import logo from '@/shared/assets/logo.png';
+
+import { OnboardingProgress } from './onboarding-progress';
+
+import type { ReactNode } from 'react';
 
 // Only visible onboarding steps (REGISTRATION_COMPLETE is auto-completed, not shown in UI)
 const ONBOARDING_STEPS = [

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { PASSWORD_REGEX, PHONE_CONFIG } from './constants';
 
 // Step 1: Initial registration form

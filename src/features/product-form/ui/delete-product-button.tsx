@@ -1,4 +1,7 @@
+import { Trash } from 'lucide-react';
 import { toast } from 'sonner';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogClose,
@@ -9,8 +12,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Button } from '@/shared/ui/base/button';
-import { Trash } from 'lucide-react';
+
 import { useDeleteProduct } from '@/entities/product/model';
 
 export const DeleteProductButton = ({ id }: { id: number }) => {

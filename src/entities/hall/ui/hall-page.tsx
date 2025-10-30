@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HallTable } from './hall-table';
-import { HallForm } from './hall-form';
-import { Button } from '@/shared/ui/base/button';
+
 import { IconPlus } from '@tabler/icons-react';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
 } from '@/shared/ui/base/dialog';
+
+import { HallForm } from './hall-form';
+import { HallTable } from './hall-table';
 
 export const HallPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);

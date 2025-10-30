@@ -1,5 +1,6 @@
 import api from '@/shared/lib/axios';
-import { IEmployee, IEmployeeDto } from '@/entities/employee';
+
+import type { IEmployee, IEmployeeDto } from '@/entities/employee';
 
 /**
  * Employee API functions

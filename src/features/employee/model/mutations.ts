@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { employeeAPi } from './api';
 import { toast } from 'sonner';
-import { IEmployeeDto, queryKeys } from '@/entities/employee';
+
+import { queryKeys } from '@/entities/employee';
+
+import { employeeAPi } from './api';
+
+import type { IEmployeeDto} from '@/entities/employee';
 
 export const useCreateEmployer = () => {
   const queryClient = useQueryClient();

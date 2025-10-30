@@ -1,4 +1,6 @@
 'use client';
+import { IconDotsVertical, IconEdit } from '@tabler/icons-react';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   DropdownMenu,
@@ -6,10 +8,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/shared/ui/base/dropdown-menu';
-import { IconDotsVertical, IconEdit } from '@tabler/icons-react';
-import { IEmployee } from '../../model';
-import { UpdateEmployeeButton } from '@/features/employee/ui/update-employee-button';
+
 import { DeleteEmployeeButton } from '@/features/employee/ui/delete-employee-button';
+import { UpdateEmployeeButton } from '@/features/employee/ui/update-employee-button';
+
+import type { IEmployee } from '../../model';
+
 
 interface CellActionProps {
   data: IEmployee;

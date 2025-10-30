@@ -1384,20 +1384,25 @@ GET /admin/menu/branches/:branchId/overrides
 - При 401 ошибке — автоматический refresh через `/auth/refresh`
 
 ### Обработка ошибок
+
+**Успешный ответ:**
 ```json
-// Успешный ответ
 Status: 200 OK
 { "id": 101, "name": "Капучино", ... }
+```
 
-// Ошибка валидации
+**Ошибка валидации:**
+```json
 Status: 400 Bad Request
 {
   "statusCode": 400,
   "message": ["name should not be empty", "price must be a number"],
   "error": "Bad Request"
 }
+```
 
-// Не найдено
+**Не найдено:**
+```json
 Status: 404 Not Found
 {
   "statusCode": 404,

@@ -1,6 +1,9 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+
 import { useDebounce } from './use-debounce';
+
+import type { UseFormReturn } from 'react-hook-form';
+
 
 /**
  * Custom hook for persisting form data to localStorage
@@ -73,7 +76,7 @@ export function useFormPersist<T extends Record<string, any>>(
             acc[key] = parsed[key];
           }
           return acc;
-        }, {} as T);
+        }, {} as Record<string, any>) as T;
 
         // Reset form with saved values
         form.reset(filteredData, { keepDefaultValues: true });

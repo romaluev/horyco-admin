@@ -1,11 +1,13 @@
 import api from '@/shared/lib/axios';
-import { IHall, IHallRequest } from './types';
 import {
-  ApiParams,
   FilteringParams,
-  PaginatedResponse,
   SortingParams
 } from '@/shared/types';
+
+import type { IHall, IHallRequest } from './types';
+import type {
+  ApiParams,
+  PaginatedResponse} from '@/shared/types';
 
 export const hallApi = {
   /**

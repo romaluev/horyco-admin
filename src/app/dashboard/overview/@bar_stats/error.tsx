@@ -1,11 +1,15 @@
 'use client';
 
+import { useTransition } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { IconAlertCircle } from '@tabler/icons-react';
+
 import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/base/alert';
 import { Button } from '@/shared/ui/base/button';
 import { Card, CardContent, CardHeader } from '@/shared/ui/base/card';
-import { IconAlertCircle } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+
 
 interface StatsErrorProps {
   error: Error;

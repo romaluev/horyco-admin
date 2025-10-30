@@ -12,11 +12,13 @@ import {
   CardTitle
 } from '@/shared/ui/base/card';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
 } from '@/shared/ui/base/chart';
+
+import type {
+  ChartConfig} from '@/shared/ui/base/chart';
 
 const chartData = [
   { month: 'January', desktop: 186, mobile: 80 },

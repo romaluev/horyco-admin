@@ -1,14 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { DayPicker } from 'react-day-picker';
-import type { ComponentProps } from 'react';
-import { ru, Locale } from 'date-fns/locale';
+
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
+import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@/shared/lib/utils';
 import { buttonVariants } from '@/shared/ui/base/button';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+
+import type { Locale } from 'date-fns/locale';
+import type { ComponentProps } from 'react';
+
 
 // Custom icons that meet the DayPicker requirements
 const LeftIcon = () => <ChevronLeftIcon className='size-4' />;
@@ -88,7 +92,7 @@ function Calendar({
       components={{
         IconRight: () => <RightIcon />,
         IconLeft: () => <LeftIcon />
-      }}
+      } as any}
       {...props}
     />
   );

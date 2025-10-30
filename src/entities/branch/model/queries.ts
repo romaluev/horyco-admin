@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+
+
 import { branchApi } from './api';
 import { queryKeys } from './query-keys';
-import { ApiParams } from '@/shared/types';
+
+import type { ApiParams } from '@/shared/types';
 
 export const useGetAllBranches = (params?: ApiParams) => {
   return useQuery({

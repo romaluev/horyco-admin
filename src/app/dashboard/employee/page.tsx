@@ -1,15 +1,18 @@
 'use client';
 
-import PageContainer from '@/shared/ui/layout/page-container';
+import { Suspense } from 'react';
+
+import { parseAsInteger, useQueryState } from 'nuqs';
+
 import { Heading } from '@/shared/ui/base/heading';
 import { Separator } from '@/shared/ui/base/separator';
 import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton';
-import { Suspense } from 'react';
-import { CreateEmployeeButton } from '@/features/employee';
+import PageContainer from '@/shared/ui/layout/page-container';
+
+import { useGetAllEmployee } from '@/entities/employee/model';
 import { EmployeeTable } from '@/entities/employee/ui/employee-tables';
 import { columns } from '@/entities/employee/ui/employee-tables/columns';
-import { parseAsInteger, useQueryState } from 'nuqs';
-import { useGetAllEmployee } from '@/entities/employee/model';
+import { CreateEmployeeButton } from '@/features/employee';
 
 export default function Page() {
   const [size] = useQueryState('perPage', parseAsInteger.withDefault(10));

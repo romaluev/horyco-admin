@@ -22,7 +22,6 @@ This document explains the complete business signup process for new restaurant o
 ### 🎯 Purpose
 
 The signup system allows new restaurant owners to:
-
 - Self-register without sales team involvement
 - Verify their phone number with SMS OTP
 - Create a tenant (restaurant brand) and their first branch
@@ -32,7 +31,6 @@ The signup system allows new restaurant owners to:
 ### 🔐 Security Features
 
 **Phone Verification**:
-
 - SMS OTP sent via Eskiz SMS provider
 - 6-digit code valid for 5 minutes
 - Maximum 3 verification attempts
@@ -40,7 +38,6 @@ The signup system allows new restaurant owners to:
 - Temporary block after max attempts exceeded
 
 **Why phone verification?**
-
 - Prevents fake registrations
 - Ensures contact ownership
 - Reduces spam/abuse
@@ -75,29 +72,24 @@ The signup system allows new restaurant owners to:
 When a user completes signup, the system automatically creates:
 
 1. **Tenant** (Restaurant Brand)
-
    - Unique tenant ID
    - Business name
    - Status: `trial` or `active`
 
 2. **Owner Employee**
-
    - First user account
    - Automatically assigned "Admin" role (full access)
    - Can login to admin panel
 
 3. **Default Branch**
-
    - Named same as business (can be changed later)
    - Marked as main branch
    - Ready for configuration
 
 4. **Default Roles** (4 system roles)
-
    - Admin, Manager, Cashier, Waiter
 
 5. **Default Settings**
-
    - Timezone: Asia/Tashkent
    - Currency: UZS
    - Language: uz
@@ -115,7 +107,6 @@ When a user completes signup, the system automatically creates:
 ### Step 1: Request OTP
 
 **User Journey**:
-
 ```
 1. User enters phone number: +998 90 123 45 67
 2. User enters business name: "Samarkand Restaurant"
@@ -125,7 +116,6 @@ When a user completes signup, the system automatically creates:
 ```
 
 **UI Form**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -154,30 +144,29 @@ When a user completes signup, the system automatically creates:
 ```
 
 **API Call**:
-
 ```typescript
 POST /auth/register/request-otp
 {
-  "phone": "+998901234567",
-  "businessName": "Samarkand Restaurant"
+  "phone": "+998901234567",        // Required, format: +998XXXXXXXXX
+  "businessName": "Samarkand Restaurant"  // Required, 2-255 chars
 }
 
 Response (Success):
 {
-  "message": "OTP code sent successfully",
-  "expiresAt": "2024-01-20T10:35:00Z"  // 5 minutes from now
+  "success": true,
+  "message": "OTP sent successfully",
+  "phone": "+998901234567",
+  "expiresAt": "2025-10-30T10:35:00Z"  // 5 minutes from now
 }
 
 Response (Rate Limited):
 {
   "statusCode": 429,
-  "message": "Too many OTP requests. Please try again in 45 minutes.",
-  "nextAllowedAt": "2024-01-20T11:20:00Z"
+  "message": "Too many OTP requests. Please try again later."
 }
 ```
 
 **Phone Number Format**:
-
 - Must start with +998 (Uzbekistan country code)
 - Format: +998XXXXXXXXX (total 13 characters)
 - Example: +998901234567
@@ -186,7 +175,6 @@ Response (Rate Limited):
 ### Step 2: Verify OTP Code
 
 **User Journey**:
-
 ```
 1. User sees "Code sent to +998 90 123 45 67"
 2. User enters 6-digit code: 1 2 3 4 5 6
@@ -196,7 +184,6 @@ Response (Rate Limited):
 ```
 
 **UI Form**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -207,100 +194,79 @@ Response (Rate Limited):
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│         ┌───┬───┬───┬───┬───┬───┐               │
-│  Code:  │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │               │
-│         └───┴───┴───┴───┴───┴───┘               │
+│         ┌───┬───┬───┬───┬───┬───┐             │
+│  Code:  │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │             │
+│         └───┴───┴───┴───┴───┴───┘             │
 │                                                 │
 │  ⏱️  Code expires in: 04:23                     │
 │                                                 │
-│  [ Verify ]                                     │
+│  [ Verify ]                                    │
 │                                                 │
-│  Didn't receive code?                           │
-│  [Resend Code] (available in 52 seconds)        │
+│  Didn't receive code?                          │
+│  [Resend Code] (available in 52 seconds)       │
 │                                                 │
 └─────────────────────────────────────────────────┘
 ```
 
 **API Call**:
-
 ```typescript
 POST /auth/register/verify-otp
 {
   "phone": "+998901234567",
-  "code": "123456"
+  "code": "123456"              // Exactly 6 digits
 }
 
 Response (Success):
 {
+  "success": true,
   "verified": true,
+  "phone": "+998901234567",
   "message": "OTP verified successfully"
 }
 
-Response (Invalid Code - 2 attempts left):
+Response (Invalid Code):
 {
   "statusCode": 400,
-  "message": "Invalid OTP code. 2 attempts remaining."
+  "message": "Invalid or expired OTP code"
 }
 
 Response (Max Attempts Exceeded):
 {
   "statusCode": 429,
-  "message": "Maximum verification attempts exceeded. Blocked until 11:45 AM.",
-  "blockedUntil": "2024-01-20T11:45:00Z"
+  "message": "Too many verification attempts. Please request a new code."
 }
 
-Response (Expired Code):
+Response (Registration Not Found):
 {
-  "statusCode": 400,
-  "message": "OTP code has expired. Please request a new code."
+  "statusCode": 404,
+  "message": "Registration request not found"
 }
 ```
 
-**Frontend Logic for OTP Input**:
+**Important Notes**:
+- `businessName` is REQUIRED and will be used as the tenant's name
+- `fullName` is the owner's personal name (different from business name)
+- The tenant will be created with `name = businessName`, not the owner's name
 
-```typescript
-// Auto-focus next input when digit entered
-const handleOtpInput = (index: number, value: string) => {
-  if (value.length === 1 && index < 5) {
-    // Move to next input
-    inputRefs[index + 1].focus()
-  }
-
-  // Auto-submit when all 6 digits entered
-  if (index === 5 && value.length === 1) {
-    verifyOtp(otpCode)
-  }
-}
-
-// Countdown timer
-useEffect(() => {
-  const timer = setInterval(() => {
-    setTimeRemaining((prev) => prev - 1)
-  }, 1000)
-
-  if (timeRemaining <= 0) {
-    setOtpExpired(true)
-  }
-
-  return () => clearInterval(timer)
-}, [timeRemaining])
-```
+**Frontend Implementation Notes**:
+- Auto-focus to the next OTP input field when a digit is entered
+- Auto-submit the OTP when all 6 digits are entered
+- Implement a countdown timer showing remaining time (starts at 5 minutes)
+- Mark OTP as expired when timer reaches zero
+- Display appropriate error messages for invalid codes, expired codes, or max attempts exceeded
 
 ### Step 3: Resend OTP (If Needed)
 
 **When to allow resend**:
-
 - Initial code expired (after 5 minutes)
 - User didn't receive SMS
 - User entered wrong number initially
 
 **Rate Limiting**:
-
 - Wait 60 seconds between resend requests
 - Maximum 3 OTP requests per hour
 
 **API Call**:
-
 ```typescript
 POST /auth/register/resend-otp
 {
@@ -309,15 +275,16 @@ POST /auth/register/resend-otp
 
 Response (Success):
 {
-  "message": "OTP code sent successfully",
-  "expiresAt": "2024-01-20T10:40:00Z"
+  "success": true,
+  "message": "OTP sent successfully",
+  "phone": "+998901234567",
+  "expiresAt": "2025-10-30T10:40:00Z"
 }
 
-Response (Too Soon):
+Response (Rate Limited):
 {
   "statusCode": 429,
-  "message": "Please wait 45 seconds before requesting a new code.",
-  "retryAfter": 45  // seconds
+  "message": "Too many OTP requests. Please try again later."
 }
 ```
 
@@ -330,7 +297,6 @@ Response (Too Soon):
 **After OTP verified**, user fills out their profile:
 
 **UI Form**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -372,38 +338,38 @@ Response (Too Soon):
 ```
 
 **API Call**:
-
 ```typescript
 POST /auth/register/complete
 {
-  "phone": "+998901234567",          // Already verified
-  "fullName": "Akmal Karimov",      // Full name
-  "email": "akmal@samarkand.uz",     // Optional
-  "password": "secure123!"
+  "phone": "+998901234567",          // Required, must be verified
+  "fullName": "Akmal Karimov",       // Required, owner's full name
+  "email": "akmal@samarkand.uz",     // Required, valid email format
+  "password": "secure123!",          // Required, minimum 8 characters
+  "businessName": "Samarkand Restaurant"  // Optional, uses OTP request name if omitted
 }
 
 Response (Success):
 {
-  "success": true,
-  "message": "Account created successfully",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "tokenType": "Bearer",
+  "expiresIn": 900,  // 15 minutes
   "tenant": {
     "id": 123,
     "name": "Samarkand Restaurant",
     "slug": "samarkand-restaurant-123",
-    "status": "trial"
+    "businessType": "restaurant",
+    "email": "akmal@samarkand.uz",
+    "phone": "+998901234567"
   },
   "employee": {
     "id": 456,
     "fullName": "Akmal Karimov",
     "phone": "+998901234567",
-    "email": "akmal@samarkand.uz",
-    "roles": ["Admin"]
+    "roles": ["Admin"],
+    "activeBranchId": 1
   },
-  "tokens": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "expiresIn": 900  // 15 minutes
-  }
+  "message": "Registration completed successfully"
 }
 
 Response (Phone Not Verified):
@@ -415,12 +381,11 @@ Response (Phone Not Verified):
 Response (Phone Already Registered):
 {
   "statusCode": 409,
-  "message": "Phone number already registered. Please login instead."
+  "message": "Phone or email already registered"
 }
 ```
 
 **What Happens After Creation**:
-
 1. Account created with all default data
 2. Access token returned (user is logged in)
 3. Welcome email sent (if email provided)
@@ -434,7 +399,6 @@ Response (Phone Already Registered):
 ### Regular Login (Phone + Password)
 
 **UI Form**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -464,12 +428,12 @@ Response (Phone Already Registered):
 ```
 
 **API Call**:
-
 ```typescript
 POST /auth/login
 {
-  "phone": "+998901234567",
-  "password": "secure123!"
+  "phone": "+998901234567",        // Required, format: +998XXXXXXXXX
+  "password": "secure123!",        // Required, minimum 8 characters
+  "tenantSlug": "samarkand-restaurant-123"  // Optional, for multi-tenant disambiguation
 }
 
 Response (Success):
@@ -494,22 +458,20 @@ Response (Invalid Credentials):
   "message": "Invalid phone number or password"
 }
 
-Response (Account Inactive):
+Response (Too Many Requests):
 {
-  "statusCode": 403,
-  "message": "Your account has been deactivated. Please contact support."
+  "statusCode": 429,
+  "message": "Too many login attempts. Please try again later."
 }
 ```
 
 ### Token Refresh
 
 **When to refresh**:
-
 - Access token expires (after 15 minutes)
 - Before making API call if token will expire soon (< 2 minutes remaining)
 
 **API Call**:
-
 ```typescript
 POST /auth/refresh
 {
@@ -519,7 +481,9 @@ POST /auth/refresh
 Response (Success):
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresIn": 900
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",  // New refresh token (token rotation)
+  "tokenType": "Bearer",
+  "expiresIn": 900  // 15 minutes
 }
 
 Response (Invalid/Expired):
@@ -527,45 +491,21 @@ Response (Invalid/Expired):
   "statusCode": 401,
   "message": "Invalid or expired refresh token. Please login again."
 }
+
+Response (Too Many Requests):
+{
+  "statusCode": 429,
+  "message": "Too many requests. Please try again later."
+}
 ```
 
-**Frontend Token Management**:
-
-```typescript
-// Store tokens securely
-localStorage.setItem('accessToken', response.accessToken)
-localStorage.setItem('refreshToken', response.refreshToken)
-
-// Add token to all requests
-axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
-
-// Auto-refresh on 401
-axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      const refreshToken = localStorage.getItem('refreshToken')
-      const newToken = await refreshAccessToken(refreshToken)
-
-      if (newToken) {
-        // Retry original request with new token
-        error.config.headers.Authorization = `Bearer ${newToken}`
-        return axios.request(error.config)
-      } else {
-        // Refresh failed, logout user
-        redirectToLogin()
-      }
-    }
-    return Promise.reject(error)
-  }
-)
-```
+**Frontend Token Management Guidelines**:
+- Store both `accessToken` and `refreshToken` securely in localStorage or secure storage
+- Add the access token to Authorization header for all authenticated requests: `Authorization: Bearer {token}`
+- Implement an HTTP interceptor to automatically refresh tokens when receiving 401 responses
+- When a 401 is received, attempt to get a new access token using the refresh token
+- If refresh succeeds, retry the original request with the new token
+- If refresh fails, logout the user and redirect to login page
 
 ---
 
@@ -577,14 +517,12 @@ axios.interceptors.response.use(
 **Solution**: 4-digit PIN for fast authentication
 
 **Use Case**:
-
 - Manager logs in with phone + password (first time)
 - Manager generates PINs for all employees
 - Employees login with PIN (takes 2 seconds)
 - PINs valid for 30 days, then need regeneration
 
 **Security**:
-
 - PINs are hashed (not stored in plain text)
 - PINs expire after 30 days
 - PIN login only works for employees assigned to the branch
@@ -595,7 +533,6 @@ axios.interceptors.response.use(
 **Manager/Admin Action**:
 
 **UI**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Employee: Akmal Karimov                        │
@@ -613,7 +550,6 @@ axios.interceptors.response.use(
 ```
 
 **API Call**:
-
 ```typescript
 POST /auth/generate-pin
 {
@@ -622,10 +558,22 @@ POST /auth/generate-pin
 
 Response (Success):
 {
-  "success": true,
   "pin": "1234",              // Only shown once!
-  "expiresAt": "2024-02-20T00:00:00Z",
+  "expiresAt": "2025-02-20T00:00:00Z",
+  "employeeId": 456,
   "message": "PIN generated successfully. Please share this PIN securely with the employee."
+}
+
+Response (Forbidden):
+{
+  "statusCode": 403,
+  "message": "Insufficient permissions. Only Admin/Manager roles can generate PINs."
+}
+
+Response (Not Found):
+{
+  "statusCode": 404,
+  "message": "Employee not found"
 }
 ```
 
@@ -634,7 +582,6 @@ Response (Success):
 ### PIN Login Flow (POS)
 
 **UI (POS Tablet)**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -679,50 +626,50 @@ Response (Success):
 ```
 
 **API Calls**:
-
 ```typescript
 // Step 1: Get employees list for branch
-GET /pos/auth/staff-list?branchId=10
+GET /pos/staff/staff-list?branchId=10
+Headers: Authorization: Bearer {JWT_TOKEN}
 
 Response:
-{
-  "employees": [
-    {
-      "id": 456,
-      "firstName": "Akmal",
-      "lastName": "Karimov",
-      "role": "Cashier",
-      "avatar": "https://...",
-      "hasPinEnabled": true,
-      "pinExpiresAt": "2024-02-20T00:00:00Z"
-    },
-    {
-      "id": 457,
-      "firstName": "Farrux",
-      "lastName": "Aliyev",
-      "role": "Waiter",
-      "avatar": null,
-      "hasPinEnabled": false
-    }
-  ]
-}
+[
+  {
+    "id": 456,
+    "fullName": "Akmal Karimov",
+    "phoneNumber": "+998901234567",
+    "hasPin": true,
+    "photoUrl": "https://...",
+    "roles": ["Cashier"],
+    "isActive": true
+  },
+  {
+    "id": 457,
+    "fullName": "Farrux Aliyev",
+    "phoneNumber": "+998909876543",
+    "hasPin": false,
+    "photoUrl": null,
+    "roles": ["Waiter"],
+    "isActive": true
+  }
+]
 
 // Step 2: Login with PIN
 POST /auth/pin-login
 {
   "employeeId": 456,
   "pin": "1234",
-  "branchId": 10  // Current branch
+  "branchId": 10  // Optional, for multi-branch employees
 }
 
 Response (Success):
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresIn": 900,
+  "tokenType": "Bearer",
   "employee": {
     "id": 456,
     "fullName": "Akmal Karimov",
+    "phone": "+998901234567",
     "roles": ["Cashier"],
     "activeBranchId": 10
   }
@@ -731,156 +678,19 @@ Response (Success):
 Response (Invalid PIN):
 {
   "statusCode": 401,
-  "message": "Invalid PIN. 2 attempts remaining."
+  "message": "Invalid PIN"
 }
 
-Response (PIN Expired):
+Response (PIN Expired or Disabled):
 {
   "statusCode": 400,
-  "message": "PIN has expired. Please use password login or contact your manager."
-}
-```
-
----
-
-## Frontend Implementation Guide
-
-### Signup Page Flow
-
-```typescript
-// Step 1: Request OTP
-const handleRequestOtp = async () => {
-  try {
-    const response = await api.post('/auth/register/request-otp', {
-      phone: formatPhone(phone),
-      businessName: businessName,
-    })
-
-    setOtpSent(true)
-    setOtpExpiresAt(response.expiresAt)
-    startCountdown(300) // 5 minutes
-
-    toast.success('Verification code sent!')
-  } catch (error) {
-    if (error.response?.status === 429) {
-      toast.error('Too many requests. Please try again later.')
-    } else {
-      toast.error('Failed to send code. Please try again.')
-    }
-  }
+  "message": "PIN has expired or is not enabled. Please contact your manager."
 }
 
-// Step 2: Verify OTP
-const handleVerifyOtp = async (code: string) => {
-  try {
-    const response = await api.post('/auth/register/verify-otp', {
-      phone: formatPhone(phone),
-      code: code,
-    })
-
-    setPhoneVerified(true)
-    toast.success('Phone verified!')
-
-    // Move to profile form
-    setCurrentStep('profile')
-  } catch (error) {
-    if (error.response?.data?.message?.includes('attempts')) {
-      toast.error(error.response.data.message)
-    } else {
-      toast.error('Invalid code. Please try again.')
-    }
-  }
-}
-
-// Step 3: Complete Registration
-const handleCompleteRegistration = async () => {
-  try {
-    const response = await api.post('/auth/register/complete', {
-      phone: formatPhone(phone),
-      businessName: businessName,
-      ownerName: ownerName,
-      email: email || undefined,
-      password: password,
-    })
-
-    // Store tokens
-    localStorage.setItem('accessToken', response.tokens.accessToken)
-    localStorage.setItem('refreshToken', response.tokens.refreshToken)
-
-    // Redirect to onboarding
-    router.push('/admin/onboarding')
-
-    toast.success('Welcome to OshLab! 🎉')
-  } catch (error) {
-    if (error.response?.status === 409) {
-      toast.error('Phone already registered. Please login.')
-    } else {
-      toast.error('Registration failed. Please try again.')
-    }
-  }
-}
-```
-
-### Login Page Flow
-
-```typescript
-const handleLogin = async () => {
-  try {
-    const response = await api.post('/auth/login', {
-      phone: formatPhone(phone),
-      password: password,
-    })
-
-    // Store tokens
-    localStorage.setItem('accessToken', response.accessToken)
-    localStorage.setItem('refreshToken', response.refreshToken)
-
-    // Store user data
-    setUser(response.employee)
-
-    // Redirect based on role
-    if (response.employee.roles.includes('Admin')) {
-      router.push('/admin/dashboard')
-    } else {
-      router.push('/pos')
-    }
-
-    toast.success(`Welcome back, ${response.employee.fullName}!`)
-  } catch (error) {
-    toast.error('Invalid phone or password')
-  }
-}
-```
-
-### PIN Login Flow (POS)
-
-```typescript
-const handlePinLogin = async (employeeId: number, pin: string) => {
-  try {
-    const response = await api.post('/auth/pin-login', {
-      employeeId: employeeId,
-      pin: pin,
-      branchId: currentBranchId,
-    })
-
-    // Store tokens
-    localStorage.setItem('accessToken', response.accessToken)
-    localStorage.setItem('refreshToken', response.refreshToken)
-
-    // Redirect to POS
-    router.push('/pos/dashboard')
-
-    toast.success(`Welcome, ${response.employee.fullName}!`)
-  } catch (error) {
-    setPinError(true)
-    clearPinInputs()
-
-    if (error.response?.data?.message?.includes('expired')) {
-      toast.error('PIN expired. Please use password login.')
-    } else {
-      toast.error('Invalid PIN')
-    }
-  }
+Response (Too Many Attempts):
+{
+  "statusCode": 429,
+  "message": "Too many failed attempts. Please try again later."
 }
 ```
 
@@ -890,63 +700,53 @@ const handlePinLogin = async (employeeId: number, pin: string) => {
 
 ### Signup Flow
 
-```typescript
-// Request OTP
+```
 POST /auth/register/request-otp
 Body: { phone, businessName }
 
-// Verify OTP
 POST /auth/register/verify-otp
 Body: { phone, code }
 
-// Resend OTP
 POST /auth/register/resend-otp
 Body: { phone }
 
-// Complete Registration
 POST /auth/register/complete
-Body: { phone, businessName, ownerName, email?, password }
+Body: { phone, fullName, email, password, businessName? }
 ```
 
 ### Login Flow
 
-```typescript
-// Regular Login
+```
 POST /auth/login
 Body: { phone, password }
 
-// Refresh Token
 POST /auth/refresh
 Body: { refreshToken }
 
-// Get Current User
 GET /auth/me
 Headers: Authorization: Bearer {token}
 
-// Logout
 POST /auth/logout
 Headers: Authorization: Bearer {token}
 ```
 
 ### PIN Authentication
 
-```typescript
-// Get Staff List for Branch (POS)
-GET /pos/auth/staff-list?branchId={branchId}
+```
+GET /pos/staff/staff-list?branchId={branchId}
+Headers: Authorization: Bearer {token}
 
-// PIN Login
 POST /auth/pin-login
-Body: { employeeId, pin, branchId }
+Body: { employeeId, pin, branchId? }
 
-// Generate PIN (Admin/Manager)
 POST /auth/generate-pin
 Body: { employeeId }
+Headers: Authorization: Bearer {token}
+Roles: Admin, Manager
 
-// Refresh PIN (Self)
 POST /auth/refresh-pin
 Headers: Authorization: Bearer {token}
 
-// Get PIN Status
 GET /auth/pin-status/:employeeId
 ```
 
@@ -957,7 +757,6 @@ GET /auth/pin-status/:employeeId
 ### Q: Why phone verification instead of email?
 
 **Phone verification is preferred in Uzbekistan** because:
-
 - Everyone has a mobile phone
 - SMS delivery is instant and reliable
 - Phone numbers are tied to ID cards (reduces fraud)
@@ -967,7 +766,6 @@ GET /auth/pin-status/:employeeId
 ### Q: Can I skip email during signup?
 
 **Yes**. Email is optional. The system will:
-
 - Still work without email
 - Send receipts via SMS instead
 - Use phone for all notifications
@@ -976,7 +774,6 @@ GET /auth/pin-status/:employeeId
 ### Q: What happens if I don't receive the SMS?
 
 **Common solutions**:
-
 1. Wait 60 seconds and click "Resend Code"
 2. Check phone number is correct (+998...)
 3. Check SMS inbox (sometimes delayed)
@@ -1007,11 +804,9 @@ After signup, user is redirected to onboarding wizard to complete setup.
 ## Next Steps
 
 After successful signup/login:
-
 1. User is redirected to onboarding wizard
 2. Complete 7-step setup (see `ADMIN_ONBOARDING_WIZARD.md`)
 3. Start using the system
 
 For onboarding documentation, see:
-
 - `ADMIN_ONBOARDING_WIZARD.md`

@@ -1,8 +1,10 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogContent,
@@ -22,8 +24,8 @@ import {
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
 import { Textarea } from '@/shared/ui/base/textarea';
-import { Button } from '@/shared/ui/base/button';
-import type { Category } from '@/shared/lib/mock-menu-data';
+
+import type { MockCategory } from '@/shared/lib/mock-menu-data';
 
 const categorySchema = z.object({
   name: z.string().min(2, { message: 'Название должно содержать минимум 2 символа' }),
@@ -35,10 +37,10 @@ const categorySchema = z.object({
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
 interface EditCategoryModalProps {
-  category: Category | null;
+  category: MockCategory | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (category: Category) => void;
+  onSave: (category: MockCategory) => void;
 }
 
 const PRESET_ICONS = ['🍕', '🍝', '🥗', '🍲', '🍢', '🍖', '🍰', '🥤', '🍣', '🦐', '🍳', '🍔', '🍟', '☕', '🥬'];

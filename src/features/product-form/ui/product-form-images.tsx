@@ -1,6 +1,10 @@
 'use client';
 
-import { FileUploader } from '@/shared/ui/file-uploader';
+import * as React from 'react';
+
+import { useFormContext } from 'react-hook-form';
+
+import { MAX_FILE_SIZE } from '@/shared/config/data';
 import {
   FormControl,
   FormField,
@@ -8,10 +12,11 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import { useFormContext } from 'react-hook-form';
-import { MAX_FILE_SIZE } from '@/shared/config/data';
-import { IFile } from '@/shared/types';
-import * as React from 'react';
+import { FileUploader } from '@/shared/ui/file-uploader';
+
+
+import type { IFile } from '@/shared/types';
+
 
 export function ProductFormImages({
   images,

@@ -1,10 +1,12 @@
 'use client';
 
-import { Plus, Check } from 'lucide-react';
 import Image from 'next/image';
-import { Card, CardContent } from './base/card';
-import { Button } from './base/button';
+
+import { Plus, Check } from 'lucide-react';
+
 import { Badge } from './base/badge';
+import { Button } from './base/button';
+import { Card, CardContent } from './base/card';
 import { cn } from '../lib/utils';
 
 export interface ProductCardData {
@@ -25,7 +27,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, isSelected, onAdd, onClick }: ProductCardProps) {
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ru-RU').format(price) + ' сум';
+    return `${new Intl.NumberFormat('ru-RU').format(price)  } сум`;
   };
 
   return (

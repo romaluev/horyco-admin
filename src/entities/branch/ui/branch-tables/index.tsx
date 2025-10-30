@@ -1,12 +1,13 @@
 'use client';
 
+import { parseAsInteger, useQueryState } from 'nuqs';
+
+import { useDataTable } from '@/shared/hooks/use-data-table';
 import { DataTable } from '@/shared/ui/base/table/data-table';
 import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar';
 
-import { useDataTable } from '@/shared/hooks/use-data-table';
 
-import { ColumnDef } from '@tanstack/react-table';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import type { ColumnDef } from '@tanstack/react-table';
 
 interface BranchTableParams<TData, TValue> {
   data: TData[];

@@ -1,12 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+
 import { useRouter } from 'next/navigation';
-import { authApi } from '@/entities/auth/model/api';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+
+import { Alert, AlertDescription } from '@/shared/ui/base/alert';
 import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
 import {
   Form,
   FormControl,
@@ -15,24 +28,17 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
-import PasswordInput from '@/shared/ui/base/passsword-input';
 import { Input } from '@/shared/ui/base/input';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot
 } from '@/shared/ui/base/input-otp';
-import { toast } from 'sonner';
+import PasswordInput from '@/shared/ui/base/passsword-input';
+import { PhoneInput } from '@/shared/ui/base/phone-input';
+
+import { authApi } from '@/entities/auth/model/api';
+
 
 // Step 1: Initial registration form
 const initialFormSchema = z.object({
@@ -118,6 +124,7 @@ const RegisterForm = () => {
     } else if (otpExpiry === 0) {
       setCanResend(true);
     }
+    return undefined;
   }, [step, otpExpiry]);
 
   // Handle initial form submission (send OTP)
@@ -247,7 +254,7 @@ const RegisterForm = () => {
                       <PhoneInput
                         defaultCountry={'UZ'}
                         placeholder={'90 123 45 67'}
-                        limitMaxLength={true}
+                        limitMaxLength
                         countries={['UZ']}
                         {...field}
                         disabled={isLoading}

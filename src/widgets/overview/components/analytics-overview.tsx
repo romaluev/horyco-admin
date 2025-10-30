@@ -3,10 +3,15 @@
 import * as React from 'react';
 // Импортируем только необходимые функции
 
-import { PeriodFilter, PeriodType, DateRange } from './period-filter';
+import { AnalyticsChart } from './analytics-chart';
 import { AnalyticsMetrics } from './analytics-metrics';
-import { AnalyticsChart, ChartDataWithCast } from './analytics-chart';
-import { RecentOrders, RecentOrder } from './recent-orders';
+import { PeriodFilter } from './period-filter';
+import { RecentOrders } from './recent-orders';
+
+import type { ChartDataWithCast } from './analytics-chart';
+import type { PeriodType, DateRange } from './period-filter';
+import type { RecentOrder } from './recent-orders';
+
 
 // Моковые данные для метрик
 const mockMetricsData = {
@@ -283,7 +288,7 @@ export function AnalyticsOverview() {
           <RecentOrders
             orders={mockRecentOrders}
             isLoading={isLoading}
-            compact={true}
+            compact
           />
         </div>
       </div>

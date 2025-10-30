@@ -1,4 +1,11 @@
 'use client';
+import { useRouter } from 'next/navigation';
+
+import { LogOut, User as UserIcon } from 'lucide-react';
+
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { getNameInitials } from '@/shared/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
 import { Button } from '@/shared/ui/base/button';
 import {
   DropdownMenu,
@@ -9,12 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/shared/ui/base/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
+
 import { useAuthStore } from '@/entities/auth/model/store';
-import { useRouter } from 'next/navigation';
-import { LogOut, User as UserIcon } from 'lucide-react';
-import { BASE_API_URL } from '@/shared/lib/axios';
-import { getNameInitials } from '@/shared/lib/utils';
 
 export function UserNav() {
   const { user, logout } = useAuthStore();

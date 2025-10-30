@@ -1,20 +1,25 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
 import { useRouter } from 'next/navigation';
-import {
-  useGetOnboardingProgress,
-  useSubmitBusinessInfo
-} from '@/entities/onboarding';
-import {
-  businessInfoSchema,
-  type BusinessInfoFormValues
-} from '@/features/onboarding/model';
-import { OnboardingLayout } from '@/shared/ui/onboarding';
-import BaseLoading from '@/shared/ui/base-loading';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+
+import { BUSINESS_TYPES } from '@/shared/config/business-types';
+import { getNextStep } from '@/shared/config/onboarding';
+import { useFormPersist } from '@/shared/hooks/use-form-persist';
+import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
 import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
 import {
   Form,
   FormControl,
@@ -24,13 +29,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+import { Input } from '@/shared/ui/base/input';
 import {
   Select,
   SelectContent,
@@ -38,18 +37,23 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { Input } from '@/shared/ui/base/input';
-import { Loader2 } from 'lucide-react';
-import { getNextStep } from '@/shared/config/onboarding';
-import { useFormPersist } from '@/shared/hooks/use-form-persist';
-import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
-import { BUSINESS_TYPES } from '@/shared/config/business-types';
+import BaseLoading from '@/shared/ui/base-loading';
+import { OnboardingLayout } from '@/shared/ui/onboarding';
+
+import {
+  useGetOnboardingProgress,
+  useSubmitBusinessInfo
+} from '@/entities/onboarding';
+import {
+  businessInfoSchema,
+  type BusinessInfoFormValues
+} from '@/features/onboarding/model';
 
 export default function BusinessInfoPage() {
   const router = useRouter();
 
   // Fetch onboarding progress
-  const { data: progress, isLoading: progressLoading } =
+  const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress();
 
   // Form initialization
@@ -110,7 +114,7 @@ export default function BusinessInfoPage() {
       title='Расскажите о вашем бизнесе'
       description='Эта информация поможет нам настроить систему под ваши потребности'
     >
-      {progressLoading ? (
+      {isProgressLoading ? (
         <BaseLoading />
       ) : (
         <Card>

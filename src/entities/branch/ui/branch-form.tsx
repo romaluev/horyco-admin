@@ -1,5 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Form,
@@ -10,17 +16,17 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { useRouter } from 'next/navigation';
+
+
 import {
-  ICreateBranchDto,
-  IBranch,
-  IUpdateBranchDto,
   useCreateBranch,
   useUpdateBranch
 } from '@/entities/branch/model';
+
+import type {
+  ICreateBranchDto,
+  IBranch,
+  IUpdateBranchDto} from '@/entities/branch/model';
 
 export default function BranchForm({ initialData }: { initialData?: IBranch }) {
   const router = useRouter();

@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
 import { hallApi } from './api';
 import { hallKeys } from './query-keys';
-import { IHallRequest } from './types';
-import { toast } from 'sonner';
+
+import type { IHallRequest } from './types';
 
 export const useCreateHall = () => {
   const queryClient = useQueryClient();

@@ -1,3 +1,7 @@
+import { Trash } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogClose,
@@ -8,10 +12,9 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Button } from '@/shared/ui/base/button';
-import { Trash } from 'lucide-react';
+
 import { useDeleteTable } from '@/entities/table/model';
-import { toast } from 'sonner';
+
 
 export const DeleteTableButton = ({ id }: { id: number }) => {
   const { mutateAsync: deleteTable } = useDeleteTable();

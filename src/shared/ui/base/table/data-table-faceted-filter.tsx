@@ -1,8 +1,11 @@
 'use client';
 
-import type { Column } from '@tanstack/react-table';
+import * as React from 'react';
+
+import { CheckIcon } from '@radix-ui/react-icons';
 import { PlusCircle, XCircle } from 'lucide-react';
 
+import { cn } from '@/shared/lib/utils';
 import { Badge } from '@/shared/ui/base/badge';
 import { Button } from '@/shared/ui/base/button';
 import {
@@ -20,10 +23,9 @@ import {
   PopoverTrigger
 } from '@/shared/ui/base/popover';
 import { Separator } from '@/shared/ui/base/separator';
-import { cn } from '@/shared/lib/utils';
-import * as React from 'react';
-import { CheckIcon } from '@radix-ui/react-icons';
-import { Option } from '@/shared/types/data-table';
+
+import type { Option } from '@/shared/types/data-table';
+import type { Column } from '@tanstack/react-table';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;

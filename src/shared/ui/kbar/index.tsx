@@ -1,6 +1,9 @@
 'use client';
 
-import { getNavItems } from '@/shared/config/data';
+import { useMemo } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import {
   KBarAnimator,
   KBarPortal,
@@ -8,8 +11,10 @@ import {
   KBarProvider,
   KBarSearch
 } from 'kbar';
-import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+
+import { getNavItems } from '@/shared/config/data';
+
+
 import RenderResults from './render-result';
 
 export default function KBar({ children }: { children: React.ReactNode }) {

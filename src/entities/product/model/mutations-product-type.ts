@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
 import { productAPi } from './api';
 import { productKeys } from './query-keys';
-import { IProductTypeRequest } from './types';
-import { toast } from 'sonner';
+
+import type { IProductTypeRequest } from './types';
 
 /**
  * Хук для создания новой категории продукта

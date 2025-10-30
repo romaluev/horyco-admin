@@ -1,12 +1,14 @@
 import api from '@/shared/lib/axios';
-import {
+
+import type {
   IProduct,
   IProductType,
   IProductTypeRequest,
   ICreateProductDto,
   IUpdateProductDto
 } from './types';
-import { ApiParams, PaginatedResponse } from '@/shared/types';
+import type { ApiParams, PaginatedResponse } from '@/shared/types';
+
 
 export const productAPi = {
   /**

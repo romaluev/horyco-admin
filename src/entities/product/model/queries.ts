@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+
+
 import { productAPi } from './api';
 import { productKeys } from './query-keys';
-import { ApiParams } from '@/shared/types';
+
+import type { ApiParams } from '@/shared/types';
 
 export const useGetAllProducts = (params?: ApiParams) => {
   return useQuery({

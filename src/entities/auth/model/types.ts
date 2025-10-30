@@ -50,14 +50,22 @@ export interface SendOTPResponse {
   };
   timestamp: string;
   requestId: string;
+  message: string;
+  maskedPhone: string;
+  expiresIn: number;
 }
 
 /**
  * Registration - Verify OTP request (Step 2)
+ * Supports both simple verification and complete registration in one call
  */
 export interface VerifyOTPRequest {
   phone: string;
-  code: string;
+  code?: string;
+  otp?: string;
+  businessName?: string;
+  ownerName?: string;
+  password?: string;
 }
 
 /**
@@ -66,6 +74,10 @@ export interface VerifyOTPRequest {
 export interface VerifyOTPResponse {
   verified: boolean;
   message: string;
+  onboardingProgress: {
+    isCompleted: boolean;
+    currentStep: string;
+  };
 }
 
 /**

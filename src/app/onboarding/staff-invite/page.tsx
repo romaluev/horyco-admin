@@ -1,38 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
 import { useRouter } from 'next/navigation';
-import {
-  useGetOnboardingProgress,
-  useSubmitStaffInvite,
-  useSkipStep
-} from '@/entities/onboarding';
-import {
-  staffInviteSchema,
-  type StaffInviteFormValues
-} from '@/features/onboarding/model';
-import { OnboardingLayout } from '@/shared/ui/onboarding';
-import { Button } from '@/shared/ui/base/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Input } from '@/shared/ui/base/input';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus, Trash2 } from 'lucide-react';
+import { useFieldArray, useForm } from 'react-hook-form';
+
+import { getNextStep } from '@/shared/config/onboarding';
+import { useFormPersist } from '@/shared/hooks/use-form-persist';
+import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,20 +21,45 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
+import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/shared/ui/base/form';
+import { Input } from '@/shared/ui/base/input';
 import { PhoneInput } from '@/shared/ui/base/phone-input';
-import { Info, Plus, Trash2 } from 'lucide-react';
 import BaseLoading from '@/shared/ui/base-loading';
-import { getNextStep } from '@/shared/config/onboarding';
-import { useFormPersist } from '@/shared/hooks/use-form-persist';
-import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
+import { OnboardingLayout } from '@/shared/ui/onboarding';
+
+import {
+  useGetOnboardingProgress,
+  useSubmitStaffInvite,
+  useSkipStep
+} from '@/entities/onboarding';
+import {
+  staffInviteSchema,
+  type StaffInviteFormValues
+} from '@/features/onboarding/model';
 
 const WAITER_ROLE_ID = 2; // Hardcoded roleId for Waiter
 
 export default function StaffInvitePage() {
   const router = useRouter();
-  const [skipConfirmOpen, setSkipConfirmOpen] = useState(false);
+  const [isSkipConfirmOpen, setSkipConfirmOpen] = useState(false);
 
-  const { data: progress, isLoading: progressLoading } =
+  const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress();
 
   // Form initialization
@@ -148,7 +151,7 @@ export default function StaffInvitePage() {
       title='Пригласите сотрудников'
       description='Добавьте официантов для управления заказами'
     >
-      {progressLoading ? (
+      {isProgressLoading ? (
         <BaseLoading />
       ) : (
         <>
@@ -163,10 +166,10 @@ export default function StaffInvitePage() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className='space-y-6'
+                  className='space-y-4'
                 >
                   {fields.length === 0 ? (
-                    <div className='py-8 text-center'>
+                    <div className='py-6 text-center'>
                       <p className='text-muted-foreground mb-4'>
                         Пока не добавлено ни одного сотрудника
                       </p>
@@ -180,26 +183,24 @@ export default function StaffInvitePage() {
                       </Button>
                     </div>
                   ) : (
-                    <div className='space-y-6'>
+                    <div className='space-y-4'>
                       {fields.map((field, index) => (
-                        <Card key={field.id}>
-                          <CardHeader>
-                            <div className='flex items-center justify-between'>
-                              <CardTitle className='text-base'>
-                                Официант #{index + 1}
-                              </CardTitle>
-                              <Button
-                                type='button'
-                                variant='ghost'
-                                size='icon'
-                                onClick={() => remove(index)}
-                                disabled={isLoading}
-                              >
-                                <Trash2 className='h-4 w-4' />
-                              </Button>
-                            </div>
+                        <Card key={field.id} className="gap-2">
+                          <CardHeader className="flex items-center justify-between">
+                            <CardTitle className='text-base'>
+                              Официант #{index + 1}
+                            </CardTitle>
+                            <Button
+                              type='button'
+                              variant='ghost'
+                              size='icon'
+                              onClick={() => remove(index)}
+                              disabled={isLoading}
+                            >
+                              <Trash2 className='h-4 w-4' />
+                            </Button>
                           </CardHeader>
-                          <CardContent className='space-y-4'>
+                          <CardContent className='space-y-3'>
                             <FormField
                               control={form.control}
                               name={`invitations.${index}.fullName`}
@@ -228,7 +229,7 @@ export default function StaffInvitePage() {
                                     <PhoneInput
                                       defaultCountry={'UZ'}
                                       placeholder={'90 111 11 11'}
-                                      limitMaxLength={true}
+                                      limitMaxLength
                                       countries={['UZ']}
                                       {...field}
                                       disabled={isLoading}
@@ -312,7 +313,7 @@ export default function StaffInvitePage() {
           </Card>
 
           {/* Skip Confirmation Dialog */}
-          <AlertDialog open={skipConfirmOpen} onOpenChange={setSkipConfirmOpen}>
+          <AlertDialog open={isSkipConfirmOpen} onOpenChange={setSkipConfirmOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>

@@ -1,10 +1,12 @@
 'use client';
 
-import { Plus, Check } from 'lucide-react';
 import Image from 'next/image';
-import { Card, CardContent } from './base/card';
-import { Button } from './base/button';
+
+import { Plus, Check } from 'lucide-react';
+
 import { Badge } from './base/badge';
+import { Button } from './base/button';
+import { Card, CardContent } from './base/card';
 import { cn } from '../lib/utils';
 
 export interface CategoryCardData {
@@ -55,7 +57,7 @@ export function CategoryCard({
         {category.icon && (
           <div
             className='absolute bottom-2 left-2 flex h-10 w-10 items-center justify-center rounded-lg text-xl backdrop-blur-sm'
-            style={{ backgroundColor: category.color + 'CC' }}
+            style={{ backgroundColor: `${category.color  }CC` }}
           >
             {category.icon}
           </div>

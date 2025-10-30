@@ -1,6 +1,20 @@
 'use client';
 
+import * as React from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+
+import {
+  IconChevronRight,
+  IconChevronsDown,
+  IconLogout,
+  IconUserCircle
+} from '@tabler/icons-react';
+
 import logo from '@/shared/assets/logo.png';
+import { getNavItems } from '@/shared/config/data';
 import {
   Collapsible,
   CollapsibleContent,
@@ -30,19 +44,12 @@ import {
   SidebarRail
 } from '@/shared/ui/base/sidebar';
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile';
-import { getNavItems } from '@/shared/config/data';
-import {
-  IconChevronRight,
-  IconChevronsDown,
-  IconLogout,
-  IconUserCircle
-} from '@tabler/icons-react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import * as React from 'react';
-import { Icons } from '../icons';
+
+
 import { useAuthStore } from '@/entities/auth/model/store';
-import Image from 'next/image';
+
+import { Icons } from '../icons';
+
 
 export default function AppSidebar() {
   const pathname = usePathname();

@@ -1,5 +1,5 @@
-import { Skeleton } from '@/shared/ui/base/skeleton';
 import { Card, CardContent, CardHeader } from '@/shared/ui/base/card';
+import { Skeleton } from '@/shared/ui/base/skeleton';
 
 export function RecentSalesSkeleton() {
   return (

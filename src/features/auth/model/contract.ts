@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { PASSWORD_REGEX, PHONE_CONFIG } from './constants';
 
 /**
@@ -59,7 +60,7 @@ export const otpSchema = z.object({
   otp: z.string().length(6, { message: 'Код должен содержать 6 цифр' })
 });
 
-export type OTPFormValues = z.infer<typeof otpSchema>;
+export type OTPVerificationFormValues = z.infer<typeof otpSchema>;
 
 /**
  * Registration - Step 3: Complete Profile (After OTP verification)

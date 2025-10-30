@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function Dashboard() {
   // Check if user is authenticated by looking for the access_token cookie
@@ -9,7 +9,7 @@ export default async function Dashboard() {
 
   if (!isAuthenticated) {
     return redirect('/auth/sign-in');
-  } else {
-    redirect('/dashboard/overview');
   }
+    redirect('/dashboard/overview');
+
 }

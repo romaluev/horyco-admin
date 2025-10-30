@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { IHall, IHallRequest } from '../model/types';
-import { useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useCreateHall, useUpdateHall } from '../model/mutations';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Form,
   FormControl,
@@ -15,7 +16,10 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
-import { Button } from '@/shared/ui/base/button';
+
+import { useCreateHall, useUpdateHall } from '../model/mutations';
+
+import type { IHall, IHallRequest } from '../model/types';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),

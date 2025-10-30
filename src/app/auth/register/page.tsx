@@ -1,8 +1,13 @@
-import { Metadata } from 'next';
-import { RegistrationFlow } from '@/features/auth';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+
+
 import logo from '@/shared/assets/logo.png';
+
+import { RegistrationFlow } from '@/features/auth';
+
+import type { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
   title: 'Регистрация',

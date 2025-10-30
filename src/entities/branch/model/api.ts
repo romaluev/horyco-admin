@@ -1,12 +1,14 @@
-import { IBranch, ICreateBranchDto, IUpdateBranchDto } from './types';
 import api from '@/shared/lib/axios';
 import {
-  ApiParams,
   FilteringParams,
-  PaginatedResponse,
   PaginationParams,
   SortingParams
 } from '@/shared/types';
+
+import type { IBranch, ICreateBranchDto, IUpdateBranchDto } from './types';
+import type {
+  ApiParams,
+  PaginatedResponse} from '@/shared/types';
 
 /**
  * Branch API functions

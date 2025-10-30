@@ -1,23 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
-import {
-  useGetOnboardingProgress,
-  useCompleteOnboarding
-} from '@/entities/onboarding';
-import { OnboardingLayout } from '@/shared/ui/onboarding';
-import { Button } from '@/shared/ui/base/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { Badge } from '@/shared/ui/base/badge';
-import BaseLoading from '@/shared/ui/base-loading';
+
 import {
   AlertCircle,
   ArrowRight,
@@ -26,9 +12,28 @@ import {
   XCircle
 } from 'lucide-react';
 
+import { Alert, AlertDescription } from '@/shared/ui/base/alert';
+import { Badge } from '@/shared/ui/base/badge';
+import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
+import BaseLoading from '@/shared/ui/base-loading';
+import { OnboardingLayout } from '@/shared/ui/onboarding';
+
+import {
+  useGetOnboardingProgress,
+  useCompleteOnboarding
+} from '@/entities/onboarding';
+
+
 export default function CompletePage() {
   const router = useRouter();
-  const { data: progress, isLoading: progressLoading } =
+  const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress();
 
   const {
@@ -52,7 +57,7 @@ export default function CompletePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'GO_LIVE'}
+      currentStep={progress?.currentStep || 'go_live'}
       completedSteps={progress?.completedSteps || []}
       title={
         isError
@@ -69,7 +74,7 @@ export default function CompletePage() {
             : 'Подождите, система активируется...'
       }
     >
-      {progressLoading || isCompleting ? (
+      {isProgressLoading || isCompleting ? (
         <BaseLoading />
       ) : isError ? (
         <>
@@ -118,29 +123,30 @@ export default function CompletePage() {
             </CardHeader>
             <CardContent>
               <div className='space-y-3'>
-                {completionData?.onboardingProgress.completedSteps.map(
+                {completionData?.completedSteps.map(
                   (step) => (
                     <div key={step} className='flex items-center gap-3'>
                       <CheckCircle2 className='text-primary h-5 w-5' />
                       <span className='capitalize'>
-                        {step === 'REGISTRATION_COMPLETE' && 'Регистрация'}
-                        {step === 'BUSINESS_INFO_VERIFIED' &&
+                        {step === 'registration_complete' && 'Регистрация'}
+                        {step === 'business_identity' &&
                           'Информация о бизнесе'}
-                        {step === 'BRANCH_SETUP' && 'Настройка филиала'}
-                        {step === 'MENU_TEMPLATE' && 'Шаблон меню'}
-                        {step === 'STAFF_INVITED' && 'Приглашение персонала'}
+                        {step === 'branch_setup' && 'Настройка филиала'}
+                        {step === 'menu_template' && 'Шаблон меню'}
+                        {step === 'staff_invited' && 'Приглашение персонала'}
+                        {step === 'go_live' && 'Запуск системы'}
                       </span>
                     </div>
                   )
                 )}
 
-                {completionData?.onboardingProgress.skippedSteps &&
-                  completionData.onboardingProgress.skippedSteps.length > 0 && (
+                {completionData?.skippedSteps &&
+                  completionData.skippedSteps.length > 0 && (
                     <div className='border-t pt-3'>
                       <p className='text-muted-foreground mb-2 text-sm font-medium'>
                         Пропущенные шаги:
                       </p>
-                      {completionData.onboardingProgress.skippedSteps.map(
+                      {completionData.skippedSteps.map(
                         (step) => (
                           <div key={step} className='flex items-center gap-3'>
                             <XCircle className='text-muted-foreground h-5 w-5' />

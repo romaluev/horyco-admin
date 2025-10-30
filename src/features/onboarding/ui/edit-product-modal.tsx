@@ -1,9 +1,13 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import Image from 'next/image';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +24,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
+import { Input } from '@/shared/ui/base/input';
 import {
   Select,
   SelectContent,
@@ -27,10 +32,9 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { Input } from '@/shared/ui/base/input';
 import { Textarea } from '@/shared/ui/base/textarea';
-import { Button } from '@/shared/ui/base/button';
-import type { Product, Category } from '@/shared/lib/mock-menu-data';
+
+import type { MockProduct, MockCategory } from '@/shared/lib/mock-menu-data';
 
 const productSchema = z.object({
   name: z.string().min(2, { message: 'Название должно содержать минимум 2 символа' }),
@@ -43,11 +47,11 @@ const productSchema = z.object({
 type ProductFormValues = z.infer<typeof productSchema>;
 
 interface EditProductModalProps {
-  product: Product | null;
-  categories: Category[];
+  product: MockProduct | null;
+  categories: MockCategory[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (product: Product) => void;
+  onSave: (product: MockProduct) => void;
 }
 
 export function EditProductModal({

@@ -1,17 +1,20 @@
 'use client';
 
-import { Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { Card, CardContent } from '@/shared/ui/base/card';
-import { Button } from '@/shared/ui/base/button';
+
+import { Edit, Trash2 } from 'lucide-react';
+
 import { Badge } from '@/shared/ui/base/badge';
-import type { Category, Product } from '@/shared/lib/mock-menu-data';
+import { Button } from '@/shared/ui/base/button';
+import { Card, CardContent } from '@/shared/ui/base/card';
+
+import type { MockCategory, MockProduct } from '@/shared/lib/mock-menu-data';
 
 interface SelectedItemsListProps {
-  selectedCategories: Category[];
-  selectedProducts: Product[];
-  onEditCategory: (category: Category) => void;
-  onEditProduct: (product: Product) => void;
+  selectedCategories: MockCategory[];
+  selectedProducts: MockProduct[];
+  onEditCategory: (category: MockCategory) => void;
+  onEditProduct: (product: MockProduct) => void;
   onRemoveCategory: (categoryId: string) => void;
   onRemoveProduct: (productId: string) => void;
 }
@@ -37,7 +40,7 @@ export function SelectedItemsList({
   }
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ru-RU').format(price) + ' сум';
+    return `${new Intl.NumberFormat('ru-RU').format(price)  } сум`;
   };
 
   return (
@@ -56,7 +59,7 @@ export function SelectedItemsList({
                     {category.icon && (
                       <div
                         className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-xl'
-                        style={{ backgroundColor: category.color + '20' }}
+                        style={{ backgroundColor: `${category.color  }20` }}
                       >
                         {category.icon}
                       </div>
@@ -103,7 +106,7 @@ export function SelectedItemsList({
                   <div className='flex gap-3'>
                     <div className='relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-muted'>
                       <Image
-                        src={product.image}
+                        src={product.image ?? '/placeholder.png'}
                         alt={product.name}
                         fill
                         className='object-cover'

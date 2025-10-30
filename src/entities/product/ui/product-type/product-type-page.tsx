@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ProductTypeTable } from './product-type-table';
-import { ProductTypeForm } from './product-type-form';
-import { Button } from '@/shared/ui/base/button';
+
 import { IconPlus } from '@tabler/icons-react';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
 } from '@/shared/ui/base/dialog';
+
+import { ProductTypeForm } from './product-type-form';
+import { ProductTypeTable } from './product-type-table';
 
 export const ProductTypePage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);

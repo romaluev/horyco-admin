@@ -6,13 +6,14 @@ import {
   CardTitle,
   CardContent
 } from '@/shared/ui/base/card';
-import { useGetBranchById } from '../model';
-import BranchForm from './branch-form';
 import BaseLoading from '@/shared/ui/base-loading';
 
-type TBranchViewPageProps = {
+import { useGetBranchById } from '../model';
+import BranchForm from './branch-form';
+
+interface TBranchViewPageProps {
   branchId: string;
-};
+}
 
 export default function BranchViewPage({ branchId }: TBranchViewPageProps) {
   const isNew = branchId === 'new';

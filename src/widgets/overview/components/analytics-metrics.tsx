@@ -1,7 +1,10 @@
 'use client';
 
 import * as React from 'react';
+
 import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 import {
   Card,
@@ -9,9 +12,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-import { PeriodType, DateRange } from './period-filter';
+
+import type { PeriodType, DateRange } from './period-filter';
 
 // Типы данных для метрик
 export interface AnalyticsMetrics {
@@ -178,11 +180,11 @@ export function AnalyticsMetrics({
         {[...Array(4)].map((_, i) => (
           <Card key={i} className='animate-pulse'>
             <CardHeader className='pb-2'>
-              <div className='bg-muted h-4 w-24 rounded'></div>
+              <div className='bg-muted h-4 w-24 rounded' />
             </CardHeader>
             <CardContent>
-              <div className='bg-muted h-8 w-32 rounded'></div>
-              <div className='bg-muted mt-2 h-4 w-20 rounded'></div>
+              <div className='bg-muted h-8 w-32 rounded' />
+              <div className='bg-muted mt-2 h-4 w-20 rounded' />
             </CardContent>
           </Card>
         ))}

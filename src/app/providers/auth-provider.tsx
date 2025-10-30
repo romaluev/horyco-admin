@@ -1,8 +1,12 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
-import { useAuthStore } from '@/entities/auth';
+import { useEffect } from 'react';
+
 import Cookies from 'js-cookie';
+
+import { useAuthStore } from '@/entities/auth';
+
+import type { ReactNode} from 'react';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -18,5 +22,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [me]);
 
-  return <>{children}</>;
+  return children
 }

@@ -1,9 +1,11 @@
-import { Input } from '@/shared/ui/base/input';
 import * as React from 'react';
-import { Button } from '@/shared/ui/base/button';
 import { useState } from 'react';
+
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { clsx } from 'clsx';
+
+import { Button } from '@/shared/ui/base/button';
+import { Input } from '@/shared/ui/base/input';
 
 const PasswordInput = ({
   className,

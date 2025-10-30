@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+
+
 import { tableApi } from './api';
 import { tableKeys } from './query-keys';
-import { ApiParams } from '@/shared/types';
+
+import type { ApiParams } from '@/shared/types';
 
 export const useTableList = (params?: ApiParams) => {
   return useQuery({

@@ -1,4 +1,11 @@
 'use client';
+import { useTransition } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as z from 'zod';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Form,
@@ -9,11 +16,6 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' })

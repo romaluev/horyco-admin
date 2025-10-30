@@ -2,20 +2,23 @@
 
 This document explains the complete onboarding wizard that new restaurant owners complete after signup to configure their restaurant for launch.
 
+**Note**: The system implements a 7-step flow including registration completion, business identity, branch setup, menu template, payment setup, staff invitation, and go live
+
 ---
 
 ## 📋 Table of Contents
 
 1. [Overview](#overview)
 2. [Onboarding Progress Tracking](#onboarding-progress-tracking)
-3. [Step 1: Business Information](#step-1-business-information)
-4. [Step 2: Branch Setup](#step-2-branch-setup)
-5. [Step 3: Menu Template](#step-3-menu-template)
-6. [Step 4: Payment Methods](#step-4-payment-methods)
-7. [Step 5: Invite Staff (Optional)](#step-5-invite-staff-optional)
-8. [Step 6: Go Live](#step-6-go-live)
-9. [Frontend Implementation Guide](#frontend-implementation-guide)
-10. [API Endpoints](#api-endpoints)
+3. [Step 0: Registration Complete](#step-0-registration-complete)
+4. [Step 1: Business Identity](#step-1-business-identity)
+5. [Step 2: Branch Setup](#step-2-branch-setup)
+6. [Step 3: Menu Template](#step-3-menu-template)
+7. [Step 4: Payment Methods](#step-4-payment-methods)
+8. [Step 5: Invite Staff (Optional)](#step-5-invite-staff-optional)
+9. [Step 6: Go Live](#step-6-go-live)
+10. [Frontend Implementation Guide](#frontend-implementation-guide)
+11. [API Endpoints](#api-endpoints)
 
 ---
 
@@ -24,7 +27,6 @@ This document explains the complete onboarding wizard that new restaurant owners
 ### 🎯 Purpose
 
 The onboarding wizard helps new restaurant owners:
-
 - Configure their restaurant in 10-15 minutes
 - Understand what settings are available
 - Launch with sensible defaults
@@ -33,14 +35,12 @@ The onboarding wizard helps new restaurant owners:
 ### 🚀 Why Onboarding Wizard?
 
 **Without wizard**:
-
 - Owner confused by all settings
 - Doesn't know where to start
 - Takes hours to configure
 - High abandonment rate
 
 **With wizard**:
-
 - Step-by-step guided process
 - Clear instructions for each step
 - Can skip optional steps
@@ -51,13 +51,17 @@ The onboarding wizard helps new restaurant owners:
 ```
 After Signup:
    ↓
-Step 1: Business Information (Required)
-   → Company address, business type, region
+Step 0: Registration Complete (Auto)
+   → Account created with OTP verification
+   ↓
+Step 1: Business Identity (Required)
+   → Business name, type, slug, logo
    ↓
 Step 2: Branch Setup (Required)
+   → Branch name, address, region, city
    → Operating hours, service types (dine-in/delivery/takeaway)
    ↓
-Step 3: Choose Menu (Required)
+Step 3: Menu Template (Required)
    → Select from pre-made templates or start from scratch
    ↓
 Step 4: Payment Methods (Optional)
@@ -89,10 +93,11 @@ Dashboard (System Ready)
 │                                                 │
 │  Setting up Samarkand Restaurant                │
 │                                                 │
-│  Step 2 of 6                                    │
-│  ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░ 33%          │
+│  Step 2 of 7                                    │
+│  ▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░ 29%           │
 │                                                 │
-│  ✓ Business Info                                │
+│  ✓ Registration                                 │
+│  ✓ Business Identity                            │
 │  → Branch Setup (current)                       │
 │    Menu Template                                │
 │    Payment Methods                              │
@@ -105,105 +110,102 @@ Dashboard (System Ready)
 ### Get Progress API
 
 **API Call**:
-
-```typescript
+```
 GET /admin/onboarding/progress
+Headers: Authorization: Bearer {token}
 
 Response:
 {
-  "isCompleted": false,
-  "currentStep": "BRANCH_SETUP",
+  "currentStep": "branch_setup",
   "completedSteps": [
-    "REGISTRATION_COMPLETE",
-    "BUSINESS_INFO_VERIFIED"
+    "registration_complete",
+    "business_identity"
   ],
-  "completionPercentage": 33,
-  "stepsData": {
-    "BUSINESS_INFO_VERIFIED": {
-      "completedAt": "2024-01-20T10:30:00Z",
-      "data": {
-        "address": "123 Main St, Tashkent",
-        "businessType": "restaurant",
-        "regionId": 1
-      }
+  "isCompleted": false,
+  "completionPercentage": 29,
+  "completedAt": null,
+  "stepData": {
+    "business_identity": {
+      "completedAt": "2025-10-30T10:30:00Z",
+      "businessName": "Golden Dragon Restaurant",
+      "businessType": "restaurant",
+      "slug": "golden-dragon",
+      "logoUrl": "https://cdn.oshlab.uz/tenants/logos/golden-dragon.png"
     }
   },
-  "nextStep": "BRANCH_SETUP",
-  "canSkip": false  // Required step
-}
-```
-
-### Step Status Types
-
-```typescript
-enum OnboardingStep {
-  REGISTRATION_COMPLETE = 'REGISTRATION_COMPLETE', // Auto-completed on signup
-  BUSINESS_INFO_VERIFIED = 'BUSINESS_INFO_VERIFIED', // Step 1
-  BRANCH_SETUP = 'BRANCH_SETUP', // Step 2
-  MENU_TEMPLATE = 'MENU_TEMPLATE', // Step 3
-  PAYMENT_SETUP = 'PAYMENT_SETUP', // Step 4 (optional)
-  STAFF_INVITED = 'STAFF_INVITED', // Step 5 (optional)
-  GO_LIVE = 'GO_LIVE', // Step 6 (final)
+  "nextStep": "menu_template",
+  "remainingSteps": [
+    "branch_setup",
+    "menu_template",
+    "payment_setup",
+    "staff_invited",
+    "go_live"
+  ],
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T10:30:00Z"
 }
 ```
 
 ---
 
-## Step 1: Business Information
+## Step 0: Registration Complete
+
+This step is **automatically completed** during the signup process (`POST /auth/register/complete`).
+
+**What Gets Created**:
+- Tenant entity with business name from OTP request
+- Default Branch entity
+- Owner Employee record with Admin role
+- OnboardingProgress entity with `registration_complete` step marked
+
+This step is not user-facing in the wizard - users land directly on Step 1 after signup.
+
+---
+
+## Step 1: Business Identity
 
 ### Purpose
 
-Collect basic business details for:
-
-- Legal/tax documentation
-- Location-based features
-- Business analytics
-- Profile display
+Set up the business identity including:
+- Business name and type
+- Tenant slug (for URLs)
+- Business logo
+- Public-facing branding
 
 ### UI Form
 
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
-│  Step 1: Tell us about your business           │
+│  Step 1: Set up your business identity         │
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│  Business Address *                             │
+│  Business Name *                                │
 │  ┌───────────────────────────────────────┐    │
-│  │ 123 Amir Temur Street                  │    │
+│  │ Golden Dragon Restaurant               │    │
 │  └───────────────────────────────────────┘    │
-│                                                 │
-│  Region *                                       │
-│  ┌───────────────────────────────────────┐    │
-│  │ Tashkent City             ▼            │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  District *                                     │
-│  ┌───────────────────────────────────────┐    │
-│  │ Yakkasaray District       ▼            │    │
-│  └───────────────────────────────────────┘    │
+│  ℹ️  This is your public-facing business name   │
 │                                                 │
 │  Business Type *                                │
 │  ○ Restaurant                                   │
 │  ○ Cafe                                         │
 │  ○ Fast Food                                    │
+│  ○ Bar                                          │
+│  ○ Bakery                                       │
 │  ○ Food Truck                                   │
 │  ○ Catering                                     │
 │  ○ Other                                        │
 │                                                 │
-│  Description (optional)                         │
+│  Business Slug *                                │
 │  ┌───────────────────────────────────────┐    │
-│  │ Traditional Uzbek cuisine with modern  │    │
-│  │ presentation. Family recipes since     │    │
-│  │ 1985.                                  │    │
+│  │ golden-dragon                          │    │
 │  └───────────────────────────────────────┘    │
-│  ℹ️  Shown to customers in webapp               │
+│  ℹ️  Used in URLs: golden-dragon.oshlab.uz     │
 │                                                 │
-│  Website (optional)                             │
-│  ┌───────────────────────────────────────┐    │
-│  │ https://samarkand.uz                   │    │
-│  └───────────────────────────────────────┘    │
+│  Business Logo (optional)                       │
+│  [📁 Upload Logo]                              │
+│  ℹ️  PNG or JPG, max 2MB                        │
 │                                                 │
 │  [Skip for Now]           [ Next Step → ]      │
 │                                                 │
@@ -212,54 +214,34 @@ Collect basic business details for:
 
 ### API Call
 
-```typescript
-POST /admin/onboarding/steps/business-info
+```
+POST /admin/onboarding/steps/business-identity
+Headers: Authorization: Bearer {token}
+
 {
-  "address": "123 Amir Temur Street, Tashkent",
-  "regionId": 1,           // Tashkent City
-  "districtId": 5,         // Yakkasaray District
+  "businessName": "Golden Dragon Restaurant",
   "businessType": "restaurant",
-  "description": "Traditional Uzbek cuisine with modern presentation. Family recipes since 1985.",
-  "website": "https://samarkand.uz"
+  "slug": "golden-dragon",
+  "logoUrl": "https://cdn.oshlab.uz/tenants/logos/golden-dragon.png"
 }
 
 Response:
 {
-  "success": true,
-  "progress": {
-    "currentStep": "BRANCH_SETUP",
-    "completionPercentage": 33,
-    "completedSteps": ["REGISTRATION_COMPLETE", "BUSINESS_INFO_VERIFIED"]
-  },
-  "message": "Business information saved successfully"
+  "message": "Business identity updated successfully"
 }
 ```
 
-### Why This Information?
+**Validation**:
+- `businessName`: Required, 2-255 characters
+- `businessType`: Required, enum (restaurant, cafe, fast_food, bar, bakery, food_truck, catering, other)
+- `slug`: Required, 3-50 characters, lowercase alphanumeric with hyphens, must be unique
+- `logoUrl`: Optional string
 
-**Address**:
-
-- Required for delivery radius calculation
-- Shown on receipts and customer app
-- Used for tax/legal documentation
-
-**Region/District**:
-
-- Tax rates may vary by location
-- Analytics by geographic area
-- Future: delivery zone configuration
-
-**Business Type**:
-
-- Pre-fills relevant settings
-- Determines default menu template options
-- Used in analytics/benchmarking
-
-**Description**:
-
-- Shown to customers in QR menu/webapp
-- Helps customers find you
-- SEO for online ordering
+**What Happens**:
+- Updates Tenant entity (name, businessType, slug)
+- Stores metadata in stepData (completedAt)
+- Marks `business_identity` step as complete
+- Moves to `branch_setup` step
 
 ---
 
@@ -267,11 +249,11 @@ Response:
 
 ### Purpose
 
-Configure the default branch with:
-
+Configure the default branch (created during signup) with:
+- Branch name and address
+- Region and city
 - Operating hours
 - Service types (dine-in, takeaway, delivery)
-- Branch-specific settings
 
 ### UI Form
 
@@ -291,6 +273,16 @@ Configure the default branch with:
 │  Branch Address                                 │
 │  ┌───────────────────────────────────────┐    │
 │  │ Same as business address               │    │
+│  └───────────────────────────────────────┘    │
+│                                                 │
+│  Region (Optional)                              │
+│  ┌───────────────────────────────────────┐    │
+│  │ Tashkent Region                        │    │
+│  └───────────────────────────────────────┘    │
+│                                                 │
+│  City (Optional)                                │
+│  ┌───────────────────────────────────────┐    │
+│  │ Tashkent                               │    │
 │  └───────────────────────────────────────┘    │
 │                                                 │
 │  Service Types *                                │
@@ -317,62 +309,63 @@ Configure the default branch with:
 
 ### API Call
 
-```typescript
+```
 POST /admin/onboarding/steps/branch-setup
+Headers: Authorization: Bearer {token}
+
 {
-  "branchName": "Samarkand Restaurant (Main Branch)",
-  "address": "123 Amir Temur Street, Tashkent",
-  "dineInEnabled": true,
-  "takeawayEnabled": true,
-  "deliveryEnabled": false,
+  "branchName": "Main Branch",
+  "address": "Tashkent, Amir Temur street 15",
+  "region": "Tashkent Region",
+  "city": "Tashkent",
   "businessHours": {
-    "monday": { "open": "09:00", "close": "22:00", "closed": false },
-    "tuesday": { "open": "09:00", "close": "22:00", "closed": false },
-    "wednesday": { "open": "09:00", "close": "22:00", "closed": false },
-    "thursday": { "open": "09:00", "close": "22:00", "closed": false },
-    "friday": { "open": "09:00", "close": "23:00", "closed": false },
-    "saturday": { "open": "09:00", "close": "23:00", "closed": false },
-    "sunday": { "open": "09:00", "close": "22:00", "closed": false }
-  }
+    "monday": { "open": "09:00", "close": "22:00" },
+    "tuesday": { "open": "09:00", "close": "22:00" },
+    "wednesday": { "open": "09:00", "close": "22:00" },
+    "thursday": { "open": "09:00", "close": "22:00" },
+    "friday": { "open": "09:00", "close": "23:00" },
+    "saturday": { "open": "10:00", "close": "23:00" },
+    "sunday": { "open": "10:00", "close": "22:00" }
+  },
+  "deliveryEnabled": true,
+  "dineInEnabled": true,
+  "takeawayEnabled": true
 }
 
 Response:
 {
-  "success": true,
-  "branch": {
-    "id": 10,
-    "name": "Samarkand Restaurant (Main Branch)",
-    "isMain": true
-  },
-  "progress": {
-    "currentStep": "MENU_TEMPLATE",
-    "completionPercentage": 50
-  }
+  "message": "Branch setup updated successfully"
 }
 ```
+
+**All fields are optional** - updates the default branch created during registration.
+
+**What Happens**:
+- Updates default Branch entity (name, address, region, city)
+- Saves business hours to Settings (`branch.business_hours`)
+- Saves service types to Settings (`branch.service_types`)
+- Stores metadata in stepData (branchId, completedAt)
+- Marks `branch_setup` step as complete
+- Moves to `menu_template` step
 
 ### Why Service Types Matter?
 
 **Dine-in**:
-
 - Enables table/hall management
 - Adds service charge option
 - Shows table session features
 
 **Takeaway**:
-
 - Simpler order flow (no table)
 - Usually no service charge
 - Faster checkout
 
 **Delivery**:
-
 - Enables delivery address fields
 - Adds delivery fee configuration
 - Shows delivery radius settings
 
 **Operating Hours**:
-
 - Prevents orders outside business hours
 - Shown to customers in webapp/QR menu
 - Used for reporting and analytics
@@ -383,165 +376,154 @@ Response:
 
 ### Purpose
 
-Quickly populate menu with pre-made templates or start from scratch.
+Quickly populate menu with pre-configured defaults based on business type or start from scratch.
+
+### UI Flow
+
+**Option 1: Load Defaults** → **Option 2: Customize Menu** → **Submit**
 
 ### UI Screen
 
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
-│  Step 3: Choose your menu                      │
+│  Step 3: Setup your menu                       │
 │                                                 │
-│  Select a template to get started quickly, or  │
-│  start from scratch and build your own.        │
+│  Load defaults for your business type or build │
+│  your own menu from scratch.                    │
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│  Filter by:  [Restaurant ▼]  [All Cuisines ▼] │
+│  Your Business Type: Restaurant                 │
 │                                                 │
-│  ┌──────────────┐  ┌──────────────┐            │
-│  │   [Image]    │  │   [Image]    │            │
-│  │              │  │              │            │
-│  │ Traditional  │  │ Modern Cafe  │            │
-│  │ Restaurant   │  │              │            │
-│  │              │  │              │            │
-│  │ 8 categories │  │ 6 categories │            │
-│  │ 45 products  │  │ 32 products  │            │
-│  │              │  │              │            │
-│  │  [Preview]   │  │  [Preview]   │            │
-│  │  [Select]    │  │  [Select]    │            │
-│  └──────────────┘  └──────────────┘            │
+│  [Load Default Restaurant Menu]                │
 │                                                 │
-│  ┌──────────────┐  ┌──────────────┐            │
-│  │   [Image]    │  │   [Image]    │            │
-│  │              │  │              │            │
-│  │ Fast Food    │  │ Blank Menu   │            │
-│  │              │  │              │            │
-│  │ 5 categories │  │ Start from   │            │
-│  │ 28 products  │  │ scratch      │            │
-│  │              │  │              │            │
-│  │  [Preview]   │  │  [Select]    │            │
-│  │  [Select]    │  │              │            │
-│  └──────────────┘  └──────────────┘            │
+│  ─────────── OR ───────────                    │
 │                                                 │
-│  [← Back]           [Skip - Add Later]         │
+│  [Start with Empty Menu]                        │
 │                                                 │
-└─────────────────────────────────────────────────┘
-```
-
-### Template Preview Modal
-
-```
-┌─────────────────────────────────────────────────┐
-│  Traditional Restaurant Menu                × │
-├─────────────────────────────────────────────────┤
+│  ────────────────────────────────────          │
 │                                                 │
-│  This template includes:                        │
+│  Current Menu (3 categories, 12 products):      │
 │                                                 │
-│  ✓ 8 Categories:                                │
-│    • Appetizers (6 items)                       │
-│    • Soups (4 items)                            │
-│    • Main Courses (12 items)                    │
-│    • Grilled Meats (8 items)                    │
-│    • Salads (5 items)                           │
-│    • Desserts (4 items)                         │
-│    • Hot Drinks (3 items)                       │
-│    • Cold Drinks (3 items)                      │
+│  📁 Appetizers (4 products)                     │
+│     • Spring Rolls - 18,000 UZS                 │
+│     • Bruschetta - 25,000 UZS                   │
+│     • Hummus Plate - 22,000 UZS                 │
+│     • Garlic Bread - 15,000 UZS                 │
 │                                                 │
-│  ✓ 45 Products with:                            │
-│    • Sample names and descriptions              │
-│    • Placeholder prices (you can edit)          │
-│    • Common modifiers (size, spice level, etc)  │
+│  📁 Main Courses (6 products)                   │
+│     • Plov - 35,000 UZS                         │
+│     • Lagman - 32,000 UZS                       │
+│     ... [Expand to see all]                     │
 │                                                 │
-│  ℹ️  You can customize everything after applying │
+│  📁 Desserts (2 products)                       │
+│     • Tiramisu - 28,000 UZS                     │
+│     • Ice Cream - 18,000 UZS                    │
 │                                                 │
-│  [ Cancel ]              [ Apply Template ]     │
+│  [ + Add Category ]  [ Edit Menu ]              │
+│                                                 │
+│  [← Back]  [Skip - Add Later]  [ Next Step → ] │
 │                                                 │
 └─────────────────────────────────────────────────┘
 ```
 
 ### API Calls
 
-```typescript
-// Get available templates
-GET /admin/onboarding/menu-templates?businessType=restaurant
+```
+// 1. Get default products for business type
+GET /admin/onboarding/default-products?businessType=restaurant
+Headers: Authorization: Bearer {token}
 
 Response:
 {
-  "templates": [
+  "categories": [
     {
-      "id": 1,
-      "name": "Traditional Restaurant",
-      "description": "Full-service restaurant with multiple courses",
-      "businessType": "restaurant",
-      "categoriesCount": 8,
-      "productsCount": 45,
-      "thumbnail": "https://...template-1.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Modern Cafe",
-      "description": "Cafe-style menu with coffee and light meals",
-      "businessType": "cafe",
-      "categoriesCount": 6,
-      "productsCount": 32,
-      "thumbnail": "https://...template-2.jpg"
+      "name": "Main Dishes",
+      "description": "Our main course offerings",
+      "products": [
+        {
+          "name": "Pizza Margherita",
+          "description": "Classic Italian pizza",
+          "suggestedPrice": 25000,
+          "image": "https://cdn.example.com/pizza.jpg",
+          "preparationTime": 15,
+          "calories": 280,
+          "allergens": ["gluten", "dairy"]
+        }
+      ]
     }
   ]
 }
 
-// Apply template
-POST /admin/onboarding/steps/menu-template
+// 2. Apply menu setup with custom/modified data
+POST /admin/onboarding/steps/menu-setup
+Headers: Authorization: Bearer {token}
+
 {
-  "templateId": 1,
-  "replaceExisting": false  // Keep any existing menu items
+  "categories": [
+    {
+      "name": "Pizzas",
+      "description": "Italian classics",
+      "products": [
+        {
+          "name": "Margherita",
+          "price": 25000,
+          "description": "Classic pizza with tomato sauce, mozzarella, and basil",
+          "image": "https://cdn.example.com/margherita.jpg",
+          "preparationTime": 15,
+          "calories": 280,
+          "allergens": ["gluten", "dairy"]
+        },
+        {
+          "name": "Pepperoni",
+          "price": 30000,
+          "description": "Spicy pepperoni pizza"
+        }
+      ]
+    }
+  ]
 }
 
 Response:
 {
   "success": true,
-  "categoriesCreated": 8,
-  "productsCreated": 45,
-  "message": "Menu template applied successfully",
-  "progress": {
-    "currentStep": "PAYMENT_SETUP",
-    "completionPercentage": 67
-  }
+  "categoriesCreated": 1,
+  "productsCreated": 2
 }
 
-// Or skip this step
-POST /admin/onboarding/steps/menu-template
-{
-  "templateId": null,  // Start from scratch
-  "replaceExisting": false
-}
+// 3. Or skip this step
+POST /admin/onboarding/steps/menu-skip
+Headers: Authorization: Bearer {token}
+
+Response: OnboardingProgressResponseDto with updated stepData
 ```
 
-### Why Menu Templates?
+### Frontend Implementation Notes
 
-**Benefits**:
+1. **Load Defaults**: Call `GET /admin/onboarding/default-products?businessType=restaurant`
+2. **Let User Customize**: Display defaults in editable form
+3. **Submit Menu**: Send customized structure to `POST /admin/onboarding/steps/menu-setup`
+4. **Or Skip**: Call `POST /admin/onboarding/steps/menu-skip` to start with empty menu
 
-- Get started immediately (no empty menu)
-- Learn proper category organization
-- See example product structure
-- Faster time to launch
+**Validation**:
+- Categories array required (at least one)
+- Each category must have name and products array
+- Each product must have name and price (≥ 0)
+- Optional fields: description, image, preparationTime, calories, allergens
 
-**Customization**:
-
-- All template data can be edited
-- Can delete unwanted items
-- Can add new items
-- Just a starting point
+**Error Handling**:
+- 400 if branch setup not completed first
 
 ---
 
-## Step 4: Payment Methods
+## Step 4: Payment Methods (Optional)
 
 ### Purpose
 
-Configure payment gateway integrations (Payme, Click) or skip for now.
+Configure payment gateway integrations (Payme, Click, Uzum) or skip for now.
 
-**This step is OPTIONAL** - can be configured later in settings.
+**This step is OPTIONAL** - can be skipped using the skip-step endpoint.
 
 ### UI Form
 
@@ -619,50 +601,35 @@ Configure payment gateway integrations (Payme, Click) or skip for now.
 
 ### API Call
 
-```typescript
+```
 POST /admin/onboarding/steps/payment-setup
+Headers: Authorization: Bearer {token}
+
 {
+  "paymeMerchantId": "628c8b3d9e1234567890abcd",
+  "paymeSecretKey": "your-payme-secret-key",
+  "clickMerchantId": "12345",
+  "clickServiceId": "67890",
+  "clickSecretKey": "your-click-secret-key",
   "cashEnabled": true,
-  "cardEnabled": true,
-  "paymeMerchantId": "5e730e8e0b852a417aa49ceb",
-  "paymeSecretKey": "your-secret-key",
-  "paymeServiceId": "12345",
-  "clickMerchantId": null,  // Not configuring Click
-  "clickServiceId": null,
-  "clickSecretKey": null
+  "cardEnabled": true
 }
 
-Response:
-{
-  "success": true,
-  "enabledMethods": {
-    "cash": true,
-    "card": true,
-    "payme": true,
-    "click": false
-  },
-  "progress": {
-    "currentStep": "STAFF_INVITED",
-    "completionPercentage": 83
-  }
-}
+Response: OnboardingProgressResponseDto
 
 // Or skip this step
-POST /admin/onboarding/skip-step
+PATCH /admin/onboarding/skip-step
+Headers: Authorization: Bearer {token}
+
 {
-  "step": "PAYMENT_SETUP",
+  "step": "payment_setup",
   "reason": "Will configure later"
 }
 
-Response:
-{
-  "success": true,
-  "progress": {
-    "currentStep": "STAFF_INVITED",
-    "completionPercentage": 83
-  }
-}
+Response: OnboardingProgressResponseDto
 ```
+
+**All fields are optional**. Stores payment methods configuration in stepData and marks step complete.
 
 ---
 
@@ -670,9 +637,9 @@ Response:
 
 ### Purpose
 
-Add employees and send them invitations to join.
+Add employee invitations for staff members.
 
-**This step is OPTIONAL** - can add staff later.
+**This step is OPTIONAL** - can be skipped using the skip-step endpoint.
 
 ### UI Form
 
@@ -739,8 +706,8 @@ Add employees and send them invitations to join.
 │  │ Cashier                    ▼           │    │
 │  └───────────────────────────────────────┘    │
 │                                                 │
-│  Assign to Branch *                             │
-│  ☑ Main Branch                                 │
+│  ℹ️  Employees will be automatically assigned  │
+│     to your default branch                      │
 │                                                 │
 │  [ Cancel ]                    [ Add Employee ] │
 │                                                 │
@@ -749,59 +716,55 @@ Add employees and send them invitations to join.
 
 ### API Call
 
-```typescript
+```
 POST /admin/onboarding/steps/staff-invite
+Headers: Authorization: Bearer {token}
+
 {
   "invitations": [
     {
-      "fullName": "Farrux Aliyev",
-      "phone": "+998909876543",
-      "email": "farrux@example.com",
-      "roleId": 3,        // Cashier role ID
-      "branchIds": [10]   // Main branch
+      "fullName": "John Doe",
+      "phone": "+998901234567",
+      "email": "john.doe@example.com",
+      "roleId": 2
     },
     {
-      "fullName": "Dilnoza Rahimova",
-      "phone": "+998931234567",
-      "email": null,
-      "roleId": 4,        // Waiter role ID
-      "branchIds": [10]
+      "fullName": "Jane Smith",
+      "phone": "+998909876543",
+      "roleId": 3
     }
   ]
 }
 
-Response:
+Response: OnboardingProgressResponseDto
+
+// Or skip this step
+PATCH /admin/onboarding/skip-step
+Headers: Authorization: Bearer {token}
+
 {
-  "success": true,
-  "totalInvited": 2,
-  "invitations": [
-    {
-      "fullName": "Farrux Aliyev",
-      "phone": "+998909876543",
-      "invitedAt": "2024-01-20T11:00:00Z"
-    },
-    {
-      "fullName": "Dilnoza Rahimova",
-      "phone": "+998931234567",
-      "invitedAt": "2024-01-20T11:00:00Z"
-    }
-  ],
-  "progress": {
-    "currentStep": "GO_LIVE",
-    "completionPercentage": 100
-  }
+  "step": "staff_invited",
+  "reason": "Will add staff later"
 }
+
+Response: OnboardingProgressResponseDto
 ```
 
-**Note**: In current implementation, this just stores invitation data. Full employee account creation happens later in Staff Management section.
+**Validation**:
+- `fullName`: Required string
+- `phone`: Required string (Uzbekistan format)
+- `email`: Optional email
+- `roleId`: Required number (role must exist)
+
+**Note**: Currently stores invitation data in stepData. Full employee creation logic to be implemented.
 
 ---
 
-## Step 6: Go Live!
+## Step 6: Go Live
 
 ### Purpose
 
-Final review and launch confirmation.
+Complete the onboarding and mark tenant as fully operational.
 
 ### UI Screen
 
@@ -847,17 +810,36 @@ Final review and launch confirmation.
 
 ### API Call
 
-```typescript
+```
 POST /admin/onboarding/complete
+Headers: Authorization: Bearer {token}
 
-Response:
+Response: OnboardingProgressResponseDto
 {
-  "success": true,
-  "completedAt": "2024-01-20T11:15:00Z",
-  "message": "Onboarding completed successfully! Welcome to OshLab!",
-  "redirectTo": "/admin/dashboard"
+  "currentStep": "go_live",
+  "completedSteps": [
+    "registration_complete",
+    "business_identity",
+    "branch_setup",
+    "menu_template",
+    "payment_setup",
+    "staff_invited",
+    "go_live"
+  ],
+  "isCompleted": true,
+  "completionPercentage": 100,
+  "completedAt": "2025-10-30T11:15:00Z",
+  ...
 }
 ```
+
+**Validation**: Checks all required steps are completed:
+- `registration_complete`
+- `business_identity`
+- `branch_setup`
+- `menu_template`
+
+**Error**: 400 if missing required steps
 
 ---
 
@@ -865,90 +847,35 @@ Response:
 
 ### Onboarding Wizard Component
 
-```typescript
-// Main wizard component
-const OnboardingWizard = () => {
-  const [progress, setProgress] = useState(null);
-  const [currentStepData, setCurrentStepData] = useState({});
+**Implementation Requirements**:
 
-  useEffect(() => {
-    loadProgress();
-  }, []);
+1. **Progress Management**:
+   - Fetch progress on mount using `GET /admin/onboarding/progress`
+   - Redirect to dashboard if `isCompleted` is true
+   - Display progress bar based on `completionPercentage` and `completedSteps`
 
-  const loadProgress = async () => {
-    const response = await api.get('/admin/onboarding/progress');
-    setProgress(response);
+2. **Step Routing**:
+   - Use `progress.currentStep` to determine which step component to render
+   - Map step values to components:
+     - `registration_complete` → Skip (auto-completed)
+     - `business_identity` → Business Identity Form
+     - `branch_setup` → Branch Setup Form
+     - `menu_template` → Menu Template Selector
+     - `payment_setup` → Payment Methods Form
+     - `staff_invited` → Staff Invite Form
+     - `go_live` → Final Summary Screen
 
-    // Redirect if already completed
-    if (response.isCompleted) {
-      router.push('/admin/dashboard');
-    }
-  };
+3. **Step Completion**:
+   - POST to appropriate endpoint based on current step
+   - Update local progress state with response
+   - Show success notification
+   - Handle errors appropriately
 
-  const handleStepComplete = async (stepData) => {
-    try {
-      let response;
-
-      switch (progress.nextStep) {
-        case 'BUSINESS_INFO_VERIFIED':
-          response = await api.post('/admin/onboarding/steps/business-info', stepData);
-          break;
-        case 'BRANCH_SETUP':
-          response = await api.post('/admin/onboarding/steps/branch-setup', stepData);
-          break;
-        case 'MENU_TEMPLATE':
-          response = await api.post('/admin/onboarding/steps/menu-template', stepData);
-          break;
-        // ... other steps
-      }
-
-      // Update progress
-      setProgress(response.progress);
-      toast.success('Step completed!');
-
-    } catch (error) {
-      toast.error('Failed to save. Please try again.');
-    }
-  };
-
-  const handleSkipStep = async () => {
-    try {
-      const response = await api.post('/admin/onboarding/skip-step', {
-        step: progress.nextStep,
-        reason: 'User chose to skip'
-      });
-
-      setProgress(response.progress);
-      toast.info('Step skipped. You can complete it later.');
-
-    } catch (error) {
-      if (error.response?.data?.message?.includes('required')) {
-        toast.error('This step is required and cannot be skipped.');
-      }
-    }
-  };
-
-  return (
-    <div>
-      <ProgressBar
-        current={progress.completedSteps.length}
-        total={6}
-        percentage={progress.completionPercentage}
-      />
-
-      {progress.nextStep === 'BUSINESS_INFO_VERIFIED' && (
-        <BusinessInfoStep onComplete={handleStepComplete} />
-      )}
-
-      {progress.nextStep === 'BRANCH_SETUP' && (
-        <BranchSetupStep onComplete={handleStepComplete} />
-      )}
-
-      {/* Other steps... */}
-    </div>
-  );
-};
-```
+4. **Skip Functionality**:
+   - PATCH to `/admin/onboarding/skip-step` with step name and reason
+   - Only `payment_setup` and `staff_invited` can be skipped
+   - Required steps (`business_identity`, `branch_setup`, `menu_template`) cannot be skipped
+   - Update progress and move to next step on success
 
 ---
 
@@ -956,36 +883,31 @@ const OnboardingWizard = () => {
 
 ### Progress Tracking
 
-```typescript
+```
 // Get onboarding progress
-GET / admin / onboarding / progress
+GET /admin/onboarding/progress
 
-// Complete specific step
-POST / admin / onboarding / steps / business - info
-POST / admin / onboarding / steps / branch - setup
-POST / admin / onboarding / steps / menu - template
-POST / admin / onboarding / steps / payment - setup
-POST / admin / onboarding / steps / staff - invite
+// Complete specific steps
+POST /admin/onboarding/steps/business-identity
+POST /admin/onboarding/steps/branch-setup
+POST /admin/onboarding/steps/menu-setup
+POST /admin/onboarding/steps/menu-skip
+POST /admin/onboarding/steps/payment-setup
+POST /admin/onboarding/steps/staff-invite
 
 // Skip optional step
-POST / admin / onboarding / skip - step
-Body: {
-  step, reason
-}
+PATCH /admin/onboarding/skip-step
+Body: { step, reason }
 
 // Complete entire onboarding
-POST / admin / onboarding / complete
+POST /admin/onboarding/complete
 ```
 
-### Menu Templates
+### Menu Defaults
 
-```typescript
-// Get available templates
-GET /admin/onboarding/menu-templates
-Query: ?businessType=restaurant
-
-// Get template details
-GET /admin/onboarding/menu-templates/:id
+```
+// Get default products for business type
+GET /admin/onboarding/default-products?businessType=restaurant
 ```
 
 ---
@@ -995,7 +917,6 @@ GET /admin/onboarding/menu-templates/:id
 ### Q: Can I go back and change previous steps?
 
 **Yes**. All settings can be modified later in:
-
 - Business Settings
 - Branch Management
 - Menu Management
@@ -1007,7 +928,6 @@ Onboarding wizard is just for initial setup.
 ### Q: What happens if I close the browser during onboarding?
 
 **Progress is saved**. When you log in again:
-
 - You'll be redirected back to onboarding
 - Progress bar shows where you left off
 - All completed steps are saved
@@ -1016,20 +936,17 @@ Onboarding wizard is just for initial setup.
 ### Q: Can I skip the entire onboarding?
 
 **No**. Required steps must be completed:
-
-- Business Information
+- Business Identity
 - Branch Setup
 - Menu Template
 
 Optional steps can be skipped:
-
 - Payment Setup
 - Staff Invites
 
 ### Q: What if I choose the wrong menu template?
 
 **No problem**. After onboarding, you can:
-
 - Edit all menu items
 - Delete items you don't need
 - Add new items
@@ -1041,7 +958,6 @@ Templates are just a starting point.
 ### Q: Do I need to configure payment gateways during onboarding?
 
 **No**. Payment gateways are optional. You can:
-
 - Skip during onboarding
 - Accept only cash/card initially
 - Configure Payme/Click later in Settings
@@ -1052,7 +968,6 @@ Templates are just a starting point.
 ## Next Steps
 
 After completing onboarding:
-
 1. Customize your menu (prices, descriptions, images)
 2. Set up tables and halls (for dine-in)
 3. Configure taxes and service charges
@@ -1061,7 +976,6 @@ After completing onboarding:
 6. Start taking orders!
 
 For post-onboarding configuration, see:
-
 - `ADMIN_MENU_MANAGEMENT.md`
 - `ADMIN_STAFF_MANAGEMENT.md`
 - `ADMIN_TAX_AND_PRICING.md`

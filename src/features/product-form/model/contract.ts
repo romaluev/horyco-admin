@@ -1,7 +1,8 @@
 import * as z from 'zod';
+
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/shared/config/data';
 
-export type ProductFormValues = {
+export interface ProductFormValues {
   name: string;
   productTypeId: number;
   status: string;
@@ -10,7 +11,7 @@ export type ProductFormValues = {
   description: string;
   additions: z.infer<typeof additionSchema>[];
   image?: File[];
-};
+}
 
 const additionProductSchema = z.object({
   id: z.number().optional(),

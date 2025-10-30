@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { hallApi } from './api';
 import { hallKeys } from './query-keys';
 

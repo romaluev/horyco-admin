@@ -1,7 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/base/alert';
 import { IconAlertCircle } from '@tabler/icons-react';
+
+import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/base/alert';
 
 export default function SalesError({ error }: { error: Error }) {
   return (

@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { branchApi } from './api';
-import { ICreateBranchDto, IUpdateBranchDto } from './types';
-import { queryKeys } from './query-keys';
 import { toast } from 'sonner';
+
+import { branchApi } from './api';
+import { queryKeys } from './query-keys';
+
+import type { ICreateBranchDto, IUpdateBranchDto } from './types';
 
 export const useCreateBranch = () => {
   const queryClient = useQueryClient();

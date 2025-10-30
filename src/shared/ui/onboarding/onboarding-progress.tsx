@@ -1,9 +1,11 @@
 'use client';
 
-import { Check, Edit } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/shared/lib/utils';
+
+import { Check, Edit } from 'lucide-react';
+
 import { getStepConfig } from '@/shared/config/onboarding';
+import { cn } from '@/shared/lib/utils';
 
 interface OnboardingStep {
   id: string;

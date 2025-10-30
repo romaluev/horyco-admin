@@ -1,8 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
-import { IUser } from '@/entities/auth/model';
+import { UserIcon } from 'lucide-react';
+
 import { BASE_API_URL } from '@/shared/lib/axios';
 import { getNameInitials } from '@/shared/lib/utils';
-import { UserIcon } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
+
+import type { IUser } from '@/entities/auth/model';
+
 
 interface UserAvatarProfileProps {
   className?: string;

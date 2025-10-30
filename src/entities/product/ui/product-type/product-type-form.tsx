@@ -1,14 +1,12 @@
 'use client';
 
 import React from 'react';
-import { IProductType, IProductTypeRequest } from '../../model/types';
-import { useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import {
-  useCreateProductType,
-  useUpdateProductType
-} from '../../model/mutations-product-type';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Form,
   FormControl,
@@ -19,7 +17,13 @@ import {
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
 import { Textarea } from '@/shared/ui/base/textarea';
-import { Button } from '@/shared/ui/base/button';
+
+import {
+  useCreateProductType,
+  useUpdateProductType
+} from '../../model/mutations-product-type';
+
+import type { IProductType, IProductTypeRequest } from '../../model/types';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),

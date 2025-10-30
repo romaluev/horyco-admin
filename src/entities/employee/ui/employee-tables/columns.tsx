@@ -1,10 +1,13 @@
 'use client';
 
-import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header';
-import { Column, ColumnDef } from '@tanstack/react-table';
 import { Text } from 'lucide-react';
+
+import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header';
+
 import { CellAction } from './cell-action';
-import { IEmployee } from '../../model';
+
+import type { IEmployee } from '../../model';
+import type { Column, ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<IEmployee>[] = [
   {

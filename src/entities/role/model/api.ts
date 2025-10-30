@@ -1,5 +1,6 @@
 import api from '@/shared/lib/axios';
-import { IRole, IRoleCreateDto, IRoleUpdateDto, IPermission } from './types';
+
+import type { IRole, IRoleCreateDto, IRoleUpdateDto, IPermission } from './types';
 
 /**
  * Role API functions

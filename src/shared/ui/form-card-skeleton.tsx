@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Card, CardContent, CardHeader } from '@/shared/ui/base/card';
 import { Skeleton } from '@/shared/ui/base/skeleton';
 

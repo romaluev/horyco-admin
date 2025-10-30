@@ -1,12 +1,14 @@
 import { Suspense } from 'react';
+
 import BaseLoading from '@/shared/ui/base-loading';
+
 import { useTableList } from '../model';
 import { TableCard } from './table-card';
 
-type TableListProps = {
+interface TableListProps {
   UpdateButton?: React.ComponentType<{ id: number }>;
   DeleteButton?: React.ComponentType<{ id: number }>;
-};
+}
 
 export const TableList = ({ UpdateButton, DeleteButton }: TableListProps) => {
   const { data: tables, isLoading } = useTableList();

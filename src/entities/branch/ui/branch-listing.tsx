@@ -1,9 +1,10 @@
 'use client';
 
-import { BranchTable } from './branch-tables';
-import { columns } from './branch-tables/columns';
-import { useGetAllBranches } from '../model';
 import { parseAsInteger, useQueryState } from 'nuqs';
+
+import { BranchTable } from './branch-tables';
+import { useGetAllBranches } from '../model';
+import { columns } from './branch-tables/columns';
 
 export default function BranchListingPage() {
   const [size] = useQueryState('perPage', parseAsInteger.withDefault(10));

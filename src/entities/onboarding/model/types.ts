@@ -1,11 +1,12 @@
 // Onboarding step identifiers
 export type OnboardingStep =
-  | 'REGISTRATION_COMPLETE'
-  | 'BUSINESS_INFO_VERIFIED'
-  | 'BRANCH_SETUP'
-  | 'MENU_TEMPLATE'
-  | 'STAFF_INVITED'
-  | 'GO_LIVE';
+  | 'registration_complete'
+  | 'business_identity'
+  | 'branch_setup'
+  | 'menu_template'
+  | 'staff_invited'
+  | 'go_live'
+  | 'payment_setup';
 
 // Onboarding progress response
 export interface OnboardingProgress {
@@ -81,31 +82,53 @@ export interface BranchLocationRequest {
 
 export interface BranchLocationResponse extends OnboardingStepResponse {}
 
-// Menu template step
-export interface MenuTemplate {
-  id: number;
+// Menu setup step - Default products
+export interface DefaultProduct {
   name: string;
-  businessType: string;
-  description: string;
-  categoriesCount: number;
-  productsCount: number;
-  previewImage?: string;
-  categories: Array<{
-    name: string;
-    count: number;
-  }>;
+  description?: string;
+  suggestedPrice: number;
+  image?: string;
+  preparationTime?: number;
+  calories?: number;
+  allergens?: string[];
 }
 
-export interface ApplyMenuTemplateRequest {
-  templateId: number;
-  replaceExisting?: boolean;
+export interface DefaultCategory {
+  name: string;
+  description?: string;
+  products: DefaultProduct[];
 }
 
-export interface ApplyMenuTemplateResponse
-  extends OnboardingStepResponse<{
-    categoriesCreated: number;
-    productsCreated: number;
-  }> {}
+export interface DefaultProductsResponse {
+  categories: DefaultCategory[];
+}
+
+// Menu setup step - Submit menu
+export interface MenuProduct {
+  name: string;
+  price: number;
+  description?: string;
+  image?: string;
+  preparationTime?: number;
+  calories?: number;
+  allergens?: string[];
+}
+
+export interface MenuCategory {
+  name: string;
+  description?: string;
+  products: MenuProduct[];
+}
+
+export interface MenuSetupRequest {
+  categories: MenuCategory[];
+}
+
+export interface MenuSetupResponse {
+  success: boolean;
+  categoriesCreated: number;
+  productsCreated: number;
+}
 
 // Staff invite step
 export interface StaffInvitation {
@@ -126,21 +149,13 @@ export interface StaffInviteResponse
   }> {}
 
 // Complete onboarding
-export interface CompleteOnboardingResponse {
-  success: boolean;
-  message: string;
-  tenant: {
-    id: number;
-    businessName: string;
-    status: string;
-    activatedAt: string;
-  };
-  onboardingProgress: OnboardingProgress;
-  nextSteps: Array<{
+export interface CompleteOnboardingResponse extends OnboardingProgress {
+  remainingSteps?: string[];
+  nextSteps?: {
     title: string;
     link: string;
     priority: 'high' | 'medium' | 'low';
-  }>;
+  }[];
 }
 
 // Skip step

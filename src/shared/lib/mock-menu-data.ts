@@ -10,12 +10,16 @@ export interface MockProduct {
   description?: string;
   image?: string;
   isSelected: boolean;
+  categoryId?: string;
 }
 
 export interface MockCategory {
   id: string;
   name: string;
   products: MockProduct[];
+  image?: string;
+  icon?: string;
+  color?: string;
 }
 
 export const MOCK_POPULAR_MENU: MockCategory[] = [

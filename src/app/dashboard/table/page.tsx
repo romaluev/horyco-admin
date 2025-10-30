@@ -1,8 +1,9 @@
 'use client';
 
-import PageContainer from '@/shared/ui/layout/page-container';
 import { Heading } from '@/shared/ui/base/heading';
 import { Separator } from '@/shared/ui/base/separator';
+import PageContainer from '@/shared/ui/layout/page-container';
+
 import { TableList } from '@/entities/table';
 import {
   UpdateTableButton,

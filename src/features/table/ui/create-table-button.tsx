@@ -1,5 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
@@ -8,10 +15,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -28,13 +31,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { useCreateTable } from '@/entities/table/model/mutations';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { tableSchema } from '@/features/table/model/contract';
-import { useGetAllHalls } from '@/entities/hall/model/queries';
-import { TABLE_SHAPES } from '@/features/table/model/constants';
 import { Switch } from '@/shared/ui/base/switch';
+
+import { useGetAllHalls } from '@/entities/hall/model/queries';
+import { useCreateTable } from '@/entities/table/model/mutations';
+import { TABLE_SHAPES } from '@/features/table/model/constants';
+import { tableSchema } from '@/features/table/model/contract';
+
+import type * as z from 'zod';
 
 type FormValues = z.infer<typeof tableSchema>;
 
@@ -65,7 +69,7 @@ export const CreateTableButton = () => {
         form.reset();
       },
       onError: (error) => {
-        toast.error('Ошибка при создании стола: ' + error.message);
+        toast.error(`Ошибка при создании стола: ${  error.message}`);
       }
     });
   };

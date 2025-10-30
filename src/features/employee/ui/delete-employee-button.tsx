@@ -1,3 +1,7 @@
+import { IconTrash } from '@tabler/icons-react';
+import { toast } from 'sonner';
+
+import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
   DialogClose,
@@ -8,10 +12,9 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Button } from '@/shared/ui/base/button';
-import { toast } from 'sonner';
+
 import { useDeleteEmployer } from '../model/mutations';
-import { IconTrash } from '@tabler/icons-react';
+
 
 export const DeleteEmployeeButton = ({ id }: { id: number }) => {
   const { mutateAsync: deleteTable } = useDeleteEmployer();

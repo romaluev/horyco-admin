@@ -9,7 +9,7 @@ export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, 0));
 
 // Define the shape of Product data
-export type Product = {
+export interface Product {
   photo_url: string;
   name: string;
   description: string;
@@ -18,7 +18,7 @@ export type Product = {
   id: number;
   category: string;
   updated_at: string;
-};
+}
 
 // Mock products data model
 export const fakeProducts = {

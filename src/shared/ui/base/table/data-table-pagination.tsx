@@ -1,6 +1,7 @@
-import type { Table } from '@tanstack/react-table';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/base/button';
 import {
   Select,
@@ -9,8 +10,10 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { cn } from '@/shared/lib/utils';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+
+import type { Table } from '@tanstack/react-table';
+
+
 
 interface DataTablePaginationProps<TData> extends React.ComponentProps<'div'> {
   table: Table<TData>;

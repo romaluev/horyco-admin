@@ -1,6 +1,9 @@
 'use client';
 
 import * as React from 'react';
+
+import { format, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import {
   Area,
   AreaChart,
@@ -12,8 +15,6 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { format, parseISO } from 'date-fns';
-import { ru } from 'date-fns/locale';
 
 import {
   Card,
@@ -23,7 +24,8 @@ import {
   CardTitle
 } from '@/shared/ui/base/card';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/base/tabs';
-import { PeriodType } from './period-filter';
+
+import type { PeriodType } from './period-filter';
 
 // Типы данных для графика
 export interface ChartDataPoint {
@@ -39,11 +41,11 @@ export interface ChartData {
 }
 
 // Тип для данных графика с возможностью приведения типов
-export type ChartDataWithCast = {
+export interface ChartDataWithCast {
   data: { date: string; value: number }[];
   metric: string;
   period: PeriodType;
-};
+}
 
 interface AnalyticsChartProps {
   data: ChartData;
@@ -264,7 +266,7 @@ export function AnalyticsChart({
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
+                    if (active && payload && payload.length && payload[0]) {
                       return (
                         <div className='bg-background rounded-md border p-2 shadow-sm'>
                           <p className='text-sm font-medium'>
@@ -340,7 +342,7 @@ export function AnalyticsChart({
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
+                    if (active && payload && payload.length && payload[0]) {
                       return (
                         <div className='bg-background rounded-md border p-2 shadow-sm'>
                           <p className='text-sm font-medium'>

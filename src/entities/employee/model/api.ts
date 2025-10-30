@@ -1,6 +1,9 @@
 import api from '@/shared/lib/axios';
-import { IEmployee, IEmployeeDto } from './types';
-import { ApiParams, PaginatedResponse } from '@/shared/types';
+
+import { IEmployeeDto } from './types';
+
+import type { IEmployee} from './types';
+import type { ApiParams, PaginatedResponse } from '@/shared/types';
 
 /**
  * Employee API functions

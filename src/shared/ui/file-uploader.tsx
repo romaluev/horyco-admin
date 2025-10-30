@@ -1,21 +1,25 @@
 'use client';
 
-import { IconX, IconUpload } from '@tabler/icons-react';
-import Image from 'next/image';
 import * as React from 'react';
+
+import Image from 'next/image';
+
+import { IconX, IconUpload } from '@tabler/icons-react';
 import Dropzone, {
   type DropzoneProps,
   type FileRejection
 } from 'react-dropzone';
 import { toast } from 'sonner';
 
+import { useControllableState } from '@/shared/hooks/use-controllable-state';
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { cn, formatBytes } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/base/button';
 import { Progress } from '@/shared/ui/base/progress';
 import { ScrollArea } from '@/shared/ui/base/scroll-area';
-import { useControllableState } from '@/shared/hooks/use-controllable-state';
-import { cn, formatBytes } from '@/shared/lib/utils';
-import { IFile } from '@/shared/types';
-import { BASE_API_URL } from '@/shared/lib/axios';
+
+import type { IFile } from '@/shared/types';
+
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

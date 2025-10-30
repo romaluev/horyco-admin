@@ -1,4 +1,4 @@
-import { IFile } from '@/shared/types';
+import type { IFile } from '@/shared/types';
 
 export interface IAdditionProduct {
   id: number;

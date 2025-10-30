@@ -1,5 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+
+import { Check, Plus, X } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   FormControl,
@@ -16,9 +21,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { Check, Plus, X } from 'lucide-react';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+
+
 import {
   useCreateProductType,
   useGetAllProductTypes
@@ -107,8 +111,8 @@ export const ProductFormType = () => {
                       form.setValue('productTypeId', Number(value));
                       form.trigger('productTypeId');
                     }}
-                    defaultValue={field.value ? field.value + '' : undefined}
-                    value={field.value ? field.value + '' : undefined}
+                    defaultValue={field.value ? `${field.value  }` : undefined}
+                    value={field.value ? `${field.value  }` : undefined}
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
@@ -117,7 +121,7 @@ export const ProductFormType = () => {
                     </FormControl>
                     <SelectContent>
                       {productTypes?.items.map((type) => (
-                        <SelectItem key={type.id} value={type.id + ''}>
+                        <SelectItem key={type.id} value={`${type.id  }`}>
                           {type.name}
                         </SelectItem>
                       ))}

@@ -1,4 +1,4 @@
-import { NavItem } from '../types';
+import type { NavItem } from '../types';
 
 export const MAX_FILE_SIZE = 5000000;
 export const ACCEPTED_IMAGE_TYPES = [

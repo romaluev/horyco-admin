@@ -1,5 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Pen } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
 import { Button } from '@/shared/ui/base/button';
 import {
   Dialog,
@@ -8,10 +15,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/shared/ui/base/dialog';
-import { Pen } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -28,14 +31,18 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui/base/select';
-import { useUpdateTable } from '@/entities/table/model/mutations';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { useTableById } from '@/entities/table/model';
-import { tableSchema } from '../model/contract';
-import { TABLE_SHAPES } from '@/features/table/model/constants';
-import { useGetAllHalls } from '@/entities/hall/model/queries';
 import { Switch } from '@/shared/ui/base/switch';
+
+import { useGetAllHalls } from '@/entities/hall/model/queries';
+import { useTableById } from '@/entities/table/model';
+import { useUpdateTable } from '@/entities/table/model/mutations';
+import { TABLE_SHAPES } from '@/features/table/model/constants';
+
+import { tableSchema } from '../model/contract';
+
+
+
+import type * as z from 'zod';
 
 type FormValues = z.infer<typeof tableSchema>;
 
@@ -82,7 +89,7 @@ export const UpdateTableButton = ({ id }: { id: number }) => {
             setOpen(false);
           },
           onError: (error) => {
-            toast.error('Ошибка при обновлении стола: ' + error.message);
+            toast.error(`Ошибка при обновлении стола: ${  error.message}`);
           }
         }
       );

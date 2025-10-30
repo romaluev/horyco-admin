@@ -1,6 +1,8 @@
 import api from '@/shared/lib/axios';
-import { ITable, ICreateTableDto, IUpdateTableDto } from './types';
-import { ApiParams, PaginatedResponse } from '@/shared/types';
+
+import type { ITable, ICreateTableDto, IUpdateTableDto } from './types';
+import type { ApiParams, PaginatedResponse } from '@/shared/types';
+
 
 export const tableApi = {
   /**

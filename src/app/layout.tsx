@@ -1,9 +1,13 @@
-import { fontVariables } from '@/shared/lib/font';
-import { cn } from '@/shared/lib/utils';
-import type { Metadata, Viewport } from 'next';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+
+import { fontVariables } from '@/shared/lib/font';
+import { cn } from '@/shared/lib/utils';
+
 import Providers from '@/app/providers/providers';
+
+import type { Metadata, Viewport } from 'next';
+
 import './globals.css';
 
 const META_THEME_COLORS = {

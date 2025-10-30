@@ -1,10 +1,15 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import LoginForm from './login-form';
-import LogoIcon from '@/shared/ui/base/LogoIcon';
 import * as React from 'react';
+
 import Image from 'next/image';
+import Link from 'next/link';
+
+
 import logo from '@/shared/assets/logo.png';
+import LogoIcon from '@/shared/ui/base/LogoIcon';
+
+import LoginForm from './login-form';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Sign In',

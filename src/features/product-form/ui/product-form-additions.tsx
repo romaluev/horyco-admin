@@ -1,6 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
+import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+
 import { Button } from '@/shared/ui/base/button';
+import { Card, CardContent } from '@/shared/ui/base/card';
 import {
   FormControl,
   FormField,
@@ -9,11 +15,7 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 import { Label } from '@/shared/ui/base/label';
-import { Card, CardContent } from '@/shared/ui/base/card';
-import { useState } from 'react';
 import { Switch } from '@/shared/ui/base/switch';
 
 export function ProductFormAdditions() {

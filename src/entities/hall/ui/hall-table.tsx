@@ -1,26 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { IHall } from '../model/types';
-import { useDeleteHall } from '../model/mutations';
-import { useGetAllHalls } from '../model/queries';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/shared/ui/base/table';
-import { Button } from '@/shared/ui/base/button';
+
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { HallForm } from './hall-form';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +14,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/shared/ui/base/alert-dialog';
+import { Button } from '@/shared/ui/base/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/shared/ui/base/dialog';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/shared/ui/base/table';
+
+import { HallForm } from './hall-form';
+import { useDeleteHall } from '../model/mutations';
+import { useGetAllHalls } from '../model/queries';
+
+
+
+
+import type { IHall } from '../model/types';
 
 export const HallTable = () => {
   const { data: response, isLoading } = useGetAllHalls();

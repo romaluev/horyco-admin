@@ -1,9 +1,11 @@
 'use client';
 
 import * as React from 'react';
+
 import { format, formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
+import { Badge } from '@/shared/ui/base/badge';
 import {
   Card,
   CardContent,
@@ -11,7 +13,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import { Badge } from '@/shared/ui/base/badge';
 import { ScrollArea } from '@/shared/ui/base/scroll-area';
 
 // Типы данных для заказов
@@ -101,24 +102,24 @@ export function RecentOrders({
     return (
       <Card className='h-full'>
         <CardHeader>
-          <div className='bg-muted h-6 w-40 animate-pulse rounded'></div>
-          <div className='bg-muted h-4 w-56 animate-pulse rounded'></div>
+          <div className='bg-muted h-6 w-40 animate-pulse rounded' />
+          <div className='bg-muted h-4 w-56 animate-pulse rounded' />
         </CardHeader>
         <CardContent>
           <div className='space-y-4'>
             {[...Array(5)].map((_, i) => (
               <div key={i} className='flex animate-pulse flex-col gap-2'>
                 <div className='flex items-center justify-between'>
-                  <div className='bg-muted h-5 w-20 rounded'></div>
-                  <div className='bg-muted h-5 w-16 rounded'></div>
+                  <div className='bg-muted h-5 w-20 rounded' />
+                  <div className='bg-muted h-5 w-16 rounded' />
                 </div>
-                <div className='bg-muted h-4 w-32 rounded'></div>
-                <div className='bg-muted h-4 w-full rounded'></div>
+                <div className='bg-muted h-4 w-32 rounded' />
+                <div className='bg-muted h-4 w-full rounded' />
                 <div className='flex items-center justify-between'>
-                  <div className='bg-muted h-4 w-24 rounded'></div>
-                  <div className='bg-muted h-5 w-20 rounded'></div>
+                  <div className='bg-muted h-4 w-24 rounded' />
+                  <div className='bg-muted h-5 w-20 rounded' />
                 </div>
-                <div className='bg-muted h-px w-full'></div>
+                <div className='bg-muted h-px w-full' />
               </div>
             ))}
           </div>
@@ -186,7 +187,7 @@ export function RecentOrders({
                     {relative}
                   </div>
 
-                  <div className='bg-border h-px w-full'></div>
+                  <div className='bg-border h-px w-full' />
                 </div>
               );
             })}

@@ -1,9 +1,10 @@
 'use client';
 
-import { EmployeeTable } from './employee-tables';
-import { columns } from './employee-tables/columns';
-import { useGetAllEmployee } from '../model';
 import { parseAsInteger, useQueryState } from 'nuqs';
+
+import { EmployeeTable } from './employee-tables';
+import { useGetAllEmployee } from '../model';
+import { columns } from './employee-tables/columns';
 
 export default function EmployeeList() {
   const [size] = useQueryState('perPage', parseAsInteger.withDefault(10));

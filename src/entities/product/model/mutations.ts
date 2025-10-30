@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { productAPi } from './api';
-import { ICreateProductDto, IUpdateProductDto } from './types';
-import { productKeys } from './query-keys';
 import { toast } from 'sonner';
+
+import { productAPi } from './api';
+import { productKeys } from './query-keys';
+
+import type { ICreateProductDto, IUpdateProductDto } from './types';
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();

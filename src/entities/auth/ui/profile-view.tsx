@@ -1,14 +1,24 @@
 'use client';
 
-import { useAuthStore } from '@/entities/auth/model/store';
+import { useEffect } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconUpload } from '@tabler/icons-react';
+import { UploadIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+import { BASE_API_URL } from '@/shared/lib/axios';
+import { getNameInitials } from '@/shared/lib/utils';
+import { BaseLoading } from '@/shared/ui';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
+import { Button } from '@/shared/ui/base/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
-import { Button } from '@/shared/ui/base/button';
 import {
   Form,
   FormControl,
@@ -18,19 +28,18 @@ import {
   FormMessage
 } from '@/shared/ui/base/form';
 import { Input } from '@/shared/ui/base/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { BASE_API_URL } from '@/shared/lib/axios';
-import { toast } from 'sonner';
 import PasswordInput from '@/shared/ui/base/passsword-input';
-import { IconUpload } from '@tabler/icons-react';
+
+import { useAuthStore } from '@/entities/auth/model/store';
+
+
 import { authApi } from '../model/api';
-import { getNameInitials } from '@/shared/lib/utils';
-import { UploadIcon } from 'lucide-react';
 import { profileSchema } from '../model/contract';
-import { useEffect } from 'react';
-import { BaseLoading } from '@/shared/ui';
+
+import type * as z from 'zod';
+
+
+
 
 export function ProfileView() {
   const { user, setUser, me, isLoading } = useAuthStore();

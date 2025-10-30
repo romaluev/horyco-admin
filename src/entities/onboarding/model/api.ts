@@ -1,4 +1,5 @@
 import api from '@/shared/lib/axios';
+
 import type {
   OnboardingProgress,
   BusinessInfoRequest,
@@ -7,9 +8,9 @@ import type {
   BranchSetupResponse,
   BranchLocationRequest,
   BranchLocationResponse,
-  MenuTemplate,
-  ApplyMenuTemplateRequest,
-  ApplyMenuTemplateResponse,
+  DefaultProductsResponse,
+  MenuSetupRequest,
+  MenuSetupResponse,
   StaffInviteRequest,
   StaffInviteResponse,
   CompleteOnboardingResponse,
@@ -61,10 +62,12 @@ export const onboardingApi = {
     return response.data;
   },
 
-  // Get menu templates
-  async getMenuTemplates(businessType?: string): Promise<MenuTemplate[]> {
-    const response = await api.get<MenuTemplate[]>(
-      '/admin/onboarding/menu-templates',
+  // Get default products for business type
+  async getDefaultProducts(
+    businessType?: string
+  ): Promise<DefaultProductsResponse> {
+    const response = await api.get<DefaultProductsResponse>(
+      '/admin/onboarding/default-products',
       {
         params: { businessType }
       }
@@ -72,13 +75,19 @@ export const onboardingApi = {
     return response.data;
   },
 
-  // Apply menu template
-  async applyMenuTemplate(
-    data: ApplyMenuTemplateRequest
-  ): Promise<ApplyMenuTemplateResponse> {
-    const response = await api.post<ApplyMenuTemplateResponse>(
-      '/admin/onboarding/steps/menu-template',
+  // Submit menu setup
+  async submitMenuSetup(data: MenuSetupRequest): Promise<MenuSetupResponse> {
+    const response = await api.post<MenuSetupResponse>(
+      '/admin/onboarding/steps/menu-setup',
       data
+    );
+    return response.data;
+  },
+
+  // Skip menu setup
+  async skipMenuSetup(): Promise<SkipStepResponse> {
+    const response = await api.post<SkipStepResponse>(
+      '/admin/onboarding/steps/menu-skip'
     );
     return response.data;
   },

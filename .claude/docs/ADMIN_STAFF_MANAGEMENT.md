@@ -20,7 +20,6 @@ This document explains how staff management works in OshLab, including employee 
 ### 🎯 Purpose
 
 The staff management system allows restaurant owners to:
-
 - Add and manage employees across multiple branches
 - Control what employees can do using roles and permissions
 - Track employee activity and access
@@ -29,7 +28,6 @@ The staff management system allows restaurant owners to:
 ### 🏢 Multi-Tenant Architecture
 
 **Important**: Every employee belongs to a specific **tenant** (restaurant brand). Employees can:
-
 - Work at multiple **branches** within the same tenant
 - Have different roles at different branches (future feature)
 - Only see data from their own tenant (automatic isolation)
@@ -41,14 +39,12 @@ The staff management system allows restaurant owners to:
 ### 1. Employee vs User
 
 **Employee** = A person who works at the restaurant
-
 - Has personal information (name, phone, email)
 - Can be assigned to one or more branches
 - Has one or more roles
 - Can be active or inactive
 
 **Not every employee needs to login**:
-
 - Kitchen staff might not need system access
 - Delivery drivers might only use a separate app
 - Only cashiers, waiters, and managers typically need POS/Admin access
@@ -58,14 +54,12 @@ The staff management system allows restaurant owners to:
 **Role** = A collection of permissions that define what an employee can do
 
 **Default Roles** (created automatically for every new tenant):
-
 - **Admin** - Full access to everything (owner)
 - **Manager** - Branch management, reports, menu editing
 - **Cashier** - POS operations, payments, customer management
 - **Waiter** - Order taking, table management
 
 **Custom Roles**:
-
 - Owners can create custom roles with specific permission combinations
 - Example: "Kitchen Manager" with menu editing + inventory access
 - Example: "Senior Waiter" with waiter permissions + shift management
@@ -105,7 +99,6 @@ finance.*       → Financial operations
 ```
 
 **Why separate permissions?**
-
 - Fine-grained access control
 - Example: A waiter can `orders.create` but not `orders.delete`
 - Example: A cashier can `finance.view` but not `settings.edit`
@@ -113,13 +106,11 @@ finance.*       → Financial operations
 ### 4. Branch Assignment
 
 **Why assign branches to employees?**
-
 - Multi-location restaurants need to control which employees work where
 - Security: Employees should only access data from their assigned branches
 - Reporting: Track performance per branch
 
 **How it works**:
-
 - An employee can be assigned to multiple branches
 - One branch is marked as "active branch" (current working location)
 - POS filters data based on active branch automatically
@@ -147,40 +138,37 @@ finance.*       → Financial operations
 ### Employee Fields Explained
 
 **Required Fields**:
-
 ```json
 {
   "firstName": "John",
   "lastName": "Doe",
-  "phone": "+998901234567", // Used for login
-  "password": "secure123" // Initial password
+  "phone": "+998901234567",  // Used for login
+  "password": "secure123"     // Initial password
 }
 ```
 
 **Optional Fields**:
-
 ```json
 {
   "email": "john@example.com",
   "birthDate": "1990-01-15",
   "hireDate": "2024-01-01",
-  "avatar": "https://...", // Profile picture URL
+  "avatar": "https://...",     // Profile picture URL
   "notes": "Works evening shifts"
 }
 ```
 
 **System Fields** (managed automatically):
-
 ```json
 {
   "id": 123,
-  "tenantId": 5, // Restaurant brand
-  "activeBranchId": 10, // Current working location
-  "isActive": true, // Can login?
-  "status": "active", // active | inactive | suspended
+  "tenantId": 5,              // Restaurant brand
+  "activeBranchId": 10,       // Current working location
+  "isActive": true,           // Can login?
+  "status": "active",         // active | inactive | suspended
   "lastLoginAt": "2024-01-20T10:30:00Z",
   "createdAt": "2024-01-01T08:00:00Z",
-  "createdBy": 1 // Who created this employee
+  "createdBy": 1              // Who created this employee
 }
 ```
 
@@ -189,19 +177,16 @@ finance.*       → Financial operations
 **Why two fields?**
 
 **`isActive`** (boolean):
-
 - Simple on/off switch
 - `false` = Cannot login to system
 - Used for temporary suspension
 
 **`status`** (enum):
-
 - More detailed state
 - Values: `active`, `inactive`, `suspended`, `terminated`
 - Used for reporting and audit
 
 **Example scenarios**:
-
 - Employee on vacation → `isActive: false`, `status: active`
 - Employee fired → `isActive: false`, `status: terminated`
 - Employee working → `isActive: true`, `status: active`
@@ -213,39 +198,27 @@ finance.*       → Financial operations
 ### How RBAC + PBAC Works
 
 **RBAC** (Role-Based Access Control):
-
 - Employees are assigned **roles**
 - Roles contain a set of permissions
 - Easy to manage groups of permissions
 
 **PBAC** (Permission-Based Access Control):
-
 - Individual permissions can be checked
 - Allows fine-grained access control in the UI
 
 **Example**:
-
-```typescript
-// Frontend checks if user has permission
-if (user.permissions.includes('orders.delete')) {
-  // Show "Cancel Order" button
-}
-
-// Backend automatically validates
-@RequirePermissions('orders.delete')
-async cancelOrder() { ... }
-```
+- Frontend checks if user has permission (e.g., `orders.delete`)
+- If permission exists, show relevant UI elements (e.g., "Cancel Order" button)
+- Backend automatically validates permission using guards and decorators
 
 ### Default Roles Breakdown
 
 **Admin Role** permissions:
-
 ```
 ALL permissions (*)
 ```
 
 **Manager Role** typical permissions:
-
 ```
 orders.* (all order operations)
 menu.view, menu.edit (menu management)
@@ -255,7 +228,6 @@ settings.view (view settings)
 ```
 
 **Cashier Role** typical permissions:
-
 ```
 orders.create, orders.edit, orders.view
 payments.* (all payment operations)
@@ -263,7 +235,6 @@ customers.* (customer management)
 ```
 
 **Waiter Role** typical permissions:
-
 ```
 orders.create, orders.edit, orders.view
 tables.* (table management)
@@ -273,24 +244,22 @@ customers.view (see customer info)
 ### Creating Custom Roles
 
 **When to create custom roles?**
-
 - You need a combination not covered by defaults
 - You want to restrict access more than default roles
 - You have specialized staff (e.g., inventory manager)
 
 **Example: Kitchen Manager Role**
-
 ```json
 {
   "name": "Kitchen Manager",
   "description": "Manages kitchen operations and menu",
   "permissions": [
-    "orders.view", // See incoming orders
-    "menu.create", // Add new dishes
-    "menu.edit", // Update recipes
-    "menu.delete", // Remove items
-    "inventory.view", // (future) See stock levels
-    "inventory.edit" // (future) Update inventory
+    "orders.view",           // See incoming orders
+    "menu.create",           // Add new dishes
+    "menu.edit",             // Update recipes
+    "menu.delete",           // Remove items
+    "inventory.view",        // (future) See stock levels
+    "inventory.edit"         // (future) Update inventory
   ]
 }
 ```
@@ -302,7 +271,6 @@ customers.view (see customer info)
 ### 1. Employee List Page
 
 **What to show**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Employees (12)               [+ Add Employee]  │
@@ -331,9 +299,7 @@ customers.view (see customer info)
 ```
 
 **API Call**:
-
-```typescript
-// Get all employees
+```
 GET /admin/staff/employees
 
 Response:
@@ -360,7 +326,6 @@ Response:
 ### 2. Add/Edit Employee Form
 
 **Step 1: Basic Information**
-
 ```
 Personal Details:
 - First Name *
@@ -372,7 +337,6 @@ Personal Details:
 ```
 
 **Step 2: Role Assignment**
-
 ```
 Select Role(s):
 ☑ Cashier
@@ -385,7 +349,6 @@ Select Role(s):
 ```
 
 **Step 3: Branch Assignment**
-
 ```
 Assign to Branches:
 ☑ Branch A (Main Branch)
@@ -396,7 +359,6 @@ Active Branch: [Branch A ▼]
 ```
 
 **Step 4: Login Credentials**
-
 ```
 Authentication:
 - Password: [**********]
@@ -405,10 +367,10 @@ Authentication:
 ```
 
 **API Call**:
-
-```typescript
-// Create employee
+```
 POST /admin/staff/employees
+
+Request Body:
 {
   "firstName": "John",
   "lastName": "Doe",
@@ -433,7 +395,6 @@ Response:
 ### 3. Role Management Page
 
 **What to show**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Roles (4 system + 2 custom)  [+ Create Role]  │
@@ -471,7 +432,6 @@ Response:
 ```
 
 **Create Custom Role Flow**:
-
 ```
 Step 1: Basic Info
 - Role Name: [Kitchen Manager]
@@ -500,13 +460,11 @@ Step 2: Select Permissions (grouped)
 ```
 
 **API Calls**:
-
-```typescript
-// Get all roles
+```
 GET /admin/staff/roles
 
-// Get permissions grouped by category
 GET /admin/staff/permissions/grouped
+Response:
 {
   "orders": [
     { "id": 1, "name": "orders.create", "description": "Create orders" },
@@ -516,8 +474,8 @@ GET /admin/staff/permissions/grouped
   "staff": [ ... ]
 }
 
-// Create custom role
 POST /admin/staff/roles
+Request Body:
 {
   "name": "Kitchen Manager",
   "description": "Manages kitchen operations and menu",
@@ -529,31 +487,14 @@ POST /admin/staff/roles
 
 **Show/Hide UI Elements**:
 
-```typescript
-// In your component
-const user = useAuth(); // Get current user from context
-
-// Show "Cancel Order" button only if user has permission
-{user.permissions.includes('orders.delete') && (
-  <Button onClick={handleCancelOrder}>
-    Cancel Order
-  </Button>
-)}
-
-// Show entire section based on permission
-{user.permissions.includes('finance.view') && (
-  <FinancialReportsSection />
-)}
-
-// Disable field if no edit permission
-<Input
-  disabled={!user.permissions.includes('menu.edit')}
-  value={productName}
-/>
-```
+**Implementation Notes**:
+- Get current user and their permissions from authentication context
+- Show "Cancel Order" button only if user has `orders.delete` permission
+- Show entire sections (e.g., Financial Reports) only if user has `finance.view` permission
+- Disable input fields if user lacks `menu.edit` permission
+- Use conditional rendering based on permission checks
 
 **Why check permissions in frontend?**
-
 - Better UX (don't show buttons user can't use)
 - Security happens on backend (frontend is just for UX)
 - Even if user modifies frontend code, backend will reject unauthorized requests
@@ -564,7 +505,7 @@ const user = useAuth(); // Get current user from context
 
 ### Employee Management
 
-```typescript
+```
 // List all employees
 GET /admin/staff/employees
 Query params: ?branchId=10&roleId=2&status=active
@@ -606,7 +547,7 @@ GET /admin/staff/employees/branch/:branchId
 
 ### Role Management
 
-```typescript
+```
 // List all roles
 GET /admin/staff/roles
 
@@ -627,7 +568,7 @@ DELETE /admin/staff/roles/:id
 
 ### Permission Management
 
-```typescript
+```
 // List all permissions
 GET /admin/staff/permissions
 
@@ -648,7 +589,6 @@ GET /admin/staff/permissions/system
 **Yes**. An employee can be assigned multiple roles, and they will have the **union of all permissions** from all their roles.
 
 Example:
-
 - Employee has "Cashier" role (can process payments)
 - Employee also has "Waiter" role (can manage tables)
 - Employee can do both: process payments AND manage tables
@@ -656,7 +596,6 @@ Example:
 ### Q: What's the difference between deactivate and delete?
 
 **Deactivate**:
-
 - Employee record stays in database
 - Employee cannot login
 - Employee's past orders/shifts are preserved
@@ -664,7 +603,6 @@ Example:
 - Use case: Temporary suspension, vacation
 
 **Delete** (soft delete):
-
 - Employee record marked as deleted
 - Employee cannot login
 - Employee data preserved for audit
@@ -674,13 +612,11 @@ Example:
 ### Q: Why do I need to set an "active branch"?
 
 **Active branch** determines:
-
 - Which branch's data the employee sees when they login to POS
 - Which branch's orders they can create
 - Which branch's reports they can access
 
 **Example**:
-
 - Employee works at Branch A (Mon-Fri) and Branch B (Sat-Sun)
 - When they login on Monday, active branch = Branch A
 - They only see Branch A's menu, orders, customers
@@ -689,7 +625,6 @@ Example:
 ### Q: Can I restrict an employee to specific branches?
 
 **Yes**. When you assign branches to an employee:
-
 - Employee can only access data from assigned branches
 - If employee is not assigned to a branch, they cannot see that branch's data
 - This is enforced automatically by the backend
@@ -699,7 +634,6 @@ Example:
 **The system will prevent deletion** if the role is assigned to any employees.
 
 You must either:
-
 1. Reassign employees to a different role
 2. Delete the employees first
 3. System roles (Admin, Manager, Cashier, Waiter) cannot be deleted ever
@@ -711,21 +645,14 @@ You must either:
 ### Backend Validation
 
 **All permission checks happen on the backend**:
-
-```typescript
-// Frontend hiding the button is just UX
-// Backend will reject if no permission
-@UseGuards(PermissionGuard)
-@RequirePermissions('orders.delete')
-async cancelOrder() {
-  // This will not execute if user lacks permission
-}
-```
+- Frontend hiding the button is just UX
+- Backend will reject if user lacks permission
+- Guards and decorators enforce permission requirements
+- Method will not execute if user lacks the required permission
 
 ### Tenant Isolation
 
 **Employees can only access their own tenant's data**:
-
 - Employee from Tenant A cannot see Tenant B's data
 - This is enforced automatically by `TenantAwareRepository`
 - No manual tenantId filtering needed in code
@@ -733,7 +660,6 @@ async cancelOrder() {
 ### JWT Tokens
 
 **User's permissions are included in JWT**:
-
 ```json
 {
   "sub": 123,                // Employee ID
@@ -752,13 +678,11 @@ This allows frontend to check permissions without extra API calls.
 ## Next Steps
 
 After setting up employees:
-
 1. Employees can login using their phone + password
 2. Optionally setup PIN login for fast POS access (see `/auth/generate-pin`)
 3. Test permissions by having employees login and verify they see correct UI
 4. Review audit logs to track who did what
 
 For POS workflow documentation, see:
-
 - `POS_WORKFLOW_NOW.md` - Current POS operations
 - `POS_AUTHENTICATION.md` - Login and PIN setup

@@ -14,7 +14,6 @@ import {
   IconLayoutDashboard,
   IconLoader2,
   IconLogin,
-  IconProps,
   IconShoppingBag,
   IconMoon,
   IconDotsVertical,
@@ -34,6 +33,9 @@ import {
   IconLayoutGrid,
   IconHierarchy
 } from '@tabler/icons-react';
+
+import type {
+  IconProps} from '@tabler/icons-react';
 
 export type Icon = React.ComponentType<IconProps>;
 
