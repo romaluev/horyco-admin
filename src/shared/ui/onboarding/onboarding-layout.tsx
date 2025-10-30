@@ -5,12 +5,8 @@ import { OnboardingProgress } from './onboarding-progress';
 import Image from 'next/image';
 import logo from '@/shared/assets/logo.png';
 
+// Only visible onboarding steps (REGISTRATION_COMPLETE is auto-completed, not shown in UI)
 const ONBOARDING_STEPS = [
-  {
-    id: 'REGISTRATION_COMPLETE',
-    name: 'Регистрация',
-    description: 'Создание аккаунта'
-  },
   {
     id: 'BUSINESS_INFO_VERIFIED',
     name: 'О бизнесе',
@@ -25,11 +21,6 @@ const ONBOARDING_STEPS = [
     id: 'MENU_TEMPLATE',
     name: 'Меню',
     description: 'Выбор шаблона'
-  },
-  {
-    id: 'PAYMENT_SETUP',
-    name: 'Оплата',
-    description: 'Способы оплаты'
   },
   {
     id: 'STAFF_INVITED',
@@ -58,41 +49,20 @@ export function OnboardingLayout({
   title,
   description
 }: OnboardingLayoutProps) {
-  const progress = Math.round(
-    (completedSteps.length / ONBOARDING_STEPS.length) * 100
-  );
-
   return (
     <div className='bg-background flex h-screen flex-col'>
-      {/* Header with Logo and Progress */}
-      <div className='bg-muted/30 border-b'>
-        <div className='container mx-auto px-4 py-4'>
-          <div className='mb-2 flex items-start justify-between gap-12'>
-            {/* Logo - Left */}
-            <div className='flex shrink-0 items-center gap-2'>
-              <Image
-                className='!h-8 !w-8 overflow-hidden rounded-lg'
-                src={logo}
-                alt='OshXona'
-              />
-              <h1 className='text-xl font-semibold text-[#023055]'>OshXona</h1>
-            </div>
-
-            {/* Progress Bar - Right (expanded) */}
-            <div className='mb-4 max-w-[30rem] flex-1'>
-              <div className='mb-2 flex items-center justify-between'>
-                <span className='text-sm font-medium'>Прогресс онбординга</span>
-                <span className='text-sm font-medium'>{progress}%</span>
-              </div>
-              <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
-                <div
-                  className='bg-primary h-full transition-all duration-500'
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
+      <div className='bg-muted/30 shrink-0 border-b'>
+        <div className='container mx-auto px-2 py-3'>
+          <div className='mb-3 flex items-center justify-center gap-2'>
+            <Image
+              className='!h-10 !w-10 overflow-hidden rounded-lg'
+              src={logo}
+              alt='OshXona'
+            />
+            <h1 className='text-2xl font-semibold text-[#023055]'>OshXona</h1>
           </div>
 
+          {/* Progress Steps */}
           <OnboardingProgress
             steps={ONBOARDING_STEPS}
             currentStep={currentStep}
@@ -101,7 +71,7 @@ export function OnboardingLayout({
         </div>
       </div>
 
-      {/* Content - Scrollable */}
+      {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
         <div className='container mx-auto px-4 py-8'>
           <div className='mx-auto max-w-3xl'>

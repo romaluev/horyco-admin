@@ -207,16 +207,16 @@ Response (Rate Limited):
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│         ┌───┬───┬───┬───┬───┬───┐             │
-│  Code:  │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │             │
-│         └───┴───┴───┴───┴───┴───┘             │
+│         ┌───┬───┬───┬───┬───┬───┐               │
+│  Code:  │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │               │
+│         └───┴───┴───┴───┴───┴───┘               │
 │                                                 │
 │  ⏱️  Code expires in: 04:23                     │
 │                                                 │
-│  [ Verify ]                                    │
+│  [ Verify ]                                     │
 │                                                 │
-│  Didn't receive code?                          │
-│  [Resend Code] (available in 52 seconds)       │
+│  Didn't receive code?                           │
+│  [Resend Code] (available in 52 seconds)        │
 │                                                 │
 └─────────────────────────────────────────────────┘
 ```
@@ -377,8 +377,7 @@ Response (Too Soon):
 POST /auth/register/complete
 {
   "phone": "+998901234567",          // Already verified
-  "businessName": "Samarkand Restaurant",
-  "ownerName": "Akmal Karimov",      // Full name
+  "fullName": "Akmal Karimov",      // Full name
   "email": "akmal@samarkand.uz",     // Optional
   "password": "secure123!"
 }

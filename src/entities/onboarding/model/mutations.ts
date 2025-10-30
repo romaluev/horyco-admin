@@ -1,172 +1,174 @@
-/**
- * React Query hooks for onboarding WRITE operations
- */
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import {
+  useMutation,
+  useQueryClient,
+  UseMutationOptions
+} from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { onboardingApi } from './api';
 import { onboardingKeys } from './query-keys';
 import type {
   BusinessInfoRequest,
+  BusinessInfoResponse,
   BranchSetupRequest,
-  MenuTemplateRequest,
-  PaymentSetupRequest,
+  BranchSetupResponse,
+  ApplyMenuTemplateRequest,
+  ApplyMenuTemplateResponse,
   StaffInviteRequest,
-  SkipStepRequest
+  StaffInviteResponse,
+  CompleteOnboardingResponse,
+  SkipStepRequest,
+  SkipStepResponse
 } from './types';
 
-/**
- * Submit business information (Step 2)
- */
-export const useSubmitBusinessInfo = () => {
+// Submit business info
+export const useSubmitBusinessInfo = (
+  options?: Omit<
+    UseMutationOptions<BusinessInfoResponse, Error, BusinessInfoRequest>,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: BusinessInfoRequest) =>
       onboardingApi.submitBusinessInfo(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
       toast.success('Информация о бизнесе сохранена');
-      router.push('/onboarding/branch-setup');
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || 'Не удалось сохранить данные'
+        error.response?.data?.message || 'Не удалось сохранить информацию'
       );
-    }
+    },
+    ...options
   });
 };
 
-/**
- * Submit branch setup (Step 3)
- */
-export const useSubmitBranchSetup = () => {
+// Submit branch setup
+export const useSubmitBranchSetup = (
+  options?: Omit<
+    UseMutationOptions<BranchSetupResponse, Error, BranchSetupRequest>,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: BranchSetupRequest) =>
       onboardingApi.submitBranchSetup(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
       toast.success('Филиал настроен');
-      router.push('/onboarding/menu-template');
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || 'Не удалось сохранить настройки'
+        error.response?.data?.message || 'Не удалось настроить филиал'
       );
-    }
+    },
+    ...options
   });
 };
 
-/**
- * Submit menu template selection (Step 4)
- */
-export const useSubmitMenuTemplate = () => {
+// Apply menu template
+export const useApplyMenuTemplate = (
+  options?: Omit<
+    UseMutationOptions<
+      ApplyMenuTemplateResponse,
+      Error,
+      ApplyMenuTemplateRequest
+    >,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: MenuTemplateRequest) =>
-      onboardingApi.submitMenuTemplate(data),
-    onSuccess: () => {
+    mutationFn: (data: ApplyMenuTemplateRequest) =>
+      onboardingApi.applyMenuTemplate(data),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success('Меню успешно создано');
-      router.push('/onboarding/payment-setup');
+      toast.success(data.message);
     },
     onError: (error: any) => {
       toast.error(
         error.response?.data?.message || 'Не удалось применить шаблон'
       );
-    }
-  });
-};
-
-/**
- * Submit payment setup (Step 5 - Optional)
- */
-export const useSubmitPaymentSetup = () => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-
-  return useMutation({
-    mutationFn: (data: PaymentSetupRequest) =>
-      onboardingApi.submitPaymentSetup(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success('Способы оплаты настроены');
-      router.push('/onboarding/staff-invite');
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || 'Не удалось сохранить настройки'
-      );
-    }
+    ...options
   });
 };
 
-/**
- * Submit staff invitations (Step 6 - Optional)
- */
-export const useSubmitStaffInvite = () => {
+// Submit staff invite
+export const useSubmitStaffInvite = (
+  options?: Omit<
+    UseMutationOptions<StaffInviteResponse, Error, StaffInviteRequest>,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: StaffInviteRequest) =>
       onboardingApi.submitStaffInvite(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success('Приглашения отправлены');
-      router.push('/onboarding/complete');
+      const count = data.progress.invitationsSent || 0;
+      toast.success(
+        count > 0 ? `Отправлено ${count} приглашений` : 'Приглашения отправлены'
+      );
     },
     onError: (error: any) => {
       toast.error(
         error.response?.data?.message || 'Не удалось отправить приглашения'
       );
-    }
+    },
+    ...options
   });
 };
 
-/**
- * Complete onboarding (Step 7)
- */
-export const useCompleteOnboarding = () => {
+// Complete onboarding
+export const useCompleteOnboarding = (
+  options?: Omit<
+    UseMutationOptions<CompleteOnboardingResponse, Error, void>,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: () => onboardingApi.complete(),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success('Поздравляем! Система готова к работе');
-      // Navigation handled by complete page
+      toast.success(data.message);
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || 'Не удалось завершить настройку'
+        error.response?.data?.message || 'Не удалось завершить онбординг'
       );
-    }
+    },
+    ...options
   });
 };
 
-/**
- * Skip an optional step
- */
-export const useSkipStep = () => {
+// Skip step
+export const useSkipStep = (
+  options?: Omit<
+    UseMutationOptions<SkipStepResponse, Error, SkipStepRequest>,
+    'mutationFn'
+  >
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: SkipStepRequest) => onboardingApi.skipStep(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
       toast.info('Шаг пропущен');
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Не удалось пропустить шаг');
-    }
+    },
+    ...options
   });
 };

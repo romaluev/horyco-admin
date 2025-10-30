@@ -1,54 +1,48 @@
 import api from '@/shared/lib/axios';
-import {
+import type {
   OnboardingProgress,
   BusinessInfoRequest,
   BusinessInfoResponse,
   BranchSetupRequest,
   BranchSetupResponse,
+  BranchLocationRequest,
+  BranchLocationResponse,
   MenuTemplate,
-  MenuTemplateRequest,
-  MenuTemplateResponse,
-  PaymentSetupRequest,
-  PaymentSetupResponse,
+  ApplyMenuTemplateRequest,
+  ApplyMenuTemplateResponse,
   StaffInviteRequest,
   StaffInviteResponse,
   CompleteOnboardingResponse,
-  SkipStepRequest
+  SkipStepRequest,
+  SkipStepResponse,
+  Region,
+  District
 } from './types';
 
-/**
- * Onboarding API functions
- */
 export const onboardingApi = {
-  /**
-   * Get current onboarding progress
-   */
-  getProgress: async (): Promise<OnboardingProgress> => {
+  // Get current onboarding progress
+  async getProgress(): Promise<OnboardingProgress> {
     const response = await api.get<OnboardingProgress>(
       '/admin/onboarding/progress'
     );
     return response.data;
   },
 
-  /**
-   * Step 2: Business Info
-   */
-  submitBusinessInfo: async (
+  // Submit business identity step (NEW API)
+  async submitBusinessInfo(
     data: BusinessInfoRequest
-  ): Promise<BusinessInfoResponse> => {
+  ): Promise<BusinessInfoResponse> {
     const response = await api.post<BusinessInfoResponse>(
-      '/admin/onboarding/steps/business-info',
+      '/admin/onboarding/steps/business-identity',
       data
     );
     return response.data;
   },
 
-  /**
-   * Step 3: Branch Setup
-   */
-  submitBranchSetup: async (
+  // Submit branch setup step
+  async submitBranchSetup(
     data: BranchSetupRequest
-  ): Promise<BranchSetupResponse> => {
+  ): Promise<BranchSetupResponse> {
     const response = await api.post<BranchSetupResponse>(
       '/admin/onboarding/steps/branch-setup',
       data
@@ -56,50 +50,43 @@ export const onboardingApi = {
     return response.data;
   },
 
-  /**
-   * Get available menu templates
-   */
-  getMenuTemplates: async (businessType?: string): Promise<MenuTemplate[]> => {
-    const params = businessType ? { businessType } : {};
-    const response = await api.get<MenuTemplate[]>(
-      '/admin/onboarding/menu-templates',
-      { params }
+  // Submit branch location step (NEW)
+  async submitBranchLocation(
+    data: BranchLocationRequest
+  ): Promise<BranchLocationResponse> {
+    const response = await api.post<BranchLocationResponse>(
+      '/admin/onboarding/steps/branch-location',
+      data
     );
     return response.data;
   },
 
-  /**
-   * Step 4: Menu Template
-   */
-  submitMenuTemplate: async (
-    data: MenuTemplateRequest
-  ): Promise<MenuTemplateResponse> => {
-    const response = await api.post<MenuTemplateResponse>(
+  // Get menu templates
+  async getMenuTemplates(businessType?: string): Promise<MenuTemplate[]> {
+    const response = await api.get<MenuTemplate[]>(
+      '/admin/onboarding/menu-templates',
+      {
+        params: { businessType }
+      }
+    );
+    return response.data;
+  },
+
+  // Apply menu template
+  async applyMenuTemplate(
+    data: ApplyMenuTemplateRequest
+  ): Promise<ApplyMenuTemplateResponse> {
+    const response = await api.post<ApplyMenuTemplateResponse>(
       '/admin/onboarding/steps/menu-template',
       data
     );
     return response.data;
   },
 
-  /**
-   * Step 5: Payment Setup
-   */
-  submitPaymentSetup: async (
-    data: PaymentSetupRequest
-  ): Promise<PaymentSetupResponse> => {
-    const response = await api.post<PaymentSetupResponse>(
-      '/admin/onboarding/steps/payment-setup',
-      data
-    );
-    return response.data;
-  },
-
-  /**
-   * Step 6: Staff Invite
-   */
-  submitStaffInvite: async (
+  // Submit staff invite step
+  async submitStaffInvite(
     data: StaffInviteRequest
-  ): Promise<StaffInviteResponse> => {
+  ): Promise<StaffInviteResponse> {
     const response = await api.post<StaffInviteResponse>(
       '/admin/onboarding/steps/staff-invite',
       data
@@ -107,23 +94,33 @@ export const onboardingApi = {
     return response.data;
   },
 
-  /**
-   * Skip a step
-   */
-  skipStep: async (data: SkipStepRequest): Promise<OnboardingProgress> => {
-    const response = await api.patch<OnboardingProgress>(
+  // Complete onboarding
+  async complete(): Promise<CompleteOnboardingResponse> {
+    const response = await api.post<CompleteOnboardingResponse>(
+      '/admin/onboarding/complete'
+    );
+    return response.data;
+  },
+
+  // Skip a step
+  async skipStep(data: SkipStepRequest): Promise<SkipStepResponse> {
+    const response = await api.post<SkipStepResponse>(
       '/admin/onboarding/skip-step',
       data
     );
     return response.data;
   },
 
-  /**
-   * Complete onboarding
-   */
-  complete: async (): Promise<CompleteOnboardingResponse> => {
-    const response = await api.post<CompleteOnboardingResponse>(
-      '/admin/onboarding/complete'
+  // Get regions
+  async getRegions(): Promise<Region[]> {
+    const response = await api.get<Region[]>('/admin/regions');
+    return response.data;
+  },
+
+  // Get districts by region
+  async getDistricts(regionId: number): Promise<District[]> {
+    const response = await api.get<District[]>(
+      `/admin/regions/${regionId}/districts`
     );
     return response.data;
   }

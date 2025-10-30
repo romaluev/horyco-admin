@@ -1,33 +1,60 @@
-/**
- * React Query hooks for onboarding READ operations
- */
-
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { onboardingApi } from './api';
 import { onboardingKeys } from './query-keys';
+import type {
+  OnboardingProgress,
+  MenuTemplate,
+  Region,
+  District
+} from './types';
 
-/**
- * Fetches current onboarding progress
- * Use this to check which step user is on
- */
-export const useGetOnboardingProgress = () => {
+// Get onboarding progress
+export const useGetOnboardingProgress = (
+  options?: Omit<UseQueryOptions<OnboardingProgress>, 'queryKey' | 'queryFn'>
+) => {
   return useQuery({
     queryKey: onboardingKeys.progress(),
     queryFn: () => onboardingApi.getProgress(),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2
+    ...options
   });
 };
 
-/**
- * Fetches available menu templates
- * @param businessType - Optional filter by business type
- */
-export const useGetMenuTemplates = (businessType?: string) => {
+// Get menu templates
+export const useGetMenuTemplates = (
+  businessType?: string,
+  options?: Omit<UseQueryOptions<MenuTemplate[]>, 'queryKey' | 'queryFn'>
+) => {
   return useQuery({
-    queryKey: [...onboardingKeys.menuTemplates(), { businessType }],
+    queryKey: onboardingKeys.templatesByType(businessType),
     queryFn: () => onboardingApi.getMenuTemplates(businessType),
-    enabled: true, // Can be controlled based on step
-    staleTime: 1000 * 60 * 10 // 10 minutes - templates don't change often
+    staleTime: 1000 * 60 * 30, // 30 minutes (templates don't change often)
+    ...options
+  });
+};
+
+// Get regions
+export const useGetRegions = (
+  options?: Omit<UseQueryOptions<Region[]>, 'queryKey' | 'queryFn'>
+) => {
+  return useQuery({
+    queryKey: onboardingKeys.regions(),
+    queryFn: () => onboardingApi.getRegions(),
+    staleTime: Infinity, // Regions rarely change
+    ...options
+  });
+};
+
+// Get districts
+export const useGetDistricts = (
+  regionId?: number,
+  options?: Omit<UseQueryOptions<District[]>, 'queryKey' | 'queryFn'>
+) => {
+  return useQuery({
+    queryKey: onboardingKeys.districts(regionId),
+    queryFn: () => onboardingApi.getDistricts(regionId!),
+    enabled: !!regionId,
+    staleTime: Infinity, // Districts rarely change
+    ...options
   });
 };

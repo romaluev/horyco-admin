@@ -1,17 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { onboardingApi } from '@/entities/onboarding';
+import {
+  useGetOnboardingProgress,
+  useSubmitBranchSetup
+} from '@/entities/onboarding';
+import {
+  type BranchSetupFormValues,
+  branchSetupSchema
+} from '@/features/onboarding/model';
 import { OnboardingLayout } from '@/shared/ui/onboarding';
+import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations';
+import BaseLoading from '@/shared/ui/base-loading';
 import { Button } from '@/shared/ui/base/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,42 +31,21 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/shared/ui/base/select';
 import { Input } from '@/shared/ui/base/input';
 import { Switch } from '@/shared/ui/base/switch';
+import { Checkbox } from '@/shared/ui/base/checkbox';
 import { TimePicker } from '@/shared/ui/base/time-picker';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-
-const timeSchema = z.object({
-  open: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Формат: HH:MM'
-  }),
-  close: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Формат: HH:MM'
-  }),
-  isClosed: z.boolean().optional()
-});
-
-const branchSetupSchema = z.object({
-  branchName: z
-    .string()
-    .min(3, { message: 'Название должно содержать минимум 3 символа' })
-    .max(100),
-  address: z.string().min(10, { message: 'Введите полный адрес' }),
-  monday: timeSchema.optional(),
-  tuesday: timeSchema.optional(),
-  wednesday: timeSchema.optional(),
-  thursday: timeSchema.optional(),
-  friday: timeSchema.optional(),
-  saturday: timeSchema.optional(),
-  sunday: timeSchema.optional(),
-  dineInEnabled: z.boolean(),
-  takeawayEnabled: z.boolean(),
-  deliveryEnabled: z.boolean()
-});
-
-type BranchSetupFormValues = z.infer<typeof branchSetupSchema>;
+import { Loader2 } from 'lucide-react';
+import { getNextStep, getPreviousStep } from '@/shared/config/onboarding';
+import { useFormPersist } from '@/shared/hooks/use-form-persist';
+import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning';
 
 const DAYS_OF_WEEK = [
   { key: 'monday', label: 'Понедельник' },
@@ -73,111 +59,130 @@ const DAYS_OF_WEEK = [
 
 export default function BranchSetupPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [progress, setProgress] = useState({
-    currentStep: 'BRANCH_SETUP',
-    completedSteps: ['REGISTRATION_COMPLETE', 'BUSINESS_INFO_VERIFIED']
-  });
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const [availableRegions, setAvailableRegions] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
 
+  // Fetch onboarding progress
+  const { data: progress, isLoading: progressLoading } =
+    useGetOnboardingProgress();
+
+  // Form initialization
   const form = useForm<BranchSetupFormValues>({
     resolver: zodResolver(branchSetupSchema),
     defaultValues: {
       branchName: '',
       address: '',
-      monday: { open: '09:00', close: '23:00', isClosed: false },
-      tuesday: { open: '09:00', close: '23:00', isClosed: false },
-      wednesday: { open: '09:00', close: '23:00', isClosed: false },
-      thursday: { open: '09:00', close: '23:00', isClosed: false },
-      friday: { open: '09:00', close: '01:00', isClosed: false },
-      saturday: { open: '10:00', close: '01:00', isClosed: false },
-      sunday: { open: '10:00', close: '23:00', isClosed: false },
+      city: '',
+      region: '',
+      businessHours: {
+        monday: { open: '09:00', close: '23:00', isClosed: false },
+        tuesday: { open: '09:00', close: '23:00', isClosed: false },
+        wednesday: { open: '09:00', close: '23:00', isClosed: false },
+        thursday: { open: '09:00', close: '23:00', isClosed: false },
+        friday: { open: '09:00', close: '01:00', isClosed: false },
+        saturday: { open: '10:00', close: '01:00', isClosed: false },
+        sunday: { open: '10:00', close: '23:00', isClosed: false }
+      },
       dineInEnabled: true,
       takeawayEnabled: true,
       deliveryEnabled: false
     }
   });
 
-  // TODO: Uncomment when API is ready
-  // useEffect(() => {
-  //   const fetchProgress = async () => {
-  //     try {
-  //       const progressData = await onboardingApi.getProgress();
-  //       setProgress({
-  //         currentStep: progressData.currentStep,
-  //         completedSteps: progressData.completedSteps
-  //       });
-  //     } catch (err) {
-  //       console.error('Failed to fetch progress:', err);
-  //     }
-  //   };
-  //   fetchProgress();
-  // }, []);
+  // Draft saving functionality
+  const { clearDraft } = useFormPersist(form, 'onboarding-branch-setup-draft', {
+    exclude: ['dineInEnabled', 'takeawayEnabled', 'deliveryEnabled']
+  });
 
-  const onSubmit = async (data: BranchSetupFormValues) => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  // Unsaved changes warning
+  const { confirmNavigation } = useUnsavedChangesWarning(
+    form.formState.isDirty
+  );
 
-      // TODO: Uncomment when API is ready
-      // const businessHours = {
-      //   monday: data.monday,
-      //   tuesday: data.tuesday,
-      //   wednesday: data.wednesday,
-      //   thursday: data.thursday,
-      //   friday: data.friday,
-      //   saturday: data.saturday,
-      //   sunday: data.sunday
-      // };
-      //
-      // await onboardingApi.submitBranchSetup({
-      //   branchName: data.branchName,
-      //   address: data.address,
-      //   businessHours,
-      //   dineInEnabled: data.dineInEnabled,
-      //   takeawayEnabled: data.takeawayEnabled,
-      //   deliveryEnabled: data.deliveryEnabled
-      // });
+  // Submit mutation
+  const { mutate: submitBranchSetup, isPending: isSubmitting } =
+    useSubmitBranchSetup({
+      onSuccess: () => {
+        clearDraft();
+        const nextStep = getNextStep('BRANCH_SETUP');
+        router.push(nextStep?.route || '/onboarding/menu-template');
+      }
+    });
 
-      // TEMPORARY: Just simulate saving and navigate
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      toast.success('Филиал настроен');
-      router.push('/onboarding/menu-template');
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          'Не удалось сохранить настройки. Попробуйте снова.'
-      );
-    } finally {
-      setIsLoading(false);
+  const handleCityChange = (cityId: string) => {
+    setSelectedCity(cityId);
+    const city = UZBEKISTAN_CITIES.find((c) => c.id === cityId);
+    if (city) {
+      form.setValue('city', city.name);
+      form.setValue('region', ''); // Clear region when city changes
+      setAvailableRegions(city.regions);
     }
   };
 
+  const handleRegionChange = (regionId: string) => {
+    const region = availableRegions.find((r) => r.id === regionId);
+    if (region) {
+      form.setValue('region', region.name);
+    }
+  };
+
+  const onSubmit = async (data: BranchSetupFormValues) => {
+    // Filter out isClosed field for API submission
+    const businessHours = Object.entries(data.businessHours).reduce(
+      (acc, [day, hours]) => {
+        acc[day as keyof typeof data.businessHours] = {
+          open: hours.open,
+          close: hours.close
+        };
+        return acc;
+      },
+      {} as Record<string, { open: string; close: string }>
+    );
+
+    submitBranchSetup({
+      branchName: data.branchName,
+      address: data.address,
+      city: data.city,
+      region: data.region,
+      businessHours: businessHours as any,
+      dineInEnabled: data.dineInEnabled,
+      takeawayEnabled: data.takeawayEnabled,
+      deliveryEnabled: data.deliveryEnabled
+    });
+  };
+
+  const handleBack = async () => {
+    const canLeave = await confirmNavigation();
+    if (canLeave) {
+      const previousStep = getPreviousStep('BRANCH_SETUP');
+      router.push(previousStep?.route || '/onboarding/business-info');
+    }
+  };
+
+  if (progressLoading) {
+    return <BaseLoading />;
+  }
+
   return (
     <OnboardingLayout
-      currentStep={progress.currentStep}
-      completedSteps={progress.completedSteps}
-      title='Настройте ваш филиал'
-      description='Укажите название, адрес и режим работы'
+      currentStep='BRANCH_SETUP'
+      completedSteps={['BUSINESS_INFO_VERIFIED']}
+      title='Настройка филиала'
+      description='Укажите информацию о вашем первом филиале'
     >
-      <Card>
+      <Card className='mx-auto w-full max-w-3xl'>
         <CardHeader>
-          <CardTitle>Основная информация</CardTitle>
+          <CardTitle>Настройка филиала</CardTitle>
           <CardDescription>
-            Настройте параметры вашего первого филиала
+            Укажите информацию о вашем первом филиале
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && (
-            <Alert variant='destructive' className='mb-6'>
-              <AlertCircle className='h-4 w-4' />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+              {/* Branch Name */}
               <FormField
                 control={form.control}
                 name='branchName'
@@ -186,9 +191,9 @@ export default function BranchSetupPage() {
                     <FormLabel>Название филиала *</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Например: Центральный филиал'
                         {...field}
-                        disabled={isLoading}
+                        placeholder='Главный филиал'
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -196,17 +201,78 @@ export default function BranchSetupPage() {
                 )}
               />
 
+              {/* City and Region Selection */}
+              <div className='grid gap-4 sm:grid-cols-2'>
+                <FormField
+                  control={form.control}
+                  name='city'
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Город *</FormLabel>
+                      <Select
+                        onValueChange={handleCityChange}
+                        value={selectedCity}
+                        disabled={isSubmitting}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Выберите город' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {UZBEKISTAN_CITIES.map((city) => (
+                            <SelectItem key={city.id} value={city.id}>
+                              {city.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='region'
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Район *</FormLabel>
+                      <Select
+                        onValueChange={handleRegionChange}
+                        disabled={!selectedCity || isSubmitting}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Выберите район' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {availableRegions.map((region) => (
+                            <SelectItem key={region.id} value={region.id}>
+                              {region.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Address */}
               <FormField
                 control={form.control}
                 name='address'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Адрес *</FormLabel>
+                    <FormLabel>Полный адрес *</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='г. Ташкент, пр. Амира Темура 10'
                         {...field}
-                        disabled={isLoading}
+                        placeholder='ул. Мустакиллик, д. 45'
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -217,72 +283,87 @@ export default function BranchSetupPage() {
               {/* Business Hours */}
               <div className='space-y-4'>
                 <div>
-                  <h3 className='mb-2 text-sm font-medium'>Режим работы</h3>
+                  <h3 className='mb-2 text-sm font-medium'>Часы работы</h3>
                   <p className='text-muted-foreground text-sm'>
-                    Укажите часы работы для каждого дня недели
+                    Настройте график работы для каждого дня недели
                   </p>
                 </div>
 
-                {DAYS_OF_WEEK.map((day) => {
-                  const isClosed = form.watch(`${day.key}.isClosed` as any);
+                <div className='space-y-3'>
+                  {DAYS_OF_WEEK.map(({ key, label }) => {
+                    const dayKey =
+                      key as keyof BranchSetupFormValues['businessHours'];
+                    return (
+                      <div
+                        key={key}
+                        className='flex items-center gap-4 rounded-lg border p-3'
+                      >
+                        <div className='w-32'>
+                          <span className='text-sm font-medium'>{label}</span>
+                        </div>
 
-                  return (
-                    <div key={day.key} className='flex items-center gap-4'>
-                      <div className='w-32 text-sm'>{day.label}</div>
-                      <FormField
-                        control={form.control}
-                        name={`${day.key}.open` as any}
-                        render={({ field }) => (
-                          <FormItem className='flex-1'>
-                            <FormControl>
-                              <TimePicker
-                                value={field.value}
-                                onChange={field.onChange}
-                                disabled={isLoading || isClosed}
-                                placeholder='Открытие'
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <span className='text-muted-foreground'>—</span>
-                      <FormField
-                        control={form.control}
-                        name={`${day.key}.close` as any}
-                        render={({ field }) => (
-                          <FormItem className='flex-1'>
-                            <FormControl>
-                              <TimePicker
-                                value={field.value}
-                                onChange={field.onChange}
-                                disabled={isLoading || isClosed}
-                                placeholder='Закрытие'
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`${day.key}.isClosed` as any}
-                        render={({ field }) => (
-                          <FormItem className='flex items-center space-x-2'>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                                disabled={isLoading}
-                              />
-                            </FormControl>
-                            <FormLabel className='!mt-0 text-sm font-normal'>
-                              Выходной
-                            </FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  );
-                })}
+                        <FormField
+                          control={form.control}
+                          name={`businessHours.${dayKey}.isClosed`}
+                          render={({ field }) => (
+                            <FormItem className='flex items-center space-x-2'>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  disabled={isSubmitting}
+                                />
+                              </FormControl>
+                              <FormLabel className='cursor-pointer text-sm font-normal'>
+                                Выходной
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className='flex flex-1 items-center gap-2'>
+                          <FormField
+                            control={form.control}
+                            name={`businessHours.${dayKey}.open`}
+                            render={({ field }) => (
+                              <FormItem className='flex-1'>
+                                <FormControl>
+                                  <TimePicker
+                                    {...field}
+                                    disabled={
+                                      form.watch(
+                                        `businessHours.${dayKey}.isClosed`
+                                      ) || isSubmitting
+                                    }
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <span className='text-muted-foreground'>—</span>
+                          <FormField
+                            control={form.control}
+                            name={`businessHours.${dayKey}.close`}
+                            render={({ field }) => (
+                              <FormItem className='flex-1'>
+                                <FormControl>
+                                  <TimePicker
+                                    {...field}
+                                    disabled={
+                                      form.watch(
+                                        `businessHours.${dayKey}.isClosed`
+                                      ) || isSubmitting
+                                    }
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Service Types */}
@@ -305,15 +386,15 @@ export default function BranchSetupPage() {
                         <FormLabel className='text-base'>
                           Обслуживание в зале (Dine-in)
                         </FormLabel>
-                        <FormDescription>
+                        <p className='text-muted-foreground text-sm'>
                           Управление столами и обслуживание официантами
-                        </FormDescription>
+                        </p>
                       </div>
                       <FormControl>
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </FormControl>
                     </FormItem>
@@ -329,15 +410,15 @@ export default function BranchSetupPage() {
                         <FormLabel className='text-base'>
                           На вынос (Takeaway)
                         </FormLabel>
-                        <FormDescription>
+                        <p className='text-muted-foreground text-sm'>
                           Заказы для самовывоза клиентами
-                        </FormDescription>
+                        </p>
                       </div>
                       <FormControl>
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </FormControl>
                     </FormItem>
@@ -353,15 +434,15 @@ export default function BranchSetupPage() {
                         <FormLabel className='text-base'>
                           Доставка (Delivery)
                         </FormLabel>
-                        <FormDescription>
+                        <p className='text-muted-foreground text-sm'>
                           Доставка заказов курьерами
-                        </FormDescription>
+                        </p>
                       </div>
                       <FormControl>
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </FormControl>
                     </FormItem>
@@ -373,20 +454,16 @@ export default function BranchSetupPage() {
                 <Button
                   type='button'
                   variant='outline'
-                  onClick={() => router.push('/onboarding/business-info')}
-                  disabled={isLoading}
+                  onClick={handleBack}
+                  disabled={isSubmitting}
                 >
                   Назад
                 </Button>
-                <Button type='submit' disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Сохранение...
-                    </>
-                  ) : (
-                    'Далее'
+                <Button type='submit' disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   )}
+                  Продолжить
                 </Button>
               </div>
             </form>

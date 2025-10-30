@@ -1,365 +1,379 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { onboardingApi, MenuTemplate } from '@/entities/onboarding';
+import Image from 'next/image';
+import { useGetOnboardingProgress, useSkipStep } from '@/entities/onboarding';
 import { OnboardingLayout } from '@/shared/ui/onboarding';
+import BaseLoading from '@/shared/ui/base-loading';
 import { Button } from '@/shared/ui/base/button';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/shared/ui/base/card';
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { Badge } from '@/shared/ui/base/badge';
-import { Skeleton } from '@/shared/ui/base/skeleton';
+import { Input } from '@/shared/ui/base/input';
+import { Textarea } from '@/shared/ui/base/textarea';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogFooter
 } from '@/shared/ui/base/dialog';
-import { ScrollArea } from '@/shared/ui/base/scroll-area';
-import { AlertCircle, Loader2, Check, Eye } from 'lucide-react';
-import { toast } from 'sonner';
+import { Loader2, Check, Edit2, X } from 'lucide-react';
+import { getNextStep, getPreviousStep } from '@/shared/config/onboarding';
+import {
+  MOCK_POPULAR_MENU,
+  type MockCategory,
+  type MockProduct
+} from '@/shared/lib/mock-menu-data';
 
 export default function MenuTemplatePage() {
   const router = useRouter();
-  const [templates, setTemplates] = useState<MenuTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] =
+    useState<MockCategory[]>(MOCK_POPULAR_MENU);
+  const [editingProduct, setEditingProduct] = useState<MockProduct | null>(
+    null
+  );
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedName, setEditedName] = useState('');
+  const [editedPrice, setEditedPrice] = useState('');
+  const [editedDescription, setEditedDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [progress, setProgress] = useState({
-    currentStep: 'MENU_TEMPLATE',
-    completedSteps: [
-      'REGISTRATION_COMPLETE',
-      'BUSINESS_INFO_VERIFIED',
-      'BRANCH_SETUP'
-    ]
+
+  // Fetch onboarding progress
+  const { data: progress, isLoading: progressLoading } =
+    useGetOnboardingProgress();
+
+  const { mutate: skipStep, isPending: isSkipping } = useSkipStep({
+    onSuccess: () => {
+      const nextStep = getNextStep('MENU_TEMPLATE');
+      router.push(nextStep?.route || '/onboarding/staff-invite');
+    }
   });
 
-  useEffect(() => {
-    // TODO: Uncomment when API is ready
-    // const fetchData = async () => {
-    //   try {
-    //     setIsLoading(true);
-    //     const [progressData, templatesData] = await Promise.all([
-    //       onboardingApi.getProgress(),
-    //       onboardingApi.getMenuTemplates()
-    //     ]);
-    //
-    //     setProgress({
-    //       currentStep: progressData.currentStep,
-    //       completedSteps: progressData.completedSteps
-    //     });
-    //     setTemplates(templatesData);
-    //   } catch (err: any) {
-    //     setError(
-    //       err.response?.data?.message || 'Не удалось загрузить шаблоны'
-    //     );
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-    // fetchData();
+  const handleToggleProduct = (categoryId: string, productId: string) => {
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              products: cat.products.map((prod) =>
+                prod.id === productId
+                  ? { ...prod, isSelected: !prod.isSelected }
+                  : prod
+              )
+            }
+          : cat
+      )
+    );
+  };
 
-    // TEMPORARY: Use mock data
-    setIsLoading(true);
-    setTimeout(() => {
-      setTemplates([
-        {
-          id: 1,
-          name: 'Итальянская пиццерия',
-          businessType: 'pizzeria',
-          description:
-            'Классическое меню итальянской пиццерии с пастой и салатами',
-          categoriesCount: 5,
-          productsCount: 32,
-          categories: [
-            { name: 'Пиццы', count: 12 },
-            { name: 'Паста', count: 8 },
-            { name: 'Салаты', count: 6 },
-            { name: 'Десерты', count: 4 },
-            { name: 'Напитки', count: 2 }
-          ]
-        },
-        {
-          id: 2,
-          name: 'Узбекская кухня',
-          businessType: 'restaurant',
-          description: 'Традиционные узбекские блюда',
-          categoriesCount: 6,
-          productsCount: 28,
-          categories: [
-            { name: 'Плов', count: 5 },
-            { name: 'Лагман', count: 4 },
-            { name: 'Самса', count: 6 },
-            { name: 'Шашлыки', count: 8 },
-            { name: 'Салаты', count: 3 },
-            { name: 'Напитки', count: 2 }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Кофейня',
-          businessType: 'coffee_shop',
-          description: 'Базовое меню кофейни',
-          categoriesCount: 4,
-          productsCount: 25,
-          categories: [
-            { name: 'Кофе', count: 10 },
-            { name: 'Чай', count: 5 },
-            { name: 'Выпечка', count: 8 },
-            { name: 'Десерты', count: 2 }
-          ]
-        }
-      ]);
-      setIsLoading(false);
-    }, 500);
-  }, []);
+  const handleEditProduct = (product: MockProduct) => {
+    setEditingProduct(product);
+    setEditedName(product.name);
+    setEditedPrice(product.price.toString());
+    setEditedDescription(product.description || '');
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingProduct) return;
+
+    setCategories((prev) =>
+      prev.map((cat) => ({
+        ...cat,
+        products: cat.products.map((prod) =>
+          prod.id === editingProduct.id
+            ? {
+                ...prod,
+                name: editedName,
+                price: Number(editedPrice),
+                description: editedDescription
+              }
+            : prod
+        )
+      }))
+    );
+
+    setEditDialogOpen(false);
+    setEditingProduct(null);
+  };
 
   const handleSubmit = async () => {
-    if (!selectedTemplate) {
-      toast.error('Выберите шаблон меню');
-      return;
-    }
+    setIsSubmitting(true);
 
-    try {
-      setIsSubmitting(true);
-      setError(null);
+    // Prepare data: only selected products grouped by category
+    const selectedMenu = categories
+      .map((cat) => ({
+        categoryId: cat.id,
+        categoryName: cat.name,
+        products: cat.products
+          .filter((p) => p.isSelected)
+          .map((p) => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            description: p.description
+          }))
+      }))
+      .filter((cat) => cat.products.length > 0);
 
-      // TODO: Uncomment when API is ready
-      // await onboardingApi.submitMenuTemplate({
-      //   templateId: selectedTemplate,
-      //   replaceExisting: false
-      // });
+    // Mock API call - in real implementation, send to backend
+    console.log('Submitting menu:', selectedMenu);
 
-      // TEMPORARY: Just simulate saving and navigate
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast.success('Меню успешно создано');
-      router.push('/onboarding/payment-setup');
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          'Не удалось применить шаблон. Попробуйте снова.'
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    setIsSubmitting(false);
+
+    // Navigate to next step
+    const nextStep = getNextStep('MENU_TEMPLATE');
+    router.push(nextStep?.route || '/onboarding/staff-invite');
   };
 
-  const handleSkip = async () => {
-    try {
-      setIsSubmitting(true);
-
-      // TODO: Uncomment when API is ready
-      // await onboardingApi.skipStep({
-      //   step: 'MENU_TEMPLATE',
-      //   reason: 'Создам меню позже'
-      // });
-
-      // TEMPORARY: Just navigate
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      toast.info('Шаг пропущен');
-      router.push('/onboarding/payment-setup');
-    } catch (err: any) {
-      toast.error('Не удалось пропустить шаг');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSkip = () => {
+    skipStep({
+      step: 'MENU_TEMPLATE',
+      reason: 'Создам меню позже'
+    });
   };
+
+  const handleBack = () => {
+    const prevStep = getPreviousStep('MENU_TEMPLATE');
+    router.push(prevStep?.route || '/onboarding/branch-setup');
+  };
+
+  const selectedCount = categories.reduce(
+    (total, cat) => total + cat.products.filter((p) => p.isSelected).length,
+    0
+  );
+
+  if (progressLoading) {
+    return <BaseLoading />;
+  }
 
   return (
     <OnboardingLayout
-      currentStep={progress.currentStep}
-      completedSteps={progress.completedSteps}
-      title='Выберите готовое меню'
-      description='Используйте шаблон для быстрого старта или создайте меню с нуля'
+      currentStep={progress?.currentStep || 'MENU_TEMPLATE'}
+      completedSteps={
+        progress?.completedSteps || ['BUSINESS_INFO_VERIFIED', 'BRANCH_SETUP']
+      }
+      title='Настройка меню'
+      description='Выберите популярные блюда для вашего заведения'
     >
-      {error && (
-        <Alert variant='destructive' className='mb-6'>
-          <AlertCircle className='h-4 w-4' />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+      {/* Selected count badge */}
+      {selectedCount > 0 && (
+        <div className='bg-muted/50 mb-4 flex items-center justify-between rounded-lg border p-3'>
+          <span className='text-sm font-medium'>
+            Выбрано блюд: {selectedCount}
+          </span>
+          <Button
+            size='sm'
+            variant='ghost'
+            onClick={() =>
+              setCategories((prev) =>
+                prev.map((cat) => ({
+                  ...cat,
+                  products: cat.products.map((p) => ({
+                    ...p,
+                    isSelected: false
+                  }))
+                }))
+              )
+            }
+          >
+            Сбросить всё
+          </Button>
+        </div>
       )}
 
-      {isLoading ? (
-        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-          {[1, 2, 3].map((i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className='h-6 w-3/4' />
-                <Skeleton className='h-4 w-full' />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className='h-32 w-full' />
-              </CardContent>
-              <CardFooter>
-                <Skeleton className='h-10 w-full' />
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      ) : templates.length === 0 ? (
-        <Card>
-          <CardContent className='py-8 text-center'>
-            <p className='text-muted-foreground'>
-              Нет доступных шаблонов. Вы можете создать меню вручную позже.
-            </p>
-            <Button className='mt-4' onClick={handleSkip}>
-              Создать меню позже
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-            {templates.map((template) => (
-              <Card
-                key={template.id}
-                className={`cursor-pointer transition-all hover:shadow-lg ${
-                  selectedTemplate === template.id ? 'ring-primary ring-2' : ''
-                }`}
-                onClick={() => setSelectedTemplate(template.id)}
-              >
-                <CardHeader>
-                  <div className='flex items-start justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-lg'>{template.name}</CardTitle>
-                      <CardDescription className='mt-1'>
-                        {template.description}
-                      </CardDescription>
-                    </div>
-                    {selectedTemplate === template.id && (
-                      <Check className='text-primary h-5 w-5' />
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className='space-y-2'>
-                    <div className='flex items-center gap-2 text-sm'>
-                      <Badge variant='secondary'>
-                        {template.categoriesCount} категорий
-                      </Badge>
-                      <Badge variant='secondary'>
-                        {template.productsCount} продуктов
-                      </Badge>
-                    </div>
+      {/* Categories with products */}
+      <div className='space-y-8'>
+        {categories.map((category) => (
+          <div key={category.id}>
+            <div className='mb-4 flex items-center justify-between'>
+              <h2 className='text-xl font-semibold'>{category.name}</h2>
+              <span className='text-muted-foreground text-sm'>
+                {category.products.filter((p) => p.isSelected).length} /{' '}
+                {category.products.length}
+              </span>
+            </div>
 
-                    {template.categories && template.categories.length > 0 && (
-                      <div className='text-muted-foreground mt-3 text-sm'>
-                        <p className='mb-1 font-medium'>Включает:</p>
-                        <ul className='list-inside list-disc space-y-1'>
-                          {template.categories.slice(0, 3).map((cat) => (
-                            <li key={cat.name}>
-                              {cat.name} ({cat.count})
-                            </li>
-                          ))}
-                          {template.categories.length > 3 && (
-                            <li>и ещё {template.categories.length - 3}...</li>
-                          )}
-                        </ul>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+              {category.products.map((product) => (
+                <Card
+                  key={product.id}
+                  className={`relative overflow-hidden transition-all ${
+                    product.isSelected ? 'ring-primary ring-2' : ''
+                  }`}
+                >
+                  {product.isSelected && (
+                    <div className='bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full'>
+                      <Check className='h-4 w-4 text-white' />
+                    </div>
+                  )}
+
+                  {/* Product Image */}
+                  <div className='bg-muted relative h-40 w-full overflow-hidden'>
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className='object-cover'
+                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                      />
+                    ) : (
+                      <div className='bg-muted flex h-full w-full items-center justify-center'>
+                        <span className='text-muted-foreground text-4xl'>
+                          🍽️
+                        </span>
                       </div>
                     )}
                   </div>
-                </CardContent>
-                <CardFooter className='flex gap-2'>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        className='flex-1'
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Eye className='mr-2 h-4 w-4' />
-                        Просмотр
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className='max-w-2xl'>
-                      <DialogHeader>
-                        <DialogTitle>{template.name}</DialogTitle>
-                        <DialogDescription>
-                          {template.description}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <ScrollArea className='mt-4 max-h-[400px]'>
-                        <div className='space-y-4'>
-                          {template.categories?.map((category) => (
-                            <div key={category.name}>
-                              <h4 className='font-medium'>
-                                {category.name} ({category.count} позиций)
-                              </h4>
-                            </div>
-                          ))}
-                        </div>
-                      </ScrollArea>
-                    </DialogContent>
-                  </Dialog>
-                  <Button
-                    size='sm'
-                    className='flex-1'
-                    variant={
-                      selectedTemplate === template.id ? 'default' : 'outline'
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedTemplate(template.id);
-                    }}
-                  >
-                    {selectedTemplate === template.id ? 'Выбрано' : 'Выбрать'}
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
 
-          <div className='mt-8 flex justify-between'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => router.push('/onboarding/branch-setup')}
-              disabled={isSubmitting}
-            >
-              Назад
-            </Button>
-            <div className='flex gap-4'>
-              <Button
-                type='button'
-                variant='ghost'
-                onClick={handleSkip}
-                disabled={isSubmitting}
-              >
-                Создать своё меню
-              </Button>
-              <Button onClick={handleSubmit} disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Применение...
-                  </>
-                ) : (
-                  'Далее'
-                )}
-              </Button>
+                  <CardHeader className='space-y-2 p-4'>
+                    <CardTitle className='line-clamp-1 text-base'>
+                      {product.name}
+                    </CardTitle>
+                    <CardDescription className='line-clamp-2 text-xs'>
+                      {product.description}
+                    </CardDescription>
+                    <div className='text-primary text-lg font-bold'>
+                      {new Intl.NumberFormat('ru-RU').format(product.price)} сум
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className='flex gap-2 p-4 pt-0'>
+                    <Button
+                      size='sm'
+                      variant={product.isSelected ? 'secondary' : 'default'}
+                      className='flex-1'
+                      onClick={() =>
+                        handleToggleProduct(category.id, product.id)
+                      }
+                    >
+                      {product.isSelected ? (
+                        <>
+                          <X className='mr-1 h-3 w-3' />
+                          Убрать
+                        </>
+                      ) : (
+                        <>
+                          <Check className='mr-1 h-3 w-3' />
+                          Выбрать
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      onClick={() => handleEditProduct(product)}
+                    >
+                      <Edit2 className='h-3 w-3' />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
+        ))}
+      </div>
 
-          <Alert className='mt-6'>
-            <AlertDescription>
-              Вы сможете отредактировать меню после завершения настройки
-            </AlertDescription>
-          </Alert>
-        </>
-      )}
+      {/* Navigation */}
+      <div className='mt-8 flex justify-between border-t pt-6'>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={handleBack}
+          disabled={isSubmitting || isSkipping}
+        >
+          Назад
+        </Button>
+        <div className='flex gap-4'>
+          <Button
+            type='button'
+            variant='ghost'
+            onClick={handleSkip}
+            disabled={isSubmitting || isSkipping}
+          >
+            {isSkipping ? (
+              <>
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                Пропуск...
+              </>
+            ) : (
+              'Пропустить'
+            )}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={selectedCount === 0 || isSubmitting || isSkipping}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                Сохранение...
+              </>
+            ) : (
+              `Продолжить (${selectedCount})`
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Edit Product Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Редактировать блюдо</DialogTitle>
+            <DialogDescription>
+              Измените название, цену или описание блюда
+            </DialogDescription>
+          </DialogHeader>
+          <div className='space-y-4 py-4'>
+            <div>
+              <label className='mb-2 block text-sm font-medium'>Название</label>
+              <Input
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                placeholder='Название блюда'
+              />
+            </div>
+            <div>
+              <label className='mb-2 block text-sm font-medium'>
+                Цена (сум)
+              </label>
+              <Input
+                type='number'
+                value={editedPrice}
+                onChange={(e) => setEditedPrice(e.target.value)}
+                placeholder='25000'
+              />
+            </div>
+            <div>
+              <label className='mb-2 block text-sm font-medium'>Описание</label>
+              <Textarea
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                placeholder='Описание блюда'
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setEditDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={handleSaveEdit}>Сохранить</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </OnboardingLayout>
   );
 }

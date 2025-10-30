@@ -1,11 +1,9 @@
-/**
- * Query keys factory for onboarding entity
- * Provides consistent cache key management for React Query
- */
-
 export const onboardingKeys = {
   all: () => ['onboarding'] as const,
   progress: () => [...onboardingKeys.all(), 'progress'] as const,
-  menuTemplates: () => [...onboardingKeys.all(), 'menu-templates'] as const,
-  menuTemplate: (id: number) => [...onboardingKeys.menuTemplates(), id] as const
+  templates: () => [...onboardingKeys.all(), 'templates'] as const,
+  templatesByType: (businessType?: string) =>
+    [...onboardingKeys.templates(), { businessType }] as const,
+  regions: () => ['regions'] as const,
+  districts: (regionId?: number) => ['regions', regionId, 'districts'] as const
 } as const;

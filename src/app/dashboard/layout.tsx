@@ -2,6 +2,7 @@ import KBar from '@/shared/ui/kbar';
 import AppSidebar from '@/shared/ui/layout/app-sidebar';
 import Header from '@/shared/ui/layout/header';
 import { SidebarInset, SidebarProvider } from '@/shared/ui/base/sidebar';
+import { OnboardingReminderDialog } from '@/widgets/onboarding-reminder-dialog';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
@@ -24,6 +25,7 @@ export default async function DashboardLayout({
         <AppSidebar />
         <SidebarInset>
           <Header />
+          <OnboardingReminderDialog />
           {children}
         </SidebarInset>
       </SidebarProvider>

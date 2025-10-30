@@ -1,81 +1,87 @@
-/**
- * Onboarding entity types
- */
+// Onboarding step identifiers
+export type OnboardingStep =
+  | 'REGISTRATION_COMPLETE'
+  | 'BUSINESS_INFO_VERIFIED'
+  | 'BRANCH_SETUP'
+  | 'MENU_TEMPLATE'
+  | 'STAFF_INVITED'
+  | 'GO_LIVE';
 
-// Onboarding steps enum
-export enum OnboardingStep {
-  REGISTRATION_COMPLETE = 'REGISTRATION_COMPLETE',
-  BUSINESS_INFO_VERIFIED = 'BUSINESS_INFO_VERIFIED',
-  BRANCH_SETUP = 'BRANCH_SETUP',
-  MENU_TEMPLATE = 'MENU_TEMPLATE',
-  PAYMENT_SETUP = 'PAYMENT_SETUP',
-  STAFF_INVITED = 'STAFF_INVITED',
-  GO_LIVE = 'GO_LIVE'
-}
-
-// Onboarding progress
+// Onboarding progress response
 export interface OnboardingProgress {
-  currentStep: string;
-  completedSteps: string[];
+  currentStep: OnboardingStep;
+  completedSteps: OnboardingStep[];
   completionPercentage: number;
   isCompleted: boolean;
   stepData?: Record<string, any>;
-  skippedSteps?: string[];
-  createdAt?: string;
-  updatedAt?: string;
-  completedAt?: string;
+  skippedSteps?: OnboardingStep[];
+  nextStep?: OnboardingStep;
+  canSkip?: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Business Info step
-export interface BusinessInfoRequest {
+// Base response wrapper for all onboarding step responses
+export interface OnboardingStepResponse<T = {}> {
+  success: boolean;
+  message: string;
+  progress: OnboardingProgress & T;
+}
+
+// Step 1: Business Identity (NEW API)
+export interface BusinessIdentityRequest {
+  businessName: string;
   businessType: string;
-  description?: string;
-  address: string;
-  website?: string;
-  regionId?: number;
-  districtId?: number;
+  slug?: string;
+  logoUrl?: string;
 }
 
-export interface BusinessInfoResponse {
-  currentStep: string;
-  completedSteps: string[];
-  completionPercentage: number;
-  stepData: {
-    BUSINESS_INFO_VERIFIED: {
-      businessType: string;
-      description?: string;
-      completedAt: string;
-    };
-  };
-}
+export interface BusinessIdentityResponse extends OnboardingStepResponse {}
 
-// Branch Setup step
-export interface BusinessHours {
-  monday?: { open: string; close: string; isClosed?: boolean };
-  tuesday?: { open: string; close: string; isClosed?: boolean };
-  wednesday?: { open: string; close: string; isClosed?: boolean };
-  thursday?: { open: string; close: string; isClosed?: boolean };
-  friday?: { open: string; close: string; isClosed?: boolean };
-  saturday?: { open: string; close: string; isClosed?: boolean };
-  sunday?: { open: string; close: string; isClosed?: boolean };
-}
+// Legacy alias for backwards compatibility
+export type BusinessInfoRequest = BusinessIdentityRequest;
+export type BusinessInfoResponse = BusinessIdentityResponse;
 
+// Step 2: Branch Setup (UPDATED API)
 export interface BranchSetupRequest {
   branchName: string;
   address: string;
-  businessHours: BusinessHours;
+  region: string;
+  city: string;
+  businessHours: {
+    monday: { open: string; close: string };
+    tuesday: { open: string; close: string };
+    wednesday: { open: string; close: string };
+    thursday: { open: string; close: string };
+    friday: { open: string; close: string };
+    saturday: { open: string; close: string };
+    sunday: { open: string; close: string };
+  };
   dineInEnabled: boolean;
   takeawayEnabled: boolean;
   deliveryEnabled: boolean;
 }
 
-export interface BranchSetupResponse {
-  currentStep: string;
-  completedSteps: string[];
-  completionPercentage: number;
+export interface BranchSetupResponse
+  extends OnboardingStepResponse<{
+    branchId: number;
+  }> {}
+
+// Step 3: Branch Location (NEW)
+export interface BranchLocationRequest {
+  latitude: number;
+  longitude: number;
+  city: string;
+  region: string;
+  postalCode?: string;
+  fullAddress: string;
+  phone: string;
+  email?: string;
 }
 
-// Menu Template step
+export interface BranchLocationResponse extends OnboardingStepResponse {}
+
+// Menu template step
 export interface MenuTemplate {
   id: number;
   name: string;
@@ -84,44 +90,24 @@ export interface MenuTemplate {
   categoriesCount: number;
   productsCount: number;
   previewImage?: string;
-  categories?: {
+  categories: Array<{
     name: string;
     count: number;
-  }[];
+  }>;
 }
 
-export interface MenuTemplateRequest {
+export interface ApplyMenuTemplateRequest {
   templateId: number;
   replaceExisting?: boolean;
 }
 
-export interface MenuTemplateResponse {
-  success: boolean;
-  message: string;
-  categoriesCreated: number;
-  productsCreated: number;
-  currentStep: string;
-  completionPercentage: number;
-}
+export interface ApplyMenuTemplateResponse
+  extends OnboardingStepResponse<{
+    categoriesCreated: number;
+    productsCreated: number;
+  }> {}
 
-// Payment Setup step
-export interface PaymentSetupRequest {
-  cashEnabled: boolean;
-  cardEnabled: boolean;
-  paymeMerchantId?: string;
-  paymeSecretKey?: string;
-  clickMerchantId?: string;
-  clickServiceId?: string;
-  clickSecretKey?: string;
-}
-
-export interface PaymentSetupResponse {
-  currentStep: string;
-  completedSteps: string[];
-  completionPercentage: number;
-}
-
-// Staff Invite step
+// Staff invite step
 export interface StaffInvitation {
   fullName: string;
   phone: string;
@@ -134,14 +120,12 @@ export interface StaffInviteRequest {
   invitations: StaffInvitation[];
 }
 
-export interface StaffInviteResponse {
-  currentStep: string;
-  completedSteps: string[];
-  completionPercentage: number;
-  invitationsSent: number;
-}
+export interface StaffInviteResponse
+  extends OnboardingStepResponse<{
+    invitationsSent: number;
+  }> {}
 
-// Complete Onboarding
+// Complete onboarding
 export interface CompleteOnboardingResponse {
   success: boolean;
   message: string;
@@ -152,15 +136,29 @@ export interface CompleteOnboardingResponse {
     activatedAt: string;
   };
   onboardingProgress: OnboardingProgress;
-  nextSteps: {
+  nextSteps: Array<{
     title: string;
     link: string;
-    priority: string;
-  }[];
+    priority: 'high' | 'medium' | 'low';
+  }>;
 }
 
 // Skip step
 export interface SkipStepRequest {
-  step: string;
+  step: OnboardingStep;
   reason?: string;
+}
+
+export interface SkipStepResponse extends OnboardingStepResponse {}
+
+// Regions and districts
+export interface Region {
+  id: number;
+  name: string;
+}
+
+export interface District {
+  id: number;
+  regionId: number;
+  name: string;
 }
