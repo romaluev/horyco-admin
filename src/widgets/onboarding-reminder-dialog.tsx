@@ -1,5 +1,7 @@
 'use client';
 
+
+
 import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -17,24 +19,76 @@ import {
 
 import { useGetOnboardingProgress } from '@/entities/onboarding';
 
-export function OnboardingReminderDialog() {
+import type { JSX } from 'react';
+
+// LocalStorage keys
+const ONBOARDING_COMPLETED_KEY = 'onboarding_completed';
+const ONBOARDING_DISMISSED_KEY = 'onboarding_dismissed';
+
+// LocalStorage utilities
+const getOnboardingCompletedFromStorage = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(ONBOARDING_COMPLETED_KEY) === 'true';
+};
+
+const setOnboardingCompletedToStorage = (completed: boolean): void => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(ONBOARDING_COMPLETED_KEY, String(completed));
+};
+
+const getOnboardingDismissedFromStorage = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(ONBOARDING_DISMISSED_KEY) === 'true';
+};
+
+const setOnboardingDismissedToStorage = (dismissed: boolean): void => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(ONBOARDING_DISMISSED_KEY, String(dismissed));
+};
+
+export const OnboardingReminderDialog = (): JSX.Element | null => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [shouldCheckApi, setShouldCheckApi] = useState(false);
 
-  const { data: progress, isLoading } = useGetOnboardingProgress();
-
+  // Check localStorage on mount
   useEffect(() => {
-    // Check if user dismissed the dialog in this session
-    if (isDismissed || isLoading) return;
+    const isCompleted = getOnboardingCompletedFromStorage();
+    const isDismissed = getOnboardingDismissedFromStorage();
 
-    // Show dialog if onboarding is not completed
-    if (progress && !progress.isCompleted) {
-      setIsVisible(true);
+    // If completed or dismissed, don't show and don't check API
+    if (isCompleted || isDismissed) {
+      setShouldCheckApi(false);
+      return;
     }
-  }, [progress, isLoading, isDismissed]);
 
-  const handleStartOnboarding = () => {
+    // If not cached, check API once
+    setShouldCheckApi(true);
+  }, []);
+
+  // Only fetch if not cached
+  const { data: progress, isLoading } = useGetOnboardingProgress({
+    enabled: shouldCheckApi
+  });
+
+  // Handle API response
+  useEffect(() => {
+    if (!shouldCheckApi || isLoading) return;
+
+    if (progress) {
+      if (progress.isCompleted) {
+        // Save to localStorage and hide
+        setOnboardingCompletedToStorage(true);
+        setIsVisible(false);
+        setShouldCheckApi(false);
+      } else {
+        // Show dialog if not completed
+        setIsVisible(true);
+      }
+    }
+  }, [progress, isLoading, shouldCheckApi]);
+
+  const handleStartOnboarding = (): void => {
     setIsVisible(false);
 
     // Get the current step or start from beginning
@@ -45,9 +99,10 @@ export function OnboardingReminderDialog() {
     router.push(route);
   };
 
-  const handleDismiss = () => {
+  const handleDismiss = (): void => {
     setIsVisible(false);
-    setIsDismissed(true);
+    setOnboardingDismissedToStorage(true);
+    setShouldCheckApi(false);
   };
 
   if (!isVisible) return null;
@@ -105,7 +160,7 @@ export function OnboardingReminderDialog() {
 }
 
 // Helper function to map step to route
-function getRouteForStep(step: string): string {
+const getRouteForStep = (step: string): string => {
   const stepRoutes: Record<string, string> = {
     REGISTRATION_COMPLETE: '/onboarding/business-info',
     BUSINESS_INFO_VERIFIED: '/onboarding/branch-setup',
@@ -116,4 +171,4 @@ function getRouteForStep(step: string): string {
   };
 
   return stepRoutes[step] || '/onboarding/business-info';
-}
+};

@@ -68,8 +68,7 @@ export default function BranchSetupPage() {
   >([])
 
   // Fetch onboarding progress
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  const { isLoading: isProgressLoading } = useGetOnboardingProgress()
 
   // Form initialization
   const form = useForm<BranchSetupFormValues>({
@@ -107,7 +106,7 @@ export default function BranchSetupPage() {
     useSubmitBranchSetup({
       onSuccess: () => {
         clearDraft()
-        const nextStep = getNextStep('BRANCH_SETUP')
+        const nextStep = getNextStep('branch_setup')
         router.push(nextStep?.route || '/onboarding/menu-template')
       },
     })
@@ -139,7 +138,15 @@ export default function BranchSetupPage() {
         }
         return acc
       },
-      {} as Record<string, { open: string; close: string }>
+      {} as {
+        monday: { open: string; close: string };
+        tuesday: { open: string; close: string };
+        wednesday: { open: string; close: string };
+        thursday: { open: string; close: string };
+        friday: { open: string; close: string };
+        saturday: { open: string; close: string };
+        sunday: { open: string; close: string };
+      }
     )
 
     submitBranchSetup({
@@ -147,7 +154,7 @@ export default function BranchSetupPage() {
       address: data.address,
       city: data.city,
       region: data.region,
-      businessHours: businessHours as any,
+      businessHours,
       dineInEnabled: data.dineInEnabled,
       takeawayEnabled: data.takeawayEnabled,
       deliveryEnabled: data.deliveryEnabled,
@@ -157,7 +164,7 @@ export default function BranchSetupPage() {
   const handleBack = async () => {
     const canLeave = await confirmNavigation()
     if (canLeave) {
-      const previousStep = getPreviousStep('BRANCH_SETUP')
+      const previousStep = getPreviousStep('branch_setup')
       router.push(previousStep?.route || '/onboarding/business-info')
     }
   }
@@ -168,8 +175,8 @@ export default function BranchSetupPage() {
 
   return (
     <OnboardingLayout
-      currentStep="BRANCH_SETUP"
-      completedSteps={['BUSINESS_INFO_VERIFIED']}
+      currentStep="branch_setup"
+      completedSteps={['business_identity']}
       title="Настройка филиала"
       description="Укажите информацию о вашем первом филиале"
     >

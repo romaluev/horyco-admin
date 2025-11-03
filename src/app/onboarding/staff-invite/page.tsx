@@ -85,7 +85,7 @@ export default function StaffInvitePage() {
     useSubmitStaffInvite({
       onSuccess: () => {
         clearDraft();
-        const nextStep = getNextStep('STAFF_INVITED');
+        const nextStep = getNextStep('staff_invited');
         router.push(nextStep?.route || '/onboarding/complete');
       }
     });
@@ -94,7 +94,7 @@ export default function StaffInvitePage() {
   const { mutate: skipStep, isPending: isSkipping } = useSkipStep({
     onSuccess: () => {
       clearDraft();
-      const nextStep = getNextStep('STAFF_INVITED');
+      const nextStep = getNextStep('staff_invited');
       router.push(nextStep?.route || '/onboarding/complete');
     }
   });
@@ -138,7 +138,7 @@ export default function StaffInvitePage() {
 
   const confirmSkip = () => {
     skipStep({
-      step: 'STAFF_INVITED',
+      step: 'staff_invited',
       reason: 'Добавлю сотрудников позже'
     });
     setSkipConfirmOpen(false);
@@ -146,7 +146,7 @@ export default function StaffInvitePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'STAFF_INVITED'}
+      currentStep={progress?.currentStep || 'staff_invited'}
       completedSteps={progress?.completedSteps || []}
       title='Пригласите сотрудников'
       description='Добавьте официантов для управления заказами'

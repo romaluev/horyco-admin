@@ -34,7 +34,6 @@ import {
   useGetDefaultProducts,
   useSubmitMenuSetup,
   useSkipMenuSetup,
-  type DefaultCategory,
   type MenuSetupRequest,
 } from '@/entities/onboarding'
 
@@ -62,20 +61,20 @@ export default function MenuTemplatePage() {
   const router = useRouter()
   const [categories, setCategories] = useState<MenuCategory[]>([])
   const [editingProduct, setEditingProduct] = useState<MenuProduct | null>(null)
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editedName, setEditedName] = useState('')
   const [editedPrice, setEditedPrice] = useState('')
   const [editedDescription, setEditedDescription] = useState('')
 
   // Fetch onboarding progress
-  const { data: progress, isLoading: progressLoading } =
+  const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress()
 
   // Fetch default products based on business type
   const businessType = progress?.stepData?.businessType || 'restaurant'
   const {
     data: defaultProducts,
-    isLoading: productsLoading,
+    isLoading: isProductsLoading,
     error: productsError,
   } = useGetDefaultProducts(businessType)
 
@@ -107,14 +106,14 @@ export default function MenuTemplatePage() {
   // Mutations
   const { mutate: submitMenu, isPending: isSubmitting } = useSubmitMenuSetup({
     onSuccess: () => {
-      const nextStep = getNextStep('MENU_TEMPLATE')
+      const nextStep = getNextStep('menu_template')
       router.push(nextStep?.route || '/onboarding/staff-invite')
     },
   })
 
   const { mutate: skipMenu, isPending: isSkipping } = useSkipMenuSetup({
     onSuccess: () => {
-      const nextStep = getNextStep('MENU_TEMPLATE')
+      const nextStep = getNextStep('menu_template')
       router.push(nextStep?.route || '/onboarding/staff-invite')
     },
   })
@@ -141,7 +140,7 @@ export default function MenuTemplatePage() {
     setEditedName(product.name)
     setEditedPrice(product.price.toString())
     setEditedDescription(product.description || '')
-    setEditDialogOpen(true)
+    setIsEditDialogOpen(true)
   }
 
   const handleSaveEdit = () => {
@@ -163,7 +162,7 @@ export default function MenuTemplatePage() {
       }))
     )
 
-    setEditDialogOpen(false)
+    setIsEditDialogOpen(false)
     setEditingProduct(null)
   }
 
@@ -197,7 +196,7 @@ export default function MenuTemplatePage() {
   }
 
   const handleBack = () => {
-    const prevStep = getPreviousStep('MENU_TEMPLATE')
+    const prevStep = getPreviousStep('menu_template')
     router.push(prevStep?.route || '/onboarding/branch-setup')
   }
 
@@ -206,7 +205,7 @@ export default function MenuTemplatePage() {
     0
   )
 
-  if (progressLoading || productsLoading) {
+  if (isProgressLoading || isProductsLoading) {
     return <BaseLoading />
   }
 
@@ -237,9 +236,9 @@ export default function MenuTemplatePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'MENU_TEMPLATE'}
+      currentStep={progress?.currentStep || 'menu_template'}
       completedSteps={
-        progress?.completedSteps || ['BUSINESS_INFO_VERIFIED', 'BRANCH_SETUP']
+        progress?.completedSteps || ['business_identity', 'branch_setup']
       }
       title="Настройка меню"
       description="Выберите популярные блюда для вашего заведения"
@@ -415,7 +414,7 @@ export default function MenuTemplatePage() {
       </div>
 
       {/* Edit Product Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Редактировать блюдо</DialogTitle>
@@ -425,18 +424,20 @@ export default function MenuTemplatePage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <label className="mb-2 block text-sm font-medium">Название</label>
+              <label htmlFor="edit-product-name" className="mb-2 block text-sm font-medium">Название</label>
               <Input
+                id="edit-product-name"
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
                 placeholder="Название блюда"
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">
+              <label htmlFor="edit-product-price" className="mb-2 block text-sm font-medium">
                 Цена (сум)
               </label>
               <Input
+                id="edit-product-price"
                 type="number"
                 value={editedPrice}
                 onChange={(e) => setEditedPrice(e.target.value)}
@@ -444,8 +445,9 @@ export default function MenuTemplatePage() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Описание</label>
+              <label htmlFor="edit-product-description" className="mb-2 block text-sm font-medium">Описание</label>
               <Textarea
+                id="edit-product-description"
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 placeholder="Описание блюда"
@@ -454,7 +456,7 @@ export default function MenuTemplatePage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
               Отмена
             </Button>
             <Button onClick={handleSaveEdit}>Сохранить</Button>

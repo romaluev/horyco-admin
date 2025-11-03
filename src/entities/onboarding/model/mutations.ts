@@ -159,9 +159,9 @@ export const useCompleteOnboarding = (
 
   return useMutation({
     mutationFn: () => onboardingApi.complete(),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() });
-      toast.success(data.message);
+      toast.success('Onboarding completed successfully');
     },
     onError: (error: any) => {
       toast.error(

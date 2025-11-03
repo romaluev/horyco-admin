@@ -80,15 +80,15 @@ export default function BusinessInfoPage() {
     useSubmitBusinessInfo({
       onSuccess: () => {
         clearDraft();
-        const nextStep = getNextStep('BUSINESS_INFO_VERIFIED');
+        const nextStep = getNextStep('business_identity');
         router.push(nextStep?.route || '/onboarding/branch-setup');
       }
     });
 
   // Load existing data if available
   useEffect(() => {
-    if (progress?.stepData?.BUSINESS_INFO_VERIFIED) {
-      const data = progress.stepData.BUSINESS_INFO_VERIFIED;
+    if (progress?.stepData?.business_identity) {
+      const data = progress.stepData.business_identity;
       form.reset({
         businessName: data.businessName || '',
         businessType: data.businessType || '',
@@ -109,7 +109,7 @@ export default function BusinessInfoPage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'BUSINESS_INFO_VERIFIED'}
+      currentStep={progress?.currentStep || 'business_identity'}
       completedSteps={progress?.completedSteps || []}
       title='Расскажите о вашем бизнесе'
       description='Эта информация поможет нам настроить систему под ваши потребности'

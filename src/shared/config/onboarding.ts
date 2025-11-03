@@ -19,7 +19,7 @@ export interface StepConfig {
 // REGISTRATION_COMPLETE is auto-completed and should not be shown
 export const ONBOARDING_STEPS: StepConfig[] = [
   {
-    id: 'BUSINESS_INFO_VERIFIED',
+    id: 'business_identity',
     route: '/onboarding/business-info',
     title: 'Информация о бизнесе',
     description: 'Основные данные о заведении',
@@ -27,7 +27,7 @@ export const ONBOARDING_STEPS: StepConfig[] = [
     order: 0
   },
   {
-    id: 'BRANCH_SETUP',
+    id: 'branch_setup',
     route: '/onboarding/branch-setup',
     title: 'Настройка филиала',
     description: 'График работы и услуги',
@@ -35,7 +35,7 @@ export const ONBOARDING_STEPS: StepConfig[] = [
     order: 1
   },
   {
-    id: 'MENU_TEMPLATE',
+    id: 'menu_template',
     route: '/onboarding/menu-template',
     title: 'Шаблон меню',
     description: 'Выбор готового меню',
@@ -43,7 +43,7 @@ export const ONBOARDING_STEPS: StepConfig[] = [
     order: 2
   },
   {
-    id: 'STAFF_INVITED',
+    id: 'staff_invited',
     route: '/onboarding/staff-invite',
     title: 'Приглашение сотрудников',
     description: 'Добавление команды',
@@ -51,7 +51,7 @@ export const ONBOARDING_STEPS: StepConfig[] = [
     order: 3
   },
   {
-    id: 'GO_LIVE',
+    id: 'go_live',
     route: '/onboarding/complete',
     title: 'Завершение',
     description: 'Готово к использованию',
