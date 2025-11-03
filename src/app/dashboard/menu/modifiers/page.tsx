@@ -1,0 +1,437 @@
+/**
+ * Modifiers Page
+ * Manage modifier groups and modifiers
+ */
+
+'use client';
+
+import { useState } from 'react';
+
+import {
+  MoreVertical,
+  Plus,
+  Pencil,
+  Search,
+  Settings,
+  Trash2
+} from 'lucide-react';
+
+import { BaseLoading } from '@/shared/ui';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/shared/ui/base/accordion';
+import { Badge } from '@/shared/ui/base/badge';
+import { Button } from '@/shared/ui/base/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui/base/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/shared/ui/base/dropdown-menu';
+import { Input } from '@/shared/ui/base/input';
+import { Separator } from '@/shared/ui/base/separator';
+import PageContainer from '@/shared/ui/layout/page-container';
+
+import {
+  useGetModifierGroups,
+  useDeleteModifierGroup,
+  useDeleteModifier,
+  type IModifierGroup,
+  type IModifier
+} from '@/entities/modifier-group';
+import {
+  CreateModifierGroupDialog,
+  CreateModifierDialog,
+  UpdateModifierGroupDialog,
+  UpdateModifierDialog
+} from '@/features/modifier-group-form';
+
+import type { JSX } from 'react';
+
+interface PageHeaderProps {
+  onCreateGroup: () => void;
+}
+
+const PageHeader = ({ onCreateGroup }: PageHeaderProps) => (
+  <div className="flex items-center justify-between">
+    <div>
+      <h2 className="text-3xl font-bold tracking-tight">Модификаторы</h2>
+      <p className="text-muted-foreground">
+        Управляйте группами модификаторов и модификаторами
+      </p>
+    </div>
+    <CreateModifierGroupDialog
+      trigger={
+        <Button onClick={onCreateGroup}>
+          <Plus className="mr-2 h-4 w-4" />
+          Создать группу
+        </Button>
+      }
+    />
+  </div>
+);
+
+interface SearchBarProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const SearchBar = ({ value, onChange }: SearchBarProps) => (
+  <div className="flex items-center gap-2">
+    <div className="relative flex-1 max-w-sm">
+      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Input
+        placeholder="Поиск по группам..."
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="pl-8"
+      />
+    </div>
+  </div>
+);
+
+interface EmptyStateProps {
+  hasSearch: boolean;
+}
+
+const EmptyState = ({ hasSearch }: EmptyStateProps) => (
+  <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
+    <div className="text-center">
+      <p className="text-lg font-medium text-muted-foreground">
+        {hasSearch
+          ? 'Группы модификаторов не найдены'
+          : 'Нет групп модификаторов'}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        {hasSearch
+          ? 'Попробуйте изменить поисковый запрос'
+          : 'Создайте первую группу модификаторов'}
+      </p>
+    </div>
+  </div>
+);
+
+interface ModifierGroupStatsProps {
+  totalGroups: number;
+  requiredGroups: number;
+  totalModifiers: number;
+}
+
+const ModifierGroupStats = ({
+  totalGroups,
+  requiredGroups,
+  totalModifiers
+}: ModifierGroupStatsProps) => (
+  <div className="grid gap-4 md:grid-cols-3">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Всего групп</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{totalGroups}</div>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Обязательных</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{requiredGroups}</div>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">
+          Всего модификаторов
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{totalModifiers}</div>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+interface ModifierItemProps {
+  modifier: IModifier;
+  onEdit: (modifier: IModifier) => void;
+  onDelete: (id: number) => void;
+}
+
+const ModifierItem = ({
+  modifier,
+  onEdit,
+  onDelete
+}: ModifierItemProps) => (
+  <div className="flex items-center justify-between rounded-lg border bg-background p-4 transition-colors hover:bg-accent/50">
+    <div className="flex-1">
+      <p className="font-medium">{modifier.name}</p>
+      {modifier.description && (
+        <p className="mt-1 text-sm text-muted-foreground">
+          {modifier.description}
+        </p>
+      )}
+    </div>
+    <div className="flex items-center gap-4">
+      <Badge variant={modifier.isActive ? 'default' : 'secondary'}>
+        {modifier.isActive ? 'Активен' : 'Неактивен'}
+      </Badge>
+      <span className="min-w-[80px] text-right font-semibold">
+        {modifier.price} ₽
+      </span>
+      <div className="flex items-center gap-1">
+        <Button variant="ghost" size="sm" onClick={() => onEdit(modifier)}>
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onDelete(modifier.id)}
+        >
+          <Trash2 className="h-4 w-4 text-destructive" />
+        </Button>
+      </div>
+    </div>
+  </div>
+);
+
+interface GroupHeaderProps {
+  group: IModifierGroup;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+const GroupHeader = ({
+  group,
+  onEdit,
+  onDelete
+}: GroupHeaderProps) => (
+  <div className="flex flex-1 items-center justify-between pr-4">
+    <div className="flex items-center gap-3 text-left">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+        <Settings className="h-5 w-5 text-primary" />
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold">{group.name}</h3>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          {group.isRequired && (
+            <Badge variant="outline" className="text-xs">
+              Обязательно
+            </Badge>
+          )}
+          <span>
+            Выбор: {group.minSelection}-{group.maxSelection}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div className="flex items-center gap-3">
+      <Badge variant="secondary" className="text-sm">
+        {group.modifiers?.length || 0} модификаторов
+      </Badge>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            Редактировать
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="text-destructive"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Удалить
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </div>
+);
+
+interface GroupContentProps {
+  group: IModifierGroup;
+  onEditModifier: (modifier: IModifier) => void;
+  onDeleteModifier: (id: number) => void;
+}
+
+const GroupContent = ({
+  group,
+  onEditModifier,
+  onDeleteModifier
+}: GroupContentProps) => (
+  <>
+    <Separator className="mb-4" />
+    <div className="space-y-3">
+      {group.modifiers && group.modifiers.length > 0 ? (
+        group.modifiers.map((modifier) => (
+          <ModifierItem
+            key={modifier.id}
+            modifier={modifier}
+            onEdit={onEditModifier}
+            onDelete={onDeleteModifier}
+          />
+        ))
+      ) : (
+        <p className="py-8 text-center text-sm text-muted-foreground">
+          Нет модификаторов в группе
+        </p>
+      )}
+      <CreateModifierDialog
+        modifierGroupId={group.id}
+        trigger={
+          <Button size="sm" variant="outline" className="mt-2 w-full">
+            <Plus className="mr-2 h-4 w-4" />
+            Добавить модификатор
+          </Button>
+        }
+      />
+    </div>
+  </>
+);
+
+interface ModifierGroupItemProps {
+  group: IModifierGroup;
+  onEditGroup: (group: IModifierGroup) => void;
+  onDeleteGroup: (id: number) => void;
+  onEditModifier: (modifier: IModifier) => void;
+  onDeleteModifier: (id: number) => void;
+}
+
+const ModifierGroupItem = ({
+  group,
+  onEditGroup,
+  onDeleteGroup,
+  onEditModifier,
+  onDeleteModifier
+}: ModifierGroupItemProps) => (
+  <AccordionItem
+    key={group.id}
+    value={group.id.toString()}
+    className="bg-card rounded-lg border"
+  >
+    <AccordionTrigger className="px-6 py-4 hover:no-underline">
+      <GroupHeader
+        group={group}
+        onEdit={() => onEditGroup(group)}
+        onDelete={() => onDeleteGroup(group.id)}
+      />
+    </AccordionTrigger>
+    <AccordionContent className="px-6 pb-4">
+      <GroupContent
+        group={group}
+        onEditModifier={onEditModifier}
+        onDeleteModifier={onDeleteModifier}
+      />
+    </AccordionContent>
+  </AccordionItem>
+);
+
+export default function ModifiersPage(): JSX.Element {
+  const [search, setSearch] = useState('');
+  const [editingGroup, setEditingGroup] = useState<IModifierGroup | null>(null);
+  const [editingModifier, setEditingModifier] = useState<IModifier | null>(
+    null
+  );
+
+  const { data: modifierGroups = [], isLoading } = useGetModifierGroups(
+    search ? { search } : undefined
+  );
+  const { mutate: deleteGroup } = useDeleteModifierGroup();
+  const { mutate: deleteModifier } = useDeleteModifier();
+
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <div className="w-full">
+          <BaseLoading />
+        </div>
+      </PageContainer>
+    );
+  }
+
+  const filteredGroups = search
+    ? modifierGroups.filter((group) =>
+        group.name.toLowerCase().includes(search.toLowerCase())
+      )
+    : modifierGroups;
+
+  return (
+    <PageContainer>
+      <div className="w-full space-y-6">
+        <PageHeader onCreateGroup={() => {}} />
+        <SearchBar value={search} onChange={setSearch} />
+
+        {modifierGroups.length > 0 && (
+          <ModifierGroupStats
+            totalGroups={modifierGroups.length}
+            requiredGroups={modifierGroups.filter((g) => g.isRequired).length}
+            totalModifiers={modifierGroups.reduce(
+              (sum, g) => sum + (g.modifiers?.length || 0),
+              0
+            )}
+          />
+        )}
+
+        {filteredGroups.length === 0 ? (
+          <EmptyState hasSearch={!!search} />
+        ) : (
+          <Accordion type="multiple" className="space-y-6">
+            {filteredGroups.map((group) => (
+              <ModifierGroupItem
+                key={group.id}
+                group={group}
+                onEditGroup={setEditingGroup}
+                onDeleteGroup={deleteGroup}
+                onEditModifier={setEditingModifier}
+                onDeleteModifier={deleteModifier}
+              />
+            ))}
+          </Accordion>
+        )}
+
+        {/* Update Dialogs */}
+        {editingGroup && (
+          <UpdateModifierGroupDialog
+            group={editingGroup}
+            isOpen={!!editingGroup}
+            onClose={() => setEditingGroup(null)}
+          />
+        )}
+
+        {editingModifier && (
+          <UpdateModifierDialog
+            modifier={editingModifier}
+            isOpen={!!editingModifier}
+            onClose={() => setEditingModifier(null)}
+          />
+        )}
+      </div>
+    </PageContainer>
+  );
+}
