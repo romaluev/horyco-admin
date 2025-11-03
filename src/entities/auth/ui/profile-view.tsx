@@ -32,7 +32,6 @@ import PasswordInput from '@/shared/ui/base/passsword-input';
 
 import { useAuthStore } from '@/entities/auth/model/store';
 
-
 import { authApi } from '../model/api';
 import { profileSchema } from '../model/contract';
 
@@ -62,10 +61,9 @@ export function ProfileView() {
       if (!user) return;
 
       const response = await authApi.updateProfile({
+        id: user.id,
         fullName: values.fullName,
-        phone: user.phone,
-        password: values.password,
-        branchId: user.branchId
+        ...(values.password && { password: values.password })
       });
 
       setUser(response);
@@ -83,9 +81,60 @@ export function ProfileView() {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      await authApi.attachAvatar(file);
-      me();
-      toast.success('Фото профиля успешно обновлено');
+      if (!user?.id) {
+        toast.error('Ошибка: пользователь не найден');
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Пожалуйста, выберите изображение');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Размер файла не должен превышать 5MB');
+        return;
+      }
+
+      const loadingToast = toast.loading('Загрузка фото...');
+
+      // Upload using presigned URL flow
+      const { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } =
+        await import('@/entities/file');
+
+      const presignedData = await requestPresignedUploadUrl({
+        entityType: 'EMPLOYEE',
+        entityId: user.id,
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        altText: user.fullName,
+      });
+
+      await uploadToPresignedUrl(presignedData.data.uploadUrl, file);
+
+      const response = await confirmUpload({
+        fileId: presignedData.data.fileId,
+        fileKey: presignedData.data.fileKey
+      });
+
+      // Get the photo URL
+      const photoUrl = response.variants.medium || response.variants.original;
+      if (photoUrl) {
+        // Update profile with the photo URL
+        await authApi.updateProfile({
+          id: user.id,
+          fullName: user.fullName,
+          photoUrl: photoUrl,
+        });
+
+        // Refresh user data
+        await me();
+        toast.dismiss(loadingToast);
+        toast.success('Фото профиля обновлено');
+      }
     } catch (error) {
       console.error('Error uploading avatar:', error);
       toast.error('Ошибка при загрузке фото');
@@ -119,7 +168,7 @@ export function ProfileView() {
                   alt={user.fullName}
                 />
                 <AvatarFallback className='text-lg'>
-                  {getNameInitials(user?.fullName) || <UploadIcon />}
+                  {getNameInitials(user.fullName) || <UploadIcon />}
                 </AvatarFallback>
               </Avatar>
               <label

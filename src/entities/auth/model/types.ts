@@ -114,6 +114,23 @@ export interface CompleteRegistrationResponse {
 }
 
 /**
+ * Token refresh request
+ */
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+/**
+ * Token refresh response
+ */
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+}
+
+/**
  * Error response structure
  */
 export interface ErrorResponse {
@@ -128,5 +145,5 @@ export interface IUser {
   fullName: string;
   password: string;
   phone: string;
-  photoUrl: null | string;
+  photoUrl?: string | null;
 }

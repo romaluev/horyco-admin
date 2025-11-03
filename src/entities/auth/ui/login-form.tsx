@@ -1,38 +1,36 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertCircle, Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { Button } from '@/shared/ui/base/button';
+import { BaseLoading } from '@/shared/ui'
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import PasswordInput from '@/shared/ui/base/passsword-input';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import PasswordInput from '@/shared/ui/base/passsword-input'
+import { PhoneInput } from '@/shared/ui/base/phone-input'
 
-import { useAuthStore } from '@/entities/auth/model/store';
-import { onboardingApi } from '@/entities/onboarding';
-
+import { useAuthStore } from '@/entities/auth/model/store'
 
 // Define the form schema with Zod
 const loginFormSchema = z.object({
@@ -43,32 +41,38 @@ const loginFormSchema = z.object({
   password: z
     .string()
     .min(4, { message: 'Password must be at least 6 characters' })
-    .max(100, { message: 'Password must be less than 100 characters' })
-});
+    .max(100, { message: 'Password must be less than 100 characters' }),
+})
 
-type LoginFormValues = z.infer<typeof loginFormSchema>;
+type LoginFormValues = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { login, isLoading, error, clearError, me } = useAuthStore();
-  const [generalError, setGeneralError] = useState<string | null>(null);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { login, isLoading, error, clearError, me } = useAuthStore()
+  const [generalError, setGeneralError] = useState<string | null>(null)
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
       phone: '',
-      password: ''
-    }
-  });
+      password: '',
+    },
+  })
 
   // Handle form submission
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues): Promise<void> => {
     try {
-      setGeneralError(null);
-      clearError();
-      await login(data.phone, data.password);
-      await me();
+      setGeneralError(null)
+      clearError()
+
+      // Step 1: Login and save tokens
+      await login(data.phone, data.password)
+
+      // Step 2: Show loading immediately and fetch user data
+      setIsRedirecting(true)
+      await me()
 
       // TODO: Uncomment when API is ready
       // Check onboarding status
@@ -99,8 +103,8 @@ const LoginForm = () => {
       //   console.log('Could not check onboarding status:', err);
       // }
 
-      // TEMPORARY: For testing UI, redirect to onboarding by default
-      router.push('/onboarding/business-info');
+      // Step 3: Redirect after user data is loaded
+      router.push('/')
 
       // Normal redirect logic for completed onboarding (currently unreachable)
       // const redirectPath = searchParams?.get('redirect');
@@ -115,31 +119,43 @@ const LoginForm = () => {
       //   router.push('/dashboard');
       // }
     } catch (error: any) {
+      setIsRedirecting(false)
       setGeneralError(
         error.response?.data?.message || 'Failed to login. Please try again.'
-      );
+      )
     }
-  };
+  }
+
+  // Show full-screen loading overlay while fetching user data
+  if (isRedirecting) {
+    return (
+      <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-4">
+          <BaseLoading />
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <Card className='mx-auto w-full max-w-md'>
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader>
-        <CardTitle className='text-2xl font-bold'>Sign In</CardTitle>
+        <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
         <CardDescription>Введите свои данные, чтобы войти</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {(error || generalError) && (
-              <Alert variant='destructive'>
-                <AlertCircle className='h-4 w-4' />
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error || generalError}</AlertDescription>
               </Alert>
             )}
 
             <FormField
               control={form.control}
-              name='phone'
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Телефон номер</FormLabel>
@@ -150,7 +166,7 @@ const LoginForm = () => {
                       limitMaxLength
                       countries={['UZ']}
                       {...field}
-                      disabled={isLoading}
+                      disabled={isLoading || isRedirecting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -160,17 +176,17 @@ const LoginForm = () => {
 
             <FormField
               control={form.control}
-              name='password'
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Пароль</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      type='password'
-                      placeholder='Введите свой пароль'
+                      type="password"
+                      placeholder="Введите свой пароль"
                       {...field}
-                      autoComplete='current-password'
-                      disabled={isLoading}
+                      autoComplete="current-password"
+                      disabled={isLoading || isRedirecting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -178,10 +194,14 @@ const LoginForm = () => {
               )}
             />
 
-            <Button type='submit' className='w-full' disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading || isRedirecting}
+            >
               {isLoading ? (
                 <>
-                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Вход...
                 </>
               ) : (
@@ -192,7 +212,7 @@ const LoginForm = () => {
         </Form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

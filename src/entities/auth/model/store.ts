@@ -61,16 +61,24 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   // Logout action
   logout: () => {
-    // Remove token from cookies
+    // Remove all tokens and expiration from cookies
     Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+    Cookies.remove('token_expires_at');
 
-    // Reset state
+    // Reset all auth state
     set({
       user: null,
       token: null,
       isAuthenticated: false,
+      isLoading: false,
       error: null
     });
+
+    // Redirect to login page
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth/sign-in';
+    }
   },
 
   // Clear error
@@ -86,17 +94,19 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         user: myProfile
       });
     } catch (error: any) {
-      toast.error('Не удалось получить данные о вас');
-      if (error?.response?.status === 401) {
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false
-        });
-        if (!window.location.href.includes('/auth/sign')) {
-          window.location.href = '/auth/sign-in';
-        }
+      // Don't show toast for 401 errors (handled by axios interceptor)
+      if (error?.response?.status !== 401) {
+        toast.error('Не удалось получить данные о вас');
       }
+
+      // Clear user state on any error (401 redirect handled by axios interceptor)
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false
+      });
+
+      throw error;
     }
   },
 
