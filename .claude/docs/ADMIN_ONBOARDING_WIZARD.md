@@ -9,16 +9,19 @@ This document explains the complete onboarding wizard that new restaurant owners
 ## 📋 Table of Contents
 
 1. [Overview](#overview)
-2. [Onboarding Progress Tracking](#onboarding-progress-tracking)
-3. [Step 0: Registration Complete](#step-0-registration-complete)
-4. [Step 1: Business Identity](#step-1-business-identity)
-5. [Step 2: Branch Setup](#step-2-branch-setup)
-6. [Step 3: Menu Template](#step-3-menu-template)
-7. [Step 4: Payment Methods](#step-4-payment-methods)
-8. [Step 5: Invite Staff (Optional)](#step-5-invite-staff-optional)
-9. [Step 6: Go Live](#step-6-go-live)
-10. [Frontend Implementation Guide](#frontend-implementation-guide)
-11. [API Endpoints](#api-endpoints)
+2. [⚡ Standardized Response Format](#-standardized-response-format-new)
+3. [Onboarding Progress Tracking](#onboarding-progress-tracking)
+4. [✅ Onboarding Validation (NEW)](#-onboarding-validation-new)
+5. [🔄 Reopen Step for Editing (NEW)](#-reopen-step-for-editing-new)
+6. [Step 0: Registration Complete](#step-0-registration-complete)
+7. [Step 1: Business Identity](#step-1-business-identity)
+8. [Step 2: Branch Setup](#step-2-branch-setup)
+9. [Step 3: Menu Template](#step-3-menu-template)
+10. [Step 4: Payment Methods](#step-4-payment-methods)
+11. [Step 5: Invite Staff (Optional)](#step-5-invite-staff-optional)
+12. [Step 6: Go Live](#step-6-go-live)
+13. [Frontend Implementation Guide](#frontend-implementation-guide)
+14. [API Endpoints](#api-endpoints)
 
 ---
 
@@ -84,6 +87,89 @@ Dashboard (System Ready)
 
 ---
 
+## ⚡ Standardized Response Format (NEW)
+
+### 🎯 All Step Endpoints Return Same Format
+
+**IMPORTANT**: As of the latest update, **ALL onboarding step endpoints now return the same standardized `OnboardingProgressResponseDto`**. This means:
+
+✅ **No more different response formats** - Every step endpoint returns identical structure
+✅ **Frontend can use single response handler** - One function handles all step responses
+✅ **No extra `/progress` calls needed** - All necessary data included in step response
+✅ **branchId available immediately** - Returned in response after branch setup
+✅ **tenantId always included** - Available in every response
+
+### Standard Response Structure
+
+All step endpoints (`/steps/business-identity`, `/steps/branch-setup`, `/steps/menu-setup`, etc.) return:
+
+```json
+{
+  "currentStep": "branch_setup",
+  "completedSteps": ["registration_complete", "business_identity"],
+  "isCompleted": false,
+  "completionPercentage": 29,
+  "stepData": {
+    "business_identity": {
+      "businessName": "Golden Dragon",
+      "completedAt": "2025-10-30T10:30:00Z"
+    }
+  },
+  "nextStep": "branch_setup",
+  "remainingSteps": ["branch_setup", "menu_template", "payment_setup", "staff_invited", "go_live"],
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T10:30:00Z",
+  "tenantId": 1,
+  "branchId": 5  // Available after branch setup, null before
+}
+```
+
+### Frontend Benefits
+
+**Before (Inconsistent)**:
+```typescript
+// Had to handle 3 different response types
+if (response.message) {
+  // Business identity or branch setup
+} else if (response.success) {
+  // Menu setup
+} else {
+  // Other steps
+}
+```
+
+**After (Consistent)**:
+```typescript
+// Single handler for ALL steps!
+function handleStepResponse(response: OnboardingProgressResponseDto) {
+  updateProgress(response);
+  if (response.branchId) {
+    saveBranchId(response.branchId);
+  }
+  navigateToStep(response.nextStep);
+}
+```
+
+### Key Fields
+
+- **`currentStep`**: Current onboarding step (use for navigation)
+- **`nextStep`**: Recommended next step to navigate to
+- **`completedSteps`**: Array of completed steps (use for progress indicator)
+- **`completionPercentage`**: 0-100 percentage (use for progress bar)
+- **`stepData`**: Step-specific data (e.g., menu stats, payment methods configured)
+- **`tenantId`**: Always present - tenant identifier
+- **`branchId`**: Available after branch setup step completes
+- **`remainingSteps`**: Steps left to complete
+
+### Migration Notes
+
+If you were using the old response formats:
+- Replace parsing of `{ message }` responses with `OnboardingProgressResponseDto`
+- Replace parsing of `{ success, categoriesCreated }` with `stepData.menu_template`
+- Remove extra calls to `/progress` between steps - data is in step response
+
+---
+
 ## Onboarding Progress Tracking
 
 ### Progress Bar UI
@@ -145,6 +231,806 @@ Response:
   "updatedAt": "2025-10-30T10:30:00Z"
 }
 ```
+
+---
+
+## ✅ Onboarding Validation (NEW)
+
+### 🎯 Purpose
+
+The validation endpoint allows frontend to check if onboarding can be completed **before** showing the "Complete Onboarding" button or attempting to call `/complete`. This provides better UX by:
+
+- ✅ Proactively showing "You're ready to go live!" vs "Missing: Menu Setup"
+- ✅ Showing specific missing steps instead of generic error messages
+- ✅ Avoiding 400 errors from failed `/complete` calls
+- ✅ Displaying accurate completion progress with skipped steps
+
+### When to Call Validation
+
+Call `GET /admin/onboarding/validation` in these scenarios:
+
+1. **Before showing "Complete Onboarding" button** - Check if all required steps are done
+2. **After completing each step** - Update UI to show remaining tasks
+3. **On wizard load** - Display current completion status
+4. **Before final step** - Verify readiness to go live
+
+### API Endpoint
+
+```
+GET /admin/onboarding/validation
+Headers: Authorization: Bearer {token}
+
+Response:
+{
+  "canComplete": true,
+  "missingSteps": [],
+  "completedSteps": [
+    "registration_complete",
+    "business_identity",
+    "branch_setup"
+  ],
+  "skippedSteps": ["menu_template"],
+  "completionPercentage": 100,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 4
+}
+```
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `canComplete` | boolean | Can the onboarding be completed? `true` if all required steps done |
+| `missingSteps` | string[] | Array of required steps that must be completed |
+| `completedSteps` | string[] | Array of steps actually completed (not skipped) |
+| `skippedSteps` | string[] | Array of steps that were skipped (count as completed) |
+| `completionPercentage` | number | 0-100 percentage based on required steps only |
+| `requiredStepsCount` | number | Total required steps (always 4) |
+| `completedStepsCount` | number | Total completed + skipped steps |
+
+### Required Steps Logic
+
+The validation checks these **4 required steps**:
+
+1. ✅ `REGISTRATION_COMPLETE` - Always completed during signup
+2. ✅ `BUSINESS_IDENTITY` - Must be completed
+3. ✅ `BRANCH_SETUP` - Must be completed
+4. ✅ `MENU_TEMPLATE` - Must be completed **OR** skipped
+
+**Optional steps** (don't block completion):
+- `PAYMENT_SETUP` - Can be skipped
+- `STAFF_INVITED` - Can be skipped
+
+**Important**: Skipped steps count as completed! If `MENU_TEMPLATE` is skipped, it will appear in `skippedSteps` array and will **NOT** be in `missingSteps`.
+
+### Example Validation Responses
+
+#### Scenario 1: New User (Just Registered)
+
+```json
+{
+  "canComplete": false,
+  "missingSteps": [
+    "business_identity",
+    "branch_setup",
+    "menu_template"
+  ],
+  "completedSteps": ["registration_complete"],
+  "skippedSteps": [],
+  "completionPercentage": 25,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 1
+}
+```
+
+**UI Display**: "25% Complete - Missing: Business Identity, Branch Setup, Menu Template"
+
+#### Scenario 2: Mid-Onboarding (50% Complete)
+
+```json
+{
+  "canComplete": false,
+  "missingSteps": [
+    "branch_setup",
+    "menu_template"
+  ],
+  "completedSteps": [
+    "registration_complete",
+    "business_identity"
+  ],
+  "skippedSteps": [],
+  "completionPercentage": 50,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 2
+}
+```
+
+**UI Display**: "50% Complete - Missing: Branch Setup, Menu Template"
+
+#### Scenario 3: Ready to Complete (All Done)
+
+```json
+{
+  "canComplete": true,
+  "missingSteps": [],
+  "completedSteps": [
+    "registration_complete",
+    "business_identity",
+    "branch_setup",
+    "menu_template"
+  ],
+  "skippedSteps": [],
+  "completionPercentage": 100,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 4
+}
+```
+
+**UI Display**: "🎉 You're ready to go live! - Complete Onboarding"
+
+#### Scenario 4: With Skipped Menu (Still Ready)
+
+```json
+{
+  "canComplete": true,
+  "missingSteps": [],
+  "completedSteps": [
+    "registration_complete",
+    "business_identity",
+    "branch_setup"
+  ],
+  "skippedSteps": ["menu_template"],
+  "completionPercentage": 100,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 4
+}
+```
+
+**UI Display**: "🎉 You're ready to go live! (Menu will be added later) - Complete Onboarding"
+
+### Frontend Implementation
+
+#### Basic Usage
+
+```typescript
+async function checkOnboardingValidation() {
+  const response = await api.get('/admin/onboarding/validation');
+
+  if (response.canComplete) {
+    // Show "Complete Onboarding" button
+    setShowCompleteButton(true);
+    setStatusMessage("You're ready to go live!");
+  } else {
+    // Hide "Complete Onboarding" button
+    setShowCompleteButton(false);
+
+    // Show specific missing steps
+    const missingList = response.missingSteps
+      .map(step => formatStepName(step))
+      .join(', ');
+    setStatusMessage(`Missing: ${missingList}`);
+  }
+
+  // Update progress bar
+  setCompletionPercentage(response.completionPercentage);
+}
+```
+
+#### Complete Validation Workflow
+
+```typescript
+// 1. On wizard load
+useEffect(() => {
+  checkOnboardingValidation();
+}, []);
+
+// 2. After completing each step
+async function handleStepComplete(stepEndpoint: string, data: any) {
+  const response = await api.post(stepEndpoint, data);
+
+  // Update progress
+  setProgress(response);
+
+  // Check validation after step completion
+  const validation = await api.get('/admin/onboarding/validation');
+  updateValidationUI(validation);
+
+  // Navigate to next step
+  navigateToStep(response.nextStep);
+}
+
+// 3. Before showing "Complete" button
+function renderCompleteButton() {
+  if (!validation.canComplete) {
+    return (
+      <Button disabled>
+        Complete Onboarding
+        <Tooltip>
+          Missing steps: {validation.missingSteps.join(', ')}
+        </Tooltip>
+      </Button>
+    );
+  }
+
+  return (
+    <Button onClick={completeOnboarding}>
+      🎉 Complete Onboarding
+    </Button>
+  );
+}
+
+// 4. Display validation status
+function renderValidationStatus() {
+  return (
+    <div className="validation-status">
+      <ProgressBar percentage={validation.completionPercentage} />
+
+      <div className="status-details">
+        {validation.canComplete ? (
+          <Alert type="success">
+            ✅ All required steps completed! Ready to go live.
+          </Alert>
+        ) : (
+          <Alert type="info">
+            📋 Complete these steps to go live:
+            <ul>
+              {validation.missingSteps.map(step => (
+                <li key={step}>{formatStepName(step)}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+
+        {validation.skippedSteps.length > 0 && (
+          <div className="skipped-info">
+            ℹ️ Skipped: {validation.skippedSteps.map(formatStepName).join(', ')}
+            <br />
+            You can configure these later in Settings.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+#### Helper Function for Step Names
+
+```typescript
+function formatStepName(step: string): string {
+  const names: Record<string, string> = {
+    'registration_complete': 'Registration',
+    'business_identity': 'Business Identity',
+    'branch_setup': 'Branch Setup',
+    'menu_template': 'Menu Setup',
+    'payment_setup': 'Payment Methods',
+    'staff_invited': 'Staff Invitation',
+    'go_live': 'Go Live'
+  };
+  return names[step] || step;
+}
+```
+
+### Validation vs Complete Endpoint
+
+**Important**: The validation logic matches the `/complete` endpoint requirements exactly:
+
+```typescript
+// Validation says canComplete = true
+const validation = await api.get('/admin/onboarding/validation');
+if (validation.canComplete) {
+  // This will succeed ✅
+  await api.post('/admin/onboarding/complete');
+}
+
+// Validation says canComplete = false
+if (!validation.canComplete) {
+  // This will fail with 400 ❌
+  await api.post('/admin/onboarding/complete');
+  // Error: "Cannot complete onboarding. Missing required steps: menu_template"
+}
+```
+
+### Best Practices
+
+1. **Always check validation before showing complete button** - Better UX than showing error after click
+2. **Update validation after each step** - Keep UI in sync with backend state
+3. **Show specific missing steps** - Don't just say "incomplete", tell them what's needed
+4. **Highlight skipped steps** - Let users know they can configure these later
+5. **Use completion percentage for progress bar** - More accurate than step count
+6. **Handle skipped steps properly** - They count as completed for validation purposes
+
+### Common Questions
+
+#### Q: What if I call `/complete` without checking validation first?
+
+**A**: The `/complete` endpoint will return a 400 error with the same missing steps information. However, it's better UX to check validation first and prevent the error.
+
+#### Q: Do skipped steps block completion?
+
+**A**: No! Skipped steps count as completed. If you skip `MENU_TEMPLATE`, `canComplete` will be `true` (assuming other required steps are done).
+
+#### Q: Can I rely on validation for all steps?
+
+**A**: Yes! The validation checks the exact same logic as `/complete`. If `canComplete = true`, the `/complete` call will succeed.
+
+#### Q: How often should I call validation?
+
+**A**:
+- On wizard load (to show current status)
+- After completing each step (to update progress)
+- Before showing the "Complete" button (to verify readiness)
+
+You don't need to call it on every render - cache the result and update only when progress changes.
+
+---
+
+## 🔄 Reopen Step for Editing (NEW)
+
+### 🎯 Purpose
+
+The reopen step feature allows users to go back and edit previously completed onboarding steps without losing all their progress. This significantly improves UX for users who:
+
+- Made a typo in business name (step 2) after completing steps 3-5
+- Need to change branch address after menu is configured
+- Want to update business type and see different menu templates
+- Realize they need to modify any completed step
+
+**Without reopen**: Users would have to reset entire onboarding or contact support
+**With reopen**: Click "Edit" on any completed step, fix the data, and re-complete subsequent steps
+
+### 🔑 Key Concepts
+
+#### Cascade Invalidation
+
+Reopening a step **automatically invalidates all subsequent steps** to maintain data consistency:
+
+```
+Completed Steps: [1, 2, 3, 4, 5]
+                      ↓
+Reopen Step 2 (BUSINESS_IDENTITY)
+                      ↓
+Completed Steps: [1] only
+Steps 2-5 become incomplete
+```
+
+**Why cascade?** Because later steps may depend on earlier step data:
+- Menu templates depend on business type (step 2)
+- Branch settings may affect menu availability
+- Payment settings might change based on business type
+
+#### Data Preservation
+
+**Important**: Step data is **preserved** when reopening, not deleted. This allows users to:
+- See their previous answers when re-editing
+- Make small corrections without re-entering everything
+- Understand what they configured before
+
+```json
+// After reopening BUSINESS_IDENTITY
+{
+  "stepData": {
+    "business_identity": {
+      "businessName": "Golden Dragon",  // ← Still here!
+      "businessType": "restaurant",      // ← Available for editing
+      "slug": "golden-dragon",
+      "completedAt": "2025-10-30T10:30:00Z"
+    },
+    "branch_setup": {
+      "branchName": "Main Branch",  // ← Also preserved (even though step invalidated)
+      "address": "123 Main St"
+    }
+  }
+}
+```
+
+### Which Steps Can Be Reopened?
+
+| Step | Can Reopen? | Consequence |
+|------|-------------|-------------|
+| `REGISTRATION_COMPLETE` | ❌ No | Cannot undo registration |
+| `BUSINESS_IDENTITY` | ✅ Yes | Invalidates steps 3-6 (BRANCH_SETUP, MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
+| `BRANCH_SETUP` | ✅ Yes | Invalidates steps 4-6 (MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
+| `MENU_TEMPLATE` | ✅ Yes | Invalidates steps 5-6 (PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
+| `PAYMENT_SETUP` | ✅ Yes | Invalidates step 6 (STAFF_INVITED, GO_LIVE) |
+| `STAFF_INVITED` | ✅ Yes | Invalidates step 7 (GO_LIVE only) |
+| `GO_LIVE` | ✅ Yes | Marks onboarding as incomplete, allows re-editing |
+
+**Note**: Can only reopen steps that were previously completed. Cannot reopen steps that were never completed.
+
+### API Endpoint
+
+```
+PATCH /admin/onboarding/steps/:step/reopen
+Headers: Authorization: Bearer {token}
+
+Response: OnboardingProgressResponseDto
+{
+  "currentStep": "business_identity",  // ← Updated to reopened step
+  "completedSteps": ["registration_complete"],  // ← Subsequent steps removed
+  "isCompleted": false,
+  "completionPercentage": 14,  // ← Recalculated
+  "stepData": {
+    "business_identity": {
+      "businessName": "Golden Dragon",  // ← Preserved for re-editing
+      "businessType": "restaurant",
+      "slug": "golden-dragon"
+    },
+    "branch_setup": { ... }  // ← Still available even though step invalidated
+  },
+  ...
+}
+```
+
+### Step Order & Invalidation Examples
+
+#### Example 1: Reopen Step 2 (BUSINESS_IDENTITY)
+
+**Before**:
+```
+Completed: [1:REGISTRATION, 2:BUSINESS, 3:BRANCH, 4:MENU, 5:PAYMENT]
+Current Step: STAFF_INVITED (step 6)
+```
+
+**Reopen BUSINESS_IDENTITY (step 2)**:
+```
+PATCH /admin/onboarding/steps/business_identity/reopen
+
+Completed: [1:REGISTRATION] only
+Current Step: BUSINESS_IDENTITY (step 2)
+Invalidated: [3:BRANCH, 4:MENU, 5:PAYMENT, 6:STAFF]
+```
+
+**User must now re-complete**: Steps 2, 3, 4, 5, 6
+
+#### Example 2: Reopen Step 4 (MENU_TEMPLATE)
+
+**Before**:
+```
+Completed: [1, 2, 3, 4, 5, 6, 7] (All done, onboarding completed)
+isCompleted: true
+```
+
+**Reopen MENU_TEMPLATE (step 4)**:
+```
+PATCH /admin/onboarding/steps/menu_template/reopen
+
+Completed: [1, 2, 3] only
+Current Step: MENU_TEMPLATE (step 4)
+Invalidated: [5:PAYMENT, 6:STAFF, 7:GO_LIVE]
+isCompleted: false  // ← Onboarding no longer complete
+```
+
+**User must now re-complete**: Steps 4, 5, 6, 7
+
+#### Example 3: Reopen Last Step (STAFF_INVITED)
+
+**Before**:
+```
+Completed: [1, 2, 3, 4, 5, 6]
+Current Step: GO_LIVE (step 7)
+```
+
+**Reopen STAFF_INVITED (step 6)**:
+```
+PATCH /admin/onboarding/steps/staff_invited/reopen
+
+Completed: [1, 2, 3, 4, 5] only
+Current Step: STAFF_INVITED (step 6)
+Invalidated: [7:GO_LIVE] only
+```
+
+**User must now re-complete**: Steps 6, 7
+
+### Error Responses
+
+#### Cannot Reopen REGISTRATION_COMPLETE
+
+```json
+// Request
+PATCH /admin/onboarding/steps/registration_complete/reopen
+
+// Response: 400 Bad Request
+{
+  "statusCode": 400,
+  "message": "Cannot reopen REGISTRATION_COMPLETE step. Registration cannot be undone.",
+  "error": "Bad Request"
+}
+```
+
+#### Cannot Reopen Uncompleted Step
+
+```json
+// Request: Trying to reopen PAYMENT_SETUP that was skipped (not completed)
+PATCH /admin/onboarding/steps/payment_setup/reopen
+
+// Response: 400 Bad Request
+{
+  "statusCode": 400,
+  "message": "Cannot reopen step 'payment_setup' - it was never completed. Only completed steps can be reopened.",
+  "error": "Bad Request"
+}
+```
+
+#### Invalid Step Name
+
+```json
+// Request
+PATCH /admin/onboarding/steps/invalid_step/reopen
+
+// Response: 400 Bad Request
+{
+  "statusCode": 400,
+  "message": "Invalid onboarding step: invalid_step",
+  "error": "Bad Request"
+}
+```
+
+### Frontend Implementation
+
+#### Basic Usage
+
+```typescript
+async function reopenStep(step: OnboardingStep) {
+  try {
+    const response = await api.patch(`/admin/onboarding/steps/${step}/reopen`);
+
+    // Update progress
+    setProgress(response);
+
+    // Navigate to reopened step
+    navigateToStep(response.currentStep);
+
+    // Show success message
+    toast.success(`Reopened ${formatStepName(step)} for editing. Subsequent steps will need to be re-completed.`);
+
+    // Update completion percentage
+    setCompletionPercentage(response.completionPercentage);
+
+  } catch (error) {
+    if (error.response?.status === 400) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error('Failed to reopen step. Please try again.');
+    }
+  }
+}
+```
+
+#### Complete Reopen Workflow
+
+```typescript
+// 1. Show "Edit" button next to completed steps
+function renderCompletedStep(step: OnboardingStep) {
+  const canReopen = step !== OnboardingStep.REGISTRATION_COMPLETE;
+
+  return (
+    <div className="completed-step">
+      <CheckIcon /> {formatStepName(step)}
+
+      {canReopen && (
+        <Button onClick={() => handleReopenStep(step)} variant="ghost">
+          Edit
+        </Button>
+      )}
+    </div>
+  );
+}
+
+// 2. Confirm before reopening (warn about invalidation)
+async function handleReopenStep(step: OnboardingStep) {
+  // Calculate which steps will be invalidated
+  const subsequentSteps = getSubsequentSteps(step);
+
+  if (subsequentSteps.length > 0) {
+    const confirmed = await confirm({
+      title: 'Reopen step for editing?',
+      message: `Reopening "${formatStepName(step)}" will mark the following steps as incomplete:\n\n` +
+               subsequentSteps.map(s => `• ${formatStepName(s)}`).join('\n') +
+               `\n\nYou'll need to re-complete these steps. Your previous answers will be preserved for re-editing.`,
+      confirmText: 'Yes, Edit Step',
+      cancelText: 'Cancel'
+    });
+
+    if (!confirmed) return;
+  }
+
+  await reopenStep(step);
+}
+
+// 3. Helper to calculate subsequent steps
+function getSubsequentSteps(step: OnboardingStep): OnboardingStep[] {
+  const allSteps = [
+    OnboardingStep.REGISTRATION_COMPLETE,
+    OnboardingStep.BUSINESS_IDENTITY,
+    OnboardingStep.BRANCH_SETUP,
+    OnboardingStep.MENU_TEMPLATE,
+    OnboardingStep.PAYMENT_SETUP,
+    OnboardingStep.STAFF_INVITED,
+    OnboardingStep.GO_LIVE,
+  ];
+
+  const index = allSteps.indexOf(step);
+  return allSteps.slice(index + 1);
+}
+
+// 4. Show warning in UI
+function renderReopenWarning() {
+  return (
+    <Alert type="warning">
+      ⚠️ Editing this step will invalidate all steps completed after it.
+      Your previous answers will be preserved.
+    </Alert>
+  );
+}
+```
+
+#### Progress Sidebar with Edit Buttons
+
+```tsx
+function OnboardingProgressSidebar({ progress }: { progress: OnboardingProgressResponseDto }) {
+  const steps = [
+    { key: OnboardingStep.REGISTRATION_COMPLETE, label: 'Registration' },
+    { key: OnboardingStep.BUSINESS_IDENTITY, label: 'Business Identity' },
+    { key: OnboardingStep.BRANCH_SETUP, label: 'Branch Setup' },
+    { key: OnboardingStep.MENU_TEMPLATE, label: 'Menu Setup' },
+    { key: OnboardingStep.PAYMENT_SETUP, label: 'Payment Methods' },
+    { key: OnboardingStep.STAFF_INVITED, label: 'Staff Invitation' },
+    { key: OnboardingStep.GO_LIVE, label: 'Go Live' },
+  ];
+
+  return (
+    <div className="progress-sidebar">
+      {steps.map((step, index) => {
+        const isCompleted = progress.completedSteps.includes(step.key);
+        const isCurrent = progress.currentStep === step.key;
+        const canReopen = isCompleted && step.key !== OnboardingStep.REGISTRATION_COMPLETE;
+
+        return (
+          <div key={step.key} className={`step-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
+            <div className="step-indicator">
+              {isCompleted ? <CheckIcon /> : <span>{index + 1}</span>}
+            </div>
+
+            <div className="step-content">
+              <div className="step-label">{step.label}</div>
+
+              {isCompleted && canReopen && (
+                <button
+                  onClick={() => handleReopenStep(step.key)}
+                  className="edit-button"
+                >
+                  Edit
+                </button>
+              )}
+
+              {isCurrent && <span className="current-badge">Current</span>}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+### UI/UX Recommendations
+
+#### 1. Clear Visual Indication
+
+Show "Edit" buttons prominently on completed steps:
+
+```
+✅ Registration Complete                [Cannot Edit]
+✅ Business Identity                    [Edit ✏️]
+✅ Branch Setup                         [Edit ✏️]
+→  Menu Setup                           [In Progress]
+   Payment Methods                      [Not Started]
+```
+
+#### 2. Warning Before Reopening
+
+Always warn users about cascade invalidation:
+
+```
+┌─────────────────────────────────────────────────┐
+│  ⚠️ Edit Business Identity?                     │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  Editing this step will mark the following      │
+│  steps as incomplete:                           │
+│                                                 │
+│  • Branch Setup                                 │
+│  • Menu Setup                                   │
+│  • Payment Methods                              │
+│                                                 │
+│  You'll need to re-complete these steps.        │
+│  Your previous answers will be saved.           │
+│                                                 │
+│  [ Cancel ]        [ Yes, Edit Step ]           │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+#### 3. Pre-fill Forms with Existing Data
+
+When user reopens a step, pre-populate form with preserved step data:
+
+```typescript
+// Fetch current progress
+const progress = await api.get('/admin/onboarding/progress');
+
+// Pre-fill business identity form
+const businessData = progress.stepData.business_identity;
+if (businessData) {
+  form.setValue('businessName', businessData.businessName);
+  form.setValue('businessType', businessData.businessType);
+  form.setValue('slug', businessData.slug);
+}
+```
+
+#### 4. Highlight Invalidated Steps
+
+After reopening, visually show which steps need re-completion:
+
+```
+✅ Registration Complete
+→  Business Identity                    [Editing...]
+⚠️ Branch Setup                        [Needs Re-completion]
+⚠️ Menu Setup                          [Needs Re-completion]
+⚠️ Payment Methods                     [Needs Re-completion]
+```
+
+### Re-completion Workflow
+
+After reopening a step, users must re-complete it and all subsequent steps:
+
+```
+1. User completes steps 1-5
+2. User realizes business name has typo
+3. User clicks "Edit" on Business Identity (step 2)
+   → Steps 3-5 become incomplete
+   → Step data preserved
+4. User fixes business name
+5. User clicks "Next" → re-completes step 2
+6. User re-completes step 3 (branch setup)
+   → Can use preserved data or change it
+7. User re-completes step 4 (menu)
+8. User re-completes step 5 (payment)
+9. Onboarding progress restored!
+```
+
+### Best Practices
+
+1. **Always show warning** - Users should understand cascade invalidation before confirming
+2. **Preserve data** - Pre-fill forms with existing stepData so users can make quick corrections
+3. **Visual feedback** - Clearly indicate which steps need re-completion after reopen
+4. **Cannot reopen registration** - Disable "Edit" button for REGISTRATION_COMPLETE step
+5. **Only completed steps** - Cannot reopen steps that were never completed or were skipped
+6. **Completion percentage updates** - Progress bar should reflect invalidated steps
+7. **Handle onboarding complete** - If user reopens GO_LIVE, `isCompleted` becomes `false`
+
+### Common Questions
+
+#### Q: What happens to my data when I reopen a step?
+
+**A**: Your data is **preserved**, not deleted. All `stepData` remains available so you can see your previous answers and make corrections without re-entering everything.
+
+#### Q: Can I reopen a step I skipped?
+
+**A**: No. You can only reopen steps that were actually completed. Skipped steps can be completed normally by navigating to them.
+
+#### Q: What if I reopen step 2 but don't want to re-complete step 4?
+
+**A**: Unfortunately, you must re-complete all subsequent steps after the reopened step. This ensures data consistency (e.g., menu templates match business type).
+
+#### Q: Can I undo a reopen?
+
+**A**: No direct "undo" feature, but you can simply re-complete the reopened step without making changes, then re-complete subsequent steps using the preserved data.
+
+#### Q: Why can't I reopen REGISTRATION_COMPLETE?
+
+**A**: Registration creates fundamental tenant data (phone number, initial tenant record, owner account). This cannot be undone without deleting the entire tenant, which would require contacting support.
 
 ---
 
@@ -225,9 +1111,19 @@ Headers: Authorization: Bearer {token}
   "logoUrl": "https://cdn.oshlab.uz/tenants/logos/golden-dragon.png"
 }
 
-Response:
+Response: OnboardingProgressResponseDto
 {
-  "message": "Business identity updated successfully"
+  "currentStep": "branch_setup",
+  "completedSteps": ["registration_complete", "business_identity"],
+  "isCompleted": false,
+  "completionPercentage": 29,
+  "stepData": { ... },
+  "nextStep": "branch_setup",
+  "remainingSteps": ["branch_setup", "menu_template", ...],
+  "tenantId": 1,
+  "branchId": null,
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T10:30:00Z"
 }
 ```
 
@@ -332,9 +1228,19 @@ Headers: Authorization: Bearer {token}
   "takeawayEnabled": true
 }
 
-Response:
+Response: OnboardingProgressResponseDto
 {
-  "message": "Branch setup updated successfully"
+  "currentStep": "menu_template",
+  "completedSteps": ["registration_complete", "business_identity", "branch_setup"],
+  "isCompleted": false,
+  "completionPercentage": 43,
+  "stepData": { ... },
+  "nextStep": "menu_template",
+  "remainingSteps": ["menu_template", "payment_setup", ...],
+  "tenantId": 1,
+  "branchId": 5,  // ← Available immediately after this step!
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T11:00:00Z"
 }
 ```
 
@@ -485,18 +1391,38 @@ Headers: Authorization: Bearer {token}
   ]
 }
 
-Response:
+Response: OnboardingProgressResponseDto
 {
-  "success": true,
-  "categoriesCreated": 1,
-  "productsCreated": 2
+  "currentStep": "payment_setup",
+  "completedSteps": ["registration_complete", "business_identity", "branch_setup", "menu_template"],
+  "isCompleted": false,
+  "completionPercentage": 57,
+  "stepData": {
+    "menu_template": {
+      "success": true,
+      "categoriesCreated": 1,
+      "productsCreated": 2,
+      "completedAt": "2025-10-30T11:30:00Z"
+    }
+  },
+  "nextStep": "payment_setup",
+  "remainingSteps": ["payment_setup", "staff_invited", "go_live"],
+  "tenantId": 1,
+  "branchId": 5,
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T11:30:00Z"
 }
 
-// 3. Or skip this step
-POST /admin/onboarding/steps/menu-skip
+// 3. Or skip this step using unified skip endpoint
+PATCH /admin/onboarding/skip-step
 Headers: Authorization: Bearer {token}
 
-Response: OnboardingProgressResponseDto with updated stepData
+{
+  "step": "menu_template",
+  "reason": "Will add menu items manually later"
+}
+
+Response: OnboardingProgressResponseDto (with menu_template marked as skipped in stepData)
 ```
 
 ### Frontend Implementation Notes
@@ -504,7 +1430,7 @@ Response: OnboardingProgressResponseDto with updated stepData
 1. **Load Defaults**: Call `GET /admin/onboarding/default-products?businessType=restaurant`
 2. **Let User Customize**: Display defaults in editable form
 3. **Submit Menu**: Send customized structure to `POST /admin/onboarding/steps/menu-setup`
-4. **Or Skip**: Call `POST /admin/onboarding/steps/menu-skip` to start with empty menu
+4. **Or Skip**: Call `PATCH /admin/onboarding/skip-step` with `step: "menu_template"` to start with empty menu
 
 **Validation**:
 - Categories array required (at least one)
@@ -865,16 +1791,35 @@ Response: OnboardingProgressResponseDto
      - `staff_invited` → Staff Invite Form
      - `go_live` → Final Summary Screen
 
-3. **Step Completion**:
+3. **Step Completion (NEW - Standardized)**:
    - POST to appropriate endpoint based on current step
-   - Update local progress state with response
-   - Show success notification
-   - Handle errors appropriately
+   - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
+   - Extract `branchId` from response (available after branch setup)
+   - Extract `tenantId` from response (always available)
+   - Navigate using `response.nextStep` field
+   - Update progress bar using `response.completionPercentage`
+   - **No need to call `/progress` separately** - data is in step response!
 
-4. **Skip Functionality**:
-   - PATCH to `/admin/onboarding/skip-step` with step name and reason
-   - Only `payment_setup` and `staff_invited` can be skipped
-   - Required steps (`business_identity`, `branch_setup`, `menu_template`) cannot be skipped
+4. **Simplified Response Handler (NEW)**:
+   ```typescript
+   async function handleStepComplete(stepEndpoint: string, data: any) {
+     const response = await api.post(stepEndpoint, data);
+     // response is always OnboardingProgressResponseDto
+     setProgress(response);
+     if (response.branchId) {
+       setBranchId(response.branchId); // Available after branch setup
+     }
+     navigateToStep(response.nextStep);
+     updateProgressBar(response.completionPercentage);
+   }
+   ```
+
+5. **Skip Functionality**:
+   - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
+   - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
+   - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
+   - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
+   - Skipped steps are marked as completed with skip metadata in `stepData`
    - Update progress and move to next step on success
 
 ---
@@ -887,17 +1832,30 @@ Response: OnboardingProgressResponseDto
 // Get onboarding progress
 GET /admin/onboarding/progress
 
+// Validate if onboarding can be completed (NEW)
+GET /admin/onboarding/validation
+
 // Complete specific steps
 POST /admin/onboarding/steps/business-identity
 POST /admin/onboarding/steps/branch-setup
 POST /admin/onboarding/steps/menu-setup
-POST /admin/onboarding/steps/menu-skip
 POST /admin/onboarding/steps/payment-setup
 POST /admin/onboarding/steps/staff-invite
 
-// Skip optional step
+// Reopen a completed step for editing (NEW)
+PATCH /admin/onboarding/steps/:step/reopen
+Path Params: {
+  step: "business_identity" | "branch_setup" | "menu_template" |
+        "payment_setup" | "staff_invited" | "go_live"
+}
+Note: Cannot reopen "registration_complete"
+
+// Skip optional steps (MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED)
 PATCH /admin/onboarding/skip-step
-Body: { step, reason }
+Body: {
+  step: "menu_template" | "payment_setup" | "staff_invited",
+  reason?: string  // Optional
+}
 
 // Complete entire onboarding
 POST /admin/onboarding/complete
@@ -916,14 +1874,22 @@ GET /admin/onboarding/default-products?businessType=restaurant
 
 ### Q: Can I go back and change previous steps?
 
-**Yes**. All settings can be modified later in:
-- Business Settings
-- Branch Management
-- Menu Management
-- Staff Management
-- Payment Settings
+**Yes, in two ways**:
 
-Onboarding wizard is just for initial setup.
+1. **During onboarding** - Use the reopen step feature:
+   - Click "Edit" button next to any completed step
+   - Make your changes
+   - Re-complete subsequent steps
+   - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
+
+2. **After onboarding** - Modify settings in the main admin panel:
+   - Business Settings
+   - Branch Management
+   - Menu Management
+   - Staff Management
+   - Payment Settings
+
+Onboarding wizard is just for initial setup - all configurations can be changed anytime.
 
 ### Q: What happens if I close the browser during onboarding?
 
@@ -936,13 +1902,17 @@ Onboarding wizard is just for initial setup.
 ### Q: Can I skip the entire onboarding?
 
 **No**. Required steps must be completed:
+- Registration Complete (auto-completed during signup)
 - Business Identity
 - Branch Setup
-- Menu Template
+- Go Live (final step)
 
-Optional steps can be skipped:
-- Payment Setup
-- Staff Invites
+Optional steps can be skipped using `PATCH /admin/onboarding/skip-step`:
+- **Menu Template** - Start with empty menu, add products later
+- **Payment Setup** - Accept only cash/card, configure gateways later
+- **Staff Invites** - Add employees later in Staff Management
+
+Note: The old `/steps/menu-skip` endpoint has been removed. Use the unified `/skip-step` endpoint for all optional steps.
 
 ### Q: What if I choose the wrong menu template?
 

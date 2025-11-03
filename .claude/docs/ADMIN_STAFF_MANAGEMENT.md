@@ -506,9 +506,26 @@ Request Body:
 ### Employee Management
 
 ```
-// List all employees
+// List all employees with search, filtering, and pagination
 GET /admin/staff/employees
-Query params: ?branchId=10&roleId=2&status=active
+Query params:
+  - search: string (search by name or phone)
+  - roleId: number (filter by role)
+  - isActive: boolean (filter by active status)
+  - branchId: number (filter by assigned branch)
+  - page: number (default: 1)
+  - limit: number (default: 20, max: 100)
+Response: {
+  data: Employee[],
+  meta: {
+    total: number,
+    page: number,
+    limit: number,
+    totalPages: number,
+    hasNextPage: boolean,
+    hasPreviousPage: boolean
+  }
+}
 
 // Get employee details
 GET /admin/staff/employees/:id
@@ -516,6 +533,24 @@ GET /admin/staff/employees/:id
 // Create employee
 POST /admin/staff/employees
 Body: CreateEmployeeDto
+Note: Validates branchIds exist and role allows multi-branch assignment
+
+// Bulk import employees from CSV
+POST /admin/staff/employees/bulk-import
+Content-Type: multipart/form-data
+Body: file (CSV with columns: fullName, phone, password, roleIds, branchIds)
+Response: {
+  total: number,
+  success: number,
+  failed: number,
+  results: [
+    { row: number, success: boolean, employeeId?: number, error?: string }
+  ]
+}
+Limits:
+  - Max file size: 5MB
+  - Max rows: 1000 employees per import
+  - Partial success supported (some can succeed while others fail)
 
 // Update employee
 PATCH /admin/staff/employees/:id
@@ -533,6 +568,7 @@ PATCH /admin/staff/employees/:id/deactivate
 // Assign branches to employee
 PATCH /admin/staff/employees/:id/branches
 Body: { branchIds: [10, 11] }
+Note: Validates all branchIds exist and role allows multi-branch assignment
 
 // Set active branch
 PATCH /admin/staff/employees/:id/active-branch/:branchId
@@ -540,30 +576,61 @@ PATCH /admin/staff/employees/:id/active-branch/:branchId
 // Change password
 PATCH /admin/staff/employees/:id/password
 Body: { currentPassword, newPassword }
+Security: Requires current password if changing own password,
+         or admin permission to change another employee's password
 
-// Get employees by branch
+// Get employees by branch (DEPRECATED)
 GET /admin/staff/employees/branch/:branchId
+Use instead: GET /admin/staff/employees?branchId=:id
 ```
 
 ### Role Management
 
 ```
-// List all roles
+// List all roles with optional pagination
 GET /admin/staff/roles
+Query params:
+  - page: number (optional, default: returns all)
+  - limit: number (optional, default: 50, max: 100)
+Response (without pagination): Role[]
+Response (with pagination): {
+  data: Role[],
+  meta: { total, page, limit, totalPages, hasNextPage, hasPreviousPage }
+}
 
 // Get role details
 GET /admin/staff/roles/:id
 
 // Create custom role
 POST /admin/staff/roles
-Body: { name, description, permissionIds }
+Body: {
+  name: string,
+  description: string,
+  permissionIds: number[],
+  branchRestriction?: 'single' | 'multiple' (default: 'multiple')
+}
+Note: branchRestriction controls whether employees with this role
+      can be assigned to multiple branches
 
 // Update role
 PATCH /admin/staff/roles/:id
-Body: { name?, description?, permissionIds? }
+Body: { name?, description?, permissionIds?, branchRestriction? }
 
 // Delete role
 DELETE /admin/staff/roles/:id
+
+// Add single permission to role
+POST /admin/staff/roles/:id/permissions/:permissionId
+Response: Updated role with all permissions
+
+// Remove single permission from role
+DELETE /admin/staff/roles/:id/permissions/:permissionId
+Response: Updated role with all permissions
+
+// Replace all permissions in role
+PATCH /admin/staff/roles/:id/permissions
+Body: { permissionIds: number[] }
+Response: Updated role with new permission set
 ```
 
 ### Permission Management
@@ -579,6 +646,372 @@ Returns: { orders: [...], menu: [...], staff: [...] }
 // Get system permissions only
 GET /admin/staff/permissions/system
 ```
+
+---
+
+## New Features (Phase 7 Updates)
+
+### 1. Employee Search, Filtering, and Pagination (Task 7.2)
+
+**Purpose**: Efficiently manage large employee lists with search and filtering capabilities.
+
+**Features**:
+- **Search**: Find employees by name or phone number (case-insensitive)
+- **Filter by Role**: Show only employees with specific role
+- **Filter by Status**: Show only active or inactive employees
+- **Filter by Branch**: Show only employees assigned to specific branch
+- **Pagination**: Load employees in chunks (default 20 per page)
+
+**Example Workflow**:
+```
+1. Initial Load:
+   GET /admin/staff/employees?page=1&limit=20
+   → Shows first 20 employees
+
+2. Search for "John":
+   GET /admin/staff/employees?search=John&page=1
+   → Shows all employees with "John" in name or phone
+
+3. Filter by role and branch:
+   GET /admin/staff/employees?roleId=2&branchId=10&page=1
+   → Shows all Cashiers at Branch A
+
+4. Combined filters:
+   GET /admin/staff/employees?search=John&roleId=2&isActive=true
+   → Shows active Cashiers named John
+```
+
+**Response Structure**:
+```json
+{
+  "data": [
+    {
+      "id": 123,
+      "fullName": "John Doe",
+      "phone": "+998901234567",
+      "isActive": true,
+      "roles": [{ "id": 2, "name": "Cashier" }],
+      "branches": [{ "id": 10, "name": "Branch A" }]
+    }
+  ],
+  "meta": {
+    "total": 150,
+    "page": 1,
+    "limit": 20,
+    "totalPages": 8,
+    "hasNextPage": true,
+    "hasPreviousPage": false
+  }
+}
+```
+
+**Frontend Implementation**:
+```
+┌─────────────────────────────────────────────────────────┐
+│  Employees (150)                      [+ Add Employee]  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  [🔍 Search by name or phone    ]                      │
+│                                                         │
+│  Filter: [All Roles ▼] [All Branches ▼] [Active ▼]    │
+│                                                         │
+│  ┌─────────────────────────────────────────────┐      │
+│  │ Results: 1-20 of 150                        │      │
+│  │                                             │      │
+│  │ [Employee cards shown here...]              │      │
+│  │                                             │      │
+│  └─────────────────────────────────────────────┘      │
+│                                                         │
+│  [◀ Previous] Page 1 of 8 [Next ▶]                    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 2. Branch Assignment Validation (Task 7.3)
+
+**Purpose**: Prevent invalid branch assignments and enforce role-based restrictions.
+
+**Validation Rules**:
+
+1. **Branch Existence**: All branch IDs must exist and belong to the current tenant
+2. **Role Restrictions**: Roles can have branch restrictions:
+   - `'multiple'` - Employee can be assigned to many branches (default)
+   - `'single'` - Employee can only be assigned to one branch at a time
+
+**Error Messages**:
+```json
+// Invalid branch ID
+{
+  "statusCode": 400,
+  "message": "Branch with ID 999 not found or does not belong to your organization"
+}
+
+// Role restriction violation
+{
+  "statusCode": 400,
+  "message": "Cannot assign multiple branches to employee. The following role(s) have single-branch restriction: Cashier. Please either assign the employee to a single branch or change their role to one that allows multi-branch access."
+}
+```
+
+**When Validation Happens**:
+- Creating new employee with `POST /admin/staff/employees`
+- Updating employee branches with `PATCH /admin/staff/employees/:id/branches`
+- Updating employee with new role that has stricter restrictions
+
+**Example Scenarios**:
+
+**Scenario 1: Creating Cashier (single-branch role)**
+```
+POST /admin/staff/employees
+{
+  "fullName": "John Doe",
+  "phone": "+998901234567",
+  "password": "secure123",
+  "roleIds": [2],        // Cashier role (single-branch)
+  "branchIds": [10, 11]  // ❌ Multiple branches
+}
+
+Response: 400 Bad Request
+"Cannot assign multiple branches - Cashier role has single-branch restriction"
+```
+
+**Scenario 2: Creating Manager (multi-branch role)**
+```
+POST /admin/staff/employees
+{
+  "fullName": "Jane Smith",
+  "phone": "+998909876543",
+  "password": "secure456",
+  "roleIds": [3],        // Manager role (multiple-branch)
+  "branchIds": [10, 11]  // ✅ Multiple branches allowed
+}
+
+Response: 201 Created
+Employee created successfully
+```
+
+---
+
+### 3. Granular Permission Management (Task 7.3)
+
+**Purpose**: Manage role permissions individually without editing entire permission set.
+
+**New Endpoints**:
+
+**Add Single Permission**:
+```
+POST /admin/staff/roles/5/permissions/12
+
+Use Case: Toggle permission checkbox ON in UI
+Response: Updated role with all permissions
+```
+
+**Remove Single Permission**:
+```
+DELETE /admin/staff/roles/5/permissions/12
+
+Use Case: Toggle permission checkbox OFF in UI
+Response: Updated role with all permissions
+```
+
+**Replace All Permissions**:
+```
+PATCH /admin/staff/roles/5/permissions
+Body: { "permissionIds": [1, 2, 5, 8, 10] }
+
+Use Case: Save button after selecting multiple permissions
+Response: Updated role with new permission set
+```
+
+**Frontend UI Example**:
+```
+┌─────────────────────────────────────────────────────┐
+│  Edit Role: Manager                                 │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Permissions (toggle individual):                  │
+│                                                     │
+│  📋 Orders                                          │
+│    ☑ Create orders    ← POST .../:id/permissions/1 │
+│    ☑ View orders      ← Already has                │
+│    ☐ Edit orders      ← POST .../:id/permissions/3 │
+│    ☐ Delete orders    ← POST .../:id/permissions/4 │
+│                                                     │
+│  🍔 Menu                                            │
+│    ☑ Create menu      ← DELETE .../:id/permissions/5│
+│    ☑ Edit menu                                      │
+│    ☑ View menu                                      │
+│                                                     │
+│  [Save All] ← PATCH .../:id/permissions             │
+│             (with all selected IDs)                 │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+**Implementation Approaches**:
+
+**Approach A: Immediate Save (Recommended for Simple UI)**
+- Each checkbox toggle calls POST or DELETE immediately
+- User sees instant feedback
+- No need for "Save" button
+- Role updates in real-time
+
+**Approach B: Batch Save (Recommended for Complex Forms)**
+- User selects multiple permissions
+- Clicks "Save" when done
+- Calls PATCH with all selected permissionIds
+- Better for forms with many permissions
+
+---
+
+### 4. Bulk Employee Import (Task 7.4)
+
+**Purpose**: Import multiple employees at once from CSV file instead of creating them one-by-one.
+
+**Use Cases**:
+- Onboarding large restaurant with 50+ existing employees
+- Migrating from another system
+- Adding seasonal staff in bulk
+
+**CSV Format**:
+```csv
+fullName,phone,password,roleIds,branchIds
+John Doe,+998901234567,password123,"1,2","10,11,12"
+Jane Smith,+998909876543,password456,2,10
+Bob Wilson,+998909999999,password789,"1,3",11
+```
+
+**Field Specifications**:
+- `fullName` - Employee's full name (required)
+- `phone` - Phone in international format, must be unique (required)
+- `password` - Initial password (required)
+- `roleIds` - Comma-separated role IDs (required)
+  - Single role: `2`
+  - Multiple roles: `"1,2,3"` (use quotes)
+- `branchIds` - Comma-separated branch IDs (required)
+  - Single branch: `10`
+  - Multiple branches: `"10,11,12"` (use quotes)
+
+**Limits**:
+- Maximum file size: 5MB
+- Maximum rows: 1000 employees per import
+- Supported format: CSV only
+
+**Response Structure**:
+```json
+{
+  "total": 50,
+  "success": 48,
+  "failed": 2,
+  "results": [
+    {
+      "row": 1,
+      "success": true,
+      "employeeId": 100,
+      "fullName": "John Doe",
+      "phone": "+998901234567"
+    },
+    {
+      "row": 15,
+      "success": false,
+      "fullName": "Invalid User",
+      "phone": "+998900000000",
+      "error": "Employee with phone +998900000000 already exists"
+    },
+    {
+      "row": 23,
+      "success": false,
+      "fullName": "Bad Data",
+      "phone": "+998901111111",
+      "error": "Role ID 999 not found"
+    }
+  ]
+}
+```
+
+**Partial Success**:
+- Import continues even if some rows fail
+- Each row processed independently
+- Successful employees are created
+- Failed rows reported with errors
+- Response includes both successes and failures
+
+**Frontend Workflow**:
+```
+Step 1: User clicks "Import Employees"
+        → Show file upload dialog
+
+Step 2: User selects CSV file
+        → Validate file type and size
+        → Show preview (first 5 rows)
+
+Step 3: User confirms import
+        → POST /admin/staff/employees/bulk-import
+        → Show progress indicator
+
+Step 4: Show results
+        ┌────────────────────────────────────────┐
+        │  Import Complete                       │
+        ├────────────────────────────────────────┤
+        │  ✅ 48 employees created successfully  │
+        │  ❌ 2 employees failed                 │
+        │                                        │
+        │  Errors:                               │
+        │  • Row 15: Phone already exists        │
+        │  • Row 23: Role ID 999 not found       │
+        │                                        │
+        │  [Download Error Report]               │
+        │  [View Imported Employees]             │
+        └────────────────────────────────────────┘
+```
+
+**Validation Performed**:
+- Phone number format and uniqueness
+- Role IDs exist and belong to tenant
+- Branch IDs exist and belong to tenant
+- Required fields present
+- CSV format correct
+
+**Error Handling**:
+- Row number included for easy debugging
+- Specific error message per failure
+- Option to download error report for correction
+
+---
+
+### 5. Role Pagination (Task 7.4)
+
+**Purpose**: Paginate role list for tenants with many custom roles.
+
+**Backward Compatible**:
+- Without query params: Returns all roles (existing behavior)
+- With query params: Returns paginated response
+
+**Usage**:
+```
+// Get all roles (backward compatible)
+GET /admin/staff/roles
+Response: Role[]
+
+// Get paginated roles
+GET /admin/staff/roles?page=1&limit=20
+Response: {
+  data: Role[],
+  meta: { total, page, limit, totalPages, hasNextPage, hasPreviousPage }
+}
+```
+
+**When to Use Pagination**:
+- Tenant has 50+ custom roles
+- Performance concerns with large role lists
+- Consistency with other paginated endpoints (employees, products)
+
+**Default Values**:
+- Default limit: 50 (roles are typically fewer than employees)
+- Maximum limit: 100
+- Default page: 1
 
 ---
 
