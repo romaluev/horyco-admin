@@ -11,5 +11,5 @@ export const branchOverrideKeys = {
   product: (productId: number) =>
     [...branchOverrideKeys.all, 'product', productId] as const,
   branch: (branchId: number) =>
-    [...branchOverrideKeys.all, 'branch', branchId] as const
-};
+    [...branchOverrideKeys.all, 'branch', branchId] as const,
+}

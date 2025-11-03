@@ -3,54 +3,51 @@
  * Modal for creating new modifiers within a group
  */
 
-'use client';
+'use client'
 
+import { useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { useState } from 'react';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useCreateModifier } from '@/entities/modifier';
+import { useCreateModifier } from '@/entities/modifier'
 
-import { modifierFormSchema, type ModifierFormValues } from '../model/contract';
+import { modifierFormSchema, type ModifierFormValues } from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateModifierDialogProps {
-  modifierGroupId: number;
-  onSuccess?: () => void;
+  modifierGroupId: number
+  onSuccess?: () => void
 }
 
 export const CreateModifierDialog = ({
   modifierGroupId,
-  onSuccess
+  onSuccess,
 }: CreateModifierDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createModifier, isPending } = useCreateModifier();
+  const [open, setOpen] = useState(false)
+  const { mutate: createModifier, isPending } = useCreateModifier()
 
   const form = useForm<ModifierFormValues>({
     resolver: zodResolver(modifierFormSchema),
@@ -59,19 +56,19 @@ export const CreateModifierDialog = ({
       description: '',
       price: 0,
       modifierGroupId,
-      isActive: true
-    }
-  });
+      isActive: true,
+    },
+  })
 
   const onSubmit = (data: ModifierFormValues): void => {
-    createModifier(data, {
+    createModifier(_data, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-        onSuccess?.();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+        onSuccess?.()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -153,7 +150,7 @@ export const CreateModifierDialog = ({
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <FormLabel>Активен</FormLabel>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Опция будет доступна для выбора
                     </p>
                   </div>
@@ -184,5 +181,5 @@ export const CreateModifierDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

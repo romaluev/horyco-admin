@@ -32,7 +32,6 @@ import { useGetTemplates } from '@/entities/menu-template'
 import { useGetModifiers } from '@/entities/modifier'
 import { useGetProducts } from '@/entities/product'
 
-import type { JSX } from 'react'
 
 const menuSections = [
   {
@@ -86,42 +85,42 @@ const menuSections = [
 ]
 
 export default function MenuPage(): JSX.Element {
-  const { data: categories = [] } = useGetCategories();
-  const { data: productsData } = useGetProducts();
-  const { data: modifiers = [] } = useGetModifiers();
-  const { data: additions = [] } = useGetAdditions();
-  const { data: templates = [] } = useGetTemplates();
+  const { data: categories = [] } = useGetCategories()
+  const { data: productsData } = useGetProducts()
+  const { data: modifiers = [] } = useGetModifiers()
+  const { data: additions = [] } = useGetAdditions()
+  const { data: templates = [] } = useGetTemplates()
 
   const stats = [
     {
       label: 'Категории',
       value: categories.length,
-      href: '/dashboard/menu/categories'
+      href: '/dashboard/menu/categories',
     },
     {
       label: 'Продукты',
       value: productsData?.total || 0,
-      href: '/dashboard/menu/products'
+      href: '/dashboard/menu/products',
     },
     {
       label: 'Модификаторы',
       value: modifiers.length,
-      href: '/dashboard/menu/modifiers'
+      href: '/dashboard/menu/modifiers',
     },
     {
       label: 'Дополнения',
       value: additions.length,
-      href: '/dashboard/menu/additions'
+      href: '/dashboard/menu/additions',
     },
     {
       label: 'Шаблоны',
       value: templates.length,
-      href: '/dashboard/menu/templates'
-    }
-  ];
+      href: '/dashboard/menu/templates',
+    },
+  ]
 
   return (
-    <div className="flex flex-col gap-6 py-4 px-6">
+    <div className="flex flex-col gap-6 px-6 py-4">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Управление меню</h1>
         <p className="text-muted-foreground">
@@ -132,7 +131,7 @@ export default function MenuPage(): JSX.Element {
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href}>
-            <Card className="hover:bg-accent transition-colors cursor-pointer">
+            <Card className="hover:bg-accent cursor-pointer transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {stat.label}
@@ -148,16 +147,16 @@ export default function MenuPage(): JSX.Element {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {menuSections.map((section) => {
-          const Icon = section.icon;
+          const Icon = section.icon
           return (
             <Card
               key={section.title}
-              className="hover:shadow-lg transition-shadow"
+              className="transition-shadow hover:shadow-lg"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div
-                    className={`p-3 rounded-lg ${section.bgColor} ${section.color}`}
+                    className={`rounded-lg p-3 ${section.bgColor} ${section.color}`}
                   >
                     <Icon className="h-6 w-6" />
                   </div>
@@ -174,7 +173,7 @@ export default function MenuPage(): JSX.Element {
                 </Link>
               </CardContent>
             </Card>
-          );
+          )
         })}
       </div>
 
@@ -188,7 +187,7 @@ export default function MenuPage(): JSX.Element {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <h3 className="font-semibold">Рекомендуемый порядок настройки:</h3>
-            <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
+            <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
               <li>Создайте структуру категорий (иерархию)</li>
               <li>Добавьте продукты и привяжите их к категориям</li>
               <li>Настройте модификаторы для продуктов (опционально)</li>
@@ -199,11 +198,11 @@ export default function MenuPage(): JSX.Element {
               </li>
             </ol>
           </div>
-          <div className="space-y-2 pt-4 border-t">
+          <div className="space-y-2 border-t pt-4">
             <h3 className="font-semibold">Или используйте готовые решения:</h3>
-            <p className="text-sm text-muted-foreground">
-              Просмотрите шаблоны меню для быстрого запуска с готовой
-              структурой категорий и продуктов
+            <p className="text-muted-foreground text-sm">
+              Просмотрите шаблоны меню для быстрого запуска с готовой структурой
+              категорий и продуктов
             </p>
             <Link href="/dashboard/menu/templates">
               <Button>
@@ -215,5 +214,5 @@ export default function MenuPage(): JSX.Element {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

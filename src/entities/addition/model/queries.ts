@@ -3,16 +3,12 @@
  * React Query hooks for fetching addition data
  */
 
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
-import { additionApi } from './api';
-import { additionKeys } from './query-keys';
+import { additionApi } from './api'
+import { additionKeys } from './query-keys'
 
-import type {
-  IAddition,
-  IGetAdditionsParams,
-  IAdditionItem
-} from './types';
+import type { IAddition, IGetAdditionsParams, IAdditionItem } from './types'
 
 /**
  * Get all additions with optional filters
@@ -24,9 +20,9 @@ export const useGetAdditions = (
   return useQuery({
     queryKey: additionKeys.list(params),
     queryFn: () => additionApi.getAdditions(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get addition by ID
@@ -39,9 +35,9 @@ export const useGetAdditionById = (
     queryKey: additionKeys.detail(id),
     queryFn: () => additionApi.getAdditionById(id),
     enabled: !!id,
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get additions by product ID
@@ -54,21 +50,24 @@ export const useGetAdditionsByProduct = (
     queryKey: additionKeys.byProduct(productId),
     queryFn: () => additionApi.getAdditions({ productId }),
     enabled: !!productId,
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get addition items for a specific addition
  */
 export const useGetAdditionItems = (
   additionId: number,
-  options?: Omit<UseQueryOptions<IAdditionItem[], Error>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<IAdditionItem[], Error>,
+    'queryKey' | 'queryFn'
+  >
 ) => {
   return useQuery({
     queryKey: additionKeys.items.byAddition(additionId),
     queryFn: () => additionApi.getAdditionItems(additionId),
     enabled: !!additionId,
-    ...options
-  });
-};
+    ...options,
+  })
+}

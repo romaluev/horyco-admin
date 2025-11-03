@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { Text } from 'lucide-react';
+import { Text } from 'lucide-react'
 
-import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header';
+import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header'
 
-import type { IEmployee } from '../../model';
-import type { Column, ColumnDef } from '@tanstack/react-table';
+import type { IEmployee } from '../../model'
+import type { Column, ColumnDef } from '@tanstack/react-table'
 
 interface CreateColumnsOptions {
-  renderActions?: (employee: IEmployee) => React.ReactNode;
+  renderActions?: (employee: IEmployee) => React.ReactNode
 }
 
 export const createEmployeeColumns = (
@@ -19,13 +19,9 @@ export const createEmployeeColumns = (
       id: 'name',
       accessorFn: (row) => row.fullName,
       header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-        <DataTableColumnHeader column={column} title='Имя' />
+        <DataTableColumnHeader column={column} title="Имя" />
       ),
-      cell: ({ row }) => (
-        <div>
-          {row.original.fullName}
-        </div>
-      ),
+      cell: ({ row }) => <div>{row.original.fullName}</div>,
       meta: {
         label: 'Имя',
         placeholder: 'Поиск сотрудника...',
@@ -38,7 +34,7 @@ export const createEmployeeColumns = (
       id: 'phone',
       accessorKey: 'phone',
       header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-        <DataTableColumnHeader column={column} title='Телефон' />
+        <DataTableColumnHeader column={column} title="Телефон" />
       ),
       cell: ({ cell }) => <div>{cell.getValue<IEmployee['phone']>()}</div>,
       meta: {
@@ -53,25 +49,25 @@ export const createEmployeeColumns = (
       id: 'createdAt',
       accessorKey: 'createdAt',
       header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-        <DataTableColumnHeader column={column} title='Дата создания' />
+        <DataTableColumnHeader column={column} title="Дата создания" />
       ),
       cell: ({ cell }) => {
-        const date = new Date(cell.getValue<Date>());
-        return <div>{date.toLocaleDateString()}</div>;
+        const date = new Date(cell.getValue<Date>())
+        return <div>{date.toLocaleDateString()}</div>
       },
     },
-  ];
+  ]
 
   // Add actions column if renderActions is provided
   if (options?.renderActions) {
     baseColumns.push({
       id: 'actions',
       cell: ({ row }) => options.renderActions!(row.original),
-    });
+    })
   }
 
-  return baseColumns;
-};
+  return baseColumns
+}
 
 // Export default columns without actions for backward compatibility
-export const columns = createEmployeeColumns();
+export const columns = createEmployeeColumns()

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, Loader2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -13,35 +13,35 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
-} from '@/shared/ui';
+} from '@/shared/ui'
 
-import { useActivateEmployee } from '@/entities/employee';
+import { useActivateEmployee } from '@/entities/employee'
 
-import type { IEmployee } from '@/entities/employee';
+import type { IEmployee } from '@/entities/employee'
 
 interface ActivateEmployeeButtonProps {
-  employee: IEmployee;
+  employee: IEmployee
 }
 
 export const ActivateEmployeeButton = ({
   employee,
 }: ActivateEmployeeButtonProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate: activateEmployee, isPending } = useActivateEmployee();
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate: activateEmployee, isPending } = useActivateEmployee()
 
   const handleActivate = (): void => {
     activateEmployee(employee.id, {
       onSuccess: () => {
-        setIsOpen(false);
+        setIsOpen(false)
       },
-    });
-  };
+    })
+  }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant='ghost' size='sm' disabled={employee.isActive}>
-          <CheckCircle className='h-4 w-4' />
+        <Button variant="ghost" size="sm" disabled={employee.isActive}>
+          <CheckCircle className="h-4 w-4" />
           Активировать
         </Button>
       </AlertDialogTrigger>
@@ -58,11 +58,11 @@ export const ActivateEmployeeButton = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Отмена</AlertDialogCancel>
           <AlertDialogAction onClick={handleActivate} disabled={isPending}>
-            {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isPending ? 'Активация...' : 'Активировать'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

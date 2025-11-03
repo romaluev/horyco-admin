@@ -3,21 +3,21 @@
  * Dialog for updating an existing modifier
  */
 
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -25,31 +25,30 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateModifier } from '@/entities/modifier-group';
+import { useUpdateModifier } from '@/entities/modifier-group'
 
-import { modifierSchema, type ModifierFormValues } from '../model/contract';
+import { modifierSchema, type ModifierFormValues } from '../model/contract'
 
-import type { IModifier } from '@/entities/modifier-group';
-import type { JSX } from 'react';
+import type { IModifier } from '@/entities/modifier-group'
 
 interface UpdateModifierDialogProps {
-  modifier: IModifier;
-  isOpen: boolean;
-  onClose: () => void;
+  modifier: IModifier
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const UpdateModifierDialog = ({
   modifier,
   isOpen,
-  onClose
+  onClose,
 }: UpdateModifierDialogProps) => {
-  const { mutate: updateModifier, isPending } = useUpdateModifier();
+  const { mutate: updateModifier, isPending } = useUpdateModifier()
 
   const form = useForm<ModifierFormValues>({
     resolver: zodResolver(modifierSchema),
@@ -59,9 +58,9 @@ export const UpdateModifierDialog = ({
       price: modifier.price,
       modifierGroupId: modifier.modifierGroupId,
       sortOrder: modifier.sortOrder || 0,
-      isActive: modifier.isActive ?? true
-    }
-  });
+      isActive: modifier.isActive ?? true,
+    },
+  })
 
   // Reset form when modifier changes
   useEffect(() => {
@@ -72,34 +71,35 @@ export const UpdateModifierDialog = ({
         price: modifier.price,
         modifierGroupId: modifier.modifierGroupId,
         sortOrder: modifier.sortOrder || 0,
-        isActive: modifier.isActive ?? true
-      });
+        isActive: modifier.isActive ?? true,
+      })
     }
-  }, [modifier, form]);
+  }, [modifier, form])
 
   const handleSubmit = (values: ModifierFormValues): void => {
     updateModifier(
       { id: modifier.id, data: values },
       {
         onSuccess: () => {
-          onClose();
-        }
+          onClose()
+        },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Редактировать модификатор</DialogTitle>
-          <DialogDescription>
-            Измените параметры модификатора
-          </DialogDescription>
+          <DialogDescription>Измените параметры модификатора</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -196,11 +196,7 @@ export const UpdateModifierDialog = ({
             />
 
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button type="button" variant="outline" onClick={onClose}>
                 Отмена
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -211,5 +207,5 @@ export const UpdateModifierDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

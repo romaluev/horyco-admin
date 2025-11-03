@@ -1,57 +1,60 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
+import Image from 'next/image'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Textarea } from '@/shared/ui/base/textarea';
+  SelectValue,
+} from '@/shared/ui/base/select'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import type { MockProduct, MockCategory } from '@/shared/lib/mock-menu-data';
+import type { MockProduct, MockCategory } from '@/shared/lib/mock-menu-data'
 
 const productSchema = z.object({
-  name: z.string().min(2, { message: 'Название должно содержать минимум 2 символа' }),
-  description: z.string().min(10, { message: 'Описание должно содержать минимум 10 символов' }),
+  name: z
+    .string()
+    .min(2, { message: 'Название должно содержать минимум 2 символа' }),
+  description: z
+    .string()
+    .min(10, { message: 'Описание должно содержать минимум 10 символов' }),
   price: z.number().min(0, { message: 'Цена не может быть отрицательной' }),
   image: z.string().url({ message: 'Введите корректный URL изображения' }),
-  categoryId: z.string().min(1, { message: 'Выберите категорию' })
-});
+  categoryId: z.string().min(1, { message: 'Выберите категорию' }),
+})
 
-type ProductFormValues = z.infer<typeof productSchema>;
+type ProductFormValues = z.infer<typeof productSchema>
 
 interface EditProductModalProps {
-  product: MockProduct | null;
-  categories: MockCategory[];
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSave: (product: MockProduct) => void;
+  product: MockProduct | null
+  categories: MockCategory[]
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSave: (product: MockProduct) => void
 }
 
 export function EditProductModal({
@@ -59,7 +62,7 @@ export function EditProductModal({
   categories,
   open,
   onOpenChange,
-  onSave
+  onSave,
 }: EditProductModalProps) {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -68,26 +71,26 @@ export function EditProductModal({
       description: product?.description || '',
       price: product?.price || 0,
       image: product?.image || '',
-      categoryId: product?.categoryId || ''
-    }
-  });
+      categoryId: product?.categoryId || '',
+    },
+  })
 
-  const imageUrl = form.watch('image');
+  const imageUrl = form.watch('image')
 
   const onSubmit = (data: ProductFormValues) => {
-    if (!product) return;
+    if (!product) return
 
     onSave({
       ...product,
-      ...data
-    });
+      ...data,
+    })
 
-    onOpenChange(false);
-  };
+    onOpenChange(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl'>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Редактировать продукт</DialogTitle>
           <DialogDescription>
@@ -96,22 +99,22 @@ export function EditProductModal({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Left column - Image preview */}
               <div>
                 <FormLabel>Изображение</FormLabel>
-                <div className='relative mt-2 h-48 w-full overflow-hidden rounded-lg border bg-muted'>
+                <div className="bg-muted relative mt-2 h-48 w-full overflow-hidden rounded-lg border">
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
-                      alt='Product preview'
+                      alt="Product preview"
                       fill
-                      className='object-cover'
-                      sizes='400px'
+                      className="object-cover"
+                      sizes="400px"
                     />
                   ) : (
-                    <div className='flex h-full items-center justify-center text-sm text-muted-foreground'>
+                    <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
                       Предпросмотр изображения
                     </div>
                   )}
@@ -119,11 +122,11 @@ export function EditProductModal({
 
                 <FormField
                   control={form.control}
-                  name='image'
+                  name="image"
                   render={({ field }) => (
-                    <FormItem className='mt-2'>
+                    <FormItem className="mt-2">
                       <FormControl>
-                        <Input placeholder='URL изображения' {...field} />
+                        <Input placeholder="URL изображения" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -132,15 +135,15 @@ export function EditProductModal({
               </div>
 
               {/* Right column - Basic info */}
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 <FormField
                   control={form.control}
-                  name='name'
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Название *</FormLabel>
                       <FormControl>
-                        <Input placeholder='Пицца Маргарита' {...field} />
+                        <Input placeholder="Пицца Маргарита" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,16 +152,18 @@ export function EditProductModal({
 
                 <FormField
                   control={form.control}
-                  name='price'
+                  name="price"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Цена (сум) *</FormLabel>
                       <FormControl>
                         <Input
-                          type='number'
-                          placeholder='89000'
+                          type="number"
+                          placeholder="89000"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -168,14 +173,17 @@ export function EditProductModal({
 
                 <FormField
                   control={form.control}
-                  name='categoryId'
+                  name="categoryId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Категория *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder='Выберите категорию' />
+                            <SelectValue placeholder="Выберите категорию" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -195,14 +203,14 @@ export function EditProductModal({
 
             <FormField
               control={form.control}
-              name='description'
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Описание *</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Описание продукта...'
-                      className='resize-none'
+                      placeholder="Описание продукта..."
+                      className="resize-none"
                       rows={3}
                       {...field}
                     />
@@ -213,14 +221,18 @@ export function EditProductModal({
             />
 
             <DialogFooter>
-              <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
                 Отмена
               </Button>
-              <Button type='submit'>Сохранить</Button>
+              <Button type="submit">Сохранить</Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

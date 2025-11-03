@@ -2,7 +2,7 @@
  * Modifier Group Query Keys Factory
  */
 
-import type { IGetModifierGroupsParams, IGetModifiersParams } from './types';
+import type { IGetModifierGroupsParams, IGetModifiersParams } from './types'
 
 export const modifierGroupKeys = {
   all: () => ['modifier-groups'] as const,
@@ -17,6 +17,6 @@ export const modifierGroupKeys = {
     all: () => ['modifiers'] as const,
     lists: () => [...modifierGroupKeys.modifiers.all(), 'list'] as const,
     list: (params?: IGetModifiersParams) =>
-      [...modifierGroupKeys.modifiers.lists(), params] as const
-  }
-};
+      [...modifierGroupKeys.modifiers.lists(), params] as const,
+  },
+}

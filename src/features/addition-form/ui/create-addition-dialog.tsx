@@ -3,22 +3,22 @@
  * Dialog for creating a new addition group
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -26,29 +26,28 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useCreateAddition } from '@/entities/addition';
+import { useCreateAddition } from '@/entities/addition'
 
-import { additionSchema, type AdditionFormValues } from '../model/contract';
+import { additionSchema, type AdditionFormValues } from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateAdditionDialogProps {
-  productId: number;
-  trigger?: React.ReactNode;
+  productId: number
+  trigger?: React.ReactNode
 }
 
 export const CreateAdditionDialog = ({
   productId,
-  trigger
+  trigger,
 }: CreateAdditionDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createAddition, isPending } = useCreateAddition();
+  const [open, setOpen] = useState(false)
+  const { mutate: createAddition, isPending } = useCreateAddition()
 
   const form = useForm<AdditionFormValues>({
     resolver: zodResolver(additionSchema),
@@ -62,18 +61,18 @@ export const CreateAdditionDialog = ({
       minSelection: 0,
       maxSelection: 1,
       sortOrder: 0,
-      isActive: true
-    }
-  });
+      isActive: true,
+    },
+  })
 
   const handleSubmit = (values: AdditionFormValues): void => {
     createAddition(values, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -89,7 +88,10 @@ export const CreateAdditionDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -111,10 +113,7 @@ export const CreateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>Описание</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Выберите размер порции"
-                      {...field}
-                    />
+                    <Textarea placeholder="Выберите размер порции" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -280,5 +279,5 @@ export const CreateAdditionDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

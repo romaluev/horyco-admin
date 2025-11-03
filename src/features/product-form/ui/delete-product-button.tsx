@@ -1,7 +1,7 @@
-import { Trash } from 'lucide-react';
-import { toast } from 'sonner';
+import { Trash } from 'lucide-react'
+import { toast } from 'sonner'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogClose,
@@ -10,27 +10,27 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 
-import { useDeleteProduct } from '@/entities/product/model';
+import { useDeleteProduct } from '@/entities/product/model'
 
 export const DeleteProductButton = ({ id }: { id: number }) => {
-  const { mutateAsync: deleteProduct } = useDeleteProduct();
+  const { mutateAsync: deleteProduct } = useDeleteProduct()
 
   const handleDelete = async () => {
     try {
-      await deleteProduct(id);
-      toast.error('Продукт успешно удален');
+      await deleteProduct(id)
+      toast.error('Продукт успешно удален')
     } catch {
-      toast.error('Ошибка при удалении продукта');
+      toast.error('Ошибка при удалении продукта')
     }
-  };
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='secondary' size='sm'>
+        <Button variant="secondary" size="sm">
           <Trash />
         </Button>
       </DialogTrigger>
@@ -41,17 +41,17 @@ export const DeleteProductButton = ({ id }: { id: number }) => {
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type='button' variant='secondary'>
+            <Button type="button" variant="secondary">
               Отменить
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type='button' onClick={handleDelete} variant='destructive'>
+            <Button type="button" onClick={handleDelete} variant="destructive">
               Удалить
             </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

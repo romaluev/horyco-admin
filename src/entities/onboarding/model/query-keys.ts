@@ -4,5 +4,5 @@ export const onboardingKeys = {
   defaultProducts: (businessType?: string) =>
     [...onboardingKeys.all(), 'default-products', { businessType }] as const,
   regions: () => ['regions'] as const,
-  districts: (regionId?: number) => ['regions', regionId, 'districts'] as const
-} as const;
+  districts: (regionId?: number) => ['regions', regionId, 'districts'] as const,
+} as const

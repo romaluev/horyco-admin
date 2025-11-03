@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { XCircle, Loader2 } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -13,35 +13,35 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
-} from '@/shared/ui';
+} from '@/shared/ui'
 
-import { useDeactivateEmployee } from '@/entities/employee';
+import { useDeactivateEmployee } from '@/entities/employee'
 
-import type { IEmployee } from '@/entities/employee';
+import type { IEmployee } from '@/entities/employee'
 
 interface DeactivateEmployeeButtonProps {
-  employee: IEmployee;
+  employee: IEmployee
 }
 
 export const DeactivateEmployeeButton = ({
   employee,
 }: DeactivateEmployeeButtonProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate: deactivateEmployee, isPending } = useDeactivateEmployee();
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate: deactivateEmployee, isPending } = useDeactivateEmployee()
 
   const handleDeactivate = (): void => {
     deactivateEmployee(employee.id, {
       onSuccess: () => {
-        setIsOpen(false);
+        setIsOpen(false)
       },
-    });
-  };
+    })
+  }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant='ghost' size='sm' disabled={!employee.isActive}>
-          <XCircle className='h-4 w-4' />
+        <Button variant="ghost" size="sm" disabled={!employee.isActive}>
+          <XCircle className="h-4 w-4" />
           Деактивировать
         </Button>
       </AlertDialogTrigger>
@@ -58,11 +58,11 @@ export const DeactivateEmployeeButton = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Отмена</AlertDialogCancel>
           <AlertDialogAction onClick={handleDeactivate} disabled={isPending}>
-            {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isPending ? 'Деактивация...' : 'Деактивировать'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

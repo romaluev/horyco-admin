@@ -35,7 +35,6 @@ import {
   TemplatePreviewCard,
 } from '@/features/template-selector'
 
-import type { JSX } from 'react'
 
 export default function MenuTemplatesPage(): JSX.Element {
   const [selectedBusinessType, setSelectedBusinessType] =
@@ -49,8 +48,7 @@ export default function MenuTemplatesPage(): JSX.Element {
 
   const { data: businessTypes = [], isLoading: isLoadingBusinessTypes } =
     useGetBusinessTypes()
-  const { data: templates, isLoading: isLoadingTemplates } =
-    useGetTemplates()
+  const { data: templates, isLoading: isLoadingTemplates } = useGetTemplates()
 
   // Ensure templates is always an array
   const templatesArray = Array.isArray(templates) ? templates : []

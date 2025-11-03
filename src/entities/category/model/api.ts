@@ -3,7 +3,7 @@
  * Based on /admin/menu/categories endpoints from ADMIN_STAFF_MANAGEMENT.md
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   ICategory,
@@ -11,7 +11,7 @@ import type {
   IUpdateCategoryDto,
   IReorderCategoriesDto,
   IGetCategoriesParams,
-} from './types';
+} from './types'
 
 export const categoryApi = {
   /**
@@ -22,8 +22,8 @@ export const categoryApi = {
     const response = await api.get<{ data: ICategory[] }>(
       '/admin/menu/categories',
       { params }
-    );
-    return response.data.data || [];
+    )
+    return response.data.data || []
   },
 
   /**
@@ -31,8 +31,8 @@ export const categoryApi = {
    * GET /admin/menu/categories/:id
    */
   async getCategoryById(id: number): Promise<ICategory> {
-    const response = await api.get<ICategory>(`/admin/menu/categories/${id}`);
-    return response.data;
+    const response = await api.get<ICategory>(`/admin/menu/categories/${id}`)
+    return response.data
   },
 
   /**
@@ -40,17 +40,23 @@ export const categoryApi = {
    * POST /admin/menu/categories
    */
   async createCategory(data: ICreateCategoryDto): Promise<ICategory> {
-    const response = await api.post<ICategory>('/admin/menu/categories', data);
-    return response.data;
+    const response = await api.post<ICategory>('/admin/menu/categories', data)
+    return response.data
   },
 
   /**
    * Update existing category
    * PATCH /admin/menu/categories/:id
    */
-  async updateCategory(id: number, data: IUpdateCategoryDto): Promise<ICategory> {
-    const response = await api.patch<ICategory>(`/admin/menu/categories/${id}`, data);
-    return response.data;
+  async updateCategory(
+    id: number,
+    data: IUpdateCategoryDto
+  ): Promise<ICategory> {
+    const response = await api.patch<ICategory>(
+      `/admin/menu/categories/${id}`,
+      data
+    )
+    return response.data
   },
 
   /**
@@ -58,7 +64,7 @@ export const categoryApi = {
    * DELETE /admin/menu/categories/:id
    */
   async deleteCategory(id: number): Promise<void> {
-    await api.delete(`/admin/menu/categories/${id}`);
+    await api.delete(`/admin/menu/categories/${id}`)
   },
 
   /**
@@ -66,6 +72,6 @@ export const categoryApi = {
    * PATCH /admin/menu/categories/reorder
    */
   async reorderCategories(data: IReorderCategoriesDto): Promise<void> {
-    await api.patch('/admin/menu/categories/reorder', data);
+    await api.patch('/admin/menu/categories/reorder', data)
   },
-};
+}

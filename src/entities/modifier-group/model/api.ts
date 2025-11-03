@@ -3,7 +3,7 @@
  * Based on /admin/menu/modifier-groups endpoints
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   IModifierGroup,
@@ -13,14 +13,14 @@ import type {
   IGetModifierGroupsParams,
   ICreateModifierDto,
   IUpdateModifierDto,
-  IGetModifiersParams
-} from './types';
+  IGetModifiersParams,
+} from './types'
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 export const modifierGroupApi = {
@@ -34,8 +34,8 @@ export const modifierGroupApi = {
     const response = await api.get<ApiResponse<IModifierGroup[]>>(
       '/admin/menu/modifier-groups',
       { params }
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -45,8 +45,8 @@ export const modifierGroupApi = {
   async getModifierGroupById(id: number): Promise<IModifierGroup> {
     const response = await api.get<ApiResponse<IModifierGroup>>(
       `/admin/menu/modifier-groups/${id}`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -59,8 +59,8 @@ export const modifierGroupApi = {
     const response = await api.post<ApiResponse<IModifierGroup>>(
       '/admin/menu/modifier-groups',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -74,8 +74,8 @@ export const modifierGroupApi = {
     const response = await api.patch<ApiResponse<IModifierGroup>>(
       `/admin/menu/modifier-groups/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -83,7 +83,7 @@ export const modifierGroupApi = {
    * DELETE /admin/menu/modifier-groups/:id
    */
   async deleteModifierGroup(id: number): Promise<void> {
-    await api.delete(`/admin/menu/modifier-groups/${id}`);
+    await api.delete(`/admin/menu/modifier-groups/${id}`)
   },
 
   /**
@@ -93,8 +93,8 @@ export const modifierGroupApi = {
   async getProductModifierGroups(productId: number): Promise<IModifierGroup[]> {
     const response = await api.get<ApiResponse<IModifierGroup[]>>(
       `/admin/menu/products/${productId}/modifier-groups`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -107,7 +107,7 @@ export const modifierGroupApi = {
   ): Promise<void> {
     await api.post(
       `/admin/menu/products/${productId}/modifier-groups/${groupId}`
-    );
+    )
   },
 
   /**
@@ -120,7 +120,7 @@ export const modifierGroupApi = {
   ): Promise<void> {
     await api.delete(
       `/admin/menu/products/${productId}/modifier-groups/${groupId}`
-    );
+    )
   },
 
   // ===== Modifiers =====
@@ -133,8 +133,8 @@ export const modifierGroupApi = {
     const response = await api.get<ApiResponse<IModifier[]>>(
       '/admin/menu/modifiers',
       { params }
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -145,8 +145,8 @@ export const modifierGroupApi = {
     const response = await api.post<ApiResponse<IModifier>>(
       '/admin/menu/modifiers',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -160,8 +160,8 @@ export const modifierGroupApi = {
     const response = await api.patch<ApiResponse<IModifier>>(
       `/admin/menu/modifiers/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -169,6 +169,6 @@ export const modifierGroupApi = {
    * DELETE /admin/menu/modifiers/:id
    */
   async deleteModifier(id: number): Promise<void> {
-    await api.delete(`/admin/menu/modifiers/${id}`);
-  }
-};
+    await api.delete(`/admin/menu/modifiers/${id}`)
+  },
+}

@@ -1,23 +1,23 @@
-import type { NavItem } from '../types';
+import type { NavItem } from '../types'
 
-export const MAX_FILE_SIZE = 5000000;
+export const MAX_FILE_SIZE = 5000000
 export const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/png',
-  'image/webp'
-];
+  'image/webp',
+]
 
 export const getStatuses = () => [
   {
     value: 'active',
-    label: 'Активный'
+    label: 'Активный',
   },
   {
     value: 'archived',
-    label: 'Архивирован'
-  }
-];
+    label: 'Архивирован',
+  },
+]
 
 export const getNavItems = (): NavItem[] => [
   {
@@ -26,7 +26,7 @@ export const getNavItems = (): NavItem[] => [
     icon: 'dashboard',
     shortcut: ['D'],
     isActive: false,
-    items: []
+    items: [],
   },
   {
     title: 'Меню',
@@ -37,29 +37,29 @@ export const getNavItems = (): NavItem[] => [
     items: [
       {
         title: 'Категории',
-        url: '/dashboard/menu/categories'
+        url: '/dashboard/menu/categories',
       },
       {
         title: 'Продукты',
-        url: '/dashboard/menu/products'
+        url: '/dashboard/menu/products',
       },
       {
         title: 'Модификаторы',
-        url: '/dashboard/menu/modifiers'
+        url: '/dashboard/menu/modifiers',
       },
       {
         title: 'Дополнения',
-        url: '/dashboard/menu/additions'
+        url: '/dashboard/menu/additions',
       },
       {
         title: 'Шаблоны',
-        url: '/dashboard/menu/templates'
+        url: '/dashboard/menu/templates',
       },
       {
         title: 'Переопределения филиалов',
-        url: '/dashboard/menu/branch-overrides'
-      }
-    ]
+        url: '/dashboard/menu/branch-overrides',
+      },
+    ],
   },
   {
     title: 'Персонал',
@@ -70,13 +70,13 @@ export const getNavItems = (): NavItem[] => [
     items: [
       {
         title: 'Сотрудники',
-        url: '/dashboard/staff/employees'
+        url: '/dashboard/staff/employees',
       },
       {
         title: 'Роли и права',
-        url: '/dashboard/staff/roles'
-      }
-    ]
+        url: '/dashboard/staff/roles',
+      },
+    ],
   },
   {
     title: 'Филиалы',
@@ -84,7 +84,7 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/branches',
     icon: 'hierarchy',
     isActive: false,
-    items: []
+    items: [],
   },
   {
     title: 'Залы',
@@ -92,7 +92,7 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/halls',
     icon: 'kanban',
     isActive: false,
-    items: []
+    items: [],
   },
   {
     title: 'Стол менеджмент',
@@ -100,6 +100,6 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/table',
     icon: 'layoutGrid',
     isActive: false,
-    items: []
-  }
-];
+    items: [],
+  },
+]

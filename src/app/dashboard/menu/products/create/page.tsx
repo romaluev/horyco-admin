@@ -3,17 +3,16 @@
  * Page for creating new products
  */
 
-'use client';
+'use client'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 
-import { CreateProductForm } from '@/features/product-form';
+import { CreateProductForm } from '@/features/product-form'
 
-import type { JSX } from 'react';
 
 export default function CreateProductPage(): JSX.Element {
   return (
@@ -26,13 +25,11 @@ export default function CreateProductPage(): JSX.Element {
         </Link>
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Создать продукт</h2>
-          <p className="text-muted-foreground">
-            Добавьте новый продукт в меню
-          </p>
+          <p className="text-muted-foreground">Добавьте новый продукт в меню</p>
         </div>
       </div>
 
       <CreateProductForm />
     </div>
-  );
+  )
 }

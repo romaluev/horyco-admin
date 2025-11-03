@@ -3,13 +3,11 @@
  * Button with confirmation dialog for deleting categories
  */
 
-'use client';
-
-
+'use client'
 
 import { useState } from 'react'
 
-import { Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -20,34 +18,33 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/shared/ui/base/alert-dialog';
-import { Button } from '@/shared/ui/base/button';
+  AlertDialogTrigger,
+} from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 
-import { useDeleteCategory, type ICategory } from '@/entities/category';
+import { useDeleteCategory, type ICategory } from '@/entities/category'
 
-import type { JSX } from 'react';
 
 interface DeleteCategoryButtonProps {
-  category: ICategory;
+  category: ICategory
 }
 
 export const DeleteCategoryButton = ({
-  category
+  category,
 }: DeleteCategoryButtonProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: deleteCategory, isPending } = useDeleteCategory();
+  const [open, setOpen] = useState(false)
+  const { mutate: deleteCategory, isPending } = useDeleteCategory()
 
   const handleDelete = (): void => {
     deleteCategory(category.id, {
       onSuccess: () => {
-        setOpen(false);
-      }
-    });
-  };
+        setOpen(false)
+      },
+    })
+  }
 
-  const hasChildren = category.children && category.children.length > 0;
-  const hasProducts = (category.productCount ?? 0) > 0;
+  const hasChildren = category.children && category.children.length > 0
+  const hasProducts = (category.productCount ?? 0) > 0
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -65,7 +62,8 @@ export const DeleteCategoryButton = ({
           <AlertDialogTitle>Подтвердите удаление</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
             <p>
-              Вы уверены, что хотите удалить категорию <strong>{category.name}</strong>?
+              Вы уверены, что хотите удалить категорию{' '}
+              <strong>{category.name}</strong>?
             </p>
             {hasChildren && (
               <p className="text-destructive">
@@ -95,5 +93,5 @@ export const DeleteCategoryButton = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

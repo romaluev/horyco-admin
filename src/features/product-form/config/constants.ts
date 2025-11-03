@@ -44,4 +44,4 @@ Your instructions:
 Return only the final parsed JSON. Do not explain, add metadata, or include comments—**only JSON** output is allowed. I am expecting this kind of content format: '\`\`\`json\\n' +
     '[\\n' +
     '  { ...product }
-`;
+`

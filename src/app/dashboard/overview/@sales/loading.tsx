@@ -1,5 +1,5 @@
-import { RecentSalesSkeleton } from '@/widgets/overview';
+import { RecentSalesSkeleton } from '@/widgets/overview'
 
 export default function Loading() {
-  return <RecentSalesSkeleton />;
+  return <RecentSalesSkeleton />
 }

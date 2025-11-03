@@ -3,21 +3,21 @@
  * Dialog for updating an existing modifier group
  */
 
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -25,34 +25,33 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateModifierGroup } from '@/entities/modifier-group';
+import { useUpdateModifierGroup } from '@/entities/modifier-group'
 
 import {
   modifierGroupSchema,
-  type ModifierGroupFormValues
-} from '../model/contract';
+  type ModifierGroupFormValues,
+} from '../model/contract'
 
-import type { IModifierGroup } from '@/entities/modifier-group';
-import type { JSX } from 'react';
+import type { IModifierGroup } from '@/entities/modifier-group'
 
 interface UpdateModifierGroupDialogProps {
-  group: IModifierGroup;
-  isOpen: boolean;
-  onClose: () => void;
+  group: IModifierGroup
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const UpdateModifierGroupDialog = ({
   group,
   isOpen,
-  onClose
+  onClose,
 }: UpdateModifierGroupDialogProps) => {
-  const { mutate: updateGroup, isPending } = useUpdateModifierGroup();
+  const { mutate: updateGroup, isPending } = useUpdateModifierGroup()
 
   const form = useForm<ModifierGroupFormValues>({
     resolver: zodResolver(modifierGroupSchema),
@@ -62,9 +61,9 @@ export const UpdateModifierGroupDialog = ({
       isRequired: group.isRequired,
       minSelection: group.minSelection,
       maxSelection: group.maxSelection,
-      sortOrder: group.sortOrder || 0
-    }
-  });
+      sortOrder: group.sortOrder || 0,
+    },
+  })
 
   // Reset form when group changes
   useEffect(() => {
@@ -75,21 +74,21 @@ export const UpdateModifierGroupDialog = ({
         isRequired: group.isRequired,
         minSelection: group.minSelection,
         maxSelection: group.maxSelection,
-        sortOrder: group.sortOrder || 0
-      });
+        sortOrder: group.sortOrder || 0,
+      })
     }
-  }, [group, form]);
+  }, [group, form])
 
   const handleSubmit = (values: ModifierGroupFormValues): void => {
     updateGroup(
       { id: group.id, data: values },
       {
         onSuccess: () => {
-          onClose();
-        }
+          onClose()
+        },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -102,7 +101,10 @@ export const UpdateModifierGroupDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -124,10 +126,7 @@ export const UpdateModifierGroupDialog = ({
                 <FormItem>
                   <FormLabel>Описание</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Выберите соус к блюду"
-                      {...field}
-                    />
+                    <Textarea placeholder="Выберите соус к блюду" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,9 +190,7 @@ export const UpdateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Порядок отображения группы
-                  </FormDescription>
+                  <FormDescription>Порядок отображения группы</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -221,11 +218,7 @@ export const UpdateModifierGroupDialog = ({
             />
 
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button type="button" variant="outline" onClick={onClose}>
                 Отмена
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -236,5 +229,5 @@ export const UpdateModifierGroupDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

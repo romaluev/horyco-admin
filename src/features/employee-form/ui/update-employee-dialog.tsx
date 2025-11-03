@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Pencil } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2, Pencil } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
 import {
   Button,
@@ -13,22 +13,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/ui';
+} from '@/shared/ui'
 
-import { useUpdateEmployee } from '@/entities/employee';
+import { useUpdateEmployee } from '@/entities/employee'
 
-import { EmployeeFormBasic } from './employee-form-basic';
-import { updateEmployeeSchema } from '../model/contract';
+import { EmployeeFormBasic } from './employee-form-basic'
+import { updateEmployeeSchema } from '../model/contract'
 
-import type { UpdateEmployeeFormData } from '../model/contract';
-import type { IEmployee } from '@/entities/employee';
+import type { UpdateEmployeeFormData } from '../model/contract'
+import type { IEmployee } from '@/entities/employee'
 
 interface UpdateEmployeeDialogProps {
-  employee: IEmployee;
+  employee: IEmployee
 }
 
-export const UpdateEmployeeDialog = ({ employee }: UpdateEmployeeDialogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const UpdateEmployeeDialog = ({
+  employee,
+}: UpdateEmployeeDialogProps) => {
+  const [isOpen, setIsOpen] = useState(false)
 
   const form = useForm<UpdateEmployeeFormData>({
     resolver: zodResolver(updateEmployeeSchema),
@@ -39,9 +41,9 @@ export const UpdateEmployeeDialog = ({ employee }: UpdateEmployeeDialogProps) =>
       hireDate: employee.hireDate,
       notes: employee.notes,
     },
-  });
+  })
 
-  const { mutate: updateEmployee, isPending } = useUpdateEmployee();
+  const { mutate: updateEmployee, isPending } = useUpdateEmployee()
 
   useEffect(() => {
     if (isOpen) {
@@ -51,31 +53,31 @@ export const UpdateEmployeeDialog = ({ employee }: UpdateEmployeeDialogProps) =>
         birthDate: employee.birthDate,
         hireDate: employee.hireDate,
         notes: employee.notes,
-      });
+      })
     }
-  }, [isOpen, employee, form]);
+  }, [isOpen, employee, form])
 
   const onSubmit = (data: UpdateEmployeeFormData): void => {
     updateEmployee(
       { id: employee.id, data },
       {
         onSuccess: () => {
-          setIsOpen(false);
+          setIsOpen(false)
         },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant='ghost' size='sm'>
-          <Pencil className='h-4 w-4' />
+        <Button variant="ghost" size="sm">
+          <Pencil className="h-4 w-4" />
           Редактировать
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='max-w-2xl'>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Редактировать сотрудника</DialogTitle>
           <DialogDescription>
@@ -84,21 +86,25 @@ export const UpdateEmployeeDialog = ({ employee }: UpdateEmployeeDialogProps) =>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='my-6'>
+          <div className="my-6">
             <EmployeeFormBasic form={form as any} />
           </div>
 
           <DialogFooter>
-            <Button type='button' variant='outline' onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               Отмена
             </Button>
-            <Button type='submit' disabled={isPending}>
-              {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isPending ? 'Сохранение...' : 'Сохранить изменения'}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

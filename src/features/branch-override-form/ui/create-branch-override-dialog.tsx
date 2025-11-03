@@ -3,24 +3,23 @@
  * Dialog for creating branch-specific product overrides
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -28,42 +27,41 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Switch } from '@/shared/ui/base/switch';
+  SelectValue,
+} from '@/shared/ui/base/select'
+import { Switch } from '@/shared/ui/base/switch'
 
-import { useUpsertBranchOverride } from '@/entities/branch-override';
+import { useUpsertBranchOverride } from '@/entities/branch-override'
 
 import {
   upsertBranchOverrideFormSchema,
-  type UpsertBranchOverrideFormValues
-} from '../model/contract';
+  type UpsertBranchOverrideFormValues,
+} from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateBranchOverrideDialogProps {
-  productId?: number;
-  branchId?: number;
-  products?: { id: number; name: string; price: number }[];
-  branches?: { id: number; name: string }[];
+  productId?: number
+  branchId?: number
+  products?: { id: number; name: string; price: number }[]
+  branches?: { id: number; name: string }[]
 }
 
 export const CreateBranchOverrideDialog = ({
   productId,
   branchId,
   products = [],
-  branches = []
+  branches = [],
 }: CreateBranchOverrideDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: upsertOverride, isPending } = useUpsertBranchOverride();
+  const [open, setOpen] = useState(false)
+  const { mutate: upsertOverride, isPending } = useUpsertBranchOverride()
 
   const form = useForm<UpsertBranchOverrideFormValues>({
     resolver: zodResolver(upsertBranchOverrideFormSchema),
@@ -71,41 +69,42 @@ export const CreateBranchOverrideDialog = ({
       productId: productId || undefined,
       branchId: branchId || undefined,
       overridePrice: undefined,
-      overrideAvailability: undefined
-    }
-  });
+      overrideAvailability: undefined,
+    },
+  })
 
   const onSubmit = (data: UpsertBranchOverrideFormValues): void => {
     if (!data.productId || !data.branchId) {
-      return;
+      return
     }
 
-    upsertOverride({
-      productId: data.productId,
-      branchId: data.branchId,
-      data: {
-        overridePrice: data.overridePrice,
-        overrideAvailability: data.overrideAvailability,
-        overrideImage: data.overrideImage,
-        overrideName: data.overrideName
+    upsertOverride(
+      {
+        productId: data.productId,
+        branchId: data.branchId,
+        data: {
+          overridePrice: data.overridePrice,
+          overrideAvailability: data.overrideAvailability,
+          overrideImage: data.overrideImage,
+          overrideName: data.overrideName,
+        },
+      },
+      {
+        onSuccess: () => {
+          setOpen(false)
+          form.reset()
+        },
       }
-    }, {
-      onSuccess: () => {
-        setOpen(false);
-        form.reset();
-      }
-    });
-  };
+    )
+  }
 
-  const selectedProduct = products.find(
-    (p) => p.id === form.watch('productId')
-  );
+  const selectedProduct = products.find((p) => p.id === form.watch('productId'))
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           Добавить переопределение
         </Button>
       </DialogTrigger>
@@ -201,8 +200,8 @@ export const CreateBranchOverrideDialog = ({
                       {...field}
                       value={field.value ?? ''}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value ? Number(value) : null);
+                        const value = e.target.value
+                        field.onChange(value ? Number(value) : null)
                       }}
                     />
                   </FormControl>
@@ -252,5 +251,5 @@ export const CreateBranchOverrideDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

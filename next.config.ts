@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
@@ -6,21 +6,21 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'oshposapi.021.uz',
-        port: ''
+        port: '',
       },
       {
         protocol: 'https',
         hostname: 'ooni.com',
-        port: ''
-      }
-    ]
+        port: '',
+      },
+    ],
   },
   reactStrictMode: true, // Enable strict mode for development
   eslint: {
     // Temporarily ignore ESLint during builds to get successful build
     // TODO: Fix ESLint errors incrementally and remove this
-    ignoreDuringBuilds: true
-  }
-};
+    ignoreDuringBuilds: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig

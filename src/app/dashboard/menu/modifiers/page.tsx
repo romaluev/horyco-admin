@@ -3,9 +3,9 @@
  * Manage modifier groups and modifiers
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
 import {
   MoreVertical,
@@ -13,52 +13,46 @@ import {
   Pencil,
   Search,
   Settings,
-  Trash2
-} from 'lucide-react';
+  Trash2,
+} from 'lucide-react'
 
-import { BaseLoading } from '@/shared/ui';
+import { BaseLoading } from '@/shared/ui'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
-} from '@/shared/ui/base/accordion';
-import { Badge } from '@/shared/ui/base/badge';
-import { Button } from '@/shared/ui/base/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  AccordionTrigger,
+} from '@/shared/ui/base/accordion'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/shared/ui/base/dropdown-menu';
-import { Input } from '@/shared/ui/base/input';
-import { Separator } from '@/shared/ui/base/separator';
-import PageContainer from '@/shared/ui/layout/page-container';
+  DropdownMenuTrigger,
+} from '@/shared/ui/base/dropdown-menu'
+import { Input } from '@/shared/ui/base/input'
+import { Separator } from '@/shared/ui/base/separator'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useGetModifierGroups,
   useDeleteModifierGroup,
   useDeleteModifier,
   type IModifierGroup,
-  type IModifier
-} from '@/entities/modifier-group';
+  type IModifier,
+} from '@/entities/modifier-group'
 import {
   CreateModifierGroupDialog,
   CreateModifierDialog,
   UpdateModifierGroupDialog,
-  UpdateModifierDialog
-} from '@/features/modifier-group-form';
+  UpdateModifierDialog,
+} from '@/features/modifier-group-form'
 
-import type { JSX } from 'react';
 
 interface PageHeaderProps {
-  onCreateGroup: () => void;
+  onCreateGroup: () => void
 }
 
 const PageHeader = ({ onCreateGroup }: PageHeaderProps) => (
@@ -78,17 +72,17 @@ const PageHeader = ({ onCreateGroup }: PageHeaderProps) => (
       }
     />
   </div>
-);
+)
 
 interface SearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: string
+  onChange: (value: string) => void
 }
 
 const SearchBar = ({ value, onChange }: SearchBarProps) => (
   <div className="flex items-center gap-2">
-    <div className="relative flex-1 max-w-sm">
-      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div className="relative max-w-sm flex-1">
+      <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
       <Input
         placeholder="Поиск по группам..."
         value={value}
@@ -97,39 +91,39 @@ const SearchBar = ({ value, onChange }: SearchBarProps) => (
       />
     </div>
   </div>
-);
+)
 
 interface EmptyStateProps {
-  hasSearch: boolean;
+  hasSearch: boolean
 }
 
 const EmptyState = ({ hasSearch }: EmptyStateProps) => (
   <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
     <div className="text-center">
-      <p className="text-lg font-medium text-muted-foreground">
+      <p className="text-muted-foreground text-lg font-medium">
         {hasSearch
           ? 'Группы модификаторов не найдены'
           : 'Нет групп модификаторов'}
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         {hasSearch
           ? 'Попробуйте изменить поисковый запрос'
           : 'Создайте первую группу модификаторов'}
       </p>
     </div>
   </div>
-);
+)
 
 interface ModifierGroupStatsProps {
-  totalGroups: number;
-  requiredGroups: number;
-  totalModifiers: number;
+  totalGroups: number
+  requiredGroups: number
+  totalModifiers: number
 }
 
 const ModifierGroupStats = ({
   totalGroups,
   requiredGroups,
-  totalModifiers
+  totalModifiers,
 }: ModifierGroupStatsProps) => (
   <div className="grid gap-4 md:grid-cols-3">
     <Card>
@@ -159,24 +153,20 @@ const ModifierGroupStats = ({
       </CardContent>
     </Card>
   </div>
-);
+)
 
 interface ModifierItemProps {
-  modifier: IModifier;
-  onEdit: (modifier: IModifier) => void;
-  onDelete: (id: number) => void;
+  modifier: IModifier
+  onEdit: (modifier: IModifier) => void
+  onDelete: (id: number) => void
 }
 
-const ModifierItem = ({
-  modifier,
-  onEdit,
-  onDelete
-}: ModifierItemProps) => (
-  <div className="flex items-center justify-between rounded-lg border bg-background p-4 transition-colors hover:bg-accent/50">
+const ModifierItem = ({ modifier, onEdit, onDelete }: ModifierItemProps) => (
+  <div className="bg-background hover:bg-accent/50 flex items-center justify-between rounded-lg border p-4 transition-colors">
     <div className="flex-1">
       <p className="font-medium">{modifier.name}</p>
       {modifier.description && (
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-1 text-sm">
           {modifier.description}
         </p>
       )}
@@ -192,37 +182,29 @@ const ModifierItem = ({
         <Button variant="ghost" size="sm" onClick={() => onEdit(modifier)}>
           <Pencil className="h-4 w-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onDelete(modifier.id)}
-        >
-          <Trash2 className="h-4 w-4 text-destructive" />
+        <Button variant="ghost" size="sm" onClick={() => onDelete(modifier.id)}>
+          <Trash2 className="text-destructive h-4 w-4" />
         </Button>
       </div>
     </div>
   </div>
-);
+)
 
 interface GroupHeaderProps {
-  group: IModifierGroup;
-  onEdit: () => void;
-  onDelete: () => void;
+  group: IModifierGroup
+  onEdit: () => void
+  onDelete: () => void
 }
 
-const GroupHeader = ({
-  group,
-  onEdit,
-  onDelete
-}: GroupHeaderProps) => (
+const GroupHeader = ({ group, onEdit, onDelete }: GroupHeaderProps) => (
   <div className="flex flex-1 items-center justify-between pr-4">
     <div className="flex items-center gap-3 text-left">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-        <Settings className="h-5 w-5 text-primary" />
+      <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+        <Settings className="text-primary h-5 w-5" />
       </div>
       <div>
         <h3 className="text-lg font-semibold">{group.name}</h3>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
           {group.isRequired && (
             <Badge variant="outline" className="text-xs">
               Обязательно
@@ -251,8 +233,8 @@ const GroupHeader = ({
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={(e) => {
-              e.stopPropagation();
-              onEdit();
+              e.stopPropagation()
+              onEdit()
             }}
           >
             <Pencil className="mr-2 h-4 w-4" />
@@ -260,8 +242,8 @@ const GroupHeader = ({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
+              e.stopPropagation()
+              onDelete()
             }}
             className="text-destructive"
           >
@@ -272,18 +254,18 @@ const GroupHeader = ({
       </DropdownMenu>
     </div>
   </div>
-);
+)
 
 interface GroupContentProps {
-  group: IModifierGroup;
-  onEditModifier: (modifier: IModifier) => void;
-  onDeleteModifier: (id: number) => void;
+  group: IModifierGroup
+  onEditModifier: (modifier: IModifier) => void
+  onDeleteModifier: (id: number) => void
 }
 
 const GroupContent = ({
   group,
   onEditModifier,
-  onDeleteModifier
+  onDeleteModifier,
 }: GroupContentProps) => (
   <>
     <Separator className="mb-4" />
@@ -298,7 +280,7 @@ const GroupContent = ({
           />
         ))
       ) : (
-        <p className="py-8 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground py-8 text-center text-sm">
           Нет модификаторов в группе
         </p>
       )}
@@ -313,14 +295,14 @@ const GroupContent = ({
       />
     </div>
   </>
-);
+)
 
 interface ModifierGroupItemProps {
-  group: IModifierGroup;
-  onEditGroup: (group: IModifierGroup) => void;
-  onDeleteGroup: (id: number) => void;
-  onEditModifier: (modifier: IModifier) => void;
-  onDeleteModifier: (id: number) => void;
+  group: IModifierGroup
+  onEditGroup: (group: IModifierGroup) => void
+  onDeleteGroup: (id: number) => void
+  onEditModifier: (modifier: IModifier) => void
+  onDeleteModifier: (id: number) => void
 }
 
 const ModifierGroupItem = ({
@@ -328,7 +310,7 @@ const ModifierGroupItem = ({
   onEditGroup,
   onDeleteGroup,
   onEditModifier,
-  onDeleteModifier
+  onDeleteModifier,
 }: ModifierGroupItemProps) => (
   <AccordionItem
     key={group.id}
@@ -350,20 +332,18 @@ const ModifierGroupItem = ({
       />
     </AccordionContent>
   </AccordionItem>
-);
+)
 
 export default function ModifiersPage(): JSX.Element {
-  const [search, setSearch] = useState('');
-  const [editingGroup, setEditingGroup] = useState<IModifierGroup | null>(null);
-  const [editingModifier, setEditingModifier] = useState<IModifier | null>(
-    null
-  );
+  const [search, setSearch] = useState('')
+  const [editingGroup, setEditingGroup] = useState<IModifierGroup | null>(null)
+  const [editingModifier, setEditingModifier] = useState<IModifier | null>(null)
 
   const { data: modifierGroups = [], isLoading } = useGetModifierGroups(
     search ? { search } : undefined
-  );
-  const { mutate: deleteGroup } = useDeleteModifierGroup();
-  const { mutate: deleteModifier } = useDeleteModifier();
+  )
+  const { mutate: deleteGroup } = useDeleteModifierGroup()
+  const { mutate: deleteModifier } = useDeleteModifier()
 
   if (isLoading) {
     return (
@@ -372,14 +352,14 @@ export default function ModifiersPage(): JSX.Element {
           <BaseLoading />
         </div>
       </PageContainer>
-    );
+    )
   }
 
   const filteredGroups = search
     ? modifierGroups.filter((group) =>
         group.name.toLowerCase().includes(search.toLowerCase())
       )
-    : modifierGroups;
+    : modifierGroups
 
   return (
     <PageContainer>
@@ -433,5 +413,5 @@ export default function ModifiersPage(): JSX.Element {
         )}
       </div>
     </PageContainer>
-  );
+  )
 }

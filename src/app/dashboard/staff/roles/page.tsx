@@ -2,11 +2,7 @@
 
 import { Pencil } from 'lucide-react'
 
-import {
-  BaseError,
-  BaseLoading,
-  Button,
-} from '@/shared/ui'
+import { BaseError, BaseLoading, Button } from '@/shared/ui'
 import { Badge } from '@/shared/ui/base/badge'
 import {
   Card,
@@ -19,7 +15,6 @@ import {
 import { useGetAllRoles } from '@/entities/role'
 import { CreateRoleDialog, DeleteRoleDialog } from '@/features/role-form'
 
-import type { JSX } from 'react'
 
 const SYSTEM_ROLES = ['Администратор', 'Менеджер', 'Кассир', 'Официант']
 

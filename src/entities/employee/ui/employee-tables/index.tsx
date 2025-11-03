@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
 import {
   getCoreRowModel,
@@ -11,44 +11,44 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
-  type VisibilityState
-} from '@tanstack/react-table';
-import { parseAsInteger, useQueryState } from 'nuqs';
+  type VisibilityState,
+} from '@tanstack/react-table'
+import { _parseAsInteger, _useQueryState } from 'nuqs'
 
-import { DataTable } from '@/shared/ui/base/table/data-table';
-import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar';
+import { DataTable } from '@/shared/ui/base/table/data-table'
+import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar'
 
-export { columns, createEmployeeColumns } from './columns';
+export { columns, createEmployeeColumns } from './columns'
 
 interface EmployeeTableParams<TData, TValue> {
-  data: TData[];
-  totalItems: number;
-  columns: ColumnDef<TData, TValue>[];
+  data: TData[]
+  _totalItems: number
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function EmployeeTable<TData, TValue>({
-  data,
-  totalItems,
-  columns
+  _data,
+  _totalItems,
+  columns,
 }: EmployeeTableParams<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 10
-  });
+    pageSize: 10,
+  })
 
   const table = useReactTable({
-    data,
+    _data,
     columns,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination
+      pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -62,12 +62,12 @@ export function EmployeeTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     manualPagination: false, // Use client-side pagination
     manualSorting: false, // Use client-side sorting
-    manualFiltering: false // Use client-side filtering
-  });
+    manualFiltering: false, // Use client-side filtering
+  })
 
   return (
     <DataTable table={table}>
-       <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} />
     </DataTable>
-  );
+  )
 }

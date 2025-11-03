@@ -1,26 +1,26 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
-import { useAuthStore } from '@/entities/auth';
+import { useAuthStore } from '@/entities/auth'
 
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react'
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { me } = useAuthStore();
+  const { me } = useAuthStore()
 
   useEffect(() => {
-    const token = Cookies.get('access_token');
+    const token = Cookies.get('access_token')
     if (token) {
-      me();
+      me()
     }
-  }, [me]);
+  }, [me])
 
   return children
 }

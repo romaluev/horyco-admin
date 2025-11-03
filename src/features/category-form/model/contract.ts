@@ -3,7 +3,7 @@
  * Zod validation for category forms
  */
 
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const categoryFormSchema = z.object({
   name: z
@@ -15,9 +15,13 @@ export const categoryFormSchema = z.object({
     .max(500, { message: 'Описание не должно превышать 500 символов' })
     .optional(),
   parentId: z.number().nullable().optional(),
-  image: z.string().url({ message: 'Некорректный URL изображения' }).optional().or(z.literal('')),
+  image: z
+    .string()
+    .url({ message: 'Некорректный URL изображения' })
+    .optional()
+    .or(z.literal('')),
   sortOrder: z.number().min(0).optional(),
-  isActive: z.boolean().default(true)
-});
+  isActive: z.boolean().default(true),
+})
 
-export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
+export type CategoryFormValues = z.infer<typeof categoryFormSchema>

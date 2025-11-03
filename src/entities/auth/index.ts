@@ -1,2 +1,2 @@
-export { ProfileView } from './ui/profile-view';
-export { useAuthStore } from './model/store';
+export { ProfileView } from './ui/profile-view'
+export { useAuthStore } from './model/store'

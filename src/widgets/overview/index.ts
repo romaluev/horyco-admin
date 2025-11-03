@@ -1,15 +1,15 @@
-export { BarGraph } from './components/bar-graph';
-export { BarGraphSkeleton } from './components/bar-graph-skeleton';
-export { AreaGraph } from './components/area-graph';
-export { AreaGraphSkeleton } from './components/area-graph-skeleton';
-export { PieGraph } from './components/pie-graph';
-export { PieGraphSkeleton } from './components/pie-graph-skeleton';
-export { RecentSales } from './components/recent-sales';
-export { RecentSalesSkeleton } from './components/recent-sales-skeleton';
+export { BarGraph } from './components/bar-graph'
+export { BarGraphSkeleton } from './components/bar-graph-skeleton'
+export { AreaGraph } from './components/area-graph'
+export { AreaGraphSkeleton } from './components/area-graph-skeleton'
+export { PieGraph } from './components/pie-graph'
+export { PieGraphSkeleton } from './components/pie-graph-skeleton'
+export { RecentSales } from './components/recent-sales'
+export { RecentSalesSkeleton } from './components/recent-sales-skeleton'
 
 // Новые компоненты аналитики продаж
-export { AnalyticsOverview } from './components/analytics-overview';
-export { PeriodFilter } from './components/period-filter';
-export { AnalyticsMetrics } from './components/analytics-metrics';
-export { AnalyticsChart } from './components/analytics-chart';
-export { RecentOrders } from './components/recent-orders';
+export { AnalyticsOverview } from './components/analytics-overview'
+export { PeriodFilter } from './components/period-filter'
+export { AnalyticsMetrics } from './components/analytics-metrics'
+export { AnalyticsChart } from './components/analytics-chart'
+export { RecentOrders } from './components/recent-orders'

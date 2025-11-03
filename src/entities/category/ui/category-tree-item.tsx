@@ -3,31 +3,31 @@
  * Individual sortable item in category tree
  */
 
-'use client';
-
-
+'use client'
 
 import { useState } from 'react'
 
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { ChevronRight, GripVertical } from 'lucide-react';
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { ChevronRight, GripVertical } from 'lucide-react'
 
-import { cn } from '@/shared/lib/utils';
-import { Badge } from '@/shared/ui/base/badge';
-import { Button } from '@/shared/ui/base/button';
+import { cn } from '@/shared/lib/utils'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 
-import { EditCategoryDialog, DeleteCategoryButton } from '@/features/category-form';
+import {
+  EditCategoryDialog,
+  DeleteCategoryButton,
+} from '@/features/category-form'
 
-import type { ICategory } from '../model';
-import type { JSX } from 'react';
+import type { ICategory } from '../model'
 
 interface CategoryTreeItemProps {
-  category: ICategory;
-  onEdit?: (category: ICategory) => void;
-  onDelete?: (categoryId: number) => void;
-  onAddChild?: (parentId: number) => void;
-  level?: number;
+  category: ICategory
+  onEdit?: (category: ICategory) => void
+  onDelete?: (categoryId: number) => void
+  onAddChild?: (parentId: number) => void
+  level?: number
 }
 
 export const CategoryTreeItem = ({
@@ -35,10 +35,10 @@ export const CategoryTreeItem = ({
   onEdit,
   onDelete,
   onAddChild,
-  level = 0
+  level = 0,
 }: CategoryTreeItemProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const hasChildren = category.children && category.children.length > 0;
+  const [isExpanded, setIsExpanded] = useState(false)
+  const hasChildren = category.children && category.children.length > 0
 
   const {
     attributes,
@@ -46,19 +46,19 @@ export const CategoryTreeItem = ({
     setNodeRef,
     transform,
     transition,
-    isDragging
-  } = useSortable({ id: category.id });
+    isDragging,
+  } = useSortable({ id: category.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition
-  };
+    transition,
+  }
 
   return (
     <div ref={setNodeRef} style={style}>
       <div
         className={cn(
-          'group flex items-center gap-2 rounded-lg border bg-card p-3 transition-colors',
+          'group bg-card flex items-center gap-2 rounded-lg border p-3 transition-colors',
           isDragging && 'opacity-50',
           !category.isActive && 'opacity-60'
         )}
@@ -70,7 +70,7 @@ export const CategoryTreeItem = ({
           {...listeners}
           className="cursor-grab active:cursor-grabbing"
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="text-muted-foreground h-4 w-4" />
         </div>
 
         {/* Expand/Collapse */}
@@ -105,7 +105,7 @@ export const CategoryTreeItem = ({
         <div className="flex-1">
           <span className="font-medium">{category.name}</span>
           {category.description && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {category.description}
             </p>
           )}
@@ -124,7 +124,7 @@ export const CategoryTreeItem = ({
         </Badge>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 ">
+        <div className="flex items-center gap-1">
           {onAddChild && (
             <Button
               variant="ghost"
@@ -155,5 +155,5 @@ export const CategoryTreeItem = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

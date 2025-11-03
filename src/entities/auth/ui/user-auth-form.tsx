@@ -1,62 +1,62 @@
-'use client';
-import { useTransition } from 'react';
+'use client'
+import { useTransition } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import * as z from 'zod'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Enter a valid email address' })
-});
+  email: z.string().email({ message: 'Enter a valid email address' }),
+})
 
-type UserFormValue = z.infer<typeof formSchema>;
+type UserFormValue = z.infer<typeof formSchema>
 
 export default function UserAuthForm() {
-  const [loading, startTransition] = useTransition();
+  const [loading, startTransition] = useTransition()
   const defaultValues = {
-    email: 'demo@gmail.com'
-  };
+    email: 'demo@gmail.com',
+  }
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues
-  });
+    defaultValues,
+  })
 
   const onSubmit = async (data: UserFormValue) => {
     startTransition(() => {
-      console.log('continue with email clicked');
-      toast.success('Signed In Successfully!');
-    });
-  };
+      console.log('continue with email clicked')
+      toast.success('Signed In Successfully!')
+    })
+  }
 
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='w-full space-y-2'
+          className="w-full space-y-2"
         >
           <FormField
             control={form.control}
-            name='email'
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    type='email'
-                    placeholder='Enter your email...'
+                    type="email"
+                    placeholder="Enter your email..."
                     disabled={loading}
                     {...field}
                   />
@@ -68,23 +68,23 @@ export default function UserAuthForm() {
 
           <Button
             disabled={loading}
-            className='mt-2 ml-auto w-full'
-            type='submit'
+            className="mt-2 ml-auto w-full"
+            type="submit"
           >
             Continue With Email
           </Button>
         </form>
       </Form>
-      <div className='relative'>
-        <div className='absolute inset-0 flex items-center'>
-          <span className='w-full border-t' />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
         </div>
-        <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background text-muted-foreground px-2'>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background text-muted-foreground px-2">
             Or continue with
           </span>
         </div>
       </div>
     </>
-  );
+  )
 }

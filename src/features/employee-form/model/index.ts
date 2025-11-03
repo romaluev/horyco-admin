@@ -1,2 +1,2 @@
-export * from './contract';
-export * from './use-employee-form';
+export * from './contract'
+export * from './use-employee-form'

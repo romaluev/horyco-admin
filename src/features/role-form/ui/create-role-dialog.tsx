@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2, Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
 import {
   Button,
@@ -16,17 +16,17 @@ import {
   Input,
   Label,
   Textarea,
-} from '@/shared/ui';
+} from '@/shared/ui'
 
-import { useCreateRole } from '@/entities/role';
+import { useCreateRole } from '@/entities/role'
 
-import { PermissionSelector } from './permission-selector';
-import { createRoleSchema } from '../model/contract';
+import { PermissionSelector } from './permission-selector'
+import { createRoleSchema } from '../model/contract'
 
-import type { CreateRoleFormData } from '../model/contract';
+import type { CreateRoleFormData } from '../model/contract'
 
 export const CreateRoleDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   const form = useForm<CreateRoleFormData>({
     resolver: zodResolver(createRoleSchema),
@@ -35,36 +35,36 @@ export const CreateRoleDialog = () => {
       description: '',
       permissionIds: [],
     },
-  });
+  })
 
-  const { mutate: createRole, isPending } = useCreateRole();
+  const { mutate: createRole, isPending } = useCreateRole()
 
   const onSubmit = (data: CreateRoleFormData): void => {
-    createRole(data, {
+    createRole(_data, {
       onSuccess: () => {
-        setIsOpen(false);
-        form.reset();
+        setIsOpen(false)
+        form.reset()
       },
-    });
-  };
+    })
+  }
 
   const handleOpenChange = (open: boolean): void => {
-    setIsOpen(open);
+    setIsOpen(open)
     if (!open) {
-      form.reset();
+      form.reset()
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className='h-4 w-4' />
+          <Plus className="h-4 w-4" />
           Создать роль
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Создать роль</DialogTitle>
           <DialogDescription>
@@ -73,29 +73,31 @@ export const CreateRoleDialog = () => {
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='space-y-6 py-4'>
-            <div className='space-y-2'>
-              <Label htmlFor='name'>
-                Название <span className='text-destructive'>*</span>
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                Название <span className="text-destructive">*</span>
               </Label>
               <Input
-                id='name'
+                id="name"
                 {...form.register('name')}
-                placeholder='Например: Менеджер зала'
-                className='text-base md:text-sm'
+                placeholder="Например: Менеджер зала"
+                className="text-base md:text-sm"
               />
               {form.formState.errors.name && (
-                <p className='text-destructive text-sm'>{form.formState.errors.name.message}</p>
+                <p className="text-destructive text-sm">
+                  {form.formState.errors.name.message}
+                </p>
               )}
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='description'>Описание</Label>
+            <div className="space-y-2">
+              <Label htmlFor="description">Описание</Label>
               <Textarea
-                id='description'
+                id="description"
                 {...form.register('description')}
-                placeholder='Краткое описание роли'
-                className='min-h-[80px] text-base md:text-sm'
+                placeholder="Краткое описание роли"
+                className="min-h-[80px] text-base md:text-sm"
               />
             </div>
 
@@ -103,16 +105,20 @@ export const CreateRoleDialog = () => {
           </div>
 
           <DialogFooter>
-            <Button type='button' variant='outline' onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               Отмена
             </Button>
-            <Button type='submit' disabled={isPending}>
-              {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isPending ? 'Создание...' : 'Создать роль'}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

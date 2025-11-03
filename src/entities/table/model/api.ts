@@ -1,8 +1,7 @@
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
-import type { ITable, ICreateTableDto, IUpdateTableDto } from './types';
-import type { ApiParams, PaginatedResponse } from '@/shared/types';
-
+import type { ITable, ICreateTableDto, IUpdateTableDto } from './types'
+import type { ApiParams, PaginatedResponse } from '@/shared/types'
 
 export const tableApi = {
   /**
@@ -11,25 +10,25 @@ export const tableApi = {
    * @returns Promise with the created table
    */
   async createTable(tableData: ICreateTableDto): Promise<ITable> {
-    const response = await api.post<ITable>('/pos/table', tableData);
-    return response.data;
+    const response = await api.post<ITable>('/pos/table', tableData)
+    return response.data
   },
 
   async getTables(
-    searchParams: ApiParams = {}
+    _searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<ITable>> {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams()
 
-    params.append('page', String(searchParams.page || '0'));
-    params.append('size', String(searchParams.size || '100'));
+    params.append('page', String(searchParams.page || '0'))
+    params.append('size', String(searchParams.size || '100'))
 
     if (searchParams.filters) {
-      params.append('filters', searchParams.filters);
+      params.append('filters', _searchParams.filters)
     }
     const response = await api.get<PaginatedResponse<ITable>>('/pos/table', {
-      params: params
-    });
-    return response.data;
+      params: params,
+    })
+    return response.data
   },
 
   /**
@@ -38,8 +37,8 @@ export const tableApi = {
    * @returns Promise with the table
    */
   async getTableById(id: number): Promise<ITable> {
-    const response = await api.get<ITable>(`/pos/table/${id}`);
-    return response.data;
+    const response = await api.get<ITable>(`/pos/table/${id}`)
+    return response.data
   },
 
   /**
@@ -49,8 +48,8 @@ export const tableApi = {
    * @returns Promise with the updated table
    */
   async updateTable(id: number, tableData: IUpdateTableDto): Promise<ITable> {
-    const response = await api.patch<ITable>(`/pos/table/${id}`, tableData);
-    return response.data;
+    const response = await api.patch<ITable>(`/pos/table/${id}`, tableData)
+    return response.data
   },
 
   /**
@@ -59,6 +58,6 @@ export const tableApi = {
    * @returns Promise with void
    */
   async deleteTable(id: number): Promise<void> {
-    await api.delete(`/pos/table/${id}`);
-  }
-};
+    await api.delete(`/pos/table/${id}`)
+  },
+}

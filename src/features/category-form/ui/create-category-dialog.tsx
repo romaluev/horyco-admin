@@ -3,56 +3,59 @@
  * Modal for creating new categories
  */
 
-'use client';
+'use client'
 
-import * as React from 'react';
+import * as React from 'react'
 import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
-import { ImageUpload } from '@/shared/ui/image-upload';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
+import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useCreateCategory, categoryApi } from '@/entities/category';
-import { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } from '@/entities/file'
+import { useCreateCategory, categoryApi } from '@/entities/category'
+import {
+  requestPresignedUploadUrl,
+  uploadToPresignedUrl,
+  confirmUpload,
+} from '@/entities/file'
 
-import { CategoryParentSelector } from './category-parent-selector';
-import { categoryFormSchema, type CategoryFormValues } from '../model/contract';
+import { CategoryParentSelector } from './category-parent-selector'
+import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateCategoryDialogProps {
-  defaultParentId?: number;
+  defaultParentId?: number
 }
 
 export const CreateCategoryDialog = ({
-  defaultParentId
+  defaultParentId,
 }: CreateCategoryDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createCategory, isPending } = useCreateCategory();
+  const [open, setOpen] = useState(false)
+  const { mutate: createCategory, isPending } = useCreateCategory()
 
-  const [imageFile, setImageFile] = React.useState<File | null>(null);
+  const [imageFile, setImageFile] = React.useState<File | null>(null)
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
@@ -61,19 +64,19 @@ export const CreateCategoryDialog = ({
       description: '',
       parentId: defaultParentId ?? null,
       image: '',
-      isActive: true
-    }
-  });
+      isActive: true,
+    },
+  })
 
   const onSubmit = async (data: CategoryFormValues): Promise<void> => {
     try {
       // First create the category
       const createdCategory = await new Promise<any>((resolve, reject) => {
-        createCategory(data, {
+        createCategory(_data, {
           onSuccess: (category) => resolve(category),
-          onError: (error) => reject(error)
-        });
-      });
+          onError: (error) => reject(error),
+        })
+      })
 
       if (imageFile && createdCategory?.id) {
         const presignedData = await requestPresignedUploadUrl({
@@ -82,30 +85,32 @@ export const CreateCategoryDialog = ({
           fileName: imageFile.name,
           mimeType: imageFile.type,
           fileSize: imageFile.size,
-          altText: data.name
-        });
+          altText: data.name,
+        })
 
-        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile);
+        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
 
         const response = await confirmUpload({
           fileId: presignedData.data.fileId,
-          fileKey: presignedData.data.fileKey
-        });
+          fileKey: presignedData.data.fileKey,
+        })
 
         // Update category with image URL
-        const imageUrl = response.variants.medium || response.variants.original;
+        const imageUrl = response.variants.medium || response.variants.original
         if (imageUrl) {
-          await categoryApi.updateCategory(createdCategory.id, { image: imageUrl });
+          await categoryApi.updateCategory(createdCategory.id, {
+            image: imageUrl,
+          })
         }
       }
 
-      setOpen(false);
-      form.reset();
-      setImageFile(null);
+      setOpen(false)
+      form.reset()
+      setImageFile(null)
     } catch (error) {
-      console.error('Error creating category:', error);
+      console.error('Error creating category:', error)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -175,10 +180,7 @@ export const CreateCategoryDialog = ({
 
             <div>
               <FormLabel className="pb-2">Изображение</FormLabel>
-              <ImageUpload
-                value={imageFile}
-                onChange={setImageFile}
-              />
+              <ImageUpload value={imageFile} onChange={setImageFile} />
             </div>
 
             <FormField
@@ -188,7 +190,7 @@ export const CreateCategoryDialog = ({
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <FormLabel>Активна</FormLabel>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Категория будет доступна в меню
                     </p>
                   </div>
@@ -219,5 +221,5 @@ export const CreateCategoryDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,60 +1,70 @@
-'use client';
+'use client'
 
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
-import { BaseError, BaseLoading } from '@/shared/ui';
+import { BaseError, BaseLoading } from '@/shared/ui'
 
-import { useGetEmployees, EmployeeTable, createEmployeeColumns } from '@/entities/employee';
-import { CreateEmployeeDialog } from '@/features/employee-form';
+import {
+  useGetEmployees,
+  EmployeeTable,
+  createEmployeeColumns,
+} from '@/entities/employee'
+import { CreateEmployeeDialog } from '@/features/employee-form'
 
-import { EmployeeTableActions } from '../components/employee-table-actions';
+import { EmployeeTableActions } from '../components/employee-table-actions'
 
 export default function EmployeesPage() {
-  const { data: employeesResponse, isLoading, isError } = useGetEmployees();
+  const { data: employeesResponse, isLoading, isError } = useGetEmployees()
 
   const columns = useMemo(
     () =>
       createEmployeeColumns({
-        renderActions: (employee) => <EmployeeTableActions employee={employee} />,
+        renderActions: (employee) => (
+          <EmployeeTableActions employee={employee} />
+        ),
       }),
     []
-  );
+  )
 
   // Handle both array and paginated response
   const employees = Array.isArray(employeesResponse)
     ? employeesResponse
-    : employeesResponse?.data || [];
-  const totalItems = Array.isArray(employeesResponse)
+    : employeesResponse?.data || []
+  const _totalItems = Array.isArray(employeesResponse)
     ? employeesResponse.length
-    : employeesResponse?.meta?.total || 0;
+    : employeesResponse?.meta?.total || 0
 
   return (
-    <div className='space-y-6 p-6'>
-      <div className='flex items-center justify-between'>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className='text-3xl font-bold'>Сотрудники</h1>
-          <p className='text-sm text-muted-foreground'>Управление сотрудниками и их данными</p>
+          <h1 className="text-3xl font-bold">Сотрудники</h1>
+          <p className="text-muted-foreground text-sm">
+            Управление сотрудниками и их данными
+          </p>
         </div>
         <CreateEmployeeDialog />
       </div>
 
       {isLoading && <BaseLoading />}
-      {isError && <BaseError message='Ошибка при загрузке сотрудников' />}
+      {isError && <BaseError message="Ошибка при загрузке сотрудников" />}
 
       {employees.length === 0 && !isLoading && !isError && (
-        <div className='flex flex-col items-center justify-center gap-4 py-16'>
-          <h2 className='text-lg font-semibold text-muted-foreground'>Сотрудников пока нет</h2>
+        <div className="flex flex-col items-center justify-center gap-4 py-16">
+          <h2 className="text-muted-foreground text-lg font-semibold">
+            Сотрудников пока нет
+          </h2>
           <CreateEmployeeDialog />
         </div>
       )}
 
       {employees.length > 0 && (
         <EmployeeTable
-          data={employees}
-          totalItems={totalItems}
+          _data={employees}
+          totalItems={_totalItems}
           columns={columns}
         />
       )}
     </div>
-  );
+  )
 }

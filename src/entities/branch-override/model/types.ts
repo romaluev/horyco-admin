@@ -10,17 +10,17 @@
  * and GET /admin/menu/branches/:branchId/overrides
  */
 export interface IBranchOverride {
-  branchId: number;
-  branchName: string;
-  productId?: number;
-  productName?: string;
-  basePrice?: number;
-  overridePrice: number | null;
-  overrideAvailability: boolean | null;
-  overrideImage: string | null;
-  overrideName: string | null;
-  isActive: boolean;
-  createdAt: string;
+  branchId: number
+  branchName: string
+  productId?: number
+  productName?: string
+  basePrice?: number
+  overridePrice: number | null
+  overrideAvailability: boolean | null
+  overrideImage: string | null
+  overrideName: string | null
+  isActive: boolean
+  createdAt: string
 }
 
 /**
@@ -29,10 +29,10 @@ export interface IBranchOverride {
  * null values mean "use base product value"
  */
 export interface IUpsertBranchOverrideDto {
-  overridePrice?: number | null;
-  overrideAvailability?: boolean | null;
-  overrideImage?: string | null;
-  overrideName?: string | null;
+  overridePrice?: number | null
+  overrideAvailability?: boolean | null
+  overrideImage?: string | null
+  overrideName?: string | null
 }
 
 /**
@@ -40,11 +40,11 @@ export interface IUpsertBranchOverrideDto {
  */
 export interface IBranchOverrideWithProduct extends IBranchOverride {
   product: {
-    id: number;
-    name: string;
-    basePrice: number;
-    baseAvailability: boolean;
-  };
+    id: number
+    name: string
+    basePrice: number
+    baseAvailability: boolean
+  }
 }
 
 /**
@@ -52,7 +52,7 @@ export interface IBranchOverrideWithProduct extends IBranchOverride {
  */
 export interface IBranchOverrideWithBranch extends IBranchOverride {
   branch: {
-    id: number;
-    name: string;
-  };
+    id: number
+    name: string
+  }
 }

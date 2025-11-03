@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'
 
-import { employeeApi } from './api';
-import { employeeKeys } from './query-keys';
+import { employeeApi } from './api'
+import { employeeKeys } from './query-keys'
 
-import type { IEmployeeFilters } from './types';
+import type { IEmployeeFilters } from './types'
 
 /**
  * Get all employees with optional filters
@@ -13,8 +13,8 @@ export const useGetEmployees = (filters?: IEmployeeFilters) => {
   return useQuery({
     queryKey: employeeKeys.list(filters),
     queryFn: () => employeeApi.getEmployees(filters),
-  });
-};
+  })
+}
 
 /**
  * Get employee by ID
@@ -25,8 +25,8 @@ export const useGetEmployeeById = (id: number) => {
     queryKey: employeeKeys.detail(id),
     queryFn: () => employeeApi.getEmployeeById(id),
     enabled: Number.isFinite(id) && id > 0,
-  });
-};
+  })
+}
 
 /**
  * Get employees by branch
@@ -37,5 +37,5 @@ export const useGetEmployeesByBranch = (branchId: number) => {
     queryKey: employeeKeys.byBranch(branchId),
     queryFn: () => employeeApi.getEmployeesByBranch(branchId),
     enabled: Number.isFinite(branchId) && branchId > 0,
-  });
-};
+  })
+}

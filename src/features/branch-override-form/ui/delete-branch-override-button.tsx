@@ -3,10 +3,9 @@
  * Button for deleting branch overrides
  */
 
-'use client';
+'use client'
 
-
-import { Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -17,38 +16,37 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/shared/ui/base/alert-dialog';
-import { Button } from '@/shared/ui/base/button';
+  AlertDialogTrigger,
+} from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 
-import { useDeleteBranchOverride } from '@/entities/branch-override';
+import { useDeleteBranchOverride } from '@/entities/branch-override'
 
-import type { JSX } from 'react';
 
 interface DeleteBranchOverrideButtonProps {
-  productId: number;
-  branchId: number;
-  productName?: string;
-  branchName?: string;
+  productId: number
+  branchId: number
+  productName?: string
+  branchName?: string
 }
 
 export const DeleteBranchOverrideButton = ({
   productId,
   branchId,
   productName,
-  branchName
+  branchName,
 }: DeleteBranchOverrideButtonProps) => {
-  const { mutate: deleteOverride, isPending } = useDeleteBranchOverride();
+  const { mutate: deleteOverride, isPending } = useDeleteBranchOverride()
 
   const handleDelete = (): void => {
-    deleteOverride({ productId, branchId });
-  };
+    deleteOverride({ productId, branchId })
+  }
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon" disabled={isPending}>
-          <Trash2 className="h-4 w-4 text-destructive" />
+          <Trash2 className="text-destructive h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -74,5 +72,5 @@ export const DeleteBranchOverrideButton = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

@@ -1,15 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'
 
-import { onboardingApi } from './api';
-import { onboardingKeys } from './query-keys';
+import { onboardingApi } from './api'
+import { onboardingKeys } from './query-keys'
 
 import type {
   OnboardingProgress,
   DefaultProductsResponse,
   Region,
-  District
-} from './types';
-import type { UseQueryOptions } from '@tanstack/react-query';
+  District,
+} from './types'
+import type { UseQueryOptions } from '@tanstack/react-query'
 
 // Get onboarding progress
 export const useGetOnboardingProgress = (
@@ -19,9 +19,9 @@ export const useGetOnboardingProgress = (
     queryKey: onboardingKeys.progress(),
     queryFn: () => onboardingApi.getProgress(),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 // Get default products for menu setup
 export const useGetDefaultProducts = (
@@ -35,9 +35,9 @@ export const useGetDefaultProducts = (
     queryKey: onboardingKeys.defaultProducts(businessType),
     queryFn: () => onboardingApi.getDefaultProducts(businessType),
     staleTime: 1000 * 60 * 30, // 30 minutes (defaults don't change often)
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 // Get regions
 export const useGetRegions = (
@@ -47,9 +47,9 @@ export const useGetRegions = (
     queryKey: onboardingKeys.regions(),
     queryFn: () => onboardingApi.getRegions(),
     staleTime: Infinity, // Regions rarely change
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 // Get districts
 export const useGetDistricts = (
@@ -61,6 +61,6 @@ export const useGetDistricts = (
     queryFn: () => onboardingApi.getDistricts(regionId!),
     enabled: !!regionId,
     staleTime: Infinity, // Districts rarely change
-    ...options
-  });
-};
+    ...options,
+  })
+}

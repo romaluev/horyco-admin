@@ -31,13 +31,12 @@ import {
   IconLayoutKanban,
   IconBrandGithub,
   IconLayoutGrid,
-  IconHierarchy
-} from '@tabler/icons-react';
+  IconHierarchy,
+} from '@tabler/icons-react'
 
-import type {
-  IconProps} from '@tabler/icons-react';
+import type { IconProps } from '@tabler/icons-react'
 
-export type Icon = React.ComponentType<IconProps>;
+export type Icon = React.ComponentType<IconProps>
 
 export const Icons = {
   dashboard: IconLayoutDashboard,
@@ -72,5 +71,5 @@ export const Icons = {
   twitter: IconBrandTwitter,
   check: IconCheck,
   layoutGrid: IconLayoutGrid,
-  hierarchy: IconHierarchy
-};
+  hierarchy: IconHierarchy,
+}

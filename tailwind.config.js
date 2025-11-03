@@ -3,9 +3,9 @@ module.exports = {
   theme: {
     extend: {
       fontSize: {
-        md: '16px'
-      }
-    }
+        md: '16px',
+      },
+    },
   },
-  plugins: []
-};
+  plugins: [],
+}

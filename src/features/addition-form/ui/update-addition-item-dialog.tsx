@@ -3,21 +3,21 @@
  * Dialog for updating an existing item within an addition group
  */
 
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -25,32 +25,31 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 
-import { useUpdateAdditionItem } from '@/entities/addition';
+import { useUpdateAdditionItem } from '@/entities/addition'
 
 import {
   additionItemSchema,
-  type AdditionItemFormValues
-} from '../model/contract';
+  type AdditionItemFormValues,
+} from '../model/contract'
 
-import type { IAdditionItem } from '@/entities/addition';
-import type { JSX } from 'react';
+import type { IAdditionItem } from '@/entities/addition'
 
 interface UpdateAdditionItemDialogProps {
-  item: IAdditionItem;
-  isOpen: boolean;
-  onClose: () => void;
+  item: IAdditionItem
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const UpdateAdditionItemDialog = ({
   item,
   isOpen,
-  onClose
+  onClose,
 }: UpdateAdditionItemDialogProps) => {
-  const { mutate: updateItem, isPending } = useUpdateAdditionItem();
+  const { mutate: updateItem, isPending } = useUpdateAdditionItem()
 
   const form = useForm<AdditionItemFormValues>({
     resolver: zodResolver(additionItemSchema),
@@ -58,9 +57,9 @@ export const UpdateAdditionItemDialog = ({
       name: item.name,
       price: item.price,
       additionId: item.additionId,
-      sortOrder: item.sortOrder || 0
-    }
-  });
+      sortOrder: item.sortOrder || 0,
+    },
+  })
 
   // Reset form when item changes
   useEffect(() => {
@@ -69,21 +68,21 @@ export const UpdateAdditionItemDialog = ({
         name: item.name,
         price: item.price,
         additionId: item.additionId,
-        sortOrder: item.sortOrder || 0
-      });
+        sortOrder: item.sortOrder || 0,
+      })
     }
-  }, [item, form]);
+  }, [item, form])
 
   const handleSubmit = (values: AdditionItemFormValues): void => {
     updateItem(
       { id: item.id, data: values },
       {
         onSuccess: () => {
-          onClose();
-        }
+          onClose()
+        },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -96,7 +95,10 @@ export const UpdateAdditionItemDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -155,11 +157,7 @@ export const UpdateAdditionItemDialog = ({
             />
 
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button type="button" variant="outline" onClick={onClose}>
                 Отмена
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -170,5 +168,5 @@ export const UpdateAdditionItemDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -18,6 +18,7 @@
 ---
 
 ## 📁 FSD Layers
+
 ```
 src/
 ├── app/         # Routes, providers
@@ -28,6 +29,7 @@ src/
 ```
 
 **Import Rules:**
+
 ```
 app      → widgets, features, entities, shared
 widgets  → features, entities, shared
@@ -37,6 +39,7 @@ shared   → nothing
 ```
 
 ❌ **FORBIDDEN:**
+
 - Cross-entity imports
 - Upward imports
 - Feature-to-feature imports
@@ -44,6 +47,7 @@ shared   → nothing
 ---
 
 ## 🏗️ Entity Structure
+
 ```
 entities/[name]/
 ├── index.ts
@@ -58,6 +62,7 @@ entities/[name]/
 ```
 
 **Rules:**
+
 - NO user interactions
 - NO business logic
 - Dumb UI components
@@ -66,6 +71,7 @@ entities/[name]/
 ---
 
 ## 🎨 Feature Structure
+
 ```
 features/[name]/
 ├── index.ts            # Export UI only
@@ -76,6 +82,7 @@ features/[name]/
 ```
 
 **Rules:**
+
 - NO direct API calls
 - Use entity mutations/queries
 - Handle validations
@@ -85,15 +92,15 @@ features/[name]/
 
 ## 📋 Naming
 
-| Type | Format | Example |
-|------|--------|---------|
-| Components | PascalCase | `ProductCard.tsx` |
-| Hooks | camelCase + use | `useProductForm.ts` |
-| Utils | camelCase | `formatPrice.ts` |
-| Types | PascalCase + I | `IProduct` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRIES` |
-| Booleans | is/has/should | `isLoading` |
-| Folders | kebab-case | `product-form/` |
+| Type       | Format          | Example             |
+| ---------- | --------------- | ------------------- |
+| Components | PascalCase      | `ProductCard.tsx`   |
+| Hooks      | camelCase + use | `useProductForm.ts` |
+| Utils      | camelCase       | `formatPrice.ts`    |
+| Types      | PascalCase + I  | `IProduct`          |
+| Constants  | SCREAMING_SNAKE | `MAX_RETRIES`       |
+| Booleans   | is/has/should   | `isLoading`         |
+| Folders    | kebab-case      | `product-form/`     |
 
 ---
 
@@ -116,17 +123,18 @@ features/[name]/
 
 ## 📊 Limits
 
-| Rule | Limit |
-|------|-------|
-| Function | 50 lines |
-| File | 200 lines |
-| Complexity | 10 |
-| Nesting | 3 levels |
-| Parameters | 4 |
+| Rule       | Limit     |
+| ---------- | --------- |
+| Function   | 50 lines  |
+| File       | 200 lines |
+| Complexity | 10        |
+| Nesting    | 3 levels  |
+| Parameters | 4         |
 
 ---
 
 ## 🛠️ Commands
+
 ```bash
 pnpm dev              # Dev
 pnpm build            # Build

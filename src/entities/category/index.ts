@@ -16,10 +16,10 @@ export {
   type ICreateCategoryDto,
   type IUpdateCategoryDto,
   type IReorderCategoriesDto,
-  type IGetCategoriesParams
-} from './model';
+  type IGetCategoriesParams,
+} from './model'
 
-export { CategoryCard } from './ui/category-card';
-export { CategoryList } from './ui/category-list';
-export { CategoryTree } from './ui/category-tree';
-export { CategoryTreeItem } from './ui/category-tree-item';
+export { CategoryCard } from './ui/category-card'
+export { CategoryList } from './ui/category-list'
+export { CategoryTree } from './ui/category-tree'
+export { CategoryTreeItem } from './ui/category-tree-item'

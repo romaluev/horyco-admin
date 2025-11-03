@@ -1,5 +1,5 @@
-import { ClientHallPage } from './client-page';
+import { ClientHallPage } from './client-page'
 
 export default function HallsPage() {
-  return <ClientHallPage />;
+  return <ClientHallPage />
 }

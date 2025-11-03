@@ -3,15 +3,12 @@
  * React Query hooks for fetching modifier data
  */
 
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
-import { modifierApi } from './api';
-import { modifierKeys } from './query-keys';
+import { modifierApi } from './api'
+import { modifierKeys } from './query-keys'
 
-import type {
-  IModifier,
-  IGetModifiersParams
-} from './types';
+import type { IModifier, IGetModifiersParams } from './types'
 
 /**
  * Get all modifiers with optional filters
@@ -23,9 +20,9 @@ export const useGetModifiers = (
   return useQuery({
     queryKey: modifierKeys.list(params),
     queryFn: () => modifierApi.getModifiers(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get modifier by ID
@@ -38,6 +35,6 @@ export const useGetModifierById = (
     queryKey: modifierKeys.detail(id),
     queryFn: () => modifierApi.getModifierById(id),
     enabled: !!id,
-    ...options
-  });
-};
+    ...options,
+  })
+}

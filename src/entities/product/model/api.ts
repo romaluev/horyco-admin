@@ -3,7 +3,7 @@
  * Based on /admin/menu/products endpoints from ADMIN_MENU_MANAGEMENT.md
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   IProduct,
@@ -16,14 +16,14 @@ import type {
   IProductType,
   IProductTypeResponse,
   ICreateProductTypeDto,
-  IUpdateProductTypeDto
-} from './types';
+  IUpdateProductTypeDto,
+} from './types'
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 export const productApi = {
@@ -35,8 +35,8 @@ export const productApi = {
     const response = await api.get<ApiResponse<IProductsResponse>>(
       '/admin/menu/products',
       { params }
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -46,8 +46,8 @@ export const productApi = {
   async getProductById(id: number): Promise<IProduct> {
     const response = await api.get<ApiResponse<IProduct>>(
       `/admin/menu/products/${id}`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -58,8 +58,8 @@ export const productApi = {
     const response = await api.post<ApiResponse<IProduct>>(
       '/admin/menu/products',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -70,8 +70,8 @@ export const productApi = {
     const response = await api.patch<ApiResponse<IProduct>>(
       `/admin/menu/products/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -85,8 +85,8 @@ export const productApi = {
     const response = await api.patch<ApiResponse<IProduct>>(
       `/admin/menu/products/${id}/price`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -100,8 +100,8 @@ export const productApi = {
     const response = await api.patch<ApiResponse<IProduct>>(
       `/admin/menu/products/${id}/availability`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -109,7 +109,7 @@ export const productApi = {
    * DELETE /admin/menu/products/:id
    */
   async deleteProduct(id: number): Promise<void> {
-    await api.delete(`/admin/menu/products/${id}`);
+    await api.delete(`/admin/menu/products/${id}`)
   },
 
   // ===== Product Types =====
@@ -119,15 +119,15 @@ export const productApi = {
    * GET /admin/menu/product-types
    */
   async getProductTypes(params?: {
-    page?: number;
-    limit?: number;
+    page?: number
+    limit?: number
   }): Promise<IProductTypeResponse> {
     const response = await api.get<ApiResponse<IProductTypeResponse>>(
       '/admin/menu/product-types',
       { params }
-    );
+    )
 
-    return response.data.data;
+    return response.data.data
   },
 
   /**
@@ -138,8 +138,8 @@ export const productApi = {
     const response = await api.post<ApiResponse<IProductType>>(
       '/admin/menu/product-types',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -153,8 +153,8 @@ export const productApi = {
     const response = await api.patch<ApiResponse<IProductType>>(
       `/admin/menu/product-types/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -162,12 +162,12 @@ export const productApi = {
    * DELETE /admin/menu/product-types/:id
    */
   async deleteProductType(id: number): Promise<void> {
-    await api.delete(`/admin/menu/product-types/${id}`);
-  }
-};
+    await api.delete(`/admin/menu/product-types/${id}`)
+  },
+}
 
 /**
  * Legacy export for backward compatibility
  * @deprecated Use productApi instead
  */
-export const productAPi = productApi;
+export const productAPi = productApi

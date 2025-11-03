@@ -3,56 +3,55 @@
  * Modal for editing existing categories
  */
 
-'use client';
-
-
+'use client'
 
 import { useEffect, useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Pencil } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Pencil } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
-import { ImageUpload } from '@/shared/ui/image-upload';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
+import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useUpdateCategory, type ICategory } from '@/entities/category';
-import { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } from '@/entities/file'
+import { useUpdateCategory, type ICategory } from '@/entities/category'
+import {
+  requestPresignedUploadUrl,
+  uploadToPresignedUrl,
+  confirmUpload,
+} from '@/entities/file'
 
-import { CategoryParentSelector } from './category-parent-selector';
-import { categoryFormSchema, type CategoryFormValues } from '../model/contract';
+import { CategoryParentSelector } from './category-parent-selector'
+import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface EditCategoryDialogProps {
-  category: ICategory;
+  category: ICategory
 }
 
-export const EditCategoryDialog = ({
-  category
-}: EditCategoryDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const { mutate: updateCategory, isPending } = useUpdateCategory();
+export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
+  const [open, setOpen] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const { mutate: updateCategory, isPending } = useUpdateCategory()
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
@@ -61,9 +60,9 @@ export const EditCategoryDialog = ({
       description: category.description || '',
       parentId: category.parentId,
       image: category.image || '',
-      isActive: category.isActive
-    }
-  });
+      isActive: category.isActive,
+    },
+  })
 
   useEffect(() => {
     if (open) {
@@ -72,15 +71,15 @@ export const EditCategoryDialog = ({
         description: category.description || '',
         parentId: category.parentId,
         image: category.image || '',
-        isActive: category.isActive
-      });
-      setImageFile(null);
+        isActive: category.isActive,
+      })
+      setImageFile(null)
     }
-  }, [open, category, form]);
+  }, [open, category, form])
 
   const onSubmit = async (data: CategoryFormValues): Promise<void> => {
     try {
-      let imageUrl = data.image;
+      let imageUrl = data.image
 
       if (imageFile) {
         const presignedData = await requestPresignedUploadUrl({
@@ -89,17 +88,17 @@ export const EditCategoryDialog = ({
           fileName: imageFile.name,
           mimeType: imageFile.type,
           fileSize: imageFile.size,
-          altText: data.name
-        });
+          altText: data.name,
+        })
 
-        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile);
+        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
 
         const response = await confirmUpload({
           fileId: presignedData.data.fileId,
-          fileKey: presignedData.data.fileKey
-        });
+          fileKey: presignedData.data.fileKey,
+        })
 
-        imageUrl = response.variants.medium || response.variants.original || '';
+        imageUrl = response.variants.medium || response.variants.original || ''
       }
 
       // Update category with image URL
@@ -107,15 +106,15 @@ export const EditCategoryDialog = ({
         { id: category.id, data: { ...data, image: imageUrl } },
         {
           onSuccess: () => {
-            setOpen(false);
-            setImageFile(null);
-          }
+            setOpen(false)
+            setImageFile(null)
+          },
         }
-      );
+      )
     } catch (error) {
-      console.error('Error updating category:', error);
+      console.error('Error updating category:', error)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -199,7 +198,7 @@ export const EditCategoryDialog = ({
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <FormLabel>Активна</FormLabel>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Категория будет доступна в меню
                     </p>
                   </div>
@@ -230,5 +229,5 @@ export const EditCategoryDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

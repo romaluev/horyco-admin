@@ -3,25 +3,23 @@
  * Modal for creating new modifier groups
  */
 
-'use client';
+'use client'
 
+import { useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { useState } from 'react';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -29,31 +27,30 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
 
-import { useCreateModifierGroup } from '@/entities/modifier-group';
+import { useCreateModifierGroup } from '@/entities/modifier-group'
 
 import {
   modifierGroupFormSchema,
-  type ModifierGroupFormValues
-} from '../model/contract';
+  type ModifierGroupFormValues,
+} from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateModifierGroupDialogProps {
-  productId: number;
-  onSuccess?: () => void;
+  productId: number
+  onSuccess?: () => void
 }
 
 export const CreateModifierGroupDialog = ({
   productId,
-  onSuccess
+  onSuccess,
 }: CreateModifierGroupDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createGroup, isPending } = useCreateModifierGroup();
+  const [open, setOpen] = useState(false)
+  const { mutate: createGroup, isPending } = useCreateModifierGroup()
 
   const form = useForm<ModifierGroupFormValues>({
     resolver: zodResolver(modifierGroupFormSchema),
@@ -62,19 +59,19 @@ export const CreateModifierGroupDialog = ({
       productId,
       minSelection: 0,
       maxSelection: 1,
-      isRequired: false
-    }
-  });
+      isRequired: false,
+    },
+  })
 
   const onSubmit = (data: ModifierGroupFormValues): void => {
-    createGroup(data, {
+    createGroup(_data, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-        onSuccess?.();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+        onSuccess?.()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -194,5 +191,5 @@ export const CreateModifierGroupDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

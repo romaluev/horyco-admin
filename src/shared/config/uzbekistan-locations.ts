@@ -4,16 +4,16 @@
  */
 
 export interface UzbekistanRegion {
-  id: string;
-  name: string;
-  nameEn: string;
+  id: string
+  name: string
+  nameEn: string
 }
 
 export interface UzbekistanCity {
-  id: string;
-  name: string;
-  nameEn: string;
-  regions: UzbekistanRegion[];
+  id: string
+  name: string
+  nameEn: string
+  regions: UzbekistanRegion[]
 }
 
 export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
@@ -28,20 +28,20 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
       {
         id: 'mirzo-ulugbek',
         name: 'Мирзо-Улугбекский район',
-        nameEn: 'Mirzo-Ulugbek'
+        nameEn: 'Mirzo-Ulugbek',
       },
       { id: 'mirobod', name: 'Мирабадский район', nameEn: 'Mirobod' },
       {
         id: 'shaykhontohur',
         name: 'Шайхонтохурский район',
-        nameEn: 'Shaykhontohur'
+        nameEn: 'Shaykhontohur',
       },
       { id: 'almazar', name: 'Алмазарский район', nameEn: 'Almazar' },
       { id: 'bektemir', name: 'Бектемирский район', nameEn: 'Bektemir' },
       { id: 'uchtepa', name: 'Учтепинский район', nameEn: 'Uchtepa' },
       { id: 'sergeli', name: 'Сергелийский район', nameEn: 'Sergeli' },
-      { id: 'yashnabad', name: 'Яшнабадский район', nameEn: 'Yashnabad' }
-    ]
+      { id: 'yashnabad', name: 'Яшнабадский район', nameEn: 'Yashnabad' },
+    ],
   },
   {
     id: 'samarkand',
@@ -50,8 +50,8 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
     regions: [
       { id: 'samarkand-center', name: 'Центральный район', nameEn: 'Center' },
       { id: 'samarkand-north', name: 'Северный район', nameEn: 'North' },
-      { id: 'samarkand-south', name: 'Южный район', nameEn: 'South' }
-    ]
+      { id: 'samarkand-south', name: 'Южный район', nameEn: 'South' },
+    ],
   },
   {
     id: 'bukhara',
@@ -59,8 +59,8 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
     nameEn: 'Bukhara',
     regions: [
       { id: 'bukhara-center', name: 'Центральный район', nameEn: 'Center' },
-      { id: 'bukhara-old-city', name: 'Старый город', nameEn: 'Old City' }
-    ]
+      { id: 'bukhara-old-city', name: 'Старый город', nameEn: 'Old City' },
+    ],
   },
   {
     id: 'andijan',
@@ -68,8 +68,8 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
     nameEn: 'Andijan',
     regions: [
       { id: 'andijan-center', name: 'Центральный район', nameEn: 'Center' },
-      { id: 'andijan-east', name: 'Восточный район', nameEn: 'East' }
-    ]
+      { id: 'andijan-east', name: 'Восточный район', nameEn: 'East' },
+    ],
   },
   {
     id: 'fergana',
@@ -77,8 +77,8 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
     nameEn: 'Fergana',
     regions: [
       { id: 'fergana-center', name: 'Центральный район', nameEn: 'Center' },
-      { id: 'fergana-south', name: 'Южный район', nameEn: 'South' }
-    ]
+      { id: 'fergana-south', name: 'Южный район', nameEn: 'South' },
+    ],
   },
   {
     id: 'namangan',
@@ -86,78 +86,78 @@ export const UZBEKISTAN_CITIES: UzbekistanCity[] = [
     nameEn: 'Namangan',
     regions: [
       { id: 'namangan-center', name: 'Центральный район', nameEn: 'Center' },
-      { id: 'namangan-north', name: 'Северный район', nameEn: 'North' }
-    ]
+      { id: 'namangan-north', name: 'Северный район', nameEn: 'North' },
+    ],
   },
   {
     id: 'karshi',
     name: 'Карши',
     nameEn: 'Karshi',
     regions: [
-      { id: 'karshi-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'karshi-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'termez',
     name: 'Термез',
     nameEn: 'Termez',
     regions: [
-      { id: 'termez-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'termez-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'urgench',
     name: 'Ургенч',
     nameEn: 'Urgench',
     regions: [
-      { id: 'urgench-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'urgench-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'nukus',
     name: 'Нукус',
     nameEn: 'Nukus',
     regions: [
-      { id: 'nukus-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'nukus-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'navoiy',
     name: 'Навои',
     nameEn: 'Navoiy',
     regions: [
-      { id: 'navoiy-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'navoiy-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'jizzakh',
     name: 'Джизак',
     nameEn: 'Jizzakh',
     regions: [
-      { id: 'jizzakh-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
+      { id: 'jizzakh-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
   },
   {
     id: 'gulistan',
     name: 'Гулистан',
     nameEn: 'Gulistan',
     regions: [
-      { id: 'gulistan-center', name: 'Центральный район', nameEn: 'Center' }
-    ]
-  }
-];
+      { id: 'gulistan-center', name: 'Центральный район', nameEn: 'Center' },
+    ],
+  },
+]
 
 /**
  * Get regions by city ID
  */
 export const getRegionsByCity = (cityId: string): UzbekistanRegion[] => {
-  const city = UZBEKISTAN_CITIES.find((c) => c.id === cityId);
-  return city?.regions || [];
-};
+  const city = UZBEKISTAN_CITIES.find((c) => c.id === cityId)
+  return city?.regions || []
+}
 
 /**
  * Get city by ID
  */
 export const getCityById = (cityId: string): UzbekistanCity | undefined => {
-  return UZBEKISTAN_CITIES.find((c) => c.id === cityId);
-};
+  return UZBEKISTAN_CITIES.find((c) => c.id === cityId)
+}

@@ -1,44 +1,42 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertCircle, Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
-
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { Button } from '@/shared/ui/base/button';
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot
-} from '@/shared/ui/base/input-otp';
-import PasswordInput from '@/shared/ui/base/passsword-input';
-import { PhoneInput } from '@/shared/ui/base/phone-input';
+  InputOTPSlot,
+} from '@/shared/ui/base/input-otp'
+import PasswordInput from '@/shared/ui/base/passsword-input'
+import { PhoneInput } from '@/shared/ui/base/phone-input'
 
-import { authApi } from '@/entities/auth/model/api';
-
+import { authApi } from '@/entities/auth/model/api'
 
 // Step 1: Initial registration form
 const initialFormSchema = z.object({
@@ -49,8 +47,8 @@ const initialFormSchema = z.object({
   businessName: z
     .string()
     .min(3, { message: 'Название должно содержать минимум 3 символа' })
-    .max(100, { message: 'Название слишком длинное' })
-});
+    .max(100, { message: 'Название слишком длинное' }),
+})
 
 // Step 2: OTP verification form
 const otpFormSchema = z
@@ -65,43 +63,43 @@ const otpFormSchema = z
       .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
       .max(100, { message: 'Пароль слишком длинный' })
       .regex(/[A-Z]/, {
-        message: 'Пароль должен содержать минимум 1 заглавную букву'
+        message: 'Пароль должен содержать минимум 1 заглавную букву',
       })
       .regex(/[0-9]/, { message: 'Пароль должен содержать минимум 1 цифру' })
       .regex(/[^A-Za-z0-9]/, {
-        message: 'Пароль должен содержать минимум 1 специальный символ'
+        message: 'Пароль должен содержать минимум 1 специальный символ',
       }),
-    confirmPassword: z.string()
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Пароли не совпадают',
-    path: ['confirmPassword']
-  });
+    path: ['confirmPassword'],
+  })
 
-type InitialFormValues = z.infer<typeof initialFormSchema>;
-type OTPFormValues = z.infer<typeof otpFormSchema>;
+type InitialFormValues = z.infer<typeof initialFormSchema>
+type OTPFormValues = z.infer<typeof otpFormSchema>
 
 const RegisterForm = () => {
-  const router = useRouter();
-  const [step, setStep] = useState<'initial' | 'otp'>('initial');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [maskedPhone, setMaskedPhone] = useState('');
-  const [otpExpiry, setOtpExpiry] = useState(180); // 3 minutes in seconds
-  const [canResend, setCanResend] = useState(false);
+  const router = useRouter()
+  const [step, setStep] = useState<'initial' | 'otp'>('initial')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [maskedPhone, setMaskedPhone] = useState('')
+  const [otpExpiry, setOtpExpiry] = useState(180) // 3 minutes in seconds
+  const [canResend, setCanResend] = useState(false)
   const [registrationData, setRegistrationData] = useState<{
-    phone: string;
-    businessName: string;
-  } | null>(null);
+    phone: string
+    businessName: string
+  } | null>(null)
 
   // Initial form
   const initialForm = useForm<InitialFormValues>({
     resolver: zodResolver(initialFormSchema),
     defaultValues: {
       phone: '',
-      businessName: ''
-    }
-  });
+      businessName: '',
+    },
+  })
 
   // OTP form
   const otpForm = useForm<OTPFormValues>({
@@ -110,118 +108,118 @@ const RegisterForm = () => {
       otp: '',
       ownerName: '',
       password: '',
-      confirmPassword: ''
-    }
-  });
+      confirmPassword: '',
+    },
+  })
 
   // Countdown timer for OTP expiry
   React.useEffect(() => {
     if (step === 'otp' && otpExpiry > 0) {
       const timer = setTimeout(() => {
-        setOtpExpiry((prev) => prev - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
+        setOtpExpiry((prev) => prev - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
     } else if (otpExpiry === 0) {
-      setCanResend(true);
+      setCanResend(true)
     }
-    return undefined;
-  }, [step, otpExpiry]);
+    return undefined
+  }, [step, otpExpiry])
 
   // Handle initial form submission (send OTP)
   const onSendOTP = async (data: InitialFormValues) => {
     try {
-      setIsLoading(true);
-      setError(null);
+      setIsLoading(true)
+      setError(null)
 
       const response = await authApi.sendOTP({
         phone: data.phone,
-        businessName: data.businessName
-      });
+        businessName: data.businessName,
+      })
 
-      setRegistrationData(data);
-      setMaskedPhone(response.maskedPhone);
-      setOtpExpiry(response.expiresIn);
-      setCanResend(false);
-      setStep('otp');
-      toast.success(response.message);
-    } catch (err: any) {
+      setRegistrationData(data)
+      setMaskedPhone(response.maskedPhone)
+      setOtpExpiry(response.expiresIn)
+      setCanResend(false)
+      setStep('otp')
+      toast.success(response.message)
+    } catch (err: unknown) {
       setError(
         err.response?.data?.message ||
           'Не удалось отправить код. Попробуйте снова.'
-      );
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // Handle OTP verification and complete registration
   const onVerifyOTP = async (data: OTPFormValues) => {
-    if (!registrationData) return;
+    if (!registrationData) return
 
     try {
-      setIsLoading(true);
-      setError(null);
+      setIsLoading(true)
+      setError(null)
 
       const response = await authApi.verifyOTP({
         phone: registrationData.phone,
         otp: data.otp,
         businessName: registrationData.businessName,
         ownerName: data.ownerName,
-        password: data.password
-      });
+        password: data.password,
+      })
 
-      toast.success('Регистрация успешно завершена!');
+      toast.success('Регистрация успешно завершена!')
 
       // Redirect to onboarding
       if (response.onboardingProgress.isCompleted) {
-        router.push('/dashboard');
+        router.push('/dashboard')
       } else {
-        router.push('/onboarding/business-info');
+        router.push('/onboarding/business-info')
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(
         err.response?.data?.message ||
           'Неверный код или истёк срок действия. Попробуйте снова.'
-      );
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // Resend OTP
   const handleResendOTP = async () => {
-    if (!registrationData || !canResend) return;
+    if (!registrationData || !canResend) return
 
     try {
-      setIsLoading(true);
-      setError(null);
+      setIsLoading(true)
+      setError(null)
 
-      const response = await authApi.sendOTP(registrationData);
+      const response = await authApi.sendOTP(registrationData)
 
-      setOtpExpiry(response.expiresIn);
-      setCanResend(false);
-      toast.success('Код повторно отправлен');
-    } catch (err: any) {
+      setOtpExpiry(response.expiresIn)
+      setCanResend(false)
+      toast.success('Код повторно отправлен')
+    } catch (err: unknown) {
       setError(
         err.response?.data?.message ||
           'Не удалось отправить код. Попробуйте снова.'
-      );
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // Format seconds to MM:SS
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
 
   return (
-    <Card className='mx-auto w-full max-w-md'>
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader>
-        <CardTitle className='text-2xl font-bold'>
+        <CardTitle className="text-2xl font-bold">
           {step === 'initial' ? 'Регистрация' : 'Подтверждение'}
         </CardTitle>
         <CardDescription>
@@ -232,8 +230,8 @@ const RegisterForm = () => {
       </CardHeader>
       <CardContent>
         {error && (
-          <Alert variant='destructive' className='mb-4'>
-            <AlertCircle className='h-4 w-4' />
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -242,11 +240,11 @@ const RegisterForm = () => {
           <Form {...initialForm}>
             <form
               onSubmit={initialForm.handleSubmit(onSendOTP)}
-              className='space-y-4'
+              className="space-y-4"
             >
               <FormField
                 control={initialForm.control}
-                name='phone'
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Номер телефона</FormLabel>
@@ -267,13 +265,13 @@ const RegisterForm = () => {
 
               <FormField
                 control={initialForm.control}
-                name='businessName'
+                name="businessName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Название вашего бизнеса</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Например: Пицца Хаус'
+                        placeholder="Например: Пицца Хаус"
                         {...field}
                         disabled={isLoading}
                       />
@@ -283,10 +281,10 @@ const RegisterForm = () => {
                 )}
               />
 
-              <Button type='submit' className='w-full' disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Отправка...
                   </>
                 ) : (
@@ -299,11 +297,11 @@ const RegisterForm = () => {
           <Form {...otpForm}>
             <form
               onSubmit={otpForm.handleSubmit(onVerifyOTP)}
-              className='space-y-4'
+              className="space-y-4"
             >
               <FormField
                 control={otpForm.control}
-                name='otp'
+                name="otp"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Код подтверждения</FormLabel>
@@ -312,7 +310,7 @@ const RegisterForm = () => {
                         maxLength={6}
                         {...field}
                         disabled={isLoading}
-                        containerClassName='justify-center'
+                        containerClassName="justify-center"
                       >
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
@@ -324,7 +322,7 @@ const RegisterForm = () => {
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>
-                    <div className='text-muted-foreground mt-2 text-center text-sm'>
+                    <div className="text-muted-foreground mt-2 text-center text-sm">
                       Код действителен: {formatTime(otpExpiry)}
                     </div>
                     <FormMessage />
@@ -334,13 +332,13 @@ const RegisterForm = () => {
 
               <FormField
                 control={otpForm.control}
-                name='ownerName'
+                name="ownerName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ваше имя</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Иван Иванов'
+                        placeholder="Иван Иванов"
                         {...field}
                         disabled={isLoading}
                       />
@@ -352,13 +350,13 @@ const RegisterForm = () => {
 
               <FormField
                 control={otpForm.control}
-                name='password'
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Пароль</FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder='Создайте надежный пароль'
+                        placeholder="Создайте надежный пароль"
                         {...field}
                         disabled={isLoading}
                       />
@@ -370,13 +368,13 @@ const RegisterForm = () => {
 
               <FormField
                 control={otpForm.control}
-                name='confirmPassword'
+                name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Подтвердите пароль</FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder='Повторите пароль'
+                        placeholder="Повторите пароль"
                         {...field}
                         disabled={isLoading}
                       />
@@ -386,20 +384,20 @@ const RegisterForm = () => {
                 )}
               />
 
-              <div className='flex gap-2'>
+              <div className="flex gap-2">
                 <Button
-                  type='button'
-                  variant='outline'
-                  className='flex-1'
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
                   onClick={handleResendOTP}
                   disabled={!canResend || isLoading}
                 >
                   {canResend ? 'Отправить повторно' : 'Ожидание...'}
                 </Button>
-                <Button type='submit' className='flex-1' disabled={isLoading}>
+                <Button type="submit" className="flex-1" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Проверка...
                     </>
                   ) : (
@@ -412,7 +410,7 @@ const RegisterForm = () => {
         )}
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default RegisterForm;
+export default RegisterForm

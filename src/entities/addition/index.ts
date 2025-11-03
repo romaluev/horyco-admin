@@ -22,5 +22,5 @@ export {
   type IGetAdditionsParams,
   type IAdditionItem,
   type ICreateAdditionItemDto,
-  type IUpdateAdditionItemDto
-} from './model';
+  type IUpdateAdditionItemDto,
+} from './model'

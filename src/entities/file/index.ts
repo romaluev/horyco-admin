@@ -11,10 +11,10 @@ export type {
   IFileMetadata,
   IPresignedUploadUrlRequest,
   IPresignedUploadUrlResponse,
-  IConfirmUploadRequest,
+  _IConfirmUploadRequest,
   IFileResponse,
-  IDeleteFileParams
-} from './model/types';
+  _IDeleteFileParams,
+} from './model/types'
 
 // API
 export {
@@ -23,12 +23,12 @@ export {
   uploadToPresignedUrl,
   getFileById,
   getEntityFiles,
-  deleteFile
-} from './model/api';
+  deleteFile,
+} from './model/api'
 
 // Hooks
-export { useUploadFile, useDeleteFile } from './model/mutations';
-export { useGetFile, useGetEntityFiles } from './model/queries';
+export { useUploadFile, useDeleteFile } from './model/mutations'
+export { useGetFile, useGetEntityFiles } from './model/queries'
 
 // Query Keys
-export { fileKeys } from './model/query-keys';
+export { fileKeys } from './model/query-keys'

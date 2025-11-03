@@ -1,88 +1,88 @@
-'use client';
+'use client'
 
-import React from 'react';
+import React from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Textarea } from '@/shared/ui/base/textarea'
 
 import {
   useCreateProductType,
-  useUpdateProductType
-} from '../../model/mutations';
+  useUpdateProductType,
+} from '../../model/mutations'
 
-import type { IProductType, ICreateProductTypeDto } from '../../model/types';
+import type { IProductType, ICreateProductTypeDto } from '../../model/types'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
-  description: z.string().min(1, 'Описание обязательно')
-});
+  description: z.string().min(1, 'Описание обязательно'),
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 interface ProductTypeFormProps {
-  initialData?: IProductType | null;
-  onSuccess?: () => void;
+  initialData?: IProductType | null
+  onSuccess?: () => void
 }
 
 export const ProductTypeForm = ({
   initialData,
-  onSuccess
+  onSuccess,
 }: ProductTypeFormProps) => {
   const { mutate: createProductType, isPending: isCreating } =
-    useCreateProductType();
+    useCreateProductType()
   const { mutate: updateProductType, isPending: isUpdating } =
-    useUpdateProductType();
+    useUpdateProductType()
 
-  const isSubmitting = isCreating || isUpdating;
+  const isSubmitting = isCreating || isUpdating
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || '',
-      description: initialData?.description || ''
-    }
-  });
+      description: initialData?.description || '',
+    },
+  })
 
   const onSubmit = (values: FormValues) => {
     const productTypeData: ICreateProductTypeDto = {
       name: values.name,
-      description: values.description
-    };
+      description: values.description,
+    }
 
     if (initialData && initialData.id) {
       updateProductType(
         { id: initialData.id, data: productTypeData },
         { onSuccess }
-      );
+      )
     } else {
-      createProductType(productTypeData, { onSuccess });
+      createProductType(productTypeData, { onSuccess })
     }
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name='name'
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Название</FormLabel>
               <FormControl>
-                <Input placeholder='Введите название категории' {...field} />
+                <Input placeholder="Введите название категории" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,19 +91,19 @@ export const ProductTypeForm = ({
 
         <FormField
           control={form.control}
-          name='description'
+          name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Описание</FormLabel>
               <FormControl>
-                <Textarea placeholder='Введите описание категории' {...field} />
+                <Textarea placeholder="Введите описание категории" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type='submit' disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? 'Сохранение...'
             : initialData
@@ -112,5 +112,5 @@ export const ProductTypeForm = ({
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

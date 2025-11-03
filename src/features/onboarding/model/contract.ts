@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 /**
  * Onboarding validation schemas (Zod)
@@ -18,10 +18,10 @@ export const businessInfoSchema = z.object({
     .string()
     .url({ message: 'Введите корректный URL' })
     .optional()
-    .or(z.literal(''))
-});
+    .or(z.literal('')),
+})
 
-export type BusinessInfoFormValues = z.infer<typeof businessInfoSchema>;
+export type BusinessInfoFormValues = z.infer<typeof businessInfoSchema>
 
 /**
  * Branch Setup step schema
@@ -29,8 +29,8 @@ export type BusinessInfoFormValues = z.infer<typeof businessInfoSchema>;
 const dayHoursSchema = z.object({
   open: z.string(),
   close: z.string(),
-  isClosed: z.boolean().optional()
-});
+  isClosed: z.boolean().optional(),
+})
 
 export const branchSetupSchema = z.object({
   branchName: z.string().min(2, { message: 'Введите название филиала' }),
@@ -44,14 +44,14 @@ export const branchSetupSchema = z.object({
     thursday: dayHoursSchema,
     friday: dayHoursSchema,
     saturday: dayHoursSchema,
-    sunday: dayHoursSchema
+    sunday: dayHoursSchema,
   }),
   dineInEnabled: z.boolean(),
   takeawayEnabled: z.boolean(),
-  deliveryEnabled: z.boolean()
-});
+  deliveryEnabled: z.boolean(),
+})
 
-export type BranchSetupFormValues = z.infer<typeof branchSetupSchema>;
+export type BranchSetupFormValues = z.infer<typeof branchSetupSchema>
 
 /**
  * Staff Invite step schema
@@ -64,12 +64,12 @@ export const invitationSchema = z.object({
     .string()
     .email({ message: 'Некорректный email' })
     .optional()
-    .or(z.literal(''))
-});
+    .or(z.literal('')),
+})
 
 export const staffInviteSchema = z.object({
-  invitations: z.array(invitationSchema).min(0)
-});
+  invitations: z.array(invitationSchema).min(0),
+})
 
-export type InvitationFormValues = z.infer<typeof invitationSchema>;
-export type StaffInviteFormValues = z.infer<typeof staffInviteSchema>;
+export type InvitationFormValues = z.infer<typeof invitationSchema>
+export type StaffInviteFormValues = z.infer<typeof staffInviteSchema>

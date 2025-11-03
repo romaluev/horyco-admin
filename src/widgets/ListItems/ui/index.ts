@@ -1,2 +1,2 @@
-export * from './BaseFilter';
-export * from './BasePagination';
+export * from './BaseFilter'
+export * from './BasePagination'

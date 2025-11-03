@@ -3,21 +3,21 @@
  * Dialog for updating an existing addition group
  */
 
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -25,31 +25,30 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateAddition } from '@/entities/addition';
+import { useUpdateAddition } from '@/entities/addition'
 
-import { additionSchema, type AdditionFormValues } from '../model/contract';
+import { additionSchema, type AdditionFormValues } from '../model/contract'
 
-import type { IAddition } from '@/entities/addition';
-import type { JSX } from 'react';
+import type { IAddition } from '@/entities/addition'
 
 interface UpdateAdditionDialogProps {
-  addition: IAddition;
-  isOpen: boolean;
-  onClose: () => void;
+  addition: IAddition
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const UpdateAdditionDialog = ({
   addition,
   isOpen,
-  onClose
+  onClose,
 }: UpdateAdditionDialogProps) => {
-  const { mutate: updateAddition, isPending } = useUpdateAddition();
+  const { mutate: updateAddition, isPending } = useUpdateAddition()
 
   const form = useForm<AdditionFormValues>({
     resolver: zodResolver(additionSchema),
@@ -63,9 +62,9 @@ export const UpdateAdditionDialog = ({
       minSelection: addition.minSelection,
       maxSelection: addition.maxSelection,
       sortOrder: addition.sortOrder || 0,
-      isActive: addition.isActive ?? true
-    }
-  });
+      isActive: addition.isActive ?? true,
+    },
+  })
 
   // Reset form when addition changes
   useEffect(() => {
@@ -80,21 +79,21 @@ export const UpdateAdditionDialog = ({
         minSelection: addition.minSelection,
         maxSelection: addition.maxSelection,
         sortOrder: addition.sortOrder || 0,
-        isActive: addition.isActive ?? true
-      });
+        isActive: addition.isActive ?? true,
+      })
     }
-  }, [addition, form]);
+  }, [addition, form])
 
   const handleSubmit = (values: AdditionFormValues): void => {
     updateAddition(
       { id: addition.id, data: values },
       {
         onSuccess: () => {
-          onClose();
-        }
+          onClose()
+        },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -107,7 +106,10 @@ export const UpdateAdditionDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -129,10 +131,7 @@ export const UpdateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>Описание</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Выберите размер порции"
-                      {...field}
-                    />
+                    <Textarea placeholder="Выберите размер порции" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -283,11 +282,7 @@ export const UpdateAdditionDialog = ({
             />
 
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button type="button" variant="outline" onClick={onClose}>
                 Отмена
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -298,5 +293,5 @@ export const UpdateAdditionDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

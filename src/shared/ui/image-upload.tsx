@@ -3,71 +3,69 @@
  * Stores file locally, uploads only when form is submitted
  */
 
-'use client';
+'use client'
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react'
 
-import { Upload, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Upload, X } from 'lucide-react'
+import { toast } from 'sonner'
 
+import { Button } from './base/button'
+import { cn } from '../lib/utils'
 
-import { Button } from './base/button';
-import { cn } from '../lib/utils';
-
-import type { JSX } from 'react';
 
 interface ImageUploadProps {
-  value?: File | null;
-  onChange: (value: File | null) => void;
-  className?: string;
-  currentImageUrl?: string;
+  value?: File | null
+  onChange: (value: File | null) => void
+  className?: string
+  currentImageUrl?: string
 }
 
 export const ImageUpload = ({
   value,
   onChange,
   className,
-  currentImageUrl
+  currentImageUrl,
 }: ImageUploadProps) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null)
 
   useEffect(() => {
     if (value) {
-      const previewUrl = URL.createObjectURL(value);
-      setPreview(previewUrl);
-      return () => URL.revokeObjectURL(previewUrl);
+      const previewUrl = URL.createObjectURL(value)
+      setPreview(previewUrl)
+      return () => URL.revokeObjectURL(previewUrl)
     }
-    setPreview(null);
-    return undefined;
-  }, [value]);
+    setPreview(null)
+    return undefined
+  }, [value])
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+      const file = e.target.files?.[0]
+      if (!file) return
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        toast.error('Пожалуйста, выберите изображение');
-        return;
+        toast.error('Пожалуйста, выберите изображение')
+        return
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Размер файла не должен превышать 5MB');
-        return;
+        toast.error('Размер файла не должен превышать 5MB')
+        return
       }
 
-      onChange(file);
+      onChange(file)
     },
     [onChange]
-  );
+  )
 
   const handleRemove = useCallback(() => {
-    onChange(null);
-  }, [onChange]);
+    onChange(null)
+  }, [onChange])
 
-  const displayImage = preview || currentImageUrl;
+  const displayImage = preview || currentImageUrl
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -76,7 +74,7 @@ export const ImageUpload = ({
           <img
             src={displayImage}
             alt="Uploaded"
-            className="h-32 w-32 rounded-md object-cover border"
+            className="h-32 w-32 rounded-md border object-cover"
           />
           <Button
             type="button"
@@ -95,10 +93,8 @@ export const ImageUpload = ({
             'hover:border-primary hover:bg-accent'
           )}
         >
-          <Upload className="h-8 w-8 text-muted-foreground" />
-          <span className="mt-2 text-xs text-muted-foreground">
-            Загрузить
-          </span>
+          <Upload className="text-muted-foreground h-8 w-8" />
+          <span className="text-muted-foreground mt-2 text-xs">Загрузить</span>
           <input
             type="file"
             accept="image/*"
@@ -107,9 +103,9 @@ export const ImageUpload = ({
           />
         </label>
       )}
-      <p className="text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-xs">
         Рекомендуемый размер: 512x512px. Макс: 5MB
       </p>
     </div>
-  );
-};
+  )
+}

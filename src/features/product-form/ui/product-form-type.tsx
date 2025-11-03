@@ -19,7 +19,6 @@ import {
 
 import { useGetProductTypes } from '@/entities/product'
 
-import type { JSX } from 'react'
 
 export const ProductFormType = () => {
   const form = useFormContext()

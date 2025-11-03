@@ -4,18 +4,15 @@
  * Based on /admin/menu/products/:id/branches endpoints from ADMIN_MENU_MANAGEMENT.md
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
-import type {
-  IBranchOverride,
-  IUpsertBranchOverrideDto
-} from './types';
+import type { IBranchOverride, IUpsertBranchOverrideDto } from './types'
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 /**
@@ -27,11 +24,13 @@ export const branchOverrideApi = {
    * GET /admin/menu/products/:id/branches
    * Get all branch overrides for a specific product
    */
-  async getProductBranchOverrides(productId: number): Promise<IBranchOverride[]> {
+  async getProductBranchOverrides(
+    productId: number
+  ): Promise<IBranchOverride[]> {
     const response = await api.get<ApiResponse<IBranchOverride[]>>(
       `/admin/menu/products/${productId}/branches`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -41,8 +40,8 @@ export const branchOverrideApi = {
   async getBranchOverrides(branchId: number): Promise<IBranchOverride[]> {
     const response = await api.get<ApiResponse<IBranchOverride[]>>(
       `/admin/menu/branches/${branchId}/overrides`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -58,15 +57,18 @@ export const branchOverrideApi = {
     const response = await api.patch<ApiResponse<IBranchOverride>>(
       `/admin/menu/products/${productId}/branches/${branchId}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
    * DELETE /admin/menu/products/:id/branches/:branchId
    * Remove branch override (product will use base settings)
    */
-  async deleteBranchOverride(productId: number, branchId: number): Promise<void> {
-    await api.delete(`/admin/menu/products/${productId}/branches/${branchId}`);
-  }
-};
+  async deleteBranchOverride(
+    productId: number,
+    branchId: number
+  ): Promise<void> {
+    await api.delete(`/admin/menu/products/${productId}/branches/${branchId}`)
+  },
+}

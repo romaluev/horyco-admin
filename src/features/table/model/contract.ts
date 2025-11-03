@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import * as z from 'zod'
 
 export const tableSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
@@ -12,5 +12,5 @@ export const tableSchema = z.object({
     .min(0, 'Позиция Y должна быть больше или равна 0'),
   hallId: z.coerce.number().min(1, 'Зал обязателен'),
   number: z.coerce.number().min(1),
-  isAvailable: z.boolean()
-});
+  isAvailable: z.boolean(),
+})

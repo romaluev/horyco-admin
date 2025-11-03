@@ -3,22 +3,22 @@
  * Dialog for creating a new modifier group
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -26,30 +26,29 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useCreateModifierGroup } from '@/entities/modifier-group';
+import { useCreateModifierGroup } from '@/entities/modifier-group'
 
 import {
   modifierGroupSchema,
-  type ModifierGroupFormValues
-} from '../model/contract';
+  type ModifierGroupFormValues,
+} from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateModifierGroupDialogProps {
-  trigger?: React.ReactNode;
+  trigger?: React.ReactNode
 }
 
 export const CreateModifierGroupDialog = ({
-  trigger
+  trigger,
 }: CreateModifierGroupDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createGroup, isPending } = useCreateModifierGroup();
+  const [open, setOpen] = useState(false)
+  const { mutate: createGroup, isPending } = useCreateModifierGroup()
 
   const form = useForm<ModifierGroupFormValues>({
     resolver: zodResolver(modifierGroupSchema),
@@ -59,18 +58,18 @@ export const CreateModifierGroupDialog = ({
       isRequired: false,
       minSelection: 0,
       maxSelection: 1,
-      sortOrder: 0
-    }
-  });
+      sortOrder: 0,
+    },
+  })
 
   const handleSubmit = (values: ModifierGroupFormValues): void => {
     createGroup(values, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -86,7 +85,10 @@ export const CreateModifierGroupDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -108,10 +110,7 @@ export const CreateModifierGroupDialog = ({
                 <FormItem>
                   <FormLabel>Описание</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Выберите соус к блюду"
-                      {...field}
-                    />
+                    <Textarea placeholder="Выберите соус к блюду" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,9 +174,7 @@ export const CreateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Порядок отображения группы
-                  </FormDescription>
+                  <FormDescription>Порядок отображения группы</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -220,5 +217,5 @@ export const CreateModifierGroupDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

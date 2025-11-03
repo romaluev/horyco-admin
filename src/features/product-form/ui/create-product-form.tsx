@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { StarsIcon } from 'lucide-react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { StarsIcon } from 'lucide-react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import {
   Button,
@@ -17,35 +17,32 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Textarea
-} from '@/shared/ui';
+  Textarea,
+} from '@/shared/ui'
 
-import { useCreateProduct } from '@/entities/product';
+import { useCreateProduct } from '@/entities/product'
 
-import { ProductFormAdditions } from './product-form-additions';
-import { ProductFormCategory } from './product-form-category';
-import { ProductFormImages } from './product-form-images';
-import { ProductFormType } from './product-form-type';
-import { productSchema } from '../model/contract';
+import { ProductFormAdditions } from './product-form-additions'
+import { ProductFormCategory } from './product-form-category'
+import { ProductFormImages } from './product-form-images'
+import { ProductFormType } from './product-form-type'
+import { productSchema } from '../model/contract'
 
-import type { ProductFormValues } from '../model/contract';
-import type { JSX } from 'react';
+import type { ProductFormValues } from '../model/contract'
 
-const EXPAND_USAGE_KEY = 'expand_usage';
+const EXPAND_USAGE_KEY = 'expand_usage'
 
 export const CreateProductForm = () => {
-  const { mutateAsync: createProductMutation } = useCreateProduct();
-  const router = useRouter();
-  const [sending, setSending] = useState(false);
-  const [expandLoading, setExpandLoading] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { mutateAsync: createProductMutation } = useCreateProduct()
+  const router = useRouter()
+  const [sending, setSending] = useState(false)
+  const [expandLoading, setExpandLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [expandUsageCount, setExpandUsageCount] = useState(0)
 
   useEffect(() => {
-    setExpandUsageCount(parseInt(
-      localStorage.getItem(EXPAND_USAGE_KEY) || '0'
-    ))
+    setExpandUsageCount(parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0'))
   }, [])
 
   const defaultValues: Partial<ProductFormValues> = {
@@ -56,57 +53,60 @@ export const CreateProductForm = () => {
     description: '',
     isAvailable: true,
     additions: [],
-    image: ''
-  };
+    image: '',
+  }
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues
-  });
+    defaultValues,
+  })
 
   const handleExpandDescription = async (): Promise<void> => {
-    const usageCount = parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0');
-    if (usageCount <= 5 || expandLoading || expanded) return;
+    const usageCount = parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0')
+    if (usageCount <= 5 || expandLoading || expanded) return
 
-    const description = form.getValues('description');
+    const description = form.getValues('description')
 
     if (description.length < 10) {
-      toast.error('Слишком короткое описание');
-      return;
+      toast.error('Слишком короткое описание')
+      return
     }
 
-    setExpandLoading(true);
+    setExpandLoading(true)
     try {
-      localStorage.setItem(EXPAND_USAGE_KEY, (usageCount + 1).toString());
+      localStorage.setItem(EXPAND_USAGE_KEY, (usageCount + 1).toString())
       const res = await fetch('/api/expand-description', {
         method: 'POST',
-        body: JSON.stringify({ description })
-      });
+        body: JSON.stringify({ description }),
+      })
 
-      const body = await res.json();
+      const body = await res.json()
 
-      form.setValue('description', body.description);
-      toast.success('Описание успешно расширено!');
-      setExpanded(true);
+      form.setValue('description', body.description)
+      toast.success('Описание успешно расширено!')
+      setExpanded(true)
     } catch (e) {
-      toast.error('Что-то пошло не так');
+      toast.error('Что-то пошло не так')
     }
-    setExpandLoading(false);
-  };
+    setExpandLoading(false)
+  }
 
   const onSubmit = async (values: ProductFormValues): Promise<void> => {
-    const { additions, ...productData } = values;
-    setSending(true);
+    const { additions, ...productData } = values
+    setSending(true)
 
     try {
       // Create product first
-      const createdProduct = await createProductMutation(productData);
+      const createdProduct = await createProductMutation(productData)
 
       // If there's a file, upload it and update the product
       if (imageFile && createdProduct?.id) {
-        const { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } =
-          await import('@/entities/file');
-        const { productApi } = await import('@/entities/product');
+        const {
+          requestPresignedUploadUrl,
+          uploadToPresignedUrl,
+          confirmUpload,
+        } = await import('@/entities/file')
+        const { productApi } = await import('@/entities/product')
 
         const presignedData = await requestPresignedUploadUrl({
           entityType: 'PRODUCT',
@@ -114,33 +114,33 @@ export const CreateProductForm = () => {
           fileName: imageFile.name,
           mimeType: imageFile.type,
           fileSize: imageFile.size,
-          altText: values.name
-        });
+          altText: values.name,
+        })
 
-        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile);
+        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
 
         const response = await confirmUpload({
           fileId: presignedData.data.fileId,
-          fileKey: presignedData.data.fileKey
-        });
+          fileKey: presignedData.data.fileKey,
+        })
 
-        const imageUrl = response.variants.medium || response.variants.original;
+        const imageUrl = response.variants.medium || response.variants.original
         if (imageUrl) {
-          await productApi.updateProduct(createdProduct.id, { image: imageUrl });
+          await productApi.updateProduct(createdProduct.id, { image: imageUrl })
         }
       }
 
-      setSending(false);
-      router.push('/dashboard/menu/products');
+      setSending(false)
+      router.push('/dashboard/menu/products')
     } catch (e) {
-      setSending(false);
+      setSending(false)
     }
-  };
+  }
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <div className='grid grid-cols-1 items-start gap-x-2 gap-y-4 md:grid-cols-6'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 items-start gap-x-2 gap-y-4 md:grid-cols-6">
           <ProductFormImages
             imageFile={imageFile}
             setImageFile={setImageFile}
@@ -148,12 +148,12 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='name'
+            name="name"
             render={({ field }) => (
-              <FormItem className='md:col-span-3'>
+              <FormItem className="md:col-span-3">
                 <FormLabel>Название</FormLabel>
                 <FormControl>
-                  <Input placeholder='Введите название продукта' {...field} />
+                  <Input placeholder="Введите название продукта" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -166,14 +166,14 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='price'
+            name="price"
             render={({ field }) => (
-              <FormItem className='md:col-span-2'>
+              <FormItem className="md:col-span-2">
                 <FormLabel>Цена (обязательно)</FormLabel>
                 <FormControl>
                   <Input
-                    type='number'
-                    placeholder='Введите цену'
+                    type="number"
+                    placeholder="Введите цену"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -185,16 +185,20 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='preparationTime'
+            name="preparationTime"
             render={({ field }) => (
-              <FormItem className='md:col-span-2'>
+              <FormItem className="md:col-span-2">
                 <FormLabel>Время приготовления (мин)</FormLabel>
                 <FormControl>
                   <Input
-                    type='number'
-                    placeholder='Например: 15'
+                    type="number"
+                    placeholder="Например: 15"
                     {...field}
-                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -204,16 +208,20 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='calories'
+            name="calories"
             render={({ field }) => (
-              <FormItem className='md:col-span-2'>
+              <FormItem className="md:col-span-2">
                 <FormLabel>Калории</FormLabel>
                 <FormControl>
                   <Input
-                    type='number'
-                    placeholder='Например: 350'
+                    type="number"
+                    placeholder="Например: 350"
                     {...field}
-                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -223,14 +231,14 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             render={({ field }) => (
-              <FormItem className='md:col-span-6'>
+              <FormItem className="md:col-span-6">
                 <FormLabel>Описание</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Введите описание продукта'
-                    className='resize-none'
+                    placeholder="Введите описание продукта"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -241,12 +249,12 @@ export const CreateProductForm = () => {
           {!expanded && expandUsageCount < 5 && (
             <Button
               onClick={handleExpandDescription}
-              type='button'
+              type="button"
               disabled={expandLoading}
-              className='relative inline-flex h-9 w-60 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none'
+              className="relative inline-flex h-9 w-60 overflow-hidden rounded-lg p-[2px] focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none"
             >
-              <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]' />
-              <span className='bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl transition hover:text-[#fe4a49]'>
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
+              <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl transition hover:text-[#fe4a49]">
                 <StarsIcon size={16} />
                 {expandLoading ? 'Обрабатывается...' : 'Расширить с AI'}
               </span>
@@ -255,19 +263,24 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='allergens'
+            name="allergens"
             render={({ field }) => (
-              <FormItem className='md:col-span-6'>
+              <FormItem className="md:col-span-6">
                 <FormLabel>Аллергены (через запятую)</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='Например: молоко, яйца, орехи'
+                    placeholder="Например: молоко, яйца, орехи"
                     {...field}
                     value={field.value?.join(', ') || ''}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const allergens = value ? value.split(',').map(a => a.trim()).filter(Boolean) : [];
-                      field.onChange(allergens);
+                      const value = e.target.value
+                      const allergens = value
+                        ? value
+                            .split(',')
+                            .map((a) => a.trim())
+                            .filter(Boolean)
+                        : []
+                      field.onChange(allergens)
                     }}
                   />
                 </FormControl>
@@ -278,18 +291,20 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='isAvailable'
+            name="isAvailable"
             render={({ field }) => (
-              <FormItem className='md:col-span-6 flex items-center gap-2 space-y-0'>
+              <FormItem className="flex items-center gap-2 space-y-0 md:col-span-6">
                 <FormControl>
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     checked={field.value}
                     onChange={field.onChange}
-                    className='h-4 w-4'
+                    className="h-4 w-4"
                   />
                 </FormControl>
-                <FormLabel className='!mt-0'>Продукт доступен для заказа</FormLabel>
+                <FormLabel className="!mt-0">
+                  Продукт доступен для заказа
+                </FormLabel>
                 <FormMessage />
               </FormItem>
             )}
@@ -297,11 +312,11 @@ export const CreateProductForm = () => {
 
           <ProductFormAdditions />
 
-          <Button type='submit' className='w-full md:w-auto' disabled={sending}>
+          <Button type="submit" className="w-full md:w-auto" disabled={sending}>
             Создать продукт
           </Button>
         </div>
       </form>
     </FormProvider>
-  );
-};
+  )
+}

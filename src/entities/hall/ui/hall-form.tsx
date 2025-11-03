@@ -1,82 +1,82 @@
-'use client';
+'use client'
 
-import React from 'react';
+import React from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 
-import { useCreateHall, useUpdateHall } from '../model/mutations';
+import { useCreateHall, useUpdateHall } from '../model/mutations'
 
-import type { IHall, IHallRequest } from '../model/types';
+import type { IHall, IHallRequest } from '../model/types'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
-  floor: z.number().int().min(1, 'Этаж должен быть положительным числом')
-});
+  floor: z.number().int().min(1, 'Этаж должен быть положительным числом'),
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 interface HallFormProps {
-  initialData?: IHall | null;
-  onSuccess?: () => void;
+  initialData?: IHall | null
+  onSuccess?: () => void
 }
 
 export const HallForm = ({ initialData, onSuccess }: HallFormProps) => {
-  const { mutate: createHall, isPending: isCreating } = useCreateHall();
+  const { mutate: createHall, isPending: isCreating } = useCreateHall()
   const { mutate: updateHall, isPending: isUpdating } = useUpdateHall(
     initialData?.id?.toString() || ''
-  );
+  )
 
-  const isSubmitting = isCreating || isUpdating;
+  const isSubmitting = isCreating || isUpdating
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || '',
-      floor: initialData?.floor || 1
-    }
-  });
+      floor: initialData?.floor || 1,
+    },
+  })
 
   const onSubmit = (values: FormValues) => {
     const hallData: IHallRequest = {
       name: values.name,
-      floor: values.floor
-    };
+      floor: values.floor,
+    }
 
     if (initialData) {
-      updateHall(hallData);
+      updateHall(hallData)
     } else {
-      createHall(hallData);
+      createHall(hallData)
     }
 
     if (onSuccess) {
-      onSuccess();
+      onSuccess()
     }
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name='name'
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Название</FormLabel>
               <FormControl>
-                <Input placeholder='Введите название зала' {...field} />
+                <Input placeholder="Введите название зала" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,14 +85,14 @@ export const HallForm = ({ initialData, onSuccess }: HallFormProps) => {
 
         <FormField
           control={form.control}
-          name='floor'
+          name="floor"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Этаж</FormLabel>
               <FormControl>
                 <Input
-                  type='number'
-                  placeholder='Введите номер этажа'
+                  type="number"
+                  placeholder="Введите номер этажа"
                   {...field}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                   value={field.value || ''}
@@ -103,7 +103,7 @@ export const HallForm = ({ initialData, onSuccess }: HallFormProps) => {
           )}
         />
 
-        <Button type='submit' disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? 'Сохранение...'
             : initialData
@@ -112,5 +112,5 @@ export const HallForm = ({ initialData, onSuccess }: HallFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

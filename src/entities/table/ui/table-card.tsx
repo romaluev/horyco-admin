@@ -1,4 +1,4 @@
-import { Armchair } from 'lucide-react';
+import { Armchair } from 'lucide-react'
 
 import {
   Card,
@@ -6,40 +6,40 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 
-import type { ITable } from '../model';
+import type { ITable } from '../model'
 
 interface TableCardProps {
-  table: ITable;
-  className?: string;
-  UpdateButton?: React.ComponentType<{ id: number }>;
-  DeleteButton?: React.ComponentType<{ id: number }>;
+  table: ITable
+  className?: string
+  UpdateButton?: React.ComponentType<{ id: number }>
+  DeleteButton?: React.ComponentType<{ id: number }>
 }
 export const TableCard = ({
   table,
   className,
   UpdateButton,
-  DeleteButton
+  DeleteButton,
 }: TableCardProps) => {
   return (
     <Card className={className}>
-      <CardHeader className='grid-rows-1 items-center'>
+      <CardHeader className="grid-rows-1 items-center">
         <CardTitle>Стол: #{table.number}</CardTitle>
-        <CardAction className='row-span-1 grid grid-cols-2 gap-2'>
+        <CardAction className="row-span-1 grid grid-cols-2 gap-2">
           {UpdateButton && <UpdateButton id={table.id} />}
           {DeleteButton && <DeleteButton id={table.id} />}
         </CardAction>
       </CardHeader>
       <CardContent>
         <CardDescription>
-          <p className='text-md flex items-center gap-1'>
+          <p className="text-md flex items-center gap-1">
             <Armchair size={18} />
             Количество мест: <strong>{table.size}</strong>
           </p>
         </CardDescription>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

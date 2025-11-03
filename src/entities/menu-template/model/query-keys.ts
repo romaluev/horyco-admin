@@ -3,7 +3,7 @@
  * Query key factory for menu templates
  */
 
-import type { IGetTemplatesParams } from './types';
+import type { IGetTemplatesParams } from './types'
 
 /**
  * Query keys for menu templates
@@ -17,5 +17,5 @@ export const menuTemplateKeys = {
   detail: (id: number) => [...menuTemplateKeys.details(), id] as const,
   businessTypes: () => [...menuTemplateKeys.all, 'business-types'] as const,
   byBusinessType: (type: string) =>
-    [...menuTemplateKeys.all, 'business-type', type] as const
-};
+    [...menuTemplateKeys.all, 'business-type', type] as const,
+}

@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react'
 
 import {
   AlertDialog,
@@ -12,63 +12,60 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
-} from '@/shared/ui/base/alert-dialog';
-import { Button } from '@/shared/ui/base/button';
+  AlertDialogTitle,
+} from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/shared/ui/base/table';
+  TableRow,
+} from '@/shared/ui/base/table'
 
-import { HallForm } from './hall-form';
-import { useDeleteHall } from '../model/mutations';
-import { useGetAllHalls } from '../model/queries';
+import { HallForm } from './hall-form'
+import { useDeleteHall } from '../model/mutations'
+import { useGetAllHalls } from '../model/queries'
 
-
-
-
-import type { IHall } from '../model/types';
+import type { IHall } from '../model/types'
 
 export const HallTable = () => {
-  const { data: response, isLoading } = useGetAllHalls();
-  const { mutate: deleteHall } = useDeleteHall();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentHall, setCurrentHall] = useState<IHall | null>(null);
+  const { data: response, isLoading } = useGetAllHalls()
+  const { mutate: deleteHall } = useDeleteHall()
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [currentHall, setCurrentHall] = useState<IHall | null>(null)
 
   if (isLoading) {
-    return <div>Загрузка залов...</div>;
+    return <div>Загрузка залов...</div>
   }
 
   const handleEdit = (hall: IHall) => {
-    setCurrentHall(hall);
-    setIsFormOpen(true);
-  };
+    setCurrentHall(hall)
+    setIsFormOpen(true)
+  }
 
   const handleDelete = (hall: IHall) => {
-    setCurrentHall(hall);
-    setIsDeleteDialogOpen(true);
-  };
+    setCurrentHall(hall)
+    setIsDeleteDialogOpen(true)
+  }
 
   const confirmDelete = () => {
     if (currentHall) {
-      deleteHall(String(currentHall.id));
-      setIsDeleteDialogOpen(false);
+      deleteHall(String(currentHall.id))
+      setIsDeleteDialogOpen(false)
     }
-  };
+  }
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       <Table>
         <TableHeader>
           <TableRow>
@@ -85,17 +82,17 @@ export const HallTable = () => {
                 <TableCell>{hall.id}</TableCell>
                 <TableCell>{hall.name}</TableCell>
                 <TableCell>{hall.floor}</TableCell>
-                <TableCell className='space-x-2'>
+                <TableCell className="space-x-2">
                   <Button
-                    variant='outline'
-                    size='sm'
+                    variant="outline"
+                    size="sm"
                     onClick={() => handleEdit(hall)}
                   >
                     <IconEdit size={16} />
                   </Button>
                   <Button
-                    variant='outline'
-                    size='sm'
+                    variant="outline"
+                    size="sm"
                     onClick={() => handleDelete(hall)}
                   >
                     <IconTrash size={16} />
@@ -143,5 +140,5 @@ export const HallTable = () => {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}

@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { KBarProvider } from 'kbar';
+import { KBarProvider } from 'kbar'
 
 export const KBar = ({ children }: { children: React.ReactNode }) => {
-  return <KBarProvider>{children}</KBarProvider>;
-};
+  return <KBarProvider>{children}</KBarProvider>
+}

@@ -3,7 +3,7 @@
  * Based on /admin/menu/additions endpoints from ADMIN_MENU_MANAGEMENT.md
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   IAddition,
@@ -12,14 +12,14 @@ import type {
   IGetAdditionsParams,
   IAdditionItem,
   ICreateAdditionItemDto,
-  IUpdateAdditionItemDto
-} from './types';
+  IUpdateAdditionItemDto,
+} from './types'
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 export const additionApi = {
@@ -33,8 +33,8 @@ export const additionApi = {
     const response = await api.get<ApiResponse<IAddition[]>>(
       '/admin/menu/additions',
       { params }
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -44,8 +44,8 @@ export const additionApi = {
   async getAdditionById(id: number): Promise<IAddition> {
     const response = await api.get<ApiResponse<IAddition>>(
       `/admin/menu/additions/${id}`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -56,8 +56,8 @@ export const additionApi = {
     const response = await api.post<ApiResponse<IAddition>>(
       '/admin/menu/additions',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -71,8 +71,8 @@ export const additionApi = {
     const response = await api.patch<ApiResponse<IAddition>>(
       `/admin/menu/additions/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -80,7 +80,7 @@ export const additionApi = {
    * DELETE /admin/menu/additions/:id
    */
   async deleteAddition(id: number): Promise<void> {
-    await api.delete(`/admin/menu/additions/${id}`);
+    await api.delete(`/admin/menu/additions/${id}`)
   },
 
   // ===== Addition Items =====
@@ -92,8 +92,8 @@ export const additionApi = {
   async getAdditionItems(additionId: number): Promise<IAdditionItem[]> {
     const response = await api.get<ApiResponse<IAdditionItem[]>>(
       `/admin/menu/additions/${additionId}/items`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -106,8 +106,8 @@ export const additionApi = {
     const response = await api.post<ApiResponse<IAdditionItem>>(
       '/admin/menu/addition-items',
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -121,8 +121,8 @@ export const additionApi = {
     const response = await api.patch<ApiResponse<IAdditionItem>>(
       `/admin/menu/addition-items/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -130,6 +130,6 @@ export const additionApi = {
    * DELETE /admin/menu/addition-items/:id
    */
   async deleteAdditionItem(id: number): Promise<void> {
-    await api.delete(`/admin/menu/addition-items/${id}`);
-  }
-};
+    await api.delete(`/admin/menu/addition-items/${id}`)
+  },
+}

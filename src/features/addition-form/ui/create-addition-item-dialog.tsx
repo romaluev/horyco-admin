@@ -3,22 +3,22 @@
  * Dialog for creating a new item within an addition group
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -26,30 +26,29 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 
-import { useCreateAdditionItem } from '@/entities/addition';
+import { useCreateAdditionItem } from '@/entities/addition'
 
 import {
   additionItemSchema,
-  type AdditionItemFormValues
-} from '../model/contract';
+  type AdditionItemFormValues,
+} from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateAdditionItemDialogProps {
-  additionId: number;
-  trigger?: React.ReactNode;
+  additionId: number
+  trigger?: React.ReactNode
 }
 
 export const CreateAdditionItemDialog = ({
   additionId,
-  trigger
+  trigger,
 }: CreateAdditionItemDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createItem, isPending } = useCreateAdditionItem();
+  const [open, setOpen] = useState(false)
+  const { mutate: createItem, isPending } = useCreateAdditionItem()
 
   const form = useForm<AdditionItemFormValues>({
     resolver: zodResolver(additionItemSchema),
@@ -57,18 +56,18 @@ export const CreateAdditionItemDialog = ({
       name: '',
       price: 0,
       additionId,
-      sortOrder: 0
-    }
-  });
+      sortOrder: 0,
+    },
+  })
 
   const handleSubmit = (values: AdditionItemFormValues): void => {
     createItem(values, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -84,7 +83,10 @@ export const CreateAdditionItemDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -158,5 +160,5 @@ export const CreateAdditionItemDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

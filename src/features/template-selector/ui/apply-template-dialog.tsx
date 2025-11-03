@@ -3,67 +3,64 @@
  * Dialog for applying a menu template with options
  */
 
-'use client';
+'use client'
 
+import { useEffect, useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertTriangle, Check } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
-import { useEffect, useState } from 'react';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertTriangle, Check } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-
-import { Alert, AlertDescription } from '@/shared/ui/base/alert';
-import { Button } from '@/shared/ui/base/button';
-import { Checkbox } from '@/shared/ui/base/checkbox';
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
+import { Button } from '@/shared/ui/base/button'
+import { Checkbox } from '@/shared/ui/base/checkbox'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormDescription,
   FormField,
   FormItem,
-  FormLabel
-} from '@/shared/ui/base/form';
-import { ScrollArea } from '@/shared/ui/base/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs';
+  FormLabel,
+} from '@/shared/ui/base/form'
+import { ScrollArea } from '@/shared/ui/base/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 
 import {
   useGetTemplateById,
   useApplyTemplate,
-  type IMenuTemplate
-} from '@/entities/menu-template';
+  type IMenuTemplate,
+} from '@/entities/menu-template'
 
 import {
   applyTemplateFormSchema,
-  type ApplyTemplateFormValues
-} from '../model/contract';
+  type ApplyTemplateFormValues,
+} from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface ApplyTemplateDialogProps {
-  template: IMenuTemplate | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  template: IMenuTemplate | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export const ApplyTemplateDialog = ({
   template,
   open,
-  onOpenChange
+  onOpenChange,
 }: ApplyTemplateDialogProps) => {
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false)
 
   const { data: templateDetail, isLoading } = useGetTemplateById(
     template?.id || 0
-  );
-  const { mutate: applyTemplate, isPending } = useApplyTemplate();
+  )
+  const { mutate: applyTemplate, isPending } = useApplyTemplate()
 
   const form = useForm<ApplyTemplateFormValues>({
     resolver: zodResolver(applyTemplateFormSchema),
@@ -73,40 +70,40 @@ export const ApplyTemplateDialog = ({
       applyProducts: true,
       applyModifiers: true,
       applyAdditions: true,
-      replaceExisting: false
-    }
-  });
+      replaceExisting: false,
+    },
+  })
 
   useEffect(() => {
     if (template && open) {
-      form.setValue('templateId', template.id);
-      setShowConfirmation(false);
+      form.setValue('templateId', template.id)
+      setShowConfirmation(false)
     }
-  }, [template, open, form]);
+  }, [template, open, form])
 
   const onSubmit = (data: ApplyTemplateFormValues): void => {
     if (!showConfirmation && data.replaceExisting) {
-      setShowConfirmation(true);
-      return;
+      setShowConfirmation(true)
+      return
     }
 
     applyTemplate(
       { id: data.templateId, data },
       {
         onSuccess: () => {
-          onOpenChange(false);
-          form.reset();
-          setShowConfirmation(false);
-        }
+          onOpenChange(false)
+          form.reset()
+          setShowConfirmation(false)
+        },
       }
-    );
-  };
+    )
+  }
 
-  if (!template) return <></>;
+  if (!template) return <></>
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh]">
+      <DialogContent className="max-h-[90vh] max-w-4xl">
         <DialogHeader>
           <DialogTitle>{template.name}</DialogTitle>
           <DialogDescription>
@@ -116,7 +113,7 @@ export const ApplyTemplateDialog = ({
         </DialogHeader>
 
         {isLoading ? (
-          <div className="py-8 text-center text-muted-foreground">
+          <div className="text-muted-foreground py-8 text-center">
             Загрузка деталей...
           </div>
         ) : (
@@ -132,20 +129,20 @@ export const ApplyTemplateDialog = ({
                   {templateDetail && (
                     <div className="space-y-6">
                       <div>
-                        <h3 className="font-semibold mb-2">Категории</h3>
+                        <h3 className="mb-2 font-semibold">Категории</h3>
                         <div className="space-y-2">
                           {templateDetail.categories.map((category) => (
                             <div
                               key={category.id}
-                              className="p-3 border rounded-lg"
+                              className="rounded-lg border p-3"
                             >
                               <p className="font-medium">{category.name}</p>
                               {category.description && (
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-muted-foreground text-sm">
                                   {category.description}
                                 </p>
                               )}
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="text-muted-foreground mt-1 text-xs">
                                 {category.products.length} продуктов
                               </p>
                             </div>
@@ -154,7 +151,7 @@ export const ApplyTemplateDialog = ({
                       </div>
 
                       <div>
-                        <h3 className="font-semibold mb-2">
+                        <h3 className="mb-2 font-semibold">
                           Примеры продуктов
                         </h3>
                         <div className="grid grid-cols-2 gap-2">
@@ -164,12 +161,12 @@ export const ApplyTemplateDialog = ({
                             .map((product) => (
                               <div
                                 key={product.id}
-                                className="p-3 border rounded-lg"
+                                className="rounded-lg border p-3"
                               >
-                                <p className="font-medium text-sm">
+                                <p className="text-sm font-medium">
                                   {product.name}
                                 </p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-muted-foreground text-sm">
                                   {product.price} сум
                                 </p>
                               </div>
@@ -192,7 +189,7 @@ export const ApplyTemplateDialog = ({
                         control={form.control}
                         name="applyCategories"
                         render={({ field }) => (
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className="flex items-center space-y-0 space-x-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -213,7 +210,7 @@ export const ApplyTemplateDialog = ({
                         control={form.control}
                         name="applyProducts"
                         render={({ field }) => (
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className="flex items-center space-y-0 space-x-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -234,7 +231,7 @@ export const ApplyTemplateDialog = ({
                         control={form.control}
                         name="applyModifiers"
                         render={({ field }) => (
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className="flex items-center space-y-0 space-x-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -255,7 +252,7 @@ export const ApplyTemplateDialog = ({
                         control={form.control}
                         name="applyAdditions"
                         render={({ field }) => (
-                          <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormItem className="flex items-center space-y-0 space-x-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -276,7 +273,7 @@ export const ApplyTemplateDialog = ({
                         control={form.control}
                         name="replaceExisting"
                         render={({ field }) => (
-                          <FormItem className="flex items-center space-x-3 space-y-0 border-t pt-4">
+                          <FormItem className="flex items-center space-y-0 space-x-3 border-t pt-4">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -307,7 +304,7 @@ export const ApplyTemplateDialog = ({
                       </Alert>
                     )}
 
-                    <div className="flex justify-end gap-3 pt-4 border-t">
+                    <div className="flex justify-end gap-3 border-t pt-4">
                       <Button
                         type="button"
                         variant="outline"
@@ -321,7 +318,7 @@ export const ApplyTemplateDialog = ({
                           'Применение...'
                         ) : showConfirmation ? (
                           <>
-                            <Check className="h-4 w-4 mr-2" />
+                            <Check className="mr-2 h-4 w-4" />
                             Подтвердить применение
                           </>
                         ) : (
@@ -337,5 +334,5 @@ export const ApplyTemplateDialog = ({
         )}
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

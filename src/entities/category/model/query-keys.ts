@@ -3,7 +3,7 @@
  * Centralized query key management for React Query
  */
 
-import type { IGetCategoriesParams } from './types';
+import type { IGetCategoriesParams } from './types'
 
 export const categoryKeys = {
   all: () => ['categories'] as const,
@@ -12,5 +12,5 @@ export const categoryKeys = {
     [...categoryKeys.lists(), params] as const,
   details: () => [...categoryKeys.all(), 'detail'] as const,
   detail: (id: number) => [...categoryKeys.details(), id] as const,
-  tree: () => [...categoryKeys.all(), 'tree'] as const
-} as const;
+  tree: () => [...categoryKeys.all(), 'tree'] as const,
+} as const

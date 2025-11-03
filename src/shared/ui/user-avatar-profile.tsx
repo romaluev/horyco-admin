@@ -1,25 +1,24 @@
-import { UserIcon } from 'lucide-react';
+import { UserIcon } from 'lucide-react'
 
-import { BASE_API_URL } from '@/shared/lib/axios';
-import { getNameInitials } from '@/shared/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
+import { BASE_API_URL } from '@/shared/lib/axios'
+import { getNameInitials } from '@/shared/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 
-import type { IUser } from '@/entities/auth/model';
-
+import type { IUser } from '@/entities/auth/model'
 
 interface UserAvatarProfileProps {
-  className?: string;
-  showInfo?: boolean;
-  user: IUser | null;
+  className?: string
+  showInfo?: boolean
+  user: IUser | null
 }
 
 export function UserAvatarProfile({
   className,
   showInfo = false,
-  user
+  user,
 }: UserAvatarProfileProps) {
   return (
-    <div className='flex items-center gap-2'>
+    <div className="flex items-center gap-2">
       <Avatar className={className}>
         <AvatarImage
           src={
@@ -27,16 +26,16 @@ export function UserAvatarProfile({
           }
           alt={user?.fullName || ''}
         />
-        <AvatarFallback className='rounded-lg'>
+        <AvatarFallback className="rounded-lg">
           {getNameInitials(user?.fullName) || <UserIcon />}
         </AvatarFallback>
       </Avatar>
 
       {showInfo && (
-        <div className='grid flex-1 text-left text-sm leading-tight'>
-          <span className='truncate font-semibold'>{user?.fullName || ''}</span>
+        <div className="grid flex-1 text-left text-sm leading-tight">
+          <span className="truncate font-semibold">{user?.fullName || ''}</span>
         </div>
       )}
     </div>
-  );
+  )
 }

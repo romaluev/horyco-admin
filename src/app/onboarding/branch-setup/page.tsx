@@ -139,13 +139,13 @@ export default function BranchSetupPage() {
         return acc
       },
       {} as {
-        monday: { open: string; close: string };
-        tuesday: { open: string; close: string };
-        wednesday: { open: string; close: string };
-        thursday: { open: string; close: string };
-        friday: { open: string; close: string };
-        saturday: { open: string; close: string };
-        sunday: { open: string; close: string };
+        monday: { open: string; close: string }
+        tuesday: { open: string; close: string }
+        wednesday: { open: string; close: string }
+        thursday: { open: string; close: string }
+        friday: { open: string; close: string }
+        saturday: { open: string; close: string }
+        sunday: { open: string; close: string }
       }
     )
 
@@ -394,7 +394,7 @@ export default function BranchSetupPage() {
                         <Card className="h-full p-0">
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
-                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                              <FormLabel className="mx-auto w-max text-base font-semibold">
                                 В зале
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
@@ -422,7 +422,7 @@ export default function BranchSetupPage() {
                         <Card className="h-full p-0">
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
-                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                              <FormLabel className="mx-auto w-max text-base font-semibold">
                                 Собой
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
@@ -450,7 +450,7 @@ export default function BranchSetupPage() {
                         <Card className="h-full p-0">
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
-                              <FormLabel className="text-base font-semibold w-max mx-auto">
+                              <FormLabel className="mx-auto w-max text-base font-semibold">
                                 Доставка
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">

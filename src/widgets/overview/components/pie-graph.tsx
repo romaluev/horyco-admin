@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { Label, Pie, PieChart } from 'recharts';
+import { Label, Pie, PieChart } from 'recharts'
 
 import {
   Card,
@@ -10,73 +10,72 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
-} from '@/shared/ui/base/chart';
+  ChartTooltipContent,
+} from '@/shared/ui/base/chart'
 
-import type {
-  ChartConfig} from '@/shared/ui/base/chart';
+import type { ChartConfig } from '@/shared/ui/base/chart'
 
 const chartData = [
   { browser: 'chrome', visitors: 275, fill: 'var(--primary)' },
   { browser: 'safari', visitors: 200, fill: 'var(--primary-light)' },
   { browser: 'firefox', visitors: 287, fill: 'var(--primary-lighter)' },
   { browser: 'edge', visitors: 173, fill: 'var(--primary-dark)' },
-  { browser: 'other', visitors: 190, fill: 'var(--primary-darker)' }
-];
+  { browser: 'other', visitors: 190, fill: 'var(--primary-darker)' },
+]
 
 const chartConfig = {
   visitors: {
-    label: 'Visitors'
+    label: 'Visitors',
   },
   chrome: {
     label: 'Chrome',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   safari: {
     label: 'Safari',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   firefox: {
     label: 'Firefox',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   edge: {
     label: 'Edge',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   other: {
     label: 'Other',
-    color: 'var(--primary)'
-  }
-} satisfies ChartConfig;
+    color: 'var(--primary)',
+  },
+} satisfies ChartConfig
 
 export function PieGraph() {
   const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
+  }, [])
 
   return (
-    <Card className='@container/card'>
+    <Card className="@container/card">
       <CardHeader>
         <CardTitle>Количество посетителей на вебсайт</CardTitle>
         <CardDescription>
-          <span className='hidden @[540px]/card:block'>
+          <span className="hidden @[540px]/card:block">
             За последние 6 месяцев
           </span>
-          <span className='@[540px]/card:hidden'>
+          <span className="@[540px]/card:hidden">
             Распространение в браузере
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className='mx-auto aspect-square h-[250px]'
+          className="mx-auto aspect-square h-[250px]"
         >
           <PieChart>
             <defs>
@@ -85,19 +84,19 @@ export function PieGraph() {
                   <linearGradient
                     key={browser}
                     id={`fill${browser}`}
-                    x1='0'
-                    y1='0'
-                    x2='0'
-                    y2='1'
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
                   >
                     <stop
-                      offset='0%'
-                      stopColor='var(--primary)'
+                      offset="0%"
+                      stopColor="var(--primary)"
                       stopOpacity={1 - index * 0.15}
                     />
                     <stop
-                      offset='100%'
-                      stopColor='var(--primary)'
+                      offset="100%"
+                      stopColor="var(--primary)"
                       stopOpacity={0.8 - index * 0.15}
                     />
                   </linearGradient>
@@ -111,13 +110,13 @@ export function PieGraph() {
             <Pie
               data={chartData.map((item) => ({
                 ...item,
-                fill: `url(#fill${item.browser})`
+                fill: `url(#fill${item.browser})`,
               }))}
-              dataKey='visitors'
-              nameKey='browser'
+              dataKey="visitors"
+              nameKey="browser"
               innerRadius={60}
               strokeWidth={2}
-              stroke='var(--background)'
+              stroke="var(--background)"
             >
               <Label
                 content={({ viewBox }) => {
@@ -126,38 +125,38 @@ export function PieGraph() {
                       <text
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor='middle'
-                        dominantBaseline='middle'
+                        textAnchor="middle"
+                        dominantBaseline="middle"
                       >
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className='fill-foreground text-3xl font-bold'
+                          className="fill-foreground text-3xl font-bold"
                         >
                           {totalVisitors.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
-                          className='fill-muted-foreground text-sm'
+                          className="fill-muted-foreground text-sm"
                         >
                           Количество посещении
                         </tspan>
                       </text>
-                    );
+                    )
                   }
-                  return null;
+                  return null
                 }}
               />
             </Pie>
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className='flex-col gap-2 text-sm'>
-        <div className='text-muted-foreground leading-none'>
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="text-muted-foreground leading-none">
           Основанный на данных January - June 2024
         </div>
       </CardFooter>
     </Card>
-  );
+  )
 }

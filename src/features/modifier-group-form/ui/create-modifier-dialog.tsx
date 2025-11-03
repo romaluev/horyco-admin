@@ -3,22 +3,22 @@
  * Dialog for creating a new modifier within a group
  */
 
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -26,29 +26,28 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
-import { Textarea } from '@/shared/ui/base/textarea';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useCreateModifier } from '@/entities/modifier-group';
+import { useCreateModifier } from '@/entities/modifier-group'
 
-import { modifierSchema, type ModifierFormValues } from '../model/contract';
+import { modifierSchema, type ModifierFormValues } from '../model/contract'
 
-import type { JSX } from 'react';
 
 interface CreateModifierDialogProps {
-  modifierGroupId: number;
-  trigger?: React.ReactNode;
+  modifierGroupId: number
+  trigger?: React.ReactNode
 }
 
 export const CreateModifierDialog = ({
   modifierGroupId,
-  trigger
+  trigger,
 }: CreateModifierDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createModifier, isPending } = useCreateModifier();
+  const [open, setOpen] = useState(false)
+  const { mutate: createModifier, isPending } = useCreateModifier()
 
   const form = useForm<ModifierFormValues>({
     resolver: zodResolver(modifierSchema),
@@ -58,18 +57,18 @@ export const CreateModifierDialog = ({
       price: 0,
       modifierGroupId,
       sortOrder: 0,
-      isActive: true
-    }
-  });
+      isActive: true,
+    },
+  })
 
   const handleSubmit = (values: ModifierFormValues): void => {
     createModifier(values, {
       onSuccess: () => {
-        setOpen(false);
-        form.reset();
-      }
-    });
-  };
+        setOpen(false)
+        form.reset()
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -85,7 +84,10 @@ export const CreateModifierDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -197,5 +199,5 @@ export const CreateModifierDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

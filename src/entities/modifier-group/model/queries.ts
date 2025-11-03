@@ -2,17 +2,17 @@
  * Modifier Group Query Hooks
  */
 
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
-import { modifierGroupApi } from './api';
-import { modifierGroupKeys } from './query-keys';
+import { modifierGroupApi } from './api'
+import { modifierGroupKeys } from './query-keys'
 
 import type {
   IModifierGroup,
   IModifier,
   IGetModifierGroupsParams,
-  IGetModifiersParams
-} from './types';
+  IGetModifiersParams,
+} from './types'
 
 export const useGetModifierGroups = (
   params?: IGetModifierGroupsParams,
@@ -24,9 +24,9 @@ export const useGetModifierGroups = (
   return useQuery({
     queryKey: modifierGroupKeys.list(params),
     queryFn: () => modifierGroupApi.getModifierGroups(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 export const useGetModifierGroupById = (
   id: number,
@@ -36,9 +36,9 @@ export const useGetModifierGroupById = (
     queryKey: modifierGroupKeys.detail(id),
     queryFn: () => modifierGroupApi.getModifierGroupById(id),
     enabled: !!id,
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 export const useGetProductModifierGroups = (
   productId: number,
@@ -51,9 +51,9 @@ export const useGetProductModifierGroups = (
     queryKey: modifierGroupKeys.productGroups(productId),
     queryFn: () => modifierGroupApi.getProductModifierGroups(productId),
     enabled: !!productId,
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 export const useGetModifiers = (
   params?: IGetModifiersParams,
@@ -62,6 +62,6 @@ export const useGetModifiers = (
   return useQuery({
     queryKey: modifierGroupKeys.modifiers.list(params),
     queryFn: () => modifierGroupApi.getModifiers(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}

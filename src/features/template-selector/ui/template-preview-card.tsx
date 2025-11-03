@@ -3,43 +3,40 @@
  * Card component for displaying menu template preview
  */
 
-'use client';
+'use client'
 
+import { Star, Package, FolderTree } from 'lucide-react'
 
-
-import { Star, Package, FolderTree } from 'lucide-react';
-
-import { Badge } from '@/shared/ui/base/badge';
-import { Button } from '@/shared/ui/base/button';
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 
-import type { IMenuTemplate } from '@/entities/menu-template';
-import type { JSX } from 'react';
+import type { IMenuTemplate } from '@/entities/menu-template'
 
 interface TemplatePreviewCardProps {
-  template: IMenuTemplate;
-  onSelect: (template: IMenuTemplate) => void;
+  template: IMenuTemplate
+  onSelect: (template: IMenuTemplate) => void
 }
 
 export const TemplatePreviewCard = ({
   template,
-  onSelect
+  onSelect,
 }: TemplatePreviewCardProps) => {
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
       {template.thumbnail && (
-        <div className="aspect-video relative bg-muted overflow-hidden">
+        <div className="bg-muted relative aspect-video overflow-hidden">
           <img
             src={template.thumbnail}
             alt={template.name}
-            className="object-cover w-full h-full"
+            className="h-full w-full object-cover"
           />
           {template.isPremium && (
             <Badge className="absolute top-2 right-2" variant="secondary">
@@ -65,11 +62,11 @@ export const TemplatePreviewCard = ({
       </CardHeader>
       <CardContent>
         {template.description && (
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-4 text-sm">
             {template.description}
           </p>
         )}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1">
             <FolderTree className="h-4 w-4" />
             <span>{template.categoryCount} категорий</span>
@@ -86,5 +83,5 @@ export const TemplatePreviewCard = ({
         </Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}

@@ -3,25 +3,24 @@
  * Dialog for editing branch-specific product overrides
  */
 
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Pencil } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Pencil } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
@@ -29,83 +28,82 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
-import { Switch } from '@/shared/ui/base/switch';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
 
 import {
   useUpsertBranchOverride,
   type IBranchOverride,
-  type IUpsertBranchOverrideDto
-} from '@/entities/branch-override';
+  type IUpsertBranchOverrideDto,
+} from '@/entities/branch-override'
 
-import type { JSX } from 'react';
 
 interface EditBranchOverrideDialogProps {
-  override: IBranchOverride;
-  basePrice?: number;
+  override: IBranchOverride
+  basePrice?: number
 }
 
 // Form schema for just the override fields (not productId/branchId)
 const editOverrideSchema = z.object({
   overridePrice: z
     .number({
-      invalid_type_error: 'Введите корректную цену'
+      invalid_type_error: 'Введите корректную цену',
     })
     .min(0, 'Цена не может быть отрицательной')
     .nullable()
     .optional(),
-  overrideAvailability: z.boolean().nullable().optional()
-});
+  overrideAvailability: z.boolean().nullable().optional(),
+})
 
-type EditOverrideFormValues = z.infer<typeof editOverrideSchema>;
+type EditOverrideFormValues = z.infer<typeof editOverrideSchema>
 
 export const EditBranchOverrideDialog = ({
   override,
-  basePrice
+  basePrice,
 }: EditBranchOverrideDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const { mutate: upsertOverride, isPending } = useUpsertBranchOverride();
+  const [open, setOpen] = useState(false)
+  const { mutate: upsertOverride, isPending } = useUpsertBranchOverride()
 
   const form = useForm<EditOverrideFormValues>({
     resolver: zodResolver(editOverrideSchema),
     defaultValues: {
       overridePrice: override.overridePrice ?? undefined,
-      overrideAvailability: override.overrideAvailability ?? undefined
-    }
-  });
+      overrideAvailability: override.overrideAvailability ?? undefined,
+    },
+  })
 
   useEffect(() => {
     if (open) {
       form.reset({
         overridePrice: override.overridePrice ?? undefined,
-        overrideAvailability: override.overrideAvailability ?? undefined
-      });
+        overrideAvailability: override.overrideAvailability ?? undefined,
+      })
     }
-  }, [open, override, form]);
+  }, [open, override, form])
 
   const onSubmit = (data: EditOverrideFormValues): void => {
     // ProductId might not be on override, extract it from the context
-    const productId = override.productId;
+    const productId = override.productId
     if (!productId) {
-      console.error('No productId on override');
-      return;
+      console.error('No productId on override')
+      return
     }
 
     upsertOverride(
       {
         productId,
         branchId: override.branchId,
-        data: data as IUpsertBranchOverrideDto
+        data: _data as IUpsertBranchOverrideDto,
       },
       {
         onSuccess: () => {
-          setOpen(false);
-        }
+          setOpen(false)
+        },
       }
-    );
-  };
+    )
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -140,8 +138,8 @@ export const EditBranchOverrideDialog = ({
                       {...field}
                       value={field.value ?? ''}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value ? Number(value) : null);
+                        const value = e.target.value
+                        field.onChange(value ? Number(value) : null)
                       }}
                     />
                   </FormControl>
@@ -191,5 +189,5 @@ export const EditBranchOverrideDialog = ({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 
-import { ProductTypeForm } from './product-type-form';
-import { ProductTypeTable } from './product-type-table';
+import { ProductTypeForm } from './product-type-form'
+import { ProductTypeTable } from './product-type-table'
 
 export const ProductTypePage = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false)
 
   return (
-    <div className='container mx-auto space-y-4 p-4'>
-      <div className='flex flex-wrap items-center justify-between'>
-        <h1 className='text-2xl font-bold'>Категории продуктов</h1>
+    <div className="container mx-auto space-y-4 p-4">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="text-2xl font-bold">Категории продуктов</h1>
         <Button onClick={() => setIsFormOpen(true)}>
-          <IconPlus className='mr-2' size={18} />
+          <IconPlus className="mr-2" size={18} />
           Добавить категорию
         </Button>
       </div>
@@ -39,5 +39,5 @@ export const ProductTypePage = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
+  )
+}

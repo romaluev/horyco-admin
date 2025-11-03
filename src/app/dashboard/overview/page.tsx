@@ -1,13 +1,12 @@
-import { AnalyticsOverview } from '@/widgets/overview';
+import { AnalyticsOverview } from '@/widgets/overview'
 
-import type { Metadata } from 'next';
-
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Панель управления',
-  description: 'Обзор ключевых показателей ресторана'
-};
+  description: 'Обзор ключевых показателей ресторана',
+}
 
 export default function OverviewPage() {
-  return <AnalyticsOverview />;
+  return <AnalyticsOverview />
 }

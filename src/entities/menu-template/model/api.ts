@@ -3,7 +3,7 @@
  * API client for menu templates
  */
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   IMenuTemplate,
@@ -11,14 +11,14 @@ import type {
   IGetTemplatesParams,
   IApplyTemplateDto,
   IApplyTemplateResult,
-  IBusinessType
-} from './types';
+  IBusinessType,
+} from './types'
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 /**
@@ -32,8 +32,8 @@ export const menuTemplateApi = {
     const response = await api.get<ApiResponse<IMenuTemplate[]>>(
       '/admin/menu/templates',
       { params }
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -42,8 +42,8 @@ export const menuTemplateApi = {
   async getTemplateById(id: number): Promise<IMenuTemplateDetail> {
     const response = await api.get<ApiResponse<IMenuTemplateDetail>>(
       `/admin/menu/templates/${id}`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -53,8 +53,8 @@ export const menuTemplateApi = {
   async getBusinessTypes(): Promise<IBusinessType[]> {
     const response = await api.get<ApiResponse<IBusinessType[]>>(
       '/admin/menu/templates/business-types'
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
@@ -64,19 +64,22 @@ export const menuTemplateApi = {
   async getTemplatesByBusinessType(type: string): Promise<IMenuTemplate[]> {
     const response = await api.get<ApiResponse<IMenuTemplate[]>>(
       `/admin/menu/templates/business-type/${type}`
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   /**
    * Apply a template to current menu
    * POST /admin/menu/templates/:id/apply
    */
-  async applyTemplate(id: number, data: IApplyTemplateDto): Promise<IApplyTemplateResult> {
+  async applyTemplate(
+    id: number,
+    data: IApplyTemplateDto
+  ): Promise<IApplyTemplateResult> {
     const response = await api.post<ApiResponse<IApplyTemplateResult>>(
       `/admin/menu/templates/${id}/apply`,
       data
-    );
-    return response.data.data;
-  }
-};
+    )
+    return response.data.data
+  },
+}

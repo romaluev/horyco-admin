@@ -1,17 +1,16 @@
-'use client';
+'use client'
 
-import * as React from 'react';
+import * as React from 'react'
 // Импортируем только необходимые функции
 
-import { AnalyticsChart } from './analytics-chart';
-import { AnalyticsMetrics } from './analytics-metrics';
-import { PeriodFilter } from './period-filter';
-import { RecentOrders } from './recent-orders';
+import { AnalyticsChart } from './analytics-chart'
+import { AnalyticsMetrics } from './analytics-metrics'
+import { PeriodFilter } from './period-filter'
+import { RecentOrders } from './recent-orders'
 
-import type { ChartDataWithCast } from './analytics-chart';
-import type { PeriodType, DateRange } from './period-filter';
-import type { RecentOrder } from './recent-orders';
-
+import type { ChartDataWithCast } from './analytics-chart'
+import type { PeriodType, DateRange } from './period-filter'
+import type { RecentOrder } from './recent-orders'
 
 // Моковые данные для метрик
 const mockMetricsData = {
@@ -22,14 +21,14 @@ const mockMetricsData = {
     id: '1',
     name: 'Плов "Чайхана"',
     quantity: 48,
-    revenue: 144000
+    revenue: 144000,
   },
   previousPeriod: {
     revenue: 2350000,
     ordersCount: 132,
-    averageCheck: 17803
-  }
-};
+    averageCheck: 17803,
+  },
+}
 
 // Моковые данные для графика по выручке
 const mockRevenueChartData = {
@@ -44,11 +43,11 @@ const mockRevenueChartData = {
     { date: '2025-08-10T15:00:00', value: 240000 },
     { date: '2025-08-10T16:00:00', value: 220000 },
     { date: '2025-08-10T17:00:00', value: 270000 },
-    { date: '2025-08-10T18:00:00', value: 300000 }
+    { date: '2025-08-10T18:00:00', value: 300000 },
   ],
   metric: 'revenue',
-  period: 'hour'
-};
+  _period: 'hour',
+}
 
 // Моковые данные для графика по заказам
 const mockOrdersChartData = {
@@ -63,11 +62,11 @@ const mockOrdersChartData = {
     { date: '2025-08-10T15:00:00', value: 16 },
     { date: '2025-08-10T16:00:00', value: 14 },
     { date: '2025-08-10T17:00:00', value: 18 },
-    { date: '2025-08-10T18:00:00', value: 20 }
+    { date: '2025-08-10T18:00:00', value: 20 },
   ],
   metric: 'orders',
-  period: 'hour'
-};
+  _period: 'hour',
+}
 
 // Моковые данные для графика по среднему чеку
 const mockAverageChartData = {
@@ -82,11 +81,11 @@ const mockAverageChartData = {
     { date: '2025-08-10T15:00:00', value: 17200 },
     { date: '2025-08-10T16:00:00', value: 16900 },
     { date: '2025-08-10T17:00:00', value: 17500 },
-    { date: '2025-08-10T18:00:00', value: 18000 }
+    { date: '2025-08-10T18:00:00', value: 18000 },
   ],
   metric: 'average',
-  period: 'hour'
-};
+  _period: 'hour',
+}
 
 // Моковые данные для последних заказов
 const mockRecentOrders: RecentOrder[] = [
@@ -97,9 +96,9 @@ const mockRecentOrders: RecentOrder[] = [
     total: 58000,
     items: [
       { name: 'Плов "Чайхана"', quantity: 1, price: 30000 },
-      { name: 'Манты с говядиной', quantity: 1, price: 28000 }
+      { name: 'Манты с говядиной', quantity: 1, price: 28000 },
     ],
-    type: 'dine-in'
+    type: 'dine-in',
   },
   {
     id: '2',
@@ -108,13 +107,13 @@ const mockRecentOrders: RecentOrder[] = [
     total: 42000,
     items: [
       { name: 'Шашлык из баранины', quantity: 1, price: 35000 },
-      { name: 'Чай зеленый', quantity: 1, price: 7000 }
+      { name: 'Чай зеленый', quantity: 1, price: 7000 },
     ],
     customer: {
       name: 'Алишер',
-      phone: '+998 90 123 45 67'
+      phone: '+998 90 123 45 67',
     },
-    type: 'delivery'
+    type: 'delivery',
   },
   {
     id: '3',
@@ -124,12 +123,12 @@ const mockRecentOrders: RecentOrder[] = [
     items: [
       { name: 'Лагман', quantity: 1, price: 25000 },
       { name: 'Самса с курицей', quantity: 2, price: 15000 },
-      { name: 'Компот', quantity: 2, price: 5000 }
+      { name: 'Компот', quantity: 2, price: 5000 },
     ],
     customer: {
-      name: 'Дильшод'
+      name: 'Дильшод',
     },
-    type: 'takeaway'
+    type: 'takeaway',
   },
   {
     id: '4',
@@ -139,9 +138,9 @@ const mockRecentOrders: RecentOrder[] = [
     items: [
       { name: 'Манты с говядиной', quantity: 1, price: 28000 },
       { name: 'Чай зеленый', quantity: 1, price: 7000 },
-      { name: 'Пахлава', quantity: 1, price: 12000 }
+      { name: 'Пахлава', quantity: 1, price: 12000 },
     ],
-    type: 'dine-in'
+    type: 'dine-in',
   },
   {
     id: '5',
@@ -151,111 +150,110 @@ const mockRecentOrders: RecentOrder[] = [
     items: [
       { name: 'Плов "Чайхана"', quantity: 2, price: 30000 },
       { name: 'Шашлык из баранины', quantity: 1, price: 35000 },
-      { name: 'Компот', quantity: 2, price: 5000 }
+      { name: 'Компот', quantity: 2, price: 5000 },
     ],
     customer: {
       name: 'Фархад',
-      phone: '+998 90 987 65 43'
+      phone: '+998 90 987 65 43',
     },
-    type: 'delivery'
-  }
-] as const;
+    type: 'delivery',
+  },
+] as const
 
 export function AnalyticsOverview() {
   // Состояние для выбранного периода и диапазона дат
-  const [selectedPeriod, setSelectedPeriod] =
-    React.useState<PeriodType>('hour');
+  const [selectedPeriod, setSelectedPeriod] = React.useState<PeriodType>('hour')
   const [selectedDateRange, setSelectedDateRange] = React.useState<DateRange>({
     from: new Date(),
-    to: undefined
-  });
+    to: undefined,
+  })
 
   // Состояние для выбранной метрики графика
   const [selectedMetric, setSelectedMetric] = React.useState<
     'revenue' | 'orders' | 'average'
-  >('revenue');
+  >('revenue')
 
   // Состояние для загрузки данных
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false)
 
   // Данные для графика в зависимости от выбранной метрики
   const chartData = React.useMemo(() => {
-    let data: ChartDataWithCast;
+    let data: ChartDataWithCast
 
     switch (selectedMetric) {
       case 'revenue':
-        data = {
+        _data = {
           ...mockRevenueChartData,
-          period: selectedPeriod,
-          metric: selectedMetric
-        };
-        break;
+          _period: selectedPeriod,
+          metric: selectedMetric,
+        }
+        break
       case 'orders':
         data = {
           ...mockOrdersChartData,
-          period: selectedPeriod,
-          metric: selectedMetric
-        };
-        break;
+          _period: selectedPeriod,
+          metric: selectedMetric,
+        }
+        break
       case 'average':
         data = {
           ...mockAverageChartData,
-          period: selectedPeriod,
-          metric: selectedMetric
-        };
-        break;
+          _period: selectedPeriod,
+          metric: selectedMetric,
+        }
+        break
       default:
         data = {
           ...mockRevenueChartData,
-          period: selectedPeriod,
-          metric: 'revenue'
-        };
+          _period: selectedPeriod,
+          metric: 'revenue',
+        }
     }
 
     // Приведение типа для соответствия интерфейсу ChartData
-    return data as any;
-  }, [selectedMetric, selectedPeriod]);
+    return data as any
+  }, [selectedMetric, selectedPeriod])
 
   // Обработчик изменения периода
-  const handlePeriodChange = (period: PeriodType) => {
-    setIsLoading(true);
-    setSelectedPeriod(period);
+  const handlePeriodChange = (_period: PeriodType) => {
+    setIsLoading(true)
+    setSelectedPeriod(_period)
 
     // Имитация загрузки данных
     setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  };
+      setIsLoading(false)
+    }, 500)
+  }
 
   // Обработчик изменения диапазона дат
   const handleDateRangeChange = (range: DateRange) => {
-    setIsLoading(true);
-    setSelectedDateRange(range);
+    setIsLoading(true)
+    setSelectedDateRange(range)
 
     // Имитация загрузки данных
     setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  };
+      setIsLoading(false)
+    }, 500)
+  }
 
   // Обработчик изменения метрики графика
   const handleMetricChange = (metric: 'revenue' | 'orders' | 'average') => {
-    setSelectedMetric(metric);
-  };
+    setSelectedMetric(metric)
+  }
 
   // Эффект для имитации загрузки данных при первом рендере
   React.useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  }, []);
+      setIsLoading(false)
+    }, 500)
+  }, [])
 
   return (
-    <div className='space-y-4'>
-      <div className='flex flex-wrap items-center justify-between gap-4'>
-        <h2 className='text-2xl font-bold tracking-tight'>Аналитика продаж</h2>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold tracking-tight">Аналитика продаж</h2>
         <PeriodFilter
           selectedPeriod={selectedPeriod}
           selectedRange={selectedDateRange}
@@ -264,9 +262,9 @@ export function AnalyticsOverview() {
         />
       </div>
 
-      <div className='grid grid-cols-1 gap-4 lg:grid-cols-5'>
-        <div className='lg:col-span-4'>
-          <div className='space-y-4'>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+        <div className="lg:col-span-4">
+          <div className="space-y-4">
             <AnalyticsMetrics
               metrics={mockMetricsData}
               period={selectedPeriod}
@@ -284,7 +282,7 @@ export function AnalyticsOverview() {
           </div>
         </div>
 
-        <div className='lg:col-span-1'>
+        <div className="lg:col-span-1">
           <RecentOrders
             orders={mockRecentOrders}
             isLoading={isLoading}
@@ -293,5 +291,5 @@ export function AnalyticsOverview() {
         </div>
       </div>
     </div>
-  );
+  )
 }

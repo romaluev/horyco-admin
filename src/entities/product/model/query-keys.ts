@@ -3,7 +3,7 @@
  * Centralized query key management for React Query
  */
 
-import type { IGetProductsParams } from './types';
+import type { IGetProductsParams } from './types'
 
 export const productKeys = {
   all: () => ['products'] as const,
@@ -18,6 +18,7 @@ export const productKeys = {
     list: (params?: { page?: number; limit?: number }) =>
       [...productKeys.productTypes.lists(), params] as const,
     details: () => [...productKeys.productTypes.all(), 'detail'] as const,
-    detail: (id: number) => [...productKeys.productTypes.details(), id] as const
-  }
-} as const;
+    detail: (id: number) =>
+      [...productKeys.productTypes.details(), id] as const,
+  },
+} as const

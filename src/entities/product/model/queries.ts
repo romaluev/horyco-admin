@@ -3,17 +3,17 @@
  * React Query hooks for fetching product data
  */
 
-import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
-import { productApi } from './api';
-import { productKeys } from './query-keys';
+import { productApi } from './api'
+import { productKeys } from './query-keys'
 
 import type {
   IProduct,
   IProductsResponse,
   IGetProductsParams,
-  IProductTypeResponse
-} from './types';
+  IProductTypeResponse,
+} from './types'
 
 /**
  * Get all products with filters and pagination
@@ -28,9 +28,9 @@ export const useGetProducts = (
   return useQuery({
     queryKey: productKeys.list(params),
     queryFn: () => productApi.getProducts(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get product by ID
@@ -43,9 +43,9 @@ export const useGetProductById = (
     queryKey: productKeys.detail(id),
     queryFn: () => productApi.getProductById(id),
     enabled: !!id,
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Get all product types
@@ -60,17 +60,17 @@ export const useGetProductTypes = (
   return useQuery({
     queryKey: productKeys.productTypes.list(params),
     queryFn: () => productApi.getProductTypes(params),
-    ...options
-  });
-};
+    ...options,
+  })
+}
 
 /**
  * Legacy exports for backward compatibility
  * @deprecated Use useGetProducts instead
  */
-export const useGetAllProducts = useGetProducts;
+export const useGetAllProducts = useGetProducts
 
 /**
  * @deprecated Use useGetProductTypes instead
  */
-export const useGetAllProductTypes = useGetProductTypes;
+export const useGetAllProductTypes = useGetProductTypes

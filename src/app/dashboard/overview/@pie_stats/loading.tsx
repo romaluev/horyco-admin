@@ -1,5 +1,5 @@
-import { PieGraphSkeleton } from '@/widgets/overview';
+import { PieGraphSkeleton } from '@/widgets/overview'
 
 export default function Loading() {
-  return <PieGraphSkeleton />;
+  return <PieGraphSkeleton />
 }

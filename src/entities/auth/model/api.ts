@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   AuthRequest,
@@ -12,18 +12,18 @@ import type {
   CompleteRegistrationRequest,
   CompleteRegistrationResponse,
   RefreshTokenRequest,
-  RefreshTokenResponse
-} from '.';
-import type { IEmployee } from '@/entities/employee';
+  RefreshTokenResponse,
+} from '.'
+import type { IEmployee } from '@/entities/employee'
 
 /**
  * API Response wrapper from backend
  */
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  requestId: string;
+  success: boolean
+  data: T
+  timestamp: string
+  requestId: string
 }
 
 /**
@@ -34,27 +34,27 @@ const storeTokens = (
   refreshToken: string,
   expiresIn: number
 ): void => {
-  const expirationTime = Date.now() + expiresIn * 1000; // Convert to milliseconds
+  const expirationTime = Date.now() + expiresIn * 1000 // Convert to milliseconds
 
   Cookies.set('access_token', accessToken, {
     expires: 7, // 7 days
     secure: false, // Changed to false for localhost
-    sameSite: 'lax'
-  });
+    sameSite: 'lax',
+  })
 
   Cookies.set('refresh_token', refreshToken, {
     expires: 7,
     secure: false, // Changed to false for localhost
-    sameSite: 'lax'
-  });
+    sameSite: 'lax',
+  })
 
   // Store token expiration time
   Cookies.set('token_expires_at', String(expirationTime), {
     expires: 7,
     secure: false,
-    sameSite: 'lax'
-  });
-};
+    sameSite: 'lax',
+  })
+}
 
 /**
  * Authentication API functions
@@ -67,27 +67,27 @@ const storeTokens = (
  */
 export const authApi = {
   login: async (credentials: AuthRequest): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', credentials);
+    const response = await api.post<AuthResponse>('/auth/login', credentials)
 
-    console.log('Login response:', response.data);
+    console.log('Login response:', response.data)
 
     // Store tokens from nested data structure
     if (response.data.success && response.data.data) {
-      const { accessToken, refreshToken, expiresIn } = response.data.data;
+      const { accessToken, refreshToken, expiresIn } = response.data.data
 
-      console.log('Saving access token:', accessToken);
-      console.log('Saving refresh token:', refreshToken);
-      console.log('Token expires in:', expiresIn, 'seconds');
+      console.log('Saving access token:', accessToken)
+      console.log('Saving refresh token:', refreshToken)
+      console.log('Token expires in:', expiresIn, 'seconds')
 
-      storeTokens(accessToken, refreshToken, expiresIn);
+      storeTokens(accessToken, refreshToken, expiresIn)
 
       // Verify cookie was set
-      console.log('Cookie after setting:', Cookies.get('access_token'));
+      console.log('Cookie after setting:', Cookies.get('access_token'))
     } else {
-      console.error('Login response structure is wrong:', response.data);
+      console.error('Login response structure is wrong:', response.data)
     }
 
-    return response.data;
+    return response.data
   },
 
   /**
@@ -98,20 +98,17 @@ export const authApi = {
   refreshToken: async (
     data: RefreshTokenRequest
   ): Promise<RefreshTokenResponse> => {
-    const response = await api.post<RefreshTokenResponse>(
-      '/auth/refresh',
-      data
-    );
+    const response = await api.post<RefreshTokenResponse>('/auth/refresh', data)
 
-    const { accessToken, refreshToken, expiresIn } = response.data;
+    const { accessToken, refreshToken, expiresIn } = response.data
 
-    console.log('Refreshing tokens...');
-    console.log('New access token:', accessToken);
-    console.log('New refresh token:', refreshToken);
+    console.log('Refreshing tokens...')
+    console.log('New access token:', accessToken)
+    console.log('New refresh token:', refreshToken)
 
-    storeTokens(accessToken, refreshToken, expiresIn);
+    storeTokens(accessToken, refreshToken, expiresIn)
 
-    return response.data;
+    return response.data
   },
 
   /**
@@ -123,8 +120,8 @@ export const authApi = {
     const response = await api.post<SendOTPResponse>(
       '/auth/register/request-otp',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   /**
@@ -136,8 +133,8 @@ export const authApi = {
     const response = await api.post<VerifyOTPResponse>(
       '/auth/register/verify-otp',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   /**
@@ -151,49 +148,49 @@ export const authApi = {
     const response = await api.post<CompleteRegistrationResponse>(
       '/auth/register/complete',
       data
-    );
+    )
 
-    console.log('Registration response:', response.data);
+    console.log('Registration response:', response.data)
 
     // Store tokens from nested data structure
     if (response.data.success && response.data.data) {
-      const { accessToken, refreshToken, expiresIn } = response.data.data;
+      const { accessToken, refreshToken, expiresIn } = response.data.data
 
-      console.log('Saving access token:', accessToken);
-      console.log('Saving refresh token:', refreshToken);
-      console.log('Token expires in:', expiresIn, 'seconds');
+      console.log('Saving access token:', accessToken)
+      console.log('Saving refresh token:', refreshToken)
+      console.log('Token expires in:', expiresIn, 'seconds')
 
-      storeTokens(accessToken, refreshToken, expiresIn);
+      storeTokens(accessToken, refreshToken, expiresIn)
 
-      console.log('Cookie after setting:', Cookies.get('access_token'));
+      console.log('Cookie after setting:', Cookies.get('access_token'))
     }
 
-    return response.data;
+    return response.data
   },
 
   myProfile: async (): Promise<IEmployee> => {
-    const response = await api.get<IEmployee>('/auth/me');
-    return response.data;
+    const response = await api.get<IEmployee>('/auth/me')
+    return response.data
   },
 
   updateProfile: async (
     employeeData: Partial<IEmployee> & { id: number }
   ): Promise<IEmployee> => {
-    const { id, ...data } = employeeData;
+    const { id, ...data } = employeeData
     const response = await api.patch<ApiResponse<IEmployee>>(
       `/admin/staff/employees/${id}`,
       data
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
 
   attachAvatar: async (file: File): Promise<IEmployee> => {
-    const formData = new FormData();
-    formData.append('file', file);
+    const formData = new FormData()
+    formData.append('file', file)
     const response = await api.postForm<IEmployee>(
       '/dashboard/profile/attach-avatar',
       formData
-    );
-    return response.data;
-  }
-};
+    )
+    return response.data
+  },
+}

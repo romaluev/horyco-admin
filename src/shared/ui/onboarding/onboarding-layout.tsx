@@ -1,49 +1,48 @@
-'use client';
+'use client'
 
+import Image from 'next/image'
 
-import Image from 'next/image';
+import logo from '@/shared/assets/logo.png'
 
-import logo from '@/shared/assets/logo.png';
+import { OnboardingProgress } from './onboarding-progress'
 
-import { OnboardingProgress } from './onboarding-progress';
-
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 
 // Only visible onboarding steps (REGISTRATION_COMPLETE is auto-completed, not shown in UI)
 const ONBOARDING_STEPS = [
   {
     id: 'BUSINESS_INFO_VERIFIED',
     name: 'О бизнесе',
-    description: 'Информация о ресторане'
+    description: 'Информация о ресторане',
   },
   {
     id: 'BRANCH_SETUP',
     name: 'Филиал',
-    description: 'Настройка филиала'
+    description: 'Настройка филиала',
   },
   {
     id: 'MENU_TEMPLATE',
     name: 'Меню',
-    description: 'Выбор шаблона'
+    description: 'Выбор шаблона',
   },
   {
     id: 'STAFF_INVITED',
     name: 'Персонал',
-    description: 'Приглашение команды'
+    description: 'Приглашение команды',
   },
   {
     id: 'GO_LIVE',
     name: 'Готово',
-    description: 'Запуск системы'
-  }
-];
+    description: 'Запуск системы',
+  },
+]
 
 interface OnboardingLayoutProps {
-  children: ReactNode;
-  currentStep: string;
-  completedSteps: string[];
-  title: string;
-  description?: string;
+  children: ReactNode
+  currentStep: string
+  completedSteps: string[]
+  title: string
+  description?: string
 }
 
 export function OnboardingLayout({
@@ -51,19 +50,19 @@ export function OnboardingLayout({
   currentStep,
   completedSteps,
   title,
-  description
+  description,
 }: OnboardingLayoutProps) {
   return (
-    <div className='bg-background flex h-screen flex-col'>
-      <div className='bg-muted/30 shrink-0 border-b'>
-        <div className='container mx-auto px-2 py-3'>
-          <div className='mb-3 flex items-center justify-center gap-2'>
+    <div className="bg-background flex h-screen flex-col">
+      <div className="bg-muted/30 shrink-0 border-b">
+        <div className="container mx-auto px-2 py-3">
+          <div className="mb-3 flex items-center justify-center gap-2">
             <Image
-              className='!h-10 !w-10 overflow-hidden rounded-lg'
+              className="!h-10 !w-10 overflow-hidden rounded-lg"
               src={logo}
-              alt='OshXona'
+              alt="OshXona"
             />
-            <h1 className='text-2xl font-semibold text-[#023055]'>OshXona</h1>
+            <h1 className="text-2xl font-semibold text-[#023055]">OshXona</h1>
           </div>
 
           {/* Progress Steps */}
@@ -76,13 +75,13 @@ export function OnboardingLayout({
       </div>
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='container mx-auto px-4 py-8'>
-          <div className='mx-auto max-w-3xl'>
-            <div className='mb-8'>
-              <h2 className='text-3xl font-bold'>{title}</h2>
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold">{title}</h2>
               {description && (
-                <p className='text-muted-foreground mt-2'>{description}</p>
+                <p className="text-muted-foreground mt-2">{description}</p>
               )}
             </div>
             {children}
@@ -90,5 +89,5 @@ export function OnboardingLayout({
         </div>
       </div>
     </div>
-  );
+  )
 }

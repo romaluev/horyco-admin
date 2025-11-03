@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
-import React from 'react';
+import React from 'react'
 
-import PageContainer from '@/shared/ui/layout/page-container';
+import PageContainer from '@/shared/ui/layout/page-container'
 
 interface OverViewLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  area_stats: React.ReactNode;
+  area_stats: React.ReactNode
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  bar_stats: React.ReactNode;
+  bar_stats: React.ReactNode
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  pie_stats: React.ReactNode;
-  sales: React.ReactNode;
+  pie_stats: React.ReactNode
+  sales: React.ReactNode
 }
 
 export default function OverViewLayout({
@@ -20,11 +20,11 @@ export default function OverViewLayout({
   area_stats,
   bar_stats,
   pie_stats,
-  sales
+  sales,
 }: OverViewLayoutProps) {
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col space-y-4'>
+      <div className="flex flex-1 flex-col space-y-4">
         {children}
         {area_stats}
         {bar_stats}
@@ -32,5 +32,5 @@ export default function OverViewLayout({
         {sales}
       </div>
     </PageContainer>
-  );
+  )
 }

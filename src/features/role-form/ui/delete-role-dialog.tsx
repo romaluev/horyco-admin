@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { Loader2, Trash } from 'lucide-react';
+import { Loader2, Trash } from 'lucide-react'
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,33 +15,33 @@ import {
   AlertDialogTrigger,
   Button,
   buttonVariants,
-} from '@/shared/ui';
+} from '@/shared/ui'
 
-import { useDeleteRole } from '@/entities/role';
+import { useDeleteRole } from '@/entities/role'
 
-import type { IRole } from '@/entities/role';
+import type { IRole } from '@/entities/role'
 
 interface DeleteRoleDialogProps {
-  role: IRole;
+  role: IRole
 }
 
 export const DeleteRoleDialog = ({ role }: DeleteRoleDialogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate: deleteRole, isPending } = useDeleteRole();
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate: deleteRole, isPending } = useDeleteRole()
 
   const handleDelete = (): void => {
     deleteRole(role.id, {
       onSuccess: () => {
-        setIsOpen(false);
+        setIsOpen(false)
       },
-    });
-  };
+    })
+  }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant='ghost' size='sm' className='text-destructive'>
-          <Trash className='h-4 w-4' />
+        <Button variant="ghost" size="sm" className="text-destructive">
+          <Trash className="h-4 w-4" />
           Удалить
         </Button>
       </AlertDialogTrigger>
@@ -50,8 +50,8 @@ export const DeleteRoleDialog = ({ role }: DeleteRoleDialogProps) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить роль?</AlertDialogTitle>
           <AlertDialogDescription>
-            Это действие нельзя отменить. Роль "{role.name}" будет удалена. Убедитесь, что ни один
-            сотрудник не использует эту роль.
+            Это действие нельзя отменить. Роль "{role.name}" будет удалена.
+            Убедитесь, что ни один сотрудник не использует эту роль.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -62,11 +62,11 @@ export const DeleteRoleDialog = ({ role }: DeleteRoleDialogProps) => {
             className={cn(buttonVariants({ variant: 'destructive' }))}
             disabled={isPending}
           >
-            {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isPending ? 'Удаление...' : 'Удалить'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

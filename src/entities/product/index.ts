@@ -4,10 +4,10 @@
  */
 
 // API
-export { productApi, productAPi } from './model/api';
+export { productApi, productAPi } from './model/api'
 
 // Query Keys
-export { productKeys } from './model/query-keys';
+export { productKeys } from './model/query-keys'
 
 // Queries
 export {
@@ -15,8 +15,8 @@ export {
   useGetProductById,
   useGetProductTypes,
   useGetAllProducts,
-  useGetAllProductTypes
-} from './model/queries';
+  useGetAllProductTypes,
+} from './model/queries'
 
 // Mutations
 export {
@@ -27,8 +27,8 @@ export {
   useDeleteProduct,
   useCreateProductType,
   useUpdateProductType,
-  useDeleteProductType
-} from './model/mutations';
+  useDeleteProductType,
+} from './model/mutations'
 
 // Types
 export type {
@@ -43,8 +43,8 @@ export type {
   ICreateProductTypeDto,
   IUpdateProductTypeDto,
   IProductTypeResponse,
-  IProductTypeRequest
-} from './model/types';
+  IProductTypeRequest,
+} from './model/types'
 
 // UI Components
-export { ProductList } from './ui/product-list';
+export { ProductList } from './ui/product-list'

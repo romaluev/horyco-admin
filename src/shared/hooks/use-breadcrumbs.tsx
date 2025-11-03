@@ -1,69 +1,69 @@
-'use client';
+'use client'
 
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation'
 
 interface BreadcrumbItem {
-  title: string;
-  link: string;
+  title: string
+  link: string
 }
 
 // This allows to add custom title as well
 const routeMapping: Record<string, BreadcrumbItem[]> = {
   '/dashboard': [{ title: 'Панель управления', link: '/dashboard' }],
   '/dashboard/overview': [
-    { title: 'Панель управления', link: '/dashboard/overview' }
+    { title: 'Панель управления', link: '/dashboard/overview' },
   ],
   '/dashboard/employee': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Сотрудники', link: '/dashboard/employee' }
+    { title: 'Сотрудники', link: '/dashboard/employee' },
   ],
   '/dashboard/categories': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Категории', link: '/dashboard/categories' }
+    { title: 'Категории', link: '/dashboard/categories' },
   ],
   '/dashboard/branches': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Филиалы', link: '/dashboard/branches' }
+    { title: 'Филиалы', link: '/dashboard/branches' },
   ],
   '/dashboard/halls': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Залы', link: '/dashboard/halls' }
+    { title: 'Залы', link: '/dashboard/halls' },
   ],
   '/dashboard/products': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Продукты', link: '/dashboard/products' }
+    { title: 'Продукты', link: '/dashboard/products' },
   ],
   '/dashboard/table': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Стол менеджмент', link: '/dashboard/table' }
+    { title: 'Стол менеджмент', link: '/dashboard/table' },
   ],
   '/dashboard/profile': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Профиль', link: '/dashboard/profile' }
-  ]
-};
+    { title: 'Профиль', link: '/dashboard/profile' },
+  ],
+}
 
 export function useBreadcrumbs() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   const breadcrumbs = useMemo(() => {
     // Check if we have a custom mapping for this exact path
     if (routeMapping[pathname]) {
-      return routeMapping[pathname];
+      return routeMapping[pathname]
     }
 
     // If no exact match, fall back to generating breadcrumbs from the path
-    const segments = pathname.split('/').filter(Boolean);
+    const segments = pathname.split('/').filter(Boolean)
     return segments.map((segment, index) => {
-      const path = `/${segments.slice(0, index + 1).join('/')}`;
+      const path = `/${segments.slice(0, index + 1).join('/')}`
       return {
         title: segment.charAt(0).toUpperCase() + segment.slice(1),
-        link: path
-      };
-    });
-  }, [pathname]);
+        link: path,
+      }
+    })
+  }, [pathname])
 
-  return breadcrumbs;
+  return breadcrumbs
 }

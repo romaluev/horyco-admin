@@ -14,5 +14,5 @@ export {
   type IModifier,
   type ICreateModifierDto,
   type IUpdateModifierDto,
-  type IGetModifiersParams
-} from './model';
+  type IGetModifiersParams,
+} from './model'

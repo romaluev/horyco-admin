@@ -8,5 +8,5 @@ export const roleKeys = {
   list: () => [...roleKeys.lists()] as const,
   byId: (id: number) => [...roleKeys.all(), id] as const,
   permissions: () => ['permissions'] as const,
-  permissionsGrouped: () => [...roleKeys.permissions(), 'grouped'] as const
-} as const;
+  permissionsGrouped: () => [...roleKeys.permissions(), 'grouped'] as const,
+} as const

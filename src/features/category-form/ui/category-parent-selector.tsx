@@ -3,40 +3,36 @@
  * Dropdown for selecting parent category
  */
 
-'use client';
-
-
+'use client'
 
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
+  SelectValue,
+} from '@/shared/ui/base/select'
 
-import { useGetCategories } from '@/entities/category';
+import { useGetCategories } from '@/entities/category'
 
-import type { JSX } from 'react';
 
 interface CategoryParentSelectorProps {
-  value?: number;
-  onChange: (value: number | null) => void;
-  excludeId?: number;
+  value?: number
+  onChange: (value: number | null) => void
+  excludeId?: number
 }
 
 export const CategoryParentSelector = ({
   value,
   onChange,
-  excludeId
+  excludeId,
 }: CategoryParentSelectorProps) => {
   const { data: categories, isLoading } = useGetCategories({
-    includeProducts: false
-  });
+    includeProducts: false,
+  })
 
-  const availableCategories = categories?.filter(
-    (cat) => cat.id !== excludeId && !cat.parentId
-  ) || [];
+  const availableCategories =
+    categories?.filter((cat) => cat.id !== excludeId && !cat.parentId) || []
 
   return (
     <Select
@@ -56,5 +52,5 @@ export const CategoryParentSelector = ({
         ))}
       </SelectContent>
     </Select>
-  );
-};
+  )
+}

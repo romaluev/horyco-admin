@@ -286,87 +286,88 @@ export default function MenuTemplatePage() {
       {!hasNoProducts && (
         <div className="space-y-8">
           {categories.map((category) => (
-          <div key={category.id}>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">{category.name}</h2>
-              <span className="text-muted-foreground text-sm">
-                {category.products.filter((p) => p.isSelected).length} /{' '}
-                {category.products.length}
-              </span>
-            </div>
+            <div key={category.id}>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-semibold">{category.name}</h2>
+                <span className="text-muted-foreground text-sm">
+                  {category.products.filter((p) => p.isSelected).length} /{' '}
+                  {category.products.length}
+                </span>
+              </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {category.products.map((product) => (
-                <Card
-                  key={product.id}
-                  className={`relative overflow-hidden transition-all p-0 ${
-                    product.isSelected ? 'ring-primary ring-2' : ''
-                  }`}
-                >
-                  {product.isSelected && (
-                    <div className="bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full">
-                      <Check className="h-4 w-4 text-white" />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {category.products.map((product) => (
+                  <Card
+                    key={product.id}
+                    className={`relative overflow-hidden p-0 transition-all ${
+                      product.isSelected ? 'ring-primary ring-2' : ''
+                    }`}
+                  >
+                    {product.isSelected && (
+                      <div className="bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full">
+                        <Check className="h-4 w-4 text-white" />
+                      </div>
+                    )}
+
+                    {/* Product Image */}
+                    <div className="bg-muted relative h-40 w-full overflow-hidden">
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : null}
                     </div>
-                  )}
 
-                  {/* Product Image */}
-                  <div className="bg-muted relative h-40 w-full overflow-hidden">
-                    {product.image ? (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    ) : null}
-                  </div>
+                    <CardHeader className="space-y-2 p-4">
+                      <CardTitle className="line-clamp-1 text-base">
+                        {product.name}
+                      </CardTitle>
+                      <CardDescription className="line-clamp-2 text-xs">
+                        {product.description}
+                      </CardDescription>
+                      <div className="text-primary text-lg font-bold">
+                        {new Intl.NumberFormat('ru-RU').format(product.price)}{' '}
+                        сум
+                      </div>
+                    </CardHeader>
 
-                  <CardHeader className="space-y-2 p-4">
-                    <CardTitle className="line-clamp-1 text-base">
-                      {product.name}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 text-xs">
-                      {product.description}
-                    </CardDescription>
-                    <div className="text-primary text-lg font-bold">
-                      {new Intl.NumberFormat('ru-RU').format(product.price)} сум
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="flex gap-2 p-4 pt-0">
-                    <Button
-                      size="sm"
-                      variant={product.isSelected ? 'secondary' : 'default'}
-                      className="flex-1"
-                      onClick={() =>
-                        handleToggleProduct(category.id, product.id)
-                      }
-                    >
-                      {product.isSelected ? (
-                        <>
-                          <X className="mr-1 h-3 w-3" />
-                          Убрать
-                        </>
-                      ) : (
-                        <>
-                          <Check className="mr-1 h-3 w-3" />
-                          Выбрать
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEditProduct(product)}
-                    >
-                      <Edit2 className="h-3 w-3" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                    <CardContent className="flex gap-2 p-4 pt-0">
+                      <Button
+                        size="sm"
+                        variant={product.isSelected ? 'secondary' : 'default'}
+                        className="flex-1"
+                        onClick={() =>
+                          handleToggleProduct(category.id, product.id)
+                        }
+                      >
+                        {product.isSelected ? (
+                          <>
+                            <X className="mr-1 h-3 w-3" />
+                            Убрать
+                          </>
+                        ) : (
+                          <>
+                            <Check className="mr-1 h-3 w-3" />
+                            Выбрать
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditProduct(product)}
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
           ))}
         </div>
       )}
@@ -424,7 +425,12 @@ export default function MenuTemplatePage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <label htmlFor="edit-product-name" className="mb-2 block text-sm font-medium">Название</label>
+              <label
+                htmlFor="edit-product-name"
+                className="mb-2 block text-sm font-medium"
+              >
+                Название
+              </label>
               <Input
                 id="edit-product-name"
                 value={editedName}
@@ -433,7 +439,10 @@ export default function MenuTemplatePage() {
               />
             </div>
             <div>
-              <label htmlFor="edit-product-price" className="mb-2 block text-sm font-medium">
+              <label
+                htmlFor="edit-product-price"
+                className="mb-2 block text-sm font-medium"
+              >
                 Цена (сум)
               </label>
               <Input
@@ -445,7 +454,12 @@ export default function MenuTemplatePage() {
               />
             </div>
             <div>
-              <label htmlFor="edit-product-description" className="mb-2 block text-sm font-medium">Описание</label>
+              <label
+                htmlFor="edit-product-description"
+                className="mb-2 block text-sm font-medium"
+              >
+                Описание
+              </label>
               <Textarea
                 id="edit-product-description"
                 value={editedDescription}
@@ -456,7 +470,10 @@ export default function MenuTemplatePage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}
+            >
               Отмена
             </Button>
             <Button onClick={handleSaveEdit}>Сохранить</Button>

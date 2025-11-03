@@ -7,20 +7,20 @@ export const branchProperties = [
     label: 'Name',
     type: 'text',
     sortable: true,
-    filterable: true
+    filterable: true,
   },
   {
     key: 'address',
     label: 'Address',
     type: 'text',
     sortable: true,
-    filterable: true
+    filterable: true,
   },
   {
     key: 'createdAt',
     label: 'Created At',
     type: 'date',
     sortable: true,
-    filterable: true
-  }
-];
+    filterable: true,
+  },
+]

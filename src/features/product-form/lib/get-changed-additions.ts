@@ -3,80 +3,82 @@ export function getChangedAdditions(
   current: any[] = [],
   productId: number
 ): any[] {
-  const result: any[] = [];
+  const result: any[] = []
 
-  current.forEach((currentAddition: any) => {
+  current.forEach((currentAddition: unknown) => {
     if (!currentAddition.id) {
-      result.push({ ...currentAddition, productId });
-      return;
+      result.push({ ...currentAddition, productId })
+      return
     }
 
-    const originalAddition = initial.find((a: any) => a.id === currentAddition.id);
-    if (!originalAddition) return;
+    const originalAddition = initial.find(
+      (a: unknown) => a.id === currentAddition.id
+    )
+    if (!originalAddition) return
 
     const hasMainChanges =
       currentAddition.name !== originalAddition.name ||
       currentAddition.isRequired !== originalAddition.isRequired ||
       currentAddition.isMultiple !== originalAddition.isMultiple ||
-      currentAddition.limit !== originalAddition.limit;
+      currentAddition.limit !== originalAddition.limit
 
-    const changedProducts: any[] = [];
+    const changedProducts: any[] = []
 
-    (currentAddition.additionProducts || []).forEach((currentProduct: any) => {
+    ;(currentAddition.additionProducts || []).forEach((currentProduct: unknown) => {
       if (!currentProduct.id) {
         if (currentAddition.id) {
-          currentProduct.additionId = currentAddition.id;
+          currentProduct.additionId = currentAddition.id
         }
-        changedProducts.push(currentProduct);
-        return;
+        changedProducts.push(currentProduct)
+        return
       }
 
       const originalProduct = originalAddition.additionProducts.find(
-        (p: any) => p.id === currentProduct.id
-      );
-      if (!originalProduct) return;
+        (p: unknown) => p.id === currentProduct.id
+      )
+      if (!originalProduct) return
 
       if (
         currentProduct.name !== originalProduct.name ||
         currentProduct.price !== originalProduct.price
       ) {
-        changedProducts.push(currentProduct);
+        changedProducts.push(currentProduct)
       }
-    });
+    })
 
-    originalAddition.additionProducts.forEach((originalProduct: any) => {
-      if (!originalProduct.id) return;
+    originalAddition.additionProducts.forEach((originalProduct: unknown) => {
+      if (!originalProduct.id) return
 
       const isDeleted = !(currentAddition.additionProducts || []).some(
-        (p: any) => p.id === originalProduct.id
-      );
+        (p: unknown) => p.id === originalProduct.id
+      )
       if (isDeleted) {
-        changedProducts.push({ ...originalProduct, isDeleted: true });
+        changedProducts.push({ ...originalProduct, isDeleted: true })
       }
-    });
+    })
 
     if (hasMainChanges || changedProducts.length) {
       result.push({
         ...currentAddition,
         productId,
-        additionProducts: changedProducts.length ? changedProducts : undefined
-      });
+        additionProducts: changedProducts.length ? changedProducts : undefined,
+      })
     }
-  });
+  })
 
   // Handle deleted additions
-  initial.forEach((originalAddition: any) => {
-    if (!originalAddition.id) return;
+  initial.forEach((originalAddition: unknown) => {
+    if (!originalAddition.id) return
 
-    const isDeleted = !current.some((a: any) => a.id === originalAddition.id);
+    const isDeleted = !current.some((a: unknown) => a.id === originalAddition.id)
     if (isDeleted) {
       result.push({
         ...originalAddition,
         productId,
-        isDeleted: true
-      });
+        isDeleted: true,
+      })
     }
-  });
+  })
 
-  return result;
+  return result
 }

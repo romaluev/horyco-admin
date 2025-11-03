@@ -1,51 +1,51 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
-import { Button } from '@/shared/ui/base/button';
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/shared/ui/base/dialog';
+  DialogTrigger,
+} from '@/shared/ui/base/dialog'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { Input } from '@/shared/ui/base/input';
+  FormMessage,
+} from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Switch } from '@/shared/ui/base/switch';
+  SelectValue,
+} from '@/shared/ui/base/select'
+import { Switch } from '@/shared/ui/base/switch'
 
-import { useGetAllHalls } from '@/entities/hall/model/queries';
-import { useCreateTable } from '@/entities/table/model/mutations';
-import { TABLE_SHAPES } from '@/features/table/model/constants';
-import { tableSchema } from '@/features/table/model/contract';
+import { useGetAllHalls } from '@/entities/hall/model/queries'
+import { useCreateTable } from '@/entities/table/model/mutations'
+import { TABLE_SHAPES } from '@/features/table/model/constants'
+import { tableSchema } from '@/features/table/model/contract'
 
-import type * as z from 'zod';
+import type * as z from 'zod'
 
-type FormValues = z.infer<typeof tableSchema>;
+type FormValues = z.infer<typeof tableSchema>
 
 export const CreateTableButton = () => {
-  const [open, setOpen] = useState(false);
-  const { mutate: createTable, isPending } = useCreateTable();
-  const { data: halls } = useGetAllHalls();
+  const [open, setOpen] = useState(false)
+  const { mutate: createTable, isPending } = useCreateTable()
+  const { data: halls } = useGetAllHalls()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(tableSchema),
@@ -57,28 +57,28 @@ export const CreateTableButton = () => {
       xPosition: 0,
       yPosition: 0,
       hallId: 1,
-      isAvailable: true
-    }
-  });
+      isAvailable: true,
+    },
+  })
 
   const onSubmit = (data: FormValues) => {
-    createTable(data, {
+    createTable(_data, {
       onSuccess: () => {
-        toast.success('Стол успешно создан');
-        setOpen(false);
-        form.reset();
+        toast.success('Стол успешно создан')
+        setOpen(false)
+        form.reset()
       },
       onError: (error) => {
-        toast.error(`Ошибка при создании стола: ${  error.message}`);
-      }
-    });
-  };
+        toast.error(`Ошибка при создании стола: ${error.message}`)
+      },
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className='mr-2 h-4 w-4' />
+          <Plus className="mr-2 h-4 w-4" />
           Добавить стол
         </Button>
       </DialogTrigger>
@@ -87,15 +87,15 @@ export const CreateTableButton = () => {
           <DialogTitle>Создать новый стол</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
-                    <Input placeholder='Стол 1' {...field} />
+                    <Input placeholder="Стол 1" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,26 +103,26 @@ export const CreateTableButton = () => {
             />
             <FormField
               control={form.control}
-              name='number'
+              name="number"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Номер стола</FormLabel>
                   <FormControl>
-                    <Input type='number' min={1} {...field} />
+                    <Input type="number" min={1} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className='grid grid-cols-2 gap-2'>
+            <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
-                name='size'
+                name="size"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Размер</FormLabel>
                     <FormControl>
-                      <Input type='number' min={1} {...field} />
+                      <Input type="number" min={1} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,7 +130,7 @@ export const CreateTableButton = () => {
               />
               <FormField
                 control={form.control}
-                name='shape'
+                name="shape"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Форма</FormLabel>
@@ -139,8 +139,8 @@ export const CreateTableButton = () => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className='w-full'>
-                          <SelectValue placeholder='Выберите форму' />
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Выберите форму" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -158,7 +158,7 @@ export const CreateTableButton = () => {
             </div>
             <FormField
               control={form.control}
-              name='hallId'
+              name="hallId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Зал</FormLabel>
@@ -167,8 +167,8 @@ export const CreateTableButton = () => {
                     defaultValue={String(field.value)}
                   >
                     <FormControl>
-                      <SelectTrigger className='w-full'>
-                        <SelectValue placeholder='Выберите залл' />
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Выберите залл" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -185,27 +185,27 @@ export const CreateTableButton = () => {
             />
             <FormField
               control={form.control}
-              name='isAvailable'
+              name="isAvailable"
               render={({ field }) => (
-                <FormItem className='flex flex-row items-center space-y-0 space-x-1'>
+                <FormItem className="flex flex-row items-center space-y-0 space-x-1">
                   <FormControl>
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <div className='space-y-1 leading-none'>
+                  <div className="space-y-1 leading-none">
                     <FormLabel>Доступен</FormLabel>
                   </div>
                 </FormItem>
               )}
             />
-            <Button type='submit' className='w-full' disabled={isPending}>
+            <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? 'Создание...' : 'Создать стол'}
             </Button>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react'
 
-import { BaseLoading } from '@/shared/ui';
+import { BaseLoading } from '@/shared/ui'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,64 +13,64 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
-} from '@/shared/ui/base/alert-dialog';
-import { Button } from '@/shared/ui/base/button';
+  AlertDialogTitle,
+} from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/shared/ui/base/dialog';
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/shared/ui/base/table';
-import PageContainer from '@/shared/ui/layout/page-container';
+  TableRow,
+} from '@/shared/ui/base/table'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { ProductTypeForm } from './product-type-form';
-import { useDeleteProductType } from '../../model/mutations';
-import { useGetAllProductTypes } from '../../model/queries';
+import { ProductTypeForm } from './product-type-form'
+import { useDeleteProductType } from '../../model/mutations'
+import { useGetAllProductTypes } from '../../model/queries'
 
-import type { IProductType } from '../../model/types';
+import type { IProductType } from '../../model/types'
 
 export const ProductTypeTable = () => {
-  const { data: response, isLoading } = useGetAllProductTypes();
-  const { mutate: deleteProductType } = useDeleteProductType();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { data: response, isLoading } = useGetAllProductTypes()
+  const { mutate: deleteProductType } = useDeleteProductType()
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentProductType, setCurrentProductType] =
-    useState<IProductType | null>(null);
+    useState<IProductType | null>(null)
 
   if (isLoading) {
-    return <BaseLoading />;
+    return <BaseLoading />
   }
 
   const handleEdit = (productType: IProductType) => {
-    setCurrentProductType(productType);
-    setIsFormOpen(true);
-  };
+    setCurrentProductType(productType)
+    setIsFormOpen(true)
+  }
 
   const handleDelete = (productType: IProductType) => {
-    setCurrentProductType(productType);
-    setIsDeleteDialogOpen(true);
-  };
+    setCurrentProductType(productType)
+    setIsDeleteDialogOpen(true)
+  }
 
   const confirmDelete = () => {
     if (currentProductType) {
-      deleteProductType(currentProductType.id);
-      setIsDeleteDialogOpen(false);
+      deleteProductType(currentProductType.id)
+      setIsDeleteDialogOpen(false)
     }
-  };
+  }
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       <PageContainer scrollable>
-        <Table className='!mb-15'>
+        <Table className="!mb-15">
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
@@ -86,17 +86,17 @@ export const ProductTypeTable = () => {
                   <TableCell>{productType.id}</TableCell>
                   <TableCell>{productType.name}</TableCell>
                   <TableCell>{productType.description}</TableCell>
-                  <TableCell className='space-x-2'>
+                  <TableCell className="space-x-2">
                     <Button
-                      variant='outline'
-                      size='sm'
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleEdit(productType)}
                     >
                       <IconEdit size={16} />
                     </Button>
                     <Button
-                      variant='outline'
-                      size='sm'
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleDelete(productType)}
                     >
                       <IconTrash size={16} />
@@ -145,5 +145,5 @@ export const ProductTypeTable = () => {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}

@@ -19,7 +19,6 @@ import {
 
 import { useGetCategories } from '@/entities/category'
 
-import type { JSX } from 'react'
 
 export const ProductFormCategory = () => {
   const form = useFormContext()

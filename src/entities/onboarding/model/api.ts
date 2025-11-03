@@ -1,4 +1,4 @@
-import api from '@/shared/lib/axios';
+import api from '@/shared/lib/axios'
 
 import type {
   OnboardingProgress,
@@ -17,16 +17,16 @@ import type {
   SkipStepRequest,
   SkipStepResponse,
   Region,
-  District
-} from './types';
+  District,
+} from './types'
 
 export const onboardingApi = {
   // Get current onboarding progress
   async getProgress(): Promise<OnboardingProgress> {
     const response = await api.get<OnboardingProgress>(
       '/admin/onboarding/progress'
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Submit business identity step (NEW API)
@@ -36,8 +36,8 @@ export const onboardingApi = {
     const response = await api.post<BusinessInfoResponse>(
       '/admin/onboarding/steps/business-identity',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Submit branch setup step
@@ -47,8 +47,8 @@ export const onboardingApi = {
     const response = await api.post<BranchSetupResponse>(
       '/admin/onboarding/steps/branch-setup',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Submit branch location step (NEW)
@@ -58,8 +58,8 @@ export const onboardingApi = {
     const response = await api.post<BranchLocationResponse>(
       '/admin/onboarding/steps/branch-location',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Get default products for business type
@@ -69,10 +69,10 @@ export const onboardingApi = {
     const response = await api.get<DefaultProductsResponse>(
       '/admin/onboarding/default-products',
       {
-        params: { businessType }
+        params: { businessType },
       }
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Submit menu setup
@@ -80,16 +80,16 @@ export const onboardingApi = {
     const response = await api.post<MenuSetupResponse>(
       '/admin/onboarding/steps/menu-setup',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Skip menu setup
   async skipMenuSetup(): Promise<SkipStepResponse> {
     const response = await api.post<SkipStepResponse>(
       '/admin/onboarding/steps/menu-skip'
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Submit staff invite step
@@ -99,16 +99,16 @@ export const onboardingApi = {
     const response = await api.post<StaffInviteResponse>(
       '/admin/onboarding/steps/staff-invite',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Complete onboarding
   async complete(): Promise<CompleteOnboardingResponse> {
     const response = await api.post<CompleteOnboardingResponse>(
       '/admin/onboarding/complete'
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Skip a step
@@ -116,21 +116,21 @@ export const onboardingApi = {
     const response = await api.post<SkipStepResponse>(
       '/admin/onboarding/skip-step',
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // Get regions
   async getRegions(): Promise<Region[]> {
-    const response = await api.get<Region[]>('/admin/regions');
-    return response.data;
+    const response = await api.get<Region[]>('/admin/regions')
+    return response.data
   },
 
   // Get districts by region
   async getDistricts(regionId: number): Promise<District[]> {
     const response = await api.get<District[]>(
       `/admin/regions/${regionId}/districts`
-    );
-    return response.data;
-  }
-};
+    )
+    return response.data
+  },
+}

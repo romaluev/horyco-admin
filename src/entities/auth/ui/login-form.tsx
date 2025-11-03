@@ -48,7 +48,7 @@ type LoginFormValues = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const _searchParams = useSearchParams()
   const { login, isLoading, error, clearError, me } = useAuthStore()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -70,7 +70,7 @@ const LoginForm = () => {
       // Step 1: Login and save tokens
       await login(data.phone, data.password)
 
-      // Step 2: Show loading immediately and fetch user data
+      // Step 2: Show loading immediately and fetch user _data
       setIsRedirecting(true)
       await me()
 
@@ -118,7 +118,7 @@ const LoginForm = () => {
       // } else {
       //   router.push('/dashboard');
       // }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsRedirecting(false)
       setGeneralError(
         error.response?.data?.message || 'Failed to login. Please try again.'

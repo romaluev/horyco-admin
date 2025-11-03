@@ -3,22 +3,22 @@
  * React Query mutations for file operations
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 import {
   requestPresignedUploadUrl,
   uploadToPresignedUrl,
   confirmUpload,
-  deleteFile
-} from './api';
-import { fileKeys } from './query-keys';
+  deleteFile,
+} from './api'
+import { fileKeys } from './query-keys'
 
 import type {
   IPresignedUploadUrlRequest,
-  IConfirmUploadRequest,
-  IDeleteFileParams
-} from './types';
+  _IConfirmUploadRequest,
+  _IDeleteFileParams,
+} from './types'
 
 /**
  * Hook to upload file using presigned URL flow
@@ -27,19 +27,19 @@ import type {
  * 3. Confirm upload
  */
 export const useUploadFile = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({
       file,
       entityType,
       entityId,
-      altText
+      altText,
     }: {
-      file: File;
-      entityType: IPresignedUploadUrlRequest['entityType'];
-      entityId: number;
-      altText?: string;
+      file: File
+      entityType: IPresignedUploadUrlRequest['entityType']
+      entityId: number
+      altText?: string
     }) => {
       // Step 1: Request presigned URL
       const presignedData = await requestPresignedUploadUrl({
@@ -48,52 +48,52 @@ export const useUploadFile = () => {
         fileName: file.name,
         mimeType: file.type,
         fileSize: file.size,
-        altText
-      });
+        altText,
+      })
 
       // Step 2: Upload to storage
-      await uploadToPresignedUrl(presignedData.data.uploadUrl, file);
+      await uploadToPresignedUrl(presignedData.data.uploadUrl, file)
 
       // Step 3: Confirm upload
       const fileResponse = await confirmUpload({
         fileId: presignedData.data.fileId,
-        fileKey: presignedData.data.fileKey
-      });
+        fileKey: presignedData.data.fileKey,
+      })
 
-      return fileResponse;
+      return fileResponse
     },
     onSuccess: (data) => {
       // Invalidate entity files cache
       queryClient.invalidateQueries({
-        queryKey: fileKeys.byEntity(data.entityType, data.entityId)
-      });
-      toast.success('Файл успешно загружен');
+        queryKey: fileKeys.byEntity(data.entityType, data.entityId),
+      })
+      toast.success('Файл успешно загружен')
     },
     onError: (error: Error) => {
-      console.error('Upload error:', error);
-      toast.error('Ошибка при загрузке файла');
-    }
-  });
-};
+      console.error('Upload error:', error)
+      toast.error('Ошибка при загрузке файла')
+    },
+  })
+}
 
 /**
  * Hook to delete file
  */
 export const useDeleteFile = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: deleteFile,
     onSuccess: (_, variables) => {
       // Invalidate entity files cache
       queryClient.invalidateQueries({
-        queryKey: fileKeys.byEntity(variables.entityType, variables.entityId)
-      });
-      toast.success('Файл успешно удален');
+        queryKey: fileKeys.byEntity(variables.entityType, variables.entityId),
+      })
+      toast.success('Файл успешно удален')
     },
     onError: (error: Error) => {
-      console.error('Delete error:', error);
-      toast.error('Ошибка при удалении файла');
-    }
-  });
-};
+      console.error('Delete error:', error)
+      toast.error('Ошибка при удалении файла')
+    },
+  })
+}

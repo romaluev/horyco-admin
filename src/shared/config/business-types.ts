@@ -11,7 +11,7 @@ export const BUSINESS_TYPES = [
   { value: 'bakery', label: 'Пекарня' },
   { value: 'food_truck', label: 'Фуд-трак' },
   { value: 'catering', label: 'Кейтеринг' },
-  { value: 'other', label: 'Другое' }
-] as const;
+  { value: 'other', label: 'Другое' },
+] as const
 
-export type BusinessType = (typeof BUSINESS_TYPES)[number]['value'];
+export type BusinessType = (typeof BUSINESS_TYPES)[number]['value']
