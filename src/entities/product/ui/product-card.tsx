@@ -48,11 +48,11 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        {product.files[0]?.originalName ? (
+        {product.image ? (
           <img
             className='h-[200px] rounded-md object-cover'
-            src={`${BASE_API_URL}/file/${product.files[0].originalName}`}
-            alt='product-image'
+            src={product.image}
+            alt={product.name}
           />
         ) : null}
         <CardDescription className='pt-2'>

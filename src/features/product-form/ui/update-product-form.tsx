@@ -20,12 +20,9 @@ import {
 } from '@/shared/ui';
 
 import {
-  productAPi,
-  useAttachProductImages,
   useGetProductById,
   useUpdateProduct
 } from '@/entities/product';
-import { getChangedAdditions } from '@/features/product-form/lib/get-changed-additions';
 
 import { ProductFormAdditions } from './product-form-additions';
 import { ProductFormImages } from './product-form-images';
@@ -34,64 +31,77 @@ import { productSchema } from '../model/contract';
 
 import type * as z from 'zod';
 
-export const UpdateProductForm = ({ productId }: { productId: number }) => {
+interface UpdateProductFormProps {
+  productId: number;
+  onSuccess?: () => void;
+}
+
+export const UpdateProductForm = ({
+  productId,
+  onSuccess
+}: UpdateProductFormProps) => {
   const { mutateAsync: updateProductMutation } = useUpdateProduct();
-  const { mutateAsync: attachImages } = useAttachProductImages();
-  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
 
   const { data: product } = useGetProductById(productId);
 
   const defaultValues = {
-    image: product?.files || [],
+    image: product?.image || '',
     name: product?.name || '',
     productTypeId: product?.productTypeId || 0,
-    status: '',
+    categoryId: product?.categoryId || 0,
     price: product?.price || 0,
-    stock: product?.stock || 0,
     description: product?.description || '',
-    additions: product?.additions || []
+    isAvailable: product?.isAvailable ?? true,
+    additions: []
   };
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
-    values: defaultValues
+    defaultValues
   });
 
   const onSubmit = async () => {
     const values = form.getValues();
-    const body: any = { ...form.getValues(), id: productId };
-    delete body.image;
+    const productData = values;
 
-    const changedAdditions = getChangedAdditions(
-      product?.additions || [],
-      values.additions || [],
-      productId
-    );
-    if (changedAdditions.length > 0) {
-      body.additions = changedAdditions;
-    } else {
-      delete body.additions;
+    let imageUrl = productData.image;
+
+    // If there's a new file, upload it
+    if (imageFile) {
+      const { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } =
+        await import('@/entities/file');
+
+      const presignedData = await requestPresignedUploadUrl({
+        entityType: 'PRODUCT',
+        entityId: productId,
+        fileName: imageFile.name,
+        mimeType: imageFile.type,
+        fileSize: imageFile.size,
+        altText: values.name
+      });
+
+      await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile);
+
+      const response = await confirmUpload({
+        fileId: presignedData.data.fileId,
+        fileKey: presignedData.data.fileKey
+      });
+
+      imageUrl = response.variants.medium || response.variants.original || '';
     }
 
     await updateProductMutation({
       id: productId,
-      data: body
+      data: { ...productData, image: imageUrl }
     });
 
-    if (deletedImageIds.length) {
-      deletedImageIds.forEach((id) => {
-        productAPi.deleteFile(productId, id);
-      });
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      router.push('/dashboard/menu/products');
     }
-    const images = (values.image || []).filter(
-      (image: any) => image instanceof File
-    );
-    if (images.length) {
-      await attachImages({ id: productId, files: images });
-    }
-
-    router.push('/dashboard/products');
   };
 
   return (
@@ -99,11 +109,9 @@ export const UpdateProductForm = ({ productId }: { productId: number }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <div className='grid grid-cols-1 items-start gap-x-2 gap-y-4 md:grid-cols-6'>
           <ProductFormImages
-            images={
-              product?.files.filter((f) => !deletedImageIds.includes(f.id)) ||
-              []
-            }
-            setDeletedImages={setDeletedImageIds}
+            imageFile={imageFile}
+            setImageFile={setImageFile}
+            currentImageUrl={product?.image}
           />
 
           <FormField
@@ -132,25 +140,6 @@ export const UpdateProductForm = ({ productId }: { productId: number }) => {
                   <Input
                     type='number'
                     placeholder='Введите цену'
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='stock'
-            render={({ field }) => (
-              <FormItem className='md:col-span-2'>
-                <FormLabel>Количество</FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Введите количество'
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />

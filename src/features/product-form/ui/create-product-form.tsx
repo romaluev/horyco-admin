@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation';
 
@@ -20,45 +20,51 @@ import {
   Textarea
 } from '@/shared/ui';
 
-import { useAttachProductImages, useCreateProduct } from '@/entities/product';
+import { useCreateProduct } from '@/entities/product';
 
 import { ProductFormAdditions } from './product-form-additions';
+import { ProductFormCategory } from './product-form-category';
 import { ProductFormImages } from './product-form-images';
 import { ProductFormType } from './product-form-type';
 import { productSchema } from '../model/contract';
 
-import type { ProductFormValues} from '../model/contract';
-
-
+import type { ProductFormValues } from '../model/contract';
+import type { JSX } from 'react';
 
 const EXPAND_USAGE_KEY = 'expand_usage';
 
 export const CreateProductForm = () => {
   const { mutateAsync: createProductMutation } = useCreateProduct();
-  const { mutateAsync: attachImages } = useAttachProductImages();
   const router = useRouter();
   const [sending, setSending] = useState(false);
   const [expandLoading, setExpandLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const expandUsageCount = parseInt(
-    localStorage.getItem(EXPAND_USAGE_KEY) || '0'
-  );
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [expandUsageCount, setExpandUsageCount] = useState(0)
 
-  const defaultValues = {
+  useEffect(() => {
+    setExpandUsageCount(parseInt(
+      localStorage.getItem(EXPAND_USAGE_KEY) || '0'
+    ))
+  }, [])
+
+  const defaultValues: Partial<ProductFormValues> = {
     name: '',
+    categoryId: 0,
     productTypeId: 0,
-    status: '',
+    price: 0,
     description: '',
+    isAvailable: true,
     additions: [],
-    image: []
+    image: ''
   };
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    values: defaultValues
+    defaultValues
   });
 
-  const handleExpandDescription = async () => {
+  const handleExpandDescription = async (): Promise<void> => {
     const usageCount = parseInt(localStorage.getItem(EXPAND_USAGE_KEY) || '0');
     if (usageCount <= 5 || expandLoading || expanded) return;
 
@@ -88,31 +94,57 @@ export const CreateProductForm = () => {
     setExpandLoading(false);
   };
 
-  const onSubmit = async (values: ProductFormValues) => {
-    const body = { ...values, price: values.price || 0 };
-    delete body.image;
+  const onSubmit = async (values: ProductFormValues): Promise<void> => {
+    const { additions, ...productData } = values;
     setSending(true);
 
     try {
-      const res = await createProductMutation(body);
+      // Create product first
+      const createdProduct = await createProductMutation(productData);
 
-      if (values.image?.length && res) {
-        await attachImages({ id: res.id, files: values.image });
+      // If there's a file, upload it and update the product
+      if (imageFile && createdProduct?.id) {
+        const { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } =
+          await import('@/entities/file');
+        const { productApi } = await import('@/entities/product');
+
+        const presignedData = await requestPresignedUploadUrl({
+          entityType: 'PRODUCT',
+          entityId: createdProduct.id,
+          fileName: imageFile.name,
+          mimeType: imageFile.type,
+          fileSize: imageFile.size,
+          altText: values.name
+        });
+
+        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile);
+
+        const response = await confirmUpload({
+          fileId: presignedData.data.fileId,
+          fileKey: presignedData.data.fileKey
+        });
+
+        const imageUrl = response.variants.medium || response.variants.original;
+        if (imageUrl) {
+          await productApi.updateProduct(createdProduct.id, { image: imageUrl });
+        }
       }
-      setSending(false);
-      toast.success('Продукт успешно создан');
-    } catch (e) {
-      toast.error('Что-то пошло не так');
-    }
 
-    router.push('/dashboard/products');
+      setSending(false);
+      router.push('/dashboard/menu/products');
+    } catch (e) {
+      setSending(false);
+    }
   };
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <div className='grid grid-cols-1 items-start gap-x-2 gap-y-4 md:grid-cols-6'>
-          <ProductFormImages />
+          <ProductFormImages
+            imageFile={imageFile}
+            setImageFile={setImageFile}
+          />
 
           <FormField
             control={form.control}
@@ -128,14 +160,16 @@ export const CreateProductForm = () => {
             )}
           />
 
+          <ProductFormCategory />
+
           <ProductFormType />
 
           <FormField
             control={form.control}
             name='price'
             render={({ field }) => (
-              <FormItem className='md:col-span-3'>
-                <FormLabel>Цена</FormLabel>
+              <FormItem className='md:col-span-2'>
+                <FormLabel>Цена (обязательно)</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
@@ -151,16 +185,35 @@ export const CreateProductForm = () => {
 
           <FormField
             control={form.control}
-            name='stock'
+            name='preparationTime'
             render={({ field }) => (
-              <FormItem className='md:col-span-3'>
-                <FormLabel>Количество</FormLabel>
+              <FormItem className='md:col-span-2'>
+                <FormLabel>Время приготовления (мин)</FormLabel>
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder='Введите количество'
+                    placeholder='Например: 15'
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='calories'
+            render={({ field }) => (
+              <FormItem className='md:col-span-2'>
+                <FormLabel>Калории</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Например: 350'
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -199,6 +252,48 @@ export const CreateProductForm = () => {
               </span>
             </Button>
           )}
+
+          <FormField
+            control={form.control}
+            name='allergens'
+            render={({ field }) => (
+              <FormItem className='md:col-span-6'>
+                <FormLabel>Аллергены (через запятую)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder='Например: молоко, яйца, орехи'
+                    {...field}
+                    value={field.value?.join(', ') || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const allergens = value ? value.split(',').map(a => a.trim()).filter(Boolean) : [];
+                      field.onChange(allergens);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='isAvailable'
+            render={({ field }) => (
+              <FormItem className='md:col-span-6 flex items-center gap-2 space-y-0'>
+                <FormControl>
+                  <input
+                    type='checkbox'
+                    checked={field.value}
+                    onChange={field.onChange}
+                    className='h-4 w-4'
+                  />
+                </FormControl>
+                <FormLabel className='!mt-0'>Продукт доступен для заказа</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <ProductFormAdditions />
 

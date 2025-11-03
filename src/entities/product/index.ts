@@ -1,12 +1,50 @@
-export { ProductList } from './ui/product-list';
+/**
+ * Product Entity - Public API
+ * Entry point for product entity exports
+ */
+
+// API
+export { productApi, productAPi } from './model/api';
+
+// Query Keys
+export { productKeys } from './model/query-keys';
+
+// Queries
 export {
-  useGetAllProductTypes,
+  useGetProducts,
   useGetProductById,
-  productAPi,
-  type IProduct,
+  useGetProductTypes,
+  useGetAllProducts,
+  useGetAllProductTypes
+} from './model/queries';
+
+// Mutations
+export {
   useCreateProduct,
-  useDeleteProduct,
   useUpdateProduct,
-  useAttachProductImages,
-  useCreateProductType
-} from './model';
+  useUpdateProductPrice,
+  useUpdateProductAvailability,
+  useDeleteProduct,
+  useCreateProductType,
+  useUpdateProductType,
+  useDeleteProductType
+} from './model/mutations';
+
+// Types
+export type {
+  IProduct,
+  ICreateProductDto,
+  IUpdateProductDto,
+  IUpdateProductPriceDto,
+  IUpdateProductAvailabilityDto,
+  IGetProductsParams,
+  IProductsResponse,
+  IProductType,
+  ICreateProductTypeDto,
+  IUpdateProductTypeDto,
+  IProductTypeResponse,
+  IProductTypeRequest
+} from './model/types';
+
+// UI Components
+export { ProductList } from './ui/product-list';

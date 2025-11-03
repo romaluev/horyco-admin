@@ -1,135 +1,173 @@
+/**
+ * Product API Client
+ * Based on /admin/menu/products endpoints from ADMIN_MENU_MANAGEMENT.md
+ */
+
 import api from '@/shared/lib/axios';
 
 import type {
   IProduct,
-  IProductType,
-  IProductTypeRequest,
+  IProductsResponse,
   ICreateProductDto,
-  IUpdateProductDto
+  IUpdateProductDto,
+  IUpdateProductPriceDto,
+  IUpdateProductAvailabilityDto,
+  IGetProductsParams,
+  IProductType,
+  IProductTypeResponse,
+  ICreateProductTypeDto,
+  IUpdateProductTypeDto
 } from './types';
-import type { ApiParams, PaginatedResponse } from '@/shared/types';
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+  requestId: string;
+}
 
-export const productAPi = {
+export const productApi = {
   /**
-   * Create a new products
-   * @param productData - The products data to create
-   * @returns Promise with the created products
+   * Get all products with filters and pagination
+   * GET /admin/menu/products
    */
-  async createProduct(productData: ICreateProductDto): Promise<IProduct> {
-    const response = await api.post<IProduct>('/pos/product', productData);
-    return response.data;
-  },
-
-  async getProducts(
-    searchParams: ApiParams = {}
-  ): Promise<PaginatedResponse<IProduct>> {
-    const params = new URLSearchParams();
-
-    params.append('page', String(searchParams.page || '0'));
-    params.append('size', String(searchParams.size || '100'));
-
-    if (searchParams.filters) {
-      params.append('filters', searchParams.filters);
-    }
-    const response = await api.get<PaginatedResponse<IProduct>>(
-      '/pos/product',
-      {
-        params: params
-      }
-    );
-    return response.data;
-  },
-
-  /**
-   * Get a products by ID
-   * @param id - The products ID
-   * @returns Promise with the products
-   */
-  async getProductById(id: number): Promise<IProduct> {
-    const response = await api.get<IProduct>(`/pos/product/${id}`);
-    return response.data;
-  },
-
-  /**
-   * Update a products
-   * @param id - The products ID
-   * @param productData - The products data to update
-   * @returns Promise with the updated products
-   */
-  async updateProduct(
-    id: number,
-    productData: IUpdateProductDto
-  ): Promise<IProduct> {
-    const response = await api.put<IProduct>(`/pos/product/${id}`, productData);
-    return response.data;
-  },
-
-  /**
-   * Delete a products
-   * @param id - The products ID
-   * @returns Promise with the deleted products
-   */
-  async deleteProduct(id: number): Promise<void> {
-    await api.delete(`/pos/product/${id}`);
-  },
-
-  async attachFiles(id: number, files: File[]): Promise<number> {
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
-    await api.post(`/pos/product/${id}/attach-files`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-    return id;
-  },
-
-  async getFiles(id: number) {
-    const { data } = await api.get(`/pos/product/${id}/files`);
-    return data;
-  },
-
-  async deleteFile(productId: number, fileId: number): Promise<void> {
-    await api.delete(`/pos/product/${productId}/delete-file-module/${fileId}`);
-  },
-
-  async getAllProductTypes(
-    searchParams: ApiParams = {}
-  ): Promise<PaginatedResponse<IProductType>> {
-    const params = new URLSearchParams();
-
-    params.append('page', String(searchParams.page || '0'));
-    params.append('size', String(searchParams.size || '100'));
-
-    if (searchParams.filters) {
-      params.append('filters', searchParams.filters);
-    }
-
-    const response = await api.get<PaginatedResponse<IProductType>>(
-      `/pos/product-type/`,
+  async getProducts(params?: IGetProductsParams): Promise<IProductsResponse> {
+    const response = await api.get<ApiResponse<IProductsResponse>>(
+      '/admin/menu/products',
       { params }
     );
-    return response.data;
+    return response.data.data;
   },
 
-  async createProductTypes(body: IProductTypeRequest): Promise<IProductType> {
-    const response = await api.post<IProductType>(`/pos/product-type/`, body);
-    return response.data;
-  },
-
-  async updateProductTypes(
-    id: string,
-    body: IProductTypeRequest
-  ): Promise<IProductType> {
-    const response = await api.put<IProductType>(
-      `/pos/product-type/${id}`,
-      body
+  /**
+   * Get product by ID
+   * GET /admin/menu/products/:id
+   */
+  async getProductById(id: number): Promise<IProduct> {
+    const response = await api.get<ApiResponse<IProduct>>(
+      `/admin/menu/products/${id}`
     );
-    return response.data;
+    return response.data.data;
   },
 
-  async deleteProductTypes(id: string) {
-    await api.delete(`/pos/product-type/${id}`);
+  /**
+   * Create new product
+   * POST /admin/menu/products
+   */
+  async createProduct(data: ICreateProductDto): Promise<IProduct> {
+    const response = await api.post<ApiResponse<IProduct>>(
+      '/admin/menu/products',
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Update product
+   * PATCH /admin/menu/products/:id
+   */
+  async updateProduct(id: number, data: IUpdateProductDto): Promise<IProduct> {
+    const response = await api.patch<ApiResponse<IProduct>>(
+      `/admin/menu/products/${id}`,
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Quick update product price
+   * PATCH /admin/menu/products/:id/price
+   */
+  async updateProductPrice(
+    id: number,
+    data: IUpdateProductPriceDto
+  ): Promise<IProduct> {
+    const response = await api.patch<ApiResponse<IProduct>>(
+      `/admin/menu/products/${id}/price`,
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Quick update product availability
+   * PATCH /admin/menu/products/:id/availability
+   */
+  async updateProductAvailability(
+    id: number,
+    data: IUpdateProductAvailabilityDto
+  ): Promise<IProduct> {
+    const response = await api.patch<ApiResponse<IProduct>>(
+      `/admin/menu/products/${id}/availability`,
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Delete product (soft delete)
+   * DELETE /admin/menu/products/:id
+   */
+  async deleteProduct(id: number): Promise<void> {
+    await api.delete(`/admin/menu/products/${id}`);
+  },
+
+  // ===== Product Types =====
+
+  /**
+   * Get all product types
+   * GET /admin/menu/product-types
+   */
+  async getProductTypes(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<IProductTypeResponse> {
+    const response = await api.get<ApiResponse<IProductTypeResponse>>(
+      '/admin/menu/product-types',
+      { params }
+    );
+
+    return response.data.data;
+  },
+
+  /**
+   * Create product type
+   * POST /admin/menu/product-types
+   */
+  async createProductType(data: ICreateProductTypeDto): Promise<IProductType> {
+    const response = await api.post<ApiResponse<IProductType>>(
+      '/admin/menu/product-types',
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Update product type
+   * PATCH /admin/menu/product-types/:id
+   */
+  async updateProductType(
+    id: number,
+    data: IUpdateProductTypeDto
+  ): Promise<IProductType> {
+    const response = await api.patch<ApiResponse<IProductType>>(
+      `/admin/menu/product-types/${id}`,
+      data
+    );
+    return response.data.data;
+  },
+
+  /**
+   * Delete product type
+   * DELETE /admin/menu/product-types/:id
+   */
+  async deleteProductType(id: number): Promise<void> {
+    await api.delete(`/admin/menu/product-types/${id}`);
   }
 };
+
+/**
+ * Legacy export for backward compatibility
+ * @deprecated Use productApi instead
+ */
+export const productAPi = productApi;

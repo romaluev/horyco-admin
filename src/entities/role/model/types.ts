@@ -29,3 +29,22 @@ export interface IRoleUpdateDto {
   description?: string;
   permissionIds?: number[];
 }
+
+export interface IRoleFilters {
+  page?: number;
+  limit?: number;
+}
+
+export interface IPaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface IPaginatedResponse<T> {
+  data: T[];
+  meta: IPaginationMeta;
+}

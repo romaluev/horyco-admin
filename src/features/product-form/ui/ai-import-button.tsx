@@ -82,7 +82,7 @@ export const AiImportButton = () => {
       files.forEach((file) => formData.append('images', file));
 
       const categories =
-        productTypes?.items
+        productTypes?.data
           .map((type) => `{name: ${type.name}, id: ${type.id}}`)
           .join(', ') || '';
       formData.append('prompt', IMAGE_PROMPT(categories));
@@ -115,10 +115,9 @@ export const AiImportButton = () => {
           name: product.name,
           description: product.description,
           price: product.price,
-          stock: product.stock || 10,
-          status: product.status || 'active',
+          categoryId: product.categoryId || 1,
           productTypeId: product.productTypeId || 1,
-          additions: product.additions || []
+          isAvailable: true
         });
       }
 

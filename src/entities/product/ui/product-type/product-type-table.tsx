@@ -33,7 +33,7 @@ import {
 import PageContainer from '@/shared/ui/layout/page-container';
 
 import { ProductTypeForm } from './product-type-form';
-import { useDeleteProductType } from '../../model/mutations-product-type';
+import { useDeleteProductType } from '../../model/mutations';
 import { useGetAllProductTypes } from '../../model/queries';
 
 import type { IProductType } from '../../model/types';
@@ -62,7 +62,7 @@ export const ProductTypeTable = () => {
 
   const confirmDelete = () => {
     if (currentProductType) {
-      deleteProductType(String(currentProductType.id));
+      deleteProductType(currentProductType.id);
       setIsDeleteDialogOpen(false);
     }
   };
@@ -80,8 +80,8 @@ export const ProductTypeTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {response?.items &&
-              response.items.map((productType: IProductType) => (
+            {response?.data &&
+              response.data.map((productType: IProductType) => (
                 <TableRow key={productType.id}>
                   <TableCell>{productType.id}</TableCell>
                   <TableCell>{productType.name}</TableCell>

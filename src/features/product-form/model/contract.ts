@@ -4,13 +4,16 @@ import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/shared/config/data';
 
 export interface ProductFormValues {
   name: string;
+  categoryId: number;
   productTypeId: number;
-  status: string;
-  price?: number;
-  stock?: number;
+  price: number;
   description: string;
+  preparationTime?: number;
+  calories?: number;
+  allergens?: string[];
+  isAvailable?: boolean;
   additions: z.infer<typeof additionSchema>[];
-  image?: File[];
+  image?: string;
 }
 
 const additionProductSchema = z.object({
@@ -37,27 +40,17 @@ const additionSchema = z.object({
 });
 
 export const productSchema = z.object({
-  image: z
-    .any()
-    .refine((files) => {
-      if (!files?.length) return true;
-      return files[0]?.size <= MAX_FILE_SIZE;
-    }, 'Максимальный размер файла 5MB.')
-    .refine((files) => {
-      if (!files?.length) return true;
-      const file = files[0];
-      return (
-        ACCEPTED_IMAGE_TYPES.includes(file?.type) ||
-        ACCEPTED_IMAGE_TYPES.includes(file?.mimeType)
-      );
-    }, 'Допускаются файлы .jpg, .jpeg, .png и .webp'),
+  image: z.string().optional(),
   name: z.string().min(2, {
     message: 'Название должно содержать минимум 2 символа'
   }),
+  categoryId: z.number().min(1, { message: 'Укажите категорию' }),
   productTypeId: z.number().min(1, { message: 'Укажите тип продукта' }),
-  status: z.string(),
-  price: z.number({ message: 'Укажите цену' }),
-  stock: z.number({ message: 'Укажите количество' }),
+  price: z.number().min(0, { message: 'Цена должна быть положительным числом' }),
   description: z.string(),
+  preparationTime: z.number().min(0).optional(),
+  calories: z.number().min(0).optional(),
+  allergens: z.array(z.string()).optional(),
+  isAvailable: z.boolean().optional().default(true),
   additions: z.array(additionSchema).optional().default([])
 });

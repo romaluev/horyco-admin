@@ -4,55 +4,74 @@ import { Text } from 'lucide-react';
 
 import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header';
 
-import { CellAction } from './cell-action';
-
 import type { IEmployee } from '../../model';
 import type { Column, ColumnDef } from '@tanstack/react-table';
 
-export const columns: ColumnDef<IEmployee>[] = [
-  {
-    id: 'fullName',
-    accessorKey: 'fullName',
-    header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Имя' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<IEmployee['fullName']>()}</div>,
-    meta: {
-      label: 'Имя',
-      placeholder: 'Поиск сотрудника...',
-      variant: 'text',
-      icon: Text
+interface CreateColumnsOptions {
+  renderActions?: (employee: IEmployee) => React.ReactNode;
+}
+
+export const createEmployeeColumns = (
+  options?: CreateColumnsOptions
+): ColumnDef<IEmployee>[] => {
+  const baseColumns: ColumnDef<IEmployee>[] = [
+    {
+      id: 'name',
+      accessorFn: (row) => row.fullName,
+      header: ({ column }: { column: Column<IEmployee, unknown> }) => (
+        <DataTableColumnHeader column={column} title='Имя' />
+      ),
+      cell: ({ row }) => (
+        <div>
+          {row.original.fullName}
+        </div>
+      ),
+      meta: {
+        label: 'Имя',
+        placeholder: 'Поиск сотрудника...',
+        variant: 'text',
+        icon: Text,
+      },
+      enableColumnFilter: true,
     },
-    enableColumnFilter: true
-  },
-  {
-    id: 'phone',
-    accessorKey: 'phone',
-    header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Телефон' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<IEmployee['phone']>()}</div>,
-    meta: {
-      label: 'Телефон',
-      placeholder: 'Поиск по телефону...',
-      variant: 'text',
-      icon: Text
+    {
+      id: 'phone',
+      accessorKey: 'phone',
+      header: ({ column }: { column: Column<IEmployee, unknown> }) => (
+        <DataTableColumnHeader column={column} title='Телефон' />
+      ),
+      cell: ({ cell }) => <div>{cell.getValue<IEmployee['phone']>()}</div>,
+      meta: {
+        label: 'Телефон',
+        placeholder: 'Поиск по телефону...',
+        variant: 'text',
+        icon: Text,
+      },
+      enableColumnFilter: true,
     },
-    enableColumnFilter: true
-  },
-  {
-    id: 'createdAt',
-    accessorKey: 'createdAt',
-    header: ({ column }: { column: Column<IEmployee, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Дата создания' />
-    ),
-    cell: ({ cell }) => {
-      const date = new Date(cell.getValue<Date>());
-      return <div>{date.toLocaleDateString()}</div>;
-    }
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      header: ({ column }: { column: Column<IEmployee, unknown> }) => (
+        <DataTableColumnHeader column={column} title='Дата создания' />
+      ),
+      cell: ({ cell }) => {
+        const date = new Date(cell.getValue<Date>());
+        return <div>{date.toLocaleDateString()}</div>;
+      },
+    },
+  ];
+
+  // Add actions column if renderActions is provided
+  if (options?.renderActions) {
+    baseColumns.push({
+      id: 'actions',
+      cell: ({ row }) => options.renderActions!(row.original),
+    });
   }
-];
+
+  return baseColumns;
+};
+
+// Export default columns without actions for backward compatibility
+export const columns = createEmployeeColumns();

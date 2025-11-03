@@ -1,26 +1,17 @@
-import {
-  IAdditionProduct
-} from '@/entities/product/model';
-
-import type {
-  IAddition,
-  IUpdatedAddition
-} from '@/entities/product/model';
-
 export function getChangedAdditions(
-  initial: IAddition[] = [],
+  initial: any[] = [],
   current: any[] = [],
   productId: number
-): IUpdatedAddition[] {
-  const result: IUpdatedAddition[] = [];
+): any[] {
+  const result: any[] = [];
 
-  current.forEach((currentAddition) => {
+  current.forEach((currentAddition: any) => {
     if (!currentAddition.id) {
       result.push({ ...currentAddition, productId });
       return;
     }
 
-    const originalAddition = initial.find((a) => a.id === currentAddition.id);
+    const originalAddition = initial.find((a: any) => a.id === currentAddition.id);
     if (!originalAddition) return;
 
     const hasMainChanges =
@@ -41,7 +32,7 @@ export function getChangedAdditions(
       }
 
       const originalProduct = originalAddition.additionProducts.find(
-        (p) => p.id === currentProduct.id
+        (p: any) => p.id === currentProduct.id
       );
       if (!originalProduct) return;
 
@@ -53,7 +44,7 @@ export function getChangedAdditions(
       }
     });
 
-    originalAddition.additionProducts.forEach((originalProduct) => {
+    originalAddition.additionProducts.forEach((originalProduct: any) => {
       if (!originalProduct.id) return;
 
       const isDeleted = !(currentAddition.additionProducts || []).some(
@@ -74,7 +65,7 @@ export function getChangedAdditions(
   });
 
   // Handle deleted additions
-  initial.forEach((originalAddition) => {
+  initial.forEach((originalAddition: any) => {
     if (!originalAddition.id) return;
 
     const isDeleted = !current.some((a: any) => a.id === originalAddition.id);

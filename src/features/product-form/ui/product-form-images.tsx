@@ -4,50 +4,33 @@ import * as React from 'react';
 
 import { useFormContext } from 'react-hook-form';
 
-import { MAX_FILE_SIZE } from '@/shared/config/data';
 import {
-  FormControl,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/shared/ui/base/form';
-import { FileUploader } from '@/shared/ui/file-uploader';
+import { ImageUpload } from '@/shared/ui/image-upload';
 
-
-import type { IFile } from '@/shared/types';
-
+interface ProductFormImagesProps {
+  imageFile: File | null;
+  setImageFile: (file: File | null) => void;
+  currentImageUrl?: string;
+}
 
 export function ProductFormImages({
-  images,
-  setDeletedImages
-}: {
-  images?: IFile[];
-  setDeletedImages?: React.Dispatch<React.SetStateAction<number[]>>;
-}) {
-  const form = useFormContext();
-
+  imageFile,
+  setImageFile,
+  currentImageUrl
+}: ProductFormImagesProps) {
   return (
-    <FormField
-      control={form.control}
-      name='image'
-      render={({ field }) => (
-        <FormItem className='md:col-span-6'>
-          <FormLabel>Картинки продукта</FormLabel>
-          <FormControl>
-            <FileUploader
-              setDeletedFiles={setDeletedImages}
-              variant='image'
-              uploadedFiles={images}
-              value={field.value}
-              onValueChange={field.onChange}
-              maxFiles={4}
-              maxSize={MAX_FILE_SIZE}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormItem className='md:col-span-6'>
+      <FormLabel>Изображение продукта</FormLabel>
+      <ImageUpload
+        value={imageFile}
+        onChange={setImageFile}
+        currentImageUrl={currentImageUrl}
+      />
+      <FormMessage />
+    </FormItem>
   );
 }

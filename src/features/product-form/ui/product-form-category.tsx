@@ -17,38 +17,39 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { useGetProductTypes } from '@/entities/product'
+import { useGetCategories } from '@/entities/category'
 
 import type { JSX } from 'react'
 
-export const ProductFormType = () => {
+export const ProductFormCategory = () => {
   const form = useFormContext()
-  const { data: productTypes } = useGetProductTypes()
+  const { data: categories = [] } = useGetCategories()
+
   return (
     <FormField
       control={form.control}
-      name="productTypeId"
+      name="categoryId"
       render={({ field }) => (
         <FormItem className="md:col-span-3">
-          <FormLabel>Тип продукта</FormLabel>
+          <FormLabel>Категория</FormLabel>
           <div className="w-full">
             <Select
               onValueChange={(value) => {
-                form.setValue('productTypeId', Number(value))
-                form.trigger('productTypeId')
+                form.setValue('categoryId', Number(value))
+                form.trigger('categoryId')
               }}
               defaultValue={field.value ? `${field.value}` : undefined}
               value={field.value ? `${field.value}` : undefined}
             >
               <FormControl>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Выберите тип продукта" />
+                  <SelectValue placeholder="Выберите категорию" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {productTypes?.data?.map((type) => (
-                  <SelectItem key={type.id} value={`${type.id}`}>
-                    {type.name}
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={`${category.id}`}>
+                    {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>

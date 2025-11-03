@@ -21,9 +21,9 @@ import { Textarea } from '@/shared/ui/base/textarea';
 import {
   useCreateProductType,
   useUpdateProductType
-} from '../../model/mutations-product-type';
+} from '../../model/mutations';
 
-import type { IProductType, IProductTypeRequest } from '../../model/types';
+import type { IProductType, ICreateProductTypeDto } from '../../model/types';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
@@ -44,7 +44,7 @@ export const ProductTypeForm = ({
   const { mutate: createProductType, isPending: isCreating } =
     useCreateProductType();
   const { mutate: updateProductType, isPending: isUpdating } =
-    useUpdateProductType(initialData?.id?.toString() || '');
+    useUpdateProductType();
 
   const isSubmitting = isCreating || isUpdating;
 
@@ -57,19 +57,18 @@ export const ProductTypeForm = ({
   });
 
   const onSubmit = (values: FormValues) => {
-    const productTypeData: IProductTypeRequest = {
+    const productTypeData: ICreateProductTypeDto = {
       name: values.name,
       description: values.description
     };
 
-    if (initialData) {
-      updateProductType(productTypeData);
+    if (initialData && initialData.id) {
+      updateProductType(
+        { id: initialData.id, data: productTypeData },
+        { onSuccess }
+      );
     } else {
-      createProductType(productTypeData);
-    }
-
-    if (onSuccess) {
-      onSuccess();
+      createProductType(productTypeData, { onSuccess });
     }
   };
 
