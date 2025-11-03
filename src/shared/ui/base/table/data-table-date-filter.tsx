@@ -6,13 +6,13 @@ import { CalendarIcon, XCircle } from 'lucide-react';
 
 import { formatDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/base/button';
-import { Calendar } from '@/shared/ui/base/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/shared/ui/base/popover';
 import { Separator } from '@/shared/ui/base/separator';
+import { Calendar } from '@/shared/ui/base/ui/calendar';
 
 import type { Column } from '@tanstack/react-table';
 import type { DateRange } from 'react-day-picker';

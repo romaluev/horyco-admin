@@ -26,31 +26,57 @@ export const getNavItems = (): NavItem[] => [
     icon: 'dashboard',
     shortcut: ['D'],
     isActive: false,
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Продукты',
-    shortcut: ['P'],
-    url: '/dashboard/products',
-    icon: 'product',
-    isActive: false,
     items: []
   },
   {
-    title: 'Категории',
-    shortcut: ['C'],
-    url: '/dashboard/categories',
+    title: 'Меню',
+    url: '/dashboard/menu',
     icon: 'pizza',
+    shortcut: ['M'],
     isActive: false,
-    items: []
+    items: [
+      {
+        title: 'Категории',
+        url: '/dashboard/menu/categories'
+      },
+      {
+        title: 'Продукты',
+        url: '/dashboard/menu/products'
+      },
+      {
+        title: 'Модификаторы',
+        url: '/dashboard/menu/modifiers'
+      },
+      {
+        title: 'Дополнения',
+        url: '/dashboard/menu/additions'
+      },
+      {
+        title: 'Шаблоны',
+        url: '/dashboard/menu/templates'
+      },
+      {
+        title: 'Переопределения филиалов',
+        url: '/dashboard/menu/branch-overrides'
+      }
+    ]
   },
   {
-    title: 'Сотрудники',
-    shortcut: ['E'],
-    url: '/dashboard/employee',
-    icon: 'product',
+    title: 'Персонал',
+    shortcut: ['S'],
+    url: '/dashboard/staff',
+    icon: 'user',
     isActive: false,
-    items: []
+    items: [
+      {
+        title: 'Сотрудники',
+        url: '/dashboard/staff/employees'
+      },
+      {
+        title: 'Роли и права',
+        url: '/dashboard/staff/roles'
+      }
+    ]
   },
   {
     title: 'Филиалы',

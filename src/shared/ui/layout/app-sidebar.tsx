@@ -50,7 +50,6 @@ import { useAuthStore } from '@/entities/auth/model/store';
 
 import { Icons } from '../icons';
 
-
 export default function AppSidebar() {
   const pathname = usePathname();
   const authStore = useAuthStore();
@@ -87,13 +86,10 @@ export default function AppSidebar() {
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        isActive={pathname === item.url}
-                      >
-                        {item.icon && <Icon size={30} />}
-                        <span>{item.title}</span>
-                        <IconChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                      <SidebarMenuButton tooltip={item.title}>
+                        {item.icon && <Icon className='!h-6 !w-6' size={30} />}
+                        <span className='text-[17px]'>{item.title}</span>
+                        <IconChevronRight className='ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -101,11 +97,12 @@ export default function AppSidebar() {
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
+                              className="!p-3"
                               asChild
                               isActive={pathname === subItem.url}
                             >
                               <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
+                                <span className='text-[17px]'>{subItem.title}</span>
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -123,7 +120,7 @@ export default function AppSidebar() {
                   >
                     <Link href={item.url}>
                       <Icon size={30} className='!h-6 !w-6' />
-                      <span className='text-[18px]'>{item.title}</span>
+                      <span className='text-[17px]'>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
