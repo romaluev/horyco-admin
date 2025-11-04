@@ -1,5 +1,6 @@
 'use client'
 
+import type { JSX } from 'react'
 import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -16,7 +17,6 @@ import {
 } from '@/shared/ui/base/card'
 
 import { useGetOnboardingProgress } from '@/entities/onboarding'
-
 
 // LocalStorage keys
 const ONBOARDING_COMPLETED_KEY = 'onboarding_completed'

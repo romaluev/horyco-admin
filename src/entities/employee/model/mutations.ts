@@ -17,7 +17,7 @@ export const useCreateEmployee = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateEmployeeDto) => employeeApi.createEmployee(_data),
+    mutationFn: (data: ICreateEmployeeDto) => employeeApi.createEmployee(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: employeeKeys.all() })
       toast.success('Сотрудник успешно создан')

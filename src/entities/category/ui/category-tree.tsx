@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import {
   DndContext,
   DragOverlay,
@@ -14,8 +15,6 @@ import {
   useSensor,
   useSensors,
   type UniqueIdentifier,
-  DragEndEvent,
-  DragStartEvent,
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 

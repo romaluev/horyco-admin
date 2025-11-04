@@ -36,7 +36,6 @@ import { useCreateAddition } from '@/entities/addition'
 
 import { additionSchema, type AdditionFormValues } from '../model/contract'
 
-
 interface CreateAdditionDialogProps {
   productId: number
   trigger?: React.ReactNode

@@ -1,7 +1,5 @@
 'use client'
 
-import { _parseAsInteger, _useQueryState } from 'nuqs'
-
 import { useDataTable } from '@/shared/hooks/use-data-table'
 import { DataTable } from '@/shared/ui/base/table/data-table'
 import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar'
@@ -10,21 +8,21 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 interface BranchTableParams<TData, TValue> {
   data: TData[]
-  _totalItems: number
+  totalItems: number
   columns: ColumnDef<TData, TValue>[]
 }
 
 export function BranchTable<TData, TValue>({
-  _data,
-  _totalItems,
+  data,
+  totalItems,
   columns,
 }: BranchTableParams<TData, TValue>) {
-  const [pageSize] = _useQueryState('perPage', _parseAsInteger.withDefault(10))
+  const pageSize = 10
 
-  const pageCount = Math.ceil(_totalItems / pageSize)
+  const pageCount = Math.ceil(totalItems / pageSize)
 
   const { table } = useDataTable({
-    _data,
+    data,
     columns,
     pageCount: pageCount,
     shallow: false, // Setting to false triggers a network request with the updated querystring.

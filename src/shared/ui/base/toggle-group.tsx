@@ -26,10 +26,10 @@ function ToggleGroup({
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"
-      _data-variant={variant}
+      data-variant={variant}
       data-size={size}
       className={cn(
-        'group/toggle-group flex w-fit items-center rounded-md _data-[variant=outline]:shadow-xs',
+        'group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs',
         className
       )}
       {...props}
@@ -54,7 +54,7 @@ function ToggleGroupItem({
   return (
     <ToggleGroupPrimitive.Item
       data-slot="toggle-group-item"
-      _data-variant={context.variant || variant}
+      data-variant={context.variant || variant}
       data-size={context.size || size}
       className={cn(
         toggleVariants({

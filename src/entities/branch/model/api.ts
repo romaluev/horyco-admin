@@ -19,14 +19,14 @@ export const branchApi = {
   },
 
   getBranches: async (
-    _searchParams: ApiParams = {}
+    searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IBranch>> => {
     const params = new URLSearchParams()
 
     params.append('page', String(searchParams.page || '0'))
     params.append('size', String(searchParams.size || '100'))
     if (searchParams.filters) {
-      params.append('filters', _searchParams.filters)
+      params.append('filters', searchParams.filters)
     }
 
     const response = await api.get<PaginatedResponse<IBranch>>('/branch', {

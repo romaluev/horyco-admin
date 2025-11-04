@@ -36,7 +36,6 @@ import { useCreateModifier } from '@/entities/modifier-group'
 
 import { modifierSchema, type ModifierFormValues } from '../model/contract'
 
-
 interface CreateModifierDialogProps {
   modifierGroupId: number
   trigger?: React.ReactNode

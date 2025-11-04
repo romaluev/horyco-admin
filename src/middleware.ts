@@ -43,7 +43,7 @@ export default async function middleware(req: NextRequest) {
   // Redirect to login if accessing protected route without auth
   if (!isAuthenticated && (isProtectedRoute || isOnboardingRoute)) {
     const url = new URL('/auth/sign-in', req.url)
-    url._searchParams.set('redirect', pathname)
+    url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
   }
 

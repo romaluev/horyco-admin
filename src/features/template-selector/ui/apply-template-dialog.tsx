@@ -43,7 +43,6 @@ import {
   type ApplyTemplateFormValues,
 } from '../model/contract'
 
-
 interface ApplyTemplateDialogProps {
   template: IMenuTemplate | null
   open: boolean

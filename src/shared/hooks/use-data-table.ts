@@ -24,9 +24,9 @@ import {
   type Parser,
   type UseQueryStateOptions,
   parseAsArrayOf,
-  _parseAsInteger,
+  parseAsInteger,
   parseAsString,
-  _useQueryState,
+  useQueryState,
   useQueryStates,
 } from 'nuqs'
 

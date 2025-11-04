@@ -11,9 +11,9 @@ export type {
   IFileMetadata,
   IPresignedUploadUrlRequest,
   IPresignedUploadUrlResponse,
-  _IConfirmUploadRequest,
+  IConfirmUploadRequest,
   IFileResponse,
-  _IDeleteFileParams,
+  IDeleteFileParams,
 } from './model/types'
 
 // API

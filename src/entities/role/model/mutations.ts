@@ -13,7 +13,7 @@ export const useCreateRole = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: IRoleCreateDto) => roleApi.createRole(_data),
+    mutationFn: (data: IRoleCreateDto) => roleApi.createRole(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roleKeys.all() })
       toast.success('Роль успешно создана')

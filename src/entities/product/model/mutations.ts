@@ -25,7 +25,7 @@ export const useCreateProduct = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateProductDto) => productApi.createProduct(_data),
+    mutationFn: (data: ICreateProductDto) => productApi.createProduct(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: productKeys.all() })
       toast.success('Продукт успешно создан')
@@ -88,7 +88,7 @@ export const useUpdateProductAvailability = () => {
   return useMutation({
     mutationFn: ({
       id,
-      _data,
+      data,
     }: {
       id: number
       data: IUpdateProductAvailabilityDto
@@ -134,7 +134,7 @@ export const useCreateProductType = () => {
 
   return useMutation({
     mutationFn: (data: ICreateProductTypeDto) =>
-      productApi.createProductType(_data),
+      productApi.createProductType(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: productKeys.productTypes.all(),

@@ -5,6 +5,7 @@
 
 'use client'
 
+import type { JSX } from 'react'
 import { useState } from 'react'
 
 import Link from 'next/link'
@@ -203,7 +204,7 @@ export default function ProductsPage(): JSX.Element {
           </div>
         ) : (
           <ProductsDataTable
-            _data={products}
+            data={products}
             total={total}
             page={page}
             limit={limit}

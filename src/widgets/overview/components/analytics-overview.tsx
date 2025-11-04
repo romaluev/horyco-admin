@@ -3,7 +3,7 @@
 import * as React from 'react'
 // Импортируем только необходимые функции
 
-import { AnalyticsChart } from './analytics-chart'
+import { AnalyticsChart, ChartData } from './analytics-chart'
 import { AnalyticsMetrics } from './analytics-metrics'
 import { PeriodFilter } from './period-filter'
 import { RecentOrders } from './recent-orders'
@@ -46,7 +46,7 @@ const mockRevenueChartData = {
     { date: '2025-08-10T18:00:00', value: 300000 },
   ],
   metric: 'revenue',
-  _period: 'hour',
+  period: 'hour',
 }
 
 // Моковые данные для графика по заказам
@@ -65,7 +65,7 @@ const mockOrdersChartData = {
     { date: '2025-08-10T18:00:00', value: 20 },
   ],
   metric: 'orders',
-  _period: 'hour',
+  period: 'hour',
 }
 
 // Моковые данные для графика по среднему чеку
@@ -84,7 +84,7 @@ const mockAverageChartData = {
     { date: '2025-08-10T18:00:00', value: 18000 },
   ],
   metric: 'average',
-  _period: 'hour',
+  period: 'hour',
 }
 
 // Моковые данные для последних заказов
@@ -182,42 +182,41 @@ export function AnalyticsOverview() {
 
     switch (selectedMetric) {
       case 'revenue':
-        _data = {
+        data = {
           ...mockRevenueChartData,
-          _period: selectedPeriod,
+          period: selectedPeriod,
           metric: selectedMetric,
         }
         break
       case 'orders':
         data = {
           ...mockOrdersChartData,
-          _period: selectedPeriod,
+          period: selectedPeriod,
           metric: selectedMetric,
         }
         break
       case 'average':
         data = {
           ...mockAverageChartData,
-          _period: selectedPeriod,
+          period: selectedPeriod,
           metric: selectedMetric,
         }
         break
       default:
         data = {
           ...mockRevenueChartData,
-          _period: selectedPeriod,
+          period: selectedPeriod,
           metric: 'revenue',
         }
     }
 
-    // Приведение типа для соответствия интерфейсу ChartData
-    return data as any
+    return data as ChartData
   }, [selectedMetric, selectedPeriod])
 
   // Обработчик изменения периода
-  const handlePeriodChange = (_period: PeriodType) => {
+  const handlePeriodChange = (period: PeriodType) => {
     setIsLoading(true)
-    setSelectedPeriod(_period)
+    setSelectedPeriod(period)
 
     // Имитация загрузки данных
     setTimeout(() => {

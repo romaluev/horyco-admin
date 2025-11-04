@@ -37,7 +37,6 @@ import {
   type AdditionItemFormValues,
 } from '../model/contract'
 
-
 interface CreateAdditionItemDialogProps {
   additionId: number
   trigger?: React.ReactNode

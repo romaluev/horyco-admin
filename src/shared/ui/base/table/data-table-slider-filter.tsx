@@ -152,7 +152,7 @@ export function DataTableSliderFilter<TData>({
             <>
               <Separator
                 orientation="vertical"
-                className="mx-0.5 _data-[orientation=vertical]:h-4"
+                className="mx-0.5 data-[orientation=vertical]:h-4"
               />
               {formatValue(columnFilterValue[0])} -{' '}
               {formatValue(columnFilterValue[1])}

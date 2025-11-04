@@ -15,7 +15,7 @@ export const tableApi = {
   },
 
   async getTables(
-    _searchParams: ApiParams = {}
+    searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<ITable>> {
     const params = new URLSearchParams()
 
@@ -23,7 +23,7 @@ export const tableApi = {
     params.append('size', String(searchParams.size || '100'))
 
     if (searchParams.filters) {
-      params.append('filters', _searchParams.filters)
+      params.append('filters', searchParams.filters)
     }
     const response = await api.get<PaginatedResponse<ITable>>('/pos/table', {
       params: params,

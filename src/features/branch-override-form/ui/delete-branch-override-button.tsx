@@ -22,7 +22,6 @@ import { Button } from '@/shared/ui/base/button'
 
 import { useDeleteBranchOverride } from '@/entities/branch-override'
 
-
 interface DeleteBranchOverrideButtonProps {
   productId: number
   branchId: number

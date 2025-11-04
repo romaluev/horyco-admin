@@ -43,7 +43,6 @@ import {
 import { CategoryParentSelector } from './category-parent-selector'
 import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
 
-
 interface EditCategoryDialogProps {
   category: ICategory
 }

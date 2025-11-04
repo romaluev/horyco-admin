@@ -22,7 +22,7 @@ export const useCreateCategory = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateCategoryDto) => categoryApi.createCategory(_data),
+    mutationFn: (data: ICreateCategoryDto) => categoryApi.createCategory(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
       toast.success('Категория успешно создана')
@@ -82,7 +82,7 @@ export const useReorderCategories = () => {
 
   return useMutation({
     mutationFn: (data: IReorderCategoriesDto) =>
-      categoryApi.reorderCategories(_data),
+      categoryApi.reorderCategories(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
       toast.success('Порядок категорий обновлен')

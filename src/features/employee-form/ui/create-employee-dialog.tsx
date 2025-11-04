@@ -51,7 +51,7 @@ export const CreateEmployeeDialog = () => {
   const { mutate: createEmployee, isPending } = useCreateEmployee()
 
   const onSubmit = (data: CreateEmployeeFormData): void => {
-    createEmployee(_data, {
+    createEmployee(data, {
       onSuccess: () => {
         setIsOpen(false)
         form.reset()

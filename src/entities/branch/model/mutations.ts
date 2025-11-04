@@ -10,7 +10,7 @@ export const useCreateBranch = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateBranchDto) => branchApi.createBranch(_data),
+    mutationFn: (data: ICreateBranchDto) => branchApi.createBranch(data),
     onSuccess: () => {
       toast.success('Филиал успешно создан')
       queryClient.invalidateQueries({ queryKey: queryKeys.all() })

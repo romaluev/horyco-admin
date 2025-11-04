@@ -88,7 +88,7 @@ export const AiImportButton = () => {
         throw new Error('Ошибка при извлечении данных')
       }
 
-      const _data = await response.json()
+      const data = await response.json()
       setProducts(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка')

@@ -30,7 +30,7 @@ export default function EmployeesPage() {
   const employees = Array.isArray(employeesResponse)
     ? employeesResponse
     : employeesResponse?.data || []
-  const _totalItems = Array.isArray(employeesResponse)
+  const totalItems = Array.isArray(employeesResponse)
     ? employeesResponse.length
     : employeesResponse?.meta?.total || 0
 
@@ -60,8 +60,8 @@ export default function EmployeesPage() {
 
       {employees.length > 0 && (
         <EmployeeTable
-          _data={employees}
-          totalItems={_totalItems}
+          data={employees}
+          totalItems={totalItems}
           columns={columns}
         />
       )}

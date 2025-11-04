@@ -18,7 +18,7 @@ export const useCreateModifier = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateModifierDto) => modifierApi.createModifier(_data),
+    mutationFn: (data: ICreateModifierDto) => modifierApi.createModifier(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: modifierKeys.all() })
       toast.success('Модификатор успешно создан')

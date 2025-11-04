@@ -37,14 +37,14 @@ export interface ChartDataPoint {
 export interface ChartData {
   data: { date: string; value: number }[]
   metric: 'revenue' | 'orders' | 'average'
-  _period: PeriodType
+  period: PeriodType
 }
 
 // Тип для данных графика с возможностью приведения типов
 export interface ChartDataWithCast {
   data: { date: string; value: number }[]
   metric: string
-  _period: PeriodType
+  period: PeriodType
 }
 
 interface AnalyticsChartProps {
@@ -54,7 +54,7 @@ interface AnalyticsChartProps {
 }
 
 export function AnalyticsChart({
-  _data,
+  data,
   onMetricChange,
   isLoading = false,
 }: AnalyticsChartProps) {
@@ -79,17 +79,17 @@ export function AnalyticsChart({
 
     return optimizedData.map((item) => ({
       ...item,
-      date: formatDate(item.date, data._period),
+      date: formatDate(item.date, data.period),
       value: item.value,
     }))
   }
 
   // Форматирование даты в зависимости от периода
-  const formatDate = (dateStr: string, _period: PeriodType) => {
+  const formatDate = (dateStr: string, period: PeriodType) => {
     try {
       const date = parseISO(dateStr)
 
-      switch (_period) {
+      switch (period) {
         case 'hour':
           return format(date, 'HH:00', { locale: ru })
         case 'day':
@@ -137,7 +137,7 @@ export function AnalyticsChart({
   // Получение описания в зависимости от метрики и периода
   const getChartDescription = (
     metric: 'revenue' | 'orders' | 'average',
-    _period: PeriodType
+    period: PeriodType
   ) => {
     let metricText = ''
     let periodText = ''
@@ -204,7 +204,7 @@ export function AnalyticsChart({
           <div>
             <CardTitle>{getMetricTitle(data.metric)}</CardTitle>
             <CardDescription>
-              {getChartDescription(data.metric, data._period)}
+              {getChartDescription(data.metric, data.period)}
             </CardDescription>
           </div>
           <Tabs
@@ -228,7 +228,7 @@ export function AnalyticsChart({
           <ResponsiveContainer width="100%" height={250}>
             {data.metric === 'orders' ? (
               <BarChart
-                _data={formatChartData()}
+                data={formatChartData()}
                 margin={{ top: 10, right: 20, left: 20, bottom: 10 }}
               >
                 <defs>
@@ -255,7 +255,7 @@ export function AnalyticsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => formatDate(value, data._period)}
+                  tickFormatter={(value) => formatDate(value, data.period)}
                   stroke="var(--muted-foreground)"
                 />
                 <YAxis
@@ -270,7 +270,7 @@ export function AnalyticsChart({
                       return (
                         <div className="bg-background rounded-md border p-2 shadow-sm">
                           <p className="text-sm font-medium">
-                            {formatDate(label, data._period)}
+                            {formatDate(label, data.period)}
                           </p>
                           <p className="text-sm">
                             {formatValue(
@@ -288,7 +288,7 @@ export function AnalyticsChart({
                   dataKey="value"
                   fill="url(#colorOrders)"
                   radius={[4, 4, 0, 0]}
-                  barSize={data._period === 'hour' ? 20 : 30}
+                  barSize={data.period === 'hour' ? 20 : 30}
                 />
               </BarChart>
             ) : (
@@ -326,7 +326,7 @@ export function AnalyticsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => formatDate(value, data._period)}
+                  tickFormatter={(value) => formatDate(value, data.period)}
                   stroke="var(--muted-foreground)"
                 />
                 <YAxis
@@ -346,7 +346,7 @@ export function AnalyticsChart({
                       return (
                         <div className="bg-background rounded-md border p-2 shadow-sm">
                           <p className="text-sm font-medium">
-                            {formatDate(label, data._period)}
+                            {formatDate(label, data.period)}
                           </p>
                           <p className="text-sm">
                             {formatValue(

@@ -103,7 +103,7 @@ export const employeeApi = {
       `${BASE_URL}/bulk-import`,
       formData,
       {
-        headers: { 'Content-Type': 'multipart/form-_data' },
+        headers: { 'Content-Type': 'multipart/form-data' },
       }
     )
     return response.data.data

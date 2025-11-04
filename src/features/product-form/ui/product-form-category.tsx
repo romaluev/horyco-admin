@@ -19,7 +19,6 @@ import {
 
 import { useGetCategories } from '@/entities/category'
 
-
 export const ProductFormCategory = () => {
   const form = useFormContext()
   const { data: categories = [] } = useGetCategories()

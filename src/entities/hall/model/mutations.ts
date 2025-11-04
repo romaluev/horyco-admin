@@ -10,7 +10,7 @@ export const useCreateHall = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: IHallRequest) => hallApi.createHall(_data),
+    mutationFn: (data: IHallRequest) => hallApi.createHall(data),
     onSuccess: () => {
       toast.success('Зал успешно создан')
       queryClient.invalidateQueries({ queryKey: hallKeys.lists() })

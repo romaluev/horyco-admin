@@ -19,7 +19,6 @@ import {
 
 import { useGetProductTypes } from '@/entities/product'
 
-
 export const ProductFormType = () => {
   const form = useFormContext()
   const { data: productTypes } = useGetProductTypes()

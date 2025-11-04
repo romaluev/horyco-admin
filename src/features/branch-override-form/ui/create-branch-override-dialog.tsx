@@ -46,7 +46,6 @@ import {
   type UpsertBranchOverrideFormValues,
 } from '../model/contract'
 
-
 interface CreateBranchOverrideDialogProps {
   productId?: number
   branchId?: number

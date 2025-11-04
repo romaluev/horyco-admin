@@ -44,7 +44,6 @@ import {
 import { CategoryParentSelector } from './category-parent-selector'
 import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
 
-
 interface CreateCategoryDialogProps {
   defaultParentId?: number
 }
@@ -72,7 +71,7 @@ export const CreateCategoryDialog = ({
     try {
       // First create the category
       const createdCategory = await new Promise<any>((resolve, reject) => {
-        createCategory(_data, {
+        createCategory(data, {
           onSuccess: (category) => resolve(category),
           onError: (error) => reject(error),
         })

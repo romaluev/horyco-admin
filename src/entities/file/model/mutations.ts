@@ -16,8 +16,8 @@ import { fileKeys } from './query-keys'
 
 import type {
   IPresignedUploadUrlRequest,
-  _IConfirmUploadRequest,
-  _IDeleteFileParams,
+  IConfirmUploadRequest,
+  IDeleteFileParams,
 } from './types'
 
 /**

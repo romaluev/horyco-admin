@@ -62,7 +62,7 @@ export const CreateTableButton = () => {
   })
 
   const onSubmit = (data: FormValues) => {
-    createTable(_data, {
+    createTable(data, {
       onSuccess: () => {
         toast.success('Стол успешно создан')
         setOpen(false)

@@ -48,7 +48,7 @@ type LoginFormValues = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
   const router = useRouter()
-  const _searchParams = useSearchParams()
+  const searchParams = useSearchParams()
   const { login, isLoading, error, clearError, me } = useAuthStore()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -70,7 +70,7 @@ const LoginForm = () => {
       // Step 1: Login and save tokens
       await login(data.phone, data.password)
 
-      // Step 2: Show loading immediately and fetch user _data
+      // Step 2: Show loading immediately and fetch user data
       setIsRedirecting(true)
       await me()
 
@@ -120,9 +120,26 @@ const LoginForm = () => {
       // }
     } catch (error: unknown) {
       setIsRedirecting(false)
-      setGeneralError(
-        error.response?.data?.message || 'Failed to login. Please try again.'
-      )
+      let errorMessage = 'Failed to login. Please try again.'
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error
+      ) {
+        const errorObj = error as Record<string, unknown>
+        const response = errorObj.response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'data' in response
+        ) {
+          const data = response as Record<string, unknown>
+          if ('message' in data && typeof data.message === 'string') {
+            errorMessage = data.message
+          }
+        }
+      }
+      setGeneralError(errorMessage)
     }
   }
 

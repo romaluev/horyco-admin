@@ -15,7 +15,6 @@ import {
 
 import { UpdateProductForm } from './update-product-form'
 
-
 interface UpdateProductDialogProps {
   productId: number
   isOpen: boolean

@@ -19,6 +19,29 @@ import type {
 } from './types'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
+// Helper function to extract error message from unknown error type
+const getErrorMessage = (error: unknown, defaultMessage: string): string => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error
+  ) {
+    const errorObj = error as Record<string, unknown>
+    const response = errorObj.response
+    if (
+      typeof response === 'object' &&
+      response !== null &&
+      'data' in response
+    ) {
+      const data = response as Record<string, unknown>
+      if ('message' in data && typeof data.message === 'string') {
+        return data.message
+      }
+    }
+  }
+  return defaultMessage
+}
+
 // Submit business info
 export const useSubmitBusinessInfo = (
   options?: Omit<
@@ -31,14 +54,12 @@ export const useSubmitBusinessInfo = (
   return useMutation({
     mutationFn: (data: BusinessInfoRequest) =>
       onboardingApi.submitBusinessInfo(data),
-    onSuccess: (_data) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Информация о бизнесе сохранена')
     },
     onError: (error: unknown) => {
-      toast.error(
-        error.response?.data?.message || 'Не удалось сохранить информацию'
-      )
+      toast.error(getErrorMessage(error, 'Не удалось сохранить информацию'))
     },
     ...options,
   })
@@ -56,14 +77,12 @@ export const useSubmitBranchSetup = (
   return useMutation({
     mutationFn: (data: BranchSetupRequest) =>
       onboardingApi.submitBranchSetup(data),
-    onSuccess: (_data) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Филиал настроен')
     },
     onError: (error: unknown) => {
-      toast.error(
-        error.response?.data?.message || 'Не удалось настроить филиал'
-      )
+      toast.error(getErrorMessage(error, 'Не удалось настроить филиал'))
     },
     ...options,
   })
@@ -80,14 +99,14 @@ export const useSubmitMenuSetup = (
 
   return useMutation({
     mutationFn: (data: MenuSetupRequest) => onboardingApi.submitMenuSetup(data),
-    onSuccess: (_data) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success(
         `Меню создано: ${data.categoriesCreated} категорий, ${data.productsCreated} блюд`
       )
     },
     onError: (error: unknown) => {
-      toast.error(error.response?.data?.message || 'Не удалось создать меню')
+      toast.error(getErrorMessage(error, 'Не удалось создать меню'))
     },
     ...options,
   })
@@ -109,7 +128,7 @@ export const useSkipMenuSetup = (
       toast.info('Меню будет настроено позже')
     },
     onError: (error: unknown) => {
-      toast.error(error.response?.data?.message || 'Не удалось пропустить шаг')
+      toast.error(getErrorMessage(error, 'Не удалось пропустить шаг'))
     },
     ...options,
   })
@@ -127,7 +146,7 @@ export const useSubmitStaffInvite = (
   return useMutation({
     mutationFn: (data: StaffInviteRequest) =>
       onboardingApi.submitStaffInvite(data),
-    onSuccess: (_data) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       const count = data.progress.invitationsSent || 0
       toast.success(
@@ -135,9 +154,7 @@ export const useSubmitStaffInvite = (
       )
     },
     onError: (error: unknown) => {
-      toast.error(
-        error.response?.data?.message || 'Не удалось отправить приглашения'
-      )
+      toast.error(getErrorMessage(error, 'Не удалось отправить приглашения'))
     },
     ...options,
   })
@@ -159,9 +176,7 @@ export const useCompleteOnboarding = (
       toast.success('Onboarding completed successfully')
     },
     onError: (error: unknown) => {
-      toast.error(
-        error.response?.data?.message || 'Не удалось завершить онбординг'
-      )
+      toast.error(getErrorMessage(error, 'Не удалось завершить онбординг'))
     },
     ...options,
   })
@@ -178,12 +193,12 @@ export const useSkipStep = (
 
   return useMutation({
     mutationFn: (data: SkipStepRequest) => onboardingApi.skipStep(data),
-    onSuccess: (_data) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.info('Шаг пропущен')
     },
     onError: (error: unknown) => {
-      toast.error(error.response?.data?.message || 'Не удалось пропустить шаг')
+      toast.error(getErrorMessage(error, 'Не удалось пропустить шаг'))
     },
     ...options,
   })

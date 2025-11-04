@@ -163,7 +163,7 @@ export function FileUploader(props: FileUploaderProps) {
           updatedFiles.length > 0 ? `${updatedFiles.length} файлов` : `файл`
 
         toast.promise(onUpload(updatedFiles), {
-          isLoading: `Загрузка ${target}...`,
+          loading: `Загрузка ${target}...`,
           success: () => {
             setFiles([])
             return `${target} загружен`

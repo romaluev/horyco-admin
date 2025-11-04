@@ -63,7 +63,7 @@ export interface FilteringParams {
  */
 export interface PaginatedResponse<T> {
   items: T[]
-  _totalItems: number
+  totalItems: number
   page: number
   size: number
 }

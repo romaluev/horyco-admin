@@ -13,7 +13,6 @@ import {
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table'
-import { _parseAsInteger, _useQueryState } from 'nuqs'
 
 import { DataTable } from '@/shared/ui/base/table/data-table'
 import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar'
@@ -22,13 +21,13 @@ export { columns, createEmployeeColumns } from './columns'
 
 interface EmployeeTableParams<TData, TValue> {
   data: TData[]
-  _totalItems: number
+  totalItems: number
   columns: ColumnDef<TData, TValue>[]
 }
 
 export function EmployeeTable<TData, TValue>({
-  _data,
-  _totalItems,
+  data,
+  totalItems,
   columns,
 }: EmployeeTableParams<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -41,7 +40,7 @@ export function EmployeeTable<TData, TValue>({
   })
 
   const table = useReactTable({
-    _data,
+    data,
     columns,
     state: {
       sorting,

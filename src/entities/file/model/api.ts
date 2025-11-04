@@ -8,9 +8,9 @@ import api from '@/shared/lib/axios'
 import type {
   IPresignedUploadUrlRequest,
   IPresignedUploadUrlResponse,
-  _IConfirmUploadRequest,
+  IConfirmUploadRequest,
   IFileResponse,
-  _IDeleteFileParams,
+  IDeleteFileParams,
   EntityType,
 } from './types'
 

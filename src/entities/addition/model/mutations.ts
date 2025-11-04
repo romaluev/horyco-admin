@@ -23,7 +23,7 @@ export const useCreateAddition = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateAdditionDto) => additionApi.createAddition(_data),
+    mutationFn: (data: ICreateAdditionDto) => additionApi.createAddition(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: additionKeys.all() })
       toast.success('Дополнение успешно создано')
@@ -85,7 +85,7 @@ export const useCreateAdditionItem = () => {
 
   return useMutation({
     mutationFn: (data: ICreateAdditionItemDto) =>
-      additionApi.createAdditionItem(_data),
+      additionApi.createAdditionItem(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: additionKeys.all() })
       queryClient.invalidateQueries({ queryKey: additionKeys.items.all() })

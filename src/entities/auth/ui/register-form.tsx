@@ -143,10 +143,26 @@ const RegisterForm = () => {
       setStep('otp')
       toast.success(response.message)
     } catch (err: unknown) {
-      setError(
-        err.response?.data?.message ||
-          'Не удалось отправить код. Попробуйте снова.'
-      )
+      let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err
+      ) {
+        const errObj = err as Record<string, unknown>
+        const response = errObj.response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'data' in response
+        ) {
+          const data = response as Record<string, unknown>
+          if ('message' in data && typeof data.message === 'string') {
+            errorMessage = data.message
+          }
+        }
+      }
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -177,10 +193,26 @@ const RegisterForm = () => {
         router.push('/onboarding/business-info')
       }
     } catch (err: unknown) {
-      setError(
-        err.response?.data?.message ||
-          'Неверный код или истёк срок действия. Попробуйте снова.'
-      )
+      let errorMessage = 'Неверный код или истёк срок действия. Попробуйте снова.'
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err
+      ) {
+        const errObj = err as Record<string, unknown>
+        const response = errObj.response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'data' in response
+        ) {
+          const data = response as Record<string, unknown>
+          if ('message' in data && typeof data.message === 'string') {
+            errorMessage = data.message
+          }
+        }
+      }
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -200,10 +232,26 @@ const RegisterForm = () => {
       setCanResend(false)
       toast.success('Код повторно отправлен')
     } catch (err: unknown) {
-      setError(
-        err.response?.data?.message ||
-          'Не удалось отправить код. Попробуйте снова.'
-      )
+      let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err
+      ) {
+        const errObj = err as Record<string, unknown>
+        const response = errObj.response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'data' in response
+        ) {
+          const data = response as Record<string, unknown>
+          if ('message' in data && typeof data.message === 'string') {
+            errorMessage = data.message
+          }
+        }
+      }
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

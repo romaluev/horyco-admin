@@ -49,10 +49,27 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       })
     } catch (error: unknown) {
       // Handle error
+      let errorMessage = 'Failed to login. Please try again.'
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as Record<string, unknown>).response === 'object' &&
+        (error as Record<string, unknown>).response !== null
+      ) {
+        const response = (error as Record<string, unknown>).response as Record<string, unknown>
+        if ('data' in response && typeof response.data === 'object' && response.data !== null) {
+          const data = response.data as Record<string, unknown>
+          if ('message' in data && typeof data.message === 'string') {
+            errorMessage = data.message
+          }
+        }
+      }
       set({
         isLoading: false,
-        error:
-          error.response?.data?.message || 'Failed to login. Please try again.',
+        error: errorMessage,
       })
       throw error
     }
@@ -94,7 +111,25 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       })
     } catch (error: unknown) {
       // Don't show toast for 401 errors (handled by axios interceptor)
-      if (error?.response?.status !== 401) {
+      let is401 = false
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error
+      ) {
+        const errorObj = error as Record<string, unknown>
+        const response = errorObj.response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'status' in response
+        ) {
+          const responseObj = response as Record<string, unknown>
+          is401 = responseObj.status === 401
+        }
+      }
+
+      if (!is401) {
         toast.error('Не удалось получить данные о вас')
       }
 

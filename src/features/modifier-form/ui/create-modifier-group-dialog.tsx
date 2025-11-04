@@ -39,7 +39,6 @@ import {
   type ModifierGroupFormValues,
 } from '../model/contract'
 
-
 interface CreateModifierGroupDialogProps {
   productId: number
   onSuccess?: () => void
@@ -64,7 +63,7 @@ export const CreateModifierGroupDialog = ({
   })
 
   const onSubmit = (data: ModifierGroupFormValues): void => {
-    createGroup(_data, {
+    createGroup(data, {
       onSuccess: () => {
         setOpen(false)
         form.reset()

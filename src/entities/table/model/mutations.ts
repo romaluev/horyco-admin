@@ -9,7 +9,7 @@ export const useCreateTable = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateTableDto) => tableApi.createTable(_data),
+    mutationFn: (data: ICreateTableDto) => tableApi.createTable(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: tableKeys.lists() })
     },

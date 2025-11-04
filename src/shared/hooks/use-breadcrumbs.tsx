@@ -13,15 +13,56 @@ interface BreadcrumbItem {
 const routeMapping: Record<string, BreadcrumbItem[]> = {
   '/dashboard': [{ title: 'Панель управления', link: '/dashboard' }],
   '/dashboard/overview': [
-    { title: 'Панель управления', link: '/dashboard/overview' },
-  ],
-  '/dashboard/employee': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Сотрудники', link: '/dashboard/employee' },
+    { title: 'Обзор', link: '/dashboard/overview' },
   ],
-  '/dashboard/categories': [
+  '/dashboard/menu': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Категории', link: '/dashboard/categories' },
+    { title: 'Меню', link: '/dashboard/menu' },
+  ],
+  '/dashboard/menu/products': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Продукты', link: '/dashboard/menu/products' },
+  ],
+  '/dashboard/menu/categories': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Категории', link: '/dashboard/menu/categories' },
+  ],
+  '/dashboard/menu/additions': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Дополнения', link: '/dashboard/menu/additions' },
+  ],
+  '/dashboard/menu/modifiers': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Модификаторы', link: '/dashboard/menu/modifiers' },
+  ],
+  '/dashboard/menu/branch-overrides': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Переопределения филиалов', link: '/dashboard/menu/branch-overrides' },
+  ],
+  '/dashboard/menu/templates': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Меню', link: '/dashboard/menu' },
+    { title: 'Шаблоны', link: '/dashboard/menu/templates' },
+  ],
+  '/dashboard/staff': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Персонал', link: '/dashboard/staff' },
+  ],
+  '/dashboard/staff/employees': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Персонал', link: '/dashboard/staff' },
+    { title: 'Сотрудники', link: '/dashboard/staff/employees' },
+  ],
+  '/dashboard/staff/roles': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Персонал', link: '/dashboard/staff' },
+    { title: 'Роли', link: '/dashboard/staff/roles' },
   ],
   '/dashboard/branches': [
     { title: 'Панель управления', link: '/dashboard' },
@@ -31,13 +72,9 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
     { title: 'Панель управления', link: '/dashboard' },
     { title: 'Залы', link: '/dashboard/halls' },
   ],
-  '/dashboard/products': [
-    { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Продукты', link: '/dashboard/products' },
-  ],
   '/dashboard/table': [
     { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Стол менеджмент', link: '/dashboard/table' },
+    { title: 'Столы', link: '/dashboard/table' },
   ],
   '/dashboard/profile': [
     { title: 'Панель управления', link: '/dashboard' },

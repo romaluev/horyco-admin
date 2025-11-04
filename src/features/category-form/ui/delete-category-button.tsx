@@ -24,7 +24,6 @@ import { Button } from '@/shared/ui/base/button'
 
 import { useDeleteCategory, type ICategory } from '@/entities/category'
 
-
 interface DeleteCategoryButtonProps {
   category: ICategory
 }

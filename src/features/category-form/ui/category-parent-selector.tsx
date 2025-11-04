@@ -15,7 +15,6 @@ import {
 
 import { useGetCategories } from '@/entities/category'
 
-
 interface CategoryParentSelectorProps {
   value?: number
   onChange: (value: number | null) => void

@@ -32,7 +32,6 @@ import {
   type IProduct,
 } from '@/entities/product'
 
-
 interface ProductsDataTableProps {
   data: IProduct[]
   total: number
@@ -43,7 +42,7 @@ interface ProductsDataTableProps {
 }
 
 export const ProductsDataTable = ({
-  _data,
+  data,
   total,
   page,
   limit,
@@ -207,7 +206,7 @@ export const ProductsDataTable = ({
   )
 
   const table = useReactTable({
-    _data,
+    data,
     columns,
     pageCount: Math.ceil(total / limit),
     state: {

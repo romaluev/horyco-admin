@@ -40,7 +40,7 @@ export const CreateRoleDialog = () => {
   const { mutate: createRole, isPending } = useCreateRole()
 
   const onSubmit = (data: CreateRoleFormData): void => {
-    createRole(_data, {
+    createRole(data, {
       onSuccess: () => {
         setIsOpen(false)
         form.reset()

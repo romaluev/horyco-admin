@@ -123,7 +123,7 @@ const CountrySelect = ({
               setTimeout(() => {
                 if (scrollAreaRef.current) {
                   const viewportElement = scrollAreaRef.current.querySelector(
-                    '[_data-radix-scroll-area-viewport]'
+                    '[data-radix-scroll-area-viewport]'
                   )
                   if (viewportElement) {
                     viewportElement.scrollTop = 0

@@ -62,7 +62,7 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
         isOpen={deleteModal}
         onClose={() => setDeleteModal(false)}
         onConfirm={() => deleteProduct(product.id)}
-        loading={false}
+        isLoading={false}
       />
     </Card>
   )

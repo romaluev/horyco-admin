@@ -13,7 +13,7 @@ function ScrollArea({
 }: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
   return (
     <ScrollAreaPrimitive.Root
-      _data-slot="scroll-area"
+      data-slot="scroll-area"
       className={cn('relative', className)}
       {...props}
     >
@@ -36,7 +36,7 @@ function ScrollBar({
 }: React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
   return (
     <ScrollAreaPrimitive.ScrollAreaScrollbar
-      _data-slot="scroll-area-scrollbar"
+      data-slot="scroll-area-scrollbar"
       orientation={orientation}
       className={cn(
         'flex touch-none p-px transition-colors select-none',

@@ -1,5 +1,7 @@
 'use client'
 
+import type { JSX } from 'react'
+
 import { Pencil } from 'lucide-react'
 
 import { BaseError, BaseLoading, Button } from '@/shared/ui'
@@ -14,7 +16,6 @@ import {
 
 import { useGetAllRoles } from '@/entities/role'
 import { CreateRoleDialog, DeleteRoleDialog } from '@/features/role-form'
-
 
 const SYSTEM_ROLES = ['Администратор', 'Менеджер', 'Кассир', 'Официант']
 

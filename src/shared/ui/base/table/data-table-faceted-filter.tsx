@@ -40,7 +40,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   multiple,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const [open, setOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false)
 
   const columnFilterValue = column?.getFilterValue()
   const selectedValues = React.useMemo(
@@ -63,7 +63,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         column.setFilterValue(filterValues.length ? filterValues : undefined)
       } else {
         column.setFilterValue(isSelected ? undefined : [option.value])
-        setOpen(false)
+        setIsOpen(false)
       }
     },
     [column, multiple, selectedValues]
@@ -78,7 +78,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   )
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="border-dashed">
           {selectedValues?.size > 0 ? (
@@ -99,7 +99,7 @@ export function DataTableFacetedFilter<TData, TValue>({
             <>
               <Separator
                 orientation="vertical"
-                className="mx-0.5 _data-[orientation=vertical]:h-4"
+                className="mx-0.5 data-[orientation=vertical]:h-4"
               />
               <Badge
                 variant="secondary"

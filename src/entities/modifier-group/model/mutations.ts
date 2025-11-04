@@ -20,7 +20,7 @@ export const useCreateModifierGroup = () => {
 
   return useMutation({
     mutationFn: (data: ICreateModifierGroupDto) =>
-      modifierGroupApi.createModifierGroup(_data),
+      modifierGroupApi.createModifierGroup(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: modifierGroupKeys.all() })
       toast.success('Группа модификаторов создана')
@@ -121,7 +121,7 @@ export const useCreateModifier = () => {
 
   return useMutation({
     mutationFn: (data: ICreateModifierDto) =>
-      modifierGroupApi.createModifier(_data),
+      modifierGroupApi.createModifier(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: modifierGroupKeys.modifiers.all(),

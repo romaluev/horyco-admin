@@ -36,7 +36,6 @@ import { useCreateModifier } from '@/entities/modifier'
 
 import { modifierFormSchema, type ModifierFormValues } from '../model/contract'
 
-
 interface CreateModifierDialogProps {
   modifierGroupId: number
   onSuccess?: () => void
@@ -61,7 +60,7 @@ export const CreateModifierDialog = ({
   })
 
   const onSubmit = (data: ModifierFormValues): void => {
-    createModifier(_data, {
+    createModifier(data, {
       onSuccess: () => {
         setOpen(false)
         form.reset()

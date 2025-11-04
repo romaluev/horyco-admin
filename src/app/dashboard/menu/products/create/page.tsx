@@ -5,6 +5,8 @@
 
 'use client'
 
+import type { JSX } from 'react'
+
 import Link from 'next/link'
 
 import { ArrowLeft } from 'lucide-react'
@@ -12,7 +14,6 @@ import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/shared/ui/base/button'
 
 import { CreateProductForm } from '@/features/product-form'
-
 
 export default function CreateProductPage(): JSX.Element {
   return (

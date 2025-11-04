@@ -44,7 +44,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={isDeleteModalVisible}
         onClose={() => setIsDeleteModalVisible(false)}
         onConfirm={onConfirm}
-        loading={isPending}
+        isLoading={isPending}
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>

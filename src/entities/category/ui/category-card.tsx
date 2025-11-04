@@ -16,23 +16,14 @@ import type { ICategory } from '../model'
 
 interface CategoryCardProps {
   category: ICategory
-  _onClick?: () => void
+  onClick?: () => void
   className?: string
 }
 
-export const CategoryCard = ({
-  category,
-  _onClick,
-  className,
-}: CategoryCardProps) => {
+export const CategoryCard = ({ category, className }: CategoryCardProps) => {
   return (
-    <Card
-      className={cn(
-        'hover:border-primary group relative transition-colors',
-        className
-      )}
-    >
-      <CardContent className="p-4">
+    <Card className={cn('group relative py-2 transition-colors', className)}>
+      <CardContent className="p-2">
         <div className="flex flex-col gap-2">
           <div className="flex items-start gap-3">
             {category.image && (

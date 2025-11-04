@@ -24,7 +24,7 @@ export interface Product {
 export const fakeProducts = {
   records: [] as Product[], // Holds the list of products objects
 
-  // Initialize with sample _data
+  // Initialize with sample data
   initialize() {
     const sampleProducts: Product[] = []
     function generateRandomProductData(id: number): Product {
@@ -119,7 +119,7 @@ export const fakeProducts = {
     return {
       success: true,
       time: currentTime,
-      message: 'Sample _data for testing and learning purposes',
+      message: 'Sample data for testing and learning purposes',
       total_products: totalProducts,
       offset,
       limit,

@@ -30,7 +30,7 @@ export interface DateRange {
 }
 
 interface PeriodFilterProps {
-  onPeriodChange: (_period: PeriodType) => void
+  onPeriodChange: (period: PeriodType) => void
   onDateRangeChange: (range: DateRange) => void
   selectedPeriod: PeriodType
   selectedRange: DateRange
@@ -90,7 +90,7 @@ export function PeriodFilter({
             classNames={{
               caption: 'relative flex justify-center py-2',
               nav_button:
-                'absolute h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 data-[dir=previous]:left-1 _data-[dir=next]:right-1',
+                'absolute h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 data-[dir=previous]:left-1 data-[dir=next]:right-1',
               head_row: 'flex space-between',
               head_cell:
                 'w-9 font-normal text-center text-[0.8rem] text-muted-foreground',
@@ -139,7 +139,7 @@ export function PeriodFilter({
             classNames={{
               caption: 'relative flex justify-center py-2',
               nav_button:
-                'absolute h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 data-[dir=previous]:left-1 _data-[dir=next]:right-1',
+                'absolute h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 data-[dir=previous]:left-1 data-[dir=next]:right-1',
               head_row: 'flex space-between',
               head_cell:
                 'w-9 font-normal text-center text-[0.8rem] text-muted-foreground',

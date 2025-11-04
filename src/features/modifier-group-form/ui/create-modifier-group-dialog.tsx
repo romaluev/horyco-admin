@@ -39,7 +39,6 @@ import {
   type ModifierGroupFormValues,
 } from '../model/contract'
 
-
 interface CreateModifierGroupDialogProps {
   trigger?: React.ReactNode
 }

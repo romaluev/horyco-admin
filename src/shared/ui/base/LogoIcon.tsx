@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const _LogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
+const LogoIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={800}

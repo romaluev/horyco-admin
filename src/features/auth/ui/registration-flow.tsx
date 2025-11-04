@@ -47,6 +47,29 @@ import {
 
 type RegistrationStep = 'initial' | 'otp' | 'profile'
 
+// Helper function to extract error message from unknown error
+const getErrorMessage = (error: unknown): string | undefined => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error
+  ) {
+    const errorObj = error as Record<string, unknown>
+    const response = errorObj.response
+    if (
+      typeof response === 'object' &&
+      response !== null &&
+      'data' in response
+    ) {
+      const data = response as Record<string, unknown>
+      if ('message' in data && typeof data.message === 'string') {
+        return data.message
+      }
+    }
+  }
+  return undefined
+}
+
 export const RegistrationFlow = () => {
   const router = useRouter()
   const setUser = useAuthStore((state) => state.setUser)
@@ -64,7 +87,7 @@ export const RegistrationFlow = () => {
   const MAX_OTP_ATTEMPTS = 3
   const COOLDOWN_SECONDS = 300 // 5 minutes cooldown after max attempts
 
-  // Store _data across steps
+  // Store data across steps
   const [step1Data, setStep1Data] =
     useState<RegistrationStep1FormValues | null>(null)
   const [otpValue, setOtpValue] = useState('')
@@ -180,7 +203,7 @@ export const RegistrationFlow = () => {
       setStep('otp')
       toast.success(response.data.message)
     } catch (err: unknown) {
-      const errorMessage = err.response?.data?.message
+      const errorMessage = getErrorMessage(err)
 
       if (
         errorMessage?.includes('уже зарегистрирован') ||
@@ -227,7 +250,7 @@ export const RegistrationFlow = () => {
         setError(response.message || 'Неверный код верификации')
       }
     } catch (err: unknown) {
-      const errorMessage = err.response?.data?.message
+      const errorMessage = getErrorMessage(err)
 
       // Increment attempt counter
       const newAttempts = otpAttempts + 1
@@ -291,7 +314,7 @@ export const RegistrationFlow = () => {
       router.push('/onboarding/business-info')
     } catch (err: unknown) {
       console.error('Registration error:', err)
-      const errorMessage = err.response?.data?.message
+      const errorMessage = getErrorMessage(err)
       setError(errorMessage || 'Ошибка регистрации. Попробуйте снова.')
     } finally {
       setIsLoading(false)
@@ -326,8 +349,9 @@ export const RegistrationFlow = () => {
 
       toast.success('Код повторно отправлен')
     } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err)
       setError(
-        err.response?.data?.message ||
+        errorMessage ||
           'Не удалось отправить код. Попробуйте снова.'
       )
     } finally {

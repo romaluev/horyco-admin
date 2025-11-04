@@ -6,13 +6,13 @@ import { ChevronRight, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 
 function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
-  return <nav aria-label="breadcrumb" _data-slot="breadcrumb" {...props} />
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
 }
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
   return (
     <ol
-      _data-slot="breadcrumb-list"
+      data-slot="breadcrumb-list"
       className={cn(
         'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5',
         className
@@ -25,7 +25,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
   return (
     <li
-      _data-slot="breadcrumb-item"
+      data-slot="breadcrumb-item"
       className={cn('inline-flex items-center gap-1.5', className)}
       {...props}
     />
@@ -43,7 +43,7 @@ function BreadcrumbLink({
 
   return (
     <Comp
-      _data-slot="breadcrumb-link"
+      data-slot="breadcrumb-link"
       className={cn('hover:text-foreground transition-colors', className)}
       {...props}
     />
@@ -53,7 +53,7 @@ function BreadcrumbLink({
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
-      _data-slot="breadcrumb-page"
+      data-slot="breadcrumb-page"
       role="link"
       aria-disabled="true"
       aria-current="page"
@@ -70,7 +70,7 @@ function BreadcrumbSeparator({
 }: React.ComponentProps<'li'>) {
   return (
     <li
-      _data-slot="breadcrumb-separator"
+      data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
       className={cn('[&>svg]:size-3.5', className)}
@@ -87,7 +87,7 @@ function BreadcrumbEllipsis({
 }: React.ComponentProps<'span'>) {
   return (
     <span
-      _data-slot="breadcrumb-ellipsis"
+      data-slot="breadcrumb-ellipsis"
       role="presentation"
       aria-hidden="true"
       className={cn('flex size-9 items-center justify-center', className)}

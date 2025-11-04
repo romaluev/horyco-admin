@@ -22,7 +22,7 @@ export const useUpsertBranchOverride = () => {
     mutationFn: ({
       productId,
       branchId,
-      _data,
+      data,
     }: {
       productId: number
       branchId: number

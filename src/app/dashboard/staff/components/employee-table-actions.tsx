@@ -1,5 +1,7 @@
 'use client'
 
+import type { JSX } from 'react'
+
 import { MoreHorizontal } from 'lucide-react'
 
 import {

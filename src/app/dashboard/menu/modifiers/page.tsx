@@ -5,6 +5,7 @@
 
 'use client'
 
+import type { JSX } from 'react'
 import { useState } from 'react'
 
 import {
@@ -49,7 +50,6 @@ import {
   UpdateModifierGroupDialog,
   UpdateModifierDialog,
 } from '@/features/modifier-group-form'
-
 
 interface PageHeaderProps {
   onCreateGroup: () => void
@@ -363,7 +363,7 @@ export default function ModifiersPage(): JSX.Element {
 
   return (
     <PageContainer>
-      <div className="w-full space-y-6">
+      <div className="w-full space-y-4">
         <PageHeader onCreateGroup={() => {}} />
         <SearchBar value={search} onChange={setSearch} />
 
@@ -381,7 +381,7 @@ export default function ModifiersPage(): JSX.Element {
         {filteredGroups.length === 0 ? (
           <EmptyState hasSearch={!!search} />
         ) : (
-          <Accordion type="multiple" className="space-y-6">
+          <Accordion type="multiple" className="space-y-2">
             {filteredGroups.map((group) => (
               <ModifierGroupItem
                 key={group.id}

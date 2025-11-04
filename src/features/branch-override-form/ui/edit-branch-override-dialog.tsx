@@ -39,7 +39,6 @@ import {
   type IUpsertBranchOverrideDto,
 } from '@/entities/branch-override'
 
-
 interface EditBranchOverrideDialogProps {
   override: IBranchOverride
   basePrice?: number
@@ -95,7 +94,7 @@ export const EditBranchOverrideDialog = ({
       {
         productId,
         branchId: override.branchId,
-        data: _data as IUpsertBranchOverrideDto,
+        data: data as IUpsertBranchOverrideDto,
       },
       {
         onSuccess: () => {

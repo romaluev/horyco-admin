@@ -5,6 +5,7 @@
 
 'use client'
 
+import type { JSX } from 'react'
 import { useState } from 'react'
 
 import { BaseLoading } from '@/shared/ui'
@@ -18,7 +19,6 @@ import {
   CategoryList,
 } from '@/entities/category'
 import { CreateCategoryDialog } from '@/features/category-form'
-
 
 export default function CategoriesPage(): JSX.Element {
   const [view, setView] = useState<'tree' | 'grid'>('tree')

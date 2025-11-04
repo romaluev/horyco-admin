@@ -33,7 +33,7 @@ interface MetricCardProps {
   value: number
   previousValue?: number
   formatValue: (value: number) => string
-  _period: string
+  period: string
 }
 
 function MetricCard({
@@ -41,7 +41,7 @@ function MetricCard({
   value,
   previousValue,
   formatValue,
-  _period,
+  period,
 }: MetricCardProps) {
   // Расчет процента изменения, если есть предыдущее значение
   const changePercent = previousValue
@@ -72,7 +72,7 @@ function MetricCard({
             <span>
               {isIncreasing ? '+' : ''}
               {Math.abs(changePercent).toFixed(1)}%
-              <span className="text-muted-foreground ml-1">за {_period}</span>
+              <span className="text-muted-foreground ml-1">за {period}</span>
             </span>
           </div>
         )}
@@ -88,11 +88,11 @@ interface TopDishCardProps {
     quantity: number
     revenue: number
   }
-  _period: string
+  period: string
   formatCurrency: (value: number) => string
 }
 
-function TopDishCard({ dish, _period, formatCurrency }: TopDishCardProps) {
+function TopDishCard({ dish, period, formatCurrency }: TopDishCardProps) {
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -108,7 +108,7 @@ function TopDishCard({ dish, _period, formatCurrency }: TopDishCardProps) {
           <span>{dish.quantity} шт.</span>
           <span>{formatCurrency(dish.revenue)}</span>
         </div>
-        <div className="text-muted-foreground mt-1 text-xs">за {_period}</div>
+        <div className="text-muted-foreground mt-1 text-xs">за {period}</div>
       </CardContent>
     </Card>
   )
@@ -116,7 +116,7 @@ function TopDishCard({ dish, _period, formatCurrency }: TopDishCardProps) {
 
 interface AnalyticsMetricsProps {
   metrics: AnalyticsMetrics
-  _period: PeriodType
+  period: PeriodType
   dateRange: DateRange
   isLoading?: boolean
   selectedRange: DateRange
@@ -125,14 +125,11 @@ interface AnalyticsMetricsProps {
 
 export function AnalyticsMetrics({
   metrics,
-  _period,
   isLoading = false,
   selectedRange,
   selectedPeriod,
 }: AnalyticsMetricsProps) {
-  // Форматирование суммы в узбекские сумы - используем статический формат для избежания проблем с гидратацией
   const formatCurrency = (amount: number) => {
-    // Форматируем вручную, чтобы избежать различий между сервером и клиентом
     const formattedNumber = amount
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
