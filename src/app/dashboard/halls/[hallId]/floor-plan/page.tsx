@@ -26,7 +26,7 @@ export default async function FloorPlanPage(props: IFloorPlanPageProps) {
             <Button asChild variant="ghost" size="sm">
               <Link href="/dashboard/halls">
                 <IconArrowLeft className="mr-2 h-4 w-4" />
-                Back to Halls
+                Назад к залам
               </Link>
             </Button>
           </div>

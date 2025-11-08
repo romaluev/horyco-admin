@@ -31,7 +31,7 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
               <IconBuilding className="h-5 w-5" />
               {hall.name}
             </CardTitle>
-            <CardDescription>Floor {hall.floor}</CardDescription>
+            <CardDescription>Этаж {hall.floor}</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -40,7 +40,7 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
         <div className="flex items-center gap-2 text-sm">
           <IconUsers className="h-4 w-4 text-muted-foreground" />
           <span className="text-muted-foreground">
-            Capacity: <strong className="text-foreground">{hall.capacity}</strong>
+            Вместимость: <strong className="text-foreground">{hall.capacity}</strong>
           </span>
         </div>
         <div className="text-sm">
@@ -55,7 +55,7 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
       <CardFooter className="flex gap-2">
         <Button asChild variant="default" size="sm" className="flex-1">
           <Link href={`/dashboard/halls/${hall.id}/floor-plan`}>
-            View Floor Plan
+            View Этаж Plan
           </Link>
         </Button>
         {onEdit && (

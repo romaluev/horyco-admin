@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { IconArmchair } from '@tabler/icons-react'
 
 import { cn } from '@/shared/lib/utils'
 
@@ -115,18 +116,18 @@ export const VisualFloorPlan = ({
     }
   }
 
-  const getStatusLabel = (status: string) => {
+  const getStatusLineColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return 'Available'
+        return '#10b981' // green-500
       case 'OCCUPIED':
-        return 'Occupied'
+        return '#ef4444' // red-500
       case 'RESERVED':
-        return 'Reserved'
+        return '#eab308' // yellow-500
       case 'INACTIVE':
-        return 'Inactive'
+        return '#6b7280' // gray-500
       default:
-        return status
+        return '#6b7280'
     }
   }
 
@@ -164,11 +165,11 @@ export const VisualFloorPlan = ({
       {/* Warning for tables without position */}
       {tablesWithoutPosition.length > 0 && (
         <div className="absolute left-4 top-4 z-10 rounded-lg border border-yellow-300 bg-yellow-50 p-3 shadow-sm">
-          <div className="text-xs font-semibold text-yellow-800">⚠️ Warning</div>
+          <div className="text-xs font-semibold text-yellow-800">⚠️ Предупреждение</div>
           <div className="mt-1 text-xs text-yellow-700">
-            {tablesWithoutPosition.length} table(s) without position data.
+            {tablesWithoutPosition.length} стол(ов) без данных о позиции.
             <br />
-            Edit tables to set their position on the floor plan.
+            Отредактируйте столы, чтобы установить их позицию на плане зала.
           </div>
         </div>
       )}
@@ -178,15 +179,15 @@ export const VisualFloorPlan = ({
         <div className="space-y-1 text-xs">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-green-500" />
-            <span>Available</span>
+            <span>Доступен</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-red-500" />
-            <span>Occupied</span>
+            <span>Занят</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-yellow-500" />
-            <span>Reserved</span>
+            <span>Забронирован</span>
           </div>
         </div>
       </div>
@@ -207,38 +208,51 @@ export const VisualFloorPlan = ({
               : table.position.height || TABLE_SIZE
 
           return (
-            <button
+            <div
               key={table.id}
-              type="button"
-              onClick={() => !isDragging && onSelectTable(table)}
-              onMouseDown={(e) => handleMouseDown(e, table)}
-              className={cn(
-                'absolute flex cursor-move flex-col items-center justify-center gap-0.5 border text-white',
-                getStatusColor(table.status),
-                getShapeClass(table.shape),
-                selectedTableId === table.id && 'ring-4 ring-blue-500',
-                isDragging && 'opacity-70 ring-4 ring-blue-400 shadow-2xl',
-                !isDragging && 'transition-all'
-              )}
+              className="absolute"
               style={{
                 left: position.x,
                 top: position.y,
                 width,
                 height,
-                transform: `rotate(${table.position.rotation}deg)`,
-                userSelect: 'none',
-                zIndex: isDragging ? 50 : 1,
-                borderWidth: '1px',
-                borderColor: 'rgba(0, 0, 0, 0.2)',
               }}
             >
-              <div className="text-sm font-bold">Table {table.number}</div>
-              <div className="flex items-center gap-1 text-xs">
-                <span>🪑</span>
-                <span>{table.capacity}</span>
-              </div>
-              <div className="text-[10px] font-medium">{getStatusLabel(table.status)}</div>
-            </button>
+              <button
+                type="button"
+                onClick={() => !isDragging && onSelectTable(table)}
+                onMouseDown={(e) => handleMouseDown(e, table)}
+                className={cn(
+                  'relative flex h-full w-full cursor-move flex-col items-center justify-center gap-0.5 overflow-hidden border text-white',
+                  getStatusColor(table.status),
+                  getShapeClass(table.shape),
+                  selectedTableId === table.id && 'ring-4 ring-blue-500',
+                  isDragging && 'opacity-70 ring-4 ring-blue-400 shadow-2xl',
+                  !isDragging && 'transition-all'
+                )}
+                style={{
+                  transform: `rotate(${table.position.rotation}deg)`,
+                  userSelect: 'none',
+                  zIndex: isDragging ? 50 : 1,
+                  borderWidth: '1px',
+                  borderColor: 'rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                {/* Colored status line at bottom */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-1"
+                  style={{
+                    backgroundColor: getStatusLineColor(table.status),
+                  }}
+                />
+
+                <div className="text-sm font-bold">Стол {table.number}</div>
+                <div className="flex items-center gap-1 text-xs">
+                  <IconArmchair className="h-3 w-3" />
+                  <span>{table.capacity}</span>
+                </div>
+              </button>
+            </div>
           )
         })}
       </div>

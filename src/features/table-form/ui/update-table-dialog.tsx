@@ -91,7 +91,7 @@ export const UpdateTableDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Table {table.number}</DialogTitle>
+          <DialogTitle>Редактировать стол {table.number}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -100,7 +100,7 @@ export const UpdateTableDialog = ({
               name="number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Table Number *</FormLabel>
+                  <FormLabel>Номер стола *</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -119,7 +119,7 @@ export const UpdateTableDialog = ({
               name="capacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Capacity *</FormLabel>
+                  <FormLabel>Вместимость *</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

@@ -72,12 +72,12 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
       <DialogTrigger asChild>
         <Button>
           <IconPlus className="mr-2 h-4 w-4" />
-          Add Table
+          Добавить стол
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Table</DialogTitle>
+          <DialogTitle>Добавить новый стол</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -86,7 +86,7 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
               name="number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Table Number *</FormLabel>
+                  <FormLabel>Номер стола *</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -105,7 +105,7 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
               name="capacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Capacity *</FormLabel>
+                  <FormLabel>Вместимость *</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

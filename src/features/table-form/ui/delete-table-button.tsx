@@ -59,7 +59,7 @@ export const DeleteTableButton = ({
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Table?</AlertDialogTitle>
+            <AlertDialogTitle>Удалить стол?</AlertDialogTitle>
             <AlertDialogDescription>
               {hasActiveSession ? (
                 <>

@@ -14,6 +14,7 @@
 6. **Always use react query for requests**, use toasts for showing status.
 7. **Public API** via `index.ts`
 8. **Keep comments minimal**
+9. The language in ui should always be in russian.
 
 ---
 

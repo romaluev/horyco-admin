@@ -29,7 +29,7 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
   const { mutate: updatePosition } = useUpdateTablePosition()
 
   const handleDeleteTable = (table: ITable) => {
-    if (confirm(`Are you sure you want to delete Table ${table.number}?`)) {
+    if (confirm(`Вы уверены, что хотите удалить стол ${table.number}?`)) {
       deleteTable(table.id, {
         onSuccess: () => {
           if (selectedTable?.id === table.id) {
@@ -54,7 +54,7 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
   if (isHallLoading || isTablesLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <p className="text-muted-foreground">Loading...</p>
+        <p className="text-muted-foreground">Загрузка...</p>
       </div>
     )
   }
@@ -62,7 +62,7 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
   if (!hall) {
     return (
       <div className="flex items-center justify-center py-8">
-        <p className="text-muted-foreground">Hall not found</p>
+        <p className="text-muted-foreground">Зал не найден</p>
       </div>
     )
   }
@@ -71,8 +71,8 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`${hall.name} - Floor Plan`}
-          description={`Floor ${hall.floor} • Capacity: ${hall.capacity} • ${hall.tableCount} tables`}
+          title={`${hall.name} - План зала`}
+          description={`Этаж ${hall.floor} • Вместимость: ${hall.capacity} • ${hall.tableCount} столов`}
         />
         <div className="flex gap-2">
           <CreateTableDialog hallId={hallId} />
@@ -95,10 +95,10 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
           <div className="rounded-lg border bg-white shadow-sm">
             <div className="border-b p-4">
               <h3 className="font-semibold">
-                Tables ({tables?.length || 0})
+                Столы ({tables?.length || 0})
               </h3>
               <p className="text-xs text-muted-foreground">
-                Click to select, drag on canvas to move
+                Нажмите для выбора, перетащите на холсте для перемещения
               </p>
             </div>
             <ScrollArea className="h-[500px]">
@@ -116,7 +116,7 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
                   ))
                 ) : (
                   <div className="py-8 text-center text-sm text-muted-foreground">
-                    No tables yet. Create your first table.
+                    Столов пока нет. Создайте свой первый стол.
                   </div>
                 )}
               </div>

@@ -60,7 +60,7 @@ export const TableListItem = ({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold">Table {table.number}</h4>
+            <h4 className="font-semibold">Стол {table.number}</h4>
             <span
               className={cn(
                 'rounded-full px-2 py-0.5 text-xs font-medium',
@@ -71,12 +71,12 @@ export const TableListItem = ({
             </span>
           </div>
           <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
-            <span>Capacity: {table.capacity}</span>
-            <span>Shape: {table.shape}</span>
+            <span>Вместимость: {table.capacity}</span>
+            <span>Форма: {table.shape}</span>
           </div>
           {!hasPosition && (
             <div className="mt-1 text-xs text-yellow-600">
-              ⚠️ No position set
+              ⚠️ Позиция не установлена
             </div>
           )}
         </div>

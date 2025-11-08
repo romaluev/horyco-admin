@@ -81,7 +81,7 @@ export const UpdateHallDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Hall</DialogTitle>
+          <DialogTitle>Редактировать зал</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -103,7 +103,7 @@ export const UpdateHallDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Описание</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Hall description..."

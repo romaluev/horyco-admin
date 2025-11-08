@@ -64,12 +64,12 @@ export const CreateHallDialog = ({ branchId }: ICreateHallDialogProps) => {
       <DialogTrigger asChild>
         <Button>
           <IconPlus className="mr-2 h-4 w-4" />
-          Add Hall
+          Добавить зал
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Hall</DialogTitle>
+          <DialogTitle>Создать новый зал</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -91,7 +91,7 @@ export const CreateHallDialog = ({ branchId }: ICreateHallDialogProps) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Описание</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Hall description..."

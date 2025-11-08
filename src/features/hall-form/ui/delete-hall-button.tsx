@@ -60,12 +60,12 @@ export const DeleteHallButton = ({
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Hall?</AlertDialogTitle>
+            <AlertDialogTitle>Удалить зал?</AlertDialogTitle>
             <AlertDialogDescription>
               {canDelete ? (
                 <>
                   Are you sure you want to delete hall &ldquo;{hall.name}&rdquo;?
-                  This action cannot be undone.
+                  Это действие нельзя отменить.
                 </>
               ) : (
                 <>

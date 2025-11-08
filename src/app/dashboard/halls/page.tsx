@@ -36,8 +36,8 @@ export default function HallsPage() {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Halls - Downtown Branch"
-            description="Create and manage dining halls in your branches"
+            title="Залы"
+            description="Создавайте и управляйте залами в ваших филиалах"
           />
           {selectedBranchId && <CreateHallDialog branchId={selectedBranchId} />}
         </div>
@@ -45,13 +45,13 @@ export default function HallsPage() {
 
         {/* Branch Selector */}
         <div className="flex items-center gap-4">
-          <span className="text-sm font-medium">Select Branch:</span>
+          <span className="text-sm font-medium">Выберите филиал:</span>
           <Select
             value={selectedBranchId?.toString()}
             onValueChange={(val) => setSelectedBranchId(Number(val))}
           >
             <SelectTrigger className="w-[300px]">
-              <SelectValue placeholder="Choose a branch" />
+              <SelectValue placeholder="Выберите филиал" />
             </SelectTrigger>
             <SelectContent>
               {branches.map((branch) => (
