@@ -144,11 +144,7 @@ const RegisterForm = () => {
       toast.success(response.message)
     } catch (err: unknown) {
       let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'response' in err
-      ) {
+      if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
         if (
@@ -193,12 +189,9 @@ const RegisterForm = () => {
         router.push('/onboarding/business-info')
       }
     } catch (err: unknown) {
-      let errorMessage = 'Неверный код или истёк срок действия. Попробуйте снова.'
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'response' in err
-      ) {
+      let errorMessage =
+        'Неверный код или истёк срок действия. Попробуйте снова.'
+      if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
         if (
@@ -233,11 +226,7 @@ const RegisterForm = () => {
       toast.success('Код повторно отправлен')
     } catch (err: unknown) {
       let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'response' in err
-      ) {
+      if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
         if (

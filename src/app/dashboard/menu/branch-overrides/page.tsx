@@ -5,7 +5,6 @@
 
 'use client'
 
-import type { JSX } from 'react'
 import { useMemo, useState } from 'react'
 
 import { Building2 } from 'lucide-react'
@@ -43,6 +42,8 @@ import {
   EditBranchOverrideDialog,
   DeleteBranchOverrideButton,
 } from '@/features/branch-override-form'
+
+import type { JSX } from 'react'
 
 export default function BranchOverridesPage(): JSX.Element {
   const [selectedProduct, setSelectedProduct] = useState<string>('all')

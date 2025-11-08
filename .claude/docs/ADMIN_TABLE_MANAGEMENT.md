@@ -65,7 +65,10 @@ A session represents active dining at a table:
 
 ### Get All Halls
 
-**Endpoint:** `GET /admin/halls?branchId=1`
+**Endpoint:** `GET /admin/branches/:branchId/halls`
+
+**Path Parameters:**
+- `branchId` (required): Branch ID
 
 **Response:**
 ```json
@@ -127,7 +130,10 @@ A session represents active dining at a table:
 
 ### Create Hall
 
-**Endpoint:** `POST /admin/halls`
+**Endpoint:** `POST /admin/branches/:branchId/halls`
+
+**Path Parameters:**
+- `branchId` (required): Branch ID
 
 **Request:**
 ```json
@@ -157,7 +163,7 @@ A session represents active dining at a table:
 
 ### Update Hall
 
-**Endpoint:** `PATCH /admin/halls/:id`
+**Endpoint:** `PUT /admin/halls/:id`
 
 **Request:**
 ```json
@@ -195,7 +201,10 @@ A session represents active dining at a table:
 
 ### Get All Tables
 
-**Endpoint:** `GET /admin/tables?hallId=1`
+**Endpoint:** `GET /admin/halls/:hallId/tables`
+
+**Path Parameters:**
+- `hallId` (required): Hall ID
 
 **Response:**
 ```json
@@ -267,7 +276,7 @@ A session represents active dining at a table:
   "status": "AVAILABLE",
   "hasActiveSession": false,
   "qrCode": "QR_TABLE_1_ABC123",
-  "qrCodeUrl": "https://api.oshlab.uz/qr/tables/1",
+  "qrCodeUrl": "https://api.horyco.com/qr/tables/1",
   "metadata": {
     "preferredFor": "couples",
     "nearWindow": true
@@ -279,7 +288,10 @@ A session represents active dining at a table:
 
 ### Create Table
 
-**Endpoint:** `POST /admin/tables`
+**Endpoint:** `POST /admin/halls/:hallId/tables`
+
+**Path Parameters:**
+- `hallId` (required): Hall ID
 
 **Request:**
 ```json
@@ -314,7 +326,7 @@ A session represents active dining at a table:
   "shape": "ROUND",
   "status": "AVAILABLE",
   "qrCode": "QR_TABLE_10_XYZ789",
-  "qrCodeUrl": "https://api.oshlab.uz/qr/tables/10",
+  "qrCodeUrl": "https://api.horyco.com/qr/tables/10",
   "createdAt": "2025-03-01T12:00:00Z"
 }
 ```
@@ -324,6 +336,9 @@ A session represents active dining at a table:
 ### Update Table
 
 **Endpoint:** `PATCH /admin/tables/:id`
+
+**Path Parameters:**
+- `id` (required): Table ID
 
 **Request (update capacity and metadata):**
 ```json
@@ -339,6 +354,9 @@ A session represents active dining at a table:
 ### Update Table Position (Drag & Drop)
 
 **Endpoint:** `PATCH /admin/tables/:id/layout`
+
+**Path Parameters:**
+- `id` (required): Table ID
 
 **Request:**
 ```json
@@ -519,29 +537,20 @@ QR codes are generated automatically when table is created.
 
 **Format:** `QR_TABLE_{id}_{token}`
 
-**URL:** `https://app.oshlab.uz/scan/{qrCode}`
+**URL:** `https://app.horyco.com/scan/{qrCode}`
 
-### Get QR Code Image
+### QR Code Management
 
-**Endpoint:** `GET /admin/tables/:id/qr-code`
+**Note:** QR code generation and management endpoints are not yet implemented in the controller. QR codes are generated automatically when tables are created, but manual regeneration and download features are planned for future implementation.
 
-**Response:** PNG image (downloadable)
+**Planned Endpoints:**
+- `GET /admin/tables/:id/qr-code` - Download QR code as PNG image
+- `POST /admin/tables/:id/regenerate-qr` - Regenerate QR code
 
-**Use for:** Print and place on table
-
-### Regenerate QR Code
-
-**Endpoint:** `POST /admin/tables/:id/regenerate-qr`
-
-**Response:**
-```json
-{
-  "qrCode": "QR_TABLE_1_NEW123",
-  "qrCodeUrl": "https://api.oshlab.uz/qr/tables/1"
-}
-```
-
-**Use when:** QR code compromised or damaged
+**Current Implementation:**
+- QR codes are automatically generated on table creation
+- `qrCode` and `qrCodeUrl` fields are included in table responses
+- Manual regeneration is not yet supported
 
 ---
 
@@ -731,10 +740,10 @@ QR codes are generated automatically when table is created.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
-| `GET` | `/admin/halls?branchId=1` | List halls |
+| `GET` | `/admin/branches/:branchId/halls` | List halls in branch |
+| `POST` | `/admin/branches/:branchId/halls` | Create hall in branch |
 | `GET` | `/admin/halls/:id` | Get hall details |
-| `POST` | `/admin/halls` | Create hall |
-| `PATCH` | `/admin/halls/:id` | Update hall |
+| `PUT` | `/admin/halls/:id` | Update hall |
 | `DELETE` | `/admin/halls/:id` | Delete hall |
 | `GET` | `/admin/halls/:id/can-delete` | Check if can delete |
 
@@ -742,13 +751,11 @@ QR codes are generated automatically when table is created.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
-| `GET` | `/admin/tables?hallId=1` | List tables |
+| `GET` | `/admin/halls/:hallId/tables` | List tables in hall |
+| `POST` | `/admin/halls/:hallId/tables` | Create table in hall |
 | `GET` | `/admin/tables/:id` | Get table details |
-| `POST` | `/admin/tables` | Create table |
-| `PATCH` | `/admin/tables/:id` | Update table |
+| `PATCH` | `/admin/tables/:id` | Update table (partial) |
 | `PATCH` | `/admin/tables/:id/layout` | Update position |
 | `DELETE` | `/admin/tables/:id` | Delete table |
 | `GET` | `/admin/tables/:id/session-status` | Check session |
 | `POST` | `/admin/tables/:id/close-session` | Close session |
-| `GET` | `/admin/tables/:id/qr-code` | Get QR code image |
-| `POST` | `/admin/tables/:id/regenerate-qr` | Regenerate QR |

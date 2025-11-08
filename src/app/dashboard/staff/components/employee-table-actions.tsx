@@ -1,6 +1,5 @@
 'use client'
 
-import type { JSX } from 'react'
 
 import { MoreHorizontal } from 'lucide-react'
 
@@ -20,6 +19,7 @@ import {
 import { UpdateEmployeeDialog } from '@/features/employee-form'
 
 import type { IEmployee } from '@/entities/employee'
+import type { JSX } from 'react'
 
 interface EmployeeTableActionsProps {
   employee: IEmployee

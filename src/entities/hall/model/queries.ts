@@ -4,22 +4,34 @@ import { hallApi } from './api'
 import { hallKeys } from './query-keys'
 
 /**
- * Хук для получения всех залов
+ * Get all halls for a branch
  */
-export const useGetAllHalls = () => {
+export const useHallList = (branchId: number) => {
   return useQuery({
-    queryKey: hallKeys.lists(),
-    queryFn: () => hallApi.getAllHalls(),
+    queryKey: hallKeys.list(branchId),
+    queryFn: () => hallApi.getHalls(branchId),
+    enabled: !!branchId,
   })
 }
 
 /**
- * Хук для получения зала по ID
+ * Get hall by ID
  */
-export const useGetHallById = (id: number) => {
+export const useHallById = (id: number) => {
   return useQuery({
     queryKey: hallKeys.detail(id),
     queryFn: () => hallApi.getHallById(id),
+    enabled: !!id,
+  })
+}
+
+/**
+ * Check if hall can be deleted
+ */
+export const useCanDeleteHall = (id: number) => {
+  return useQuery({
+    queryKey: hallKeys.canDelete(id),
+    queryFn: () => hallApi.canDeleteHall(id),
     enabled: !!id,
   })
 }

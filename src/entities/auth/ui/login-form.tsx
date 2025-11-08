@@ -121,11 +121,7 @@ const LoginForm = () => {
     } catch (error: unknown) {
       setIsRedirecting(false)
       let errorMessage = 'Failed to login. Please try again.'
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'response' in error
-      ) {
+      if (typeof error === 'object' && error !== null && 'response' in error) {
         const errorObj = error as Record<string, unknown>
         const response = errorObj.response
         if (

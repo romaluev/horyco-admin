@@ -86,7 +86,10 @@ export default function BusinessInfoPage() {
   // Load existing data if available
   useEffect(() => {
     if (progress?.stepData?.business_identity) {
-      const data = progress.stepData.business_identity as Record<string, unknown>
+      const data = progress.stepData.business_identity as Record<
+        string,
+        unknown
+      >
       form.reset({
         businessName: (data.businessName as string) || '',
         businessType: (data.businessType as string) || '',

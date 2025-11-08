@@ -87,17 +87,9 @@ export const getNavItems = (): NavItem[] => [
     items: [],
   },
   {
-    title: 'Залы',
+    title: 'Управление залами',
     shortcut: ['H'],
     url: '/dashboard/halls',
-    icon: 'kanban',
-    isActive: false,
-    items: [],
-  },
-  {
-    title: 'Стол менеджмент',
-    shortcut: ['cmd', 'SHIFT', 'T'],
-    url: '/dashboard/table',
     icon: 'layoutGrid',
     isActive: false,
     items: [],

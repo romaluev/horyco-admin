@@ -4,53 +4,60 @@ import { toast } from 'sonner'
 import { hallApi } from './api'
 import { hallKeys } from './query-keys'
 
-import type { IHallRequest } from './types'
+import type { ICreateHallDto, IUpdateHallDto } from './types'
 
+/**
+ * Create a new hall
+ */
 export const useCreateHall = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: IHallRequest) => hallApi.createHall(data),
-    onSuccess: () => {
+    mutationFn: (data: ICreateHallDto) => hallApi.createHall(data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: hallKeys.list(data.branchId) })
       toast.success('Зал успешно создан')
-      queryClient.invalidateQueries({ queryKey: hallKeys.lists() })
     },
-    onError: (error) => {
-      toast.error('Ошибка при создании зала')
-      console.error('Create hall error:', error)
+    onError: (error: Error) => {
+      toast.error(`Ошибка при создании зала: ${error.message}`)
     },
   })
 }
 
-export const useUpdateHall = (id: string) => {
+/**
+ * Update a hall
+ */
+export const useUpdateHall = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: IHallRequest) => hallApi.updateHall(id, data),
-    onSuccess: () => {
+    mutationFn: ({ id, data }: { id: number; data: IUpdateHallDto }) =>
+      hallApi.updateHall(id, data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: hallKeys.detail(data.id) })
+      queryClient.invalidateQueries({ queryKey: hallKeys.list(data.branchId) })
       toast.success('Зал успешно обновлен')
-      queryClient.invalidateQueries({ queryKey: hallKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: hallKeys.detail(Number(id)) })
     },
-    onError: (error) => {
-      toast.error('Ошибка при обновлении зала')
-      console.error(`Update hall error (ID: ${id}):`, error)
+    onError: (error: Error) => {
+      toast.error(`Ошибка при обновлении зала: ${error.message}`)
     },
   })
 }
 
+/**
+ * Delete a hall
+ */
 export const useDeleteHall = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => hallApi.deleteHall(id),
+    mutationFn: (id: number) => hallApi.deleteHall(id),
     onSuccess: () => {
-      toast.success('Зал успешно удален')
       queryClient.invalidateQueries({ queryKey: hallKeys.lists() })
+      toast.success('Зал успешно удален')
     },
-    onError: (error) => {
-      toast.error('Ошибка при удалении зала')
-      console.error('Delete hall error:', error)
+    onError: (error: Error) => {
+      toast.error(`Ошибка при удалении зала: ${error.message}`)
     },
   })
 }

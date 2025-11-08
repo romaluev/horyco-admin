@@ -1,35 +1,52 @@
-import { Suspense } from 'react'
-
-import BaseLoading from '@/shared/ui/base-loading'
-
-import { useTableList } from '../model'
 import { TableCard } from './table-card'
+import { useTableList } from '../model/queries'
 
-interface TableListProps {
-  UpdateButton?: React.ComponentType<{ id: number }>
-  DeleteButton?: React.ComponentType<{ id: number }>
+import type { ITable } from '../model/types'
+
+interface ITableListProps {
+  hallId: number
+  onEdit?: (table: ITable) => void
+  onViewSession?: (table: ITable) => void
+  onShowQR?: (table: ITable) => void
 }
 
-export const TableList = ({ UpdateButton, DeleteButton }: TableListProps) => {
-  const { data: tables, isLoading } = useTableList()
+export const TableList = ({
+  hallId,
+  onEdit,
+  onViewSession,
+  onShowQR,
+}: ITableListProps) => {
+  const { data: tables, isLoading } = useTableList(hallId)
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <p className="text-muted-foreground">Loading tables...</p>
+      </div>
+    )
+  }
+
+  if (!tables || tables.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <p className="text-muted-foreground">
+          No tables found. Create your first table.
+        </p>
+      </div>
+    )
+  }
 
   return (
-    <Suspense fallback={<BaseLoading className="py-20" />}>
-      {isLoading && <BaseLoading />}
-      {tables?.items.length === 0 && (
-        <p className="text-center">Вы еще не добавили столы</p>
-      )}
-
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
-        {tables?.items.map((table) => (
-          <TableCard
-            key={table.id}
-            table={table}
-            UpdateButton={UpdateButton}
-            DeleteButton={DeleteButton}
-          />
-        ))}
-      </div>
-    </Suspense>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {tables.map((table) => (
+        <TableCard
+          key={table.id}
+          table={table}
+          onEdit={onEdit}
+          onViewSession={onViewSession}
+          onShowQR={onShowQR}
+        />
+      ))}
+    </div>
   )
 }

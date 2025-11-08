@@ -1,9 +1,9 @@
 export function getChangedAdditions(
-  initial: Array<Record<string, unknown>> = [],
-  current: Array<Record<string, unknown>> = [],
+  initial: Record<string, unknown>[] = [],
+  current: Record<string, unknown>[] = [],
   productId: number
-): Array<Record<string, unknown>> {
-  const result: Array<Record<string, unknown>> = []
+): Record<string, unknown>[] {
+  const result: Record<string, unknown>[] = []
 
   current.forEach((currentAddition: Record<string, unknown>) => {
     if (!(currentAddition as Record<string, unknown>).id) {
@@ -24,37 +24,45 @@ export function getChangedAdditions(
 
     const changedProducts: any[] = []
 
-    const additionProducts = Array.isArray(currentAddition.additionProducts) ? (currentAddition.additionProducts as Array<Record<string, unknown>>) : []
-    additionProducts.forEach(
-      (currentProduct: Record<string, unknown>) => {
-        if (!currentProduct.id) {
-          if (currentAddition.id) {
-            currentProduct.additionId = currentAddition.id
-          }
-          changedProducts.push(currentProduct)
-          return
+    const additionProducts = Array.isArray(currentAddition.additionProducts)
+      ? (currentAddition.additionProducts as Record<string, unknown>[])
+      : []
+    additionProducts.forEach((currentProduct: Record<string, unknown>) => {
+      if (!currentProduct.id) {
+        if (currentAddition.id) {
+          currentProduct.additionId = currentAddition.id
         }
-
-        const origProducts = Array.isArray(originalAddition.additionProducts) ? (originalAddition.additionProducts as Array<Record<string, unknown>>) : []
-        const originalProduct = origProducts.find(
-          (p: Record<string, unknown>) => p.id === currentProduct.id
-        )
-        if (!originalProduct) return
-
-        if (
-          currentProduct.name !== originalProduct.name ||
-          currentProduct.price !== originalProduct.price
-        ) {
-          changedProducts.push(currentProduct)
-        }
+        changedProducts.push(currentProduct)
+        return
       }
-    )
 
-    const origAdditionProducts = Array.isArray(originalAddition.additionProducts) ? (originalAddition.additionProducts as Array<Record<string, unknown>>) : []
+      const origProducts = Array.isArray(originalAddition.additionProducts)
+        ? (originalAddition.additionProducts as Record<string, unknown>[])
+        : []
+      const originalProduct = origProducts.find(
+        (p: Record<string, unknown>) => p.id === currentProduct.id
+      )
+      if (!originalProduct) return
+
+      if (
+        currentProduct.name !== originalProduct.name ||
+        currentProduct.price !== originalProduct.price
+      ) {
+        changedProducts.push(currentProduct)
+      }
+    })
+
+    const origAdditionProducts = Array.isArray(
+      originalAddition.additionProducts
+    )
+      ? (originalAddition.additionProducts as Record<string, unknown>[])
+      : []
     origAdditionProducts.forEach((originalProduct: Record<string, unknown>) => {
       if (!originalProduct.id) return
 
-      const currProducts = Array.isArray(currentAddition.additionProducts) ? (currentAddition.additionProducts as Array<Record<string, unknown>>) : []
+      const currProducts = Array.isArray(currentAddition.additionProducts)
+        ? (currentAddition.additionProducts as Record<string, unknown>[])
+        : []
       const isDeleted = !currProducts.some(
         (p: Record<string, unknown>) => p.id === originalProduct.id
       )

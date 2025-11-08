@@ -5,10 +5,10 @@
 
 'use client'
 
-import type { JSX } from 'react'
 import { useState } from 'react'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Plus } from 'lucide-react'
 
@@ -24,19 +24,20 @@ import {
 } from '@/shared/ui/base/select'
 import PageContainer from '@/shared/ui/layout/page-container'
 
+
 import { useGetCategories } from '@/entities/category'
 import { useGetProducts } from '@/entities/product'
 import { ProductsDataTable } from '@/entities/product/ui/products-data-table'
-import { UpdateProductDialog } from '@/features/product-form'
 
 import type { IProduct } from '@/entities/product'
+import type { JSX } from 'react'
 
 export default function ProductsPage(): JSX.Element {
+  const router = useRouter()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('all')
-  const [editingProduct, setEditingProduct] = useState<IProduct | null>(null)
 
   const limit = 20
 
@@ -209,16 +210,9 @@ export default function ProductsPage(): JSX.Element {
             page={page}
             limit={limit}
             onPageChange={setPage}
-            onEdit={(product) => setEditingProduct(product)}
-          />
-        )}
-
-        {/* Update Product Dialog */}
-        {editingProduct && (
-          <UpdateProductDialog
-            productId={editingProduct.id}
-            isOpen={!!editingProduct}
-            onClose={() => setEditingProduct(null)}
+            onEdit={(product) =>
+              router.push(`/dashboard/menu/products/${product.id}/edit`)
+            }
           />
         )}
       </div>

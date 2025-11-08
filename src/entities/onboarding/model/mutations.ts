@@ -21,11 +21,7 @@ import type { UseMutationOptions } from '@tanstack/react-query'
 
 // Helper function to extract error message from unknown error type
 const getErrorMessage = (error: unknown, defaultMessage: string): string => {
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error
-  ) {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
     const errorObj = error as Record<string, unknown>
     const response = errorObj.response
     if (

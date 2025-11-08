@@ -3,12 +3,12 @@
 import * as React from 'react'
 // Импортируем только необходимые функции
 
-import { AnalyticsChart, ChartData } from './analytics-chart'
+import { AnalyticsChart } from './analytics-chart'
 import { AnalyticsMetrics } from './analytics-metrics'
 import { PeriodFilter } from './period-filter'
 import { RecentOrders } from './recent-orders'
 
-import type { ChartDataWithCast } from './analytics-chart'
+import type { ChartDataWithCast , ChartData } from './analytics-chart'
 import type { PeriodType, DateRange } from './period-filter'
 import type { RecentOrder } from './recent-orders'
 

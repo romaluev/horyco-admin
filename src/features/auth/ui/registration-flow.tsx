@@ -49,11 +49,7 @@ type RegistrationStep = 'initial' | 'otp' | 'profile'
 
 // Helper function to extract error message from unknown error
 const getErrorMessage = (error: unknown): string | undefined => {
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error
-  ) {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
     const errorObj = error as Record<string, unknown>
     const response = errorObj.response
     if (
@@ -350,10 +346,7 @@ export const RegistrationFlow = () => {
       toast.success('Код повторно отправлен')
     } catch (err: unknown) {
       const errorMessage = getErrorMessage(err)
-      setError(
-        errorMessage ||
-          'Не удалось отправить код. Попробуйте снова.'
-      )
+      setError(errorMessage || 'Не удалось отправить код. Попробуйте снова.')
     } finally {
       setIsLoading(false)
     }

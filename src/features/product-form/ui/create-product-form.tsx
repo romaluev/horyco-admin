@@ -19,10 +19,10 @@ import {
   Input,
   Textarea,
 } from '@/shared/ui'
+import { Switch } from '@/shared/ui/base/switch'
 
 import { useCreateProduct } from '@/entities/product'
 
-import { ProductFormAdditions } from './product-form-additions'
 import { ProductFormCategory } from './product-form-category'
 import { ProductFormImages } from './product-form-images'
 import { ProductFormType } from './product-form-type'
@@ -52,7 +52,6 @@ export const CreateProductForm = () => {
     price: 0,
     description: '',
     isAvailable: true,
-    additions: [],
     image: '',
   }
 
@@ -92,7 +91,7 @@ export const CreateProductForm = () => {
   }
 
   const onSubmit = async (values: ProductFormValues): Promise<void> => {
-    const { additions, ...productData } = values
+    const productData = values
     setSending(true)
 
     try {
@@ -295,12 +294,7 @@ export const CreateProductForm = () => {
             render={({ field }) => (
               <FormItem className="flex items-center gap-2 space-y-0 md:col-span-6">
                 <FormControl>
-                  <input
-                    type="checkbox"
-                    checked={field.value}
-                    onChange={field.onChange}
-                    className="h-4 w-4"
-                  />
+                  <Switch checked={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormLabel className="!mt-0">
                   Продукт доступен для заказа
@@ -309,8 +303,6 @@ export const CreateProductForm = () => {
               </FormItem>
             )}
           />
-
-          <ProductFormAdditions />
 
           <Button type="submit" className="w-full md:w-auto" disabled={sending}>
             Создать продукт

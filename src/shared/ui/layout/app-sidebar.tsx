@@ -71,7 +71,7 @@ export default function AppSidebar() {
               src={logo}
               alt=""
             />
-            <h1 className="py-4 text-2xl font-bold text-[#023055]">OshXona</h1>
+            <h1 className="py-4 text-2xl font-bold text-[#023055]">Horyco Admin</h1>
           </SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map((item) => {

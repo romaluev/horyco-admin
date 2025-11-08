@@ -60,9 +60,9 @@ export function OnboardingLayout({
             <Image
               className="!h-10 !w-10 overflow-hidden rounded-lg"
               src={logo}
-              alt="OshXona"
+              alt="Horyco Admin"
             />
-            <h1 className="text-2xl font-semibold text-[#023055]">OshXona</h1>
+            <h1 className="text-2xl font-semibold text-[#023055]">Horyco Admin</h1>
           </div>
 
           {/* Progress Steps */}

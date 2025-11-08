@@ -5,7 +5,6 @@
 
 'use client'
 
-import type { JSX } from 'react'
 import { useState } from 'react'
 
 import {
@@ -50,6 +49,8 @@ import {
   UpdateModifierGroupDialog,
   UpdateModifierDialog,
 } from '@/features/modifier-group-form'
+
+import type { JSX } from 'react'
 
 interface PageHeaderProps {
   onCreateGroup: () => void
@@ -162,7 +163,7 @@ interface ModifierItemProps {
 }
 
 const ModifierItem = ({ modifier, onEdit, onDelete }: ModifierItemProps) => (
-  <div className="bg-background hover:bg-accent/50 flex items-center justify-between rounded-lg border p-4 transition-colors">
+  <div className="bg-background hover:bg-accent/50 mb-px flex items-center justify-between rounded-lg border p-4 transition-colors">
     <div className="flex-1">
       <p className="font-medium">{modifier.name}</p>
       {modifier.description && (
@@ -269,7 +270,7 @@ const GroupContent = ({
 }: GroupContentProps) => (
   <>
     <Separator className="mb-4" />
-    <div className="space-y-3">
+    <div className="space-y-3 pb-1">
       {group.modifiers && group.modifiers.length > 0 ? (
         group.modifiers.map((modifier) => (
           <ModifierItem

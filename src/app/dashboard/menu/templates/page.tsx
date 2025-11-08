@@ -5,7 +5,6 @@
 
 'use client'
 
-import type { JSX } from 'react'
 import { useMemo, useState } from 'react'
 
 import { Sparkles, Star } from 'lucide-react'
@@ -35,6 +34,8 @@ import {
   ApplyTemplateDialog,
   TemplatePreviewCard,
 } from '@/features/template-selector'
+
+import type { JSX } from 'react'
 
 export default function MenuTemplatesPage(): JSX.Element {
   const [selectedBusinessType, setSelectedBusinessType] =

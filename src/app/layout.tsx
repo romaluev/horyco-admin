@@ -16,8 +16,8 @@ const META_THEME_COLORS = {
 }
 
 export const metadata: Metadata = {
-  title: 'OshXona',
-  description: 'OshXona - Админ панель для управление ресторанами',
+  title: 'Horyco Admin',
+  description: 'Horyco Admin - Панель для управление ресторанами',
 }
 
 export const viewport: Viewport = {

@@ -59,8 +59,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         typeof (error as Record<string, unknown>).response === 'object' &&
         (error as Record<string, unknown>).response !== null
       ) {
-        const response = (error as Record<string, unknown>).response as Record<string, unknown>
-        if ('data' in response && typeof response.data === 'object' && response.data !== null) {
+        const response = (error as Record<string, unknown>).response as Record<
+          string,
+          unknown
+        >
+        if (
+          'data' in response &&
+          typeof response.data === 'object' &&
+          response.data !== null
+        ) {
           const data = response.data as Record<string, unknown>
           if ('message' in data && typeof data.message === 'string') {
             errorMessage = data.message
@@ -112,11 +119,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     } catch (error: unknown) {
       // Don't show toast for 401 errors (handled by axios interceptor)
       let is401 = false
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'response' in error
-      ) {
+      if (typeof error === 'object' && error !== null && 'response' in error) {
         const errorObj = error as Record<string, unknown>
         const response = errorObj.response
         if (

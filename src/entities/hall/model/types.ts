@@ -1,35 +1,40 @@
 export interface IHall {
   id: number
   name: string
+  description: string
+  capacity: number
   floor: number
-  createdAt?: string
-  updatedAt?: string
-}
-
-export interface IHallRequest {
-  name: string
-  floor: number
-}
-
-export interface ITable {
-  id: number
-  name: string
-  hallId: number
-  seats: number
-  position: {
-    x: number
-    y: number
+  branchId: number
+  branchName?: string
+  tableCount: number
+  activeTableCount?: number
+  layout?: {
+    width: number
+    height: number
+    gridSize: number
   }
-  createdAt?: string
-  updatedAt?: string
+  isActive: boolean
+  createdAt: string
 }
 
-export interface ITableRequest {
+export interface ICreateHallDto {
+  branchId: number
   name: string
-  hallId: number
-  seats: number
-  position: {
-    x: number
-    y: number
+  description: string
+  capacity: number
+  floor: number
+}
+
+export interface IUpdateHallDto {
+  capacity?: number
+  description?: string
+  name?: string
+  floor?: number
+}
+
+export interface ICanDeleteHallResponse {
+  canDelete: boolean
+  blockingReasons?: {
+    tables?: string
   }
 }

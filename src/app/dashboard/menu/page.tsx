@@ -5,7 +5,6 @@
 
 'use client'
 
-import type { JSX } from 'react'
 
 import Link from 'next/link'
 
@@ -33,6 +32,8 @@ import { useGetCategories } from '@/entities/category'
 import { useGetTemplates } from '@/entities/menu-template'
 import { useGetModifiers } from '@/entities/modifier'
 import { useGetProducts } from '@/entities/product'
+
+import type { JSX } from 'react'
 
 const menuSections = [
   {

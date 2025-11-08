@@ -20,7 +20,6 @@ import {
 
 import { useGetProductById, useUpdateProduct } from '@/entities/product'
 
-import { ProductFormAdditions } from './product-form-additions'
 import { ProductFormImages } from './product-form-images'
 import { ProductFormType } from './product-form-type'
 import { productSchema } from '../model/contract'
@@ -50,7 +49,6 @@ export const UpdateProductForm = ({
     price: product?.price || 0,
     description: product?.description || '',
     isAvailable: product?.isAvailable ?? true,
-    additions: [],
   }
 
   const form = useForm<z.infer<typeof productSchema>>({
@@ -162,8 +160,6 @@ export const UpdateProductForm = ({
               </FormItem>
             )}
           />
-
-          <ProductFormAdditions />
 
           <Button type="submit" className="w-full px-4 md:w-auto">
             Обновить продукт

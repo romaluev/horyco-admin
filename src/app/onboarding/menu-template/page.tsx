@@ -71,7 +71,8 @@ export default function MenuTemplatePage() {
     useGetOnboardingProgress()
 
   // Fetch default products based on business type
-  const businessType = ((progress?.stepData?.businessType as string) || 'restaurant') as string
+  const businessType = ((progress?.stepData?.businessType as string) ||
+    'restaurant') as string
   const {
     data: defaultProducts,
     isLoading: isProductsLoading,
