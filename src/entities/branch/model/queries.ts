@@ -19,3 +19,22 @@ export const useGetBranchById = (id: number) => {
     enabled: Number.isFinite(id) && id > 0,
   })
 }
+
+export const useCanDeleteBranch = (id: number) => {
+  return useQuery({
+    queryKey: queryKeys.canDelete(id),
+    queryFn: () => branchApi.canDeleteBranch(id),
+    enabled: Number.isFinite(id) && id > 0,
+  })
+}
+
+export const useBranchStatistics = (
+  id: number,
+  period: 'today' | 'week' | 'month' | 'year' = 'week'
+) => {
+  return useQuery({
+    queryKey: queryKeys.statistics(id, period),
+    queryFn: () => branchApi.getBranchStatistics(id, period),
+    enabled: Number.isFinite(id) && id > 0,
+  })
+}

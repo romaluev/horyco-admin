@@ -4,7 +4,11 @@ import { toast } from 'sonner'
 import { branchApi } from './api'
 import { queryKeys } from './query-keys'
 
-import type { ICreateBranchDto, IUpdateBranchDto } from './types'
+import type {
+  ICreateBranchDto,
+  IUpdateBranchDto,
+  IBulkCreateBranchDto,
+} from './types'
 
 export const useCreateBranch = () => {
   const queryClient = useQueryClient()
@@ -28,7 +32,7 @@ export const useUpdateBranch = () => {
     mutationFn: ({ id, data }: { id: number; data: IUpdateBranchDto }) =>
       branchApi.updateBranch(id, data),
     onSuccess: (_, { id }) => {
-      toast.error('Филиал успешно обновлен')
+      toast.success('Филиал успешно обновлен')
       queryClient.invalidateQueries({ queryKey: queryKeys.all() })
       queryClient.invalidateQueries({ queryKey: queryKeys.byId(id) })
     },
@@ -49,6 +53,24 @@ export const useDeleteBranch = () => {
     },
     onError: () => {
       toast.error('При удалении филиала произошла ошибка')
+    },
+  })
+}
+
+export const useBulkCreateBranches = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: IBulkCreateBranchDto) =>
+      branchApi.bulkCreateBranches(data),
+    onSuccess: (result) => {
+      toast.success(
+        `Импорт завершен: ${result.success} успешно, ${result.failed} ошибок`
+      )
+      queryClient.invalidateQueries({ queryKey: queryKeys.all() })
+    },
+    onError: () => {
+      toast.error('При импорте филиалов произошла ошибка')
     },
   })
 }

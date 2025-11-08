@@ -1,43 +1,43 @@
-# Admin Panel — Полный обзор для Frontend разработчиков
+# Admin Panel — Complete Overview for Frontend Developers
 
-Этот документ предоставляет общее понимание Admin Panel системы OshLab: архитектуру, навигацию, роли пользователей, и связь между разделами. Используйте его как отправную точку перед углублением в специфические разделы.
-
----
-
-## 📋 Содержание
-
-1. [Введение в OshLab](#введение-в-oshlab)
-2. [Архитектура системы](#архитектура-системы)
-3. [Роли пользователей](#роли-пользователей)
-4. [Структура Admin Panel](#структура-admin-panel)
-5. [Базовые концепции](#базовые-концепции)
-6. [Навигация и workflow](#навигация-и-workflow)
-7. [API структура](#api-структура)
-8. [Документация по разделам](#документация-по-разделам)
+This document provides a complete understanding of the OshLab Admin Panel: architecture, navigation, user roles, and how sections connect. Use this as your starting point before diving into specific sections.
 
 ---
 
-## Введение в OshLab
+## 📋 Table of Contents
 
-**OshLab** — это **white-label B2B2C платформа** для управления ресторанным бизнесом с мультитенантной архитектурой.
+1. [Introduction to OshLab](#introduction-to-oshlab)
+2. [System Architecture](#system-architecture)
+3. [User Roles](#user-roles)
+4. [Admin Panel Structure](#admin-panel-structure)
+5. [Core Concepts](#core-concepts)
+6. [Navigation & Workflows](#navigation--workflows)
+7. [API Structure](#api-structure)
+8. [Section Documentation](#section-documentation)
 
-### 🎯 Что это значит?
+---
+
+## Introduction to OshLab
+
+**OshLab** is a **white-label B2B2C platform** for restaurant management with multi-tenant architecture.
+
+### 🎯 What This Means
 
 **White-label:**
-- Каждый клиент получает платформу со своим брендом
-- Настраиваемый дизайн, логотипы, цвета
-- Собственный домен (например: `pizza-house.oshlab.uz`)
+- Each client gets the platform with their own branding
+- Customizable design, logos, colors
+- Own domain (example: `pizza-house.oshlab.uz`)
 
 **B2B2C:**
-- **B2B** — продаём платформу ресторанам (наши клиенты)
-- **B2C** — рестораны обслуживают своих клиентов через нашу платформу
+- **B2B** — We sell the platform to restaurants (our clients)
+- **B2C** — Restaurants serve their customers through our platform
 
-**Мультитенант:**
-- Один backend обслуживает множество ресторанов
-- Полная изоляция данных между тенантами
-- Масштабируемость и экономия ресурсов
+**Multi-tenant:**
+- One backend serves multiple restaurants
+- Complete data isolation between tenants
+- Scalability and resource efficiency
 
-### 🏗️ Основные компоненты платформы
+### 🏗️ Platform Components
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -48,8 +48,8 @@
 │  │   POS App    │  │ Admin Panel  │  │   WebApp    │ │
 │  │  (Flutter)   │  │    (Web)     │  │  (Next.js)  │ │
 │  │              │  │              │  │             │ │
-│  │ Для кассиров │  │ Для менедж.  │  │ Для клиентов│ │
-│  │ и официантов │  │ и владельцев │  │ ресторана   │ │
+│  │ For cashiers │  │ For managers │  │ For         │ │
+│  │ and waiters  │  │ and owners   │  │ customers   │ │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬──────┘ │
 │         │                 │                  │        │
 │         └─────────────────┼──────────────────┘        │
@@ -59,316 +59,316 @@
 │                  │   (NestJS)      │                  │
 │                  │                 │                  │
 │                  │ - Multi-tenant  │                  │
-│                  │ - DDD архитект. │                  │
+│                  │ - DDD           │                  │
 │                  │ - PostgreSQL    │                  │
 │                  └─────────────────┘                  │
 │                                                        │
 └────────────────────────────────────────────────────────┘
 ```
 
-### 📱 Кто использует Admin Panel?
+### 📱 Who Uses Admin Panel?
 
-**Целевая аудитория:**
-- 👨‍💼 **Владельцы ресторанов** — стратегические решения, аналитика
-- 👩‍💼 **Менеджеры** — операционное управление, контроль персонала
-- 👨‍🍳 **Управляющие** — меню, закупки, настройки филиалов
+**Target Audience:**
+- 👨‍💼 **Restaurant Owners** — Strategic decisions, analytics
+- 👩‍💼 **Managers** — Operational management, staff control
+- 👨‍🍳 **Supervisors** — Menu, purchases, branch settings
 
-**Основные задачи:**
-- Управление меню (категории, продукты, цены)
-- Контроль персонала (графики, зарплаты, роли)
-- Финансовый учёт (отчёты, кассы, выручка)
-- Управление филиалами (настройки, конфигурации)
-- Аналитика и отчёты (продажи, популярность блюд)
+**Main Tasks:**
+- Menu management (categories, products, prices)
+- Staff control (schedules, salaries, roles)
+- Financial accounting (reports, cash registers, revenue)
+- Branch management (settings, configurations)
+- Analytics and reports (sales, dish popularity)
 
 ---
 
-## Архитектура системы
+## System Architecture
 
 ### 🏛️ Domain-Driven Design (DDD)
 
-Backend организован по **доменам** (бизнес-областям):
+Backend is organized by **domains** (business areas):
 
 ```
 src/
-├── domains/                    # Бизнес-логика (Domain Layer)
-│   ├── tenant-management/      # Управление тенантами
-│   ├── menu-management/        # Меню, продукты, категории
-│   ├── order-management/       # Заказы, смены
-│   ├── staff-management/       # Сотрудники, роли
-│   ├── customer-management/    # Клиенты, лояльность
-│   ├── branch-management/      # Филиалы, столы, залы
-│   ├── financial-management/   # Платежи, отчёты
-│   └── settings-management/    # Настройки системы
+├── domains/                    # Business logic (Domain Layer)
+│   ├── tenant-management/      # Tenant management
+│   ├── menu-management/        # Menu, products, categories
+│   ├── order-management/       # Orders, shifts
+│   ├── staff-management/       # Employees, roles
+│   ├── customer-management/    # Customers, loyalty
+│   ├── branch-management/      # Branches, tables, halls
+│   ├── financial-management/   # Payments, reports
+│   └── settings-management/    # System settings
 │
-└── applications/               # API Layer (представление данных)
-    ├── pos-api/                # Endpoints для POS
-    ├── admin-api/              # Endpoints для Admin Panel ← ВЫ ЗДЕСЬ
-    ├── webapp-api/             # Endpoints для клиентского приложения
-    └── telegram-api/           # Endpoints для Telegram бота
+└── applications/               # API Layer (data presentation)
+    ├── pos-api/                # Endpoints for POS
+    ├── admin-api/              # Endpoints for Admin Panel ← YOU ARE HERE
+    ├── webapp-api/             # Endpoints for customer app
+    └── telegram-api/           # Endpoints for Telegram bot
 ```
 
-### 🔐 Мультитенантность
+### 🔐 Multi-tenancy
 
-**Каждая сущность привязана к `tenantId`:**
+**Each entity is tied to `tenantId`:**
 
 ```typescript
-// Пример: Product (продукт)
+// Example: Product
 {
   id: 101,
-  tenantId: 5,           // ← Ресторан "Пицца Хаус"
-  name: "Маргарита",
+  tenantId: 5,           // ← Restaurant "Pizza House"
+  name: "Margherita",
   price: 890,
   ...
 }
 ```
 
-**Автоматическая изоляция:**
-- Все запросы автоматически фильтруются по текущему тенанту
-- Backend использует `AsyncLocalStorage` для контекста запроса
-- Frontend не нужно вручную добавлять `tenantId` в каждый запрос
+**Automatic Isolation:**
+- All requests are automatically filtered by current tenant
+- Backend uses `AsyncLocalStorage` for request context
+- Frontend doesn't need to manually add `tenantId` to each request
 
-**Как это работает:**
+**How It Works:**
 ```
-1. Frontend делает запрос с JWT токеном
-2. Backend извлекает tenantId из токена
-3. Все SQL запросы автоматически добавляют WHERE tenantId = X
-4. Данные других ресторанов недоступны
+1. Frontend makes request with JWT token
+2. Backend extracts tenantId from token
+3. All SQL queries automatically add WHERE tenantId = X
+4. Data from other restaurants is inaccessible
 ```
 
-### 🌳 Структура филиалов
+### 🌳 Branch Structure
 
 ```
-Tenant (Ресторан "Пицца Хаус")
-  └── Branch (Филиал "Центр")
-      ├── Halls (Залы)
-      │   └── Tables (Столы)
-      ├── Employees (Сотрудники)
-      └── Settings (Настройки)
+Tenant (Restaurant "Pizza House")
+  └── Branch ("Downtown")
+      ├── Halls
+      │   └── Tables
+      ├── Employees
+      └── Settings
 
-  └── Branch (Филиал "Спальный район")
+  └── Branch ("Suburbs")
       └── ...
 ```
 
 **Branch Overrides:**
-- Каждый филиал может переопределить настройки
-- Цены на продукты могут отличаться
-- Доступность блюд зависит от локации
-- Настройки налогов, смен, касс — на уровне филиала
+- Each branch can override settings
+- Product prices can differ
+- Dish availability depends on location
+- Tax, shift, and cash register settings — at branch level
 
 ---
 
-## Роли пользователей
+## User Roles
 
-### 👥 Иерархия ролей в Admin Panel
+### 👥 Role Hierarchy in Admin Panel
 
 ```
-Owner (Владелец)
-  ├── Полный доступ ко всему
-  ├── Управление подписками и биллингом
-  └── Создание новых менеджеров
+Owner
+  ├── Full access to everything
+  ├── Subscription and billing management
+  └── Create new managers
 
-Manager (Менеджер)
-  ├── Управление меню и персоналом
-  ├── Просмотр отчётов и аналитики
-  ├── Настройки филиалов
-  └── НЕТ доступа к биллингу
+Manager
+  ├── Menu and staff management
+  ├── View reports and analytics
+  ├── Branch settings
+  └── NO access to billing
 
-Supervisor (Управляющий)
-  ├── Операционное управление одним филиалом
-  ├── Контроль смен и персонала
-  └── Базовая аналитика
+Supervisor
+  ├── Operational management of one branch
+  ├── Shift and staff control
+  └── Basic analytics
 
-Accountant (Бухгалтер)
-  ├── Финансовые отчёты
-  ├── Просмотр транзакций
-  └── Только чтение (без редактирования)
+Accountant
+  ├── Financial reports
+  ├── View transactions
+  └── Read-only (no editing)
 ```
 
-### 🔒 Права доступа (PBAC)
+### 🔒 Access Rights (PBAC)
 
 **Permission-Based Access Control:**
 
-| Раздел | Owner | Manager | Supervisor | Accountant |
-|--------|-------|---------|------------|------------|
-| Dashboard | ✅ Все | ✅ Все | ✅ Свой филиал | ✅ Финансы |
-| Меню | ✅ Полный | ✅ Полный | ✅ Ограничено | ❌ Нет |
-| Персонал | ✅ Полный | ✅ Полный | ✅ Свой филиал | ❌ Нет |
-| Финансы | ✅ Полный | ✅ Просмотр | ✅ Свой филиал | ✅ Просмотр |
-| Настройки | ✅ Полный | ✅ Базовые | ❌ Нет | ❌ Нет |
-| Биллинг | ✅ Полный | ❌ Нет | ❌ Нет | ❌ Нет |
+| Section | Owner | Manager | Supervisor | Accountant |
+|---------|-------|---------|------------|------------|
+| Dashboard | ✅ All | ✅ All | ✅ Own branch | ✅ Finance |
+| Menu | ✅ Full | ✅ Full | ✅ Limited | ❌ No |
+| Staff | ✅ Full | ✅ Full | ✅ Own branch | ❌ No |
+| Finance | ✅ Full | ✅ View | ✅ Own branch | ✅ View |
+| Settings | ✅ Full | ✅ Basic | ❌ No | ❌ No |
+| Billing | ✅ Full | ❌ No | ❌ No | ❌ No |
 
-**Проверка прав на frontend:**
+**Permission Check on Frontend:**
 ```typescript
-// Пример проверки
+// Example check
 if (user.hasPermission('menu:edit')) {
-  // Показать кнопку "Редактировать"
+  // Show "Edit" button
 }
 
 if (user.hasRole('owner', 'manager')) {
-  // Показать раздел "Аналитика"
+  // Show "Analytics" section
 }
 ```
 
 ---
 
-## Структура Admin Panel
+## Admin Panel Structure
 
-### 🗂️ Главное меню (Sidebar)
+### 🗂️ Main Menu (Sidebar)
 
 ```
 ┌─────────────────────────────────────┐
-│  🏠 Dashboard                       │  ← Главная страница с метриками
+│  🏠 Dashboard                       │  ← Home page with metrics
 ├─────────────────────────────────────┤
-│  📊 Аналитика                       │  ← Графики, отчёты
-│    ├── Продажи                      │
-│    ├── Популярные блюда             │
-│    └── Финансовые показатели        │
+│  📊 Analytics                       │  ← Charts, reports
+│    ├── Sales                        │
+│    ├── Popular dishes               │
+│    └── Financial metrics            │
 ├─────────────────────────────────────┤
-│  📋 Заказы                          │  ← История заказов
+│  📋 Orders                          │  ← Order history
 ├─────────────────────────────────────┤
-│  🍔 Меню                            │  ← Управление меню
-│    ├── Категории                    │
-│    ├── Продукты                     │
-│    ├── Модификаторы                 │
-│    ├── Дополнения                   │
-│    ├── Шаблоны меню                 │
-│    └── Настройки по филиалам        │
+│  🍔 Menu                            │  ← Menu management
+│    ├── Categories                   │
+│    ├── Products                     │
+│    ├── Modifiers                    │
+│    ├── Additions                    │
+│    ├── Menu templates               │
+│    └── Branch settings              │
 ├─────────────────────────────────────┤
-│  👥 Клиенты                         │  ← CRM
-│    ├── База клиентов                │
-│    ├── Программа лояльности         │
-│    └── Отзывы                       │
+│  👥 Customers                       │  ← CRM
+│    ├── Customer database            │
+│    ├── Loyalty program              │
+│    └── Reviews                      │
 ├─────────────────────────────────────┤
-│  👨‍💼 Персонал                        │  ← HR
-│    ├── Сотрудники                   │
-│    ├── Роли и права                 │
-│    ├── График работы                │
-│    └── Зарплаты                     │
+│  👨‍💼 Staff                           │  ← HR
+│    ├── Employees                    │
+│    ├── Roles and permissions        │
+│    ├── Work schedules               │
+│    └── Salaries                     │
 ├─────────────────────────────────────┤
-│  🏪 Филиалы                         │  ← Управление локациями
-│    ├── Список филиалов              │
-│    ├── Залы и столы                 │
-│    └── Настройки филиалов           │
+│  🏪 Branches                        │  ← Location management
+│    ├── Branch list                  │
+│    ├── Halls and tables             │
+│    └── Branch settings              │
 ├─────────────────────────────────────┤
-│  💰 Финансы                         │  ← Бухгалтерия
-│    ├── Кассовые смены               │
-│    ├── Транзакции                   │
-│    ├── Отчёты                       │
-│    └── Выплаты                      │
+│  💰 Finance                         │  ← Accounting
+│    ├── Cash register shifts         │
+│    ├── Transactions                 │
+│    ├── Reports                      │
+│    └── Payouts                      │
 ├─────────────────────────────────────┤
-│  ⚙️ Настройки                       │  ← Конфигурация
-│    ├── Общие настройки              │
-│    ├── Интеграции                   │
-│    └── Налоги и печать              │
+│  ⚙️ Settings                        │  ← Configuration
+│    ├── General settings             │
+│    ├── Integrations                 │
+│    └── Taxes and receipts           │
 ├─────────────────────────────────────┤
-│  💳 Подписка                        │  ← Биллинг (только Owner)
+│  💳 Subscription                    │  ← Billing (Owner only)
 └─────────────────────────────────────┘
 ```
 
-### 📊 Dashboard (Главная страница)
+### 📊 Dashboard (Home Page)
 
-**Ключевые метрики (KPI):**
+**Key Metrics (KPI):**
 ```
 ┌──────────────────────────────────────────────────────┐
-│  Сегодня                      Этот месяц             │
+│  Today                        This Month             │
 ├──────────────────────────────────────────────────────┤
-│  💰 Выручка: 1,250,000 ₽      15,890,000 ₽          │
-│  📦 Заказов: 145              3,450                  │
-│  👥 Клиентов: 98              1,890                  │
-│  📈 Средний чек: 8,600 ₽      4,600 ₽               │
+│  💰 Revenue: 1,250,000 ₽      15,890,000 ₽          │
+│  📦 Orders: 145               3,450                  │
+│  👥 Customers: 98             1,890                  │
+│  📈 Avg Check: 8,600 ₽        4,600 ₽               │
 └──────────────────────────────────────────────────────┘
 ```
 
-**Графики:**
-- Динамика продаж (по дням/неделям/месяцам)
-- Распределение продаж по категориям
-- Популярность блюд (Top 10)
-- Загруженность по часам
+**Charts:**
+- Sales dynamics (by days/weeks/months)
+- Sales distribution by category
+- Dish popularity (Top 10)
+- Hourly traffic
 
-**Быстрые действия:**
-- Создать новый продукт
-- Добавить сотрудника
-- Посмотреть активные смены
-- Открыть отчёт за день
+**Quick Actions:**
+- Create new product
+- Add employee
+- View active shifts
+- Open daily report
 
 ---
 
-## Базовые концепции
+## Core Concepts
 
-### 🏢 Tenant (Тенант)
+### 🏢 Tenant
 
-**Что это:**
-Ресторан или сеть ресторанов, использующая платформу.
+**What it is:**
+A restaurant or restaurant chain using the platform.
 
-**Примеры:**
-- "Пицца Хаус" — один ресторан
-- "Кофе Тайм" — сеть из 5 кофеен
-- "Суши Маркет" — франшиза из 15 точек
+**Examples:**
+- "Pizza House" — one restaurant
+- "Coffee Time" — chain of 5 cafes
+- "Sushi Market" — franchise of 15 locations
 
-**Свойства:**
-- Уникальный `tenantId`
-- Собственная база клиентов
-- Независимое меню
-- Отдельный биллинг
+**Properties:**
+- Unique `tenantId`
+- Own customer database
+- Independent menu
+- Separate billing
 
-### 🏪 Branch (Филиал)
+### 🏪 Branch
 
-**Что это:**
-Физическая локация ресторана.
+**What it is:**
+Physical restaurant location.
 
-**Примеры:**
-- "Пицца Хаус — Центр"
-- "Пицца Хаус — ТЦ Мега"
-- "Пицца Хаус — Аэропорт"
+**Examples:**
+- "Pizza House — Downtown"
+- "Pizza House — Mega Mall"
+- "Pizza House — Airport"
 
-**Почему важно:**
-- У филиалов могут быть разные цены
-- Разное меню (сезонность, региональные блюда)
-- Свой персонал
-- Отдельная аналитика
+**Why it matters:**
+- Branches can have different prices
+- Different menu (seasonality, regional dishes)
+- Own staff
+- Separate analytics
 
-### 🔄 Shift (Смена)
+### 🔄 Shift
 
-**Что это:**
-Рабочая смена кассира/официанта в POS.
+**What it is:**
+Work shift of cashier/waiter in POS.
 
-**Жизненный цикл:**
+**Lifecycle:**
 ```
-1. Открытие смены
-   ├── Сотрудник открывает POS
-   ├── Вводит начальную сумму в кассе (opening float)
+1. Open Shift
+   ├── Employee opens POS
+   ├── Enters starting cash amount (opening float)
    └── POST /pos/shifts
 
-2. Работа в течение смены
-   ├── Принимает заказы
-   ├── Обрабатывает платежи
-   └── Все транзакции привязаны к shiftId
+2. Work During Shift
+   ├── Takes orders
+   ├── Processes payments
+   └── All transactions tied to shiftId
 
-3. Закрытие смены
-   ├── Подсчёт наличности
-   ├── Сверка с системой
-   ├── Отчёт о расхождениях
+3. Close Shift
+   ├── Count cash
+   ├── Reconcile with system
+   ├── Report discrepancies
    └── PATCH /pos/shifts/:id/close
 ```
 
-**Для Admin Panel:**
-- Просмотр всех смен
-- Аналитика по сменам
-- Контроль расхождений
-- Отчёты по сотрудникам
+**For Admin Panel:**
+- View all shifts
+- Shift analytics
+- Discrepancy control
+- Employee reports
 
-### 💳 Payment (Платёж)
+### 💳 Payment
 
-**Методы оплаты:**
-- `cash` — Наличные
-- `card` — Банковская карта
+**Payment Methods:**
+- `cash` — Cash
+- `card` — Bank card
 - `payme` — Payme
 - `click` — Click
 - `uzum` — Uzum Bank
 
-**Split Payment (Разделение счёта):**
+**Split Payment:**
 ```
-Пример: Счёт на 10,000₽, оплата пополам
+Example: Bill for 10,000₽, split in half
 
 Payment 1:
   ├── method: 'card'
@@ -381,150 +381,150 @@ Payment 2:
   └── sequence: 2
 ```
 
-### 📝 Order (Заказ)
+### 📝 Order
 
-**Типы заказов:**
-- `dine_in` — В зале (за столом)
-- `takeaway` — На вынос
-- `delivery` — Доставка
+**Order Types:**
+- `dine_in` — In-hall (at table)
+- `takeaway` — To-go
+- `delivery` — Delivery
 
-**Источники заказов:**
-- `pos` — Создан в POS кассиром
-- `web` — Через WebApp
-- `telegram` — Через Telegram бота
-- `aggregator` — С платформ доставки (Yandex.Eats)
+**Order Sources:**
+- `pos` — Created in POS by cashier
+- `web` — Through WebApp
+- `telegram` — Through Telegram bot
+- `aggregator` — From delivery platforms (Yandex.Eats)
 
-**Статусы заказа:**
+**Order Statuses:**
 ```
-created (создан)
+created
   ↓
-paid (оплачен)
+paid
   ↓
-preparing (готовится)
+preparing
   ↓
-ready (готов)
+ready
   ↓
-delivered (доставлен)
+delivered
   ↓
-completed (завершён)
+completed
 ```
 
-### 🎫 Receipt (Чек)
+### 🎫 Receipt
 
-**Типы чеков:**
-- `sale` — Продажа
-- `refund` — Возврат
-- `void` — Аннулирование
+**Receipt Types:**
+- `sale` — Sale
+- `refund` — Refund
+- `void` — Void
 
-**Форматы:**
-- `thermal` — Термопринтер (58мм, 80мм)
-- `a4` — Лазерный принтер
-- `email` — Электронный чек
-- `sms` — Отправка в SMS
+**Formats:**
+- `thermal` — Thermal printer (58mm, 80mm)
+- `a4` — Laser printer
+- `email` — Electronic receipt
+- `sms` — SMS delivery
 
 ---
 
-## Навигация и workflow
+## Navigation & Workflows
 
-### 🎯 Типовые пользовательские сценарии
+### 🎯 Typical User Scenarios
 
-#### Сценарий 1: Утреннее открытие ресторана (Менеджер)
+#### Scenario 1: Morning Restaurant Opening (Manager)
 
 ```
-1. Вход в Admin Panel
+1. Login to Admin Panel
    └── GET /auth/login
 
-2. Dashboard — Проверка KPI за вчера
+2. Dashboard — Check yesterday's KPI
    └── GET /admin/analytics/dashboard
 
-3. Проверка готовности к работе
-   ├── Меню → Проверить доступность блюд
+3. Check readiness
+   ├── Menu → Check dish availability
    │   └── GET /admin/menu/products?available=false
-   ├── Персонал → Кто на смене сегодня
+   ├── Staff → Who's on shift today
    │   └── GET /admin/staff/schedule?date=today
-   └── Филиалы → Все ли столы свободны
+   └── Branches → Are all tables free
        └── GET /admin/branches/:id/tables
 
-4. Корректировка меню (если что-то недоступно)
+4. Adjust menu (if something unavailable)
    └── PATCH /admin/menu/products/:id/availability
 
-5. Готовность к открытию ✅
+5. Ready to open ✅
 ```
 
-#### Сценарий 2: Добавление нового блюда (Владелец/Менеджер)
+#### Scenario 2: Add New Dish (Owner/Manager)
 
 ```
-1. Меню → Продукты → [+ Добавить]
-   └── Открывается форма создания
+1. Menu → Products → [+ Add]
+   └── Opens creation form
 
-2. Заполнение базовой информации
-   ├── Название: "Салат Цезарь"
-   ├── Категория: "Салаты"
-   ├── Цена: 590₽
+2. Fill basic information
+   ├── Name: "Caesar Salad"
+   ├── Category: "Salads"
+   ├── Price: 590₽
    └── POST /admin/menu/products
 
-3. Добавление модификаторов
-   ├── Группа "Размер порции"
-   │   ├── Стандартная +0₽
-   │   └── Большая +150₽
+3. Add modifiers
+   ├── Group "Portion Size"
+   │   ├── Standard +0₽
+   │   └── Large +150₽
    └── POST /admin/menu/modifiers
 
-4. Добавление дополнений
-   ├── Группа "Соусы"
-   │   ├── Цезарь (бесплатно)
-   │   └── Чесночный +50₽
+4. Add additions
+   ├── Group "Sauces"
+   │   ├── Caesar (free)
+   │   └── Garlic +50₽
    └── POST /admin/menu/additions
 
-5. Настройка по филиалам (опционально)
+5. Branch settings (optional)
    └── PATCH /admin/menu/products/:id/branches/:branchId
 
-6. Блюдо доступно в POS ✅
+6. Dish available in POS ✅
 ```
 
-#### Сценарий 3: Еженедельный отчёт (Владелец)
+#### Scenario 3: Weekly Report (Owner)
 
 ```
-1. Аналитика → Отчёты
+1. Analytics → Reports
    └── GET /admin/analytics/reports
 
-2. Выбор периода
-   └── Прошлая неделя (01.01 - 07.01)
+2. Select period
+   └── Last week (01.01 - 07.01)
 
-3. Ключевые метрики
-   ├── Общая выручка
-   ├── Количество заказов
-   ├── Средний чек
-   └── Рост к предыдущей неделе
+3. Key metrics
+   ├── Total revenue
+   ├── Number of orders
+   ├── Average check
+   └── Growth vs previous week
 
-4. Детализация
-   ├── По филиалам
-   ├── По категориям
-   └── По сотрудникам
+4. Breakdown
+   ├── By branches
+   ├── By categories
+   └── By employees
 
-5. Экспорт отчёта
-   └── [Скачать PDF] / [Скачать Excel]
+5. Export report
+   └── [Download PDF] / [Download Excel]
 ```
 
-### 🔄 Связь между разделами
+### 🔄 Section Connections
 
-**Меню ↔ Заказы:**
+**Menu ↔ Orders:**
 ```
-Создали новое блюдо → Сразу доступно в POS → Клиент заказывает → Появляется в статистике
-```
-
-**Персонал ↔ Финансы:**
-```
-Добавили сотрудника → Назначили роль "Кассир" → Он открывает смену → Транзакции привязаны к нему → Отчёт по сотруднику
+Created new dish → Immediately available in POS → Customer orders → Appears in statistics
 ```
 
-**Филиалы ↔ Меню:**
+**Staff ↔ Finance:**
 ```
-Создали филиал → Применили шаблон меню → Скорректировали цены для филиала → Филиал работает
+Added employee → Assigned "Cashier" role → Opens shift → Transactions tied to them → Employee report
+```
+
+**Branches ↔ Menu:**
+```
+Created branch → Applied menu template → Adjusted prices for branch → Branch operational
 ```
 
 ---
 
-## API структура
+## API Structure
 
 ### 🔗 Base URL
 
@@ -533,16 +533,16 @@ Development: http://localhost:3000
 Production:  https://api.oshlab.uz
 ```
 
-### 🔑 Аутентификация
+### 🔑 Authentication
 
-**Все запросы требуют JWT токен:**
+**All requests require JWT token:**
 
 ```http
 GET /admin/menu/products
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-**Получение токена:**
+**Get Token:**
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -565,7 +565,7 @@ Response:
 }
 ```
 
-**Обновление токена:**
+**Refresh Token:**
 ```http
 POST /auth/refresh
 Content-Type: application/json
@@ -575,20 +575,20 @@ Content-Type: application/json
 }
 ```
 
-### 📡 Формат ответов
+### 📡 Response Format
 
-**Успешный ответ:**
+**Success Response:**
 ```json
 {
   "id": 101,
-  "name": "Капучино",
+  "name": "Cappuccino",
   "price": 350,
   "categoryId": 5,
   ...
 }
 ```
 
-**Список с пагинацией:**
+**List with Pagination:**
 ```json
 {
   "data": [...],
@@ -599,7 +599,7 @@ Content-Type: application/json
 }
 ```
 
-**Ошибка валидации:**
+**Validation Error:**
 ```json
 {
   "statusCode": 400,
@@ -611,7 +611,7 @@ Content-Type: application/json
 }
 ```
 
-**Ошибка авторизации:**
+**Authorization Error:**
 ```json
 {
   "statusCode": 401,
@@ -620,7 +620,7 @@ Content-Type: application/json
 }
 ```
 
-**Ошибка прав доступа:**
+**Permission Error:**
 ```json
 {
   "statusCode": 403,
@@ -629,240 +629,199 @@ Content-Type: application/json
 }
 ```
 
-### 🗂️ Префиксы API
+### 🗂️ API Prefixes
 
 ```
 /admin/*          — Admin Panel endpoints
 /pos/*            — POS Application endpoints
 /webapp/*         — WebApp/Customer endpoints
 /telegram/*       — Telegram Bot endpoints
-/auth/*           — Authentication (общие для всех)
+/auth/*           — Authentication (shared)
 ```
 
-### 📚 Swagger документация
+### 📚 Swagger Documentation
 
-**Доступна по адресу:**
+**Available at:**
 ```
 http://localhost:3000/api/docs
 ```
 
-**Что там есть:**
-- Полный список всех endpoints
-- Описание параметров запросов
-- Примеры ответов
-- Try it out — тестирование API прямо в браузере
-- Схемы валидации (DTOs)
+**What's there:**
+- Complete list of all endpoints
+- Request parameter descriptions
+- Response examples
+- Try it out — test API in browser
+- Validation schemas (DTOs)
 
 ---
 
-## Документация по разделам
+## Section Documentation
 
-Детальная документация по каждому разделу:
+Detailed documentation for each section:
 
-### ✅ Готовые документы
+### ✅ Available Documents
 
-1. **[Menu Management](./ADMIN_MENU_MANAGEMENT.md)** — Управление меню
-   - Категории
-   - Продукты
-   - Модификаторы
-   - Дополнения (Additions)
-   - Шаблоны меню
+1. **[ADMIN_MENU_MANAGEMENT.md](./ADMIN_MENU_MANAGEMENT.md)** — Menu Management
+   - Categories
+   - Products
+   - Modifiers
+   - Additions
+   - Menu Templates
    - Branch Overrides
-   - **Статус:** API готово ✅, документация готова ✅
 
-### 🚧 Документы в разработке
+2. **[ADMIN_STAFF_MANAGEMENT.md](./ADMIN_STAFF_MANAGEMENT.md)** — Staff Management
+   - Employee list
+   - Roles and permissions
+   - Work schedules
+   - Salaries and payouts
 
-2. **Dashboard & Analytics** — Дашборд и аналитика
-   - KPI метрики
-   - Графики продаж
-   - Популярные блюда
-   - Финансовые показатели
-   - **Статус:** API частично готово ⏳
+3. **[ADMIN_BRANCH_MANAGEMENT.md](./ADMIN_BRANCH_MANAGEMENT.md)** — Branch Management
+   - Create branches
+   - Halls and tables
+   - Branch settings
 
-3. **Staff Management** — Управление персоналом
-   - Список сотрудников
-   - Роли и права
-   - Графики работы
-   - Зарплаты и выплаты
-   - **Статус:** API не готово ❌
+4. **[ADMIN_FINANCIAL_MANAGEMENT.md](./ADMIN_FINANCIAL_MANAGEMENT.md)** — Financial Management
+   - Transactions
+   - Cash register shifts
+   - Reports
+   - Payouts
 
-4. **Branch Management** — Управление филиалами
-   - Создание филиалов
-   - Залы и столы
-   - Настройки филиалов
-   - **Статус:** API частично готово ⏳
+5. **[ADMIN_SETTINGS.md](./ADMIN_SETTINGS.md)** — System Settings
+   - General settings
+   - Integrations
+   - Taxes and receipts
 
-5. **Customer Management** — Управление клиентами
-   - База клиентов
-   - Программа лояльности
-   - История заказов
-   - **Статус:** API частично готово ⏳
+6. **[ADMIN_ONBOARDING_WIZARD.md](./ADMIN_ONBOARDING_WIZARD.md)** — Onboarding Wizard
+   - Business signup
+   - Initial setup
+   - Step-by-step configuration
 
-6. **Financial Management** — Финансовый учёт
-   - Транзакции
-   - Кассовые смены
-   - Отчёты
-   - Выплаты
-   - **Статус:** API не готово ❌
+7. **[ADMIN_BUSINESS_SIGNUP.md](./ADMIN_BUSINESS_SIGNUP.md)** — Business Signup
+   - Registration flow
+   - Phone verification
+   - Account creation
 
-7. **Settings** — Настройки системы
-   - Общие настройки
-   - Интеграции
-   - Налоги и чеки
-   - **Статус:** API частично готово ⏳
+8. **[ADMIN_OPERATING_HOURS.md](./ADMIN_OPERATING_HOURS.md)** — Operating Hours
+   - Weekly schedules
+   - Holiday management
+   - Today's status
 
-8. **Orders Management** — Управление заказами
-   - История заказов
-   - Детали заказов
-   - Возвраты и отмены
-   - **Статус:** API частично готово ⏳
+9. **[ADMIN_TAX_AND_PRICING.md](./ADMIN_TAX_AND_PRICING.md)** — Tax & Pricing
+   - Tax configuration
+   - Service charges
+   - Order calculations
+
+10. **[ADMIN_FILE_MANAGEMENT.md](./ADMIN_FILE_MANAGEMENT.md)** — File Management
+    - Image uploads
+    - File variants
+    - Presigned URLs
 
 ---
 
-## 🛠️ Технические требования
+## 🛠️ Technical Requirements
 
-### Frontend стек (рекомендации)
+### Frontend Stack (Recommendations)
 
 **Framework:**
-- React / Next.js (для SSR и SEO)
-- TypeScript (строгая типизация)
+- React / Next.js (for SSR and SEO)
+- TypeScript (strict typing)
 
-**UI библиотеки:**
-- Ant Design / Material-UI (готовые компоненты)
-- TailwindCSS (кастомная стилизация)
+**UI Libraries:**
+- Ant Design / Material-UI (ready components)
+- TailwindCSS (custom styling)
 
 **State Management:**
 - Zustand / Redux Toolkit
-- TanStack Query (React Query) для работы с API
+- TanStack Query (React Query) for API work
 
-**Графики:**
+**Charts:**
 - Recharts / Chart.js
-- ApexCharts (интерактивные графики)
+- ApexCharts (interactive charts)
 
-**Формы:**
+**Forms:**
 - React Hook Form
-- Zod (валидация схем)
+- Zod (schema validation)
 
-**Таблицы:**
+**Tables:**
 - TanStack Table (React Table)
-- AG Grid (для больших датасетов)
+- AG Grid (for large datasets)
 
-### Обязательные возможности
+### Required Features
 
-**Аутентификация:**
-- Автоматический refresh токена
-- Редирект на login при 401
-- Сохранение токена в localStorage/cookies
+**Authentication:**
+- Automatic token refresh
+- Redirect to login on 401
+- Save token in localStorage/cookies
 
-**Обработка ошибок:**
-- Toast уведомления
-- Отображение ошибок валидации
-- Retry механизм для failed requests
+**Error Handling:**
+- Toast notifications
+- Display validation errors
+- Retry mechanism for failed requests
 
 **UX:**
-- Loading states (скелетоны)
-- Оптимистичные обновления
-- Debounce для поиска
+- Loading states (skeletons)
+- Optimistic updates
+- Debounce for search
 - Infinite scroll / pagination
 
-**Безопасность:**
-- XSS защита
-- CSRF токены
-- Проверка прав на frontend (дублирует backend)
+**Security:**
+- XSS protection
+- CSRF tokens
+- Frontend permission checks (duplicates backend)
 
 ### Performance
 
-**Оптимизации:**
-- Lazy loading роутов
+**Optimizations:**
+- Lazy loading routes
 - Code splitting
-- Мемоизация компонентов
-- Виртуализация длинных списков
+- Component memoization
+- Virtualization for long lists
 
-**Кэширование:**
+**Caching:**
 - React Query cache
-- LocalStorage для редко меняющихся данных
-- Оптимистичные обновления
+- LocalStorage for rarely changing data
+- Optimistic updates
 
 ---
 
-## 🎓 Обучающие материалы
+## 🚀 Getting Started
 
-### Полезные ссылки
+### Step 1: Study Documentation
 
-**Документация:**
-- [Swagger API Docs](http://localhost:3000/api/docs)
-- [CLAUDE.md](../../CLAUDE.md) — Архитектура backend
-- [DEVELOPMENT_ROADMAP.md](../../DEVELOPMENT_ROADMAP.md) — Roadmap проекта
+1. Read this document completely
+2. Review [ADMIN_MENU_MANAGEMENT.md](./ADMIN_MENU_MANAGEMENT.md)
+3. Open Swagger docs and explore API
 
-**Для понимания бизнес-логики:**
-- `.claude/project-description/` — Детальные описания доменов
+### Step 2: Set Up Environment
 
-**Примеры:**
-- `docs/frontend/POS_WORKFLOW_NOW.md` — POS документация (аналог для POS)
+1. Get API access (dev/staging)
+2. Configure API client (axios/fetch)
+3. Implement authentication
 
-### Термины и аббревиатуры
+### Step 3: Start Simple
 
-| Термин | Значение |
-|--------|----------|
-| **Tenant** | Ресторан, использующий платформу |
-| **Branch** | Филиал ресторана |
-| **Override** | Переопределение настроек на уровне филиала |
-| **Shift** | Рабочая смена кассира |
+1. Create Login page
+2. Implement Dashboard (basic metrics)
+3. Build product list (Menu → Products)
+
+### Step 4: Iterative Development
+
+1. Implement one section completely
+2. Test with real data
+3. Collect feedback
+4. Move to next section
+
+---
+
+## Glossary
+
+| Term | Meaning |
+|------|---------|
+| **Tenant** | Restaurant using the platform |
+| **Branch** | Restaurant location |
+| **Override** | Override settings at branch level |
+| **Shift** | Cashier work shift |
 | **DDD** | Domain-Driven Design |
 | **PBAC** | Permission-Based Access Control |
-| **DTO** | Data Transfer Object (объект для передачи данных) |
-| **KPI** | Key Performance Indicator (ключевой показатель) |
-
----
-
-## 🚀 С чего начать?
-
-### Шаг 1: Изучите документацию
-
-1. Прочитайте этот документ полностью
-2. Ознакомьтесь с [ADMIN_MENU_MANAGEMENT.md](./ADMIN_MENU_MANAGEMENT.md)
-3. Откройте Swagger docs и изучите API
-
-### Шаг 2: Настройте окружение
-
-1. Получите доступ к API (dev/staging)
-2. Настройте API client (axios/fetch)
-3. Реализуйте аутентификацию
-
-### Шаг 3: Начните с простого
-
-1. Создайте Login страницу
-2. Реализуйте Dashboard (базовые метрики)
-3. Постройте список продуктов (Menu → Products)
-
-### Шаг 4: Итеративная разработка
-
-1. Реализуйте один раздел полностью
-2. Протестируйте с реальными данными
-3. Соберите фидбек
-4. Переходите к следующему разделу
-
----
-
-## 📞 Контакты и поддержка
-
-**Вопросы по API:**
-- Slack: `#admin-panel-api`
-- Backend team lead
-
-**Вопросы по бизнес-логике:**
-- Slack: `#product-team`
-- Product manager
-
-**Баги и предложения:**
-- GitHub Issues
-- Jira (если используется)
-
----
-
-**Версия документа:** 1.0
-**Дата создания:** 2025-01-24
-**Следующее обновление:** После реализации Dashboard API
-
-**Авторы:** Backend Team
-**Для:** Frontend Team (Admin Panel)
+| **DTO** | Data Transfer Object |
+| **KPI** | Key Performance Indicator |

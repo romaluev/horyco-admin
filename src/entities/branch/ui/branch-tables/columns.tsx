@@ -3,6 +3,7 @@
 import { Text } from 'lucide-react'
 
 import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header'
+import { ViewBranchButton } from '@/shared/ui/view-branch-button'
 
 import { CellAction } from './cell-action'
 
@@ -50,6 +51,11 @@ export const columns: ColumnDef<IBranch>[] = [
       const date = new Date(cell.getValue<Date>())
       return <div>{date.toLocaleDateString()}</div>
     },
+  },
+  {
+    id: 'view',
+    header: 'Просмотр',
+    cell: ({ row }) => <ViewBranchButton branchId={row.original.id} />,
   },
   {
     id: 'actions',

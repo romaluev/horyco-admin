@@ -1,10 +1,6 @@
 # Admin Settings Management
 
-**Purpose**: This document describes the settings and configuration management workflows for the OshLab Admin Panel. Settings control tenant-level and branch-level configurations including branding, features, integrations, and operational parameters.
-
-**Last Updated**: 2025-11-03
-**API Version**: v1
-**Related Endpoints**: `/admin/settings/*`
+This document describes settings and configuration management for the Admin Panel. Settings control tenant-level and branch-level configurations including branding, features, integrations, and operational parameters.
 
 ---
 
@@ -815,33 +811,3 @@ All fields follow `SettingValueResponseDto` structure with boolean values:
 | `GET` | `/admin/settings/integrations/sms` | Get SMS settings | ❌ Tenant only |
 | `POST` | `/admin/settings/integrations/test` | Test integration | ❌ Tenant only |
 
----
-
-## Changelog
-
-### 2025-11-03 - Task 8.2 Implementation
-- ✅ Added structured settings response (`AllSettingsResponseDto`)
-- ✅ Enhanced branding response with scope, isOverride, inheritedFrom metadata
-- ✅ Implemented branch-level feature flags support
-- ✅ Added integration settings with metadata and secret masking
-- ✅ All settings now include complete metadata for transparency
-
-### Previous Changes
-- Task 8.1: Added schema-based validation, blocked arbitrary setting creation
-- Initial implementation: Basic settings CRUD operations
-
----
-
-## Support and Questions
-
-For questions about settings implementation:
-1. Review API endpoint Swagger documentation at `/api/docs`
-2. Check response schemas in this document
-3. Review e2e tests in `test/settings/` for usage examples
-4. Contact backend team for schema changes or new setting types
-
----
-
-**Document Version**: 1.0
-**Task Reference**: Phase 8, Task 8.2
-**Related Files**: `src/applications/admin-api/controllers/admin-settings.controller.ts`

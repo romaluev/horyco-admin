@@ -1,7 +1,6 @@
 'use client'
-import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react'
 
@@ -13,9 +12,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/shared/ui/base/dropdown-menu'
-import { AlertModal } from '@/shared/ui/modal/alert-modal'
 
-import { useDeleteBranch } from '../../model'
+
+import { DeleteBranchDialog } from '@/features/branch-delete'
+import { UpdateBranchDialog } from '@/features/branch-form'
 
 import type { IBranch } from '../../model'
 
@@ -24,28 +24,11 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
-  const router = useRouter()
-
-  const { mutateAsync: deleteBranch, isPending } = useDeleteBranch()
-
-  const onConfirm = async () => {
-    try {
-      await deleteBranch(data.id)
-      setIsDeleteModalVisible(false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
   return (
     <>
-      <AlertModal
-        isOpen={isDeleteModalVisible}
-        onClose={() => setIsDeleteModalVisible(false)}
-        onConfirm={onConfirm}
-        isLoading={isPending}
-      />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -56,16 +39,26 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Действия</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/branches/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <IconEdit className="mr-2 h-4 w-4" /> Редактировать
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsDeleteModalVisible(true)}>
+          <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
             <IconTrash className="mr-2 h-4 w-4" /> Удалить
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <UpdateBranchDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        branch={data}
+      />
+
+      <DeleteBranchDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        branch={data}
+      />
     </>
   )
 }

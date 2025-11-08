@@ -1,10 +1,6 @@
 # Admin Financial Management
 
-**Purpose**: This document describes the financial management workflows for the OshLab Admin Panel, including payment sessions, transactions, revenue tracking, and financial reporting.
-
-**Last Updated**: 2025-11-03
-**API Version**: v1
-**Related Endpoints**: `/admin/finance/*`
+This document describes the financial management workflows for the Admin Panel, including payment sessions, transactions, revenue tracking, and financial reporting.
 
 ---
 
@@ -659,44 +655,3 @@ When trying to access or close a non-existent session:
 | `GET` | `/admin/finance/transactions/hourly-stats` | Hourly analytics | ❌ |
 | `GET` | `/admin/finance/dashboard` | Dashboard metrics | ❌ |
 
----
-
-## Changelog
-
-### 2025-11-03 - Task 9.1 Implementation
-- ✅ Implemented `getAllActiveSessions()` in PaymentSessionService
-- ✅ Updated `GET /admin/finance/sessions/active` to return real data
-- ✅ Removed TODO comment and empty array fallback
-- ✅ Added branchId filtering support
-- ✅ Enhanced Swagger documentation
-
-### 2025-11-03 - Task 9.2 Implementation
-- ✅ Added `TransactionSummaryResponseDto` with all financial summary fields
-- ✅ Added `PaymentSummaryResponseDto` with payment method breakdown
-- ✅ Added `HourlyStatsItemDto` for hourly analytics
-- ✅ Updated all summary endpoints with typed responses
-- ✅ Enhanced Swagger documentation for financial reports
-
-### 2025-11-03 - Task 9.3 Implementation
-- ✅ Created payment method categories in domain layer
-- ✅ Added `PaymentMethodService.getPaymentMethodCategories()` method
-- ✅ Made dashboard calculation dynamic (no hardcoded methods)
-- ✅ New payment methods automatically included in calculations
-- ✅ Categories: cash (CASH), card (CARD, CREDIT_CARD, DEBIT_CARD), digital (PAYME, CLICK, UZUM, PAYNET)
-
-**Note for Frontend**: Payment method categories are now centralized. The dashboard automatically categorizes payment methods as cash, card, or digital based on domain configuration.
-
----
-
-## Support and Questions
-
-For questions about financial management implementation:
-1. Review API endpoint Swagger documentation at `/api/docs`
-2. Check response schemas in this document
-3. Contact backend team for clarification on business rules
-
----
-
-**Document Version**: 1.0
-**Task Reference**: Phase 9, Task 9.1
-**Related Files**: `src/applications/admin-api/controllers/admin-finance.controller.ts`

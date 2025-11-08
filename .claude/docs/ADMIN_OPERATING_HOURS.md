@@ -1,10 +1,6 @@
-# Admin Operating Hours & Holidays Management
+# Admin Operating Hours & Holidays
 
-**Purpose**: This document describes the operating hours and holiday management workflows for the OshLab Admin Panel. Control when branches are open for business, define weekly schedules, and manage special holiday closures or hours.
-
-**Last Updated**: 2025-11-03
-**API Version**: v1
-**Related Endpoints**: `/admin/operating-hours/*`, `/admin/holidays/*`
+This document describes operating hours and holiday management workflows for the Admin Panel. Control when branches are open for business, define weekly schedules, and manage special holiday closures or hours.
 
 ---
 
@@ -732,33 +728,3 @@ If a branch operates past midnight (e.g., "Open 11 PM - 2 AM"):
 | `PUT` | `/admin/holidays/:id` | Update existing holiday |
 | `DELETE` | `/admin/holidays/:id` | Delete holiday |
 
----
-
-## Changelog
-
-### 2025-11-03 - Phase 10 Implementation
-- ✅ **Task 10.1**: Fixed critical route conflict (specific routes before generic)
-  - `/holidays/today` now executes correctly
-  - Added `ParseIntPipe` validation to `:id` routes
-  - Updated Swagger documentation with examples
-- ✅ **Task 10.2**: Enhanced `/today` convenience endpoint documentation
-  - Added comprehensive description of what it combines
-  - Documented use cases and alternatives
-  - Added performance note (optional caching)
-  - Verified data consistency with individual endpoints
-
----
-
-## Support and Questions
-
-For questions about operating hours and holidays:
-1. Review API endpoint Swagger documentation at `/api/docs`
-2. Check time format requirements (24-hour HH:MM)
-3. Verify day of week numbering (0=Sunday, 6=Saturday)
-4. Contact backend team for questions about overnight hours handling
-
----
-
-**Document Version**: 1.0
-**Task Reference**: Phase 10, Tasks 10.1 & 10.2
-**Related Files**: `src/applications/admin-api/controllers/admin-operating-hours.controller.ts`
