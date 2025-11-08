@@ -15,6 +15,7 @@ interface OverrideBadgeProps {
 export const OverrideBadge = ({
   scope,
   isOverride,
+  inheritedFrom: _inheritedFrom,
 }: OverrideBadgeProps) => {
   if (scope === 'tenant' && !isOverride) {
     return (
