@@ -94,4 +94,12 @@ export const getNavItems = (): NavItem[] => [
     isActive: false,
     items: [],
   },
+  {
+    title: 'Настройки',
+    shortcut: ['T'],
+    url: '/dashboard/settings',
+    icon: 'settings',
+    isActive: false,
+    items: [],
+  },
 ]

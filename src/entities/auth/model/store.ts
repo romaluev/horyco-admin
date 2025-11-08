@@ -3,8 +3,10 @@ import { toast } from 'sonner'
 import { create } from 'zustand'
 
 import { authApi } from '@/entities/auth/model/api'
+import { useBranchStore } from '@/entities/branch'
 
 import type { IEmployee } from '@/entities/employee'
+
 
 interface AuthState {
   user: IEmployee | null
@@ -88,6 +90,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     Cookies.remove('access_token')
     Cookies.remove('refresh_token')
     Cookies.remove('token_expires_at')
+
+    // Clear branch selection
+    useBranchStore.getState().clearSelectedBranch()
 
     // Reset all auth state
     set({

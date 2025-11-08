@@ -43,10 +43,13 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from '@/shared/ui/base/sidebar'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 
 import { useAuthStore } from '@/entities/auth/model/store'
+import { useGetAllBranches, useBranchStore } from '@/entities/branch'
 
+import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
 
 export default function AppSidebar() {
@@ -55,6 +58,23 @@ export default function AppSidebar() {
   const { user } = useAuthStore()
   const router = useRouter()
   const navItems = getNavItems()
+
+  const { data: branchesData, isLoading: isBranchesLoading } =
+    useGetAllBranches()
+  const { selectedBranchId, setSelectedBranch, initializeFromStorage } =
+    useBranchStore()
+
+  const branches = branchesData?.items || []
+
+  React.useEffect(() => {
+    initializeFromStorage()
+  }, [initializeFromStorage])
+
+  React.useEffect(() => {
+    if (branches.length > 0 && selectedBranchId === null && branches[0]) {
+      setSelectedBranch(branches[0].id)
+    }
+  }, [branches, selectedBranchId, setSelectedBranch])
 
   const handleLogout = () => {
     authStore.logout()
@@ -73,6 +93,18 @@ export default function AppSidebar() {
             />
             <h1 className="py-4 text-2xl font-bold text-[#023055]">Horyco Admin</h1>
           </SidebarGroupLabel>
+
+          <div className="mb-4 px-2 group-data-[collapsible=icon]:hidden">
+            {isBranchesLoading ? (
+              <Skeleton className="h-9 w-full" />
+            ) : (
+              <BranchSelector
+                value={selectedBranchId ?? undefined}
+                onChange={(branchId) => setSelectedBranch(branchId ?? null)}
+              />
+            )}
+          </div>
+
           <SidebarMenu>
             {navItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo
