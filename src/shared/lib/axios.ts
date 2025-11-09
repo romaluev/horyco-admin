@@ -129,6 +129,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     credentials: 'include',
+    withCredentials: true
   },
 })
 
