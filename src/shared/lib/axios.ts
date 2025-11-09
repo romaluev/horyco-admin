@@ -128,9 +128,8 @@ const api = axios.create({
   baseURL: BASE_API_URL,
   headers: {
     'Content-Type': 'application/json',
-    credentials: 'include',
-    withCredentials: true
   },
+  withCredentials: true,
 })
 
 // Request interceptor: Check token expiration and refresh if needed
