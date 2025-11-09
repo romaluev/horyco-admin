@@ -33,7 +33,7 @@ import {
   useGetOnboardingProgress,
   useGetDefaultProducts,
   useSubmitMenuSetup,
-  useSkipMenuSetup,
+  useSkipStep,
   type MenuSetupRequest,
 } from '@/entities/onboarding'
 
@@ -70,9 +70,11 @@ export default function MenuTemplatePage() {
   const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress()
 
-  // Fetch default products based on business type
-  const businessType = ((progress?.stepData?.businessType as string) ||
-    'restaurant') as string
+  // Fetch default products based on business type from stepData
+  const businessType = (
+    (progress?.stepData?.business_identity as { businessType?: string })
+      ?.businessType || 'restaurant'
+  ) as string
   const {
     data: defaultProducts,
     isLoading: isProductsLoading,
@@ -112,7 +114,7 @@ export default function MenuTemplatePage() {
     },
   })
 
-  const { mutate: skipMenu, isPending: isSkipping } = useSkipMenuSetup({
+  const { mutate: skipMenu, isPending: isSkipping } = useSkipStep({
     onSuccess: () => {
       const nextStep = getNextStep('menu_template')
       router.push(nextStep?.route || '/onboarding/staff-invite')
@@ -193,7 +195,7 @@ export default function MenuTemplatePage() {
   }
 
   const handleSkip = () => {
-    skipMenu()
+    skipMenu({ step: 'menu_template' })
   }
 
   const handleBack = () => {
@@ -237,10 +239,11 @@ export default function MenuTemplatePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'menu_template'}
+      currentStep="menu_template"
       completedSteps={
         progress?.completedSteps || ['business_identity', 'branch_setup']
       }
+      skippedSteps={progress?.skippedSteps || []}
       title="Настройка меню"
       description="Выберите популярные блюда для вашего заведения"
     >

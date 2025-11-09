@@ -8,30 +8,31 @@ import { OnboardingProgress } from './onboarding-progress'
 
 import type { ReactNode } from 'react'
 
-// Only visible onboarding steps (REGISTRATION_COMPLETE is auto-completed, not shown in UI)
+// Only visible onboarding steps (registration_complete is auto-completed, not shown in UI)
+// Step IDs match backend response format
 const ONBOARDING_STEPS = [
   {
-    id: 'BUSINESS_INFO_VERIFIED',
+    id: 'business_identity',
     name: 'О бизнесе',
     description: 'Информация о ресторане',
   },
   {
-    id: 'BRANCH_SETUP',
+    id: 'branch_setup',
     name: 'Филиал',
     description: 'Настройка филиала',
   },
   {
-    id: 'MENU_TEMPLATE',
+    id: 'menu_template',
     name: 'Меню',
     description: 'Выбор шаблона',
   },
   {
-    id: 'STAFF_INVITED',
+    id: 'staff_invited',
     name: 'Персонал',
     description: 'Приглашение команды',
   },
   {
-    id: 'GO_LIVE',
+    id: 'go_live',
     name: 'Готово',
     description: 'Запуск системы',
   },
@@ -41,6 +42,7 @@ interface OnboardingLayoutProps {
   children: ReactNode
   currentStep: string
   completedSteps: string[]
+  skippedSteps?: string[]
   title: string
   description?: string
 }
@@ -49,6 +51,7 @@ export function OnboardingLayout({
   children,
   currentStep,
   completedSteps,
+  skippedSteps = [],
   title,
   description,
 }: OnboardingLayoutProps) {
@@ -70,6 +73,7 @@ export function OnboardingLayout({
             steps={ONBOARDING_STEPS}
             currentStep={currentStep}
             completedSteps={completedSteps}
+            skippedSteps={skippedSteps}
           />
         </div>
       </div>

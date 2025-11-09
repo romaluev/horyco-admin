@@ -1,7 +1,5 @@
 'use client'
 
-import { useTableById } from '@/entities/table'
-
 import {
   Card,
   CardContent,
@@ -9,6 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
+
+import { useTableById } from '@/entities/table'
+
 
 interface IQRCodeDisplayProps {
   tableId: number

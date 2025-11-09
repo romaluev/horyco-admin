@@ -68,7 +68,8 @@ export default function BranchSetupPage() {
   >([])
 
   // Fetch onboarding progress
-  const { isLoading: isProgressLoading } = useGetOnboardingProgress()
+  const { data: progress, isLoading: isProgressLoading } =
+    useGetOnboardingProgress()
 
   // Form initialization
   const form = useForm<BranchSetupFormValues>({
@@ -176,7 +177,8 @@ export default function BranchSetupPage() {
   return (
     <OnboardingLayout
       currentStep="branch_setup"
-      completedSteps={['business_identity']}
+      completedSteps={progress?.completedSteps || ['business_identity']}
+      skippedSteps={progress?.skippedSteps || []}
       title="Настройка филиала"
       description="Укажите информацию о вашем первом филиале"
     >

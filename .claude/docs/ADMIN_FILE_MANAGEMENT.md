@@ -310,30 +310,30 @@ DELETE /admin/files/:id?entityType=PRODUCT&entityId=123
 **Steps:**
 
 1. **User clicks Upload or drags file**
-   - File picker opens
-   - User selects `pizza.jpg`
+  - File picker opens
+  - User selects `pizza.jpg`
 
 2. **Frontend validates**
-   - Check: File type allowed? ✅
-   - Check: File size < 5MB? ✅
-   - Show preview thumbnail
+  - Check: File type allowed? ✅
+  - Check: File size < 5MB? ✅
+  - Show preview thumbnail
 
 3. **Upload to API**
-   - `POST /admin/files/upload`
-   - Show progress bar
-   - Wait for response
+  - `POST /admin/files/upload`
+  - Show progress bar
+  - Wait for response
 
 4. **Success**
-   - Display uploaded image
-   - Show all variants available
-   - Image ready to use
+  - Display uploaded image
+  - Show all variants available
+  - Image ready to use
 
 **What to send:**
 ```javascript
 FormData:
   file: [File object]
-  folder: "products"
-  altText: "Product image"
+folder: "products"
+altText: "Product image"
 ```
 
 **What you get:**

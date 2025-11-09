@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 
+import { IconHierarchy } from '@tabler/icons-react'
+
 import {
   Select,
   SelectContent,
@@ -11,7 +13,6 @@ import {
 } from '@/shared/ui/base/select'
 
 import { useGetAllBranches, type IBranch } from '@/entities/branch'
-import { IconHierarchy } from '@tabler/icons-react'
 
 interface BranchSelectorProps {
   value?: number

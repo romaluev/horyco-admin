@@ -144,8 +144,9 @@ export default function StaffInvitePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'staff_invited'}
+      currentStep="staff_invited"
       completedSteps={progress?.completedSteps || []}
+      skippedSteps={progress?.skippedSteps || []}
       title="Пригласите сотрудников"
       description="Добавьте официантов для управления заказами"
     >

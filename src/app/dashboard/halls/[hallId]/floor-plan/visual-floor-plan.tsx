@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+
 import { IconArmchair } from '@tabler/icons-react'
 
 import { cn } from '@/shared/lib/utils'

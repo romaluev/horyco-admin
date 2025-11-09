@@ -50,7 +50,7 @@ export const useSubmitBusinessInfo = (
   return useMutation({
     mutationFn: (data: BusinessInfoRequest) =>
       onboardingApi.submitBusinessInfo(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Информация о бизнесе сохранена')
     },
@@ -73,7 +73,7 @@ export const useSubmitBranchSetup = (
   return useMutation({
     mutationFn: (data: BranchSetupRequest) =>
       onboardingApi.submitBranchSetup(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Филиал настроен')
     },
@@ -103,28 +103,6 @@ export const useSubmitMenuSetup = (
     },
     onError: (error: unknown) => {
       toast.error(getErrorMessage(error, 'Не удалось создать меню'))
-    },
-    ...options,
-  })
-}
-
-// Skip menu setup
-export const useSkipMenuSetup = (
-  options?: Omit<
-    UseMutationOptions<SkipStepResponse, Error, void>,
-    'mutationFn'
-  >
-) => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: () => onboardingApi.skipMenuSetup(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
-      toast.info('Меню будет настроено позже')
-    },
-    onError: (error: unknown) => {
-      toast.error(getErrorMessage(error, 'Не удалось пропустить шаг'))
     },
     ...options,
   })
@@ -189,7 +167,7 @@ export const useSkipStep = (
 
   return useMutation({
     mutationFn: (data: SkipStepRequest) => onboardingApi.skipStep(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.info('Шаг пропущен')
     },

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { Check, Edit } from 'lucide-react'
+import { Check, Slash } from 'lucide-react'
 
 import { getStepConfig } from '@/shared/config/onboarding'
 import { cn } from '@/shared/lib/utils'
@@ -18,6 +18,7 @@ interface OnboardingProgressProps {
   steps: OnboardingStep[]
   currentStep: string
   completedSteps: string[]
+  skippedSteps?: string[]
   className?: string
 }
 
@@ -25,12 +26,10 @@ export function OnboardingProgress({
   steps,
   currentStep,
   completedSteps,
+  skippedSteps = [],
   className,
 }: OnboardingProgressProps) {
   const router = useRouter()
-
-  const currentStepIndex = steps.findIndex((s) => s.id === currentStep)
-  const progressPercentage = (currentStepIndex / (steps.length - 1)) * 100
 
   const handleStepClick = (step: OnboardingStep) => {
     const isCompleted = completedSteps.includes(step.id)
@@ -38,22 +37,65 @@ export function OnboardingProgress({
 
     // Only allow clicking on completed steps to edit them
     if (isCompleted && !isCurrent) {
-      const stepConfig = getStepConfig(step.id as any)
+      const stepConfig = getStepConfig(step.id)
       if (stepConfig?.route) {
         router.push(stepConfig.route)
       }
     }
   }
 
+  const getStepIcon = (
+    isPassed: boolean,
+    isSkipped: boolean,
+    isCurrent: boolean,
+    stepIdx: number
+  ) => {
+    if (isPassed) return <Check className="h-4 w-4" />
+    if (isSkipped) return <Slash className="h-4 w-4" />
+    if (isCurrent) return <span className="font-bold">{stepIdx + 1}</span>
+    return <span>{stepIdx + 1}</span>
+  }
+
+  const getStepStyles = (
+    isPassed: boolean,
+    isCurrent: boolean,
+    isSkipped: boolean,
+    isUpcoming: boolean
+  ) => {
+    const baseClasses =
+      'mb-2 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all'
+
+    if (isPassed)
+      return cn(
+        baseClasses,
+        'bg-primary/90 text-primary-foreground ring-2 ring-primary/20'
+      )
+    if (isCurrent)
+      return cn(
+        baseClasses,
+        'border-primary bg-[#fff6f6] text-primary ring-primary border-2 ring-2'
+      )
+    if (isSkipped)
+      return cn(baseClasses, 'bg-muted text-muted-foreground')
+    if (isUpcoming)
+      return cn(
+        baseClasses,
+        'border-muted-foreground/30 bg-background text-muted-foreground border-2'
+      )
+    return baseClasses
+  }
+
   return (
     <div className={cn('w-full', className)}>
       <nav aria-label="Progress">
-        <ol role="list" className="relative flex items-start justify-between">
+        <ol className="relative flex items-start justify-between">
           {steps.map((step, stepIdx) => {
             const isCompleted = completedSteps.includes(step.id)
+            const isSkipped = skippedSteps.includes(step.id)
             const isCurrent = step.id === currentStep
-            const isUpcoming = !isCompleted && !isCurrent
-            const isClickable = isCompleted && !isCurrent
+            const isPassed = isCompleted && !isCurrent && !isSkipped
+            const isUpcoming = !isCompleted && !isCurrent && !isSkipped
+            const isClickable = (isCompleted || isSkipped) && !isCurrent
 
             return (
               <li
@@ -74,29 +116,23 @@ export function OnboardingProgress({
                 >
                   <div className="relative">
                     <span
-                      className={cn(
-                        'mb-2 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all',
-                        isCompleted && 'bg-primary text-primary-foreground',
-                        isCurrent &&
-                          'border-primary bg-background text-primary border-2',
-                        isUpcoming &&
-                          'border-muted-foreground/30 bg-background text-muted-foreground border-2'
+                      className={getStepStyles(
+                        isPassed,
+                        isCurrent,
+                        isSkipped,
+                        isUpcoming
                       )}
                     >
-                      {isCompleted ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <span>{stepIdx + 1}</span>
-                      )}
+                      {getStepIcon(isPassed, isSkipped, isCurrent, stepIdx)}
                     </span>
                   </div>
 
-                  {/* Label */}
                   <span
                     className={cn(
                       'text-center text-sm font-medium transition-colors',
-                      isCompleted && 'text-foreground group-hover:text-primary',
-                      isCurrent && 'text-primary font-semibold',
+                      isPassed && 'text-foreground group-hover:text-primary',
+                      isCurrent && 'text-primary font-bold',
+                      isSkipped && 'text-muted-foreground line-through',
                       isUpcoming && 'text-muted-foreground'
                     )}
                   >
@@ -104,13 +140,14 @@ export function OnboardingProgress({
                   </span>
                 </button>
 
-                {/* Connecting line (not for last step) */}
                 {stepIdx < steps.length - 1 && (
                   <div className="absolute top-4 left-1/2 flex h-0.5 w-full items-center">
                     <div
                       className={cn(
                         'h-full w-full transition-colors',
-                        isCompleted ? 'bg-primary' : 'bg-muted'
+                        isCompleted || isSkipped
+                          ? 'bg-primary/60'
+                          : 'bg-muted'
                       )}
                     />
                   </div>

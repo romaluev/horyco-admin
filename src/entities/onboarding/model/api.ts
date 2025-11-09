@@ -23,43 +23,43 @@ import type {
 export const onboardingApi = {
   // Get current onboarding progress
   async getProgress(): Promise<OnboardingProgress> {
-    const response = await api.get<OnboardingProgress>(
+    const response = await api.get<{ data: OnboardingProgress }>(
       '/admin/onboarding/progress'
     )
-    return response.data
+    return response.data.data
   },
 
   // Submit business identity step (NEW API)
   async submitBusinessInfo(
     data: BusinessInfoRequest
   ): Promise<BusinessInfoResponse> {
-    const response = await api.post<BusinessInfoResponse>(
+    const response = await api.post<{ data: BusinessInfoResponse }>(
       '/admin/onboarding/steps/business-identity',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   // Submit branch setup step
   async submitBranchSetup(
     data: BranchSetupRequest
   ): Promise<BranchSetupResponse> {
-    const response = await api.post<BranchSetupResponse>(
+    const response = await api.post<{ data: BranchSetupResponse }>(
       '/admin/onboarding/steps/branch-setup',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   // Submit branch location step (NEW)
   async submitBranchLocation(
     data: BranchLocationRequest
   ): Promise<BranchLocationResponse> {
-    const response = await api.post<BranchLocationResponse>(
+    const response = await api.post<{ data: BranchLocationResponse }>(
       '/admin/onboarding/steps/branch-location',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   // Get default products for business type
@@ -77,47 +77,39 @@ export const onboardingApi = {
 
   // Submit menu setup
   async submitMenuSetup(data: MenuSetupRequest): Promise<MenuSetupResponse> {
-    const response = await api.post<MenuSetupResponse>(
+    const response = await api.post<{ data: MenuSetupResponse }>(
       '/admin/onboarding/steps/menu-setup',
       data
     )
-    return response.data
-  },
-
-  // Skip menu setup
-  async skipMenuSetup(): Promise<SkipStepResponse> {
-    const response = await api.post<SkipStepResponse>(
-      '/admin/onboarding/steps/menu-skip'
-    )
-    return response.data
+    return response.data.data
   },
 
   // Submit staff invite step
   async submitStaffInvite(
     data: StaffInviteRequest
   ): Promise<StaffInviteResponse> {
-    const response = await api.post<StaffInviteResponse>(
+    const response = await api.post<{ data: StaffInviteResponse }>(
       '/admin/onboarding/steps/staff-invite',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   // Complete onboarding
   async complete(): Promise<CompleteOnboardingResponse> {
-    const response = await api.post<CompleteOnboardingResponse>(
+    const response = await api.post<{ data: CompleteOnboardingResponse }>(
       '/admin/onboarding/complete'
     )
-    return response.data
+    return response.data.data
   },
 
   // Skip a step
   async skipStep(data: SkipStepRequest): Promise<SkipStepResponse> {
-    const response = await api.post<SkipStepResponse>(
+    const response = await api.patch<{ data: SkipStepResponse }>(
       '/admin/onboarding/skip-step',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   // Get regions

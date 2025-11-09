@@ -13,7 +13,12 @@ export const businessInfoSchema = z.object({
     .string()
     .min(3, { message: 'Введите название заведения (минимум 3 символа)' }),
   businessType: z.string().min(1, { message: 'Выберите тип заведения' }),
-  slug: z.string().optional(),
+  slug: z
+    .string()
+    .min(3, { message: 'Введите slug (минимум 3 символа)' })
+    .regex(/^[a-z0-9-]+$/, {
+      message: 'Slug может содержать только строчные буквы, цифры и дефисы',
+    }),
   logoUrl: z
     .string()
     .url({ message: 'Введите корректный URL' })

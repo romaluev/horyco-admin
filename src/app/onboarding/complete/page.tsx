@@ -56,8 +56,9 @@ export default function CompletePage() {
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'go_live'}
+      currentStep="go_live"
       completedSteps={progress?.completedSteps || []}
+      skippedSteps={progress?.skippedSteps || []}
       title={
         isError
           ? 'Ошибка завершения'

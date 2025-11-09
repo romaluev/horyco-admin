@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 import BaseLoading from '@/shared/ui/base-loading'
+import { FileUploader } from '@/shared/ui/file-uploader'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
@@ -49,8 +50,33 @@ import {
   type BusinessInfoFormValues,
 } from '@/features/onboarding/model'
 
+// Upload file helper
+const uploadFile = async (file: File): Promise<string> => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('folder', 'logos')
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload`,
+    {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error('Ошибка загрузки файла')
+  }
+
+  const data = await response.json()
+  return data.url
+}
+
 export default function BusinessInfoPage() {
   const router = useRouter()
+  const [logoFiles, setLogoFiles] = useState<File[]>([])
+  const [isUploading, setIsUploading] = useState(false)
 
   // Fetch onboarding progress
   const { data: progress, isLoading: isProgressLoading } =
@@ -100,18 +126,32 @@ export default function BusinessInfoPage() {
   }, [progress])
 
   const onSubmit = async (data: BusinessInfoFormValues) => {
-    submitBusinessInfo({
-      businessName: data.businessName,
-      businessType: data.businessType,
-      slug: data.slug,
-      logoUrl: data.logoUrl,
-    })
+    setIsUploading(true)
+
+    try {
+      // Upload logo file if selected
+      if (logoFiles.length > 0 && logoFiles[0]) {
+        const url = await uploadFile(logoFiles[0])
+        data.logoUrl = url
+        setLogoFiles([])
+      }
+
+      submitBusinessInfo({
+        businessName: data.businessName,
+        businessType: data.businessType,
+        slug: data.slug,
+        logoUrl: data.logoUrl,
+      })
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
     <OnboardingLayout
-      currentStep={progress?.currentStep || 'business_identity'}
+      currentStep="business_identity"
       completedSteps={progress?.completedSteps || []}
+      skippedSteps={progress?.skippedSteps || []}
       title="Расскажите о вашем бизнесе"
       description="Эта информация поможет нам настроить систему под ваши потребности"
     >
@@ -189,17 +229,16 @@ export default function BusinessInfoPage() {
                   name="slug"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>URL-адрес (slug)</FormLabel>
+                      <FormLabel>URL-адрес (slug) *</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="golden-dragon"
                           {...field}
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || isUploading}
                         />
                       </FormControl>
                       <FormDescription>
-                        Необязательно. Для создания уникальной ссылки (например:
-                        oshlab.uz/golden-dragon)
+                        Для создания уникальной ссылки (например: oshlab.uz/golden-dragon). Только строчные буквы, цифры и дефисы.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -211,18 +250,26 @@ export default function BusinessInfoPage() {
                   name="logoUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ссылка на логотип</FormLabel>
+                      <FormLabel>Логотип заведения</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="https://cdn.oshlab.uz/logos/my-logo.png"
-                          type="url"
-                          {...field}
-                          disabled={isSubmitting}
+                        <FileUploader
+                          value={logoFiles}
+                          onValueChange={setLogoFiles}
+                          maxFiles={1}
+                          maxSize={5 * 1024 * 1024}
+                          accept={{ 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] }}
+                          disabled={isSubmitting || isUploading}
+                          variant="image"
                         />
                       </FormControl>
                       <FormDescription>
-                        Необязательно. URL изображения вашего логотипа
+                        Необязательно. Загрузите логотип вашего заведения (до 5 МБ)
                       </FormDescription>
+                      {field.value && (
+                        <p className="text-muted-foreground text-sm">
+                          Текущий логотип: {field.value}
+                        </p>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -237,15 +284,15 @@ export default function BusinessInfoPage() {
                         router.back()
                       }
                     }}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isUploading}
                   >
                     Назад
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
+                  <Button type="submit" disabled={isSubmitting || isUploading}>
+                    {isSubmitting || isUploading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Сохранение...
+                        {isUploading ? 'Загрузка...' : 'Сохранение...'}
                       </>
                     ) : (
                       'Далее'

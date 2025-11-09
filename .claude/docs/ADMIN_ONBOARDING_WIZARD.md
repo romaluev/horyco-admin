@@ -124,32 +124,6 @@ All step endpoints (`/steps/business-identity`, `/steps/branch-setup`, `/steps/m
 }
 ```
 
-### Frontend Benefits
-
-**Before (Inconsistent)**:
-```typescript
-// Had to handle 3 different response types
-if (response.message) {
-  // Business identity or branch setup
-} else if (response.success) {
-  // Menu setup
-} else {
-  // Other steps
-}
-```
-
-**After (Consistent)**:
-```typescript
-// Single handler for ALL steps!
-function handleStepResponse(response: OnboardingProgressResponseDto) {
-  updateProgress(response);
-  if (response.branchId) {
-    saveBranchId(response.branchId);
-  }
-  navigateToStep(response.nextStep);
-}
-```
-
 ### Key Fields
 
 - **`currentStep`**: Current onboarding step (use for navigation)
@@ -216,7 +190,7 @@ Response:
       "businessName": "Golden Dragon Restaurant",
       "businessType": "restaurant",
       "slug": "golden-dragon",
-      "logoUrl": "https://cdn.oshlab.uz/tenants/logos/golden-dragon.png"
+      "logoUrl": "https://cdn.horyco.com/tenants/logos/golden-dragon.png"
     }
   },
   "nextStep": "menu_template",
@@ -387,149 +361,6 @@ The validation checks these **4 required steps**:
 ```
 
 **UI Display**: "🎉 You're ready to go live! (Menu will be added later) - Complete Onboarding"
-
-### Frontend Implementation
-
-#### Basic Usage
-
-```typescript
-async function checkOnboardingValidation() {
-  const response = await api.get('/admin/onboarding/validation');
-
-  if (response.canComplete) {
-    // Show "Complete Onboarding" button
-    setShowCompleteButton(true);
-    setStatusMessage("You're ready to go live!");
-  } else {
-    // Hide "Complete Onboarding" button
-    setShowCompleteButton(false);
-
-    // Show specific missing steps
-    const missingList = response.missingSteps
-      .map(step => formatStepName(step))
-      .join(', ');
-    setStatusMessage(`Missing: ${missingList}`);
-  }
-
-  // Update progress bar
-  setCompletionPercentage(response.completionPercentage);
-}
-```
-
-#### Complete Validation Workflow
-
-```typescript
-// 1. On wizard load
-useEffect(() => {
-  checkOnboardingValidation();
-}, []);
-
-// 2. After completing each step
-async function handleStepComplete(stepEndpoint: string, data: any) {
-  const response = await api.post(stepEndpoint, data);
-
-  // Update progress
-  setProgress(response);
-
-  // Check validation after step completion
-  const validation = await api.get('/admin/onboarding/validation');
-  updateValidationUI(validation);
-
-  // Navigate to next step
-  navigateToStep(response.nextStep);
-}
-
-// 3. Before showing "Complete" button
-function renderCompleteButton() {
-  if (!validation.canComplete) {
-    return (
-      <Button disabled>
-        Complete Onboarding
-        <Tooltip>
-          Missing steps: {validation.missingSteps.join(', ')}
-        </Tooltip>
-      </Button>
-    );
-  }
-
-  return (
-    <Button onClick={completeOnboarding}>
-      🎉 Complete Onboarding
-    </Button>
-  );
-}
-
-// 4. Display validation status
-function renderValidationStatus() {
-  return (
-    <div className="validation-status">
-      <ProgressBar percentage={validation.completionPercentage} />
-
-      <div className="status-details">
-        {validation.canComplete ? (
-          <Alert type="success">
-            ✅ All required steps completed! Ready to go live.
-          </Alert>
-        ) : (
-          <Alert type="info">
-            📋 Complete these steps to go live:
-            <ul>
-              {validation.missingSteps.map(step => (
-                <li key={step}>{formatStepName(step)}</li>
-              ))}
-            </ul>
-          </Alert>
-        )}
-
-        {validation.skippedSteps.length > 0 && (
-          <div className="skipped-info">
-            ℹ️ Skipped: {validation.skippedSteps.map(formatStepName).join(', ')}
-            <br />
-            You can configure these later in Settings.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-```
-
-#### Helper Function for Step Names
-
-```typescript
-function formatStepName(step: string): string {
-  const names: Record<string, string> = {
-    'registration_complete': 'Registration',
-    'business_identity': 'Business Identity',
-    'branch_setup': 'Branch Setup',
-    'menu_template': 'Menu Setup',
-    'payment_setup': 'Payment Methods',
-    'staff_invited': 'Staff Invitation',
-    'go_live': 'Go Live'
-  };
-  return names[step] || step;
-}
-```
-
-### Validation vs Complete Endpoint
-
-**Important**: The validation logic matches the `/complete` endpoint requirements exactly:
-
-```typescript
-// Validation says canComplete = true
-const validation = await api.get('/admin/onboarding/validation');
-if (validation.canComplete) {
-  // This will succeed ✅
-  await api.post('/admin/onboarding/complete');
-}
-
-// Validation says canComplete = false
-if (!validation.canComplete) {
-  // This will fail with 400 ❌
-  await api.post('/admin/onboarding/complete');
-  // Error: "Cannot complete onboarding. Missing required steps: menu_template"
-}
-```
 
 ### Best Practices
 
@@ -766,154 +597,6 @@ PATCH /admin/onboarding/steps/invalid_step/reopen
 }
 ```
 
-### Frontend Implementation
-
-#### Basic Usage
-
-```typescript
-async function reopenStep(step: OnboardingStep) {
-  try {
-    const response = await api.patch(`/admin/onboarding/steps/${step}/reopen`);
-
-    // Update progress
-    setProgress(response);
-
-    // Navigate to reopened step
-    navigateToStep(response.currentStep);
-
-    // Show success message
-    toast.success(`Reopened ${formatStepName(step)} for editing. Subsequent steps will need to be re-completed.`);
-
-    // Update completion percentage
-    setCompletionPercentage(response.completionPercentage);
-
-  } catch (error) {
-    if (error.response?.status === 400) {
-      toast.error(error.response.data.message);
-    } else {
-      toast.error('Failed to reopen step. Please try again.');
-    }
-  }
-}
-```
-
-#### Complete Reopen Workflow
-
-```typescript
-// 1. Show "Edit" button next to completed steps
-function renderCompletedStep(step: OnboardingStep) {
-  const canReopen = step !== OnboardingStep.REGISTRATION_COMPLETE;
-
-  return (
-    <div className="completed-step">
-      <CheckIcon /> {formatStepName(step)}
-
-      {canReopen && (
-        <Button onClick={() => handleReopenStep(step)} variant="ghost">
-          Edit
-        </Button>
-      )}
-    </div>
-  );
-}
-
-// 2. Confirm before reopening (warn about invalidation)
-async function handleReopenStep(step: OnboardingStep) {
-  // Calculate which steps will be invalidated
-  const subsequentSteps = getSubsequentSteps(step);
-
-  if (subsequentSteps.length > 0) {
-    const confirmed = await confirm({
-      title: 'Reopen step for editing?',
-      message: `Reopening "${formatStepName(step)}" will mark the following steps as incomplete:\n\n` +
-               subsequentSteps.map(s => `• ${formatStepName(s)}`).join('\n') +
-               `\n\nYou'll need to re-complete these steps. Your previous answers will be preserved for re-editing.`,
-      confirmText: 'Yes, Edit Step',
-      cancelText: 'Cancel'
-    });
-
-    if (!confirmed) return;
-  }
-
-  await reopenStep(step);
-}
-
-// 3. Helper to calculate subsequent steps
-function getSubsequentSteps(step: OnboardingStep): OnboardingStep[] {
-  const allSteps = [
-    OnboardingStep.REGISTRATION_COMPLETE,
-    OnboardingStep.BUSINESS_IDENTITY,
-    OnboardingStep.BRANCH_SETUP,
-    OnboardingStep.MENU_TEMPLATE,
-    OnboardingStep.PAYMENT_SETUP,
-    OnboardingStep.STAFF_INVITED,
-    OnboardingStep.GO_LIVE,
-  ];
-
-  const index = allSteps.indexOf(step);
-  return allSteps.slice(index + 1);
-}
-
-// 4. Show warning in UI
-function renderReopenWarning() {
-  return (
-    <Alert type="warning">
-      ⚠️ Editing this step will invalidate all steps completed after it.
-      Your previous answers will be preserved.
-    </Alert>
-  );
-}
-```
-
-#### Progress Sidebar with Edit Buttons
-
-```tsx
-function OnboardingProgressSidebar({ progress }: { progress: OnboardingProgressResponseDto }) {
-  const steps = [
-    { key: OnboardingStep.REGISTRATION_COMPLETE, label: 'Registration' },
-    { key: OnboardingStep.BUSINESS_IDENTITY, label: 'Business Identity' },
-    { key: OnboardingStep.BRANCH_SETUP, label: 'Branch Setup' },
-    { key: OnboardingStep.MENU_TEMPLATE, label: 'Menu Setup' },
-    { key: OnboardingStep.PAYMENT_SETUP, label: 'Payment Methods' },
-    { key: OnboardingStep.STAFF_INVITED, label: 'Staff Invitation' },
-    { key: OnboardingStep.GO_LIVE, label: 'Go Live' },
-  ];
-
-  return (
-    <div className="progress-sidebar">
-      {steps.map((step, index) => {
-        const isCompleted = progress.completedSteps.includes(step.key);
-        const isCurrent = progress.currentStep === step.key;
-        const canReopen = isCompleted && step.key !== OnboardingStep.REGISTRATION_COMPLETE;
-
-        return (
-          <div key={step.key} className={`step-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
-            <div className="step-indicator">
-              {isCompleted ? <CheckIcon /> : <span>{index + 1}</span>}
-            </div>
-
-            <div className="step-content">
-              <div className="step-label">{step.label}</div>
-
-              {isCompleted && canReopen && (
-                <button
-                  onClick={() => handleReopenStep(step.key)}
-                  className="edit-button"
-                >
-                  Edit
-                </button>
-              )}
-
-              {isCurrent && <span className="current-badge">Current</span>}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-```
-
 ### UI/UX Recommendations
 
 #### 1. Clear Visual Indication
@@ -1087,7 +770,7 @@ Set up the business identity including:
 │  ┌───────────────────────────────────────┐    │
 │  │ golden-dragon                          │    │
 │  └───────────────────────────────────────┘    │
-│  ℹ️  Used in URLs: golden-dragon.oshlab.uz     │
+│  ℹ️  Used in URLs: golden-dragon.horyco.com     │
 │                                                 │
 │  Business Logo (optional)                       │
 │  [📁 Upload Logo]                              │
@@ -1108,7 +791,7 @@ Headers: Authorization: Bearer {token}
   "businessName": "Golden Dragon Restaurant",
   "businessType": "restaurant",
   "slug": "golden-dragon",
-  "logoUrl": "https://cdn.oshlab.uz/tenants/logos/golden-dragon.png"
+  "logoUrl": "https://cdn.horyco.com/tenants/logos/golden-dragon.png"
 }
 
 Response: OnboardingProgressResponseDto
@@ -1776,29 +1459,29 @@ Response: OnboardingProgressResponseDto
 **Implementation Requirements**:
 
 1. **Progress Management**:
-   - Fetch progress on mount using `GET /admin/onboarding/progress`
-   - Redirect to dashboard if `isCompleted` is true
-   - Display progress bar based on `completionPercentage` and `completedSteps`
+  - Fetch progress on mount using `GET /admin/onboarding/progress`
+  - Redirect to dashboard if `isCompleted` is true
+  - Display progress bar based on `completionPercentage` and `completedSteps`
 
 2. **Step Routing**:
-   - Use `progress.currentStep` to determine which step component to render
-   - Map step values to components:
-     - `registration_complete` → Skip (auto-completed)
-     - `business_identity` → Business Identity Form
-     - `branch_setup` → Branch Setup Form
-     - `menu_template` → Menu Template Selector
-     - `payment_setup` → Payment Methods Form
-     - `staff_invited` → Staff Invite Form
-     - `go_live` → Final Summary Screen
+  - Use `progress.currentStep` to determine which step component to render
+  - Map step values to components:
+    - `registration_complete` → Skip (auto-completed)
+    - `business_identity` → Business Identity Form
+    - `branch_setup` → Branch Setup Form
+    - `menu_template` → Menu Template Selector
+    - `payment_setup` → Payment Methods Form
+    - `staff_invited` → Staff Invite Form
+    - `go_live` → Final Summary Screen
 
 3. **Step Completion (NEW - Standardized)**:
-   - POST to appropriate endpoint based on current step
-   - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
-   - Extract `branchId` from response (available after branch setup)
-   - Extract `tenantId` from response (always available)
-   - Navigate using `response.nextStep` field
-   - Update progress bar using `response.completionPercentage`
-   - **No need to call `/progress` separately** - data is in step response!
+  - POST to appropriate endpoint based on current step
+  - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
+  - Extract `branchId` from response (available after branch setup)
+  - Extract `tenantId` from response (always available)
+  - Navigate using `response.nextStep` field
+  - Update progress bar using `response.completionPercentage`
+  - **No need to call `/progress` separately** - data is in step response!
 
 4. **Simplified Response Handler (NEW)**:
    ```typescript
@@ -1815,12 +1498,12 @@ Response: OnboardingProgressResponseDto
    ```
 
 5. **Skip Functionality**:
-   - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
-   - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
-   - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
-   - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
-   - Skipped steps are marked as completed with skip metadata in `stepData`
-   - Update progress and move to next step on success
+  - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
+  - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
+  - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
+  - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
+  - Skipped steps are marked as completed with skip metadata in `stepData`
+  - Update progress and move to next step on success
 
 ---
 
@@ -1877,17 +1560,17 @@ GET /admin/onboarding/default-products?businessType=restaurant
 **Yes, in two ways**:
 
 1. **During onboarding** - Use the reopen step feature:
-   - Click "Edit" button next to any completed step
-   - Make your changes
-   - Re-complete subsequent steps
-   - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
+  - Click "Edit" button next to any completed step
+  - Make your changes
+  - Re-complete subsequent steps
+  - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
 
 2. **After onboarding** - Modify settings in the main admin panel:
-   - Business Settings
-   - Branch Management
-   - Menu Management
-   - Staff Management
-   - Payment Settings
+  - Business Settings
+  - Branch Management
+  - Menu Management
+  - Staff Management
+  - Payment Settings
 
 Onboarding wizard is just for initial setup - all configurations can be changed anytime.
 
