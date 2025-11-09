@@ -7,6 +7,8 @@ import { Check, Slash } from 'lucide-react'
 import { getStepConfig } from '@/shared/config/onboarding'
 import { cn } from '@/shared/lib/utils'
 
+import type { OnboardingStep as OnboardingStepType } from '@/entities/onboarding/model/types'
+
 interface OnboardingStep {
   id: string
   name: string
@@ -37,7 +39,7 @@ export function OnboardingProgress({
 
     // Only allow clicking on completed steps to edit them
     if (isCompleted && !isCurrent) {
-      const stepConfig = getStepConfig(step.id)
+      const stepConfig = getStepConfig(step.id as OnboardingStepType)
       if (stepConfig?.route) {
         router.push(stepConfig.route)
       }
