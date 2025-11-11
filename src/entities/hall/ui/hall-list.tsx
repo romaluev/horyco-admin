@@ -2,6 +2,7 @@ import { HallCard } from './hall-card'
 import { useHallList } from '../model/queries'
 
 import type { IHall } from '../model/types'
+import { BaseLoading } from '@/shared/ui'
 
 interface IHallListProps {
   branchId: number
@@ -12,11 +13,7 @@ export const HallList = ({ branchId, onEdit }: IHallListProps) => {
   const { data: halls, isLoading } = useHallList(branchId)
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <p className="text-muted-foreground">Loading halls...</p>
-      </div>
-    )
+    return <BaseLoading />
   }
 
   if (!halls || halls.length === 0) {

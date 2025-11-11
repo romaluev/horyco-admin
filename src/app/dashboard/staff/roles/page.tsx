@@ -40,7 +40,7 @@ export default function RolesPage(): JSX.Element {
   const customRoles = roles.filter((role) => !SYSTEM_ROLES.includes(role.name))
 
   return (
-    <div className="space-y-6 p-4 md:px-6">
+    <div className="space-y-6 p-4 md:px-6 h-[calc(100vh-100px)] overflow-y-auto">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Роли и права</h1>
@@ -110,6 +110,151 @@ export default function RolesPage(): JSX.Element {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {customRoles.map((role) => (
+              <Card key={role.id}>
+                <CardHeader>
+                  <CardTitle>{role.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {role.description && (
+                      <p className="text-muted-foreground text-sm">
+                        {role.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Разрешений</span>
+                      <Badge variant="secondary">
+                        {role.permissions?.length || 0}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex gap-2 border-t">
+                  <Button variant="ghost" size="sm" disabled>
+                    <Pencil className="h-4 w-4" />
+                    Редактировать
+                  </Button>
+                  <DeleteRoleDialog role={role} />
+                </CardFooter>
+              </Card>
+            ))}
+            {customRoles.map((role) => (
+              <Card key={role.id}>
+                <CardHeader>
+                  <CardTitle>{role.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {role.description && (
+                      <p className="text-muted-foreground text-sm">
+                        {role.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Разрешений</span>
+                      <Badge variant="secondary">
+                        {role.permissions?.length || 0}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex gap-2 border-t">
+                  <Button variant="ghost" size="sm" disabled>
+                    <Pencil className="h-4 w-4" />
+                    Редактировать
+                  </Button>
+                  <DeleteRoleDialog role={role} />
+                </CardFooter>
+              </Card>
+            ))}
+            {customRoles.map((role) => (
+              <Card key={role.id}>
+                <CardHeader>
+                  <CardTitle>{role.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {role.description && (
+                      <p className="text-muted-foreground text-sm">
+                        {role.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Разрешений</span>
+                      <Badge variant="secondary">
+                        {role.permissions?.length || 0}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex gap-2 border-t">
+                  <Button variant="ghost" size="sm" disabled>
+                    <Pencil className="h-4 w-4" />
+                    Редактировать
+                  </Button>
+                  <DeleteRoleDialog role={role} />
+                </CardFooter>
+              </Card>
+            ))}
+            {customRoles.map((role) => (
+              <Card key={role.id}>
+                <CardHeader>
+                  <CardTitle>{role.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {role.description && (
+                      <p className="text-muted-foreground text-sm">
+                        {role.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Разрешений</span>
+                      <Badge variant="secondary">
+                        {role.permissions?.length || 0}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex gap-2 border-t">
+                  <Button variant="ghost" size="sm" disabled>
+                    <Pencil className="h-4 w-4" />
+                    Редактировать
+                  </Button>
+                  <DeleteRoleDialog role={role} />
+                </CardFooter>
+              </Card>
+            ))}
+            {customRoles.map((role) => (
+              <Card key={role.id}>
+                <CardHeader>
+                  <CardTitle>{role.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {role.description && (
+                      <p className="text-muted-foreground text-sm">
+                        {role.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Разрешений</span>
+                      <Badge variant="secondary">
+                        {role.permissions?.length || 0}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex gap-2 border-t">
+                  <Button variant="ghost" size="sm" disabled>
+                    <Pencil className="h-4 w-4" />
+                    Редактировать
+                  </Button>
+                  <DeleteRoleDialog role={role} />
+                </CardFooter>
+              </Card>
+            ))}
             {customRoles.map((role) => (
               <Card key={role.id}>
                 <CardHeader>

@@ -8,28 +8,22 @@
 import { useMemo, useState } from 'react'
 
 import {
+  type ColumnDef,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-  type ColumnDef,
 } from '@tanstack/react-table'
-import { MoreHorizontal, Pencil, Trash } from 'lucide-react'
+import { Pencil, Trash } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/shared/ui/base/dropdown-menu'
 import { Switch } from '@/shared/ui/base/switch'
 import { DataTable } from '@/shared/ui/base/table/data-table'
 
 import {
-  useUpdateProductPrice,
-  useUpdateProductAvailability,
-  useDeleteProduct,
   type IProduct,
+  useDeleteProduct,
+  useUpdateProductAvailability,
+  useUpdateProductPrice,
 } from '@/entities/product'
 
 interface ProductsDataTableProps {
@@ -125,7 +119,6 @@ export const ProductsDataTable = ({
                     if (e.key === 'Escape') setEditingPrice(null)
                   }}
                   className="w-20 rounded border px-2 py-1 text-sm"
-                  autoFocus
                 />
                 <span>₽</span>
               </div>
@@ -171,26 +164,20 @@ export const ProductsDataTable = ({
           const product = row.original
 
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onEdit?.(product)}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Редактировать
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => deleteProduct(product.id)}
-                  className="text-destructive"
-                >
-                  <Trash className="mr-2 h-4 w-4" />
-                  Удалить
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                onClick={() => deleteProduct(product.id)}
+                className="text-destructive"
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => onEdit?.(product)}>
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
           )
         },
       },
