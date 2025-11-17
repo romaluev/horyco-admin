@@ -5,7 +5,7 @@ import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/shared/config/data'
 export interface ProductFormValues {
   name: string
   categoryId: number
-  productTypeId: number
+  productTypeId?: number
   price: number
   description: string
   preparationTime?: number
@@ -45,7 +45,7 @@ export const productSchema = z.object({
     message: 'Название должно содержать минимум 2 символа',
   }),
   categoryId: z.number().min(1, { message: 'Укажите категорию' }),
-  productTypeId: z.number().min(1, { message: 'Укажите тип продукта' }),
+  productTypeId: z.number().optional().default(1),
   price: z
     .number()
     .min(0, { message: 'Цена должна быть положительным числом' }),

@@ -98,28 +98,32 @@ export const modifierGroupApi = {
   },
 
   /**
-   * Attach modifier group to product
-   * POST /admin/menu/products/:productId/modifier-groups/:groupId
+   * Attach modifier group to product (RECOMMENDED)
+   * POST /admin/menu/products/:productId/attach-modifier-group
+   * Body: { "groupId": number }
    */
   async attachModifierGroupToProduct(
     productId: number,
     groupId: number
   ): Promise<void> {
     await api.post(
-      `/admin/menu/products/${productId}/modifier-groups/${groupId}`
+      `/admin/menu/products/${productId}/attach-modifier-group`,
+      { groupId }
     )
   },
 
   /**
-   * Detach modifier group from product
-   * DELETE /admin/menu/products/:productId/modifier-groups/:groupId
+   * Detach modifier group from product (RECOMMENDED)
+   * DELETE /admin/menu/products/:productId/detach-modifier-group
+   * Body: { "groupId": number }
    */
   async detachModifierGroupFromProduct(
     productId: number,
     groupId: number
   ): Promise<void> {
     await api.delete(
-      `/admin/menu/products/${productId}/modifier-groups/${groupId}`
+      `/admin/menu/products/${productId}/detach-modifier-group`,
+      { data: { groupId } }
     )
   },
 
@@ -170,5 +174,20 @@ export const modifierGroupApi = {
    */
   async deleteModifier(id: number): Promise<void> {
     await api.delete(`/admin/menu/modifiers/${id}`)
+  },
+
+  /**
+   * Reorder modifiers within group
+   * PATCH /admin/menu/modifier-groups/:groupId/modifiers/reorder
+   * Body: { "modifierIds": number[] }
+   */
+  async reorderModifiers(
+    groupId: number,
+    modifierIds: number[]
+  ): Promise<void> {
+    await api.patch(
+      `/admin/menu/modifier-groups/${groupId}/modifiers/reorder`,
+      { modifierIds }
+    )
   },
 }

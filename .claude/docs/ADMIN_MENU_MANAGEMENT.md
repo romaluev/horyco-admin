@@ -1,223 +1,223 @@
-# Admin Panel — Управление Меню (Menu Management)
+# Admin Panel — Menu Management
 
-Этот документ описывает фронтенд-задачи для раздела **Управление Меню** в Admin Panel. Все описанные эндпоинты уже реализованы на бэкенде (Stage 3.2) и готовы к интеграции. Материал объясняет бизнес-логику, навигацию между страницами, и контекст использования каждого API endpoint.
+This document describes frontend tasks for the **Menu Management** section in Admin Panel. All described endpoints are already implemented on the backend (Stage 3.2) and ready for integration. The material explains business logic, page navigation, and the context for using each API endpoint.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-1. [Базовые концепции и термины](#базовые-концепции-и-термины)
-2. [Навигация и структура меню](#навигация-и-структура-меню)
-3. [Страница: Категории](#страница-категории)
-4. [Страница: Продукты](#страница-продукты)
-5. [Страница: Модификаторы](#страница-модификаторы)
-6. [Страница: Дополнения (Additions)](#страница-дополнения-additions)
-7. [Страница: Шаблоны меню](#страница-шаблоны-меню)
-8. [Страница: Настройки по филиалам (Branch Overrides)](#страница-настройки-по-филиалам-branch-overrides)
-9. [Типовые сценарии использования](#типовые-сценарии-использования)
+1. [Basic Concepts and Terms](#basic-concepts-and-terms)
+2. [Navigation and Menu Structure](#navigation-and-menu-structure)
+3. [Page: Categories](#page-categories)
+4. [Page: Products](#page-products)
+5. [Page: Modifiers](#page-modifiers)
+6. [Page: Additions](#page-additions)
+7. [Page: Menu Templates](#page-menu-templates)
+8. [Page: Branch Overrides](#page-branch-overrides)
+9. [Common Use Cases](#common-use-cases)
 
 ---
 
-## Базовые концепции и термины
+## Basic Concepts and Terms
 
-### 🔑 Ключевые понятия системы меню
+### 🔑 Key Menu System Concepts
 
-#### **Category (Категория)**
-Группировка товаров для удобной навигации. Категории могут быть **иерархическими** (родительская → подкатегории).
+#### **Category**
+Grouping of products for convenient navigation. Categories can be **hierarchical** (parent → subcategories).
 
-**Примеры:**
-- `Напитки` → `Горячие напитки`, `Холодные напитки`
-- `Основные блюда` → `Паста`, `Пицца`, `Салаты`
+**Examples:**
+- `Beverages` → `Hot Drinks`, `Cold Drinks`
+- `Main Dishes` → `Pasta`, `Pizza`, `Salads`
 
-**Зачем нужны:**
-- Организация меню в POS и WebApp
-- Группировка для аналитики продаж
-- Визуальная категоризация для клиентов
+**Why needed:**
+- Menu organization in POS and WebApp
+- Grouping for sales analytics
+- Visual categorization for customers
 
-#### **Product (Продукт)**
-Основная единица меню — блюдо, напиток или товар, который продаётся клиентам.
+#### **Product**
+The main menu unit — a dish, beverage, or item sold to customers.
 
-**Обязательные поля:**
-- `name` — название продукта
-- `price` — базовая цена
-- `categoryId` — категория, к которой относится
-- `productTypeId` — тип продукта (еда, напиток, алкоголь и т.д.)
+**Required fields:**
+- `name` — product name
+- `price` — base price
+- `categoryId` — category it belongs to
+- `productTypeId` — product type (food, beverage, alcohol, etc.)
 
-**Опциональные:**
-- `description` — описание блюда
-- `image` — фото продукта
-- `isAvailable` — доступен ли для заказа
-- `preparationTime` — время приготовления (мин)
-- `calories` — калорийность
-- `allergens` — список аллергенов
+**Optional:**
+- `description` — dish description
+- `image` — product photo
+- `isAvailable` — available for ordering
+- `preparationTime` — preparation time (minutes)
+- `calories` — calorie count
+- `allergens` — list of allergens
 
-#### **Modifier (Модификатор)**
-Опция изменения продукта с **дополнительной ценой**. Модификаторы группируются в **Modifier Groups**.
+#### **Modifier**
+Option to modify a product with **additional price**. Modifiers are grouped into **Modifier Groups**.
 
-**Пример для "Бургер":**
+**Example for "Burger":**
 ```
-Modifier Group: "Степень прожарки"
-├── Well Done (+0 ₽)
-├── Medium (+0 ₽)
-└── Rare (+0 ₽)
+Modifier Group: "Doneness Level"
+├── Well Done (+0)
+├── Medium (+0)
+└── Rare (+0)
 
-Modifier Group: "Дополнительные ингредиенты"
-├── Extra Cheese (+150 ₽)
-├── Bacon (+200 ₽)
-└── Avocado (+180 ₽)
-```
-
-**Зачем нужны:**
-- Клиент может кастомизировать блюдо (размер, уровень остроты, топпинги)
-- Автоматический расчёт финальной цены в заказе
-- Кухня получает точные инструкции по приготовлению
-
-**Важно:**
-- Модификатор **обязательно принадлежит Modifier Group**
-- Группа модификаторов привязывается к продукту
-- Можно задать `minSelection` и `maxSelection` (например, "выберите 1-3 топпинга")
-
-#### **Addition (Дополнение)**
-Группа **опциональных позиций**, которые можно добавить к основному продукту. В отличие от модификаторов, дополнения состоят из **Addition Items** — отдельных продуктов со своей ценой.
-
-**Пример для "Пицца Маргарита":**
-```
-Addition: "Соусы"
-├── Чесночный соус (50 ₽)
-├── Барбекю соус (50 ₽)
-└── Сырный соус (70 ₽)
-
-Addition: "Напитки к пицце"
-├── Coca-Cola 0.5л (150 ₽)
-├── Fanta 0.5л (150 ₽)
-└── Минеральная вода (100 ₽)
+Modifier Group: "Extra Ingredients"
+├── Extra Cheese (+150)
+├── Bacon (+200)
+└── Avocado (+180)
 ```
 
-**Свойства Addition:**
-- `isRequired` — обязательно ли выбрать хотя бы один item
-- `isMultiple` — можно ли выбрать несколько items
-- `isCountable` — можно ли указать количество (например, 3 соуса)
-- `minSelection` / `maxSelection` — ограничения выбора
+**Why needed:**
+- Customer can customize dish (size, spice level, toppings)
+- Automatic final price calculation in order
+- Kitchen receives precise cooking instructions
 
-**Отличие от Modifier:**
-| Характеристика | Modifier | Addition |
+**Important:**
+- Modifier **must belong to a Modifier Group**
+- Modifier group is linked to a product
+- Can set `minSelection` and `maxSelection` (e.g., "select 1-3 toppings")
+
+#### **Addition**
+Group of **optional items** that can be added to the main product. Unlike modifiers, additions consist of **Addition Items** — separate products with their own price.
+
+**Example for "Pizza Margherita":**
+```
+Addition: "Sauces"
+├── Garlic Sauce (50)
+├── BBQ Sauce (50)
+└── Cheese Sauce (70)
+
+Addition: "Drinks with Pizza"
+├── Coca-Cola 0.5L (150)
+├── Fanta 0.5L (150)
+└── Mineral Water (100)
+```
+
+**Addition Properties:**
+- `isRequired` — must at least one item be selected
+- `isMultiple` — can multiple items be selected
+- `isCountable` — can quantity be specified (e.g., 3 sauces)
+- `minSelection` / `maxSelection` — selection constraints
+
+**Difference from Modifier:**
+| Characteristic | Modifier | Addition |
 |---------------|----------|----------|
-| Цена | Добавляется к базовой цене продукта | Каждый item — отдельная цена |
-| Структура | Плоский список опций в группе | Группа → Items (двухуровневая) |
-| Использование | Изменение характеристик блюда | Дополнительные товары к блюду |
-| Пример | Размер, прожарка, топпинги | Соусы, напитки, десерты |
+| Price | Added to product base price | Each item has separate price |
+| Structure | Flat list of options in group | Group → Items (two-level) |
+| Use | Changing dish characteristics | Additional items to dish |
+| Example | Size, doneness, toppings | Sauces, drinks, desserts |
 
-#### **Branch Override (Настройки по филиалам)**
-Возможность **переопределить параметры продукта** для конкретного филиала, не меняя базовую конфигурацию.
+#### **Branch Override**
+Ability to **override product parameters** for a specific branch without changing the base configuration.
 
-**Что можно переопределить:**
-- `price` — цена для филиала (например, выше в центре города)
-- `isAvailable` — доступность (сезонные блюда только в определённых локациях)
-- `image` — локализованное фото
-- `name` — локализованное название
+**What can be overridden:**
+- `price` — branch-specific price (e.g., higher in city center)
+- `isAvailable` — availability (seasonal dishes only in certain locations)
+- `image` — localized photo
+- `name` — localized name
 
-**Пример использования:**
+**Usage example:**
 ```
-Продукт: "Капучино"
-Базовая цена: 350 ₽
+Product: "Cappuccino"
+Base price: 350
 
 Branch Overrides:
-├── Филиал "Центр" → 450 ₽ (дороже)
-├── Филиал "Спальный район" → 300 ₽ (дешевле)
-└── Филиал "Аэропорт" → недоступно (isAvailable=false)
+├── Branch "Downtown" → 450 (more expensive)
+├── Branch "Residential" → 300 (cheaper)
+└── Branch "Airport" → unavailable (isAvailable=false)
 ```
 
-**Зачем нужны:**
-- Разные цены для разных локаций
-- Региональные особенности меню
-- Сезонные ограничения по филиалам
-- Тестирование новых позиций в отдельных точках
+**Why needed:**
+- Different prices for different locations
+- Regional menu features
+- Seasonal restrictions by branch
+- Testing new items in selected locations
 
-#### **Menu Template (Шаблон меню)**
-Готовый набор категорий и продуктов для быстрого старта нового ресторана.
+#### **Menu Template**
+Ready-made set of categories and products for quick start of a new restaurant.
 
-**Примеры шаблонов:**
-- "Кофейня" — кофе, чай, десерты, сэндвичи
-- "Пиццерия" — пиццы, паста, салаты, напитки
-- "Фаст-фуд" — бургеры, картофель фри, напитки
-- "Суши-бар" — роллы, сашими, супы, напитки
+**Template examples:**
+- "Coffee Shop" — coffee, tea, desserts, sandwiches
+- "Pizzeria" — pizzas, pasta, salads, drinks
+- "Fast Food" — burgers, fries, drinks
+- "Sushi Bar" — rolls, sashimi, soups, drinks
 
-**Зачем нужны:**
-- Ускорение онбординга новых клиентов
-- Стандартизация меню для франшиз
-- Готовая структура для новых филиалов
+**Why needed:**
+- Accelerate onboarding of new clients
+- Menu standardization for franchises
+- Ready structure for new branches
 
 ---
 
-## Навигация и структура меню
+## Navigation and Menu Structure
 
-### Главное меню Admin Panel
+### Main Admin Panel Menu
 
 ```
 📊 Dashboard
-📋 Заказы
-🍔 Меню ← ВЫ ЗДЕСЬ
-   ├── 📂 Категории
-   ├── 🍕 Продукты
-   ├── ⚙️ Модификаторы
-   ├── ➕ Дополнения
-   ├── 📑 Шаблоны меню
-   └── 🏢 Настройки по филиалам
-👥 Клиенты
-👨‍💼 Сотрудники
-🏪 Филиалы
-💰 Финансы
-⚙️ Настройки
+📋 Orders
+🍔 Menu ← YOU ARE HERE
+   ├── 📂 Categories
+   ├── 🍕 Products
+   ├── ⚙️ Modifiers
+   ├── ➕ Additions
+   ├── 📑 Menu Templates
+   └── 🏢 Branch Overrides
+👥 Customers
+👨‍💼 Staff
+🏪 Branches
+💰 Finance
+⚙️ Settings
 ```
 
-### Навигационный Flow
+### Navigation Flow
 
 ```
-Главная страница Меню
+Main Menu Page
     ↓
 ┌───────────────────────────────────────┐
-│  Список категорий / продуктов         │
-│  + Поиск, фильтры, сортировка         │
+│  Category/Product List                │
+│  + Search, filters, sorting           │
 └───────────────────────────────────────┘
-    ↓ (клик на продукт)
+    ↓ (click on product)
 ┌───────────────────────────────────────┐
-│  Детальная страница продукта          │
-│  + Редактирование базовой информации  │
+│  Product Detail Page                  │
+│  + Edit basic information             │
 └───────────────────────────────────────┘
-    ↓ (вкладка "Модификаторы")
+    ↓ (tab "Modifiers")
 ┌───────────────────────────────────────┐
-│  Управление модификаторами продукта   │
-│  + Добавить / удалить группы          │
+│  Product Modifier Management          │
+│  + Add / remove groups                │
 └───────────────────────────────────────┘
-    ↓ (вкладка "Дополнения")
+    ↓ (tab "Additions")
 ┌───────────────────────────────────────┐
-│  Управление дополнениями              │
-│  + Добавить / удалить additions       │
+│  Additions Management                 │
+│  + Add / remove additions             │
 └───────────────────────────────────────┘
-    ↓ (вкладка "По филиалам")
+    ↓ (tab "By Branches")
 ┌───────────────────────────────────────┐
 │  Branch Overrides                     │
-│  + Настроить цены/доступность         │
+│  + Configure prices/availability      │
 └───────────────────────────────────────┘
 ```
 
 ---
 
-## Страница: Категории
+## Page: Categories
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Категории`
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Categories`
 **URL:** `/admin/menu/categories`
 
-### 🎯 Цель страницы
-Управление иерархической структурой категорий меню. Менеджер может создавать, редактировать, удалять и переупорядочивать категории.
+### 🎯 Page Purpose
+Manage hierarchical menu category structure. Manager can create, edit, delete, and reorder categories.
 
 ### 📋 API Endpoints
 
-#### 1. Получить список категорий
+#### 1. Get category list
 ```
 GET /admin/menu/categories
-Query параметры:
-  - parentId? (number) — фильтр по родительской категории
-  - includeProducts? (boolean) — включить количество продуктов
+Query parameters:
+  - parentId? (number) — filter by parent category
+  - includeProducts? (boolean) — include product count
 ```
 
 **Response:**
@@ -225,179 +225,128 @@ Query параметры:
 [
   {
     "id": 1,
-    "name": "Напитки",
-    "description": "Горячие и холодные напитки",
-    "image": "https://cdn.example.com/categories/beverages.jpg",
+    "name": "Beverages",
     "parentId": null,
-    "sortOrder": 0,
-    "isActive": true,
-    "createdAt": "2025-01-20T10:00:00Z",
-    "updatedAt": "2025-01-20T10:00:00Z",
-    "children": [
-      {
-        "id": 2,
-        "name": "Горячие напитки",
-        "parentId": 1,
-        "productCount": 12
-      }
-    ],
+    "children": [{ "id": 2, "name": "Hot Drinks" }],
     "productCount": 25
   }
 ]
 ```
 
-#### 2. Создать категорию
+#### 2. Create category
 ```
 POST /admin/menu/categories
-Body: {
-  "name": "Десерты",
-  "description": "Сладкие блюда и выпечка",
-  "parentId": null,  // или ID родительской категории
-  "image": "https://cdn.example.com/desserts.jpg",
-  "sortOrder": 5,
-  "isActive": true
-}
+Body: { "name": "Desserts", "parentId": null, "sortOrder": 5 }
 ```
 
-#### 3. Обновить категорию
+#### 3. Update category
 ```
 PATCH /admin/menu/categories/:id
-Body: {
-  "name": "Горячие десерты",
-  "description": "Обновлённое описание"
-}
+Body: { "name": "Hot Desserts" }
 ```
 
-#### 4. Удалить категорию
+#### 4. Delete category
 ```
 DELETE /admin/menu/categories/:id
 ```
 
-**⚠️ Важно:**
-- Нельзя удалить категорию с подкатегориями
-- Нельзя удалить категорию с продуктами (нужно сначала переместить продукты)
+**⚠️ Important:**
+- Cannot delete category with subcategories
+- Cannot delete category with products
 
-#### 5. Изменить порядок категорий
+#### 5. Reorder categories
 ```
 PATCH /admin/menu/categories/reorder
-Body: {
-  "categoryIds": [3, 1, 2, 5, 4]  // новый порядок
-}
+Body: { "categoryIds": [3, 1, 2, 5, 4] }
 ```
 
-### 🎨 UI Компоненты
+### 🎨 UI Components
 
-**Список категорий:**
-- Древовидная структура (Tree View) с drag-and-drop
-- Иконка категории / заглушка
-- Название + описание
-- Счётчик продуктов
-- Индикатор активности (вкл/выкл)
-- Кнопки: Редактировать, Удалить, Добавить подкатегорию
+**Category List:**
+- Tree view with drag-and-drop
+- Category icon / placeholder
+- Name + description
+- Product counter
+- Activity indicator (on/off)
+- Buttons: Edit, Delete, Add Subcategory
 
-**Модальное окно создания/редактирования:**
+**Create/Edit Modal:**
 ```
 ┌─────────────────────────────────────┐
-│  Создать категорию                  │
+│  Create Category                    │
 ├─────────────────────────────────────┤
-│  Название: [_________________]      │
-│  Описание: [_________________]      │
-│  Родитель: [▼ Выбрать категорию]    │
-│  Изображение: [📷 Загрузить]        │
-│  Активна: [✓]                       │
+│  Name: [_________________]          │
+│  Description: [_________________]   │
+│  Parent: [▼ Select category]        │
+│  Image: [📷 Upload]                 │
+│  Active: [✓]                        │
 │                                     │
-│  [Отмена]  [Сохранить]              │
+│  [Cancel]  [Save]                   │
 └─────────────────────────────────────┘
 ```
 
-### ✅ Проверки и валидация
+### ✅ Validation
 
-1. **Название категории:**
-   - Обязательное поле
-   - Максимум 100 символов
-   - Не должно дублироваться на том же уровне
+1. **Category name:**
+   - Required field
+   - Max 100 characters
+   - Should not duplicate at same level
 
-2. **Родительская категория:**
-   - Нельзя выбрать саму себя
-   - Нельзя создать циклическую зависимость (A → B → A)
+2. **Parent category:**
+   - Cannot select itself
+   - Cannot create circular dependency (A → B → A)
 
-3. **Удаление:**
-   - Показать предупреждение, если есть подкатегории
-   - Показать количество продуктов, которые будут затронуты
+3. **Deletion:**
+   - Show warning if subcategories exist
+   - Show number of affected products
 
-4. **Переупорядочивание:**
-   - Drag-and-drop должен сохраняться автоматически
-   - Показать индикатор загрузки при сохранении
+### 🔄 Use Cases
 
-### 🔄 Сценарии использования
-
-**Создание иерархии:**
+**Creating hierarchy:**
 ```
-1. Менеджер создаёт "Напитки" (parentId=null)
-2. Создаёт "Горячие напитки" (parentId=1)
-3. Создаёт "Кофе" (parentId=2)
-4. Переупорядочивает drag-and-drop
-5. Система сохраняет новый sortOrder
-```
-
-**Редактирование:**
-```
-1. Клик на категорию → модалка
-2. Меняем название / описание
-3. PATCH /admin/menu/categories/:id
-4. Обновляем список без перезагрузки
+1. Manager creates "Beverages" (parentId=null)
+2. Creates "Hot Drinks" (parentId=1)
+3. Reorders via drag-and-drop
+4. System saves new sortOrder
 ```
 
 ---
 
-## Страница: Продукты
+## Page: Products
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Продукты`
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Products`
 **URL:** `/admin/menu/products`
 
-### 🎯 Цель страницы
-Управление каталогом продуктов: создание, редактирование, контроль цен и доступности.
+### 🎯 Page Purpose
+Manage product catalog: creation, editing, price and availability control.
 
 ### 📋 API Endpoints
 
-#### 1. Получить список продуктов (с фильтрами и пагинацией)
+#### 1. Get product list (with filters and pagination)
 ```
 GET /admin/menu/products
-Query параметры:
-  - categoryId? (number) — фильтр по категории
-  - available? (boolean) — только доступные / недоступные
-  - q? (string) — поиск по названию
-  - page? (number) — номер страницы (default: 1)
-  - limit? (number) — элементов на странице (default: 20)
+Query parameters:
+  - categoryId? (number) — filter by category
+  - available? (boolean) — only available / unavailable
+  - q? (string) — search by name
+  - page? (number) — page number (default: 1)
+  - limit? (number) — items per page (default: 20)
 ```
 
 **Response:**
 ```json
 {
   "data": [
-    {
-      "id": 101,
-      "name": "Капучино",
-      "description": "Классический кофе с молочной пенкой",
-      "price": 350,
-      "categoryId": 5,
-      "categoryName": "Горячие напитки",
-      "image": "https://cdn.example.com/cappuccino.jpg",
-      "isAvailable": true,
-      "sortOrder": 1,
-      "createdAt": "2025-01-20T10:00:00Z",
-      "updatedAt": "2025-01-22T15:30:00Z"
-    }
+    { "id": 101, "name": "Cappuccino", "price": 350, "isAvailable": true }
   ],
   "total": 156,
   "page": 1,
-  "limit": 20,
   "totalPages": 8
 }
 ```
 
-#### 2. Получить детали продукта
+#### 2. Get product details
 ```
 GET /admin/menu/products/:id
 ```
@@ -406,113 +355,71 @@ GET /admin/menu/products/:id
 ```json
 {
   "id": 101,
-  "name": "Капучино",
-  "description": "Классический кофе с молочной пенкой",
+  "name": "Cappuccino",
   "price": 350,
   "categoryId": 5,
-  "categoryName": "Горячие напитки",
-  "productTypeId": 2,
-  "image": "https://cdn.example.com/cappuccino.jpg",
   "isAvailable": true,
-  "sortOrder": 1,
-  "preparationTime": 5,
-  "calories": 120,
-  "allergens": ["молоко"],
-  "modifierGroupsCount": 2,
-  "additionsCount": 1,
-  "createdAt": "2025-01-20T10:00:00Z",
-  "updatedAt": "2025-01-22T15:30:00Z"
+  "modifierGroupsCount": 2
 }
 ```
 
-#### 3. Создать продукт
+#### 3. Create product
 ```
 POST /admin/menu/products
 Body: {
-  "name": "Эспрессо",
-  "description": "Крепкий чёрный кофе",
+  "name": "Espresso",
   "price": 200,
   "categoryId": 5,
-  "productTypeId": 2,
-  "image": "https://cdn.example.com/espresso.jpg",
-  "isAvailable": true,
-  "preparationTime": 3,
-  "calories": 5,
-  "allergens": []
+  "productTypeId": 2
 }
 ```
 
-#### 4. Обновить продукт
+#### 4. Update product
 ```
 PATCH /admin/menu/products/:id
-Body: {
-  "name": "Двойной Эспрессо",
-  "price": 280
-}
+Body: { "name": "Double Espresso", "price": 280 }
 ```
 
-#### 5. Быстрое обновление цены ⚠️ DEPRECATED
+#### 5. Quick price update [DEPRECATED]
 ```
 PATCH /admin/menu/products/:id/price
-Body: {
-  "price": 320
-}
+Body: { "price": 320 }
 ```
 
-**⚠️ DEPRECATED**: Этот endpoint устарел. Используйте вместо него:
-- `PATCH /admin/menu/products/:id` - для обновления одного продукта (включая цену)
-- `PATCH /admin/menu/products/bulk-price` - для массового обновления цен (процент или фиксированная сумма)
+**[DEPRECATED]** Use instead:
+- `PATCH /admin/menu/products/:id` - for single product updates
+- `PATCH /admin/menu/products/bulk-price` - for bulk price updates
 
-**Почему deprecated:**
-- Излишне специализированный endpoint
-- Bulk endpoint более эффективен для массовых операций
-- Общий PATCH endpoint более гибкий
+**Migration notes:**
+- Overly specialized endpoint
+- Bulk endpoint more efficient for mass operations
+- Will be removed in v2.0
 
-#### 6. Изменить доступность
+#### 6. Change availability
 ```
 PATCH /admin/menu/products/:id/availability
-Body: {
-  "isAvailable": false
-}
+Body: { "isAvailable": false }
 ```
 
-**Использование:**
-- Быстрое включение/выключение продукта
-- Кнопка-переключатель в списке продуктов
-- Временная недоступность (закончились ингредиенты)
-
-#### 7. Удалить продукт
+#### 7. Delete product
 ```
 DELETE /admin/menu/products/:id
 ```
 
-**⚠️ Важно:**
-- Soft delete — продукт помечается `deletedAt`, но не удаляется физически
-- Нельзя удалить, если есть активные заказы с этим продуктом
+**⚠️ Important:** Soft delete — product marked with `deletedAt`
 
 ---
 
 ### 🆕 Bulk Operations (NEW - 2025-11-03)
 
-**Зачем нужны:** Рестораны с сотнями продуктов нуждаются в массовых операциях. Вместо 100 API вызовов для обновления 100 продуктов — теперь достаточно одного!
+**Why needed:** Restaurants with hundreds of products need bulk operations instead of individual API calls!
 
-#### 8. Массовое создание продуктов
+#### 8. Bulk create products
 ```
 POST /admin/menu/products/bulk
 Body: {
   "products": [
-    {
-      "name": "Пицца Маргарита",
-      "price": 25000,
-      "categoryId": 1,
-      "productTypeId": 1
-    },
-    {
-      "name": "Пицца Пепперони",
-      "price": 28000,
-      "categoryId": 1,
-      "productTypeId": 1
-    }
+    { "name": "Pizza Margherita", "price": 25000, "categoryId": 1, "productTypeId": 1 }
   ]
 }
 ```
@@ -523,308 +430,352 @@ Body: {
   "total": 2,
   "successful": 2,
   "failed": 0,
-  "results": [
-    {
-      "index": 0,
-      "success": true,
-      "productId": 101,
-      "product": { /* полные данные продукта */ }
-    },
-    {
-      "index": 1,
-      "success": true,
-      "productId": 102,
-      "product": { /* полные данные продукта */ }
-    }
-  ]
+  "results": [...]
 }
 ```
 
-**Особенности:**
-- Максимум 100 продуктов за раз
-- Partial success - если один упал, остальные создаются
-- Возвращает детальную информацию об ошибках
-
-#### 9. Массовое обновление цен
+#### 9. Bulk price update
 ```
 PATCH /admin/menu/products/bulk-price
 Body: {
-  "productIds": [1, 2, 3, 4, 5],
-  "priceChange": {
-    "type": "percentage",  // или "fixed"
-    "value": 10  // +10% или +10 UZS
-  }
-}
-```
-
-**Примеры использования:**
-```json
-// Увеличить все цены на 10%
-{
   "productIds": [1, 2, 3],
   "priceChange": { "type": "percentage", "value": 10 }
 }
-
-// Уменьшить все цены на 5%
-{
-  "productIds": [1, 2, 3],
-  "priceChange": { "type": "percentage", "value": -5 }
-}
-
-// Добавить 5000 UZS к каждому продукту
-{
-  "productIds": [1, 2, 3],
-  "priceChange": { "type": "fixed", "value": 5000 }
-}
-
-// Убрать 2000 UZS от каждого продукта
-{
-  "productIds": [1, 2, 3],
-  "priceChange": { "type": "fixed", "value": -2000 }
-}
 ```
 
-**Валидация:**
-- Цена не может стать отрицательной
-- Atomic operation - все обновляются или ни один
-- Автоматический audit trail
+**Examples:**
+- Increase by 10%: `{ "type": "percentage", "value": 10 }`
+- Decrease by 5%: `{ "type": "percentage", "value": -5 }`
+- Add fixed amount: `{ "type": "fixed", "value": 5000 }`
 
-#### 10. Массовое изменение доступности
+#### 10. Bulk availability update
 ```
 PATCH /admin/menu/products/bulk-availability
-Body: {
-  "productIds": [1, 2, 3, 4, 5],
-  "isAvailable": false  // или true
-}
+Body: { "productIds": [1, 2, 3], "isAvailable": false }
 ```
 
-**Использование:** Быстрое отключение сезонных позиций или временная недоступность
-
-#### 11. Изменение доступности на уровне категории
+#### 11. Category-level availability update
 ```
 PATCH /admin/menu/categories/:categoryId/products/availability
-Body: {
-  "isAvailable": false
-}
+Body: { "isAvailable": false }
 ```
 
-**Использование:** Отключить все продукты в категории "Летнее меню" одним кликом
-
-#### 12. Массовое удаление
+#### 12. Bulk delete
 ```
 DELETE /admin/menu/products/bulk-delete
-Body: {
-  "productIds": [1, 2, 3, 4, 5]
-}
+Body: { "productIds": [1, 2, 3] }
 ```
 
 **Response:**
 ```json
 {
-  "deleted": 4,
+  "deleted": 2,
   "failed": 1,
-  "errors": [
-    {
-      "productId": 3,
-      "reason": "Cannot delete - product in active orders"
-    }
-  ]
+  "errors": [{ "productId": 3, "reason": "Product in active orders" }]
 }
 ```
 
-**Особенности:**
-- Partial success - удаляет что может
-- Возвращает причины для неудавшихся
-- Soft delete (можно восстановить)
-
-#### 13. Массовое обновление (общее)
+#### 13. Bulk general update
 ```
 PATCH /admin/menu/products/bulk-update
 Body: {
   "productIds": [1, 2, 3],
-  "updates": {
-    "categoryId": 5,
-    "isAvailable": true
-  }
+  "updates": { "categoryId": 5 }
 }
 ```
 
-**Использование:** Переместить несколько продуктов в другую категорию
+#### 14. Reorder products within category
+```
+PATCH /admin/menu/categories/:categoryId/products/reorder
+Body: { "productIds": [5, 3, 1, 4, 2] }
+```
+
+**Response codes:** 200 OK, 400 Bad Request, 404 Not Found
 
 ---
 
-### 🆕 Создание продукта с изображением (NEW - 2025-11-03)
+### 🆕 Create Product with Image (NEW - 2025-11-03)
 
-**Проблема:** Раньше нужно было 3 API вызова:
-1. `POST /admin/menu/products` → создать продукт
-2. `POST /admin/files/upload` → загрузить изображение
-3. `PATCH /admin/menu/products/:id` → обновить продукт с URL изображения
+**Problem:** Previously needed 3 API calls (create → upload → update)
 
-**Решение:** Теперь всё в одном вызове!
+**Solution:** Now everything in one call!
 
-#### 14. Создать продукт с изображением
+#### 15. Create product with image
 ```
 POST /admin/menu/products/with-image
 Content-Type: multipart/form-data
 
 Form fields:
 - image: [binary file]
-- name: "Пицца Маргарита"
-- description: "Классическая пицца"
+- name: "Pizza Margherita"
 - price: 25000
 - categoryId: 1
 - productTypeId: 1
-- isAvailable: true
 ```
 
-**Response:** Стандартный `ProductDetailDto` с заполненным полем `image`
+**Features:**
+- Automatic image optimization (WebP)
+- Variant generation (original, large, medium, thumb)
+- Tenant isolation
+- Single API call instead of 3
 
-**Особенности:**
-- Автоматическая генерация вариантов изображения (original, large, medium, thumb)
-- Автоматическая оптимизация (WebP)
-- Tenant isolation (файл сохраняется в `tenant-{tenantId}/products/`)
-- Возвращает полную информацию о продукте сразу
-
-**Frontend пример:**
+**Frontend example:**
 ```javascript
 const formData = new FormData();
 formData.append('image', imageFile);
-formData.append('name', 'Пицца Маргарита');
+formData.append('name', 'Pizza Margherita');
 formData.append('price', '25000');
-formData.append('categoryId', '1');
-formData.append('productTypeId', '1');
 
-const response = await fetch('/admin/menu/products/with-image', {
+await fetch('/admin/menu/products/with-image', {
   method: 'POST',
-  body: formData,
-  headers: { 'Authorization': `Bearer ${token}` }
+  body: formData
 });
 ```
 
-### 🎨 UI Компоненты
+### 🎨 UI Components
 
-**Список продуктов (Table View):**
-| Фото | Название | Категория | Цена | Доступность | Действия |
-|------|----------|-----------|------|-------------|----------|
-| 🖼️ | Капучино | Горячие напитки | 350 ₽ | ✅ Вкл | ✏️ 🗑️ |
-| 🖼️ | Лате | Горячие напитки | 380 ₽ | ❌ Выкл | ✏️ 🗑️ |
+**Product List (Table View):**
+| Photo | Name | Category | Price | Available | Actions |
+|------|------|----------|-------|-----------|---------|
+| 🖼️ | Cappuccino | Hot Drinks | 350 | ✅ On | ✏️ 🗑️ |
 
-**Фильтры:**
+**Filters:**
 ```
 ┌──────────────────────────────────────────┐
-│ Категория: [▼ Все категории]             │
-│ Поиск: [🔍 Название продукта...]          │
-│ Статус: [▼ Все] [✓ Доступные] [ ] Скрыт  │
-│ [Применить] [Сбросить]                   │
+│ Category: [▼ All]  Status: [▼ All]      │
+│ Search: [🔍 Product name...]             │
 └──────────────────────────────────────────┘
 ```
 
-**Модальное окно создания/редактирования:**
-```
-┌──────────────────────────────────────────┐
-│  Редактировать продукт                   │
-├──────────────────────────────────────────┤
-│ Вкладки: [Основное] [Модификаторы]       │
-│         [Дополнения] [По филиалам]       │
-├──────────────────────────────────────────┤
-│ Название: [Капучино______________]        │
-│ Категория: [▼ Горячие напитки]           │
-│ Цена: [350_₽] Время: [5_мин]             │
-│ Описание: [____________________]         │
-│ Калории: [120] Аллергены: [молоко]       │
-│ Фото: [📷 Загрузить]                     │
-│ Доступен: [✓]                            │
-│                                          │
-│ [Отмена] [Сохранить]                     │
-└──────────────────────────────────────────┘
-```
+### ✅ Validation
 
-### ✅ Проверки и валидация
-
-1. **Название продукта:**
-   - Обязательное поле
-   - Максимум 200 символов
-   - Не должно дублироваться в категории
-
-2. **Цена:**
-   - Обязательное поле
-   - Минимум 0 (бесплатные позиции допустимы)
-   - Максимум 999999
-
-3. **Категория:**
-   - Обязательное поле
-   - Должна существовать и быть активной
-
-4. **ProductTypeId:**
-   - Обязательное поле
-   - Используется для классификации (еда, напиток, алкоголь)
-   - Влияет на налогообложение и отчётность
-
-### 🔄 Сценарии использования
-
-**Быстрое изменение цены:**
-```
-1. В таблице продуктов клик по цене → инлайн редактор
-2. Вводим новую цену
-3. PATCH /admin/menu/products/:id/price
-4. Цена обновляется без перезагрузки страницы
-```
-
-**Создание нового продукта:**
-```
-1. Кнопка "Добавить продукт"
-2. Заполняем обязательные поля (название, цена, категория, тип)
-3. Загружаем фото
-4. POST /admin/menu/products
-5. Переходим к редактированию модификаторов
-```
+1. **Product name:** Required, max 200 characters
+2. **Price:** Required, min 0, max 999999
+3. **Category:** Required, must exist
+4. **ProductTypeId:** Required for classification
 
 ---
 
-## Страница: Модификаторы
+## Page: Modifiers
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Модификаторы`
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Modifiers`
 **URL:** `/admin/menu/modifiers`
 
-**Альтернативный путь:**
-`Продукты → [Продукт] → Вкладка "Модификаторы"`
+**Alternative:** `Products → [Product] → "Modifiers" Tab`
 
-### 🎯 Цель страницы
-Управление модификаторами и группами модификаторов для кастомизации продуктов.
+### 🎯 Page Purpose
+Manage modifier groups and modifiers for product customization.
 
-### 💡 Бизнес-логика
+### 💡 Business Logic
 
-**Архитектура:**
+**Architecture:**
 ```
-Product (Пицца Маргарита)
-  └── Modifier Group: "Размер"
-      ├── Modifier: "Маленькая (25см)" +0₽
-      ├── Modifier: "Средняя (30см)" +200₽
-      └── Modifier: "Большая (35см)" +400₽
-
-  └── Modifier Group: "Дополнительные топпинги"
-      ├── Modifier: "Моцарелла" +150₽
-      ├── Modifier: "Пепперони" +180₽
-      └── Modifier: "Грибы" +100₽
+Product (Pizza Margherita)
+  └── Modifier Group: "Size"
+      ├── Modifier: "Small (25cm)" +0
+      ├── Modifier: "Medium (30cm)" +200
+      └── Modifier: "Large (35cm)" +400
 ```
 
-**Правила:**
-- Modifier Group определяет: `minSelection`, `maxSelection`, `isRequired`
-- Модификатор всегда принадлежит группе
-- Модификатор имеет `price` (дополнительная стоимость)
-- Группа модификаторов привязывается к продукту
+**Rules:**
+- Modifier Group defines: `minSelection`, `maxSelection`, `isRequired`
+- Modifier always belongs to a group
+- Group is linked to a product
+
+### 💡 Modifier Group Templates - Business Logic
+
+#### What Are Templates?
+
+Modifier group templates are pre-defined groups (like "Size", "Temperature") created at the **platform level** and automatically given to new tenants during registration.
+
+#### How Templates Work
+
+**Template Cloning Process:**
+```
+┌─────────────────────────────────────────────────┐
+│ Platform Level (Super Admin)                   │
+│ Template: "Size" (tenant_id = NULL)            │
+│ - Not attached to any products                  │
+│ - Serves as blueprint only                     │
+└─────────────────────────────────────────────────┘
+                    ↓
+          New Tenant Registers
+                    ↓
+┌─────────────────────────────────────────────────┐
+│ Tenant's Copy (tenant_id = 123)                │
+│ Modifier Group: "Size" (cloned from template)  │
+│ - Tenant can rename it                          │
+│ - Tenant can add modifiers to it               │
+│ - Tenant can attach it to products             │
+│ - Completely independent from template         │
+└─────────────────────────────────────────────────┘
+```
+
+**Key Characteristics:**
+- **Cloned, not shared** - Each tenant gets their own copy
+- **One-time copy** - Template changes don't affect existing tenants
+- **Full ownership** - Tenants can modify, rename, or delete their copy
+- **Pure tenant isolation** - No cross-tenant data sharing
+
+#### User Flow: Tenant's First Login
+
+**Scenario:** Restaurant owner "John" registers his coffee shop.
+
+**Step 1: Registration**
+```
+1. John fills registration form:
+   - Business name: "John's Coffee"
+   - Phone: +998901234567
+   - Email: john@coffee.com
+
+2. Backend creates tenant account
+3. Backend automatically clones all templates to John's account:
+   ✓ "Size" modifier group created (empty, no modifiers yet)
+```
+
+**Step 2: Setting Up First Product**
+```
+1. John navigates to: Admin Panel → Menu → Products
+2. Creates product "Cappuccino" (price: 15,000)
+3. Clicks on "Cappuccino" → "Modifiers" tab
+4. Sees available modifier groups:
+   ┌───────────────────────────────────┐
+   │ Available Groups:                 │
+   │ ☐ Size (no modifiers yet)        │
+   │ [+ Create Custom Group]           │
+   └───────────────────────────────────┘
+```
+
+**Step 3: Adding Modifiers to Size Group**
+```
+1. John clicks on "Size" group
+2. Adds modifiers:
+   - "Small (8oz)" → price: 0
+   - "Medium (12oz)" → price: 3,000
+   - "Large (16oz)" → price: 5,000
+3. Saves modifier group
+```
+
+**Step 4: Attaching to Product**
+```
+1. Returns to "Cappuccino" product
+2. Attaches "Size" modifier group
+3. Sets rules:
+   ✓ Required: Yes
+   ✓ Min selection: 1
+   ✓ Max selection: 1
+```
+
+**Result:**
+- Customers ordering Cappuccino must choose a size
+- POS shows size options when adding Cappuccino to order
+- Frontend can render special UI for "Size" group (icons, visual layout)
+
+#### User Flow: Creating Products Without Templates
+
+**Scenario:** Pizza restaurant needs "Toppings" modifier group (not a template).
+
+**Step 1: Create Custom Group**
+```
+1. Navigate to: Admin Panel → Menu → Modifiers
+2. Click [+ Create Modifier Group]
+3. Fill form:
+   - Name: "Toppings"
+   - Required: No
+   - Min selection: 0
+   - Max selection: 5
+4. Click [Save]
+```
+
+**Step 2: Add Modifiers**
+```
+1. Click on "Toppings" group
+2. Add modifiers:
+   - "Extra Cheese" → +2,000
+   - "Pepperoni" → +3,000
+   - "Mushrooms" → +1,500
+   - "Olives" → +1,000
+3. Save
+```
+
+**Step 3: Use Across Products**
+```
+1. Attach "Toppings" to "Pizza Margherita"
+2. Attach "Toppings" to "Pizza Pepperoni"
+3. Attach "Toppings" to "Pizza Vegetariana"
+
+Result: All pizzas share same topping options
+```
+
+#### Frontend UX Patterns
+
+**Pattern 1: Template vs Custom Groups**
+
+Frontend should detect standard template names and render optimized UI. For example, when showing the "Size" group, instead of a plain list, the UI can display visual size representations with icons (small cup, medium cup, large cup). For "Temperature", it can show hot/cold icons. For custom groups like "Toppings", show a generic checkbox/radio list.
+
+**Pattern 2: Empty Template vs Configured Template**
+
+```
+Scenario: Tenant has "Size" template but hasn't added modifiers yet
+
+UI Should Show:
+┌─────────────────────────────────────────┐
+│ Modifier Groups                         │
+├─────────────────────────────────────────┤
+│ ☐ Size (0 modifiers) ⚠️                │
+│   [Add modifiers to this group]         │
+│                                         │
+│ ☐ Toppings (5 modifiers)               │
+│                                         │
+│ [+ Create Custom Group]                 │
+└─────────────────────────────────────────┘
+
+When attaching to product:
+- If "Size" has no modifiers → Show warning
+- User can either:
+  a) Add modifiers first
+  b) Skip and attach later
+```
+
+**Pattern 3: Reusing Groups Across Products**
+
+```
+UX Flow: Attach modifier group to multiple products
+
+Step 1: Select products
+┌─────────────────────────────────────────┐
+│ Bulk Actions                            │
+│ Selected: 3 products                    │
+│ - Cappuccino                            │
+│ - Latte                                 │
+│ - Americano                             │
+└─────────────────────────────────────────┘
+
+Step 2: Choose action
+[Attach Modifier Group ▼]
+
+Step 3: Select group
+┌─────────────────────────────────────────┐
+│ Select Modifier Group                   │
+│ ( ) Size (3 modifiers)                  │
+│ ( ) Temperature (3 modifiers)           │
+│ ( ) Extras (4 modifiers)                │
+│                                         │
+│ [Cancel] [Attach to All]                │
+└─────────────────────────────────────────┘
+
+Result: All 3 coffee drinks now have same size options
+```
 
 ### 📋 API Endpoints
 
-#### Группы модификаторов (Modifier Groups)
+#### Modifier Groups
 
-#### 1. Получить список групп модификаторов
+#### 1. Get modifier group list
 ```
 GET /admin/menu/modifier-groups
-Query параметры:
-  - search? (string) — поиск по названию группы
-  - isRequired? (boolean) — фильтр по обязательности
+Query: search?, isRequired?
 ```
 
 **Response:**
@@ -832,842 +783,506 @@ Query параметры:
 [
   {
     "id": 10,
-    "name": "Размер пиццы",
-    "description": "Выберите размер",
+    "name": "Pizza Size",
     "isRequired": true,
     "minSelection": 1,
-    "maxSelection": 1,
-    "sortOrder": 1,
-    "createdAt": "2025-01-20T10:00:00Z",
-    "updatedAt": "2025-01-20T10:00:00Z"
+    "maxSelection": 1
   }
 ]
 ```
 
-#### 2. Получить группу с модификаторами
+#### 2. Get modifier group with modifiers
 ```
-GET /admin/menu/modifier-groups/:id
-```
-
-**Response:**
-```json
-{
-  "id": 10,
-  "name": "Размер пиццы",
-  "description": "Выберите размер",
-  "isRequired": true,
-  "minSelection": 1,
-  "maxSelection": 1,
-  "sortOrder": 1,
-  "modifiers": [
-    {
-      "id": 201,
-      "name": "Маленькая (25см)",
-      "price": 0,
-      "sortOrder": 1
-    },
-    {
-      "id": 202,
-      "name": "Средняя (30см)",
-      "price": 200,
-      "sortOrder": 2
-    },
-    {
-      "id": 203,
-      "name": "Большая (35см)",
-      "price": 400,
-      "sortOrder": 3
-    }
-  ],
-  "createdAt": "2025-01-20T10:00:00Z",
-  "updatedAt": "2025-01-20T10:00:00Z"
-}
+GET /admin/menu/modifier-groups/:id?includeModifiers=true
 ```
 
-#### 3. Создать группу модификаторов
+#### 3. Create modifier group
 ```
 POST /admin/menu/modifier-groups
 Body: {
-  "name": "Размер пиццы",
-  "description": "Выберите размер вашей пиццы",
+  "name": "Pizza Size",
   "isRequired": true,
   "minSelection": 1,
-  "maxSelection": 1,
-  "sortOrder": 1
+  "maxSelection": 1
 }
 ```
 
-**Правила валидации:**
-- `minSelection` должен быть >= 0
-- `maxSelection` должен быть >= `minSelection`
-- Если `isRequired = true`, то `minSelection` должен быть >= 1
+**Validation:**
+- `minSelection` >= 0
+- `maxSelection` >= `minSelection`
+- If `isRequired = true`, then `minSelection` >= 1
 
-#### 4. Обновить группу модификаторов
+#### 4. Update modifier group
 ```
 PATCH /admin/menu/modifier-groups/:id
-Body: {
-  "name": "Размер",
-  "maxSelection": 2
-}
+Body: { "maxSelection": 2 }
 ```
 
-#### 5. Удалить группу модификаторов
+#### 5. Delete modifier group
 ```
 DELETE /admin/menu/modifier-groups/:id
 ```
 
-**⚠️ Важно:**
-- Soft delete — группа помечается `deletedAt`, но не удаляется физически
-- При удалении группы все её модификаторы также помечаются как удалённые
-- Связи с продуктами сохраняются для истории заказов
-
-#### 6. Получить группы модификаторов для продукта
+#### 6. Get modifier groups for product
 ```
 GET /admin/menu/products/:productId/modifier-groups
 ```
 
-**Response:**
-```json
-[
-  {
-    "id": 10,
-    "name": "Размер пиццы",
-    "isRequired": true,
-    "minSelection": 1,
-    "maxSelection": 1,
-    "modifiers": [
-      {
-        "id": 201,
-        "name": "Маленькая (25см)",
-        "price": 0
-      },
-      {
-        "id": 202,
-        "name": "Средняя (30см)",
-        "price": 200
-      }
-    ]
-  }
-]
-```
-
-#### 7. Привязать группу модификаторов к продукту (РЕКОМЕНДУЕТСЯ)
+#### 7. Attach modifier group to product (RECOMMENDED)
 ```
 POST /admin/menu/products/:productId/attach-modifier-group
-Body: { "groupId": number }
-```
-
-**Использование:**
-- Одна группа может быть привязана к нескольким продуктам
-- Например, группу "Степень прожарки" можно использовать для всех стейков
-- **Это рекомендуемый endpoint** — название явно указывает на операцию ассоциации
-
-**Пример запроса:**
-```json
-POST /admin/menu/products/1/attach-modifier-group
 Body: { "groupId": 5 }
 ```
 
+**Why recommended:**
+- Clear association semantics
+- Action-based naming
+- Body contains group ID for flexibility
+
 **Response:**
 ```json
-{
-  "message": "Modifier group attached to product successfully"
-}
+{ "message": "Modifier group attached to product successfully" }
 ```
 
-#### 8. Отвязать группу модификаторов от продукта (РЕКОМЕНДУЕТСЯ)
+#### 8. Detach modifier group from product (RECOMMENDED)
 ```
 DELETE /admin/menu/products/:productId/detach-modifier-group
-Body: { "groupId": number }
-```
-
-**⚠️ Важно:**
-- Отвязывание не удаляет саму группу или модификаторы
-- Группу можно переиспользовать для других продуктов
-- **Это рекомендуемый endpoint** — название явно указывает на операцию дизассоциации
-
-**Пример запроса:**
-```json
-DELETE /admin/menu/products/1/detach-modifier-group
 Body: { "groupId": 5 }
-```
-
-**Response:**
-```json
-{
-  "message": "Modifier group detached from product successfully"
-}
 ```
 
 ---
 
-#### ⚠️ DEPRECATED: Старые endpoint'ы для привязки/отвязки (будут удалены в v2.0)
+#### ⚠️ DEPRECATED: Old attach/detach endpoints (will be removed in v2.0)
 
-**Эти endpoint'ы устарели и будут удалены в v2.0. Используйте новые endpoint'ы выше!**
-
-##### 7a. [DEPRECATED] Привязать группу через nested resource
+##### 7a. [DEPRECATED] Attach via nested resource
 ```
 POST /admin/menu/products/:productId/modifier-groups/:groupId
 ```
 
-**Проблема:**
-- Выглядит как nested CRUD операция, но на самом деле управляет ассоциацией
-- Непонятная семантика для API consumers
-- ID группы в URL вместо тела запроса снижает гибкость
+**Problem:** Looks like CRUD but manages association
 
-**Миграция:**
-Замените на новый endpoint:
+**Migration:**
 ```
-// ❌ Старый способ (deprecated)
+// ❌ Old (deprecated)
 POST /admin/menu/products/1/modifier-groups/5
 
-// ✅ Новый способ (рекомендуется)
+// ✅ New (recommended)
 POST /admin/menu/products/1/attach-modifier-group
 Body: { "groupId": 5 }
 ```
 
-##### 8a. [DEPRECATED] Отвязать группу через nested resource
+##### 8a. [DEPRECATED] Detach via nested resource
 ```
 DELETE /admin/menu/products/:productId/modifier-groups/:groupId
 ```
 
-**Проблема:**
-- Выглядит как nested CRUD операция, но на самом деле управляет ассоциацией
-- Непонятная семантика для API consumers
-- ID группы в URL вместо тела запроса снижает гибкость
-
-**Миграция:**
-Замените на новый endpoint:
+**Migration:**
 ```
-// ❌ Старый способ (deprecated)
+// ❌ Old (deprecated)
 DELETE /admin/menu/products/1/modifier-groups/5
 
-// ✅ Новый способ (рекомендуется)
+// ✅ New (recommended)
 DELETE /admin/menu/products/1/detach-modifier-group
 Body: { "groupId": 5 }
 ```
 
-**Timeline удаления:** v2.0 (предположительно Q3 2025)
+**Removal timeline:** v2.0 (Q3 2025)
 
 ---
 
-#### Модификаторы (Modifiers)
+#### Modifiers
 
-#### 9. Получить список модификаторов
+#### 9. Get modifier list
 ```
 GET /admin/menu/modifiers
-Query параметры:
-  - modifierGroupId? (number) — фильтр по группе
+Query: modifierGroupId?
 ```
 
-**Response:**
-```json
-[
-  {
-    "id": 201,
-    "name": "Extra Cheese",
-    "description": "Дополнительный сыр моцарелла",
-    "price": 150,
-    "modifierGroupId": 10,
-    "modifierGroupName": "Дополнительные топпинги",
-    "sortOrder": 1,
-    "isActive": true,
-    "createdAt": "2025-01-20T10:00:00Z",
-    "updatedAt": "2025-01-20T10:00:00Z"
-  }
-]
-```
-
-#### 10. Создать модификатор
+#### 10. Create modifier
 ```
 POST /admin/menu/modifiers
 Body: {
   "name": "Extra Cheese",
-  "description": "Дополнительный сыр",
   "price": 150,
-  "modifierGroupId": 10,
-  "sortOrder": 1
+  "modifierGroupId": 10
 }
 ```
 
-#### 11. Обновить модификатор
+#### 11. Update modifier
 ```
 PATCH /admin/menu/modifiers/:id
-Body: {
-  "name": "Double Cheese",
-  "price": 200
-}
+Body: { "price": 200 }
 ```
 
-#### 12. Удалить модификатор
+#### 12. Delete modifier
 ```
 DELETE /admin/menu/modifiers/:id
 ```
 
-### 🎨 UI Компоненты
-
-**Главная страница модификаторов:**
+#### 13. Reorder modifiers within group
 ```
-┌──────────────────────────────────────────────────┐
-│ Группы модификаторов                             │
-│ [+ Создать группу]       🔍 [Поиск...]           │
-├──────────────────────────────────────────────────┤
-│ ☰ Размер пиццы               [✏️] [🗑️] [👁️]      │
-│   Обязательно | Мин: 1, Макс: 1                  │
-│   3 модификатора                                 │
-│                                                  │
-│ ☰ Дополнительные топпинги    [✏️] [🗑️] [👁️]      │
-│   Необязательно | Мин: 0, Макс: 5                │
-│   8 модификаторов                                │
-│                                                  │
-│ ☰ Степень прожарки           [✏️] [🗑️] [👁️]      │
-│   Обязательно | Мин: 1, Макс: 1                  │
-│   4 модификатора                                 │
-└──────────────────────────────────────────────────┘
+PATCH /admin/menu/modifier-groups/:groupId/modifiers/reorder
+Body: { "modifierIds": [3, 1, 2] }
 ```
 
-**Модальное окно создания группы модификаторов:**
+### 🎨 UI Components
+
+**Main Modifier Page:**
+```
+┌──────────────────────────────────────────┐
+│ Modifier Groups          [+ Create]     │
+├──────────────────────────────────────────┤
+│ ☰ Pizza Size           [✏️] [🗑️] [👁️]   │
+│   Required | Min: 1, Max: 1             │
+│   3 modifiers                            │
+└──────────────────────────────────────────┘
+```
+
+**Create Modal:**
 ```
 ┌─────────────────────────────────────────┐
-│  Создать группу модификаторов           │
+│  Create Modifier Group                  │
 ├─────────────────────────────────────────┤
-│ Название: [Размер пиццы________]        │
-│ Описание: [Выберите размер...]          │
+│ Name: [Pizza Size________]              │
+│ [✓] Required group                      │
+│ Min: [1_] Max: [1_]                     │
 │                                         │
-│ Правила выбора:                         │
-│ [✓] Обязательная группа                 │
-│ Минимум выборов: [1_]                   │
-│ Максимум выборов: [1_]                  │
-│ Порядок сортировки: [1_]                │
-│                                         │
-│ [Отмена] [Создать]                      │
+│ [Cancel] [Create]                       │
 └─────────────────────────────────────────┘
 ```
 
-**Детальная страница группы (с модификаторами):**
-```
-┌─────────────────────────────────────────────┐
-│ ← Назад | Группа: "Размер пиццы"    [✏️] [🗑️]│
-│ Правила: Обязательно, мин 1, макс 1         │
-├─────────────────────────────────────────────┤
-│ Модификаторы:                               │
-│ [+ Добавить модификатор]                    │
-│                                             │
-│ ☰ Маленькая (25см)         +0 ₽    [✏️] [🗑️]│
-│ ☰ Средняя (30см)        +200 ₽    [✏️] [🗑️]│
-│ ☰ Большая (35см)        +400 ₽    [✏️] [🗑️]│
-│                                             │
-│ Используется в продуктах:                   │
-│ • Пицца Маргарита                           │
-│ • Пицца Пепперони                           │
-│ • Пицца Четыре сыра                         │
-└─────────────────────────────────────────────┘
-```
+### ✅ Validation
 
-**Модальное окно создания модификатора:**
+**Groups:**
+- Name: required, max 255 chars
+- `minSelection` >= 0
+- `maxSelection` >= `minSelection`
+
+**Modifiers:**
+- Name: required, max 255 chars
+- Price: required, min 0
+- Group: must exist
+
+### 🔄 Use Cases
+
+**Scenario 1: Create group from scratch**
 ```
-┌─────────────────────────────────────────┐
-│  Новый модификатор                      │
-├─────────────────────────────────────────┤
-│ Группа: Размер пиццы (нередактируемо)   │
-│ Название: [Средняя (30см)______]        │
-│ Цена: [+200_₽]                          │
-│ Описание: [Стандартный размер]          │
-│ Порядок: [2_]                           │
-│                                         │
-│ [Отмена] [Создать]                      │
-└─────────────────────────────────────────┘
+1. Create "Pizza Size" group
+2. Add modifiers: Small (+0), Medium (+200), Large (+400)
+3. Link to products
 ```
 
-**Список групп модификаторов в контексте продукта:**
+**Scenario 2: Reuse existing group**
 ```
-┌──────────────────────────────────────────────────┐
-│ Продукт: Пицца Маргарита                         │
-│ Вкладка: [Модификаторы]                          │
-├──────────────────────────────────────────────────┤
-│ [+ Добавить группу модификаторов]                │
-│                                                  │
-│ ┌──────────────────────────────────────────────┐ │
-│ │ Группа: "Размер пиццы"              [❌]     │ │
-│ │ Обязательно | Мин: 1, Макс: 1                │ │
-│ │ ├─ Маленькая (25см) +0₽                      │ │
-│ │ ├─ Средняя (30см) +200₽                      │ │
-│ │ └─ Большая (35см) +400₽                      │ │
-│ └──────────────────────────────────────────────┘ │
-│                                                  │
-│ ┌──────────────────────────────────────────────┐ │
-│ │ Группа: "Дополнительные топпинги"   [❌]     │ │
-│ │ Необязательно | Мин: 0, Макс: 5              │ │
-│ │ ├─ Extra Cheese +150₽                        │ │
-│ │ ├─ Пепперони +180₽                           │ │
-│ │ └─ Грибы +100₽                               │ │
-│ └──────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────┘
-```
-
-**Модальное окно привязки группы к продукту:**
-```
-┌─────────────────────────────────────────┐
-│  Добавить группу модификаторов          │
-├─────────────────────────────────────────┤
-│ Продукт: Пицца Маргарита                │
-│                                         │
-│ Выберите группу:                        │
-│ ( ) Размер пиццы                        │
-│     Обязательно | 3 модификатора        │
-│                                         │
-│ (•) Дополнительные топпинги             │
-│     Необязательно | 8 модификаторов     │
-│                                         │
-│ ( ) Степень прожарки                    │
-│     Обязательно | 4 модификатора        │
-│                                         │
-│ [Создать новую группу]                  │
-│                                         │
-│ [Отмена] [Добавить]                     │
-└─────────────────────────────────────────┘
-```
-
-### ✅ Проверки и валидация
-
-#### Группы модификаторов:
-
-1. **Название группы:**
-   - Обязательное поле
-   - Максимум 255 символов
-   - Рекомендуется уникальность в рамках tenant
-
-2. **Правила выбора:**
-   - `minSelection` >= 0
-   - `maxSelection` >= `minSelection`
-   - Если `isRequired = true`, то `minSelection` >= 1
-   - Если `isRequired = false`, то `minSelection` может быть 0
-
-3. **Порядок сортировки:**
-   - Опциональное поле
-   - Используется для упорядочивания групп в UI
-
-#### Модификаторы:
-
-1. **Название модификатора:**
-   - Обязательное поле
-   - Максимум 255 символов
-   - Не должно дублироваться в группе
-
-2. **Цена:**
-   - Обязательное поле
-   - Может быть 0 (бесплатный модификатор)
-   - Минимум 0
-
-3. **Modifier Group:**
-   - Обязательное поле
-   - Группа должна существовать и не быть удалённой
-
-### 🔄 Сценарии использования
-
-#### Сценарий 1: Создание группы модификаторов с нуля
-
-**Задача:** Создать группу "Размер пиццы" для всех пицц в меню.
-
-```
-Шаг 1: Создание группы
-├── Переходим: Меню → Модификаторы → [+ Создать группу]
-├── Заполняем:
-│   ├── Название: "Размер пиццы"
-│   ├── Описание: "Выберите размер вашей пиццы"
-│   ├── Обязательная: Да
-│   ├── Минимум выборов: 1
-│   └── Максимум выборов: 1
-└── POST /admin/menu/modifier-groups
-
-Шаг 2: Добавление модификаторов в группу
-├── Открываем созданную группу
-├── [+ Добавить модификатор]
-├── Создаём:
-│   ├── "Маленькая (25см)" — 0₽ (базовый размер)
-│   ├── "Средняя (30см)" — +200₽
-│   └── "Большая (35см)" — +400₽
-└── POST /admin/menu/modifiers (для каждого)
-
-Шаг 3: Привязка к продуктам
-├── Переходим: Меню → Продукты → Пицца Маргарита
-├── Вкладка "Модификаторы"
-├── [+ Добавить группу модификаторов]
-├── Выбираем "Размер пиццы"
-└── POST /admin/menu/products/101/modifier-groups/10
-
-Результат:
-✅ Группа создана и переиспользуется для всех пицц
-✅ При заказе клиент обязан выбрать размер
-✅ Цена автоматически пересчитывается
-```
-
-#### Сценарий 2: Использование существующей группы для нового продукта
-
-**Задача:** Добавить новую пиццу и использовать уже созданную группу "Размер пиццы".
-
-```
-Шаг 1: Создаём новый продукт
-├── POST /admin/menu/products
-├── Название: "Пицца Четыре сыра"
-└── Базовая цена: 920₽
-
-Шаг 2: Привязываем существующие группы
-├── Вкладка "Модификаторы"
-├── Выбираем из списка:
-│   ├── Группа "Размер пиццы" (уже создана)
-│   └── Группа "Дополнительные топпинги" (уже создана)
-└── POST /admin/menu/products/:id/modifier-groups/:groupId
-
-Результат:
-✅ Не нужно создавать группы заново
-✅ Консистентность модификаторов для всех пицц
-✅ Экономия времени настройки
-```
-
-#### Сценарий 3: Редактирование группы модификаторов
-
-**Задача:** Изменить правила выбора для группы "Дополнительные топпинги".
-
-```
-Старые правила:
-├── Необязательно
-├── Минимум: 0
-└── Максимум: 3
-
-Новые правила (хотим позволить выбрать больше):
-├── Необязательно
-├── Минимум: 0
-└── Максимум: 5
-
-Действия:
-1. Меню → Модификаторы → "Дополнительные топпинги" → [✏️]
-2. Меняем maxSelection на 5
-3. PATCH /admin/menu/modifier-groups/11
-4. Изменения применяются ко ВСЕМ продуктам с этой группой
-
-Результат:
-✅ Клиент может выбрать до 5 топпингов вместо 3
-✅ Изменение применилось ко всем продуктам автоматически
-```
-
-#### Сценарий 4: Добавление нового модификатора в существующую группу
-
-**Задача:** Добавить новый топпинг "Ананасы" в группу "Дополнительные топпинги".
-
-```
-1. Меню → Модификаторы → "Дополнительные топпинги"
-2. [+ Добавить модификатор]
-3. Заполняем:
-   ├── Название: "Ананасы"
-   ├── Цена: +120₽
-   └── Описание: "Консервированные ананасы"
-4. POST /admin/menu/modifiers
-5. Модификатор автоматически доступен для всех продуктов с этой группой
-
-Результат:
-✅ Новый топпинг доступен во всех пиццах
-✅ Не нужно редактировать каждый продукт отдельно
-```
-
-#### Сценарий 5: Удаление группы модификаторов
-
-**Задача:** Удалить группу "Степень прожарки" (больше не используется).
-
-```
-Предварительная проверка:
-1. Открываем группу → смотрим "Используется в продуктах"
-2. Если есть связанные продукты — предупреждение:
-   "Эта группа используется в 5 продуктах. Отвяжите её перед удалением."
-
-Действия (если группа не используется):
-1. Меню → Модификаторы → "Степень прожарки" → [🗑️]
-2. Подтверждение: "Группа и все её модификаторы будут удалены"
-3. DELETE /admin/menu/modifier-groups/12
-
-Результат:
-✅ Soft delete — группа помечена deletedAt
-✅ Все модификаторы группы также помечены как удалённые
-✅ История заказов сохранена (ссылки остаются для архива)
-```
-
-#### Сценарий 6: Изменение цены модификатора
-
-**Задача:** Поднять цену "Extra Cheese" с 150₽ до 180₽.
-
-```
-1. Меню → Модификаторы → "Дополнительные топпинги"
-2. Клик на "Extra Cheese" → [✏️]
-3. Меняем цену: 150₽ → 180₽
-4. PATCH /admin/menu/modifiers/201
-5. Изменение применяется ко всем продуктам
-
-Результат:
-✅ Цена обновлена во всех продуктах с этим модификатором
-✅ Новые заказы используют новую цену
-✅ Старые заказы сохраняют историческую цену
+1. Create new pizza product
+2. Attach existing "Pizza Size" group
+3. No need to create modifiers again
 ```
 
 ---
 
-## Страница: Дополнения (Additions)
+## Page: Additions
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Дополнения`
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Additions`
 **URL:** `/admin/menu/additions`
 
-**Альтернативный путь:**
-`Продукты → [Продукт] → Вкладка "Дополнения"`
+### 🎯 Page Purpose
+Manage addition groups and items for products.
 
-### 🎯 Цель страницы
-Управление группами дополнений и дополнительными позициями (Addition Items) для продуктов.
+### 💡 Business Logic
 
-### 💡 Бизнес-логика
+**Difference from modifiers:**
+- Modifiers — **modify product** (size, toppings)
+- Additions — **additional items** (sauces, drinks)
 
-**Отличие от модификаторов:**
-- Modifiers — **изменяют продукт** (размер, топпинги)
-- Additions — **дополнительные товары** к продукту (соусы, напитки)
-
-**Архитектура:**
+**Architecture:**
 ```
-Product (Пицца Маргарита)
-  └── Addition: "Соусы"
-      ├── Addition Item: "Чесночный соус" 50₽
-      ├── Addition Item: "Барбекю соус" 50₽
-      └── Addition Item: "Сырный соус" 70₽
-
-  └── Addition: "Напитки"
-      ├── Addition Item: "Coca-Cola 0.5л" 150₽
-      └── Addition Item: "Fanta 0.5л" 150₽
+Product (Pizza Margherita)
+  └── Addition: "Sauces"
+      ├── Item: "Garlic Sauce" 50
+      ├── Item: "BBQ Sauce" 50
+      └── Item: "Cheese Sauce" 70
 ```
 
-**Свойства Addition:**
-- `isRequired` — обязательно ли выбрать хотя бы один item
-- `isMultiple` — можно ли выбрать несколько items
-- `isCountable` — можно ли указать количество
-- `minSelection` / `maxSelection` — ограничения выбора
-
-**Примеры использования:**
-```
-Пример 1: Соусы к бургеру
-├── isRequired: false (можно не брать соус)
-├── isMultiple: true (можно взять несколько соусов)
-├── isCountable: true (можно заказать 2 порции соуса)
-└── maxSelection: 3 (максимум 3 соуса)
-
-Пример 2: Гарнир к стейку
-├── isRequired: true (обязательно выбрать гарнир)
-├── isMultiple: false (только один вид гарнира)
-└── minSelection: 1, maxSelection: 1
-```
+**Properties:**
+- `isRequired` — must select at least one
+- `isMultiple` — can select multiple
+- `isCountable` — can specify quantity
+- `minSelection` / `maxSelection`
 
 ### 📋 API Endpoints
 
-#### 1. Получить список additions
+#### 1. Get additions list
 ```
 GET /admin/menu/additions
-Query параметры:
-  - productId? (number) — фильтр по продукту
+Query: productId?
+```
+
+#### 2. Create addition
+```
+POST /admin/menu/additions
+Body: {
+  "name": "Sauces",
+  "productId": 101,
+  "isRequired": false,
+  "isMultiple": true,
+  "maxSelection": 3
+}
+```
+
+#### 3. Update addition
+```
+PATCH /admin/menu/additions/:id
+Body: { "maxSelection": 5 }
+```
+
+#### 4. Delete addition
+```
+DELETE /admin/menu/additions/:id
+```
+
+### ✅ Validation
+
+- `minSelection` <= `maxSelection`
+- If `isRequired=true`, then `minSelection >= 1`
+- If `isMultiple=false`, then `maxSelection = 1`
+
+---
+
+## Page: Modifier Group Templates (Super Admin Only)
+
+### 📍 Navigation
+**Path:** `Super Admin Panel → System → Templates → Modifier Groups`
+**URL:** `/admin/system/templates/modifier-groups`
+**Access:** Super Admin role only
+
+### 🎯 Page Purpose
+Platform administrators manage global modifier group templates that are cloned for all new tenants during registration.
+
+### 💡 Business Logic
+
+**Who can access:**
+- Only users with `SUPER_ADMIN` role
+- Regular tenants cannot see or edit templates
+
+**Template lifecycle:**
+```
+1. Super Admin creates template "Size"
+2. Template saved with tenant_id = NULL (platform-level)
+3. New tenant registers
+4. Template automatically cloned to tenant (tenant_id = 123)
+5. Tenant works with their own copy
+6. Template remains unchanged
+```
+
+**Important:**
+- Templates are invisible to regular tenants
+- Changing a template doesn't affect existing tenants
+- Deleting a template doesn't affect existing tenant copies
+- Templates serve as blueprints only
+
+### 📋 API Endpoints (Super Admin)
+
+#### 1. List all modifier group templates
+```
+GET /admin/system/templates/modifier-groups
 ```
 
 **Response:**
 ```json
 [
   {
-    "id": 301,
-    "name": "Соусы",
-    "description": "Дополнительные соусы к блюду",
-    "productId": 101,
-    "productName": "Бургер Классик",
+    "id": 1,
+    "name": "Size",
+    "description": "Product size selection",
     "isRequired": false,
-    "isMultiple": true,
-    "isCountable": true,
-    "maxSelection": 3,
-    "minSelection": 0,
+    "minSelection": 1,
+    "maxSelection": 1,
     "sortOrder": 1,
-    "isActive": true,
-    "itemsCount": 5,
-    "createdAt": "2025-01-20T10:00:00Z",
-    "updatedAt": "2025-01-20T10:00:00Z"
+    "isActive": true
   }
 ]
 ```
 
-#### 2. Создать addition
+#### 2. Get template details
 ```
-POST /admin/menu/additions
+GET /admin/system/templates/modifier-groups/:id
+```
+
+#### 3. Create new template
+```
+POST /admin/system/templates/modifier-groups
 Body: {
-  "name": "Соусы",
-  "description": "Выберите соус к блюду",
-  "productId": 101,
+  "name": "Temperature",
+  "description": "Hot or cold beverage",
   "isRequired": false,
-  "isMultiple": true,
-  "isCountable": true,
-  "maxSelection": 3,
-  "minSelection": 0,
-  "sortOrder": 1
+  "minSelection": 1,
+  "maxSelection": 1,
+  "sortOrder": 2
 }
 ```
 
-#### 3. Обновить addition
+#### 4. Update template
 ```
-PATCH /admin/menu/additions/:id
+PATCH /admin/system/templates/modifier-groups/:id
 Body: {
-  "name": "Соусы и заправки",
-  "maxSelection": 5
+  "description": "Choose beverage temperature"
 }
 ```
 
-#### 4. Удалить addition
+#### 5. Delete template
 ```
-DELETE /admin/menu/additions/:id
+DELETE /admin/system/templates/modifier-groups/:id
 ```
 
-### 🎨 UI Компоненты
+**Note:** Deleting a template only prevents it from being cloned to NEW tenants. Existing tenants keep their copies.
 
-**Список additions в контексте продукта:**
+#### 6. View template usage statistics
+```
+GET /admin/system/templates/modifier-groups/:id/usage
+```
+
+**Response:**
+```json
+{
+  "templateId": 1,
+  "templateName": "Size",
+  "totalTenants": 1247,
+  "totalClones": 1247
+}
+```
+
+### 🎨 UI Components (Super Admin)
+
+**Template List Page:**
 ```
 ┌────────────────────────────────────────────────┐
-│ Дополнение: "Соусы"                            │
-│ Правила: не обязательно, можно несколько (макс 3) │
-│ Количественный: Да                              │
+│ Modifier Group Templates          [+ Create]  │
 ├────────────────────────────────────────────────┤
-│ Addition Items:                                 │
-│ ☰ Чесночный соус              50 ₽    [✏️] [🗑️] │
-│ ☰ Барбекю соус                50 ₽    [✏️] [🗑️] │
-│ ☰ Сырный соус                 70 ₽    [✏️] [🗑️] │
-│ [+ Добавить item]                               │
-│                                                 │
-│ [Редактировать правила] [Удалить группу]        │
+│ Name        | Used By  | Active | Actions     │
+├────────────────────────────────────────────────┤
+│ Size        | 1,247    | ✓      | [✏️] [📊] │
+│             | tenants  |        |            │
+│ Temperature | 856      | ✓      | [✏️] [📊] │
+│             | tenants  |        |            │
 └────────────────────────────────────────────────┘
+
+Legend:
+[✏️] = Edit template
+[📊] = View usage statistics
 ```
 
-**Модальное окно создания addition:**
+**Create/Edit Template Modal:**
 ```
 ┌─────────────────────────────────────────┐
-│  Новое дополнение                       │
+│  Create Modifier Group Template        │
 ├─────────────────────────────────────────┤
-│ Название: [Соусы_______________]        │
-│ Продукт: Бургер Классик                 │
+│  Name: [Size___________________]        │
+│  Description: [________________]        │
 │                                         │
-│ Настройки выбора:                       │
-│ [✓] Можно выбрать несколько             │
-│ [ ] Обязательно выбрать                 │
-│ [✓] Количественный выбор                │
+│  [✓] Required group                     │
+│  Min selections: [1__]                  │
+│  Max selections: [1__]                  │
+│  Sort order: [1__]                      │
 │                                         │
-│ Минимум: [0_] Максимум: [3_]            │
+│  ⚠️ This will be cloned to all new     │
+│     tenants during registration         │
 │                                         │
-│ [Отмена] [Создать]                      │
+│  [Cancel]  [Create Template]            │
 └─────────────────────────────────────────┘
 ```
 
-### ✅ Проверки и валидация
-
-1. **Название addition:**
-   - Обязательное поле
-   - Максимум 100 символов
-
-2. **Ограничения выбора:**
-   - `minSelection` должен быть <= `maxSelection`
-   - Если `isRequired=true`, то `minSelection >= 1`
-   - Если `isMultiple=false`, то `maxSelection = 1`
-
-3. **Product:**
-   - Обязательное поле
-   - Продукт должен существовать
-
-### 🔄 Сценарии использования
-
-**Создание дополнения к продукту:**
+**Usage Statistics Page:**
 ```
-1. Редактируем продукт "Стейк"
-2. Вкладка "Дополнения"
-3. Кнопка "+ Создать дополнение"
-4. Заполняем:
-   - Название: "Гарнир"
-   - Обязательно: Да
-   - Можно несколько: Нет
-   - Мин: 1, Макс: 1
-5. POST /admin/menu/additions
-6. Добавляем Addition Items (картофель, рис, овощи)
+┌─────────────────────────────────────────┐
+│  Template: "Size" - Usage Statistics   │
+├─────────────────────────────────────────┤
+│  Total Tenants Using: 1,247             │
+│  Total Clones: 1,247                    │
+│                                         │
+│  Timeline:                              │
+│  Nov 2025: 156 new clones               │
+│  Oct 2025: 142 new clones               │
+│  Sep 2025: 128 new clones               │
+│                                         │
+│  ⚠️ Modifying this template only        │
+│     affects NEW tenants, not existing   │
+│                                         │
+│  [Back to Templates]                    │
+└─────────────────────────────────────────┘
 ```
 
-**Использование в заказе (POS):**
+### 🔄 User Flow: Super Admin Creates New Template
+
+**Scenario:** Platform admin wants to add "Ice Level" template for beverage businesses.
+
+**Step 1: Create Template**
 ```
-1. Клиент заказывает "Стейк"
-2. POS показывает обязательное дополнение "Гарнир"
-3. Официант выбирает "Картофель фри"
-4. В заказе появляются 2 позиции:
-   - Стейк — 1200₽
-   - Картофель фри (к стейку) — 200₽
-5. Итого: 1400₽
+1. Navigate to: Super Admin Panel → System → Templates
+2. Click [+ Create Modifier Group Template]
+3. Fill form:
+   - Name: "Ice Level"
+   - Description: "Choose ice amount"
+   - Required: No
+   - Min: 1, Max: 1
+   - Sort order: 3
+4. Click [Create Template]
 ```
 
----
+**Step 2: Verify Creation**
+```
+✓ Template "Ice Level" created
+✓ Visible in template list
+✓ Usage: 0 tenants (new template)
+```
 
-## Страница: Шаблоны меню
+**Step 3: Test with New Tenant**
+```
+1. Create test tenant account
+2. Login as test tenant
+3. Navigate to: Menu → Modifiers
+4. See "Ice Level" group available (empty, no modifiers)
+5. Add modifiers: "No Ice", "Light Ice", "Regular", "Extra Ice"
+6. Attach to beverage products
+```
 
-### ⚠️ ВАЖНОЕ ОБНОВЛЕНИЕ - DEPRECATION NOTICE
+**Result:**
+- All future new tenants get "Ice Level" template
+- Existing tenants don't get it automatically
+- Test tenant successfully using the template
 
-> **ВНИМАНИЕ**: Endpoint `GET /admin/menu/templates` **УСТАРЕЛ** и будет удален в версии 2.0!
+## Page: Menu Templates
+
+### ⚠️ DEPRECATION NOTICE
+
+> **WARNING**: `GET /admin/menu/templates` is **DEPRECATED** and will be removed in v2.0!
 >
-> **Используйте вместо него:**
-> - **Во время онбординга (шаг 4: Menu Template):** `GET /admin/onboarding/default-products`
-> - **После онбординга (добавление категорий):** `GET /admin/menu/products/templates` *(Coming in v2.0)*
->
-> **Зачем это изменение:**
-> - Устранение дублирования endpoint'ов (оба возвращали одинаковые данные)
-> - Более четкий контекст использования (онбординг vs пост-онбординг)
-> - Улучшенная архитектура API
->
-> **План миграции:**
-> 1. **СЕЙЧАС (v1.x)**: Переключитесь на `/admin/onboarding/default-products`
-> 2. **v2.0**: Endpoint `/admin/menu/templates` будет удален
-> 3. **v2.0**: Появится новый endpoint `/admin/menu/products/templates` для добавления категорий после онбординга
+> **Use instead:**
+> - **During onboarding:** `GET /admin/onboarding/default-products`
+> - **After onboarding:** `GET /admin/menu/products/templates` *(Coming in v2.0)*
 
----
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Menu Templates`
+**URL:** `/admin/menu/templates` *(DEPRECATED)*
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Шаблоны меню`
-**URL:** `/admin/menu/templates` *(DEPRECATED - see notice above)*
+### 🎯 Page Purpose
+Apply ready-made menu templates for quick start.
 
-### 🎯 Цель страницы
-Применение готовых шаблонов меню для быстрого старта или добавления новых категорий продуктов.
+**When to use which endpoint:**
 
-**⚠️ КОГДА ИСПОЛЬЗОВАТЬ ENDPOINT:**
-
-| Сценарий | Используйте | Статус |
-|----------|-------------|--------|
-| **Во время онбординга** (шаг 4) | `GET /admin/onboarding/default-products` | ✅ **RECOMMENDED** |
-| **Добавление категорий после онбординга** | `GET /admin/menu/products/templates` | 🚧 Coming in v2.0 |
-| **Старый способ (любой)** | `GET /admin/menu/templates` | ⚠️ **DEPRECATED** |
-
-### 💡 Бизнес-логика
-
-**Зачем нужны шаблоны:**
-- Быстрый онбординг нового ресторана
-- Стандартизация меню для франшиз
-- Добавление сезонного меню (например, "Летнее меню")
-
-**Типы шаблонов:**
-- По типу заведения (Кофейня, Пиццерия, Суши-бар)
-- По категории (Завтраки, Десерты, Коктейли)
-- По сезону (Летнее меню, Зимнее меню)
+| Scenario | Use | Status |
+|----------|-----|--------|
+| During onboarding | `GET /admin/onboarding/default-products` | ✅ RECOMMENDED |
+| After onboarding | `GET /admin/menu/products/templates` | 🚧 Coming in v2.0 |
+| Old way | `GET /admin/menu/templates` | ⚠️ DEPRECATED |
 
 ### 📋 API Endpoints
 
-#### 1. ✅ Получить шаблоны во время онбординга (RECOMMENDED)
+#### 1. ✅ Get templates during onboarding (RECOMMENDED)
 ```
 GET /admin/onboarding/default-products?businessType=restaurant
 ```
-
-**Используйте этот endpoint когда:**
-- Пользователь проходит онбординг (шаг 4: Menu Template)
-- Настраивает меню впервые
-- Нужны предустановленные шаблоны по типу бизнеса
-
-**Query Parameters:**
-- `businessType` (required) - Type of business: `restaurant`, `cafe`, `bar`, `fast_food`
 
 **Response:**
 ```json
@@ -1675,331 +1290,69 @@ GET /admin/onboarding/default-products?businessType=restaurant
   "categories": [
     {
       "name": "Main Dishes",
-      "description": "Our main course offerings",
       "products": [
-        {
-          "name": "Pizza Margherita",
-          "description": "Classic Italian pizza with tomato and mozzarella",
-          "suggestedPrice": 25000,
-          "image": "https://cdn.example.com/pizza.jpg",
-          "preparationTime": 15,
-          "calories": 280,
-          "allergens": ["gluten", "dairy"]
-        }
+        { "name": "Pizza Margherita", "suggestedPrice": 25000 }
       ]
     }
   ]
 }
 ```
 
-**Swagger документация:** Полностью описано с примерами
-
----
-
-#### 2. ⚠️ Получить все шаблоны (DEPRECATED - DO NOT USE)
+#### 2. ⚠️ Get all templates (DEPRECATED)
 ```
 GET /admin/menu/templates?businessType=restaurant
 ```
 
-**⚠️ DEPRECATED**: Этот endpoint устарел и будет удален в v2.0
+**[DEPRECATED]** Returns same data as `/admin/onboarding/default-products`
 
-**⚠️ НЕ ИСПОЛЬЗУЙТЕ:** Возвращает те же данные что и `/admin/onboarding/default-products`
+**Migration:** Use `/admin/onboarding/default-products` now
 
-**Почему deprecated:**
-- Дублирует функциональность `/admin/onboarding/default-products`
-- Нет контекста использования (онбординг vs пост-онбординг)
-- Будет удален в v2.0
-
-**Migration path:** Используйте `/admin/onboarding/default-products` прямо сейчас
-
----
-
-#### 3. 🚧 Получить типы заведений (NOT YET IMPLEMENTED)
-```
-GET /admin/menu/templates/business-types
-```
-
-**Статус:** Не реализовано (было в планах, но не добавлено)
-**v2.0 Plan:** Возможно будет добавлено в новый unified endpoint
-
----
-
-#### 4. 🚧 Получить шаблоны по типу (NOT YET IMPLEMENTED)
-```
-GET /admin/menu/templates/business-type/:type
-```
-
-**Статус:** Не реализовано (было в планах, но не добавлено)
-**v2.0 Plan:** Будет заменено на context-aware endpoint
-
----
-
-#### 5. 🚧 Применить шаблон (NOT YET IMPLEMENTED)
-```
-POST /admin/menu/templates/:id/apply
-```
-
-**Статус:** Не реализовано
-
-**Вместо этого используйте:**
+#### 3. Apply template
 ```
 POST /admin/onboarding/steps/menu-setup
-```
-
-Этот endpoint применяет выбранные категории и продукты из шаблона во время онбординга.
-
-**Request Body:**
-```json
-{
+Body: {
   "categories": [
-    {
-      "name": "Main Dishes",
-      "description": "Our main course offerings",
-      "products": [
-        {
-          "name": "Pizza Margherita",
-          "price": 25000,
-          "description": "Classic Italian pizza",
-          "preparationTime": 15
-        }
-      ]
-    }
+    { "name": "Main Dishes", "products": [...] }
   ]
 }
 ```
 
-**⚠️ Важно:**
-- Применение шаблона **НЕ удаляет** существующее меню
-- Новые категории и продукты **добавляются** к текущим
-- Если категория с таким названием уже существует, продукты добавляются в неё
+### 📝 Frontend Migration Guide
 
----
-
-### 📝 Руководство по миграции для Frontend
-
-#### Шаг 1: Обновите endpoint для получения шаблонов
-
-**Было:**
+**Before:**
 ```typescript
-// ❌ Старый способ (DEPRECATED)
+// ❌ Old (DEPRECATED)
 const getTemplates = async (businessType: string) => {
-  const response = await api.get('/admin/menu/templates', {
+  return await api.get('/admin/menu/templates', {
     params: { businessType }
   });
-  return response.data;
 };
 ```
 
-**Стало:**
+**After:**
 ```typescript
-// ✅ Новый способ (RECOMMENDED)
+// ✅ New (RECOMMENDED)
 const getTemplates = async (businessType: string) => {
-  const response = await api.get('/admin/onboarding/default-products', {
+  return await api.get('/admin/onboarding/default-products', {
     params: { businessType }
   });
-  return response.data;
 };
-```
-
-#### Шаг 2: Обновите применение шаблона
-
-**Было:**
-```typescript
-// ❌ Старый способ (NOT IMPLEMENTED)
-const applyTemplate = async (templateId: number) => {
-  await api.post(`/admin/menu/templates/${templateId}/apply`);
-};
-```
-
-**Стало:**
-```typescript
-// ✅ Новый способ (используется в онбординге)
-const applyMenuSetup = async (categories: CategoryTemplate[]) => {
-  const response = await api.post('/admin/onboarding/steps/menu-setup', {
-    categories
-  });
-  return response.data;
-};
-```
-
-#### Шаг 3: Контекст использования
-
-**Во время онбординга (wizard):**
-```typescript
-// Шаг 4 онбординга: Menu Template
-const OnboardingMenuStep = () => {
-  const [templates, setTemplates] = useState([]);
-  const { businessType } = useOnboardingContext();
-
-  useEffect(() => {
-    // ✅ Используем onboarding endpoint
-    fetch('/admin/onboarding/default-products?businessType=' + businessType)
-      .then(res => res.json())
-      .then(setTemplates);
-  }, [businessType]);
-
-  const handleApply = async (selectedCategories) => {
-    // ✅ Применяем через onboarding
-    await fetch('/admin/onboarding/steps/menu-setup', {
-      method: 'POST',
-      body: JSON.stringify({ categories: selectedCategories })
-    });
-  };
-};
-```
-
-**После онбординга (добавление категорий):**
-```typescript
-// 🚧 Coming in v2.0
-const AddCategoriesPage = () => {
-  // В v2.0 будет новый endpoint:
-  // GET /admin/menu/products/templates
-
-  // Пока используйте manual creation:
-  const handleAddCategory = async (category) => {
-    await fetch('/admin/menu/categories', {
-      method: 'POST',
-      body: JSON.stringify(category)
-    });
-  };
-};
-```
-
-#### Шаг 4: Проверьте Swagger документацию
-
-После обновления проверьте:
-1. Endpoint `/admin/menu/templates` помечен как **DEPRECATED** в Swagger UI
-2. Endpoint `/admin/onboarding/default-products` содержит полную документацию
-3. Все примеры и типы данных совпадают
-
-#### Временная линия миграции
-
-| Версия | Действие | Deadline |
-|--------|----------|----------|
-| **v1.x (NOW)** | Используйте `/admin/onboarding/default-products` | ASAP |
-| **v1.x** | `/admin/menu/templates` deprecated но работает | - |
-| **v2.0** | `/admin/menu/templates` будет **УДАЛЕН** | TBD |
-| **v2.0** | Новый endpoint `/admin/menu/products/templates` | TBD |
-
----
-
-### 🎨 UI Компоненты
-
-**Галерея шаблонов:**
-```
-┌──────────────────────────────────────────────────┐
-│ Фильтр по типу: [▼ Все типы заведений]           │
-├──────────────────────────────────────────────────┤
-│ ┌─────────────┐  ┌─────────────┐  ┌─────────────┐│
-│ │ 🖼️          │  │ 🖼️          │  │ 🖼️          ││
-│ │ Кофейня     │  │ Пиццерия    │  │ Суши-бар    ││
-│ │ Базовое меню│  │ Итальянская │  │ Классика    ││
-│ │             │  │             │  │             ││
-│ │ 5 категорий │  │ 4 категории │  │ 6 категорий ││
-│ │ 32 продукта │  │ 28 продуктов│  │ 45 продуктов││
-│ │             │  │             │  │             ││
-│ │ [Просмотр]  │  │ [Просмотр]  │  │ [Просмотр]  ││
-│ │ [Применить] │  │ [Применить] │  │ [Применить] ││
-│ └─────────────┘  └─────────────┘  └─────────────┘│
-└──────────────────────────────────────────────────┘
-```
-
-**Предпросмотр шаблона:**
-```
-┌─────────────────────────────────────────┐
-│  Шаблон: Кофейня — Базовое меню         │
-├─────────────────────────────────────────┤
-│ Будет добавлено:                        │
-│                                         │
-│ 📂 Горячие напитки (12 позиций)         │
-│   ├── Эспрессо                          │
-│   ├── Американо                         │
-│   └── ...                               │
-│                                         │
-│ 📂 Холодные напитки (8 позиций)         │
-│ 📂 Десерты (7 позиций)                  │
-│ 📂 Завтраки (5 позиций)                 │
-│                                         │
-│ ⚠️ Это добавится к вашему текущему меню │
-│                                         │
-│ [Отмена] [Применить шаблон]             │
-└─────────────────────────────────────────┘
-```
-
-### ✅ Проверки и валидация
-
-1. **Перед применением:**
-   - Показать предпросмотр того, что будет добавлено
-   - Предупредить о дублировании категорий
-   - Показать общее количество позиций после применения
-
-2. **После применения:**
-   - Показать уведомление об успешном добавлении
-   - Предложить перейти к редактированию новых позиций
-
-### 🔄 Сценарии использования
-
-**Онбординг новой кофейни:**
-```
-1. Новый клиент регистрируется
-2. Выбирает "Кофейня" как тип заведения
-3. Система предлагает шаблон "Кофейня — Базовое меню"
-4. Клиент просматривает предпросмотр
-5. Применяет шаблон
-6. Получает готовое меню из 32 позиций
-7. Редактирует цены под свой регион
-```
-
-**Добавление сезонного меню:**
-```
-1. Действующая пиццерия
-2. Лето — хочет добавить холодные напитки и салаты
-3. Применяет шаблон "Летнее меню"
-4. Новые категории добавляются к существующим
-5. Редактирует под свои нужды
 ```
 
 ---
 
-## Страница: Настройки по филиалам (Branch Overrides)
+## Page: Branch Overrides
 
-### 📍 Навигация
-**Путь:** `Admin Panel → Меню → Настройки по филиалам`
-**URL:** `/admin/menu/branch-overrides`
+### 📍 Navigation
+**Path:** `Admin Panel → Menu → Branch Overrides`
+**Alternative:** `Products → [Product] → "By Branches" Tab`
 
-**Альтернативный путь:**
-`Продукты → [Продукт] → Вкладка "По филиалам"`
-
-### 🎯 Цель страницы
-Настройка индивидуальных параметров продуктов для каждого филиала сети ресторанов.
-
-### 💡 Бизнес-логика
-
-**Зачем нужны Branch Overrides:**
-- **Разные цены** — центр города дороже, чем спальный район
-- **Региональные особенности** — в прибрежных городах больше морепродуктов
-- **Сезонность** — летом айс-кофе доступен везде, зимой — только в некоторых точках
-- **Тестирование** — запустить новое блюдо в одном филиале до массового внедрения
-
-**Что можно переопределить:**
-- `price` — цена для конкретного филиала
-- `isAvailable` — доступность (включить/выключить продукт)
-- `image` — локализованное фото
-- `name` — локализованное название
-
-**Приоритет:**
-```
-Branch Override > Base Product Settings
-
-Пример:
-├── Базовая цена "Капучино": 350₽
-├── Override для "Филиал Центр": 450₽  ← используется эта цена
-└── Override для "Филиал Окраина": 280₽
-```
+### 🎯 Page Purpose
+Configure branch-specific prices and availability.
 
 ### 📋 API Endpoints
 
-#### 1. Получить все overrides для продукта
+#### 1. Get branch overrides for product
 ```
 GET /admin/menu/products/:id/branches
 ```
@@ -2007,676 +1360,208 @@ GET /admin/menu/products/:id/branches
 **Response:**
 ```json
 [
-  {
-    "branchId": 1,
-    "branchName": "Филиал Центр",
-    "overridePrice": 450,
-    "overrideAvailability": true,
-    "overrideImage": null,
-    "overrideName": null,
-    "isActive": true,
-    "createdAt": "2025-01-20T10:00:00Z"
-  },
-  {
-    "branchId": 2,
-    "branchName": "Филиал Спальный район",
-    "overridePrice": 280,
-    "overrideAvailability": true,
-    "isActive": true
-  },
-  {
-    "branchId": 3,
-    "branchName": "Филиал Аэропорт",
-    "overridePrice": null,
-    "overrideAvailability": false,
-    "isActive": true
-  }
+  { "branchId": 1, "branchName": "Downtown", "price": 450, "isAvailable": true }
 ]
 ```
 
-#### 2. Создать/обновить override для филиала
+#### 2. Create or update branch override (upsert)
 ```
-PATCH /admin/menu/products/:id/branches/:branchId
-Body: {
-  "overridePrice": 450,
-  "overrideAvailability": true,
-  "overrideImage": "https://cdn.example.com/cappuccino-premium.jpg",
-  "overrideName": "Премиум Капучино"
-}
+PUT /admin/menu/products/:id/branches/:branchId
+Body: { "price": 450, "isAvailable": true }
 ```
 
-**⚠️ Важно:**
-- Endpoint работает как **upsert** — создаёт или обновляет
-- Можно переопределить только некоторые поля (остальные наследуются от базового продукта)
-- `null` означает "использовать базовое значение"
+**Response codes:**
+- 201 Created — new override
+- 200 OK — existing override updated
 
-#### 3. Получить все overrides для филиала
+#### 3. Get all overrides for branch
 ```
 GET /admin/menu/branches/:branchId/overrides
 ```
 
-**Response:**
-```json
-[
-  {
-    "productId": 101,
-    "productName": "Капучино",
-    "basePrice": 350,
-    "overridePrice": 450,
-    "overrideAvailability": true
-  },
-  {
-    "productId": 105,
-    "productName": "Чизкейк",
-    "basePrice": 320,
-    "overridePrice": null,
-    "overrideAvailability": false
-  }
-]
-```
+### ✅ Validation
 
-### 🎨 UI Компоненты
-
-**Таблица overrides для продукта:**
-```
-┌──────────────────────────────────────────────────────────────┐
-│ Продукт: Капучино                                            │
-│ Базовая цена: 350₽  |  Базовая доступность: Да              │
-├──────────────────────────────────────────────────────────────┤
-│ Филиал              │ Цена      │ Доступность │ Действия     │
-├──────────────────────────────────────────────────────────────┤
-│ 🏢 Центр            │ 450₽ 🔸   │ ✅ Да       │ [✏️] [🗑️]   │
-│ 🏢 Спальный район   │ 280₽ 🔸   │ ✅ Да       │ [✏️] [🗑️]   │
-│ 🏢 Аэропорт         │ 350₽      │ ❌ Нет 🔸   │ [✏️] [🗑️]   │
-│ 🏢 Университетский  │ 350₽      │ ✅ Да       │ [✏️]         │
-└──────────────────────────────────────────────────────────────┘
-
-🔸 — переопределено (отличается от базового значения)
-```
-
-**Модальное окно редактирования:**
-```
-┌─────────────────────────────────────────┐
-│  Настройки для филиала "Центр"          │
-├─────────────────────────────────────────┤
-│ Продукт: Капучино                       │
-│ Базовая цена: 350₽                      │
-│                                         │
-│ Цена для филиала:                       │
-│ ( ) Использовать базовую (350₽)        │
-│ (•) Переопределить: [450_₽]            │
-│                                         │
-│ Доступность:                            │
-│ ( ) Использовать базовую (Да)          │
-│ (•) Переопределить: [✓ Доступен]       │
-│                                         │
-│ Фото:                                   │
-│ ( ) Использовать базовое               │
-│ ( ) Переопределить: [📷 Загрузить]     │
-│                                         │
-│ [Отмена] [Сохранить]                    │
-└─────────────────────────────────────────┘
-```
-
-### ✅ Проверки и валидация
-
-1. **Цена:**
-   - Если переопределяется, должна быть >= 0
-   - Показать % отклонения от базовой цены
-
-2. **Доступность:**
-   - Если продукт выключен глобально (`isAvailable=false` у базового продукта), предупредить
-
-3. **Филиал:**
-   - Проверить, что филиал существует и активен
-
-### 🔄 Сценарии использования
-
-**Разные цены для разных локаций:**
-```
-1. Открываем продукт "Капучино"
-2. Вкладка "По филиалам"
-3. Видим список всех филиалов
-4. Для "Филиал Центр" устанавливаем цену 450₽
-5. Для "Филиал Окраина" — 280₽
-6. PATCH /admin/menu/products/101/branches/1
-7. PATCH /admin/menu/products/101/branches/2
-8. POS в каждом филиале показывает свою цену
-```
-
-**Временное отключение продукта:**
-```
-1. В "Филиал Аэропорт" закончился сироп для латте
-2. Открываем "Латте" → "По филиалам"
-3. Для "Филиал Аэропорт" отключаем доступность
-4. В других филиалах латте остаётся доступным
-5. Когда привезут сироп — включаем обратно
-```
-
-**Тестирование нового продукта:**
-```
-1. Создаём новый продукт "Раф-кофе"
-2. Устанавливаем базовую доступность = false
-3. В "По филиалам" включаем только для "Тестовый филиал"
-4. Собираем отзывы от клиентов
-5. Если успешно — включаем во всех филиалах
-```
+- Override price: optional, min 0 if provided
+- Branch: must exist
+- No duplicate overrides for same product+branch
 
 ---
 
-## Типовые сценарии использования
+## Common Use Cases
 
-### 🎬 Сценарий 1: Создание нового продукта с нуля
-
-**Задача:** Добавить новую пиццу "Пепперони" в меню.
-
-```
-Шаг 1: Создание продукта
-├── Переходим: Меню → Продукты → [+ Добавить продукт]
-├── Заполняем:
-│   ├── Название: "Пицца Пепперони"
-│   ├── Категория: "Пиццы"
-│   ├── Цена: 890₽
-│   ├── Тип: "Еда"
-│   └── Описание: "Классическая пицца с пепперони и моцареллой"
-├── Загружаем фото
-└── POST /admin/menu/products
-
-Шаг 2: Добавление модификаторов
-├── Вкладка "Модификаторы"
-├── Создаём группу "Размер":
-│   ├── Маленькая (25см) +0₽
-│   ├── Средняя (30см) +200₽
-│   └── Большая (35см) +400₽
-├── Создаём группу "Дополнительные топпинги":
-│   ├── Моцарелла +150₽
-│   ├── Халапеньо +100₽
-│   └── Оливки +100₽
-└── POST /admin/menu/modifiers (для каждого модификатора)
-
-Шаг 3: Добавление дополнений
-├── Вкладка "Дополнения"
-├── Создаём addition "Соусы":
-│   ├── isRequired: false
-│   ├── isMultiple: true
-│   ├── maxSelection: 3
-│   └── Items:
-│       ├── Чесночный 50₽
-│       ├── Барбекю 50₽
-│       └── Сырный 70₽
-└── POST /admin/menu/additions
-
-Шаг 4: Настройка по филиалам (опционально)
-├── Вкладка "По филиалам"
-├── Для "Филиал Премиум" устанавливаем цену 1100₽
-└── PATCH /admin/menu/products/150/branches/1
-
-Результат:
-✅ Продукт создан и доступен в POS
-✅ Официант может принять заказ с кастомизацией
-✅ Система автоматически рассчитывает итоговую цену
-```
-
-### 🎬 Сценарий 2: Массовое изменение цен
-
-**Задача:** Повысить цены на все кофейные напитки на 10%.
-
-```
-Шаг 1: Фильтрация продуктов
-├── Меню → Продукты
-├── Фильтр: Категория = "Горячие напитки"
-└── GET /admin/menu/products?categoryId=5
-
-Шаг 2: Массовое обновление
-├── Выбираем продукты (чекбоксы)
-├── Кнопка "Действия" → "Изменить цены"
-├── Модалка: "Увеличить на 10%"
-└── Для каждого продукта:
-    └── PATCH /admin/menu/products/:id/price
-
-Шаг 3: Проверка
-├── Просматриваем обновлённые цены
-├── Убеждаемся, что изменения применились
-└── Синхронизация с POS происходит автоматически
-```
-
-### 🎬 Сценарий 3: Применение шаблона для нового филиала
-
-**Задача:** Открывается новый филиал, нужно скопировать меню.
-
-```
-Шаг 1: Применение шаблона
-├── Меню → Шаблоны меню
-├── Выбираем "Кофейня — Базовое меню"
-├── Просматриваем предпросмотр
-└── POST /admin/menu/templates/1/apply
-
-Шаг 2: Корректировка цен под регион
-├── Меню → Настройки по филиалам
-├── Выбираем новый филиал
-├── Массово корректируем цены:
-│   ├── Центральные локации: +20%
-│   └── Окраины: -10%
-└── Batch update через API
-
-Шаг 3: Локальные особенности
-├── Добавляем региональные продукты
-├── Отключаем недоступные позиции
-└── Новый филиал готов к работе
-```
-
----
-
-## 📊 Оптимизированная загрузка полного меню
-
-### 📍 Цель
-Получение полного меню с контролем уровня детализации и фильтрацией для оптимизации размера ответа и производительности.
-
-### 🎯 Проблема, которую решает
-Ранее эндпоинт `/admin/menu/full` загружал всё меню целиком (все категории, продукты, модификаторы), что приводило к:
-- Ответам размером 2MB+ JSON
-- Медленной загрузке на мобильных устройствах
-- Высокому использованию трафика
-- Падениям браузеров на слабых устройствах
-
-### ✨ Новые возможности (v1.1)
-
-Теперь эндпоинт поддерживает:
-1. **Pagination** — постраничная загрузка категорий
-2. **Depth Control** — контроль глубины загружаемых данных
-3. **Filtering** — фильтрация по категориям, доступности, филиалам
-
-### 📋 API Endpoint
+### 1. Full Menu Loading with Optimization
 
 ```
 GET /admin/menu/full
+Query:
+  - page? (default: 1)
+  - limit? (default: 20, max: 100)
+  - depth? (1|2|3, default: 2)
+  - categoryId?
+  - available?
+  - branchId?
 ```
 
-#### Query параметры
+**Depth levels:**
+- `depth=1`: Categories only
+- `depth=2`: Categories + products (default)
+- `depth=3`: Full tree with modifiers/additions
 
-| Параметр | Тип | По умолчанию | Описание |
-|----------|-----|--------------|----------|
-| `page` | number | 1 | Номер страницы категорий |
-| `limit` | number | 20 | Количество категорий на странице (макс 100) |
-| `depth` | 1\|2\|3 | 2 | Уровень детализации данных |
-| `categoryId` | number | - | Загрузить только одну категорию |
-| `available` | boolean | - | Фильтр по доступности продуктов |
-| `branchId` | number | - | Применить оверрайды для филиала |
-
-#### Depth (уровни детализации)
-
-**depth=1** — Только категории (без продуктов)
-```json
-{
-  "categories": [
-    {
-      "id": 1,
-      "name": "Напитки",
-      "description": "Горячие и холодные напитки",
-      "sortOrder": 0
-      // Нет поля products
-    }
-  ],
-  "meta": { "total": 45, "page": 1, "limit": 20, ... }
-}
-```
-
-**Использование:** Для отображения списка категорий в навигации, когда продукты пока не нужны.
-
----
-
-**depth=2** — Категории + продукты (БЕЗ модификаторов и дополнений) ✅ **По умолчанию**
-```json
-{
-  "categories": [
-    {
-      "id": 1,
-      "name": "Напитки",
-      "products": [
-        {
-          "id": 101,
-          "name": "Капучино",
-          "price": 15000,
-          "isAvailable": true
-          // Нет полей modifierGroups, additions
-        }
-      ]
-    }
-  ],
-  "meta": { ... }
-}
-```
-
-**Использование:** Для главного экрана управления меню. Показывает структуру категорий и продуктов без лишних деталей.
-
----
-
-**depth=3** — Полное дерево (категории + продукты + модификаторы + дополнения)
-```json
-{
-  "categories": [
-    {
-      "id": 1,
-      "name": "Напитки",
-      "products": [
-        {
-          "id": 101,
-          "name": "Капучино",
-          "price": 15000,
-          "modifierGroups": [
-            {
-              "id": 5,
-              "name": "Размер",
-              "modifiers": [
-                { "id": 10, "name": "Маленький", "price": 0 },
-                { "id": 11, "name": "Средний", "price": 2000 },
-                { "id": 12, "name": "Большой", "price": 5000 }
-              ]
-            }
-          ],
-          "additions": [ ... ]
-        }
-      ]
-    }
-  ]
-}
-```
-
-**Использование:** Для экспорта меню, детального просмотра, или для предзагрузки всех данных для оффлайн-режима.
-
----
-
-### 📊 Пример использования пагинации
-
-```typescript
-// Загрузка первой страницы (категории 1-20)
-GET /admin/menu/full?page=1&limit=20&depth=2
-
-Response:
-{
-  "categories": [ ... 20 категорий ... ],
-  "meta": {
-    "total": 45,           // Всего категорий
-    "page": 1,             // Текущая страница
-    "limit": 20,           // Категорий на странице
-    "totalPages": 3,       // Всего страниц
-    "hasNextPage": true,   // Есть следующая страница
-    "hasPreviousPage": false
-  }
-}
-
-// Загрузка второй страницы (категории 21-40)
-GET /admin/menu/full?page=2&limit=20&depth=2
-
-// Загрузка последней страницы (категории 41-45)
-GET /admin/menu/full?page=3&limit=20&depth=2
-Response.meta.hasNextPage = false
-```
-
-### 🔍 Примеры фильтрации
-
-#### 1. Загрузить только категорию "Напитки" со всеми продуктами
-```
-GET /admin/menu/full?categoryId=5&depth=2
-```
-
-#### 2. Показать только доступные продукты
-```
-GET /admin/menu/full?available=true&depth=2
-```
-
-#### 3. Загрузить меню с ценами для конкретного филиала
-```
-GET /admin/menu/full?branchId=3&depth=2
-```
-*Применяет branch overrides — цены и доступность, специфичные для филиала*
-
-#### 4. Комбинация фильтров
-```
-GET /admin/menu/full?categoryId=5&available=true&branchId=3&depth=2
-```
-*Загрузить категорию 5, только доступные продукты, с ценами филиала 3*
-
----
-
-### 📈 Производительность
-
-| Сценарий | Размер ответа | Время загрузки (3G) |
-|----------|---------------|---------------------|
-| **Старый метод** (весь меню depth=3) | ~2.5 MB | 8-12 сек |
-| **depth=1** (только категории) | ~15 KB | < 1 сек |
-| **depth=2, limit=20** (по умолчанию) | ~120 KB | 1-2 сек |
-| **depth=3, limit=5** (полное дерево, малая порция) | ~200 KB | 2-3 сек |
-
-**Рекомендации:**
-- Используйте **depth=1** для списков категорий в навигации
-- Используйте **depth=2** для основного экрана управления меню
-- Используйте **depth=3** только при необходимости полной информации (экспорт, детальный просмотр)
-- Для мобильных устройств используйте `limit=10-15`
-
----
-
-### 🛠️ Фронтенд-реализация
-
-**Пример загрузки меню с пагинацией (React):**
-```typescript
-const [menuData, setMenuData] = useState(null);
-const [currentPage, setCurrentPage] = useState(1);
-const [loading, setLoading] = useState(false);
-
-const loadMenu = async (page = 1, depth = 2) => {
-  setLoading(true);
-
-  const response = await fetch(
-    `/admin/menu/full?page=${page}&limit=20&depth=${depth}`,
-    {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-  );
-
-  const data = await response.json();
-  setMenuData(data);
-  setCurrentPage(page);
-  setLoading(false);
-};
-
-// Компонент пагинации
-<Pagination
-  current={menuData.meta.page}
-  total={menuData.meta.totalPages}
-  hasNext={menuData.meta.hasNextPage}
-  hasPrev={menuData.meta.hasPreviousPage}
-  onPageChange={loadMenu}
-/>
-```
-
-**Пример переключения уровней детализации:**
-```typescript
-const [viewMode, setViewMode] = useState<'categories' | 'products' | 'full'>('products');
-
-const depthMap = {
-  'categories': 1,
-  'products': 2,
-  'full': 3
-};
-
-// При переключении режима
-const handleViewModeChange = (mode) => {
-  setViewMode(mode);
-  loadMenu(1, depthMap[mode]);
-};
-```
-
----
-
-### ⚠️ Важные замечания
-
-1. **Фильтр `filters` в ответе** — показывает, какие фильтры применены:
+**Response:**
 ```json
 {
   "categories": [...],
-  "meta": {...},
-  "filters": {
-    "depth": 2,
-    "categoryId": 5,
-    "available": true,
-    "branchId": 3
-  }
+  "meta": {
+    "total": 45,
+    "page": 1,
+    "totalPages": 3,
+    "hasNextPage": true
+  },
+  "filters": { "depth": 2 }
 }
 ```
 
-2. **Branch overrides** применяются автоматически при указании `branchId`:
-   - Поле `effectivePrice` вместо `price`
-   - Поле `effectiveAvailability` вместо `isAvailable`
+### 2. Search Products
 
-3. **Пагинация категорий**, не продуктов:
-   - `limit` ограничивает количество категорий на странице
-   - Все продукты внутри категории загружаются сразу
-   - Если нужна пагинация продуктов — используйте `/admin/menu/products?categoryId=X&page=Y`
+```typescript
+const searchProducts = async (query: string) => {
+  return await api.get('/admin/menu/products', {
+    params: { q: query, page: 1, limit: 20 }
+  });
+};
+```
 
-4. **Кэширование рекомендуется:**
-   - Категории редко меняются → кэш на 5-10 минут
-   - Продукты меняются чаще → кэш на 1-2 минуты
-   - Используйте `Cache-Control` заголовки
+### 3. Quick Availability Toggle
+
+```typescript
+const toggleAvailability = async (productId, isAvailable) => {
+  await api.patch(`/admin/menu/products/${productId}/availability`, {
+    isAvailable
+  });
+};
+```
+
+### 4. Bulk Price Increase
+
+```typescript
+const increaseCategoryPrices = async (categoryId, percentage) => {
+  const { data } = await api.get('/admin/menu/products', {
+    params: { categoryId, limit: 1000 }
+  });
+
+  await api.patch('/admin/menu/products/bulk-price', {
+    productIds: data.data.map(p => p.id),
+    priceChange: { type: 'percentage', value: percentage }
+  });
+};
+```
+
+### 5. Validate Menu
+
+```typescript
+const validateMenu = async () => {
+  const { data } = await api.get('/admin/menu/validate');
+  return data; // { errors: [], warnings: [] }
+};
+```
 
 ---
 
-## 🔧 Технические требования к фронтенду
+## 🔧 Technical Requirements
 
-### Аутентификация
-- Все запросы должны содержать JWT токен в заголовке `Authorization: Bearer <token>`
-- Токен получается через `/auth/login`
-- При 401 ошибке — автоматический refresh через `/auth/refresh`
+### Authentication
+- All requests require JWT: `Authorization: Bearer <token>`
+- On 401: refresh via `/auth/refresh`
 
-### Обработка ошибок
+### Error Handling
 
-**Успешный ответ:**
+**Success:**
 ```json
 Status: 200 OK
-{ "id": 101, "name": "Капучино", ... }
+{ "id": 101, "name": "Cappuccino" }
 ```
 
-**Ошибка валидации:**
+**Validation error:**
 ```json
 Status: 400 Bad Request
 {
   "statusCode": 400,
-  "message": ["name should not be empty", "price must be a number"],
+  "message": ["name should not be empty"],
   "error": "Bad Request"
 }
 ```
 
-**Не найдено:**
+**Not found:**
 ```json
 Status: 404 Not Found
-{
-  "statusCode": 404,
-  "message": "Product with ID 999 not found",
-  "error": "Not Found"
-}
+{ "statusCode": 404, "message": "Product not found" }
 ```
 
-### Оптимизация
-- Использовать **debounce** для поиска (минимум 300ms)
-- Кэшировать списки категорий (они редко меняются)
-- Lazy loading для списков продуктов (пагинация)
-- Оптимистичные обновления UI (не ждать ответа сервера)
-
-### Реактивность
-- Обновлять списки после создания/редактирования без перезагрузки страницы
-- Показывать loading states
-- Показывать toast-уведомления об успехе/ошибке
+### Optimization
+- Debounce search (min 300ms)
+- Cache category lists
+- Lazy loading for products
+- Optimistic UI updates
 
 ---
 
-## 📚 Дополнительные материалы
+## 📚 Additional Materials
 
-### Swagger документация
-API документация доступна по адресу: `http://localhost:3000/api/docs`
+### Swagger Documentation
+Available at: `http://localhost:3000/api/docs`
 
-Все endpoint'ы имеют:
-- Подробные описания
-- Примеры запросов/ответов
-- Схемы валидации
-- Коды ошибок
-
-### Связь между сущностями
+### Entity Relationships
 ```
 Category
   └── Product
-      ├── ModifierGroup (many-to-many через ProductModifierGroup)
-      │   └── Modifier (one-to-many)
+      ├── ModifierGroup (many-to-many)
+      │   └── Modifier
       ├── Addition
       │   └── AdditionItem
       └── BranchOverride
-
-Особенности:
-- Один ModifierGroup может быть привязан к нескольким Product
-- Один Product может иметь несколько ModifierGroup
-- Модификаторы (Modifier) всегда принадлежат одной группе (ModifierGroup)
-- Группу можно переиспользовать (например, "Размер" для всех пицц)
 ```
 
-### Приоритеты разработки
+### Development Priorities
 
-**Высокий приоритет (MVP):**
-1. ✅ Категории (CRUD)
-2. ✅ Продукты (CRUD + быстрое редактирование цены/доступности)
-3. ✅ **Группы модификаторов (CRUD + привязка к продуктам)** — РЕАЛИЗОВАНО 2025-10-31
-4. ✅ Модификаторы (CRUD в контексте групп)
-5. ✅ Branch Overrides (цена + доступность)
+**High (MVP):**
+1. ✅ Categories CRUD
+2. ✅ Products CRUD
+3. ✅ Modifier Groups
+4. ✅ Branch Overrides
 
-**Средний приоритет:**
-6. Additions (полное управление)
-7. Шаблоны меню (применение)
-8. Массовые операции
+**Medium:**
+5. Additions
+6. Menu Templates
+7. Bulk operations
 
-**Низкий приоритет (будущие улучшения):**
-9. Импорт/экспорт меню
-10. История изменений
-11. A/B тестирование цен
+**Low:**
+8. Import/export
+9. Change history
 
 ---
 
-## 📝 История изменений
+## 📝 Change Log
 
-### Версия 1.2 — 2025-11-03
-**Добавлено:**
-- ✅ Новые рекомендуемые endpoints для ассоциации модификаторов:
-  - `POST /products/:productId/attach-modifier-group` (вместо nested resource)
-  - `DELETE /products/:productId/detach-modifier-group` (вместо nested resource)
-- ✅ Полное руководство по миграции от старых endpoints к новым
-- ✅ Объяснение проблем со старыми nested resource endpoints
-- ✅ Timeline удаления deprecated endpoints (v2.0)
+### Version 1.2 — 2025-11-03
+**Added:**
+- ✅ New recommended association endpoints
+- ✅ Migration guide from old to new endpoints
 
 **Deprecated:**
-- ⚠️ `POST /products/:productId/modifier-groups/:groupId` — будет удален в v2.0
-- ⚠️ `DELETE /products/:productId/modifier-groups/:groupId` — будет удален в v2.0
+- ⚠️ `POST /products/:productId/modifier-groups/:groupId` → v2.0
+- ⚠️ `DELETE /products/:productId/modifier-groups/:groupId` → v2.0
 
-**Причина изменений:**
-Старые nested resource endpoints (`/products/:productId/modifier-groups/:groupId`) выглядели как CRUD операции над вложенными ресурсами, хотя на самом деле управляли ассоциациями между сущностями. Новые endpoints с action-based naming (`attach-modifier-group`, `detach-modifier-group`) делают семантику операций более явной и следуют REST best practices для управления отношениями.
+### Version 1.1 — 2025-10-31
+**Added:**
+- ✅ Full modifier groups documentation
+- ✅ UI components
+- ✅ Use case scenarios
 
-### Версия 1.1 — 2025-10-31
-**Добавлено:**
-- ✅ Полная документация API для групп модификаторов (8 endpoints)
-- ✅ UI компоненты для управления группами
-- ✅ 6 детальных сценариев использования групп модификаторов
-- ✅ Правила валидации для групп и модификаторов
-- ✅ Workflow привязки/отвязки групп к продуктам
-
-**Изменено:**
-- Расширена секция "Страница: Модификаторы" с разделением на группы и модификаторы
-- Обновлены UI mockups с поддержкой групп
-- Добавлены примеры переиспользования групп между продуктами
-
-### Версия 1.0 — 2025-01-24
-- Первоначальная версия документа
-- Базовая документация категорий, продуктов, модификаторов
+### Version 1.0 — 2025-01-24
+- Initial version
 
 ---
 
-**Текущая версия:** 1.2
-**Дата обновления:** 2025-11-03
-**Следующее обновление:** После завершения миграции на новые association endpoints
-
-**Вопросы и предложения:** направляйте в Slack канал #admin-panel-dev
+**Current version:** 1.2
+**Last update:** 2025-11-03
+**Questions:** #admin-panel-dev Slack channel

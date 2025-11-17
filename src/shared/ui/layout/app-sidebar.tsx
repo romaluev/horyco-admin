@@ -87,11 +87,10 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
             <Image
-              className="mr-1 !h-10 !w-10 overflow-hidden rounded-2xl"
+              className="w-40 overflow-hidden rounded-2xl"
               src={logo}
               alt=""
             />
-            <h1 className="py-4 text-2xl font-bold text-[#023055]">Horyco Admin</h1>
           </SidebarGroupLabel>
 
           <div className="mb-4 px-2 group-data-[collapsible=icon]:hidden">

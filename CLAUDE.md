@@ -82,7 +82,7 @@ Every completed task must have:
 
 ### Important notes:
 
-- When user request completely violates the docs ask clarifying questions.
+- When user request completely violates the docs ask clarifying questions. It's always better to clarify rather then messing up code.
 - Keep your summaries on finish very short, clear, informative and important notes highlight in the end.
 
 ---

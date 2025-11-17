@@ -61,11 +61,10 @@ export function OnboardingLayout({
         <div className="container mx-auto px-2 py-3">
           <div className="mb-3 flex items-center justify-center gap-2">
             <Image
-              className="!h-10 !w-10 overflow-hidden rounded-lg"
+              className="w-32 overflow-hidden rounded-lg"
               src={logo}
               alt="Horyco Admin"
             />
-            <h1 className="text-2xl font-semibold text-[#023055]">Horyco Admin</h1>
           </div>
 
           {/* Progress Steps */}

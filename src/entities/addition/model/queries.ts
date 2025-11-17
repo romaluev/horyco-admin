@@ -8,7 +8,7 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { additionApi } from './api'
 import { additionKeys } from './query-keys'
 
-import type { IAddition, IGetAdditionsParams, IAdditionItem } from './types'
+import type { IAddition, IGetAdditionsParams } from './types'
 
 /**
  * Get all additions with optional filters
@@ -50,24 +50,6 @@ export const useGetAdditionsByProduct = (
     queryKey: additionKeys.byProduct(productId),
     queryFn: () => additionApi.getAdditions({ productId }),
     enabled: !!productId,
-    ...options,
-  })
-}
-
-/**
- * Get addition items for a specific addition
- */
-export const useGetAdditionItems = (
-  additionId: number,
-  options?: Omit<
-    UseQueryOptions<IAdditionItem[], Error>,
-    'queryKey' | 'queryFn'
-  >
-) => {
-  return useQuery({
-    queryKey: additionKeys.items.byAddition(additionId),
-    queryFn: () => additionApi.getAdditionItems(additionId),
-    enabled: !!additionId,
     ...options,
   })
 }

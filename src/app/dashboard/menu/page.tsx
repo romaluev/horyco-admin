@@ -11,7 +11,6 @@ import Link from 'next/link'
 import {
   ArrowRight,
   Building2,
-  FileText,
   FolderTree,
   Package,
   Plus,
@@ -29,7 +28,6 @@ import {
 
 import { useGetAdditions } from '@/entities/addition'
 import { useGetCategories } from '@/entities/category'
-import { useGetTemplates } from '@/entities/menu-template'
 import { useGetModifiers } from '@/entities/modifier'
 import { useGetProducts } from '@/entities/product'
 
@@ -69,14 +67,6 @@ const menuSections = [
     bgColor: 'bg-orange-50',
   },
   {
-    title: 'Шаблоны меню',
-    description: 'Готовые шаблоны для быстрого запуска',
-    icon: FileText,
-    href: '/dashboard/menu/templates',
-    color: 'text-pink-500',
-    bgColor: 'bg-pink-50',
-  },
-  {
     title: 'Переопределения филиалов',
     description: 'Индивидуальные настройки для каждого филиала',
     icon: Building2,
@@ -91,7 +81,6 @@ export default function MenuPage(): JSX.Element {
   const { data: productsData } = useGetProducts()
   const { data: modifiers = [] } = useGetModifiers()
   const { data: additions = [] } = useGetAdditions()
-  const { data: templates = [] } = useGetTemplates()
 
   const stats = [
     {
@@ -113,11 +102,6 @@ export default function MenuPage(): JSX.Element {
       label: 'Дополнения',
       value: additions.length,
       href: '/dashboard/menu/additions',
-    },
-    {
-      label: 'Шаблоны',
-      value: templates.length,
-      href: '/dashboard/menu/templates',
     },
   ]
 
@@ -199,19 +183,6 @@ export default function MenuPage(): JSX.Element {
                 цена/доступность)
               </li>
             </ol>
-          </div>
-          <div className="space-y-2 border-t pt-4">
-            <h3 className="font-semibold">Или используйте готовые решения:</h3>
-            <p className="text-muted-foreground text-sm">
-              Просмотрите шаблоны меню для быстрого запуска с готовой структурой
-              категорий и продуктов
-            </p>
-            <Link href="/dashboard/menu/templates">
-              <Button>
-                <FileText className="mr-2 h-4 w-4" />
-                Открыть шаблоны
-              </Button>
-            </Link>
           </div>
         </CardContent>
       </Card>

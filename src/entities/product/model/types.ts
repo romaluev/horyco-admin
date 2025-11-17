@@ -60,6 +60,59 @@ export interface IUpdateProductAvailabilityDto {
   isAvailable: boolean
 }
 
+/**
+ * Bulk Operations Types (NEW - 2025-11-03)
+ */
+export interface IBulkCreateProductsDto {
+  products: ICreateProductDto[]
+}
+
+export interface IBulkCreateProductsResult {
+  total: number
+  successful: number
+  failed: number
+  results: Array<{
+    success: boolean
+    data?: IProduct
+    error?: string
+  }>
+}
+
+export interface IBulkPriceUpdateDto {
+  productIds: number[]
+  priceChange: {
+    type: 'percentage' | 'fixed'
+    value: number
+  }
+}
+
+export interface IBulkAvailabilityUpdateDto {
+  productIds: number[]
+  isAvailable: boolean
+}
+
+export interface IBulkDeleteDto {
+  productIds: number[]
+}
+
+export interface IBulkDeleteResult {
+  deleted: number
+  failed: number
+  errors?: Array<{
+    productId: number
+    reason: string
+  }>
+}
+
+export interface IBulkUpdateDto {
+  productIds: number[]
+  updates: Partial<IUpdateProductDto>
+}
+
+export interface IReorderProductsDto {
+  productIds: number[]
+}
+
 export interface IGetProductsParams {
   categoryId?: number
   available?: boolean
@@ -74,46 +127,4 @@ export interface IProductsResponse {
   page: number
   limit: number
   totalPages: number
-}
-
-/**
- * Product Type - Classification category
- */
-export interface IProductType {
-  id: number
-  name: string
-  description?: string
-  image?: string
-  createdAt: string
-  updatedAt?: string
-}
-
-export interface ICreateProductTypeDto {
-  name: string
-  description?: string
-  image?: string
-}
-
-export interface IUpdateProductTypeDto {
-  name?: string
-  description?: string
-  image?: string
-}
-
-export interface IProductTypeResponse {
-  data: IProductType[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
-
-/**
- * Legacy types for backward compatibility
- * TODO: Remove after full migration
- */
-export interface IProductTypeRequest {
-  name: string
-  description?: string
-  image?: string
 }

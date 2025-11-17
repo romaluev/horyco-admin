@@ -22,15 +22,3 @@ export const additionSchema = z.object({
 })
 
 export type AdditionFormValues = z.infer<typeof additionSchema>
-
-/**
- * Schema for creating/updating an addition item
- */
-export const additionItemSchema = z.object({
-  name: z.string().min(1, 'Название обязательно'),
-  price: z.number().min(0, 'Цена должна быть положительной'),
-  additionId: z.number().positive('ID дополнения обязателен'),
-  sortOrder: z.number().min(0).default(0),
-})
-
-export type AdditionItemFormValues = z.infer<typeof additionItemSchema>

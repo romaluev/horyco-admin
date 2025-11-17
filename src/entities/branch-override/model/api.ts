@@ -45,16 +45,17 @@ export const branchOverrideApi = {
   },
 
   /**
-   * PATCH /admin/menu/products/:id/branches/:branchId
+   * PUT /admin/menu/products/:id/branches/:branchId
    * Create or update branch override (upsert)
    * Setting a field to null means "use base product value"
+   * Response codes: 201 Created (new), 200 OK (updated)
    */
   async upsertBranchOverride(
     productId: number,
     branchId: number,
     data: IUpsertBranchOverrideDto
   ): Promise<IBranchOverride> {
-    const response = await api.patch<ApiResponse<IBranchOverride>>(
+    const response = await api.put<ApiResponse<IBranchOverride>>(
       `/admin/menu/products/${productId}/branches/${branchId}`,
       data
     )

@@ -52,10 +52,6 @@ export const getNavItems = (): NavItem[] => [
         url: '/dashboard/menu/additions',
       },
       {
-        title: 'Шаблоны',
-        url: '/dashboard/menu/templates',
-      },
-      {
         title: 'Переопределения филиалов',
         url: '/dashboard/menu/branch-overrides',
       },

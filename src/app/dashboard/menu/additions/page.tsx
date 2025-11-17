@@ -11,11 +11,9 @@ import { Plus, Trash } from 'lucide-react'
 
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/shared/ui/base/accordion'
-import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import {
   Select,
@@ -30,12 +28,10 @@ import PageContainer from '@/shared/ui/layout/page-container'
 import {
   useGetAdditions,
   useDeleteAddition,
-  useDeleteAdditionItem,
 } from '@/entities/addition'
 import { useGetProducts } from '@/entities/product'
 import {
   CreateAdditionDialog,
-  CreateAdditionItemDialog,
 } from '@/features/addition-form'
 
 import type { JSX } from 'react'
@@ -48,7 +44,6 @@ export default function AdditionsPage(): JSX.Element {
   )
   const { data: productsData } = useGetProducts({ limit: 100 })
   const { mutate: deleteAddition } = useDeleteAddition()
-  const { mutate: deleteItem } = useDeleteAdditionItem()
 
   const products = productsData?.data || []
 
@@ -100,20 +95,12 @@ export default function AdditionsPage(): JSX.Element {
         </Select>
 
         {additions && additions.length > 0 && (
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-lg border p-4">
               <p className="text-muted-foreground text-sm font-medium">
                 Групп дополнений
               </p>
               <p className="text-2xl font-bold">{additions.length}</p>
-            </div>
-            <div className="rounded-lg border p-4">
-              <p className="text-muted-foreground text-sm font-medium">
-                Всего позиций
-              </p>
-              <p className="text-2xl font-bold">
-                {additions.reduce((sum, add) => sum + add.items.length, 0)}
-              </p>
             </div>
             <div className="rounded-lg border p-4">
               <p className="text-muted-foreground text-sm font-medium">
@@ -157,54 +144,18 @@ export default function AdditionsPage(): JSX.Element {
                         {addition.maxSelection}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary">
-                        {addition.items.length} позиций
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          deleteAddition(addition.id)
-                        }}
-                      >
-                        <Trash className="text-destructive h-4 w-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteAddition(addition.id)
+                      }}
+                    >
+                      <Trash className="text-destructive h-4 w-4" />
+                    </Button>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
-                  <div className="space-y-2">
-                    {addition.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between rounded-md border p-3"
-                      >
-                        <p className="font-medium">{item.name}</p>
-                        <div className="flex items-center gap-3">
-                          <span className="font-medium">{item.price} ₽</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteItem(item.id)}
-                          >
-                            <Trash className="text-destructive h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                    <CreateAdditionItemDialog
-                      additionId={addition.id}
-                      trigger={
-                        <Button size="sm" variant="outline">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Добавить позицию
-                        </Button>
-                      }
-                    />
-                  </div>
-                </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>

@@ -9,22 +9,15 @@ export {
   useGetAdditions,
   useGetAdditionById,
   useGetAdditionsByProduct,
-  useGetAdditionItems,
 } from './queries'
 export {
   useCreateAddition,
   useUpdateAddition,
   useDeleteAddition,
-  useCreateAdditionItem,
-  useUpdateAdditionItem,
-  useDeleteAdditionItem,
 } from './mutations'
 export type {
   IAddition,
   ICreateAdditionDto,
   IUpdateAdditionDto,
   IGetAdditionsParams,
-  IAdditionItem,
-  ICreateAdditionItemDto,
-  IUpdateAdditionItemDto,
 } from './types'

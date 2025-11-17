@@ -14,10 +14,4 @@ export const additionKeys = {
   detail: (id: number) => [...additionKeys.details(), id] as const,
   byProduct: (productId: number) =>
     [...additionKeys.all(), 'product', productId] as const,
-
-  items: {
-    all: () => ['addition-items'] as const,
-    byAddition: (additionId: number) =>
-      [...additionKeys.items.all(), 'addition', additionId] as const,
-  },
 } as const

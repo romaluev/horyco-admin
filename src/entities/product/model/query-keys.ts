@@ -12,13 +12,4 @@ export const productKeys = {
     [...productKeys.lists(), params] as const,
   details: () => [...productKeys.all(), 'detail'] as const,
   detail: (id: number) => [...productKeys.details(), id] as const,
-  productTypes: {
-    all: () => ['product-types'] as const,
-    lists: () => [...productKeys.productTypes.all(), 'list'] as const,
-    list: (params?: { page?: number; limit?: number }) =>
-      [...productKeys.productTypes.lists(), params] as const,
-    details: () => [...productKeys.productTypes.all(), 'detail'] as const,
-    detail: (id: number) =>
-      [...productKeys.productTypes.details(), id] as const,
-  },
 } as const

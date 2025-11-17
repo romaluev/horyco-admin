@@ -1,4 +1,4 @@
-Implement new feature.
+Implement new feature i will provide you the documentation of the feature and you should implement it with 100% reflection of the documentation. Btw you should follow all standards and skills..
 
 Docs: $ARGUMENTS
 
@@ -16,13 +16,12 @@ plan → implement → test → validate
 - `.claude/skills/design-system.md`
 - `.claude/skills/project-index.md`
 
-**Get requirements** from user
+**Load docs** user should provide you docs and you should load andy analyze them.
 
-**Plan file organization with skill**:
+**If you have any questions ask me**
 
 - Use shared components.
 - Plan the architecture.
-- File structure with good decomposition
 
 ---
 
@@ -46,21 +45,9 @@ Created:
 - etc.
 
 ```
-
 ---
 
-## Phase 3: Test
-
-**Call test-writer**:
-
-- Component tests (RTL)
-- API tests (MSW)
-- Integration tests
-- Target: ≥80% coverage
-
----
-
-## Phase 4: Validate
+## Phase 3: Validate
 
 **Run**:
 

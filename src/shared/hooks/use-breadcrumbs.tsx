@@ -48,11 +48,6 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
       link: '/dashboard/menu/branch-overrides',
     },
   ],
-  '/dashboard/menu/templates': [
-    { title: 'Панель управления', link: '/dashboard' },
-    { title: 'Меню', link: '/dashboard/menu' },
-    { title: 'Шаблоны', link: '/dashboard/menu/templates' },
-  ],
   '/dashboard/staff': [
     { title: 'Панель управления', link: '/dashboard' },
     { title: 'Персонал', link: '/dashboard/staff' },

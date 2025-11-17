@@ -29,7 +29,6 @@ import { useGetCategories } from '@/entities/category'
 import { useGetProducts } from '@/entities/product'
 import { ProductsDataTable } from '@/entities/product/ui/products-data-table'
 
-import type { IProduct } from '@/entities/product'
 import type { JSX } from 'react'
 
 export default function ProductsPage(): JSX.Element {

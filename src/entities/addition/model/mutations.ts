@@ -12,8 +12,6 @@ import { additionKeys } from './query-keys'
 import type {
   ICreateAdditionDto,
   IUpdateAdditionDto,
-  ICreateAdditionItemDto,
-  IUpdateAdditionItemDto,
 } from './types'
 
 /**
@@ -71,70 +69,6 @@ export const useDeleteAddition = () => {
     onError: (error: Error) => {
       toast.error('Ошибка при удалении дополнения')
       console.error('Delete addition error:', error)
-    },
-  })
-}
-
-// ===== Addition Items Mutations =====
-
-/**
- * Create addition item mutation
- */
-export const useCreateAdditionItem = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (data: ICreateAdditionItemDto) =>
-      additionApi.createAdditionItem(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: additionKeys.all() })
-      queryClient.invalidateQueries({ queryKey: additionKeys.items.all() })
-      toast.success('Элемент добавлен')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при добавлении элемента')
-      console.error('Create addition item error:', error)
-    },
-  })
-}
-
-/**
- * Update addition item mutation
- */
-export const useUpdateAdditionItem = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IUpdateAdditionItemDto }) =>
-      additionApi.updateAdditionItem(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: additionKeys.all() })
-      queryClient.invalidateQueries({ queryKey: additionKeys.items.all() })
-      toast.success('Элемент обновлен')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при обновлении элемента')
-      console.error('Update addition item error:', error)
-    },
-  })
-}
-
-/**
- * Delete addition item mutation
- */
-export const useDeleteAdditionItem = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (id: number) => additionApi.deleteAdditionItem(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: additionKeys.all() })
-      queryClient.invalidateQueries({ queryKey: additionKeys.items.all() })
-      toast.success('Элемент удален')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при удалении элемента')
-      console.error('Delete addition item error:', error)
     },
   })
 }

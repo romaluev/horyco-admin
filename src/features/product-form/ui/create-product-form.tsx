@@ -25,7 +25,6 @@ import { useCreateProduct } from '@/entities/product'
 
 import { ProductFormCategory } from './product-form-category'
 import { ProductFormImages } from './product-form-images'
-import { ProductFormType } from './product-form-type'
 import { productSchema } from '../model/contract'
 
 import type { ProductFormValues } from '../model/contract'
@@ -48,7 +47,7 @@ export const CreateProductForm = () => {
   const defaultValues: Partial<ProductFormValues> = {
     name: '',
     categoryId: 0,
-    productTypeId: 0,
+    productTypeId: 1,
     price: 0,
     description: '',
     isAvailable: true,
@@ -91,7 +90,10 @@ export const CreateProductForm = () => {
   }
 
   const onSubmit = async (values: ProductFormValues): Promise<void> => {
-    const productData = values
+    const productData = {
+      ...values,
+      productTypeId: values.productTypeId || 1,
+    }
     setSending(true)
 
     try {
@@ -160,8 +162,6 @@ export const CreateProductForm = () => {
           />
 
           <ProductFormCategory />
-
-          <ProductFormType />
 
           <FormField
             control={form.control}

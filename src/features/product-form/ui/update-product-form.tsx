@@ -21,7 +21,6 @@ import {
 import { useGetProductById, useUpdateProduct } from '@/entities/product'
 
 import { ProductFormImages } from './product-form-images'
-import { ProductFormType } from './product-form-type'
 import { productSchema } from '../model/contract'
 
 import type * as z from 'zod'
@@ -44,8 +43,8 @@ export const UpdateProductForm = ({
   const defaultValues = {
     image: product?.image || '',
     name: product?.name || '',
-    productTypeId: product?.productTypeId || 0,
     categoryId: product?.categoryId || 0,
+    productTypeId: product?.productTypeId || 1,
     price: product?.price || 0,
     description: product?.description || '',
     isAvailable: product?.isAvailable ?? true,
@@ -121,8 +120,6 @@ export const UpdateProductForm = ({
               </FormItem>
             )}
           />
-
-          <ProductFormType />
 
           <FormField
             control={form.control}

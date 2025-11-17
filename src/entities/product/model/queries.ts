@@ -12,7 +12,6 @@ import type {
   IProduct,
   IProductsResponse,
   IGetProductsParams,
-  IProductTypeResponse,
 } from './types'
 
 /**
@@ -48,29 +47,7 @@ export const useGetProductById = (
 }
 
 /**
- * Get all product types
- */
-export const useGetProductTypes = (
-  params?: { page?: number; limit?: number },
-  options?: Omit<
-    UseQueryOptions<IProductTypeResponse, Error>,
-    'queryKey' | 'queryFn'
-  >
-) => {
-  return useQuery({
-    queryKey: productKeys.productTypes.list(params),
-    queryFn: () => productApi.getProductTypes(params),
-    ...options,
-  })
-}
-
-/**
  * Legacy exports for backward compatibility
  * @deprecated Use useGetProducts instead
  */
 export const useGetAllProducts = useGetProducts
-
-/**
- * @deprecated Use useGetProductTypes instead
- */
-export const useGetAllProductTypes = useGetProductTypes

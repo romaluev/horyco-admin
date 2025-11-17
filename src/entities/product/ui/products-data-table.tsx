@@ -23,7 +23,7 @@ import {
   type IProduct,
   useDeleteProduct,
   useUpdateProductAvailability,
-  useUpdateProductPrice,
+  useUpdateProduct,
 } from '@/entities/product'
 
 interface ProductsDataTableProps {
@@ -43,7 +43,7 @@ export const ProductsDataTable = ({
   onPageChange,
   onEdit,
 }: ProductsDataTableProps) => {
-  const { mutate: updatePrice } = useUpdateProductPrice()
+  const { mutate: updateProduct } = useUpdateProduct()
   const { mutate: updateAvailability } = useUpdateProductAvailability()
   const { mutate: deleteProduct } = useDeleteProduct()
 
@@ -58,7 +58,7 @@ export const ProductsDataTable = ({
   const handlePriceSave = (productId: number): void => {
     const newPrice = parseFloat(priceValue)
     if (!isNaN(newPrice) && newPrice >= 0) {
-      updatePrice({ id: productId, data: { price: newPrice } })
+      updateProduct({ id: productId, data: { price: newPrice } })
     }
     setEditingPrice(null)
   }
@@ -186,7 +186,7 @@ export const ProductsDataTable = ({
       editingPrice,
       priceValue,
       onEdit,
-      updatePrice,
+      updateProduct,
       updateAvailability,
       deleteProduct,
     ]

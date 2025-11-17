@@ -2,7 +2,7 @@ Sync code with documentations. You should carefully go through feature/logic doc
 
 ## Docs: $ARGUMENTS
 
-## The highest Priority: To make code the same as docs and user prmopts.
+## The highest Priority: To make code the same as docs and user prompts.
 
 ## Workflow
 
@@ -14,15 +14,13 @@ analyze → sync → validate
 
 **Load ALL standards & Docs**:
 
-- `.claude/skills/core.md`
-- `.claude/skills/design-system.md`
+- Most important: The docs are provided by the user (if not enough ask questions)
 - `.claude/standards/architecture.md`
 - `.claude/standards/next.md`
-- The docs are provided by the user (if not enough ask questions)
 
 **Optional**: Focus area (typescript/design-system/architecture/all)
 
-**Call analyzer**: Find all violations against docs and standards.
+**Call analyzer subagent**: Give him the provided docs and get all violations against them.
 
 **Carefully plan**: Plan your refactoring process (use phases for clarity).
 
@@ -32,7 +30,7 @@ analyze → sync → validate
 
 **Apply ALL standards & Docs**:
 
-1. **Most important: Documentation**: Make sure that the code 100% the same as documentation.
+1. **Most important: Documentation**: Make sure that the code 100% the same as documentation. ANY VIOLATIONS SHOULD BE FIXED.
 2. **Design System**: Remove borders → shadows, inline styles → CSS Modules, Arco → Radix
 3. **Architecture**: Fix folder structure, Zustand vs React Query, import order, prop drilling
 4. **TypeScript**: Replace `any`, add explicit types, use type guards, `import type`, etc.

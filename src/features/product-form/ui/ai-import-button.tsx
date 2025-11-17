@@ -22,7 +22,7 @@ import {
 import { ScrollArea } from '@/shared/ui/base/scroll-area'
 import { FileUploader } from '@/shared/ui/file-uploader'
 
-import { useCreateProduct, useGetAllProductTypes } from '@/entities/product'
+import { useCreateProduct } from '@/entities/product'
 import { IMAGE_PROMPT } from '@/features/product-form/config/constants'
 
 import type { IProduct } from '@/entities/product'
@@ -50,7 +50,6 @@ export const AiImportButton = () => {
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const { mutateAsync: createProduct } = useCreateProduct()
-  const { data: productTypes } = useGetAllProductTypes()
   const router = useRouter()
 
   const extractProducts = async () => {
@@ -72,11 +71,7 @@ export const AiImportButton = () => {
       const formData = new FormData()
       files.forEach((file) => formData.append('images', file))
 
-      const categories =
-        productTypes?.data
-          .map((type) => `{name: ${type.name}, id: ${type.id}}`)
-          .join(', ') || ''
-      formData.append('prompt', IMAGE_PROMPT(categories))
+      formData.append('prompt', IMAGE_PROMPT(''))
 
       const response = await fetch('/api/extract-products', {
         method: 'POST',
@@ -107,7 +102,7 @@ export const AiImportButton = () => {
           description: product.description,
           price: product.price,
           categoryId: product.categoryId || 1,
-          productTypeId: product.productTypeId || 1,
+          productTypeId: 1,
           isAvailable: true,
         })
       }

@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import logo from '@/shared/assets/logo.png'
-import LogoIcon from '@/shared/ui/base/LogoIcon'
 
 import LoginForm from './login-form'
 
@@ -20,11 +19,10 @@ export default function SignInViewPage() {
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
         <Image
-          className="mr-1 !h-10 !w-10 overflow-hidden rounded-2xl"
+          className="w-32 overflow-hidden rounded-2xl"
           src={logo}
           alt=""
         />
-        <h1 className="py-4 text-2xl font-semibold text-[#023055]">Horyco Admin</h1>
       </div>
       <div className="flex h-full items-center justify-center p-4 lg:p-8">
         <div className="flex w-full max-w-md flex-col items-center justify-center space-y-6">

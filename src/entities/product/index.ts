@@ -13,21 +13,15 @@ export { productKeys } from './model/query-keys'
 export {
   useGetProducts,
   useGetProductById,
-  useGetProductTypes,
   useGetAllProducts,
-  useGetAllProductTypes,
 } from './model/queries'
 
 // Mutations
 export {
   useCreateProduct,
   useUpdateProduct,
-  useUpdateProductPrice,
   useUpdateProductAvailability,
   useDeleteProduct,
-  useCreateProductType,
-  useUpdateProductType,
-  useDeleteProductType,
 } from './model/mutations'
 
 // Types
@@ -35,15 +29,9 @@ export type {
   IProduct,
   ICreateProductDto,
   IUpdateProductDto,
-  IUpdateProductPriceDto,
   IUpdateProductAvailabilityDto,
   IGetProductsParams,
   IProductsResponse,
-  IProductType,
-  ICreateProductTypeDto,
-  IUpdateProductTypeDto,
-  IProductTypeResponse,
-  IProductTypeRequest,
 } from './model/types'
 
 // UI Components
