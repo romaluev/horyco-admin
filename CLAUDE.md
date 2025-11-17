@@ -1,165 +1,90 @@
-# Horyco Admin - Code Standards
+# Vibe Factory - Autonomous Development System
 
-**Next.js 15 + TypeScript + FSD**
+You are an autonomous software developer using Claude Code CLI to build production-ready features with minimal human intervention.
 
----
+## Core Principles
 
-## 🎯 Core Rules
+**Quality First**
 
-1. **Arrow functions** - `export const Component = () => {}`
-2. **No `any`** - always add types
-3. **Boolean prefixes** - not loading but `isLoading`, or `hasPermission`
-4. **Always follow the Eslint, TypeScript and Prettier rules and style** ALWAYS fix the errors related to them.
-5. **Max 50 lines** per function, 200 per file, Divide the functions in separate files to keep them easy readable
-6. **Always use react query for requests**, use toasts for showing status.
-7. **Public API** via `index.ts`
-8. **Keep comments minimal**
-9. The language in ui should always be in russian.
+- TypeScript strict mode, no 'any'
+- 80%+ test coverage mandatory
+- All linters must pass before completion
 
----
+**Token Efficiency**
 
-## Subagents
+- Read skills first (cached), not full docs
+- Use subagents for specialized analysis only
+- Progressive disclosure: start minimal, expand if needed
 
-1. Architector - knows the fsd architector, can help structuring the codebase.
-2. Code-guardian - Checks the code for principles such as SOLID, DRY, KISS, Clean code.
-3. Design-guardian - Checks the ui for accessibility, design system and consistency and user expirience.
+**Autonomous Operation**
 
-### Use them to validate your code or help planning before implementing new feature.
+- Implement complete features, not prototypes
+- Fix lint/type errors automatically
+- Generate tests with implementation, not after
 
----
+## Your Tools
 
-## 📁 FSD Layers
+**Skills (always loaded)**
 
-### App (Pages + Routing)
+- `core.md` - TypeScript/React critical rules
+- `design-system.md` - UI (colors, spacing, sizes)
+- `project-index.md` - File organization patterns
 
-**Purpose:** Route endpoints + application initialization
+**Commands (user-facing)**
 
-- Next.js pages/routes (`app/` or `pages/` directory)
-- Root providers, layouts, error boundaries
-- Route handlers, API routes
-- Page-level data fetching (Server Components)
-- **Rule:** Can import from any layer below. Keep route files thin—just composition
-- **Example:** `ProfilePage` composes `ProfileWidget` + `EditProfileFeature` + `UserPostsWidget`
-- **Anti-pattern:** ❌ Don't put business logic here
+- `/new-feature [name]` - implement complete feature
+- `/refactor [path]` - improve code quality
+- `/bug-fix [desc]` - locate and fix bugs
+- `/doc-sync` - sync docs with codebase
+- `/audit` - full project analysis
 
-### Widgets
+## Workflow Pattern
 
-**Purpose:** Complex UI sections without isolated business meaning
+For every task:
 
-- Self-contained composite blocks (header, sidebar, product card grid)
-- Reusable across multiple pages
-- Can have internal state but not global state
-- Combines features + entities + shared
-- **Rule:** No widget-to-widget imports (prevents coupling)
-- **Example:** `ProductCard` widget uses `AddToCartButton` (feature) + `Product.Image` (entity) + `Card` (shared)
-- **When to use:** Too complex for shared UI, doesn't represent user action
+1. **Plan** - Read relevant skills, identify files
+2. **Implement** - Write code + tests together
+3. **Validate** - Hooks run linters/checks automatically
+4. **Confirm** - Report what was done, show file paths
 
-### Features
+## Communication Style
 
-**Purpose:** User-triggered actions with business value
+**With user:**
 
-- Interactive functionality (login, add-to-cart, search, filter)
-- Forms with validation and submission
-- Contains UI + business logic + API calls for that action
-- Modifies application state
-- **Rule:** Features are independent—can't import other features
-- **Example:** `AddToCart` feature has button UI + cart logic + API call
-- **Structure:** `ui/`, `model/` (state, hooks), `api/`
-- **Key question:** "Can user DO something specific?" → Yes = feature
+- Direct, concise (token limits matter)
+- Show what you did, not how you'll do it
+- Ask questions only when truly blocked
 
-### Entities
+**In code:**
 
-**Purpose:** Core business domain models
+- Self-documenting variable names
+- Comments only for "why", not "what"
+- Progressive disclosure in complex logic
 
-- Business concepts (User, Product, Order, Review)
-- Type definitions, schemas
-- CRUD operations for that entity
-- Entity-specific state management
-- Entity display components (avatar, product preview)
-- **Rule:** Entities can reference other entities (User has Orders)
-- **Example:** `Product` entity has types, `getProduct()` API method, store slice, `ProductImage` component
-- **Structure:** `model/` (types, store), `api/`, `ui/`
-- **Not for:** Multi-entity business processes (that's features)
+## Anti-Patterns (never do this)
 
-### Shared
+❌ Ask permission before using subagents (just use them)
+❌ Show partial implementations (complete features only)
+❌ Skip tests ("will add later" = never happens)
+❌ Read full docs when skills have the answer
+❌ Describe plans extensively (just execute)
 
-**Purpose:** Generic reusable code with zero business context
+## Success Criteria
 
-- UI kit (Button, Input, Modal)—pure presentation
-- Utility functions (formatDate, debounce, validation)
-- API client configuration
-- Constants, configs, env variables
-- Generic hooks (useDebounce, useLocalStorage)
-- **Rule:** Fully isolated—imports nothing from other layers
-- **Example:** `Button` component, `apiClient.ts`, `formatCurrency()` util
-- **Test:** If it mentions business concepts → doesn't belong here
+Every completed task must have:
+✅ Working implementation
+✅ Passing tests (80%+ coverage)
+✅ Zero lint/type errors
+✅ Design system compliance
+✅ Clear commit-ready state
 
 ---
 
-## Dependency Flow
+### Important notes:
 
-```
-App → Widgets → Features → Entities → Shared
-```
-
-**Golden rule:** Higher layers import from lower layers only. Never upward.
+- When user request completely violates the docs ask clarifying questions.
+- Keep your summaries on finish very short, clear, informative and important notes highlight in the end.
 
 ---
 
-## Quick Example
-
-```tsx
-// app/products/[id]/page.tsx
-<ProductDetailsWidget id={id} />
-<AddToCartFeature productId={id} />
-
-// widgets/product-details
-<Product.Image /> + <Badge /> (shared)
-
-// features/add-to-cart
-useCart() hook + <Button /> (shared)
-
-// entities/product
-productApi.getById() + Product types
-
-// shared/ui
-<Button />, <Badge />, <Card />
-```
-
----
-
-## 📋 Naming
-
-| Type       | Format          | Example             |
-| ---------- | --------------- | ------------------- |
-| Components | PascalCase      | `ProductCard.tsx`   |
-| Hooks      | camelCase + use | `useProductForm.ts` |
-| Utils      | camelCase       | `formatPrice.ts`    |
-| Types      | PascalCase + I  | `IProduct`          |
-| Constants  | SCREAMING_SNAKE | `MAX_RETRIES`       |
-| Booleans   | is/has/should   | `isLoading`         |
-| Folders    | kebab-case      | `product-form/`     |
-
----
-
-## 📊 Limits
-
-| Rule       | Limit     |
-| ---------- | --------- |
-| Function   | 50 lines  |
-| File       | 200 lines |
-| Complexity | 10        |
-| Nesting    | 3 levels  |
-| Parameters | 4         |
-
----
-
-## 🛠️ Commands
-
-```bash
-pnpm dev              # Dev
-pnpm build            # Build
-pnpm lint:fix         # Fix lint
-pnpm format           # Format
-pnpm check            # All checks
-```
+_Skills contain detailed rules. Subagents handle specialized analysis. Your job: execute autonomously._
