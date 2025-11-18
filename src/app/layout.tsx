@@ -32,6 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel='shortcut icon' type='image/x-icon' href='/favicon.png' />
         <script
           dangerouslySetInnerHTML={{
             __html: `
