@@ -23,7 +23,9 @@ interface ITopProductsProps {
 }
 
 const formatCurrency = (amount: number): string => {
-  const formattedNumber = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  const formattedNumber = amount
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
   return `${formattedNumber} UZS`
 }
 
@@ -37,8 +39,8 @@ export const TopProducts = ({ products }: ITopProductsProps) => {
         <CardContent>
           <div className="flex h-48 items-center justify-center">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Нет данных</p>
-              <p className="text-xs text-muted-foreground">за этот период</p>
+              <p className="text-muted-foreground text-sm">Нет данных</p>
+              <p className="text-muted-foreground text-xs">за этот период</p>
             </div>
           </div>
         </CardContent>
@@ -75,15 +77,15 @@ export const TopProducts = ({ products }: ITopProductsProps) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                    <div className="bg-muted h-2 flex-1 overflow-hidden rounded-full">
                       <div
-                        className="h-full bg-primary transition-all"
+                        className="bg-primary h-full transition-all"
                         style={{
                           width: `${(product.sharePct / maxShare) * 100}%`,
                         }}
                       />
                     </div>
-                    <span className="text-xs text-muted-foreground w-12 text-right">
+                    <span className="text-muted-foreground w-12 text-right text-xs">
                       {product.sharePct.toFixed(1)}%
                     </span>
                   </div>

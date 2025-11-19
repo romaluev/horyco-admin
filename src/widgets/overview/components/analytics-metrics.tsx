@@ -2,13 +2,13 @@
 
 import * as React from 'react'
 
-import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react'
+import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { PeriodType, DateRange } from './period-filter'
+import type { PeriodFilterDateRange, PeriodType } from './period-filter'
 
 // Типы данных для метрик
 export interface AnalyticsMetrics {
@@ -117,9 +117,9 @@ function TopDishCard({ dish, period, formatCurrency }: TopDishCardProps) {
 interface AnalyticsMetricsProps {
   metrics: AnalyticsMetrics
   period: PeriodType
-  dateRange: DateRange
+  dateRange: PeriodFilterDateRange
   isLoading?: boolean
-  selectedRange: DateRange
+  selectedRange: PeriodFilterDateRange
   selectedPeriod: PeriodType
 }
 
@@ -150,19 +150,15 @@ export function AnalyticsMetrics({
       return `за ${formattedStartDate} - ${formattedEndDate}`
     }
 
-    const formattedDate = format(selectedRange.from, 'd MMMM yyyy', {
-      locale: ru,
-    })
-
     switch (selectedPeriod) {
-      case 'hour':
-        return `за ${formattedDate}, по часам`
       case 'day':
-        return `за ${formattedDate}, по дням`
+        return 'по сравнению со вчера'
       case 'week':
-        return `за ${formattedDate}, по неделям`
+        return 'по сравнению с прошлой неделей'
+      case 'month':
+        return 'по сравнению с прошлым месяцем'
       default:
-        return `за ${formattedDate}`
+        return 'за выбранный период'
     }
   }
 

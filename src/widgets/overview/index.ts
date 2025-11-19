@@ -9,7 +9,19 @@ export { RecentSalesSkeleton } from './components/recent-sales-skeleton'
 
 // Новые компоненты аналитики продаж
 export { AnalyticsOverview } from './components/analytics-overview'
-export { PeriodFilter } from './components/period-filter'
-export { AnalyticsMetrics } from './components/analytics-metrics'
-export { AnalyticsChart } from './components/analytics-chart'
+export {
+  PeriodFilter,
+  type PeriodType,
+  type PeriodFilterDateRange as DateRange,
+} from './components/period-filter'
+export {
+  AnalyticsMetrics,
+  type AnalyticsMetrics as AnalyticsMetricsType,
+} from './components/analytics-metrics'
+export {
+  AnalyticsChart,
+  type ChartData,
+} from './components/analytics-chart'
 export { RecentOrders } from './components/recent-orders'
+export { TopProducts } from './components/top-products'
+export { BranchSelector } from './components/branch-selector'

@@ -19,13 +19,11 @@ export const BranchSelector = ({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">Филиал:</span>
+      <span className="text-muted-foreground text-sm">Филиал:</span>
       <Button
         variant={isAllBranches ? 'default' : 'outline'}
         size="sm"
-        onClick={() =>
-          onScopeChange(isAllBranches ? 'branch' : 'all_branches')
-        }
+        onClick={() => onScopeChange(isAllBranches ? 'branch' : 'all_branches')}
         className="min-w-[200px]"
       >
         {isAllBranches ? 'Все филиалы' : currentBranchName || 'Текущий филиал'}

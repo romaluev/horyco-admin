@@ -4,6 +4,7 @@
  */
 
 import apiClient from '@/shared/lib/axios'
+
 import type {
   IDashboardAnalyticsParams,
   IDashboardAnalyticsResponse,

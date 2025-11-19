@@ -25,26 +25,21 @@ import {
 } from '@/shared/ui/base/card'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 
-import type { PeriodType } from './period-filter'
+const THOUSAND = 1000
+const MILLION = 1000000
 
-// Типы данных для графика
+export type ChartMetricType = 'revenue' | 'orders' | 'average'
+export type GroupByType = 'hour' | 'day' | 'week'
+
 export interface ChartDataPoint {
   date: string
   value: number
 }
 
-// Типы данных для графика
 export interface ChartData {
-  data: { date: string; value: number }[]
-  metric: 'revenue' | 'orders' | 'average'
-  period: PeriodType
-}
-
-// Тип для данных графика с возможностью приведения типов
-export interface ChartDataWithCast {
-  data: { date: string; value: number }[]
-  metric: string
-  period: PeriodType
+  data: ChartDataPoint[]
+  metric: ChartMetricType
+  groupBy: GroupByType
 }
 
 interface AnalyticsChartProps {
@@ -79,17 +74,17 @@ export function AnalyticsChart({
 
     return optimizedData.map((item) => ({
       ...item,
-      date: formatDate(item.date, data.period),
+      date: formatDate(item.date, data.groupBy),
       value: item.value,
     }))
   }
 
-  // Форматирование даты в зависимости от периода
-  const formatDate = (dateStr: string, period: PeriodType) => {
+  // Форматирование даты в зависимости от группировки
+  const formatDate = (dateStr: string, groupBy: GroupByType) => {
     try {
       const date = parseISO(dateStr)
 
-      switch (period) {
+      switch (groupBy) {
         case 'hour':
           return format(date, 'HH:00', { locale: ru })
         case 'day':
@@ -134,10 +129,10 @@ export function AnalyticsChart({
     }
   }
 
-  // Получение описания в зависимости от метрики и периода
+  // Получение описания в зависимости от метрики и группировки
   const getChartDescription = (
     metric: 'revenue' | 'orders' | 'average',
-    period: PeriodType
+    groupBy: GroupByType
   ) => {
     let metricText = ''
     let periodText = ''
@@ -154,7 +149,7 @@ export function AnalyticsChart({
         break
     }
 
-    switch (period) {
+    switch (groupBy) {
       case 'hour':
         periodText = 'по часам'
         break
@@ -197,30 +192,53 @@ export function AnalyticsChart({
     )
   }
 
+  // Empty state when no data
+  if (!data || !data.data || data.data.length === 0) {
+    return (
+      <Card className="col-span-3">
+        <CardHeader>
+          <CardTitle>{getMetricTitle(data?.metric || 'revenue')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[300px] items-center justify-center">
+            <div className="text-center">
+              <p className="text-muted-foreground">Нет данных</p>
+              <p className="text-muted-foreground text-sm">
+                за выбранный период
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="col-span-3">
       <CardHeader>
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <CardTitle>{getMetricTitle(data.metric)}</CardTitle>
-            <CardDescription>
-              {getChartDescription(data.metric, data.period)}
-            </CardDescription>
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <CardTitle>{getMetricTitle(data.metric)}</CardTitle>
+              <CardDescription>
+                {getChartDescription(data.metric, data.groupBy)}
+              </CardDescription>
+            </div>
+            <Tabs
+              defaultValue={data.metric}
+              value={data.metric}
+              onValueChange={(value) =>
+                onMetricChange(value as 'revenue' | 'orders' | 'average')
+              }
+              className="w-auto"
+            >
+              <TabsList>
+                <TabsTrigger value="revenue">Выручка</TabsTrigger>
+                <TabsTrigger value="orders">Заказы</TabsTrigger>
+                <TabsTrigger value="average">Средний чек</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
-          <Tabs
-            defaultValue={data.metric}
-            value={data.metric}
-            onValueChange={(value) =>
-              onMetricChange(value as 'revenue' | 'orders' | 'average')
-            }
-            className="w-auto"
-          >
-            <TabsList>
-              <TabsTrigger value="revenue">Выручка</TabsTrigger>
-              <TabsTrigger value="orders">Заказы</TabsTrigger>
-              <TabsTrigger value="average">Средний чек</TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
       </CardHeader>
       <CardContent className="p-0">
@@ -255,7 +273,7 @@ export function AnalyticsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => formatDate(value, data.period)}
+                  tickFormatter={(value) => formatDate(value, data.groupBy)}
                   stroke="var(--muted-foreground)"
                 />
                 <YAxis
@@ -263,6 +281,7 @@ export function AnalyticsChart({
                   axisLine={false}
                   tickMargin={8}
                   stroke="var(--muted-foreground)"
+                  domain={[0, 'auto']}
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
@@ -270,7 +289,7 @@ export function AnalyticsChart({
                       return (
                         <div className="bg-background rounded-md border p-2 shadow-sm">
                           <p className="text-sm font-medium">
-                            {formatDate(label, data.period)}
+                            {formatDate(label, data.groupBy)}
                           </p>
                           <p className="text-sm">
                             {formatValue(
@@ -288,7 +307,7 @@ export function AnalyticsChart({
                   dataKey="value"
                   fill="url(#colorOrders)"
                   radius={[4, 4, 0, 0]}
-                  barSize={data.period === 'hour' ? 20 : 30}
+                  barSize={data.groupBy === 'hour' ? 20 : 30}
                 />
               </BarChart>
             ) : (
@@ -326,7 +345,7 @@ export function AnalyticsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => formatDate(value, data.period)}
+                  tickFormatter={(value) => formatDate(value, data.groupBy)}
                   stroke="var(--muted-foreground)"
                 />
                 <YAxis
@@ -334,11 +353,19 @@ export function AnalyticsChart({
                   axisLine={false}
                   tickMargin={8}
                   stroke="var(--muted-foreground)"
-                  tickFormatter={(value) =>
-                    data.metric === 'revenue' || data.metric === 'average'
-                      ? `${(value / 1000).toFixed(0)}k`
-                      : value.toString()
-                  }
+                  domain={[0, 'auto']}
+                  tickFormatter={(value) => {
+                    if (
+                      data.metric === 'revenue' ||
+                      data.metric === 'average'
+                    ) {
+                      if (value >= MILLION) {
+                        return `${(value / MILLION).toFixed(1)}M`
+                      }
+                      return `${(value / THOUSAND).toFixed(0)}k`
+                    }
+                    return value.toString()
+                  }}
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
@@ -346,7 +373,7 @@ export function AnalyticsChart({
                       return (
                         <div className="bg-background rounded-md border p-2 shadow-sm">
                           <p className="text-sm font-medium">
-                            {formatDate(label, data.period)}
+                            {formatDate(label, data.groupBy)}
                           </p>
                           <p className="text-sm">
                             {formatValue(

@@ -2,10 +2,8 @@
 
 import * as React from 'react'
 
-import { format, formatDistanceToNow } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { format } from 'date-fns'
 
-import { Badge } from '@/shared/ui/base/badge'
 import {
   Card,
   CardContent,
@@ -13,88 +11,89 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
-import { ScrollArea } from '@/shared/ui/base/scroll-area'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 
-// Типы данных для заказов
-export interface OrderItem {
-  name: string
-  quantity: number
-  price: number
-}
+type PaymentMethod =
+  | 'CASH'
+  | 'CARD'
+  | 'CREDIT'
+  | 'PAYME'
+  | 'CLICK'
+  | 'UZUM'
+  | 'BANK_TRANSFER'
+  | 'MIXED'
+type OrderStatus = 'PAID' | 'PARTIALLY_PAID' | 'NOT_PAID'
 
 export interface RecentOrder {
   id: string
-  orderNumber: string
+  number: string
   createdAt: string
   total: number
-  items: OrderItem[]
-  customer?: {
+  paymentMethod: PaymentMethod
+  status: OrderStatus
+  branch?: {
+    id: number
     name: string
-    phone?: string
-  }
-  type: 'delivery' | 'takeaway' | 'dine-in'
+  } | null
 }
 
 interface RecentOrdersProps {
   orders: RecentOrder[]
   isLoading?: boolean
-  compact?: boolean // Компактный режим для отображения рядом с метриками
+  compact?: boolean
+  showBranch?: boolean
+}
+
+const PAYMENT_METHOD_CONFIG: Record<
+  PaymentMethod,
+  { icon: string; label: string }
+> = {
+  CASH: { icon: '💵', label: 'Наличные' },
+  CARD: { icon: '💳', label: 'Карта' },
+  CREDIT: { icon: '💳', label: 'Кредит' },
+  PAYME: { icon: '📱', label: 'Payme' },
+  CLICK: { icon: '📱', label: 'Click' },
+  UZUM: { icon: '💳', label: 'Uzum' },
+  BANK_TRANSFER: { icon: '🏦', label: 'Перевод' },
+  MIXED: { icon: '🔀', label: 'Смешанный' },
+}
+
+const STATUS_CONFIG: Record<
+  OrderStatus,
+  { icon: string; label: string; className: string }
+> = {
+  PAID: { icon: '✓', label: 'Оплачен', className: 'text-green-600' },
+  PARTIALLY_PAID: {
+    icon: '⏳',
+    label: 'Частично',
+    className: 'text-orange-600',
+  },
+  NOT_PAID: { icon: '⏸️', label: 'Не оплачен', className: 'text-gray-600' },
 }
 
 export function RecentOrders({
   orders,
   isLoading = false,
   compact = false,
+  showBranch = false,
 }: RecentOrdersProps) {
-  // Форматирование суммы в узбекские сумы - используем статический формат
   const formatCurrency = (amount: number) => {
-    // Форматируем вручную, чтобы избежать различий между сервером и клиентом
-    const formattedNumber = amount
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    return `UZS ${formattedNumber}`
+    const formatted = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    return `${formatted} UZS`
   }
 
-  // Форматирование времени заказа
-  const formatOrderTime = (dateStr: string) => {
+  const formatTime = (dateStr: string) => {
     try {
-      const date = new Date(dateStr)
-      return {
-        time: format(date, 'HH:mm', { locale: ru }),
-        relative: formatDistanceToNow(date, { addSuffix: true, locale: ru }),
-      }
+      return format(new Date(dateStr), 'HH:mm')
     } catch (e) {
-      return { time: '', relative: '' }
-    }
-  }
-
-  // Получение типа заказа на русском
-  const getOrderTypeText = (type: 'delivery' | 'takeaway' | 'dine-in') => {
-    switch (type) {
-      case 'delivery':
-        return 'Доставка'
-      case 'takeaway':
-        return 'Самовывоз'
-      case 'dine-in':
-        return 'В зале'
-      default:
-        return 'Неизвестно'
-    }
-  }
-
-  // Получение цвета бейджа в зависимости от типа заказа
-  const getOrderTypeBadgeVariant = (
-    type: 'delivery' | 'takeaway' | 'dine-in'
-  ): 'default' | 'secondary' | 'outline' => {
-    switch (type) {
-      case 'delivery':
-        return 'default'
-      case 'takeaway':
-        return 'secondary'
-      case 'dine-in':
-        return 'outline'
-      default:
-        return 'outline'
+      return ''
     }
   }
 
@@ -102,24 +101,18 @@ export function RecentOrders({
     return (
       <Card className="h-full">
         <CardHeader>
-          <div className="bg-muted h-6 w-40 animate-pulse rounded" />
-          <div className="bg-muted h-4 w-56 animate-pulse rounded" />
+          <div className="bg-muted h-6 w-48 animate-pulse rounded" />
+          {!compact && (
+            <div className="bg-muted h-4 w-64 animate-pulse rounded" />
+          )}
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex animate-pulse flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="bg-muted h-5 w-20 rounded" />
-                  <div className="bg-muted h-5 w-16 rounded" />
-                </div>
-                <div className="bg-muted h-4 w-32 rounded" />
-                <div className="bg-muted h-4 w-full rounded" />
-                <div className="flex items-center justify-between">
-                  <div className="bg-muted h-4 w-24 rounded" />
-                  <div className="bg-muted h-5 w-20 rounded" />
-                </div>
-                <div className="bg-muted h-px w-full" />
+          <div className="space-y-3">
+            {[...Array(10)].map((_, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="bg-muted h-5 w-12 animate-pulse rounded" />
+                <div className="bg-muted h-5 w-24 animate-pulse rounded" />
+                <div className="bg-muted h-5 flex-1 animate-pulse rounded" />
               </div>
             ))}
           </div>
@@ -128,77 +121,91 @@ export function RecentOrders({
     )
   }
 
+  if (orders.length === 0) {
+    return (
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle>Последние заказы</CardTitle>
+          {!compact && <CardDescription>Последние 10 заказов</CardDescription>}
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[400px] items-center justify-center">
+            <div className="text-center">
+              <p className="text-muted-foreground">Нет заказов</p>
+              <p className="text-muted-foreground text-sm">в этом периоде</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="h-full">
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle>Последние заказы</CardTitle>
         {!compact && (
-          <CardDescription>Информация о недавних заказах</CardDescription>
+          <CardDescription>
+            {showBranch
+              ? 'Последние 10 заказов (все филиалы)'
+              : 'Последние 10 заказов'}
+          </CardDescription>
         )}
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[450px]" scrollHideDelay={0}>
-          <div className="space-y-2">
-            {orders.map((order) => {
-              const { time, relative } = formatOrderTime(order.createdAt)
+        <div className="overflow-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-16">Время</TableHead>
+                <TableHead>Заказ</TableHead>
+                {showBranch && <TableHead>Филиал</TableHead>}
+                <TableHead className="text-right">Сумма</TableHead>
+                <TableHead>Оплата</TableHead>
+                <TableHead>Статус</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => {
+                const paymentConfig = PAYMENT_METHOD_CONFIG[order.paymentMethod]
+                const statusConfig = STATUS_CONFIG[order.status]
 
-              return (
-                <div key={order.id} className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">№{order.orderNumber}</div>
-                    <div className="text-muted-foreground text-sm">{time}</div>
-                  </div>
-
-                  {order.customer && (
-                    <div className="text-sm">
-                      {order.customer.name}
-                      {order.customer.phone && (
-                        <span className="text-muted-foreground ml-2">
-                          {order.customer.phone}
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="text-muted-foreground text-sm">
-                    {order.items.slice(0, 2).map((item, index) => (
-                      <span key={index}>
-                        {item.name} x{item.quantity}
-                        {index < Math.min(order.items.length, 2) - 1
-                          ? ', '
-                          : ''}
-                      </span>
-                    ))}
-                    {order.items.length > 2 && (
-                      <span> и еще {order.items.length - 2}...</span>
+                return (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-mono text-sm">
+                      {formatTime(order.createdAt)}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {order.number}
+                    </TableCell>
+                    {showBranch && (
+                      <TableCell className="text-muted-foreground text-sm">
+                        {order.branch?.name || '-'}
+                      </TableCell>
                     )}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Badge variant={getOrderTypeBadgeVariant(order.type)}>
-                      {getOrderTypeText(order.type)}
-                    </Badge>
-                    <div className="font-medium">
+                    <TableCell className="text-right font-medium">
                       {formatCurrency(order.total)}
-                    </div>
-                  </div>
-
-                  <div className="text-muted-foreground text-xs">
-                    {relative}
-                  </div>
-
-                  <div className="bg-border h-px w-full" />
-                </div>
-              )
-            })}
-
-            {orders.length === 0 && (
-              <div className="text-muted-foreground py-8 text-center">
-                Нет данных о последних заказах
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <span>{paymentConfig.icon}</span>
+                        <span className="text-sm">{paymentConfig.label}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div
+                        className={`flex items-center gap-1 ${statusConfig.className}`}
+                      >
+                        <span>{statusConfig.icon}</span>
+                        <span className="text-sm">{statusConfig.label}</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   )
