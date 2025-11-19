@@ -63,23 +63,13 @@ export const UpdateProductForm = ({
 
     // If there's a new file, upload it
     if (imageFile) {
-      const { requestPresignedUploadUrl, uploadToPresignedUrl, confirmUpload } =
-        await import('@/entities/file')
+      const { uploadFile } = await import('@/shared/lib/file-upload')
+      const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
 
-      const presignedData = await requestPresignedUploadUrl({
-        entityType: 'PRODUCT',
-        entityId: productId,
-        fileName: imageFile.name,
-        mimeType: imageFile.type,
-        fileSize: imageFile.size,
+      const response = await uploadFile({
+        file: imageFile,
+        folder: FILE_FOLDERS.PRODUCTS,
         altText: values.name,
-      })
-
-      await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
-
-      const response = await confirmUpload({
-        fileId: presignedData.data.fileId,
-        fileKey: presignedData.data.fileKey,
       })
 
       imageUrl = response.variants.medium || response.variants.original || ''

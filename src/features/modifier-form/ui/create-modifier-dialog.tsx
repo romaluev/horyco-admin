@@ -31,8 +31,9 @@ import {
 import { Input } from '@/shared/ui/base/input'
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
+import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useCreateModifier } from '@/entities/modifier'
+import { modifierApi, useCreateModifier } from '@/entities/modifier'
 
 import { modifierFormSchema, type ModifierFormValues } from '../model/contract'
 
@@ -46,6 +47,7 @@ export const CreateModifierDialog = ({
   onSuccess,
 }: CreateModifierDialogProps) => {
   const [open, setOpen] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const { mutate: createModifier, isPending } = useCreateModifier()
 
   const form = useForm<ModifierFormValues>({
@@ -53,20 +55,47 @@ export const CreateModifierDialog = ({
     defaultValues: {
       name: '',
       description: '',
+      image: '',
       price: 0,
       modifierGroupId,
       isActive: true,
     },
   })
 
-  const onSubmit = (data: ModifierFormValues): void => {
-    createModifier(data, {
-      onSuccess: () => {
-        setOpen(false)
-        form.reset()
-        onSuccess?.()
-      },
-    })
+  const onSubmit = async (data: ModifierFormValues): Promise<void> => {
+    try {
+      // Create modifier first
+      const createdModifier = await new Promise<{ id: number }>((resolve, reject) => {
+        createModifier(data, {
+          onSuccess: (modifier) => resolve(modifier),
+          onError: (error) => reject(error),
+        })
+      })
+
+      // Upload image if provided
+      if (imageFile && createdModifier?.id) {
+        const { uploadFile } = await import('@/shared/lib/file-upload')
+        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
+
+        const response = await uploadFile({
+          file: imageFile,
+          folder: FILE_FOLDERS.MODIFIERS,
+          altText: data.name,
+        })
+
+        const imageUrl = response.variants.medium || response.variants.original
+        if (imageUrl) {
+          await modifierApi.updateModifier(createdModifier.id, { image: imageUrl })
+        }
+      }
+
+      setOpen(false)
+      form.reset()
+      setImageFile(null)
+      onSuccess?.()
+    } catch (error) {
+      console.error('Failed to create modifier:', error)
+    }
   }
 
   return (
@@ -117,6 +146,20 @@ export const CreateModifierDialog = ({
                 </FormItem>
               )}
             />
+
+            <FormItem>
+              <FormLabel>Изображение</FormLabel>
+              <FormControl>
+                <ImageUpload
+                  value={imageFile}
+                  onChange={(file) => {
+                    setImageFile(file)
+                  }}
+                  currentImageUrl={form.getValues('image')}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
 
             <FormField
               control={form.control}

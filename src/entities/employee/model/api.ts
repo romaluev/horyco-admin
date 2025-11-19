@@ -232,8 +232,11 @@ export const employeeApi = {
   }> => {
     const formData = new FormData()
     formData.append('file', file)
+
+    const params = new URLSearchParams()
+    params.append('folder', 'employees')
     if (altText) {
-      formData.append('altText', altText)
+      params.append('altText', altText)
     }
 
     const response = await api.post<
@@ -256,7 +259,7 @@ export const employeeApi = {
           altText?: string
         }
       }>
-    >('/admin/files/upload?folder=EMPLOYEES', formData, {
+    >(`/admin/files/upload?${params.toString()}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     return response.data.data

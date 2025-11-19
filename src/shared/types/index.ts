@@ -85,4 +85,15 @@ export interface IFile {
   mimeType: string
   originalName: string
   size: number
+  variants?: {
+    original?: string
+    large?: string
+    medium?: string
+    thumb?: string
+  }
+  metadata?: {
+    width?: number
+    height?: number
+    altText?: string
+  }
 }

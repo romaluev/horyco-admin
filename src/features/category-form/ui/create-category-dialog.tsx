@@ -34,12 +34,7 @@ import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
 import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useCreateCategory, categoryApi } from '@/entities/category'
-import {
-  requestPresignedUploadUrl,
-  uploadToPresignedUrl,
-  confirmUpload,
-} from '@/entities/file'
+import { categoryApi, useCreateCategory } from '@/entities/category'
 
 import { CategoryParentSelector } from './category-parent-selector'
 import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
@@ -78,20 +73,13 @@ export const CreateCategoryDialog = ({
       })
 
       if (imageFile && createdCategory?.id) {
-        const presignedData = await requestPresignedUploadUrl({
-          entityType: 'CATEGORY',
-          entityId: createdCategory.id,
-          fileName: imageFile.name,
-          mimeType: imageFile.type,
-          fileSize: imageFile.size,
+        const { uploadFile } = await import('@/shared/lib/file-upload')
+        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
+
+        const response = await uploadFile({
+          file: imageFile,
+          folder: FILE_FOLDERS.CATEGORIES,
           altText: data.name,
-        })
-
-        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
-
-        const response = await confirmUpload({
-          fileId: presignedData.data.fileId,
-          fileKey: presignedData.data.fileKey,
         })
 
         // Update category with image URL

@@ -33,12 +33,7 @@ import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
 import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useUpdateCategory, type ICategory } from '@/entities/category'
-import {
-  requestPresignedUploadUrl,
-  uploadToPresignedUrl,
-  confirmUpload,
-} from '@/entities/file'
+import { type ICategory, useUpdateCategory } from '@/entities/category'
 
 import { CategoryParentSelector } from './category-parent-selector'
 import { categoryFormSchema, type CategoryFormValues } from '../model/contract'
@@ -81,20 +76,13 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
       let imageUrl = data.image
 
       if (imageFile) {
-        const presignedData = await requestPresignedUploadUrl({
-          entityType: 'CATEGORY',
-          entityId: category.id,
-          fileName: imageFile.name,
-          mimeType: imageFile.type,
-          fileSize: imageFile.size,
+        const { uploadFile } = await import('@/shared/lib/file-upload')
+        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
+
+        const response = await uploadFile({
+          file: imageFile,
+          folder: FILE_FOLDERS.CATEGORIES,
           altText: data.name,
-        })
-
-        await uploadToPresignedUrl(presignedData.data.uploadUrl, imageFile)
-
-        const response = await confirmUpload({
-          fileId: presignedData.data.fileId,
-          fileKey: presignedData.data.fileKey,
         })
 
         imageUrl = response.variants.medium || response.variants.original || ''

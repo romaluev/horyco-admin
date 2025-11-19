@@ -10,6 +10,7 @@ export interface IModifier {
   id: number
   name: string
   description?: string
+  image?: string
   price: number
   modifierGroupId: number
   sortOrder: number
@@ -21,6 +22,7 @@ export interface IModifier {
 export interface ICreateModifierDto {
   name: string
   description?: string
+  image?: string
   price: number
   modifierGroupId: number
   sortOrder?: number
@@ -30,6 +32,7 @@ export interface ICreateModifierDto {
 export interface IUpdateModifierDto {
   name?: string
   description?: string
+  image?: string
   price?: number
   sortOrder?: number
   isActive?: boolean

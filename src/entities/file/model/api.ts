@@ -6,12 +6,12 @@
 import api from '@/shared/lib/axios'
 
 import type {
+  EntityType,
+  IConfirmUploadRequest,
+  IDeleteFileParams,
+  IFileResponse,
   IPresignedUploadUrlRequest,
   IPresignedUploadUrlResponse,
-  IConfirmUploadRequest,
-  IFileResponse,
-  IDeleteFileParams,
-  EntityType,
 } from './types'
 
 /**
@@ -60,14 +60,27 @@ export const getEntityFiles = async (
 
 /**
  * Delete file from storage and database
+ * entityType and entityId are optional (defaults: PRODUCT and 0)
  */
 export const deleteFile = async (
   params: IDeleteFileParams
 ): Promise<{ id: number }> => {
   const { fileId, entityType, entityId } = params
-  const response = await api.delete<{ id: number }>(
-    `/admin/files/${fileId}?entityType=${entityType}&entityId=${entityId}`
-  )
+
+  const queryParams = new URLSearchParams()
+  if (entityType !== undefined) {
+    queryParams.append('entityType', entityType)
+  }
+  if (entityId !== undefined) {
+    queryParams.append('entityId', String(entityId))
+  }
+
+  const queryString = queryParams.toString()
+  const url = queryString
+    ? `/admin/files/${fileId}?${queryString}`
+    : `/admin/files/${fileId}`
+
+  const response = await api.delete<{ id: number }>(url)
   return response.data
 }
 

@@ -6,19 +6,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import {
-  requestPresignedUploadUrl,
-  uploadToPresignedUrl,
-  confirmUpload,
-  deleteFile,
-} from './api'
+import { confirmUpload, deleteFile, requestPresignedUploadUrl, uploadToPresignedUrl, } from './api'
 import { fileKeys } from './query-keys'
 
-import type {
-  IPresignedUploadUrlRequest,
-  IConfirmUploadRequest,
-  IDeleteFileParams,
-} from './types'
+import type { IPresignedUploadUrlRequest, } from './types'
 
 /**
  * Hook to upload file using presigned URL flow
@@ -85,10 +76,12 @@ export const useDeleteFile = () => {
   return useMutation({
     mutationFn: deleteFile,
     onSuccess: (_, variables) => {
-      // Invalidate entity files cache
-      queryClient.invalidateQueries({
-        queryKey: fileKeys.byEntity(variables.entityType, variables.entityId),
-      })
+      // Invalidate entity files cache if entityType is provided
+      if (variables.entityType && variables.entityId !== undefined) {
+        queryClient.invalidateQueries({
+          queryKey: fileKeys.byEntity(variables.entityType, variables.entityId),
+        })
+      }
       toast.success('Файл успешно удален')
     },
     onError: (error: Error) => {

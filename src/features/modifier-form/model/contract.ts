@@ -37,6 +37,7 @@ export const modifierFormSchema = z.object({
     .string()
     .max(500, { message: 'Описание не должно превышать 500 символов' })
     .optional(),
+  image: z.string().optional(),
   price: z
     .number({ required_error: 'Укажите цену' })
     .min(0, { message: 'Цена должна быть >= 0' }),

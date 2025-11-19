@@ -73,26 +73,65 @@ When you upload an image, system automatically creates 4 versions:
 | Thumb | 200px | Lists, thumbnails |
 
 **Important:**
-- Images are converted to WebP format (30% smaller, better quality)
-- Aspect ratio is preserved (no cropping)
-- If uploaded image is smaller than variant size, that variant won't be created
+- Images are converted to WebP format (85% quality, ~30% smaller file size)
+- Aspect ratio is preserved (no cropping, only resizing)
+- Variants are only generated if original image is larger than variant size
+- All variants maintain the same aspect ratio as the original
 
 ### Entity Types
 
 Files are always attached to an entity:
 
-| Entity Type | Use For | Example |
-|------------|---------|---------|
-| PRODUCT | Product photos | Pizza image |
-| CATEGORY | Category banners | "Desserts" header |
-| MODIFIER | Modifier icons | "Extra Cheese" icon |
-| EMPLOYEE | Employee avatars | Staff photo |
-| TENANT | Company logos | Restaurant logo |
-| BRANCH | Branch photos | Storefront image |
+**Primary Entity Types (Available via Admin Upload API):**
+
+| Entity Type | Use For | Example | Folder |
+|------------|---------|---------|--------|
+| PRODUCT | Product photos | Pizza image | `products` |
+| CATEGORY | Category banners | "Desserts" header | `categories` |
+| MODIFIER | Modifier icons | "Extra Cheese" icon | `modifiers` |
+| EMPLOYEE | Employee avatars | Staff photo | `employees` |
+| TENANT | Company logos, documents | Restaurant logo, certificates | `logos`, `branding`, `documents`, `misc` |
+
+**Additional Entity Types (System-managed):**
+
+These entity types are used internally by the system and not directly accessible via simplified upload endpoints:
+
+| Entity Type | Use For | Storage Folder |
+|------------|---------|----------------|
+| ADDITION_ITEM | Addition item images | `addition-items` |
+| BRANCH | Branch photos | `branch-assets` |
+| OFFER | Promotional offer images | `offers` |
+| TICKET | Kitchen ticket assets | `tickets` |
+| RECEIPT_TEMPLATE | Receipt template assets | `receipt-templates` |
+| MANUAL_PAYMENT_RECEIPT | Manual payment receipts | `manual-payment-receipts` |
+
+**Note:** System-managed entity types are typically created through specific domain endpoints (e.g., creating an offer automatically handles its image upload).
 
 ---
 
 ## Upload Workflow
+
+### Temporary Files (entityId = 0)
+
+When uploading files using the simplified upload endpoints, files are initially created with `entityId=0`. This is intentional:
+
+**Why entityId=0?**
+- Files can be uploaded before creating the entity (e.g., upload product image before creating product)
+- Frontend can display preview immediately
+- File URL can be included when creating the entity
+
+**How it works:**
+```
+1. Upload file → entityId=0, folder="products"
+2. Get file URL from response
+3. Create product with imageUrl from step 2
+4. Backend associates file with product automatically
+```
+
+**Important:**
+- Files with entityId=0 are NOT orphaned
+- They're still scoped by tenant
+- Can be deleted using DELETE /admin/files/:id (no entityId needed)
 
 ### How Upload Works
 
@@ -120,12 +159,14 @@ Files are always attached to an entity:
 
 **Request:**
 ```http
-POST /admin/files/upload
+POST /admin/files/upload?folder=products&altText=Margherita%20Pizza
 Content-Type: multipart/form-data
 
 Form data:
 - file: [binary file]
-- folder: "products"
+
+Query parameters:
+- folder: "products" (required, one of: products, categories, modifiers, employees, logos, branding, documents, misc)
 - altText: "Margherita Pizza" (optional)
 ```
 
@@ -158,12 +199,15 @@ Form data:
 
 **Request:**
 ```http
-POST /admin/files/upload-multiple
+POST /admin/files/upload-multiple?folder=products&altText=Product%20images
 Content-Type: multipart/form-data
 
 Form data:
 - files: [file1, file2, file3]
-- folder: "products"
+
+Query parameters:
+- folder: "products" (required, one of: products, categories, modifiers, employees, logos, branding, documents, misc)
+- altText: "Product images" (optional, applied to all files)
 ```
 
 **Response:**
@@ -197,13 +241,13 @@ Form data:
 ### How Variants are Generated
 
 ```
-Original Upload (JPEG/PNG)
+Original Upload (JPEG/PNG/GIF)
     ↓
 Sharp Image Processor
-    ├─→ Original (optimized) - WebP, 90% quality
-    ├─→ Large (1200px) - for detail pages
-    ├─→ Medium (600px) - for cards
-    └─→ Thumb (200px) - for lists
+    ├─→ Original (optimized) - WebP, 85% quality
+    ├─→ Large (1200px max) - for detail pages
+    ├─→ Medium (600px max) - for cards
+    └─→ Thumb (200px max) - for lists
 ```
 
 **Processing Time:**
@@ -268,15 +312,20 @@ GET /admin/files/entity/PRODUCT/123
 ### Delete File
 
 ```
-DELETE /admin/files/:id?entityType=PRODUCT&entityId=123
+DELETE /admin/files/:id?entityType=PRODUCT&entityId=0
 → Deletes file and all variants
 ```
 
+**Parameters:**
+- `id` (required) - File ID to delete
+- `entityType` (optional) - Entity type for verification (defaults to PRODUCT)
+- `entityId` (optional) - Entity ID for verification (defaults to 0 for unassociated files)
+
 **Important:**
-- Must provide entityType and entityId for verification
-- Soft delete (kept in database for audit)
-- All variants deleted from storage
-- Cannot be recovered
+- entityType and entityId are optional; if not provided, defaults are used
+- Soft delete (kept in database for audit trail)
+- All variants physically deleted from storage
+- Cannot be recovered after deletion
 
 ---
 
@@ -330,10 +379,13 @@ DELETE /admin/files/:id?entityType=PRODUCT&entityId=123
 
 **What to send:**
 ```javascript
-FormData:
-  file: [File object]
-folder: "products"
-altText: "Product image"
+// Create FormData with file
+const formData = new FormData();
+formData.append('file', fileObject);
+
+// Send to API with query parameters
+POST /admin/files/upload?folder=products&altText=Product%20image
+Body: formData
 ```
 
 **What you get:**
@@ -495,17 +547,45 @@ Organize uploads by type:
 | `employees` | Employee avatars |
 | `logos` | Tenant/brand logos |
 | `branding` | Branding materials |
+| `documents` | Legal documents, certificates |
+| `misc` | Miscellaneous files |
+
+**Folder to Entity Type Mapping:**
+
+When you upload a file to a folder, it's automatically associated with an entity type:
+
+| Folder | Entity Type | Use Case |
+|--------|-------------|----------|
+| `products` | PRODUCT | Product images |
+| `categories` | CATEGORY | Category banners |
+| `modifiers` | MODIFIER | Modifier icons |
+| `employees` | EMPLOYEE | Employee avatars |
+| `logos` | TENANT | Company logos |
+| `branding` | TENANT | Branding materials |
+| `documents` | TENANT | Legal documents |
+| `misc` | TENANT | General files |
 
 **Example:**
 ```
 Upload product image:
   folder: "products"
+  → Stored as: tenant-{tenantId}/products/{entityId}-{uniqueId}.webp
+  → Entity type: PRODUCT
 
 Upload category banner:
   folder: "categories"
+  → Stored as: tenant-{tenantId}/categories/{entityId}-{uniqueId}.webp
+  → Entity type: CATEGORY
 
 Upload employee photo:
   folder: "employees"
+  → Stored as: tenant-{tenantId}/employees/{entityId}-{uniqueId}.webp
+  → Entity type: EMPLOYEE
+
+Upload company logo:
+  folder: "logos"
+  → Stored as: tenant-{tenantId}/tenant-assets/{entityId}-{uniqueId}.webp
+  → Entity type: TENANT
 ```
 
 ---
@@ -601,6 +681,44 @@ Thumb: 200×113 (16:9) - Same aspect ratio
 
 No cropping, no distortion.
 
+### Q: Why are all images converted to WebP?
+
+**A:** WebP provides better compression with same quality.
+
+**Benefits:**
+- 25-35% smaller file size compared to JPEG/PNG
+- Faster page load times
+- Lower bandwidth costs
+- Better user experience
+
+**Browser support:**
+- All modern browsers (Chrome, Firefox, Safari, Edge) support WebP
+- 95%+ global browser coverage
+
+### Q: What happens to animated GIFs?
+
+**A:** Animated GIFs are currently processed as static images.
+
+**Behavior:**
+- Only first frame is extracted and converted to WebP
+- Animation is lost during processing
+- If you need animations, consider using video formats instead
+
+**Workaround:** Use MP4 videos for animations (better compression, broader support).
+
+### Q: Can I upload files without entityId first?
+
+**A:** Yes! This is the recommended workflow.
+
+**Example:**
+```
+1. Upload product image → Returns file with entityId=0
+2. Create product with returned image URL
+3. Backend automatically associates file with product
+```
+
+This allows you to show image preview before creating the entity.
+
 ---
 
 ## API Summary
@@ -609,6 +727,26 @@ No cropping, no distortion.
 |--------|----------|---------|
 | `POST` | `/admin/files/upload` | Upload single file |
 | `POST` | `/admin/files/upload-multiple` | Upload multiple files |
+| `POST` | `/admin/files/presigned-url` | Generate presigned upload URL (advanced) |
+| `POST` | `/admin/files/confirm` | Confirm presigned URL upload |
 | `GET` | `/admin/files/:id` | Get file metadata |
 | `GET` | `/admin/files/entity/:type/:id` | Get entity files |
 | `DELETE` | `/admin/files/:id` | Delete file |
+
+---
+
+## Document Updates
+
+**Last Updated:** 2025-11-19
+
+**Changes:**
+- ✅ Added all entity types (ADDITION_ITEM, OFFER, TICKET, etc.)
+- ✅ Added missing folders (documents, misc)
+- ✅ Updated WebP quality from 90% to 85% (matches implementation)
+- ✅ Clarified query parameter usage for folder and altText
+- ✅ Added folder-to-entity-type mapping table
+- ✅ Added temporary files (entityId=0) explanation
+- ✅ Added Common Questions about WebP conversion and animated GIFs
+- ✅ Clarified that entityType and entityId are optional in DELETE endpoint
+- ✅ Added presigned URL endpoints to API Summary
+- ✅ Updated all code examples to match actual implementation

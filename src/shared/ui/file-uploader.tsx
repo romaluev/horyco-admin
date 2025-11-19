@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import Image from 'next/image'
 
-import { IconX, IconUpload } from '@tabler/icons-react'
+import { IconUpload, IconX } from '@tabler/icons-react'
 import Dropzone, {
   type DropzoneProps,
   type FileRejection,
@@ -386,11 +386,19 @@ const UploadedFileCard = ({
   file: IFile
   onRemove: () => void
 }) => {
+  // Use thumb variant for thumbnails, fallback to other variants
+  const imageUrl =
+    file.variants?.thumb ||
+    file.variants?.medium ||
+    file.variants?.large ||
+    file.variants?.original ||
+    `${BASE_API_URL}/file/${file.originalName}`
+
   return (
     <div className="relative w-max">
       <Image
-        src={`${BASE_API_URL}/file/${file.originalName}`}
-        alt={file.originalName}
+        src={imageUrl}
+        alt={file.metadata?.altText || file.originalName}
         width={120}
         unoptimized
         height={120}

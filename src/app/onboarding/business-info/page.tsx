@@ -46,18 +46,23 @@ import {
   useSubmitBusinessInfo,
 } from '@/entities/onboarding'
 import {
-  businessInfoSchema,
   type BusinessInfoFormValues,
+  businessInfoSchema,
 } from '@/features/onboarding/model'
 
-// Upload file helper
-const uploadFile = async (file: File): Promise<string> => {
+// Upload file helper using direct upload method (ADMIN_FILE_MANAGEMENT.md)
+const uploadFile = async (file: File, altText?: string): Promise<string> => {
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('folder', 'logos')
+
+  const params = new URLSearchParams()
+  params.append('folder', 'logos')
+  if (altText) {
+    params.append('altText', altText)
+  }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload?${params.toString()}`,
     {
       method: 'POST',
       body: formData,
@@ -70,7 +75,7 @@ const uploadFile = async (file: File): Promise<string> => {
   }
 
   const data = await response.json()
-  return data.url
+  return data.variants?.original || data.url
 }
 
 export default function BusinessInfoPage() {
@@ -238,7 +243,9 @@ export default function BusinessInfoPage() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Для создания уникальной ссылки (например: oshlab.uz/golden-dragon). Только строчные буквы, цифры и дефисы.
+                        Для создания уникальной ссылки (например:
+                        oshlab.uz/golden-dragon). Только строчные буквы, цифры и
+                        дефисы.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -257,13 +264,16 @@ export default function BusinessInfoPage() {
                           onValueChange={setLogoFiles}
                           maxFiles={1}
                           maxSize={5 * 1024 * 1024}
-                          accept={{ 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] }}
+                          accept={{
+                            'image/*': ['.jpg', '.jpeg', '.png', '.webp'],
+                          }}
                           disabled={isSubmitting || isUploading}
                           variant="image"
                         />
                       </FormControl>
                       <FormDescription>
-                        Необязательно. Загрузите логотип вашего заведения (до 5 МБ)
+                        Необязательно. Загрузите логотип вашего заведения (до 5
+                        МБ)
                       </FormDescription>
                       {field.value && (
                         <p className="text-muted-foreground text-sm">

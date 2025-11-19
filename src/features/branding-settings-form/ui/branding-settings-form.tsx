@@ -24,14 +24,14 @@ import { ColorPickerInput } from '@/shared/ui/color-picker-input'
 import { FileUploader } from '@/shared/ui/file-uploader'
 
 import {
+  type IBrandingSettings,
   useBrandingSettings,
   useUpdateBranding,
-  type IBrandingSettings,
 } from '@/entities/settings'
 
 import {
-  brandingSettingsSchema,
   type BrandingSettingsFormData,
+  brandingSettingsSchema,
 } from '../model/schema'
 
 interface BrandingSettingsFormProps {
@@ -82,13 +82,18 @@ const convertToFormData = (
   }
 }
 
-const uploadFile = async (file: File): Promise<string> => {
+const uploadFile = async (file: File, altText?: string): Promise<string> => {
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('folder', 'branding')
+
+  const params = new URLSearchParams()
+  params.append('folder', 'branding')
+  if (altText) {
+    params.append('altText', altText)
+  }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload?${params.toString()}`,
     {
       method: 'POST',
       body: formData,
@@ -101,7 +106,7 @@ const uploadFile = async (file: File): Promise<string> => {
   }
 
   const data = await response.json()
-  return data.url
+  return data.variants?.original || data.url
 }
 
 export const BrandingSettingsForm = ({
@@ -425,7 +430,11 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>Адрес</FormLabel>
                 <FormControl>
-                  <Textarea {...field} placeholder="Физический адрес" rows={2} />
+                  <Textarea
+                    {...field}
+                    placeholder="Физический адрес"
+                    rows={2}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

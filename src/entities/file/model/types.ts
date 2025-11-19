@@ -11,7 +11,10 @@ export type EntityType =
   | 'EMPLOYEE'
   | 'TENANT'
   | 'BRANCH'
+  | 'OFFER'
+  | 'TICKET'
   | 'RECEIPT_TEMPLATE'
+  | 'MANUAL_PAYMENT_RECEIPT'
 
 export interface IFileVariants {
   original?: string
@@ -69,6 +72,6 @@ export interface IFileResponse extends IFile {}
 
 export interface IDeleteFileParams {
   fileId: number
-  entityType: EntityType
-  entityId: number
+  entityType?: EntityType
+  entityId?: number
 }
