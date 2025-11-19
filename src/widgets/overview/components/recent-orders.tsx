@@ -167,8 +167,17 @@ export function RecentOrders({
             </TableHeader>
             <TableBody>
               {orders.map((order) => {
-                const paymentConfig = PAYMENT_METHOD_CONFIG[order.paymentMethod]
-                const statusConfig = STATUS_CONFIG[order.status]
+                const paymentConfig = PAYMENT_METHOD_CONFIG[
+                  order.paymentMethod
+                ] || {
+                  icon: '❓',
+                  label: order.paymentMethod || 'Unknown',
+                }
+                const statusConfig = STATUS_CONFIG[order.status] || {
+                  icon: '❓',
+                  label: order.status || 'Unknown',
+                  className: 'text-gray-600',
+                }
 
                 return (
                   <TableRow key={order.id}>

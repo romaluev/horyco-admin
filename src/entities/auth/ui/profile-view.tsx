@@ -10,8 +10,6 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { employeeApi } from '@/entities/employee'
-
 import { BASE_API_URL } from '@/shared/lib/axios'
 import { getNameInitials } from '@/shared/lib/utils'
 import { BaseLoading } from '@/shared/ui'
@@ -37,6 +35,7 @@ import PasswordInput from '@/shared/ui/base/passsword-input'
 import { Separator } from '@/shared/ui/base/separator'
 
 import { useAuthStore } from '@/entities/auth/model/store'
+import { employeeApi } from '@/entities/employee'
 
 import { authApi } from '../model/api'
 

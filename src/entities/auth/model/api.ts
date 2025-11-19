@@ -169,8 +169,8 @@ export const authApi = {
   },
 
   myProfile: async (): Promise<IEmployee> => {
-    const response = await api.get<IEmployee>('/auth/me')
-    return response.data
+    const response = await api.get<{data: IEmployee}>('/auth/me')
+    return response.data.data
   },
 
   getFullProfile: async (employeeId: number): Promise<IEmployee> => {

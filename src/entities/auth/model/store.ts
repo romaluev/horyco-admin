@@ -173,16 +173,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       }
 
-      // Get employee ID from either 'id' or 'sub' field (JWT payload uses 'sub')
-      const employeeId = currentUser
-        ? currentUser.id || (currentUser as { sub?: number }).sub
-        : undefined
 
-      if (!employeeId) {
+      if (!currentUser?.id) {
         throw new Error('No user ID available')
       }
 
-      const fullProfile = await authApi.getFullProfile(employeeId)
+      const fullProfile = await authApi.getFullProfile(currentUser.id)
 
       set({
         user: fullProfile,
