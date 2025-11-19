@@ -7,11 +7,11 @@ import { useBranchStore } from '@/entities/branch'
 
 import type { IEmployee } from '@/entities/employee'
 
-
 interface AuthState {
   user: IEmployee | null
   isAuthenticated: boolean
   isLoading: boolean
+  isLoadingProfile: boolean
   error: string | null
   token: string | null
 
@@ -20,6 +20,7 @@ interface AuthState {
   logout: () => void
   clearError: () => void
   me: () => void
+  loadFullProfile: () => Promise<void>
   setUser: (user: IEmployee) => void
 }
 
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   token: null,
   isAuthenticated: false,
   isLoading: false,
+  isLoadingProfile: false,
   error: null,
 
   // Login action
@@ -148,6 +150,50 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isLoading: false,
       })
 
+      throw error
+    }
+  },
+
+  loadFullProfile: async () => {
+    let isErrorFromMe = false
+    try {
+      set({ isLoadingProfile: true })
+
+      let currentUser = get().user
+
+      // If user is not loaded yet, fetch basic user data first
+      if (!currentUser) {
+        try {
+          await get().me()
+          currentUser = get().user
+        } catch (error) {
+          // me() already showed error toast, just propagate the error
+          isErrorFromMe = true
+          throw error
+        }
+      }
+
+      // Get employee ID from either 'id' or 'sub' field (JWT payload uses 'sub')
+      const employeeId = currentUser
+        ? currentUser.id || (currentUser as { sub?: number }).sub
+        : undefined
+
+      if (!employeeId) {
+        throw new Error('No user ID available')
+      }
+
+      const fullProfile = await authApi.getFullProfile(employeeId)
+
+      set({
+        user: fullProfile,
+        isLoadingProfile: false,
+      })
+    } catch (error: unknown) {
+      // Only show toast if error is not from me() call
+      if (!isErrorFromMe) {
+        toast.error('Не удалось загрузить полный профиль')
+      }
+      set({ isLoadingProfile: false })
       throw error
     }
   },

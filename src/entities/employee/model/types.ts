@@ -1,6 +1,19 @@
 export interface IBranch {
   id: number
   name: string
+  address: string
+}
+
+export interface IPermission {
+  id: number
+  name: string
+  category: string
+}
+
+export interface IRole {
+  id: number
+  name: string
+  permissions: IPermission[]
 }
 
 export interface IEmployee {
@@ -36,7 +49,7 @@ export interface IEmployee {
   pinEnabled?: boolean
 
   // Relationships (may not always be populated)
-  roles?: string[]
+  roles?: IRole[]
   branches?: IBranch[]
   activeBranch?: IBranch
 }

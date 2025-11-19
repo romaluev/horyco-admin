@@ -5,15 +5,18 @@
 
 'use client'
 
+import type { JSX } from 'react'
 import { useState } from 'react'
 
-import { Plus, Trash } from 'lucide-react'
+import { Edit, Plus } from 'lucide-react'
 
 import {
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/shared/ui/base/accordion'
+import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import {
   Select,
@@ -22,28 +25,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
+  AdditionList,
+  type IAddition,
   useGetAdditions,
-  useDeleteAddition,
 } from '@/entities/addition'
 import { useGetProducts } from '@/entities/product'
 import {
   CreateAdditionDialog,
+  DeleteAdditionButton,
+  UpdateAdditionDialog,
 } from '@/features/addition-form'
-
-import type { JSX } from 'react'
 
 export default function AdditionsPage(): JSX.Element {
   const [productFilter, setProductFilter] = useState<string>('all')
+  const [view, setView] = useState<'tree' | 'grid'>('tree')
+  const [editingAddition, setEditingAddition] = useState<IAddition | null>(null)
 
   const { data: additions, isLoading } = useGetAdditions(
     productFilter !== 'all' ? { productId: Number(productFilter) } : undefined
   )
   const { data: productsData } = useGetProducts({ limit: 100 })
-  const { mutate: deleteAddition } = useDeleteAddition()
 
   const products = productsData?.data || []
 
@@ -67,17 +73,17 @@ export default function AdditionsPage(): JSX.Element {
               Управляйте дополнительными позициями к продуктам
             </p>
           </div>
-          {productFilter !== 'all' && (
-            <CreateAdditionDialog
-              productId={Number(productFilter)}
-              trigger={
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Создать дополнение
-                </Button>
-              }
-            />
-          )}
+          <CreateAdditionDialog
+            productId={
+              productFilter !== 'all' ? Number(productFilter) : undefined
+            }
+            trigger={
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Создать дополнение
+              </Button>
+            }
+          />
         </div>
 
         <Select value={productFilter} onValueChange={setProductFilter}>
@@ -120,47 +126,145 @@ export default function AdditionsPage(): JSX.Element {
                 Дополнения не найдены
               </p>
               <p className="text-muted-foreground text-sm">
-                Создайте первую группу дополнений
+                {productFilter === 'all'
+                  ? 'Выберите продукт и создайте первую группу дополнений'
+                  : 'Создайте первую группу дополнений'}
               </p>
             </div>
           </div>
         ) : (
-          <Accordion type="multiple" className="space-y-4">
-            {additions.map((addition) => (
-              <AccordionItem
-                key={addition.id}
-                value={addition.id.toString()}
-                className="bg-card rounded-lg border"
-              >
-                <AccordionTrigger className="px-4 hover:no-underline">
-                  <div className="flex flex-1 items-center justify-between pr-4">
-                    <div className="text-left">
-                      <h3 className="font-semibold">{addition.name}</h3>
-                      <p className="text-muted-foreground text-sm">
-                        {addition.isRequired && 'Обязательно • '}
-                        {addition.isMultiple && 'Множественный • '}
-                        {addition.isCountable && 'Количественный • '}
-                        Мин: {addition.minSelection}, Макс:{' '}
-                        {addition.maxSelection}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        deleteAddition(addition.id)
-                      }}
-                    >
-                      <Trash className="text-destructive h-4 w-4" />
-                    </Button>
-                  </div>
-                </AccordionTrigger>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <Tabs
+            value={view}
+            onValueChange={(v) => setView(v as 'tree' | 'grid')}
+          >
+            <TabsList>
+              <TabsTrigger value="tree">Дерево</TabsTrigger>
+              <TabsTrigger value="grid">Сетка</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="tree" className="space-y-4">
+              <Accordion type="multiple" className="space-y-4">
+                {additions.map((addition) => (
+                  <AccordionItem
+                    key={addition.id}
+                    value={addition.id.toString()}
+                    className="bg-card rounded-lg border"
+                  >
+                    <AccordionTrigger className="px-4 hover:no-underline">
+                      <div className="flex flex-1 items-center justify-between pr-4">
+                        <div className="text-left">
+                          <h3 className="font-semibold">{addition.name}</h3>
+                          <p className="text-muted-foreground text-sm">
+                            {addition.description}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setEditingAddition(addition)
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.stopPropagation()
+                              }
+                            }}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            <DeleteAdditionButton
+                              addition={addition}
+                              variant="ghost"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap gap-2">
+                          {addition.isRequired && (
+                            <Badge variant="secondary">Обязательно</Badge>
+                          )}
+                          {addition.isMultiple && (
+                            <Badge variant="secondary">Множественный</Badge>
+                          )}
+                          {addition.isCountable && (
+                            <Badge variant="secondary">Количественный</Badge>
+                          )}
+                          {addition.isActive ? (
+                            <Badge variant="default">Активно</Badge>
+                          ) : (
+                            <Badge variant="outline">Неактивно</Badge>
+                          )}
+                        </div>
+
+                        <div className="grid gap-3 md:grid-cols-2">
+                          <div className="rounded-lg border p-3">
+                            <p className="text-muted-foreground text-xs font-medium">
+                              Минимальный выбор
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {addition.minSelection}
+                            </p>
+                          </div>
+                          <div className="rounded-lg border p-3">
+                            <p className="text-muted-foreground text-xs font-medium">
+                              Максимальный выбор
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {addition.maxSelection}
+                            </p>
+                          </div>
+                          <div className="rounded-lg border p-3">
+                            <p className="text-muted-foreground text-xs font-medium">
+                              Порядок сортировки
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {addition.sortOrder}
+                            </p>
+                          </div>
+                          <div className="rounded-lg border p-3">
+                            <p className="text-muted-foreground text-xs font-medium">
+                              Позиций в группе
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {addition.itemsCount ?? 0}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </TabsContent>
+
+            <TabsContent value="grid" className="space-y-6">
+              <AdditionList
+                additions={additions}
+                isLoading={isLoading}
+                onAdditionClick={(addition) => setEditingAddition(addition)}
+              />
+            </TabsContent>
+          </Tabs>
         )}
       </div>
+
+      {editingAddition && (
+        <UpdateAdditionDialog
+          addition={editingAddition}
+          isOpen={!!editingAddition}
+          onClose={() => setEditingAddition(null)}
+        />
+      )}
     </PageContainer>
   )
 }

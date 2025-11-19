@@ -5,14 +5,14 @@ import api from '@/shared/lib/axios'
 import type {
   AuthRequest,
   AuthResponse,
-  SendOTPRequest,
-  SendOTPResponse,
-  VerifyOTPRequest,
-  VerifyOTPResponse,
   CompleteRegistrationRequest,
   CompleteRegistrationResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
+  SendOTPRequest,
+  SendOTPResponse,
+  VerifyOTPRequest,
+  VerifyOTPResponse,
 } from '.'
 import type { IEmployee } from '@/entities/employee'
 
@@ -173,24 +173,21 @@ export const authApi = {
     return response.data
   },
 
+  getFullProfile: async (employeeId: number): Promise<IEmployee> => {
+    const response = await api.get<ApiResponse<IEmployee>>(
+      `/admin/staff/employees/${employeeId}`
+    )
+    return response.data.data
+  },
+
   updateProfile: async (
     employeeData: Partial<IEmployee> & { id: number }
   ): Promise<IEmployee> => {
-    const { id, ...data } = employeeData
+    const { id, password: _password, ...data } = employeeData
     const response = await api.patch<ApiResponse<IEmployee>>(
       `/admin/staff/employees/${id}`,
       data
     )
     return response.data.data
-  },
-
-  attachAvatar: async (file: File): Promise<IEmployee> => {
-    const formData = new FormData()
-    formData.append('file', file)
-    const response = await api.postForm<IEmployee>(
-      '/dashboard/profile/attach-avatar',
-      formData
-    )
-    return response.data
   },
 }

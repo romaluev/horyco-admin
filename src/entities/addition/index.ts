@@ -17,3 +17,6 @@ export {
   type IUpdateAdditionDto,
   type IGetAdditionsParams,
 } from './model'
+
+export { AdditionCard } from './ui/addition-card'
+export { AdditionList } from './ui/addition-list'

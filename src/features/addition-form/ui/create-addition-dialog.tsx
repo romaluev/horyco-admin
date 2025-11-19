@@ -29,15 +29,23 @@ import {
   FormMessage,
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui/base/select'
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useCreateAddition } from '@/entities/addition'
+import { useGetProducts } from '@/entities/product'
 
-import { additionSchema, type AdditionFormValues } from '../model/contract'
+import { type AdditionFormValues, additionSchema } from '../model/contract'
 
 interface CreateAdditionDialogProps {
-  productId: number
+  productId?: number
   trigger?: React.ReactNode
 }
 
@@ -45,15 +53,18 @@ export const CreateAdditionDialog = ({
   productId,
   trigger,
 }: CreateAdditionDialogProps) => {
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const { mutate: createAddition, isPending } = useCreateAddition()
+  const { data: productsData } = useGetProducts({ limit: 100 })
+
+  const products = productsData?.data || []
 
   const form = useForm<AdditionFormValues>({
     resolver: zodResolver(additionSchema),
     defaultValues: {
       name: '',
       description: '',
-      productId,
+      productId: productId || 0,
       isRequired: false,
       isMultiple: false,
       isCountable: false,
@@ -67,14 +78,14 @@ export const CreateAdditionDialog = ({
   const handleSubmit = (values: AdditionFormValues): void => {
     createAddition(values, {
       onSuccess: () => {
-        setOpen(false)
+        setIsOpen(false)
         form.reset()
       },
     })
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger || <Button>Создать дополнение</Button>}
       </DialogTrigger>
@@ -91,6 +102,39 @@ export const CreateAdditionDialog = ({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
+            {!productId && (
+              <FormField
+                control={form.control}
+                name="productId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Продукт</FormLabel>
+                    <Select
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      value={field.value ? field.value.toString() : ''}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите продукт" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {products.map((product) => (
+                          <SelectItem
+                            key={product.id}
+                            value={product.id.toString()}
+                          >
+                            {product.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="name"
@@ -266,7 +310,7 @@ export const CreateAdditionDialog = ({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
+                onClick={() => setIsOpen(false)}
               >
                 Отмена
               </Button>

@@ -201,4 +201,64 @@ export const employeeApi = {
   ): Promise<void> => {
     await api.patch(`${BASE_URL}/${id}/password`, data)
   },
+
+  /**
+   * Upload employee avatar
+   * @param file - Image file for avatar
+   * @param altText - Alt text for the image
+   * @returns Promise with uploaded file data
+   */
+  uploadEmployeeAvatar: async (
+    file: File,
+    altText?: string
+  ): Promise<{
+    id: number
+    url: string
+    filename: string
+    size: number
+    mimeType: string
+    folder: string
+    variants: {
+      original: string
+      large?: string
+      medium?: string
+      thumb?: string
+    }
+    metadata: {
+      width?: number
+      height?: number
+      altText?: string
+    }
+  }> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    if (altText) {
+      formData.append('altText', altText)
+    }
+
+    const response = await api.post<
+      ApiResponse<{
+        id: number
+        url: string
+        filename: string
+        size: number
+        mimeType: string
+        folder: string
+        variants: {
+          original: string
+          large?: string
+          medium?: string
+          thumb?: string
+        }
+        metadata: {
+          width?: number
+          height?: number
+          altText?: string
+        }
+      }>
+    >('/admin/files/upload?folder=EMPLOYEES', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return response.data.data
+  },
 }

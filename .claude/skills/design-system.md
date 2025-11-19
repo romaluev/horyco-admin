@@ -52,7 +52,7 @@ triggers: ['ui rules', 'design system', 'component style']
 - Backgrounds: `bg-background`, `bg-card`, `bg-muted`, `bg-primary`, `bg-destructive`, `bg-secondary`, `bg-accent`
 - Text: `text-foreground`, `text-muted-foreground`, `text-primary`, `text-destructive`, `text-card-foreground`, `text-primary-foreground`
 - Borders: `border-border`, `border-input`, `border-primary`, `border-destructive`
-- Primary color is `#fe4a49` (use via `bg-primary` token only)
+- Primary color is `#41B06E` (use via `bg-primary` token only)
 
 ---
 

@@ -18,6 +18,7 @@ export interface IAddition {
   maxSelection: number
   sortOrder: number
   isActive: boolean
+  itemsCount?: number
   createdAt: string
   updatedAt: string
 }
