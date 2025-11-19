@@ -1,1 +1,1 @@
-export { CreateRoleDialog, DeleteRoleDialog } from './ui'
+export { CreateRoleDialog, DeleteRoleDialog, EditRoleDialog } from './ui'

@@ -8,6 +8,7 @@ export interface IRole {
   name: string
   description?: string
   isSystem: boolean // true for default roles (Admin, Manager, Cashier, Waiter)
+  branchRestriction?: 'single' | 'multiple' // Controls whether employees can be assigned to multiple branches
   permissions?: IPermission[]
 }
 
@@ -22,12 +23,14 @@ export interface IRoleCreateDto {
   name: string
   description?: string
   permissionIds: number[]
+  branchRestriction?: 'single' | 'multiple'
 }
 
 export interface IRoleUpdateDto {
   name?: string
   description?: string
   permissionIds?: number[]
+  branchRestriction?: 'single' | 'multiple'
 }
 
 export interface IRoleFilters {

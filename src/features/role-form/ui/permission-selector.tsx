@@ -12,14 +12,20 @@ import {
 
 import { useGetPermissionsGrouped } from '@/entities/role'
 
-import type { CreateRoleFormData } from '../model/contract'
-import type { UseFormReturn } from 'react-hook-form'
+import type { UseFormReturn, FieldValues, Path } from 'react-hook-form'
 
-interface PermissionSelectorProps {
-  form: UseFormReturn<CreateRoleFormData>
+// Generic type constraint for any form that has permissionIds field
+interface RoleFormWithPermissions extends FieldValues {
+  permissionIds?: number[]
 }
 
-export const PermissionSelector = ({ form }: PermissionSelectorProps) => {
+interface PermissionSelectorProps<T extends RoleFormWithPermissions> {
+  form: UseFormReturn<T>
+}
+
+export const PermissionSelector = <T extends RoleFormWithPermissions>({
+  form,
+}: PermissionSelectorProps<T>) => {
   const {
     setValue,
     watch,
@@ -31,17 +37,21 @@ export const PermissionSelector = ({ form }: PermissionSelectorProps) => {
     isError,
   } = useGetPermissionsGrouped()
 
-  const selectedPermissionIds = watch('permissionIds') || []
+  const selectedPermissionIds = (watch('permissionIds' as Path<T>) ||
+    []) as number[]
 
   const togglePermission = (permissionId: number): void => {
     const currentPermissionIds = selectedPermissionIds
     if (currentPermissionIds.includes(permissionId)) {
       setValue(
-        'permissionIds',
-        currentPermissionIds.filter((id) => id !== permissionId)
+        'permissionIds' as Path<T>,
+        currentPermissionIds.filter((id) => id !== permissionId) as T[Path<T>]
       )
     } else {
-      setValue('permissionIds', [...currentPermissionIds, permissionId])
+      setValue(
+        'permissionIds' as Path<T>,
+        [...currentPermissionIds, permissionId] as T[Path<T>]
+      )
     }
   }
 
@@ -53,12 +63,14 @@ export const PermissionSelector = ({ form }: PermissionSelectorProps) => {
 
     if (allSelected) {
       setValue(
-        'permissionIds',
-        selectedPermissionIds.filter((id) => !permissionIds.includes(id))
+        'permissionIds' as Path<T>,
+        selectedPermissionIds.filter(
+          (id) => !permissionIds.includes(id)
+        ) as T[Path<T>]
       )
     } else {
       const newIds = [...new Set([...selectedPermissionIds, ...permissionIds])]
-      setValue('permissionIds', newIds)
+      setValue('permissionIds' as Path<T>, newIds as T[Path<T>])
     }
   }
 
@@ -132,7 +144,7 @@ export const PermissionSelector = ({ form }: PermissionSelectorProps) => {
 
       {errors.permissionIds && (
         <p className="text-destructive text-sm">
-          {errors.permissionIds.message}
+          {String(errors.permissionIds.message)}
         </p>
       )}
     </div>

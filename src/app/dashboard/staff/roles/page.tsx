@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 
 import { Pencil } from 'lucide-react'
 
@@ -14,13 +15,19 @@ import {
 } from '@/shared/ui/base/card'
 
 import { useGetAllRoles } from '@/entities/role'
-import { CreateRoleDialog, DeleteRoleDialog } from '@/features/role-form'
+import {
+  CreateRoleDialog,
+  DeleteRoleDialog,
+  EditRoleDialog,
+} from '@/features/role-form'
 
+import type { IRole } from '@/entities/role'
 import type { JSX } from 'react'
 
 const SYSTEM_ROLES = ['Администратор', 'Менеджер', 'Кассир', 'Официант']
 
 export default function RolesPage(): JSX.Element {
+  const [editingRole, setEditingRole] = useState<IRole | null>(null)
   const { data: rolesResponse, isLoading, isError } = useGetAllRoles()
 
   if (isLoading) {
@@ -82,7 +89,11 @@ export default function RolesPage(): JSX.Element {
                 </div>
               </CardContent>
               <CardFooter className="border-t">
-                <Button variant="ghost" size="sm" disabled>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setEditingRole(role)}
+                >
                   <Pencil className="h-4 w-4" />
                   Редактировать
                 </Button>
@@ -131,7 +142,11 @@ export default function RolesPage(): JSX.Element {
                   </div>
                 </CardContent>
                 <CardFooter className="flex gap-2 border-t">
-                  <Button variant="ghost" size="sm" disabled>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEditingRole(role)}
+                  >
                     <Pencil className="h-4 w-4" />
                     Редактировать
                   </Button>
@@ -142,6 +157,18 @@ export default function RolesPage(): JSX.Element {
           </div>
         )}
       </div>
+
+      {editingRole && (
+        <EditRoleDialog
+          role={editingRole}
+          isOpen={!!editingRole}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditingRole(null)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }
