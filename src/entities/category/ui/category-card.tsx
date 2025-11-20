@@ -26,9 +26,15 @@ export const CategoryCard = ({ category, className }: CategoryCardProps) => {
       <CardContent className="p-2">
         <div className="flex flex-col gap-2">
           <div className="flex items-start gap-3">
-            {category.image && (
+            {(category.imageUrls?.thumb ||
+              category.imageUrls?.original ||
+              category.image) && (
               <img
-                src={category.image}
+                src={
+                  category.imageUrls?.thumb ||
+                  category.imageUrls?.original ||
+                  category.image
+                }
                 alt={category.name}
                 className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
               />

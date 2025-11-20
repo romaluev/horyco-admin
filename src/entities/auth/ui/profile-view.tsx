@@ -157,8 +157,8 @@ export function ProfileView() {
         user.fullName
       )
 
-      // Update profile with thumb variant
-      const photoUrl = uploadedFile.variants.thumb || uploadedFile.url
+      // Save file ID only (backend will generate presigned URLs in avatar field)
+      const photoUrl = String(uploadedFile.id)
 
       await authApi.updateProfile({
         id: user.id,
@@ -220,7 +220,7 @@ export function ProfileView() {
                 <AvatarImage
                   src={
                     user.photoUrl
-                      ? `${BASE_API_URL}/file/${user.photoUrl}`
+                      ? `${BASE_API_URL}/admin/files/${user.photoUrl}`
                       : undefined
                   }
                   alt={user.fullName}

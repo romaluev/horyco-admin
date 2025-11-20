@@ -146,4 +146,8 @@ export interface IUser {
   password: string
   phone: string
   photoUrl?: string | null
+  avatar?: {
+    original?: string
+    thumb?: string
+  }
 }

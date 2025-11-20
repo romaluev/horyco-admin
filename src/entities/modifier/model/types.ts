@@ -11,6 +11,11 @@ export interface IModifier {
   name: string
   description?: string
   image?: string
+  imageUrls?: {
+    original?: string
+    medium?: string
+    thumb?: string
+  }
   price: number
   modifierGroupId: number
   sortOrder: number

@@ -106,7 +106,8 @@ const uploadFile = async (file: File, altText?: string): Promise<string> => {
   }
 
   const data = await response.json()
-  return data.variants?.original || data.url
+  // Return file ID only (backend will generate presigned URLs)
+  return String(data.id)
 }
 
 export const BrandingSettingsForm = ({

@@ -111,10 +111,9 @@ export const CreateProductForm = () => {
           altText: values.name,
         })
 
-        const imageUrl = response.variants.medium || response.variants.original
-        if (imageUrl) {
-          await productApi.updateProduct(createdProduct.id, { image: imageUrl })
-        }
+        // Save file ID only (backend will generate presigned URLs in imageUrls field)
+        const imageId = String(response.id)
+        await productApi.updateProduct(createdProduct.id, { image: imageId })
       }
 
       setSending(false)

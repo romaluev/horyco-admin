@@ -37,9 +37,11 @@ export function UserNav() {
           <Avatar>
             <AvatarImage
               src={
-                user?.photoUrl
+                user?.avatar?.thumb ||
+                user?.avatar?.original ||
+                (user?.photoUrl
                   ? `${BASE_API_URL}/file/${user.photoUrl}`
-                  : undefined
+                  : undefined)
               }
               alt={user?.fullName}
             />

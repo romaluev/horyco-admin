@@ -47,10 +47,16 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        {product.image ? (
+        {(product.imageUrls?.medium ||
+          product.imageUrls?.original ||
+          product.image) ? (
           <img
             className="h-[200px] rounded-md object-cover"
-            src={product.image}
+            src={
+              product.imageUrls?.medium ||
+              product.imageUrls?.original ||
+              product.image
+            }
             alt={product.name}
           />
         ) : null}

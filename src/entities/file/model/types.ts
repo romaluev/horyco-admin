@@ -45,29 +45,6 @@ export interface IFile {
   createdAt: string
 }
 
-export interface IPresignedUploadUrlRequest {
-  entityType: EntityType
-  entityId: number
-  fileName: string
-  mimeType: string
-  fileSize: number
-  altText?: string
-}
-
-export interface IPresignedUploadUrlResponse {
-  data: {
-    uploadUrl: string
-    fileId: number
-    fileKey: string
-    expiresIn: number
-  }
-}
-
-export interface IConfirmUploadRequest {
-  fileId: number
-  fileKey: string
-}
-
 export interface IFileResponse extends IFile {}
 
 export interface IDeleteFileParams {

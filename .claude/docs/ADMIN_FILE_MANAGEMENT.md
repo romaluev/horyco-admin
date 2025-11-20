@@ -735,11 +735,65 @@ This allows you to show image preview before creating the entity.
 
 ---
 
+---
+
+## 🆕 Key Changes (2025-11-20)
+
+### **Fixed Upload Bug**
+- ✅ Fixed "Employee does not belong to current tenant" error
+- Added `tenantId` to user context in file upload controller
+
+### **Automatic Presigned URLs**
+- ✅ Backend now auto-generates presigned URLs when returning entities
+- Employee responses include `avatar` field with presigned URLs
+- Product responses include `imageUrls` field with all variants
+- Category responses include `imageUrls` field with all variants
+
+### **Updated Response Structure**
+
+**Employee Response (GET /pos/staff):**
+```json
+{
+  "id": 1,
+  "photoUrl": "123",        // ← File ID (store this)
+  "avatar": {               // ← NEW: Auto-generated presigned URLs
+    "original": "https://storage.../original.jpg?...",
+    "thumb": "https://storage.../thumb.jpg?..."
+  }
+}
+```
+
+**Product Response (GET /admin/products):**
+```json
+{
+  "id": 42,
+  "image": "456",           // ← File ID (store this)
+  "imageUrls": {            // ← NEW: Auto-generated presigned URLs
+    "original": "https://...",
+    "medium": "https://...",
+    "thumb": "https://..."
+  }
+}
+```
+
+### **Enhanced Proxy Endpoint**
+- ✅ Improved `/file/:id` endpoint with proper MIME types
+- Added 24-hour browser caching
+- Better performance for image display
+
+### **Frontend Integration**
+- ✅ Store file ID (not URL!) in `photoUrl`/`image` fields
+- ✅ Use presigned URLs from entity responses directly in `<img>` tags
+- ✅ No manual URL fetching needed - backend handles it automatically
+- See complete guide: `docs/frontend/FILE_UPLOAD_INTEGRATION.md`
+
+---
+
 ## Document Updates
 
-**Last Updated:** 2025-11-19
+**Last Updated:** 2025-11-20
 
-**Changes:**
+**Previous Changes:**
 - ✅ Added all entity types (ADDITION_ITEM, OFFER, TICKET, etc.)
 - ✅ Added missing folders (documents, misc)
 - ✅ Updated WebP quality from 90% to 85% (matches implementation)

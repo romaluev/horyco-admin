@@ -82,13 +82,11 @@ export const CreateCategoryDialog = ({
           altText: data.name,
         })
 
-        // Update category with image URL
-        const imageUrl = response.variants.medium || response.variants.original
-        if (imageUrl) {
-          await categoryApi.updateCategory(createdCategory.id, {
-            image: imageUrl,
-          })
-        }
+        // Save file ID only (backend will generate presigned URLs in imageUrls field)
+        const imageId = String(response.id)
+        await categoryApi.updateCategory(createdCategory.id, {
+          image: imageId,
+        })
       }
 
       setOpen(false)

@@ -28,6 +28,10 @@ export interface IEmployee {
   birthDate?: string
   hireDate?: string
   photoUrl?: string
+  avatar?: {
+    original?: string
+    thumb?: string
+  }
   notes?: string
 
   // System fields

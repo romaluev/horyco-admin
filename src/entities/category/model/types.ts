@@ -8,6 +8,11 @@ export interface ICategory {
   name: string
   description?: string
   image?: string
+  imageUrls?: {
+    original?: string
+    medium?: string
+    thumb?: string
+  }
   parentId: number | null
   sortOrder: number
   isActive: boolean

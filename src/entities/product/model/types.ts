@@ -15,6 +15,12 @@ export interface IProduct {
   categoryName?: string
   productTypeId: number
   image?: string
+  imageUrls?: {
+    original?: string
+    large?: string
+    medium?: string
+    thumb?: string
+  }
   isAvailable: boolean
   sortOrder: number
   preparationTime?: number // in minutes

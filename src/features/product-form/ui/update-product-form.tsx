@@ -72,7 +72,8 @@ export const UpdateProductForm = ({
         altText: values.name,
       })
 
-      imageUrl = response.variants.medium || response.variants.original || ''
+      // Save file ID only (backend will generate presigned URLs in imageUrls field)
+      imageUrl = String(response.id)
     }
 
     await updateProductMutation({

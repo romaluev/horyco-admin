@@ -83,10 +83,9 @@ export const CreateModifierDialog = ({
           altText: data.name,
         })
 
-        const imageUrl = response.variants.medium || response.variants.original
-        if (imageUrl) {
-          await modifierApi.updateModifier(createdModifier.id, { image: imageUrl })
-        }
+        // Save file ID only (backend will generate presigned URLs in imageUrls field)
+        const imageId = String(response.id)
+        await modifierApi.updateModifier(createdModifier.id, { image: imageId })
       }
 
       setOpen(false)

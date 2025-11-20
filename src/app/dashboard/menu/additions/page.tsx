@@ -5,7 +5,6 @@
 
 'use client'
 
-import type { JSX } from 'react'
 import { useState } from 'react'
 
 import { Edit, Plus } from 'lucide-react'
@@ -40,6 +39,8 @@ import {
   DeleteAdditionButton,
   UpdateAdditionDialog,
 } from '@/features/addition-form'
+
+import type { JSX } from 'react'
 
 export default function AdditionsPage(): JSX.Element {
   const [productFilter, setProductFilter] = useState<string>('all')

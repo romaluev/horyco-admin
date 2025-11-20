@@ -22,7 +22,9 @@ export function UserAvatarProfile({
       <Avatar className={className}>
         <AvatarImage
           src={
-            user?.photoUrl ? `${BASE_API_URL}/file/${user.photoUrl}` : undefined
+            user?.avatar?.thumb ||
+            user?.avatar?.original ||
+            (user?.photoUrl ? `${BASE_API_URL}/file/${user.photoUrl}` : undefined)
           }
           alt={user?.fullName || ''}
         />

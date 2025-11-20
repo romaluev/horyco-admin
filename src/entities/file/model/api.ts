@@ -1,41 +1,19 @@
 /**
  * File API Client
- * Handles presigned URL uploads and file management
+ * Handles file management operations
+ *
+ * Note: Admin Panel uses direct upload (Method 1) via /admin/files/upload
+ * See: src/shared/lib/file-upload.ts for upload utilities
+ * Docs: ADMIN_FILE_MANAGEMENT.md
  */
 
 import api from '@/shared/lib/axios'
 
 import type {
   EntityType,
-  IConfirmUploadRequest,
   IDeleteFileParams,
   IFileResponse,
-  IPresignedUploadUrlRequest,
-  IPresignedUploadUrlResponse,
 } from './types'
-
-/**
- * Request presigned upload URL for direct client upload
- */
-export const requestPresignedUploadUrl = async (
-  data: IPresignedUploadUrlRequest
-): Promise<IPresignedUploadUrlResponse> => {
-  const response = await api.post<IPresignedUploadUrlResponse>(
-    '/admin/files/upload-url',
-    data
-  )
-  return response.data
-}
-
-/**
- * Confirm upload after successfully uploading to presigned URL
- */
-export const confirmUpload = async (
-  data: IConfirmUploadRequest
-): Promise<IFileResponse> => {
-  const response = await api.post<IFileResponse>('/admin/files/confirm', data)
-  return response.data
-}
 
 /**
  * Get file metadata with all variants
@@ -82,25 +60,4 @@ export const deleteFile = async (
 
   const response = await api.delete<{ id: number }>(url)
   return response.data
-}
-
-/**
- * Upload file directly to presigned URL
- * This bypasses the API server and uploads directly to storage
- */
-export const uploadToPresignedUrl = async (
-  uploadUrl: string,
-  file: File
-): Promise<void> => {
-  const response = await fetch(uploadUrl, {
-    method: 'PUT',
-    body: file,
-    headers: {
-      'Content-Type': file.type,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Upload failed: ${response.statusText}`)
-  }
 }
