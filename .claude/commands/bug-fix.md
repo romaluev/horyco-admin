@@ -1,6 +1,6 @@
 Locate and fix bugs. I'm giving you bug(s), you need to fix them.
 
-Docs: $ARGUMENTS
+#1 PRIORITY TASK: $ARGUMENTS
 
 ## Workflow
 
@@ -10,7 +10,7 @@ locate → fix → test → validate
 
 ## Phase 1: Locate
 
-**Call locator agent** for bugs: you will get the locations of bugs.
+**Call locator agent** for bugs: you will get the locations of them.
 
 ---
 
@@ -18,26 +18,17 @@ locate → fix → test → validate
 
 **Load standards & use skills** (ensure fix follows rules):
 
+- `.claude/skills/project-index.md`
 - `.claude/skills/standards.md`
 - `.claude/skills/design-system.md`
 
-**Implement fix** (no code examples, see `.claude/standards/`):
+**Implement fix** (no code examples, see `.claude/standards/*`):
 
 - Read affected files
 - Apply fix following standards
 - Update related files if needed
 - Add error handling/null checks
-
-**Output**:
-
-```
-Fixed:
-✓ Added calculateTotals() in addItem
-✓ Also fixed removeItem, updateQuantity
-
-Files modified: 1
-Standards: ✓ Immutable updates ✓ Type safe
-```
+- Make sure that you completely fixed the bug
 
 ---
 
@@ -45,17 +36,6 @@ Standards: ✓ Immutable updates ✓ Type safe
 
 **If tests exist**: Run + add regression test
 **If no tests**: Call **test-writer** to generate
-
-**Output**:
-
-```
-Tests:
-✓ updates total when item added
-✓ updates total when removed
-✓ updates total when quantity changed
-
-All passing: 8/8 ✓
-```
 
 ---
 
@@ -70,16 +50,6 @@ npm run test
 ```
 
 **Fix errors, re-run**
-
-**Output**:
-
-```
-✓ TypeScript: 0 errors
-✓ ESLint: 0 warnings
-✓ Tests: 53/53 passing
-
-Bug fixed!
-```
 
 ---
 

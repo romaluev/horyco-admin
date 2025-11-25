@@ -2,15 +2,11 @@
 name: core
 description: JS/TS rules (best practices, standards, rules)
 model: haiku
-triggers: ['ts/js rules', 'best practices', 'typescript standards']
+triggers:
+  ['ts/js rules', 'best practices', 'typescript standards', 'clean code']
 ---
 
 # JS/TS Code Quality Rules
-
-**Purpose**: Enforce consistent, maintainable code across all sessions
-**Scope**: JavaScript/TypeScript implementation quality
-
----
 
 ## TYPE SAFETY
 

@@ -1,4 +1,4 @@
-# OshLab Frontend Documentation
+# Horyco Frontend Documentation
 
 Complete API and workflow documentation for frontend developers building **Admin Panel** and **POS Application**.
 
@@ -32,6 +32,7 @@ Complete API and workflow documentation for frontend developers building **Admin
 Core concepts you must understand before building.
 
 - **[Overview](./architecture/overview.md)** ⭐ **Read First**
+
   - Platform architecture
   - Multi-tenant system explained
   - Authentication flow
@@ -40,12 +41,13 @@ Core concepts you must understand before building.
   - Request/response patterns
   - File upload handling
 
-- **[Multi-Tenancy](./architecture/multi-tenancy.md)** *(Coming soon)*
+- **[Multi-Tenancy](./architecture/multi-tenancy.md)** _(Coming soon)_
+
   - Tenant isolation deep dive
   - Branch hierarchy
   - Context propagation
 
-- **[Authentication](./architecture/authentication.md)** *(Coming soon)*
+- **[Authentication](./architecture/authentication.md)** _(Coming soon)_
   - Admin Panel: Email + Password
   - POS: Manager Login + Staff PIN
   - Token management
@@ -60,6 +62,7 @@ Step-by-step processes with sequence diagrams and state machines.
 #### Admin Panel Workflows
 
 - **[Onboarding Wizard](./workflows/admin/onboarding-wizard.json)** 📋 JSON Schema
+
   - 7-step registration process
   - Phone verification (OTP)
   - Business information
@@ -70,19 +73,21 @@ Step-by-step processes with sequence diagrams and state machines.
   - Staff invitations
 
 - **[Menu Setup Flow](./workflows/admin/menu-setup-flow.md)** 📊 Mermaid Diagrams
+
   - Categories → Products → Modifiers → Additions
   - Branch overrides for multi-location
   - Image upload workflow
   - Publishing checklist
   - Common pitfalls
 
-- **[Staff Management](./workflows/admin/staff-management-flow.json)** *(Coming soon)*
+- **[Staff Management](./workflows/admin/staff-management-flow.json)** _(Coming soon)_
+
   - Creating employees
   - Assigning roles and permissions
   - Multi-branch access
   - Deactivation workflow
 
-- **[Report Generation](./workflows/admin/reports-generation.json)** *(Coming soon)*
+- **[Report Generation](./workflows/admin/reports-generation.json)** _(Coming soon)_
   - Sales reports
   - Shift summaries
   - Financial analytics
@@ -90,30 +95,34 @@ Step-by-step processes with sequence diagrams and state machines.
 
 #### POS Workflows
 
-- **[Daily Operations](./workflows/pos/daily-operations.md)** *(Coming soon)*
+- **[Daily Operations](./workflows/pos/daily-operations.md)** _(Coming soon)_
+
   - Complete day cycle
   - Manager setup → Staff login → Shift → Orders → Close
 
-- **[Shift Lifecycle](./workflows/pos/shift-lifecycle.json)** *(Coming soon)*
+- **[Shift Lifecycle](./workflows/pos/shift-lifecycle.json)** _(Coming soon)_
+
   - Open shift with cash float
   - Process orders and payments
   - Close shift with reconciliation
   - Manager approval for discrepancies
 
-- **[Order Flow](./workflows/pos/order-flow.json)** *(Coming soon)*
+- **[Order Flow](./workflows/pos/order-flow.json)** _(Coming soon)_
+
   - Create order
   - Add modifiers/additions
   - Apply discounts
   - Process payment
   - Print receipt
 
-- **[Payment Processing](./workflows/pos/payment-processing.json)** *(Coming soon)*
+- **[Payment Processing](./workflows/pos/payment-processing.json)** _(Coming soon)_
+
   - Cash
   - Card terminal
   - Split payments
   - Refunds
 
-- **[Table Session Management](./workflows/pos/table-session.json)** *(Coming soon)*
+- **[Table Session Management](./workflows/pos/table-session.json)** _(Coming soon)_
   - Open table session
   - Add orders
   - Transfer table
@@ -128,31 +137,31 @@ Complete endpoint documentation with request/response examples.
 
 #### Admin Panel APIs
 
-| Document | Endpoints | Status |
-|----------|-----------|--------|
-| **[Staff Management](./api-reference/admin/staff-management.md)** ✅ | 18 endpoints | Complete |
-| **[Onboarding](./api-reference/admin/onboarding.md)** | 8 endpoints | *Coming soon* |
-| **[Menu Management](./api-reference/admin/menu-management.md)** | 30+ endpoints | *Coming soon* |
-| **[Branch Management](./api-reference/admin/branch-management.md)** | 12 endpoints | *Coming soon* |
-| **[Settings](./api-reference/admin/settings.md)** | 10 endpoints | *Coming soon* |
-| **[Tax & Pricing](./api-reference/admin/tax-pricing.md)** | 6 endpoints | *Coming soon* |
-| **[Financial Reports](./api-reference/admin/financial-reports.md)** | 12 endpoints | *Coming soon* |
-| **[Operating Hours](./api-reference/admin/operating-hours.md)** | 5 endpoints | *Coming soon* |
-| **[Customers](./api-reference/admin/customers.md)** | 8 endpoints | *Coming soon* |
-| **[Order History](./api-reference/admin/order-history.md)** | 6 endpoints | *Coming soon* |
+| Document                                                             | Endpoints     | Status        |
+| -------------------------------------------------------------------- | ------------- | ------------- |
+| **[Staff Management](./api-reference/admin/staff-management.md)** ✅ | 18 endpoints  | Complete      |
+| **[Onboarding](./api-reference/admin/onboarding.md)**                | 8 endpoints   | _Coming soon_ |
+| **[Menu Management](./api-reference/admin/menu-management.md)**      | 30+ endpoints | _Coming soon_ |
+| **[Branch Management](./api-reference/admin/branch-management.md)**  | 12 endpoints  | _Coming soon_ |
+| **[Settings](./api-reference/admin/settings.md)**                    | 10 endpoints  | _Coming soon_ |
+| **[Tax & Pricing](./api-reference/admin/tax-pricing.md)**            | 6 endpoints   | _Coming soon_ |
+| **[Financial Reports](./api-reference/admin/financial-reports.md)**  | 12 endpoints  | _Coming soon_ |
+| **[Operating Hours](./api-reference/admin/operating-hours.md)**      | 5 endpoints   | _Coming soon_ |
+| **[Customers](./api-reference/admin/customers.md)**                  | 8 endpoints   | _Coming soon_ |
+| **[Order History](./api-reference/admin/order-history.md)**          | 6 endpoints   | _Coming soon_ |
 
 #### POS APIs
 
-| Document | Endpoints | Status |
-|----------|-----------|--------|
-| **[Authentication](./api-reference/pos/authentication.md)** | 5 endpoints | *Coming soon* |
-| **[Shifts](./api-reference/pos/shifts.md)** | 6 endpoints | *Coming soon* |
-| **[Orders](./api-reference/pos/orders.md)** | 12 endpoints | *Coming soon* |
-| **[Tables](./api-reference/pos/tables.md)** | 8 endpoints | *Coming soon* |
-| **[Payments](./api-reference/pos/payments.md)** | 8 endpoints | *Coming soon* |
-| **[Receipts](./api-reference/pos/receipts.md)** | 7 endpoints | *Coming soon* |
-| **[Customers](./api-reference/pos/customers.md)** | 6 endpoints | *Coming soon* |
-| **[Menu](./api-reference/pos/menu.md)** | 4 endpoints | *Coming soon* |
+| Document                                                    | Endpoints    | Status        |
+| ----------------------------------------------------------- | ------------ | ------------- |
+| **[Authentication](./api-reference/pos/authentication.md)** | 5 endpoints  | _Coming soon_ |
+| **[Shifts](./api-reference/pos/shifts.md)**                 | 6 endpoints  | _Coming soon_ |
+| **[Orders](./api-reference/pos/orders.md)**                 | 12 endpoints | _Coming soon_ |
+| **[Tables](./api-reference/pos/tables.md)**                 | 8 endpoints  | _Coming soon_ |
+| **[Payments](./api-reference/pos/payments.md)**             | 8 endpoints  | _Coming soon_ |
+| **[Receipts](./api-reference/pos/receipts.md)**             | 7 endpoints  | _Coming soon_ |
+| **[Customers](./api-reference/pos/customers.md)**           | 6 endpoints  | _Coming soon_ |
+| **[Menu](./api-reference/pos/menu.md)**                     | 4 endpoints  | _Coming soon_ |
 
 ---
 
@@ -215,6 +224,7 @@ Tenant (Pizza House Brand)
 ```
 
 **What this means for you:**
+
 - ✅ Never manually add `tenantId` to requests
 - ✅ Backend automatically filters all data
 - ✅ Cannot access other tenants' data
@@ -237,6 +247,7 @@ Category (e.g., "Pizzas")
 ```
 
 **Branch Overrides:**
+
 - Downtown branch: Margherita = $14.99 (20% markup)
 - Airport branch: Margherita = unavailable (seasonal)
 
@@ -249,12 +260,14 @@ Category (e.g., "Pizzas")
 Format: `resource:action`
 
 **Examples:**
+
 - `menu:view` - View menu items
 - `menu:edit` - Create/edit menu items
 - `staff:manage` - Manage employees
 - `reports:financial` - View financial reports
 
 **Predefined Roles:**
+
 - **Owner** - Full access
 - **Manager** - Branch management
 - **Cashier** - POS operations
@@ -269,19 +282,22 @@ Format: `resource:action`
 ### Setting Up
 
 1. **Clone and install:**
+
    ```bash
-   git clone https://github.com/oshlab/oshlab-api.git
-   cd oshlab-api
+   git clone https://github.com/Horyco/Horyco-api.git
+   cd Horyco-api
    npm install
    ```
 
 2. **Environment setup:**
+
    ```bash
    cp .env.example .env
    # Configure DATABASE_*, JWT_SECRET, etc.
    ```
 
 3. **Start development server:**
+
    ```bash
    npm run start:local
    ```
@@ -295,21 +311,21 @@ Format: `resource:action`
 
 ### API Base URLs
 
-| Environment | URL |
-|-------------|-----|
-| **Local** | http://localhost:3000 |
-| **Development** | https://dev-api.oshlab.uz |
-| **Production** | https://api.oshlab.uz |
+| Environment     | URL                       |
+| --------------- | ------------------------- |
+| **Local**       | http://localhost:3000     |
+| **Development** | https://dev-api.Horyco.uz |
+| **Production**  | https://api.Horyco.uz     |
 
 ---
 
 ### API Prefixes
 
-| Application | Prefix | Example Endpoint |
-|-------------|--------|------------------|
-| **Admin Panel** | `/admin/*` | `/admin/staff/employees` |
-| **POS** | `/pos/*` | `/pos/orders` |
-| **Auth (Shared)** | `/auth/*` | `/auth/login` |
+| Application       | Prefix     | Example Endpoint         |
+| ----------------- | ---------- | ------------------------ |
+| **Admin Panel**   | `/admin/*` | `/admin/staff/employees` |
+| **POS**           | `/pos/*`   | `/pos/orders`            |
+| **Auth (Shared)** | `/auth/*`  | `/auth/login`            |
 
 ---
 
@@ -322,6 +338,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **Token lifespan:**
+
 - Access token: 15 minutes
 - Refresh token: 7 days
 
@@ -386,25 +403,27 @@ All list endpoints support:
 GET /admin/menu/products?page=1&limit=20&categoryId=5&isActive=true&search=pizza&sortBy=createdAt&sortOrder=desc
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `page` | number | Page number (default: 1) |
-| `limit` | number | Items per page (default: 20, max: 100) |
-| `search` | string | Search term (name, description) |
-| `sortBy` | string | Field to sort by |
-| `sortOrder` | string | `asc` or `desc` |
-| *entity-specific* | various | Filters like `categoryId`, `branchId`, `isActive` |
+| Parameter         | Type    | Description                                       |
+| ----------------- | ------- | ------------------------------------------------- |
+| `page`            | number  | Page number (default: 1)                          |
+| `limit`           | number  | Items per page (default: 20, max: 100)            |
+| `search`          | string  | Search term (name, description)                   |
+| `sortBy`          | string  | Field to sort by                                  |
+| `sortOrder`       | string  | `asc` or `desc`                                   |
+| _entity-specific_ | various | Filters like `categoryId`, `branchId`, `isActive` |
 
 ---
 
 ## 🌐 Internationalization
 
 **Supported languages:**
+
 - English (default)
 - Russian
 - Uzbek
 
 **User language preference:**
+
 ```json
 {
   "user": {
@@ -414,6 +433,7 @@ GET /admin/menu/products?page=1&limit=20&categoryId=5&isActive=true&search=pizza
 ```
 
 **Frontend responsibilities:**
+
 - Use i18n library (`react-i18next`, `next-intl`)
 - Format dates/numbers per locale
 - Translate UI text (API returns data in English)
@@ -425,6 +445,7 @@ GET /admin/menu/products?page=1&limit=20&categoryId=5&isActive=true&search=pizza
 **Endpoint:** `POST /admin/files/upload`
 
 **Request:**
+
 ```http
 POST /admin/files/upload
 Content-Type: multipart/form-data
@@ -434,9 +455,10 @@ folder: "products"
 ```
 
 **Response:**
+
 ```json
 {
-  "url": "https://cdn.oshlab.uz/tenant-42/products/uuid-v4.jpg",
+  "url": "https://cdn.Horyco.uz/tenant-42/products/uuid-v4.jpg",
   "filename": "uuid-v4.jpg",
   "size": 245678,
   "mimeType": "image/jpeg"
@@ -444,6 +466,7 @@ folder: "products"
 ```
 
 **Constraints:**
+
 - Max size: **5 MB**
 - Formats: `jpg`, `jpeg`, `png`, `webp`
 - Auto-resize to optimal dimensions
@@ -452,39 +475,43 @@ folder: "products"
 
 ## ⚠️ Common Pitfalls
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| **401 Unauthorized** | Token expired or invalid | Refresh token or re-login |
-| **403 Forbidden** | Missing permission | Check user role/permissions |
-| **404 Not Found** | Invalid ID or wrong endpoint | Verify resource exists |
-| **409 Conflict** | Duplicate unique field | Use different value (e.g., phone, email) |
-| **422 Business Rule Error** | Violates business logic | Read `error.details` for specific issue |
-| **Products not showing in POS** | `isActive: false` | Activate both category and product |
-| **Modifiers not appearing** | Not linked to product | Use `/products/:id/modifiers` endpoint |
+| Issue                           | Cause                        | Solution                                 |
+| ------------------------------- | ---------------------------- | ---------------------------------------- |
+| **401 Unauthorized**            | Token expired or invalid     | Refresh token or re-login                |
+| **403 Forbidden**               | Missing permission           | Check user role/permissions              |
+| **404 Not Found**               | Invalid ID or wrong endpoint | Verify resource exists                   |
+| **409 Conflict**                | Duplicate unique field       | Use different value (e.g., phone, email) |
+| **422 Business Rule Error**     | Violates business logic      | Read `error.details` for specific issue  |
+| **Products not showing in POS** | `isActive: false`            | Activate both category and product       |
+| **Modifiers not appearing**     | Not linked to product        | Use `/products/:id/modifiers` endpoint   |
 
 ---
 
 ## 🎓 Learning Path
 
 ### Week 1: Foundation
+
 1. Read [Architecture Overview](./architecture/overview.md)
 2. Understand multi-tenancy concept
 3. Set up local development environment
 4. Explore Swagger UI
 
 ### Week 2: Admin Panel Development
+
 1. Study [Onboarding Workflow](./workflows/admin/onboarding-wizard.json)
 2. Implement login + dashboard
 3. Build [Menu Management](./workflows/admin/menu-setup-flow.md)
 4. Implement [Staff Management](./api-reference/admin/staff-management.md)
 
 ### Week 3: POS Development
+
 1. Study POS authentication flow (legacy docs)
 2. Implement shift management
 3. Build order creation
 4. Integrate payment processing
 
 ### Week 4: Advanced Features
+
 1. Branch overrides
 2. Reporting and analytics
 3. Offline mode (POS)
@@ -503,33 +530,37 @@ folder: "products"
 ## 📞 Support
 
 **Questions about documentation:**
+
 - Slack: `#frontend-docs`
-- Email: dev@oshlab.uz
+- Email: dev@Horyco.uz
 
 **API issues:**
+
 - Slack: `#backend-api`
 - GitHub Issues: `documentation` tag
 
 **Bugs:**
+
 - GitHub Issues with reproduction steps
 
 ---
 
 ## 📅 Changelog
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-01-30 | 2.1 | Removed TypeScript/Flutter code examples (JSON-only API docs), cleaned up structure |
-| 2025-01-29 | 2.0 | Complete restructure: English-only, JSON workflows, Mermaid diagrams |
-| 2025-01-28 | 1.2 | Added POS Authentication documentation |
-| 2025-01-24 | 1.1 | Added Admin Menu Management |
-| 2025-01-24 | 1.0 | Initial documentation structure |
+| Date       | Version | Changes                                                                             |
+| ---------- | ------- | ----------------------------------------------------------------------------------- |
+| 2025-01-30 | 2.1     | Removed TypeScript/Flutter code examples (JSON-only API docs), cleaned up structure |
+| 2025-01-29 | 2.0     | Complete restructure: English-only, JSON workflows, Mermaid diagrams                |
+| 2025-01-28 | 1.2     | Added POS Authentication documentation                                              |
+| 2025-01-24 | 1.1     | Added Admin Menu Management                                                         |
+| 2025-01-24 | 1.0     | Initial documentation structure                                                     |
 
 ---
 
 ## 🛣️ Roadmap
 
 ### ✅ Completed
+
 - [x] Architecture overview
 - [x] Error handling standards
 - [x] Admin onboarding workflow (JSON)
@@ -537,12 +568,14 @@ folder: "products"
 - [x] Staff management API reference
 
 ### 🚧 In Progress (Week of 2025-01-29)
+
 - [ ] Admin settings API
 - [ ] Admin branch management API
 - [ ] POS shift lifecycle workflow
 - [ ] POS order flow workflow
 
 ### 📋 Planned (Next 2 Weeks)
+
 - [ ] POS authentication API
 - [ ] POS payment processing API
 - [ ] Admin financial reports API
@@ -554,10 +587,10 @@ folder: "products"
 
 ## 🎯 Documentation Coverage
 
-| Application | Coverage | Status |
-|-------------|----------|--------|
-| **Admin Panel** | 65% | 🟡 In Progress |
-| **POS Application** | 45% | 🟡 In Progress |
+| Application         | Coverage | Status         |
+| ------------------- | -------- | -------------- |
+| **Admin Panel**     | 65%      | 🟡 In Progress |
+| **POS Application** | 45%      | 🟡 In Progress |
 
 **Target:** 95%+ by mid-February 2025
 
@@ -568,18 +601,21 @@ folder: "products"
 ### Report Issues
 
 Found outdated info or errors?
+
 1. Create GitHub Issue with `documentation` tag
 2. Include: file path, what's wrong, suggested fix
 
 ### Suggest Improvements
 
 Have ideas for better documentation?
+
 1. Open GitHub Discussion
 2. Or PR directly with changes
 
 ### Update Documentation
 
 When adding new endpoints:
+
 1. Update relevant API reference file
 2. Add workflow diagram if complex
 3. Include request/response examples
@@ -589,5 +625,4 @@ When adding new endpoints:
 
 **Happy Coding! 🚀**
 
-**OshLab Platform** — Making every restaurant digital-first.
-
+**Horyco Platform** — Making every restaurant digital-first.

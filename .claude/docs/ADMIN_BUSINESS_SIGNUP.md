@@ -22,6 +22,7 @@ This document explains the complete business signup process for new restaurant o
 ### 🎯 Purpose
 
 The signup system allows new restaurant owners to:
+
 - Self-register without sales team involvement
 - Verify their phone number with SMS OTP
 - Create a tenant (restaurant brand) and their first branch
@@ -31,6 +32,7 @@ The signup system allows new restaurant owners to:
 ### 🔐 Security Features
 
 **Phone Verification**:
+
 - SMS OTP sent via Eskiz SMS provider
 - 6-digit code valid for 5 minutes
 - Maximum 3 verification attempts
@@ -38,6 +40,7 @@ The signup system allows new restaurant owners to:
 - Temporary block after max attempts exceeded
 
 **Why phone verification?**
+
 - Prevents fake registrations
 - Ensures contact ownership
 - Reduces spam/abuse
@@ -72,24 +75,29 @@ The signup system allows new restaurant owners to:
 When a user completes signup, the system automatically creates:
 
 1. **Tenant** (Restaurant Brand)
+
    - Unique tenant ID
    - Business name
    - Status: `trial` or `active`
 
 2. **Owner Employee**
+
    - First user account
    - Automatically assigned "Admin" role (full access)
    - Can login to admin panel
 
 3. **Default Branch**
+
    - Named same as business (can be changed later)
    - Marked as main branch
    - Ready for configuration
 
 4. **Default Roles** (4 system roles)
+
    - Admin, Manager, Cashier, Waiter
 
 5. **Default Settings**
+
    - Timezone: Asia/Tashkent
    - Currency: UZS
    - Language: uz
@@ -107,19 +115,21 @@ When a user completes signup, the system automatically creates:
 ### Step 1: Request OTP
 
 **User Journey**:
+
 ```
 1. User enters phone number: +998 90 123 45 67
 2. User enters business name: "Samarkand Restaurant"
 3. User clicks "Send Code"
 4. System sends SMS with 6-digit code
-5. User receives SMS: "Your OshLab verification code: 123456. Valid for 5 minutes."
+5. User receives SMS: "Your Horyco verification code: 123456. Valid for 5 minutes."
 ```
 
 **UI Form**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
-│         Welcome to OshLab! 🍽️                  │
+│         Welcome to Horyco! 🍽️                  │
 │                                                 │
 │  Let's get your restaurant online in minutes   │
 │                                                 │
@@ -144,6 +154,7 @@ When a user completes signup, the system automatically creates:
 ```
 
 **API Call**:
+
 ```typescript
 POST /auth/register/request-otp
 {
@@ -167,6 +178,7 @@ Response (Rate Limited):
 ```
 
 **Phone Number Format**:
+
 - Must start with +998 (Uzbekistan country code)
 - Format: +998XXXXXXXXX (total 13 characters)
 - Example: +998901234567
@@ -175,6 +187,7 @@ Response (Rate Limited):
 ### Step 2: Verify OTP Code
 
 **User Journey**:
+
 ```
 1. User sees "Code sent to +998 90 123 45 67"
 2. User enters 6-digit code: 1 2 3 4 5 6
@@ -184,6 +197,7 @@ Response (Rate Limited):
 ```
 
 **UI Form**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -209,6 +223,7 @@ Response (Rate Limited):
 ```
 
 **API Call**:
+
 ```typescript
 POST /auth/register/verify-otp
 {
@@ -244,11 +259,13 @@ Response (Registration Not Found):
 ```
 
 **Important Notes**:
+
 - `businessName` is REQUIRED and will be used as the tenant's name
 - `fullName` is the owner's personal name (different from business name)
 - The tenant will be created with `name = businessName`, not the owner's name
 
 **Frontend Implementation Notes**:
+
 - Auto-focus to the next OTP input field when a digit is entered
 - Auto-submit the OTP when all 6 digits are entered
 - Implement a countdown timer showing remaining time (starts at 5 minutes)
@@ -258,15 +275,18 @@ Response (Registration Not Found):
 ### Step 3: Resend OTP (If Needed)
 
 **When to allow resend**:
+
 - Initial code expired (after 5 minutes)
 - User didn't receive SMS
 - User entered wrong number initially
 
 **Rate Limiting**:
+
 - Wait 60 seconds between resend requests
 - Maximum 3 OTP requests per hour
 
 **API Call**:
+
 ```typescript
 POST /auth/register/resend-otp
 {
@@ -297,6 +317,7 @@ Response (Rate Limited):
 **After OTP verified**, user fills out their profile:
 
 **UI Form**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -338,6 +359,7 @@ Response (Rate Limited):
 ```
 
 **API Call**:
+
 ```typescript
 POST /auth/register/complete
 {
@@ -386,6 +408,7 @@ Response (Phone Already Registered):
 ```
 
 **What Happens After Creation**:
+
 1. Account created with all default data
 2. Access token returned (user is logged in)
 3. Welcome email sent (if email provided)
@@ -399,10 +422,11 @@ Response (Phone Already Registered):
 ### Regular Login (Phone + Password)
 
 **UI Form**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
-│         Login to OshLab                         │
+│         Login to Horyco                         │
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
@@ -428,6 +452,7 @@ Response (Phone Already Registered):
 ```
 
 **API Call**:
+
 ```typescript
 POST /auth/login
 {
@@ -468,10 +493,12 @@ Response (Too Many Requests):
 ### Token Refresh
 
 **When to refresh**:
+
 - Access token expires (after 15 minutes)
 - Before making API call if token will expire soon (< 2 minutes remaining)
 
 **API Call**:
+
 ```typescript
 POST /auth/refresh
 {
@@ -500,6 +527,7 @@ Response (Too Many Requests):
 ```
 
 **Frontend Token Management Guidelines**:
+
 - Store both `accessToken` and `refreshToken` securely in localStorage or secure storage
 - Add the access token to Authorization header for all authenticated requests: `Authorization: Bearer {token}`
 - Implement an HTTP interceptor to automatically refresh tokens when receiving 401 responses
@@ -517,12 +545,14 @@ Response (Too Many Requests):
 **Solution**: 4-digit PIN for fast authentication
 
 **Use Case**:
+
 - Manager logs in with phone + password (first time)
 - Manager generates PINs for all employees
 - Employees login with PIN (takes 2 seconds)
 - PINs valid for 30 days, then need regeneration
 
 **Security**:
+
 - PINs are hashed (not stored in plain text)
 - PINs expire after 30 days
 - PIN login only works for employees assigned to the branch
@@ -533,6 +563,7 @@ Response (Too Many Requests):
 **Manager/Admin Action**:
 
 **UI**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  Employee: Akmal Karimov                        │
@@ -550,6 +581,7 @@ Response (Too Many Requests):
 ```
 
 **API Call**:
+
 ```typescript
 POST /auth/generate-pin
 {
@@ -582,6 +614,7 @@ Response (Not Found):
 ### PIN Login Flow (POS)
 
 **UI (POS Tablet)**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -626,6 +659,7 @@ Response (Not Found):
 ```
 
 **API Calls**:
+
 ```typescript
 // Step 1: Get employees list for branch
 GET /pos/staff/staff-list?branchId=10
@@ -757,6 +791,7 @@ GET /auth/pin-status/:employeeId
 ### Q: Why phone verification instead of email?
 
 **Phone verification is preferred in Uzbekistan** because:
+
 - Everyone has a mobile phone
 - SMS delivery is instant and reliable
 - Phone numbers are tied to ID cards (reduces fraud)
@@ -766,6 +801,7 @@ GET /auth/pin-status/:employeeId
 ### Q: Can I skip email during signup?
 
 **Yes**. Email is optional. The system will:
+
 - Still work without email
 - Send receipts via SMS instead
 - Use phone for all notifications
@@ -774,6 +810,7 @@ GET /auth/pin-status/:employeeId
 ### Q: What happens if I don't receive the SMS?
 
 **Common solutions**:
+
 1. Wait 60 seconds and click "Resend Code"
 2. Check phone number is correct (+998...)
 3. Check SMS inbox (sometimes delayed)
@@ -804,9 +841,11 @@ After signup, user is redirected to onboarding wizard to complete setup.
 ## Next Steps
 
 After successful signup/login:
+
 1. User is redirected to onboarding wizard
 2. Complete 7-step setup (see `ADMIN_ONBOARDING_WIZARD.md`)
 3. Start using the system
 
 For onboarding documentation, see:
+
 - `ADMIN_ONBOARDING_WIZARD.md`

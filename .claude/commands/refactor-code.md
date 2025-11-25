@@ -1,5 +1,7 @@
 # Refactor code for quality.
 
+## #1 Priority Requirements&Docs: $ARGUMENTS
+
 ### Visually everything looks fine but we need to work on code, improve it, make design more close to standards.
 
 ## Workflow
@@ -17,7 +19,7 @@ analyze → refactor → validate
 - `.claude/standards/architecture.md`
 - `.claude/standards/next.md`
 
-## **Call analyzer**: give related docs if provided
+## **Call analyzer**: give related docs if provided and you will get all violations.
 
 ## Phase 2: Refactor
 
@@ -30,20 +32,6 @@ analyze → refactor → validate
 5. Architecture → Split god components, remove prop drilling
 
 **No code examples** (see `.claude/standards/` for patterns)
-
-**Output**:
-
-```
-Fixed:
-✓ 3 'any' types → typed
-✓ 5 borders → shadows
-✓ 4 inline functions → extracted
-✓ 2 mutations → immutable
-✓ Split component (486 → 145 lines)
-
-Files modified: 4
-Files created: 2 (new components)
-```
 
 ---
 

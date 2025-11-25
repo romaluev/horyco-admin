@@ -18,6 +18,7 @@ This document describes operating hours and holiday management workflows for the
 ## Overview
 
 The Operating Hours & Holidays system allows restaurant owners to:
+
 - **Define weekly operating hours** per branch (Monday-Sunday schedules)
 - **Manage holidays** with special hours or closures
 - **Track current open/closed status** in real-time
@@ -54,6 +55,7 @@ Branch
 **Purpose**: Retrieve all operating hours for a branch (full weekly schedule).
 
 **Query Parameters**:
+
 - `branchId` (required): Branch identifier
 
 **Response Structure**:
@@ -92,6 +94,7 @@ Branch
 ```
 
 **Response Fields**:
+
 - `branchId` - Branch these hours apply to
 - `hours[]` - Array of 7 operating hour entries
   - `id` - Hour record identifier
@@ -102,6 +105,7 @@ Branch
   - `isClosed` - `true` if branch closed all day, `false` if open
 
 **Use Cases**:
+
 - Display weekly schedule to customers (WebApp, social media)
 - Admin view and edit operating hours
 - Validate order placement times (POS)
@@ -111,6 +115,7 @@ Branch
 **Purpose**: Update operating hours for a branch (full weekly schedule).
 
 **Query Parameters**:
+
 - `branchId` (required): Branch identifier
 
 **Request Body**:
@@ -140,6 +145,7 @@ Branch
 ```
 
 **Validation Rules**:
+
 - Must provide exactly 7 day entries (one per dayOfWeek 0-6)
 - `openTime` and `closeTime` required if `isClosed: false`
 - Times must be in HH:MM format (24-hour)
@@ -149,6 +155,7 @@ Branch
 **Response**: Updated operating hours (same structure as GET)
 
 **Use Cases**:
+
 - Admin updates weekly schedule
 - Seasonal hour changes (summer vs winter hours)
 - Initial branch setup during onboarding
@@ -162,6 +169,7 @@ Branch
 **Purpose**: Retrieve all holidays for a branch.
 
 **Query Parameters**:
+
 - `branchId` (required): Branch identifier
 - `startDate` (optional): Filter holidays on or after this date
 - `endDate` (optional): Filter holidays on or before this date
@@ -195,6 +203,7 @@ Branch
 ```
 
 **Response Fields**:
+
 - `id` - Holiday record identifier
 - `branchId` - Branch this holiday applies to
 - `date` - Holiday date (YYYY-MM-DD format)
@@ -205,6 +214,7 @@ Branch
 - `notes` - Optional notes for staff/customers
 
 **Use Cases**:
+
 - Display upcoming holidays to customers
 - Admin calendar view of special dates
 - POS warning about holiday hours
@@ -214,6 +224,7 @@ Branch
 **Purpose**: Check if today is a holiday (quick lookup).
 
 **Query Parameters**:
+
 - `branchId` (required): Branch identifier
 
 **Response** (if today is a holiday):
@@ -239,6 +250,7 @@ Branch
 ```
 
 **Use Cases**:
+
 - Quick check in dashboard: "Today is Christmas Day - Closed"
 - POS login screen warning
 - Customer notification on WebApp
@@ -250,11 +262,13 @@ Branch
 **Purpose**: Get details of a specific holiday.
 
 **Parameters**:
+
 - `id` (required): Holiday identifier (must be numeric)
 
 **Response**: Single holiday object (same structure as list item)
 
 **Use Cases**:
+
 - Edit holiday dialog (pre-fill form)
 - Holiday detail page
 
@@ -277,6 +291,7 @@ Branch
 ```
 
 **Validation Rules**:
+
 - `branchId` required
 - `date` required (YYYY-MM-DD format, must be future date)
 - `name` required (1-100 characters)
@@ -287,6 +302,7 @@ Branch
 **Response**: Created holiday object with assigned `id`
 
 **Use Cases**:
+
 - Admin adds upcoming holiday to calendar
 - Initial holiday setup during onboarding
 
@@ -295,6 +311,7 @@ Branch
 **Purpose**: Update an existing holiday.
 
 **Parameters**:
+
 - `id` (required): Holiday identifier
 
 **Request Body**: Same structure as POST (all fields can be updated)
@@ -302,6 +319,7 @@ Branch
 **Response**: Updated holiday object
 
 **Use Cases**:
+
 - Change holiday hours (e.g., decided to open half day instead of full closure)
 - Correct typo in holiday name
 - Update notes
@@ -311,11 +329,13 @@ Branch
 **Purpose**: Delete a holiday.
 
 **Parameters**:
+
 - `id` (required): Holiday identifier
 
 **Response**: Success message
 
 **Use Cases**:
+
 - Remove accidentally created holiday
 - Cancel previously planned holiday closure
 
@@ -328,9 +348,11 @@ Branch
 **Purpose**: Get today's complete operating status in a single request (convenience endpoint).
 
 **Query Parameters**:
+
 - `branchId` (required): Branch identifier
 
 **What This Endpoint Combines**:
+
 1. Today's operating hours (from weekly schedule)
 2. Current open/closed status (real-time calculation)
 3. Holiday information (if today is a holiday)
@@ -385,6 +407,7 @@ Branch
 ```
 
 **Response Fields**:
+
 - `date` - Today's date (YYYY-MM-DD)
 - `dayOfWeek` - Today's day number (0=Sunday, ..., 6=Saturday)
 - `dayName` - Human-readable day name
@@ -395,21 +418,25 @@ Branch
 - `nextStatusChange` - When status will next change (next open or close time)
 
 **Alternative Endpoints**:
+
 - `GET /admin/operating-hours?branchId=X` - Full weekly schedule
 - `GET /admin/holidays/today?branchId=X` - Holiday info only
 - `GET /admin/operating-hours/status?branchId=X` - Current open/closed status only
 
 **Use Cases**:
+
 - Dashboard "Store Status" widget
 - POS home screen: "Currently Open - Closes at 10 PM"
 - Mobile app home screen
 - Customer WebApp banner: "Open Now" or "Closed - Opens tomorrow at 9 AM"
 
 **When to Use**:
+
 - Quick status checks (dashboard, home screens)
 - When you need all three pieces of data (hours + status + holiday)
 
 **When NOT to Use**:
+
 - If you only need one piece of data (use specific endpoint)
 - If you're building a weekly schedule editor (use `/operating-hours`)
 - If you're managing holiday calendar (use `/holidays`)
@@ -423,6 +450,7 @@ Branch
 **User Action**: Navigate to Branch Settings → Operating Hours
 
 **Steps**:
+
 1. Select branch from dropdown
 2. Call `GET /admin/operating-hours?branchId={selectedBranch}`
 3. Display weekly schedule in table format
@@ -454,6 +482,7 @@ Operating Hours - Downtown Branch
 **User Action**: Admin changes operating hours
 
 **Steps**:
+
 1. Click "Edit Hours" button
 2. Display editable form with 7 rows (one per day)
 3. For each day:
@@ -466,6 +495,7 @@ Operating Hours - Downtown Branch
 8. Refresh display
 
 **Validation Rules**:
+
 - All 7 days must have data
 - Open time < Close time (same day) OR allow overnight (close time next day)
 - Times in 15-minute increments (optional UX improvement)
@@ -476,6 +506,7 @@ Operating Hours - Downtown Branch
 **User Action**: Admin adds upcoming holiday closure
 
 **Steps**:
+
 1. Navigate to Branch Settings → Holidays
 2. Click "Add Holiday" button
 3. Display form:
@@ -490,6 +521,7 @@ Operating Hours - Downtown Branch
 7. Show success message: "Holiday added successfully"
 
 **UI Recommendations**:
+
 - Calendar view showing existing holidays
 - Color-code: Red (closed), Yellow (limited hours), Green (normal hours)
 - Quick actions: "Add New Year's Day", "Add Independence Day" (pre-fill names)
@@ -500,6 +532,7 @@ Operating Hours - Downtown Branch
 **User Action**: View dashboard home screen
 
 **Steps**:
+
 1. On dashboard load, call `GET /admin/operating-hours/today?branchId={defaultBranch}`
 2. Display prominent status widget:
    - Large badge: "OPEN" (green) or "CLOSED" (red)
@@ -546,6 +579,7 @@ Operating Hours - Downtown Branch
 **User Action**: View and manage all holidays
 
 **Steps**:
+
 1. Navigate to Branch Settings → Holidays
 2. Call `GET /admin/holidays?branchId={id}&upcoming=true`
 3. Display as calendar or list view
@@ -555,6 +589,7 @@ Operating Hours - Downtown Branch
 7. Click Delete → Confirm dialog → Call `DELETE /admin/holidays/:id`
 
 **UI View Options**:
+
 - **Calendar View**: Month calendar with holidays marked
 - **List View**: Chronological list with full details
 - **Upcoming Only**: Filter to show only future holidays
@@ -665,19 +700,21 @@ When creating holiday for a past date:
 ### Time Handling
 
 **Format**: All times use 24-hour format (HH:MM)
+
 - `09:00` = 9:00 AM
 - `14:30` = 2:30 PM
 - `22:00` = 10:00 PM
 - `00:00` = Midnight
 
 **Display**: Convert to 12-hour format for user display:
+
 ```javascript
 function formatTime(time24) {
-  const [hours, minutes] = time24.split(':');
-  const hour = parseInt(hours);
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const hour12 = hour % 12 || 12;
-  return `${hour12}:${minutes} ${ampm}`;
+  const [hours, minutes] = time24.split(':')
+  const hour = parseInt(hours)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const hour12 = hour % 12 || 12
+  return `${hour12}:${minutes} ${ampm}`
 }
 ```
 
@@ -685,14 +722,14 @@ function formatTime(time24) {
 
 ```javascript
 const DAY_NAMES = [
-  'Sunday',    // 0
-  'Monday',    // 1
-  'Tuesday',   // 2
+  'Sunday', // 0
+  'Monday', // 1
+  'Tuesday', // 2
   'Wednesday', // 3
-  'Thursday',  // 4
-  'Friday',    // 5
-  'Saturday'   // 6
-];
+  'Thursday', // 4
+  'Friday', // 5
+  'Saturday', // 6
+]
 ```
 
 **Important**: JavaScript's `Date.getDay()` returns 0 for Sunday, matching the API.
@@ -700,6 +737,7 @@ const DAY_NAMES = [
 ### Real-Time Status Updates
 
 For dashboard widgets showing "Currently Open":
+
 - Poll `/operating-hours/today` every 60 seconds
 - Update countdown timer client-side (don't poll every second)
 - Recalculate status when crossing open/close time boundaries
@@ -707,24 +745,24 @@ For dashboard widgets showing "Currently Open":
 ### Overnight Hours (Edge Case)
 
 If a branch operates past midnight (e.g., "Open 11 PM - 2 AM"):
+
 - Some implementations use next-day close time
 - Others use 26:00, 27:00 notation
-- **OshLab Implementation**: Check API behavior and document here
+- **Horyco Implementation**: Check API behavior and document here
 
 ---
 
 ## API Endpoint Summary
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| `GET` | `/admin/operating-hours` | Get weekly schedule for branch |
-| `PUT` | `/admin/operating-hours` | Update weekly schedule |
-| `GET` | `/admin/operating-hours/today` | Get today's status (convenience) |
-| `GET` | `/admin/operating-hours/status` | Get current open/closed status |
-| `GET` | `/admin/holidays` | List all holidays for branch |
-| `GET` | `/admin/holidays/today` | Check if today is a holiday |
-| `GET` | `/admin/holidays/:id` | Get specific holiday details |
-| `POST` | `/admin/holidays` | Create new holiday |
-| `PUT` | `/admin/holidays/:id` | Update existing holiday |
-| `DELETE` | `/admin/holidays/:id` | Delete holiday |
-
+| Method   | Endpoint                        | Purpose                          |
+| -------- | ------------------------------- | -------------------------------- |
+| `GET`    | `/admin/operating-hours`        | Get weekly schedule for branch   |
+| `PUT`    | `/admin/operating-hours`        | Update weekly schedule           |
+| `GET`    | `/admin/operating-hours/today`  | Get today's status (convenience) |
+| `GET`    | `/admin/operating-hours/status` | Get current open/closed status   |
+| `GET`    | `/admin/holidays`               | List all holidays for branch     |
+| `GET`    | `/admin/holidays/today`         | Check if today is a holiday      |
+| `GET`    | `/admin/holidays/:id`           | Get specific holiday details     |
+| `POST`   | `/admin/holidays`               | Create new holiday               |
+| `PUT`    | `/admin/holidays/:id`           | Update existing holiday          |
+| `DELETE` | `/admin/holidays/:id`           | Delete holiday                   |

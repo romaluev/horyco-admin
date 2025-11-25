@@ -15,13 +15,16 @@ plan → implement → test → validate
 - `.claude/skills/core.md`
 - `.claude/skills/design-system.md`
 - `.claude/skills/project-index.md`
+- `.claude/standards/architecture.md`
+- `.claude/standards/next.md`
 
-**Load docs** user should provide you docs and you should load andy analyze them.
+**Read the docs&prompts** i've provided.
 
-**If you have any questions ask me**
+**If you have any questions ask me before starting**
 
-- Use shared components.
 - Plan the architecture.
+- Plan design system & ui kit component usage
+- Plan the actual implementation following all standards&docs.
 
 ---
 
@@ -29,22 +32,9 @@ plan → implement → test → validate
 
 **Execute**:
 
-1. Create API layer (typed methods, multi-tenant headers)
-2. Create data layer (React Query hooks OR Zustand store)
-3. Implement the feature itself following all rules (use todo list for clarity)
-4. Call **offline-handler** (if offline needed) → Dexie queue
-5. Write business logic (SOLID, <50 lines per function)
+- Implement the feature following all rules (use todo list for clarity)
+- Don't hurry. Take your time. I want to get the best result you can give.
 
-**Output**:
-
-```
-Created:
-- api/productApi.ts (3 methods)
-- hooks/useProducts.ts (React Query)
-- components/ProductGrid.tsx + .module.css
-- etc.
-
-```
 ---
 
 ## Phase 3: Validate
@@ -58,15 +48,6 @@ npm run test
 ```
 
 **If errors**: fix and re-run
-
-**Output**:
-
-```
-✓ TypeScript: 0 errors
-✓ ESLint: 0 warnings
-✓ Tests: 22/22 passing
-✓ Coverage: 86.3%
-```
 
 ---
 
