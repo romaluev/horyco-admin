@@ -16,8 +16,18 @@ import {
 import { Pencil, Trash } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/ui/base/dialog'
 import { Switch } from '@/shared/ui/base/switch'
 import { DataTable } from '@/shared/ui/base/table/data-table'
+import { ImageCell } from '@/shared/ui/image-cell'
 
 import {
   type IProduct,
@@ -49,6 +59,7 @@ export const ProductsDataTable = ({
 
   const [editingPrice, setEditingPrice] = useState<number | null>(null)
   const [priceValue, setPriceValue] = useState<string>('')
+  const [deleteProductId, setDeleteProductId] = useState<number | null>(null)
 
   const handlePriceEdit = (product: IProduct): void => {
     setEditingPrice(product.id)
@@ -75,18 +86,14 @@ export const ProductsDataTable = ({
       {
         accessorKey: 'image',
         header: 'Фото',
-        cell: ({ row }) => {
-          const image = row.original.image
-          return image ? (
-            <img
-              src={image}
-              alt={row.original.name}
-              className="h-10 w-10 rounded-md object-cover"
-            />
-          ) : (
-            <div className="bg-muted h-10 w-10 rounded-md" />
-          )
-        },
+        cell: ({ row }) => (
+          <ImageCell
+            imageUrls={row.original.imageUrls}
+            fileId={row.original.image}
+            alt={row.original.name}
+            preferredVariant="thumb"
+          />
+        ),
       },
       {
         accessorKey: 'name',
@@ -167,14 +174,12 @@ export const ProductsDataTable = ({
             <div className="flex items-center gap-1">
               <Button
                 variant="outline"
-                onClick={() => deleteProduct(product.id)}
+                onClick={() => setDeleteProductId(product.id)}
                 className="text-destructive"
               >
                 <Trash className="h-4 w-4" />
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => onEdit?.(product)}>
+              <Button variant="outline" onClick={() => onEdit?.(product)}>
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
@@ -213,5 +218,38 @@ export const ProductsDataTable = ({
     manualPagination: true,
   })
 
-  return <DataTable table={table} />
+  return (
+    <>
+      <DataTable table={table} />
+      <Dialog open={deleteProductId !== null} onOpenChange={() => setDeleteProductId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Удалить продукт?</DialogTitle>
+            <DialogDescription>
+              Это действие нельзя отменить. Продукт будет полностью удален.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Отменить
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => {
+                if (deleteProductId !== null) {
+                  deleteProduct(deleteProductId)
+                  setDeleteProductId(null)
+                }
+              }}
+            >
+              Удалить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
 }
