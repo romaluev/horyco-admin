@@ -1,8 +1,9 @@
+import { BaseLoading } from '@/shared/ui'
+
 import { HallCard } from './hall-card'
 import { useHallList } from '../model/queries'
 
 import type { IHall } from '../model/types'
-import { BaseLoading } from '@/shared/ui'
 
 interface IHallListProps {
   branchId: number

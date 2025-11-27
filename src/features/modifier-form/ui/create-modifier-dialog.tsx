@@ -75,11 +75,11 @@ export const CreateModifierDialog = ({
       // Upload image if provided
       if (imageFile && createdModifier?.id) {
         const { uploadFile } = await import('@/shared/lib/file-upload')
-        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
 
         const response = await uploadFile({
           file: imageFile,
-          folder: FILE_FOLDERS.MODIFIERS,
+          entityType: 'MODIFIER',
+          entityId: createdModifier.id,
           altText: data.name,
         })
 

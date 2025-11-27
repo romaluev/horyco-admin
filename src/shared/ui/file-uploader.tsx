@@ -392,7 +392,7 @@ const UploadedFileCard = ({
     file.variants?.medium ||
     file.variants?.large ||
     file.variants?.original ||
-    `${BASE_API_URL}/file/${file.originalName}`
+    `${BASE_API_URL}/files/${file.originalName}`
 
   return (
     <div className="relative w-max">

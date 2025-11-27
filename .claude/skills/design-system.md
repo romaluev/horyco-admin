@@ -2,7 +2,7 @@
 name: design-system
 description: UI rules (spacing, colors, sizes, components)
 model: haiku
-triggers: ['ui rules', 'design system', 'component style']
+triggers: ['ui rules', 'design system', 'component style', 'ui']
 ---
 
 # Design System Rules
@@ -146,7 +146,7 @@ triggers: ['ui rules', 'design system', 'component style']
 
 ## STATE PATTERNS
 
-- Loading spinners: `border-primary h-8 w-8 animate-spin rounded-full border-b-2`
+- Loading spinners: `<BaseLoading className="py-2" />`
 - Page loading: use `<BaseLoading className="py-14" />`
 - Error states: use `<BaseError className="py-10" message="..." onRetry={fn} />`
 - Focus rings: `focus-visible:ring-[3px] focus-visible:ring-ring/50`

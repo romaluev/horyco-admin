@@ -16,6 +16,7 @@ import {
 } from '@/shared/ui'
 
 import { useUpdateEmployee } from '@/entities/employee'
+import { PinManagementSection } from '@/entities/pin'
 
 import { EmployeeFormBasic } from './employee-form-basic'
 import { updateEmployeeSchema } from '../model/contract'
@@ -86,8 +87,9 @@ export const UpdateEmployeeDialog = ({
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="my-6">
+          <div className="my-6 space-y-6">
             <EmployeeFormBasic form={form as any} />
+            <PinManagementSection employee={employee} />
           </div>
 
           <DialogFooter>

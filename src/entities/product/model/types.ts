@@ -77,11 +77,11 @@ export interface IBulkCreateProductsResult {
   total: number
   successful: number
   failed: number
-  results: Array<{
+  results: {
     success: boolean
     data?: IProduct
     error?: string
-  }>
+  }[]
 }
 
 export interface IBulkPriceUpdateDto {
@@ -104,10 +104,10 @@ export interface IBulkDeleteDto {
 export interface IBulkDeleteResult {
   deleted: number
   failed: number
-  errors?: Array<{
+  errors?: {
     productId: number
     reason: string
-  }>
+  }[]
 }
 
 export interface IBulkUpdateDto {

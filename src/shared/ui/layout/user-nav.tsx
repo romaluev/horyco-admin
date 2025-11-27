@@ -1,9 +1,11 @@
 'use client'
+
+import { useEffect, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 import { LogOut, User as UserIcon } from 'lucide-react'
 
-import { BASE_API_URL } from '@/shared/lib/axios'
 import { getNameInitials } from '@/shared/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import { Button } from '@/shared/ui/base/button'
@@ -18,10 +20,42 @@ import {
 } from '@/shared/ui/base/dropdown-menu'
 
 import { useAuthStore } from '@/entities/auth/model/store'
+import { getFileById } from '@/entities/file/model/api'
 
 export function UserNav() {
   const { user, logout } = useAuthStore()
   const router = useRouter()
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const fetchAvatarUrl = async () => {
+      if (user?.avatar?.thumb || user?.avatar?.original) {
+        setAvatarUrl(user.avatar.thumb || user.avatar.original)
+        return
+      }
+
+      if (!user?.photoUrl) {
+        setAvatarUrl(undefined)
+        return
+      }
+
+      try {
+        const fileId = Number(user.photoUrl)
+        if (isNaN(fileId)) {
+          setAvatarUrl(undefined)
+          return
+        }
+
+        const file = await getFileById(fileId)
+        setAvatarUrl(file.variants?.thumb || file.variants?.original)
+      } catch (error) {
+        console.error('Error fetching avatar:', error)
+        setAvatarUrl(undefined)
+      }
+    }
+
+    fetchAvatarUrl()
+  }, [user?.photoUrl, user?.avatar?.thumb, user?.avatar?.original])
 
   const handleLogout = () => {
     logout()
@@ -36,13 +70,7 @@ export function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar>
             <AvatarImage
-              src={
-                user?.avatar?.thumb ||
-                user?.avatar?.original ||
-                (user?.photoUrl
-                  ? `${BASE_API_URL}/file/${user.photoUrl}`
-                  : undefined)
-              }
+              src={avatarUrl}
               alt={user?.fullName}
             />
             <AvatarFallback>{userInitials || <UserIcon />}</AvatarFallback>

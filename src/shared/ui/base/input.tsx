@@ -3,6 +3,27 @@ import * as React from 'react'
 import { cn } from '@/shared/lib/utils'
 
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (type === 'number') {
+      const target = e.target as HTMLInputElement
+      const currentValue = target.value
+
+      if (
+        currentValue === '0' &&
+        !isNaN(Number(e.key)) &&
+        e.key !== ' ' &&
+        !e.metaKey &&
+        !e.ctrlKey
+      ) {
+        e.preventDefault()
+        target.value = e.key
+        target.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+    }
+
+    props.onKeyDown?.(e)
+  }
+
   return (
     <input
       type={type}
@@ -13,6 +34,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
         'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
         className
       )}
+      onKeyDown={handleKeyDown}
       {...props}
     />
   )

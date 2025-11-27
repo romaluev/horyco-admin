@@ -18,6 +18,7 @@ import {
 } from '@/shared/ui'
 
 import { useCreateEmployee } from '@/entities/employee'
+import { GeneratePinDialog } from '@/entities/pin'
 
 import { EmployeeFormBasic } from './employee-form-basic'
 import { EmployeeFormBranches } from './employee-form-branches'
@@ -25,6 +26,7 @@ import { EmployeeFormRoles } from './employee-form-roles'
 import { createEmployeeSchema } from '../model/contract'
 
 import type { CreateEmployeeFormData } from '../model/contract'
+import type { IEmployee } from '@/entities/employee'
 
 const STEPS = [
   { number: 1, title: 'Основная информация', description: 'Шаг 1 из 3' },
@@ -35,6 +37,8 @@ const STEPS = [
 export const CreateEmployeeDialog = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
+  const [createdEmployee, setCreatedEmployee] = useState<IEmployee | null>(null)
+  const [showPinDialog, setShowPinDialog] = useState(false)
 
   const form = useForm<CreateEmployeeFormData>({
     resolver: zodResolver(createEmployeeSchema),
@@ -52,10 +56,13 @@ export const CreateEmployeeDialog = () => {
 
   const onSubmit = (data: CreateEmployeeFormData): void => {
     createEmployee(data, {
-      onSuccess: () => {
+      onSuccess: (employee) => {
         setIsOpen(false)
         form.reset()
         setCurrentStep(1)
+        // Prompt for PIN generation
+        setCreatedEmployee(employee)
+        setShowPinDialog(true)
       },
     })
   }
@@ -143,6 +150,18 @@ export const CreateEmployeeDialog = () => {
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {/* PIN Generation Dialog after employee creation */}
+      {createdEmployee && (
+        <GeneratePinDialog
+          employee={createdEmployee}
+          isOpen={showPinDialog}
+          onClose={() => {
+            setShowPinDialog(false)
+            setCreatedEmployee(null)
+          }}
+        />
+      )}
     </Dialog>
   )
 }

@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { BASE_API_URL } from '@/shared/lib/axios'
 import { getNameInitials } from '@/shared/lib/utils'
 import { BaseLoading } from '@/shared/ui'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
@@ -36,6 +35,7 @@ import { Separator } from '@/shared/ui/base/separator'
 
 import { useAuthStore } from '@/entities/auth/model/store'
 import { employeeApi } from '@/entities/employee'
+import { getFileById } from '@/entities/file/model/api'
 
 import { authApi } from '../model/api'
 
@@ -61,11 +61,46 @@ export function ProfileView() {
   const { user, setUser, loadFullProfile, isLoadingProfile } = useAuthStore()
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
   const [isPermissionsOpen, setIsPermissionsOpen] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
 
-  // Load full profile on mount
+  // Load full profile and avatar on mount
   useEffect(() => {
-    loadFullProfile().catch(console.error)
+    const loadProfile = async () => {
+      try {
+        await loadFullProfile()
+      } catch (error) {
+        console.error('Error loading profile:', error)
+      }
+    }
+    loadProfile()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch avatar URL when user or photoUrl changes
+  useEffect(() => {
+    const fetchAvatarUrl = async () => {
+      if (!user?.photoUrl) {
+        setAvatarUrl(undefined)
+        return
+      }
+
+      try {
+        const fileId = Number(user.photoUrl)
+        if (isNaN(fileId)) {
+          setAvatarUrl(undefined)
+          return
+        }
+
+        const file = await getFileById(fileId)
+        // Use thumb variant if available, otherwise original
+        setAvatarUrl(file.variants?.thumb || file.variants?.original)
+      } catch (error) {
+        console.error('Error fetching avatar:', error)
+        setAvatarUrl(undefined)
+      }
+    }
+
+    fetchAvatarUrl()
+  }, [user?.photoUrl])
 
   // Profile form
   const profileForm = useForm<z.infer<typeof profileSchema>>({
@@ -207,7 +242,7 @@ export function ProfileView() {
   }
 
   return (
-    <div className="max-h-[80vh] space-y-6 overflow-y-auto px-2 py-4 md:px-6">
+    <div className="max-h-[calc(100vh-100px)] space-y-6 overflow-y-auto px-2 py-4 md:px-6">
       {/* Section 1: Avatar Section */}
       <Card className="gap-2 py-4">
         <CardHeader className="px-2">
@@ -218,11 +253,7 @@ export function ProfileView() {
             <div className="group relative">
               <Avatar className="h-32 w-32">
                 <AvatarImage
-                  src={
-                    user.photoUrl
-                      ? `${BASE_API_URL}/admin/files/${user.photoUrl}`
-                      : undefined
-                  }
+                  src={avatarUrl}
                   alt={user.fullName}
                 />
                 <AvatarFallback className="text-lg">

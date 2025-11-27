@@ -2,7 +2,7 @@
  * File API Client
  * Handles file management operations
  *
- * Note: Admin Panel uses direct upload (Method 1) via /admin/files/upload
+ * v4.0 Update: Using unified /files endpoint (no /admin prefix)
  * See: src/shared/lib/file-upload.ts for upload utilities
  * Docs: ADMIN_FILE_MANAGEMENT.md
  */
@@ -17,10 +17,13 @@ import type {
 
 /**
  * Get file metadata with all variants
+ * Returns fresh presigned URLs (15-minute expiry)
  */
 export const getFileById = async (fileId: number): Promise<IFileResponse> => {
-  const response = await api.get<IFileResponse>(`/admin/files/${fileId}`)
-  return response.data
+  const response = await api.get<{ success: boolean; data: IFileResponse }>(
+    `/files/${fileId}`
+  )
+  return response.data.data
 }
 
 /**
@@ -30,15 +33,15 @@ export const getEntityFiles = async (
   entityType: EntityType,
   entityId: number
 ): Promise<IFileResponse[]> => {
-  const response = await api.get<IFileResponse[]>(
-    `/admin/files/entity/${entityType}/${entityId}`
+  const response = await api.get<{ success: boolean; data: IFileResponse[] }>(
+    `/files/entity/${entityType}/${entityId}`
   )
-  return response.data
+  return response.data.data
 }
 
 /**
  * Delete file from storage and database
- * entityType and entityId are optional (defaults: PRODUCT and 0)
+ * entityType and entityId are required for validation
  */
 export const deleteFile = async (
   params: IDeleteFileParams
@@ -55,8 +58,8 @@ export const deleteFile = async (
 
   const queryString = queryParams.toString()
   const url = queryString
-    ? `/admin/files/${fileId}?${queryString}`
-    : `/admin/files/${fileId}`
+    ? `/files/${fileId}?${queryString}`
+    : `/files/${fileId}`
 
   const response = await api.delete<{ id: number }>(url)
   return response.data

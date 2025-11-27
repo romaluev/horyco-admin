@@ -416,7 +416,7 @@ export const RegistrationFlow = () => {
     switch (step) {
       case 'initial':
         return {
-          title: 'Добро пожаловать в OshLab!',
+          title: 'Добро пожаловать в Horyco!',
           description: 'Создайте аккаунт для вашего ресторана',
         }
       case 'otp':

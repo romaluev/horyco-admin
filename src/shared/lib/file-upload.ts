@@ -1,9 +1,10 @@
-import type { FileFolder } from '@/entities/file/model/constants'
-import type { IFileMetadata, IFileVariants } from '@/entities/file/model/types'
+import api from './axios'
+
+import type { EntityType, IFileMetadata, IFileVariants } from '@/entities/file/model/types'
 
 /**
  * Response from single file upload endpoint
- * Based on ADMIN_FILE_MANAGEMENT.md specification
+ * Based on ADMIN_FILE_MANAGEMENT.md v4.0 specification
  */
 export interface FileUploadResponse {
   id: number
@@ -26,10 +27,11 @@ export interface MultipleFileUploadResponse {
 
 /**
  * Upload a single file using direct upload method (Method 1 from docs)
- * Uses query parameters for folder and altText as per ADMIN_FILE_MANAGEMENT.md
+ * v4.0: Uses entityType and entityId instead of folder
  *
  * @param file - The file to upload
- * @param folder - The storage folder (products, categories, modifiers, etc.)
+ * @param entityType - Entity type (PRODUCT, CATEGORY, EMPLOYEE, etc.)
+ * @param entityId - Entity ID (use 0 for temporary files)
  * @param altText - Optional alt text for the image
  * @returns Upload response with file metadata and variant URLs
  *
@@ -37,7 +39,8 @@ export interface MultipleFileUploadResponse {
  * ```typescript
  * const result = await uploadFile({
  *   file: imageFile,
- *   folder: FILE_FOLDERS.PRODUCTS,
+ *   entityType: 'PRODUCT',
+ *   entityId: 0,
  *   altText: 'Margherita Pizza'
  * })
  * const imageUrl = result.variants.medium || result.url
@@ -45,45 +48,46 @@ export interface MultipleFileUploadResponse {
  */
 export async function uploadFile({
   file,
-  folder,
+  entityType,
+  entityId = 0,
   altText,
 }: {
   file: File
-  folder: FileFolder
+  entityType: EntityType
+  entityId?: number
   altText?: string
 }): Promise<FileUploadResponse> {
   const formData = new FormData()
   formData.append('file', file)
 
   const params = new URLSearchParams()
-  params.append('folder', folder)
+  params.append('entityType', entityType)
+  params.append('entityId', String(entityId))
   if (altText) {
     params.append('altText', altText)
   }
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload?${params.toString()}`,
+  // Don't set Content-Type header for FormData - let browser handle it
+  const axiosResponse = await api.post<{ success: boolean; data: FileUploadResponse }>(
+    `/files/upload?${params.toString()}`,
+    formData,
     {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
+      headers: {
+        'Content-Type': undefined,
+      },
     }
   )
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}))
-    throw new Error(error.message || 'File upload failed')
-  }
-
-  return response.json()
+  return axiosResponse.data.data
 }
 
 /**
- * Upload multiple files at once (max 10 files)
- * Uses query parameters for folder and altText as per ADMIN_FILE_MANAGEMENT.md
+ * Upload multiple files at once (max 10 for admin, 5 for POS)
+ * v4.0: Uses entityType and entityId instead of folder
  *
- * @param files - Array of files to upload (max 10)
- * @param folder - The storage folder
+ * @param files - Array of files to upload
+ * @param entityType - Entity type (PRODUCT, CATEGORY, etc.)
+ * @param entityId - Entity ID (use 0 for temporary files)
  * @param altText - Optional alt text applied to all files
  * @returns Upload response with array of uploaded files
  *
@@ -91,7 +95,8 @@ export async function uploadFile({
  * ```typescript
  * const result = await uploadMultipleFiles({
  *   files: [file1, file2, file3],
- *   folder: FILE_FOLDERS.PRODUCTS,
+ *   entityType: 'PRODUCT',
+ *   entityId: 0,
  *   altText: 'Product images'
  * })
  * const urls = result.files.map(f => f.variants.medium || f.url)
@@ -99,11 +104,13 @@ export async function uploadFile({
  */
 export async function uploadMultipleFiles({
   files,
-  folder,
+  entityType,
+  entityId = 0,
   altText,
 }: {
   files: File[]
-  folder: FileFolder
+  entityType: EntityType
+  entityId?: number
   altText?: string
 }): Promise<MultipleFileUploadResponse> {
   const formData = new FormData()
@@ -112,26 +119,22 @@ export async function uploadMultipleFiles({
   })
 
   const params = new URLSearchParams()
-  params.append('folder', folder)
+  params.append('entityType', entityType)
+  params.append('entityId', String(entityId))
   if (altText) {
     params.append('altText', altText)
   }
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload-multiple?${params.toString()}`,
-    {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    }
-  )
+  const axiosResponse = await api.post<{
+    success: boolean
+    data: MultipleFileUploadResponse
+  }>(`/files/upload-multiple?${params.toString()}`, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}))
-    throw new Error(error.message || 'Multiple file upload failed')
-  }
-
-  return response.json()
+  return axiosResponse.data.data
 }
 
 /**

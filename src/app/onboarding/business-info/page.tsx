@@ -12,6 +12,7 @@ import { BUSINESS_TYPES } from '@/shared/config/business-types'
 import { getNextStep } from '@/shared/config/onboarding'
 import { useFormPersist } from '@/shared/hooks/use-form-persist'
 import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { uploadFile } from '@/shared/lib/file-upload'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -50,33 +51,14 @@ import {
   businessInfoSchema,
 } from '@/features/onboarding/model'
 
-// Upload file helper using direct upload method (ADMIN_FILE_MANAGEMENT.md)
-const uploadFile = async (file: File, altText?: string): Promise<string> => {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  const params = new URLSearchParams()
-  params.append('folder', 'logos')
-  if (altText) {
-    params.append('altText', altText)
-  }
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload?${params.toString()}`,
-    {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error('Ошибка загрузки файла')
-  }
-
-  const data = await response.json()
-  // Return file ID only (backend will generate presigned URLs)
-  return String(data.id)
+const uploadBusinessLogo = async (file: File): Promise<string> => {
+  const response = await uploadFile({
+    file,
+    entityType: 'TENANT',
+    entityId: 0,
+    altText: 'Business Logo',
+  })
+  return String(response.id)
 }
 
 export default function BusinessInfoPage() {
@@ -137,7 +119,7 @@ export default function BusinessInfoPage() {
     try {
       // Upload logo file if selected
       if (logoFiles.length > 0 && logoFiles[0]) {
-        const url = await uploadFile(logoFiles[0])
+        const url = await uploadBusinessLogo(logoFiles[0])
         data.logoUrl = url
         setLogoFiles([])
       }
@@ -245,7 +227,7 @@ export default function BusinessInfoPage() {
                       </FormControl>
                       <FormDescription>
                         Для создания уникальной ссылки (например:
-                        oshlab.uz/golden-dragon). Только строчные буквы, цифры и
+                        Horyco.uz/golden-dragon). Только строчные буквы, цифры и
                         дефисы.
                       </FormDescription>
                       <FormMessage />

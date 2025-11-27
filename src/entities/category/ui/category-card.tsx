@@ -6,6 +6,7 @@
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/base/badge'
 import { Card, CardContent } from '@/shared/ui/base/card'
+import { ImageCell } from '@/shared/ui/image-cell'
 
 import {
   EditCategoryDialog,
@@ -26,19 +27,13 @@ export const CategoryCard = ({ category, className }: CategoryCardProps) => {
       <CardContent className="p-2">
         <div className="flex flex-col gap-2">
           <div className="flex items-start gap-3">
-            {(category.imageUrls?.thumb ||
-              category.imageUrls?.original ||
-              category.image) && (
-              <img
-                src={
-                  category.imageUrls?.thumb ||
-                  category.imageUrls?.original ||
-                  category.image
-                }
-                alt={category.name}
-                className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
-              />
-            )}
+            <ImageCell
+              imageUrls={category.imageUrls}
+              fileId={category.image}
+              alt={category.name}
+              className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
+              preferredVariant="thumb"
+            />
             <div className="min-w-0 flex-1">
               <h3 className="truncate text-base font-semibold">
                 {category.name}

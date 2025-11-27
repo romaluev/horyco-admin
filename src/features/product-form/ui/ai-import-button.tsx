@@ -22,9 +22,10 @@ import {
 import { ScrollArea } from '@/shared/ui/base/scroll-area'
 import { FileUploader } from '@/shared/ui/file-uploader'
 
-import type { IProduct } from '@/entities/product'
 import { useCreateProduct } from '@/entities/product'
 import { IMAGE_PROMPT } from '@/features/product-form/config/constants'
+
+import type { IProduct } from '@/entities/product'
 
 const MAX_USAGE = 3
 const IMPORT_USAGE_KEY = 'ai_import_usage'

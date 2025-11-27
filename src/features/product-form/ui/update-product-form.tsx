@@ -17,9 +17,11 @@ import {
   Input,
   Textarea,
 } from '@/shared/ui'
+import { Switch } from '@/shared/ui/base/switch'
 
 import { useGetProductById, useUpdateProduct } from '@/entities/product'
 
+import { ProductFormCategory } from './product-form-category'
 import { ProductFormImages } from './product-form-images'
 import { productSchema } from '../model/contract'
 
@@ -46,7 +48,10 @@ export const UpdateProductForm = ({
     categoryId: product?.categoryId || 0,
     productTypeId: product?.productTypeId || 1,
     price: product?.price || 0,
+    preparationTime: product?.preparationTime || undefined,
+    calories: product?.calories || undefined,
     description: product?.description || '',
+    allergens: product?.allergens || [],
     isAvailable: product?.isAvailable ?? true,
   }
 
@@ -64,11 +69,11 @@ export const UpdateProductForm = ({
     // If there's a new file, upload it
     if (imageFile) {
       const { uploadFile } = await import('@/shared/lib/file-upload')
-      const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
 
       const response = await uploadFile({
         file: imageFile,
-        folder: FILE_FOLDERS.PRODUCTS,
+        entityType: 'PRODUCT',
+        entityId: product?.id || 0,
         altText: values.name,
       })
 
@@ -96,6 +101,7 @@ export const UpdateProductForm = ({
             imageFile={imageFile}
             setImageFile={setImageFile}
             currentImageUrl={product?.image}
+            currentImageUrls={product?.imageUrls}
           />
 
           <FormField
@@ -112,18 +118,66 @@ export const UpdateProductForm = ({
             )}
           />
 
+          <ProductFormCategory />
+
           <FormField
             control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Цена</FormLabel>
+                <FormLabel>Цена (обязательно)</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
                     placeholder="Введите цену"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="preparationTime"
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FormLabel>Время приготовления (мин)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Например: 15"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="calories"
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FormLabel>Калории</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Например: 350"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -144,6 +198,50 @@ export const UpdateProductForm = ({
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="allergens"
+            render={({ field }) => (
+              <FormItem className="md:col-span-6">
+                <FormLabel>Аллергены (через запятую)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Например: молоко, яйца, орехи"
+                    {...field}
+                    value={field.value?.join(', ') || ''}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      const allergens = value
+                        ? value
+                            .split(',')
+                            .map((a) => a.trim())
+                            .filter(Boolean)
+                        : []
+                      field.onChange(allergens)
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isAvailable"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-2 space-y-0 md:col-span-6">
+                <FormControl>
+                  <Switch checked={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormLabel className="!mt-0">
+                  Продукт доступен для заказа
+                </FormLabel>
                 <FormMessage />
               </FormItem>
             )}

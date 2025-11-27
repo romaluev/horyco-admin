@@ -204,6 +204,7 @@ export const employeeApi = {
 
   /**
    * Upload employee avatar
+   * v4.0: Uses entityType=EMPLOYEE and entityId=0 for temporary uploads
    * @param file - Image file for avatar
    * @param altText - Alt text for the image
    * @returns Promise with uploaded file data
@@ -234,7 +235,8 @@ export const employeeApi = {
     formData.append('file', file)
 
     const params = new URLSearchParams()
-    params.append('folder', 'employees')
+    params.append('entityType', 'EMPLOYEE')
+    params.append('entityId', '0')
     if (altText) {
       params.append('altText', altText)
     }
@@ -259,7 +261,7 @@ export const employeeApi = {
           altText?: string
         }
       }>
-    >(`/admin/files/upload?${params.toString()}`, formData, {
+    >(`/files/upload?${params.toString()}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     return response.data.data

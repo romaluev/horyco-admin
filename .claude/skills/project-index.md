@@ -3,23 +3,18 @@ name: project-index
 description: Quick reference to project structure, documentation locations, and key directories. Use this to understand where files are located and what's already implemented.
 model: haiku
 color: blue
----
-
-# Horyco Admin - Project Index
-
-Quick reference for navigating the codebase and finding key resources.
-
+triggers: ['code locations', 'find docs', 'find components', 'project structure']
 ---
 
 ## 📚 DOCUMENTATION LOCATIONS
 
 | Location              | Description                                                      |
-| --------------------- | ---------------------------------------------------------------- |
+|-----------------------|------------------------------------------------------------------|
 | `/.claude/standards/` | Code quality standards (TypeScript, Design System, Next.js, FSD) |
+| `/.claude/docs/`      | Documentation about the project and its modules                  |
 | `/.claude/agents/`    | AI agent configurations (design-guardian, code-guardian, etc.)   |
 | `/.claude/skills/`    | Reusable skills (this file, design-system, typescript)           |
 | `/CLAUDE.md`          | Project-level instructions for AI                                |
-| `/README.md`          | Project overview and setup                                       |
 
 ---
 
@@ -82,10 +77,10 @@ Quick reference for navigating the codebase and finding key resources.
 - `onboarding/` - Onboarding flow
 - `file/` - File uploads
 
-**Entity Structure**:
+**Layer Structure**:
 
 ```
-entities/[name]/
+[layer]/[name]/
 ├── model/
 │   ├── types.ts       (Interfaces, DTOs)
 │   ├── api.ts         (API methods)
@@ -152,13 +147,8 @@ entities/[name]/
 
 ### Need to understand architecture?
 
-→ Read `.claude/standards/fsd-architecture.md`
+→ Read `.claude/standards/architecture.md`
 
 ### Need coding standards?
 
 → Read `.claude/standards/` (typescript, design-system, nextjs-react)
-
----
-
-**Last Updated**: 2025-01-17
-**Total Files**: 492 TypeScript/TSX files

@@ -22,7 +22,7 @@ deploy_dev:
   <<: *deploy_template
   variables:
     DEPLOY_HOST: "157.173.202.24"
-    DEPLOY_DIR: "/www/wwwroot/oshlab/oshxona/dev"
+    DEPLOY_DIR: "/www/wwwroot/Horyco/oshxona/dev"
   only:
     - dev
 
@@ -30,6 +30,6 @@ deploy_prod:
   <<: *deploy_template
   variables:
     DEPLOY_HOST: "157.173.202.24"
-    DEPLOY_DIR: "/www/wwwroot/oshlab/oshxona/prod"
+    DEPLOY_DIR: "/www/wwwroot/Horyco/oshxona/prod"
   only:
     - main

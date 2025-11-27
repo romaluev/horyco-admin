@@ -25,8 +25,9 @@ import { useCreateProduct } from '@/entities/product'
 
 import { ProductFormCategory } from './product-form-category'
 import { ProductFormImages } from './product-form-images'
-import type { ProductFormValues } from '../model/contract'
 import { productSchema } from '../model/contract'
+
+import type { ProductFormValues } from '../model/contract'
 
 const EXPAND_USAGE_KEY = 'expand_usage'
 
@@ -102,12 +103,12 @@ export const CreateProductForm = () => {
       // If there's a file, upload it and update the product
       if (imageFile && createdProduct?.id) {
         const { uploadFile } = await import('@/shared/lib/file-upload')
-        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
         const { productApi } = await import('@/entities/product')
 
         const response = await uploadFile({
           file: imageFile,
-          folder: FILE_FOLDERS.PRODUCTS,
+          entityType: 'PRODUCT',
+          entityId: createdProduct.id,
           altText: values.name,
         })
 
@@ -289,7 +290,7 @@ export const CreateProductForm = () => {
             )}
           />
 
-          <Button type="submit" className="w-full md:w-auto" disabled={sending}>
+          <Button type="submit" className="w-40 max-w-40" disabled={sending}>
             Создать продукт
           </Button>
         </div>

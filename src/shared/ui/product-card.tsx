@@ -7,6 +7,7 @@ import { Plus, Check } from 'lucide-react'
 import { Badge } from './base/badge'
 import { Button } from './base/button'
 import { Card, CardContent } from './base/card'
+import { ImageCell } from './image-cell'
 import { cn } from '../lib/utils'
 
 export interface ProductCardData {
@@ -16,6 +17,12 @@ export interface ProductCardData {
   price: number
   image: string
   categoryId: string
+  imageUrls?: {
+    thumb?: string
+    medium?: string
+    large?: string
+    original?: string
+  }
 }
 
 interface ProductCardProps {
@@ -50,12 +57,12 @@ export function ProductCard({
       )}
 
       <div className="bg-muted relative h-40 w-full overflow-hidden">
-        <Image
-          src={product.image}
+        <ImageCell
+          imageUrls={product.imageUrls}
+          fileId={product.image}
           alt={product.name}
-          fill
-          className="object-cover transition-transform group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+          preferredVariant="medium"
         />
       </div>
 

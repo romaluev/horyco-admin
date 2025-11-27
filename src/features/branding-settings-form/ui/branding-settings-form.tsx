@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { uploadFile } from '@/shared/lib/file-upload'
 import { Button } from '@/shared/ui/base/button'
 import {
   Form,
@@ -40,6 +41,16 @@ interface BrandingSettingsFormProps {
 
 const extractValue = <T,>(setting: { value: T } | undefined): T | undefined => {
   return setting?.value
+}
+
+const uploadBrandingFile = async (file: File, altText?: string): Promise<string> => {
+  const response = await uploadFile({
+    file,
+    entityType: 'TENANT',
+    entityId: 0,
+    altText,
+  })
+  return String(response.id)
 }
 
 const convertToFormData = (
@@ -82,34 +93,6 @@ const convertToFormData = (
   }
 }
 
-const uploadFile = async (file: File, altText?: string): Promise<string> => {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  const params = new URLSearchParams()
-  params.append('folder', 'branding')
-  if (altText) {
-    params.append('altText', altText)
-  }
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/files/upload?${params.toString()}`,
-    {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error('Ошибка загрузки файла')
-  }
-
-  const data = await response.json()
-  // Return file ID only (backend will generate presigned URLs)
-  return String(data.id)
-}
-
 export const BrandingSettingsForm = ({
   branchId,
 }: BrandingSettingsFormProps) => {
@@ -138,19 +121,19 @@ export const BrandingSettingsForm = ({
     try {
       // Upload files if selected
       if (logoFiles.length > 0 && logoFiles[0]) {
-        const url = await uploadFile(logoFiles[0])
+        const url = await uploadBrandingFile(logoFiles[0], 'Logo')
         data.logoUrl = url
         setLogoFiles([])
       }
 
       if (logoDarkFiles.length > 0 && logoDarkFiles[0]) {
-        const url = await uploadFile(logoDarkFiles[0])
+        const url = await uploadBrandingFile(logoDarkFiles[0], 'Logo Dark')
         data.logoDarkUrl = url
         setLogoDarkFiles([])
       }
 
       if (faviconFiles.length > 0 && faviconFiles[0]) {
-        const url = await uploadFile(faviconFiles[0])
+        const url = await uploadBrandingFile(faviconFiles[0], 'Favicon')
         data.faviconUrl = url
         setFaviconFiles([])
       }

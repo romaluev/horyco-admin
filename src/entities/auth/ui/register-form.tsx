@@ -48,6 +48,11 @@ const initialFormSchema = z.object({
     .string()
     .min(3, { message: 'Название должно содержать минимум 3 символа' })
     .max(100, { message: 'Название слишком длинное' }),
+  email: z
+    .string()
+    .email({ message: 'Некорректный email' })
+    .optional()
+    .or(z.literal('')),
 })
 
 // Step 2: OTP verification form
@@ -90,6 +95,7 @@ const RegisterForm = () => {
   const [registrationData, setRegistrationData] = useState<{
     phone: string
     businessName: string
+    email?: string
   } | null>(null)
 
   // Initial form
@@ -98,6 +104,7 @@ const RegisterForm = () => {
     defaultValues: {
       phone: '',
       businessName: '',
+      email: '',
     },
   })
 
@@ -134,6 +141,7 @@ const RegisterForm = () => {
       const response = await authApi.sendOTP({
         phone: data.phone,
         businessName: data.businessName,
+        email: data.email,
       })
 
       setRegistrationData(data)
@@ -309,6 +317,25 @@ const RegisterForm = () => {
                     <FormControl>
                       <Input
                         placeholder="Например: Пицца Хаус"
+                        {...field}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={initialForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email (необязательно)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="example@email.com"
                         {...field}
                         disabled={isLoading}
                       />

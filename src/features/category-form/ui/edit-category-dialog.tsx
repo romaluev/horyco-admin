@@ -77,11 +77,11 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
 
       if (imageFile) {
         const { uploadFile } = await import('@/shared/lib/file-upload')
-        const { FILE_FOLDERS } = await import('@/entities/file/model/constants')
 
         const response = await uploadFile({
           file: imageFile,
-          folder: FILE_FOLDERS.CATEGORIES,
+          entityType: 'CATEGORY',
+          entityId: category!.id,
           altText: data.name,
         })
 

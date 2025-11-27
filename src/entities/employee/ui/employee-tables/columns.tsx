@@ -4,11 +4,18 @@ import { Text } from 'lucide-react'
 
 import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header'
 
+import { PinStatusBadge, usePinStatus } from '@/entities/pin'
+
 import type { IEmployee } from '../../model'
 import type { Column, ColumnDef } from '@tanstack/react-table'
 
 interface CreateColumnsOptions {
   renderActions?: (employee: IEmployee) => React.ReactNode
+}
+
+const PinStatusCell = ({ employeeId }: { employeeId: number }) => {
+  const { data: pinStatus, isLoading } = usePinStatus(employeeId)
+  return <PinStatusBadge status={pinStatus} isLoading={isLoading} />
 }
 
 export const createEmployeeColumns = (
@@ -44,6 +51,14 @@ export const createEmployeeColumns = (
         icon: Text,
       },
       enableColumnFilter: true,
+    },
+    {
+      id: 'pinStatus',
+      accessorKey: 'id',
+      header: ({ column }: { column: Column<IEmployee, unknown> }) => (
+        <DataTableColumnHeader column={column} title="PIN" />
+      ),
+      cell: ({ row }) => <PinStatusCell employeeId={row.original.id} />,
     },
     {
       id: 'createdAt',

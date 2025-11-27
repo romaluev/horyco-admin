@@ -6,6 +6,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import i18n from '@/shared/config/i18n'
+
+
 import { categoryApi } from './api'
 import { categoryKeys } from './query-keys'
 
@@ -25,10 +28,10 @@ export const useCreateCategory = () => {
     mutationFn: (data: ICreateCategoryDto) => categoryApi.createCategory(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
-      toast.success('Категория успешно создана')
+      toast.success(i18n.t('toasts.category.created'))
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при создании категории')
+      toast.error(i18n.t('toasts.category.createError'))
       console.error('Create category error:', error)
     },
   })
@@ -46,10 +49,10 @@ export const useUpdateCategory = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
       queryClient.invalidateQueries({ queryKey: categoryKeys.detail(id) })
-      toast.success('Категория успешно обновлена')
+      toast.success(i18n.t('toasts.category.updated'))
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при обновлении категории')
+      toast.error(i18n.t('toasts.category.updateError'))
       console.error('Update category error:', error)
     },
   })
@@ -65,10 +68,10 @@ export const useDeleteCategory = () => {
     mutationFn: (id: number) => categoryApi.deleteCategory(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
-      toast.success('Категория успешно удалена')
+      toast.success(i18n.t('toasts.category.deleted'))
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при удалении категории')
+      toast.error(i18n.t('toasts.category.deleteError'))
       console.error('Delete category error:', error)
     },
   })
@@ -85,10 +88,10 @@ export const useReorderCategories = () => {
       categoryApi.reorderCategories(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all() })
-      toast.success('Порядок категорий обновлен')
+      toast.success(i18n.t('toasts.category.reordered'))
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при изменении порядка')
+      toast.error(i18n.t('toasts.category.reorderError'))
       console.error('Reorder categories error:', error)
     },
   })

@@ -7,6 +7,7 @@ import { Plus, Check } from 'lucide-react'
 import { Badge } from './base/badge'
 import { Button } from './base/button'
 import { Card, CardContent } from './base/card'
+import { ImageCell } from './image-cell'
 import { cn } from '../lib/utils'
 
 export interface CategoryCardData {
@@ -15,6 +16,12 @@ export interface CategoryCardData {
   image: string
   icon?: string
   color?: string
+  imageUrls?: {
+    thumb?: string
+    medium?: string
+    large?: string
+    original?: string
+  }
 }
 
 interface CategoryCardProps {
@@ -47,12 +54,12 @@ export function CategoryCard({
       )}
 
       <div className="bg-muted relative h-32 w-full overflow-hidden">
-        <Image
-          src={category.image}
+        <ImageCell
+          imageUrls={category.imageUrls}
+          fileId={category.image}
           alt={category.name}
-          fill
-          className="object-cover transition-transform group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="h-32 w-full object-cover transition-transform group-hover:scale-105"
+          preferredVariant="medium"
         />
         {category.icon && (
           <div

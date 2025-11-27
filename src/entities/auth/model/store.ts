@@ -19,7 +19,7 @@ interface AuthState {
   login: (phone: string, password: string) => Promise<void>
   logout: () => void
   clearError: () => void
-  me: () => void
+  me: () => Promise<void>
   loadFullProfile: () => Promise<void>
   setUser: (user: IEmployee) => void
 }

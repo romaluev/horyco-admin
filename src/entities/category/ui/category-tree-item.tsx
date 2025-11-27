@@ -14,6 +14,7 @@ import { ChevronRight, GripVertical } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
+import { ImageCell } from '@/shared/ui/image-cell'
 
 import {
   EditCategoryDialog,
@@ -93,13 +94,13 @@ export const CategoryTreeItem = ({
         )}
 
         {/* Category Image */}
-        {category.image && (
-          <img
-            src={category.image}
-            alt={category.name}
-            className="h-8 w-8 rounded object-cover"
-          />
-        )}
+        <ImageCell
+          imageUrls={category.imageUrls}
+          fileId={category.image}
+          alt={category.name}
+          className="h-8 w-8 rounded object-cover"
+          preferredVariant="thumb"
+        />
 
         {/* Category Name */}
         <div className="flex-1">

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { DateRange } from 'react-day-picker'
+
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -14,6 +14,8 @@ import {
   PopoverTrigger,
 } from '@/shared/ui/base/popover'
 import { Calendar } from '@/shared/ui/base/ui/calendar'
+
+import type { DateRange } from 'react-day-picker'
 
 export type PeriodType = 'day' | 'week' | 'month' | 'custom'
 

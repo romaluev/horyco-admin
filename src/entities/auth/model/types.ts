@@ -37,6 +37,7 @@ export interface AuthResponse {
 export interface SendOTPRequest {
   phone: string
   businessName: string
+  email?: string
 }
 
 /**

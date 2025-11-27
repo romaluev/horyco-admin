@@ -147,12 +147,11 @@ export function ProductsContent({
 
   return (
     <>
-      <ProductsHeader
-        viewMode={state.viewMode}
-        onViewModeChange={handleViewModeChange}
-      />
+      <ProductsHeader />
 
       <ProductsFilters
+        viewMode={state.viewMode}
+        onViewModeChange={handleViewModeChange}
         search={state.search}
         categoryFilter={state.categoryFilter}
         availabilityFilter={state.availabilityFilter}

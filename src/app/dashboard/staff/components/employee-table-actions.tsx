@@ -17,6 +17,7 @@ import {
   DeleteEmployeeButton,
 } from '@/features/employee-actions'
 import { UpdateEmployeeDialog } from '@/features/employee-form'
+import { GeneratePinButton } from '@/features/pin-actions'
 
 import type { IEmployee } from '@/entities/employee'
 import type { JSX } from 'react'
@@ -39,6 +40,7 @@ export const EmployeeTableActions = ({
       <DropdownMenuContent align="end" className="flex flex-col gap-2">
         <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <UpdateEmployeeDialog employee={employee} />
+        <GeneratePinButton employee={employee} />
         <ActivateEmployeeButton employee={employee} />
         <DeactivateEmployeeButton employee={employee} />
         <DeleteEmployeeButton employee={employee} />

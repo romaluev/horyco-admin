@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
@@ -48,8 +48,7 @@ type LoginFormValues = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login, isLoading, error, clearError, me } = useAuthStore()
+  const { login, isLoading, error, clearError, me, loadFullProfile } = useAuthStore()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -73,6 +72,8 @@ const LoginForm = () => {
       // Step 2: Show loading immediately and fetch user data
       setIsRedirecting(true)
       await me()
+      // Load full profile with avatar on background
+      void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
 
       // TODO: Uncomment when API is ready
       // Check onboarding status

@@ -28,7 +28,7 @@ export default function ProductsPage(): JSX.Element {
     search: '',
     categoryFilter: 'all',
     availabilityFilter: 'all',
-    viewMode: 'table',
+    viewMode: 'grid',
   })
 
   const limit = 20

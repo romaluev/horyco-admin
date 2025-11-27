@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { Pen } from 'lucide-react'
 
-import { BASE_API_URL } from '@/shared/lib/axios'
+import { ImageCell } from '@/shared/ui/image-cell'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -47,19 +47,13 @@ const ProductCard = ({ product, DeleteButton }: ProductCardProps) => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        {(product.imageUrls?.medium ||
-          product.imageUrls?.original ||
-          product.image) ? (
-          <img
-            className="h-[200px] rounded-md object-cover"
-            src={
-              product.imageUrls?.medium ||
-              product.imageUrls?.original ||
-              product.image
-            }
-            alt={product.name}
-          />
-        ) : null}
+        <ImageCell
+          imageUrls={product.imageUrls}
+          fileId={product.image}
+          alt={product.name}
+          className="h-[200px] w-full rounded-md object-cover"
+          preferredVariant="medium"
+        />
         <CardDescription className="pt-2">
           {product.description}
         </CardDescription>

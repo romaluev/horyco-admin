@@ -10,6 +10,7 @@ import { useCallback, useState, useEffect } from 'react'
 import { Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { useImageUrl } from '@/shared/hooks/use-image-url'
 import { Button } from './base/button'
 import { cn } from '../lib/utils'
 
@@ -18,6 +19,12 @@ interface ImageUploadProps {
   onChange: (value: File | null) => void
   className?: string
   currentImageUrl?: string
+  currentImageUrls?: {
+    thumb?: string
+    medium?: string
+    large?: string
+    original?: string
+  }
 }
 
 export const ImageUpload = ({
@@ -25,8 +32,10 @@ export const ImageUpload = ({
   onChange,
   className,
   currentImageUrl,
+  currentImageUrls,
 }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null)
+  const resolvedImageUrl = useImageUrl(currentImageUrls, currentImageUrl, 'medium')
 
   useEffect(() => {
     if (value) {
@@ -64,7 +73,7 @@ export const ImageUpload = ({
     onChange(null)
   }, [onChange])
 
-  const displayImage = preview || currentImageUrl
+  const displayImage = preview || resolvedImageUrl
 
   return (
     <div className={cn('space-y-2', className)}>
