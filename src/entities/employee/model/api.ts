@@ -8,6 +8,10 @@ import type {
   IEmployeeFilters,
   IPaginatedResponse,
   IUpdateEmployeeDto,
+  IAssignPermissionsDto,
+  IAssignPermissionsFromRoleDto,
+  ICopyPermissionsDto,
+  IEmployeeBranchPermissions,
 } from './types'
 
 /**
@@ -265,5 +269,131 @@ export const employeeApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     return response.data.data
+  },
+
+  // ============================================
+  // Permission Management Endpoints
+  // ============================================
+
+  /**
+   * Get employee permissions at a specific branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @returns Promise with branch permissions
+   */
+  getEmployeeBranchPermissions: async (
+    employeeId: number,
+    branchId: number
+  ): Promise<IEmployeeBranchPermissions> => {
+    const response = await api.get<ApiResponse<IEmployeeBranchPermissions>>(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Assign permissions directly to an employee at a branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @param data - Permission IDs to assign
+   * @returns Promise with assigned permissions
+   */
+  assignPermissions: async (
+    employeeId: number,
+    branchId: number,
+    data: IAssignPermissionsDto
+  ): Promise<IEmployeeBranchPermissions> => {
+    const response = await api.post<ApiResponse<IEmployeeBranchPermissions>>(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions`,
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Assign permissions from a role template to an employee at a branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @param data - Role ID and optional additional permissions
+   * @returns Promise with assigned permissions
+   */
+  assignPermissionsFromRole: async (
+    employeeId: number,
+    branchId: number,
+    data: IAssignPermissionsFromRoleDto
+  ): Promise<IEmployeeBranchPermissions> => {
+    const response = await api.post<ApiResponse<IEmployeeBranchPermissions>>(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions/assign-from-role`,
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Replace all permissions for an employee at a branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @param data - New permission IDs
+   * @returns Promise with updated permissions
+   */
+  updatePermissions: async (
+    employeeId: number,
+    branchId: number,
+    data: IAssignPermissionsDto
+  ): Promise<IEmployeeBranchPermissions> => {
+    const response = await api.put<ApiResponse<IEmployeeBranchPermissions>>(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions`,
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Revoke specific permissions from an employee at a branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @param permissionIds - Permission IDs to revoke
+   * @returns Promise<void>
+   */
+  revokePermissions: async (
+    employeeId: number,
+    branchId: number,
+    permissionIds: number[]
+  ): Promise<void> => {
+    await api.delete(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions`,
+      { data: { permissionIds } }
+    )
+  },
+
+  /**
+   * Remove all permissions from an employee at a branch
+   * @param employeeId - Employee ID
+   * @param branchId - Branch ID
+   * @returns Promise<void>
+   */
+  removeFromBranch: async (
+    employeeId: number,
+    branchId: number
+  ): Promise<void> => {
+    await api.delete(
+      `${BASE_URL}/${employeeId}/branches/${branchId}/permissions/all`
+    )
+  },
+
+  /**
+   * Copy permissions between branches for an employee
+   * @param employeeId - Employee ID
+   * @param data - Source and target branch IDs
+   * @returns Promise<void>
+   */
+  copyPermissions: async (
+    employeeId: number,
+    data: ICopyPermissionsDto
+  ): Promise<void> => {
+    await api.post(
+      `${BASE_URL}/${employeeId}/permissions/copy`,
+      data
+    )
   },
 }

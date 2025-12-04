@@ -23,15 +23,17 @@ import { GeneratePinDialog } from '@/entities/pin'
 import { EmployeeFormBasic } from './employee-form-basic'
 import { EmployeeFormBranches } from './employee-form-branches'
 import { EmployeeFormRoles } from './employee-form-roles'
+import { EmployeeFormPermissions } from './employee-form-permissions'
 import { createEmployeeSchema } from '../model/contract'
 
 import type { CreateEmployeeFormData } from '../model/contract'
 import type { IEmployee } from '@/entities/employee'
 
 const STEPS = [
-  { number: 1, title: 'Основная информация', description: 'Шаг 1 из 3' },
-  { number: 2, title: 'Назначение ролей', description: 'Шаг 2 из 3' },
-  { number: 3, title: 'Назначение филиалов', description: 'Шаг 3 из 3' },
+  { number: 1, title: 'Основная информация', description: 'Шаг 1 из 4' },
+  { number: 2, title: 'Назначение ролей', description: 'Шаг 2 из 4' },
+  { number: 3, title: 'Назначение филиалов', description: 'Шаг 3 из 4' },
+  { number: 4, title: 'Разрешения', description: 'Шаг 4 из 4' },
 ] as const
 
 export const CreateEmployeeDialog = () => {
@@ -74,9 +76,11 @@ export const CreateEmployeeDialog = () => {
       isValid = await form.trigger(['fullName', 'phone', 'email', 'password'])
     } else if (currentStep === 2) {
       isValid = await form.trigger(['roleIds'])
+    } else if (currentStep === 3) {
+      isValid = await form.trigger(['branchIds', 'activeBranchId'])
     }
 
-    if (isValid && currentStep < 3) {
+    if (isValid && currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -123,6 +127,7 @@ export const CreateEmployeeDialog = () => {
             {currentStep === 1 && <EmployeeFormBasic form={form} />}
             {currentStep === 2 && <EmployeeFormRoles form={form} />}
             {currentStep === 3 && <EmployeeFormBranches form={form} />}
+            {currentStep === 4 && <EmployeeFormPermissions form={form} />}
           </div>
 
           <DialogFooter>
@@ -137,7 +142,7 @@ export const CreateEmployeeDialog = () => {
               </Button>
             )}
 
-            {currentStep < 3 ? (
+            {currentStep < 4 ? (
               <Button type="button" onClick={handleNext}>
                 Далее
               </Button>

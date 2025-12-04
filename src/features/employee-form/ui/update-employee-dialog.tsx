@@ -13,6 +13,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from '@/shared/ui'
 
 import { useUpdateEmployee } from '@/entities/employee'
@@ -78,7 +82,7 @@ export const UpdateEmployeeDialog = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Редактировать сотрудника</DialogTitle>
           <DialogDescription>
@@ -86,26 +90,59 @@ export const UpdateEmployeeDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="my-6 space-y-6">
-            <EmployeeFormBasic form={form as any} />
-            <PinManagementSection employee={employee} />
-          </div>
+        <Tabs defaultValue="info" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="info">Информация</TabsTrigger>
+            <TabsTrigger value="pin">PIN</TabsTrigger>
+            <TabsTrigger value="permissions">Разрешения</TabsTrigger>
+          </TabsList>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-            >
-              Отмена
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isPending ? 'Сохранение...' : 'Сохранить изменения'}
-            </Button>
-          </DialogFooter>
-        </form>
+          {/* Basic Info Tab */}
+          <TabsContent value="info">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="my-6 space-y-6">
+                <EmployeeFormBasic form={form as any} />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </TabsContent>
+
+          {/* PIN Tab */}
+          <TabsContent value="pin">
+            <div className="my-6">
+              <PinManagementSection employee={employee} />
+            </div>
+          </TabsContent>
+
+          {/* Permissions Tab */}
+          <TabsContent value="permissions">
+            <div className="my-6">
+              <div className="rounded-lg border p-4">
+                <p className="text-sm text-muted-foreground">
+                  Управление разрешениями сотрудника для каждого филиала.
+                  Разрешения сохраняются отдельно для каждого филиала,
+                  в котором работает сотрудник.
+                </p>
+                <p className="text-sm font-medium mt-4">
+                  Функция управления разрешениями в разработке
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   )

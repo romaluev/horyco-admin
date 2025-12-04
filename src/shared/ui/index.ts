@@ -63,3 +63,14 @@ export {
   AccordionItem,
   AccordionTrigger,
 } from './base/accordion'
+export {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from './base/tabs'
+export {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from './base/alert'

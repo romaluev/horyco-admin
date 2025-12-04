@@ -64,6 +64,15 @@ export interface IEmployee {
   activeBranch?: IBranch
 }
 
+/**
+ * Branch-specific permissions for an employee
+ * Used when creating/updating employee permissions per branch
+ */
+export interface IBranchPermissions {
+  roleTemplateId?: number // Optional: role to use as template
+  permissionIds: number[] // Required: actual permissions to assign
+}
+
 export interface ICreateEmployeeDto {
   fullName: string
   phone: string
@@ -73,10 +82,12 @@ export interface ICreateEmployeeDto {
   hireDate?: string
   photoUrl?: string
   notes?: string
-  roleIds: number[]
-  branchIds: number[]
+  roleIds: number[] // Used to determine default permissions per branch
+  branchIds: number[] // Branches to assign employee to
   activeBranchId: number
   pin?: string
+  // Per-branch permissions (optional, can be derived from roleIds)
+  branchPermissions?: Record<number, IBranchPermissions>
 }
 
 export interface IUpdateEmployeeDto {
@@ -89,6 +100,54 @@ export interface IUpdateEmployeeDto {
   roleIds?: number[]
   branchIds?: number[]
   activeBranchId?: number
+  branchPermissions?: Record<number, IBranchPermissions>
+}
+
+/**
+ * Permission assignment request for a specific branch
+ */
+export interface IAssignPermissionsDto {
+  permissionIds: number[]
+}
+
+/**
+ * Assign permissions from a role template for a branch
+ */
+export interface IAssignPermissionsFromRoleDto {
+  roleId: number
+  additionalPermissionIds?: number[]
+}
+
+/**
+ * Copy permissions between branches
+ */
+export interface ICopyPermissionsDto {
+  fromBranchId: number
+  toBranchId: number
+}
+
+/**
+ * Employee permission response (per branch)
+ */
+export interface IEmployeePermission {
+  id: number
+  permissionId: number
+  permissionName: string // e.g., "orders:view"
+  category: string // e.g., "orders"
+  description?: string
+  grantedAt: string
+}
+
+/**
+ * Employee permissions at a specific branch
+ */
+export interface IEmployeeBranchPermissions {
+  employeeId: number
+  branchId: number
+  branchName?: string
+  permissions: IEmployeePermission[]
+  totalPermissions: number
+  groupedByCategory?: Record<string, string[]>
 }
 
 export interface IEmployeeFilters {
