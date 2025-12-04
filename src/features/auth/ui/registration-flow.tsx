@@ -297,6 +297,7 @@ export const RegistrationFlow = () => {
         fullName: data.fullName,
         email: data.email || undefined,
         password: data.password,
+        businessName: step1Data.businessName,
       })
 
       // Update auth store with employee data from nested structure

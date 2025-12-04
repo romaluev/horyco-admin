@@ -5,9 +5,11 @@
  * All endpoints under /auth (not /admin)
  */
 
+import Cookies from 'js-cookie'
+
 import api from '@/shared/lib/axios'
 
-import type { IPinGenerateResponse, IPinStatusResponse } from './types'
+import type { IPinGenerateResponse, IPinStatusResponse, IPinLoginResponse } from './types'
 
 /**
  * API Response wrapper from backend
@@ -82,4 +84,52 @@ export const togglePinEnabled = async (
   await api.patch(`/admin/staff/employees/${employeeId}`, {
     pinEnabled: enabled,
   })
+}
+
+/**
+ * Login with PIN (for POS)
+ * Provides quick authentication for POS terminals
+ *
+ * @param employeeId - ID of employee logging in
+ * @param pin - 4-digit PIN
+ * @param branchId - Optional branch ID (required for multi-branch employees)
+ * @returns Promise with access token and employee data including branchPermissions
+ */
+export const pinLogin = async (
+  employeeId: number,
+  pin: string,
+  branchId?: number
+): Promise<IPinLoginResponse> => {
+  const response = await api.post<IPinLoginResponse>('/auth/pin-login', {
+    employeeId,
+    pin,
+    branchId,
+  })
+
+  // Store tokens from response
+  if (response.data.accessToken && response.data.expiresIn) {
+    const expirationTime = Date.now() + response.data.expiresIn * 1000
+
+    Cookies.set('access_token', response.data.accessToken, {
+      expires: 7,
+      secure: false,
+      sameSite: 'lax',
+    })
+
+    if (response.data.refreshToken) {
+      Cookies.set('refresh_token', response.data.refreshToken, {
+        expires: 7,
+        secure: false,
+        sameSite: 'lax',
+      })
+    }
+
+    Cookies.set('token_expires_at', String(expirationTime), {
+      expires: 7,
+      secure: false,
+      sameSite: 'lax',
+    })
+  }
+
+  return response.data
 }

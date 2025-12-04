@@ -12,10 +12,17 @@ import { BrandingSettingsForm } from '@/features/branding-settings-form'
 import { FeatureFlagsManager } from '@/features/feature-flags-manager'
 import { PaymentSettingsForm } from '@/features/payment-settings-form'
 import { SmsSettingsForm } from '@/features/sms-settings-form'
+import {
+  SubscriptionDashboard,
+  ModuleCatalog,
+  InvoicesList,
+  PaymentsHistory,
+} from '@/features/subscription-management'
 
 export default function SettingsPage() {
   const { selectedBranchId } = useBranchStore()
   const [activeTab, setActiveTab] = useState('branding')
+  const [subscriptionSubTab, setSubscriptionSubTab] = useState('overview')
 
   return (
     <PageContainer scrollable>
@@ -29,11 +36,12 @@ export default function SettingsPage() {
         <Separator />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="branding" className="w-full">Брендинг</TabsTrigger>
             <TabsTrigger value="features" className="w-full">Функции</TabsTrigger>
             <TabsTrigger value="payment" className="w-full">Оплата</TabsTrigger>
             <TabsTrigger value="sms" className="w-full">SMS</TabsTrigger>
+            <TabsTrigger value="subscription" className="w-full">Подписка</TabsTrigger>
           </TabsList>
 
           <TabsContent value="branding" className="space-y-4 w-full">
@@ -76,6 +84,33 @@ export default function SettingsPage() {
             <div className="rounded-lg border p-6">
               <SmsSettingsForm />
             </div>
+          </TabsContent>
+
+          <TabsContent value="subscription" className="space-y-6 w-full">
+            <Tabs value={subscriptionSubTab} onValueChange={setSubscriptionSubTab}>
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="overview" className="w-full">Обзор</TabsTrigger>
+                <TabsTrigger value="modules" className="w-full">Модули</TabsTrigger>
+                <TabsTrigger value="invoices" className="w-full">Счета</TabsTrigger>
+                <TabsTrigger value="payments" className="w-full">Платежи</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="overview" className="space-y-4 w-full">
+                <SubscriptionDashboard />
+              </TabsContent>
+
+              <TabsContent value="modules" className="space-y-4 w-full">
+                <ModuleCatalog />
+              </TabsContent>
+
+              <TabsContent value="invoices" className="space-y-4 w-full">
+                <InvoicesList />
+              </TabsContent>
+
+              <TabsContent value="payments" className="space-y-4 w-full">
+                <PaymentsHistory />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
         </Tabs>
       </div>

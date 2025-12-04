@@ -34,8 +34,8 @@ The backend uses a global `auth_users` table for identity management:
 ┌─────────────────────────────────────────────────────────────┐
 │                    auth_users (Global Identity)             │
 │                                                             │
-│  phone       | user_type | password_hash | is_active       │
-│  ────────────────────────────────────────────────────────  │
+│  phone       | user_type | password_hash | is_active        │
+│  ────────────────────────────────────────────────────────   │
 │  +998901234567 | employee  | $2b$10$...  | true             │
 │  +998901234567 | customer  | NULL        | true             │
 │                                                             │
@@ -47,14 +47,14 @@ The backend uses a global `auth_users` table for identity management:
           ┌─────────────────────────────────────┐
           │                                     │
           ▼                                     ▼
-┌─────────────────────┐          ┌─────────────────────────┐
-│   sm_employees      │          │   cm_customers          │
-│   (Per-Tenant)      │          │   (Per-Tenant)          │
-│                     │          │                         │
-│ auth_user_id: FK    │          │ auth_user_id: FK        │
-│ tenant_id: required │          │ tenant_id: required     │
-│ branch permissions  │          │ loyalty points          │
-└─────────────────────┘          └─────────────────────────┘
+┌───────────────────────────┐          ┌────────────────────────────┐
+│   sm_employees            │          │   cm_customers             │
+│   (Per-Tenant)            │          │   (Per-Tenant)             │
+│                           │          │                            │
+│ auth_user_id: FK required │          │ auth_user_id: FK required  │
+│ tenant_id: required       │          │ tenant_id: required        │
+│ branch permissions        │          │ loyalty points             │
+└───────────────────────────┘          └────────────────────────────┘
 ```
 
 **Key Points:**
@@ -108,55 +108,39 @@ Header: x-tenant-slug: golden-dragon
 ### Login
 
 ```http
-POST /admin/auth/login
+POST /auth/login
 Content-Type: application/json
-x-tenant-slug: golden-dragon
 
 {
   "phone": "+998901234567",
-  "password": "SecurePassword123"
+  "password": "SecurePassword123",
+  "tenantSlug": "golden-dragon"
 }
 
 Response 200:
 {
   "accessToken": "eyJhbG...",
   "refreshToken": "eyJhbG...",
+  "tokenType": "Bearer",
+  "expiresIn": 900,
   "employee": {
     "id": 42,
     "fullName": "Alice Manager",
     "phone": "+998901234567",
-    "photoUrl": "https://...",
-    "isActive": true,
-    "branchPermissions": [
-      {
-        "branchId": 101,
-        "permissions": ["manage_menu", "view_reports", "manage_staff"]
-      },
-      {
-        "branchId": 102,
-        "permissions": ["view_reports"]
-      }
-    ]
-  },
-  "tenant": {
-    "id": 10,
-    "name": "Golden Dragon Restaurant",
-    "slug": "golden-dragon"
-  },
-  "branches": [
-    {
-      "id": 101,
-      "name": "Downtown Branch",
-      "isMain": true
-    },
-    {
-      "id": 102,
-      "name": "Mall Branch",
-      "isMain": false
+    "tenantId": 10,
+    "branchPermissions": {
+      "101": ["menu:manage", "reports:view", "staff:manage"],
+      "102": ["reports:view"]
     }
-  ]
+  }
 }
+```
 
+**Note:** `branchPermissions` is a **map** of `branchId → permission names[]`:
+- Owner with full access: `{ "101": ["*"] }`
+- Staff with limited access: `{ "101": ["menu:view", "orders:create"] }`
+
+```http
 Response 401:
 {
   "statusCode": 401,
@@ -179,7 +163,7 @@ Response 403:
 ### Refresh Token
 
 ```http
-POST /admin/auth/refresh
+POST /auth/refresh
 Content-Type: application/json
 
 {
@@ -189,7 +173,9 @@ Content-Type: application/json
 Response 200:
 {
   "accessToken": "eyJhbG...",
-  "refreshToken": "eyJhbG..."
+  "refreshToken": "eyJhbG...",
+  "tokenType": "Bearer",
+  "expiresIn": 900
 }
 
 Response 401:
@@ -202,7 +188,7 @@ Response 401:
 ### Get Current User
 
 ```http
-GET /admin/auth/me
+GET /auth/me
 Authorization: Bearer {accessToken}
 
 Response 200:
@@ -214,14 +200,24 @@ Response 200:
   "photoUrl": "https://...",
   "tenantId": 10,
   "tenantName": "Golden Dragon Restaurant",
-  "branchPermissions": [...]
+  "isOwner": false,
+  "branchPermissions": {
+    "101": ["menu:manage", "reports:view", "staff:manage"],
+    "102": ["reports:view"]
+  }
 }
 ```
+
+**Permission System Note:**
+- `isOwner: true` indicates the user is a tenant owner
+- Owners have wildcard permission `"*"` for full access
+- Staff have specific permissions per branch
+- See [Staff Management](./ADMIN_STAFF_MANAGEMENT.md) for permission details
 
 ### Logout
 
 ```http
-POST /admin/auth/logout
+POST /auth/logout
 Authorization: Bearer {accessToken}
 
 Response 204 (No Content)
@@ -271,38 +267,26 @@ Response 204 (No Content)
 
 ### Auto-Refresh Strategy
 
-```typescript
-// Pseudo-code for axios interceptor
-axios.interceptors.response.use(
-  response => response,
-  async error => {
-    if (error.response?.status === 401 && !error.config._retry) {
-      error.config._retry = true;
+**Implementation Logic:**
 
-      const refreshToken = getRefreshToken();
-      if (!refreshToken) {
-        redirectToLogin();
-        return Promise.reject(error);
-      }
+1. **Intercept 401 errors** from API responses
+2. **Check if refresh already attempted** (prevent infinite loops)
+3. **Get refresh token** from storage
+4. **Call refresh endpoint** with refresh token
+5. **Save new tokens** if successful
+6. **Retry original request** with new access token
+7. **Redirect to login** if refresh fails
 
-      try {
-        const { accessToken, refreshToken: newRefresh } =
-          await refreshTokens(refreshToken);
-
-        saveTokens(accessToken, newRefresh);
-        error.config.headers.Authorization = `Bearer ${accessToken}`;
-
-        return axios(error.config);
-      } catch (refreshError) {
-        clearTokens();
-        redirectToLogin();
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
+**API Flow:**
+```
+Original Request → 401 Error
+  ↓
+Get Refresh Token from Storage
+  ↓
+POST /admin/auth/refresh { "refreshToken": "..." }
+  ↓
+Success: Save new tokens → Retry original request
+Failure: Clear storage → Redirect to login
 ```
 
 ---

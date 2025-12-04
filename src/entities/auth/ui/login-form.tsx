@@ -66,8 +66,13 @@ const LoginForm = () => {
       setGeneralError(null)
       clearError()
 
+      // Get tenantSlug from stored context or URL
+      const tenantSlug = typeof window !== 'undefined'
+        ? localStorage.getItem('tenantSlug') || undefined
+        : undefined
+
       // Step 1: Login and save tokens
-      await login(data.phone, data.password)
+      await login(data.phone, data.password, tenantSlug)
 
       // Step 2: Show loading immediately and fetch user data
       setIsRedirecting(true)

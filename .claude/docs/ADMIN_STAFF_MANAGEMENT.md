@@ -49,20 +49,28 @@ The staff management system allows restaurant owners to:
 - Delivery drivers might only use a separate app
 - Only cashiers, waiters, and managers typically need POS/Admin access
 
-### 2. Roles
+### 2. Roles (Templates)
 
-**Role** = A collection of permissions that define what an employee can do
+**Role** = A template collection of permissions for quick employee setup
 
-**Default Roles** (created automatically for every new tenant):
-- **Admin** - Full access to everything (owner)
+**IMPORTANT: Roles are UI templates only**:
+- When you select a role during employee creation, its permissions are **copied** to the employee
+- The role itself is **NOT stored** with the employee record
+- Changing a role template does NOT affect existing employees
+- See `03-roles-permissions.md` for detailed architecture
+
+**Default Role Templates** (pre-configured):
+- **Owner/CEO** - Full access to everything (`*` permission)
 - **Manager** - Branch management, reports, menu editing
 - **Cashier** - POS operations, payments, customer management
 - **Waiter** - Order taking, table management
+- **Kitchen** - View orders, kitchen display
+- **Barista** - View orders, create orders
 
-**Custom Roles**:
-- Owners can create custom roles with specific permission combinations
+**Custom Role Templates**:
+- Owners can create custom templates with specific permission combinations
 - Example: "Kitchen Manager" with menu editing + inventory access
-- Example: "Senior Waiter" with waiter permissions + shift management
+- Example: "Senior Cashier" with cashier permissions + refund capability
 
 ### 3. Permissions
 
@@ -165,12 +173,34 @@ finance.*       → Financial operations
   "tenantId": 5,              // Restaurant brand
   "activeBranchId": 10,       // Current working location
   "isActive": true,           // Can login?
+  "isOwner": false,           // Is this the business owner? (protected)
   "status": "active",         // active | inactive | suspended
   "lastLoginAt": "2024-01-20T10:30:00Z",
   "createdAt": "2024-01-01T08:00:00Z",
   "createdBy": 1              // Who created this employee
 }
 ```
+
+### Owner Protection
+
+**The `isOwner` field** marks the business owner employee. This field provides special protections:
+
+| Protection | Description |
+|------------|-------------|
+| **Cannot Delete** | Owner employee cannot be deleted (soft or hard) |
+| **Cannot Deactivate** | Owner cannot be deactivated via API |
+| **Cannot Remove** | Owner cannot be removed from any branch |
+| **Automatic Assignment** | Set automatically during onboarding for first employee |
+
+**Why Owner Protection?**
+- Prevents accidental lockout of business owners
+- Ensures at least one account always has full access
+- Protects against malicious removal by other admins
+
+**UI Implications:**
+- Hide "Delete" and "Deactivate" buttons for owner employee
+- Show "Owner" badge on employee card
+- Disable role/permission changes for owner (always has full access)
 
 ### Employee Status vs isActive
 
@@ -558,12 +588,14 @@ Body: UpdateEmployeeDto
 
 // Delete employee (soft delete)
 DELETE /admin/staff/employees/:id
+Note: Returns 403 if attempting to delete owner employee
 
 // Activate employee
 PATCH /admin/staff/employees/:id/activate
 
 // Deactivate employee
 PATCH /admin/staff/employees/:id/deactivate
+Note: Returns 403 if attempting to deactivate owner employee
 
 // Assign branches to employee
 PATCH /admin/staff/employees/:id/branches
@@ -1092,19 +1124,27 @@ You must either:
 
 ### JWT Tokens
 
-**User's permissions are included in JWT**:
+**User's permissions are included in JWT per branch**:
 ```json
 {
-  "sub": 123,                // Employee ID
+  "sub": 123,
   "phone": "+998901234567",
   "tenantId": 5,
-  "roles": ["Cashier", "Waiter"],
-  "permissions": ["orders.create", "orders.view", ...],
-  "activeBranchId": 10
+  "tenantSlug": "burger-house",
+  "branchPermissions": {
+    "1": ["orders:view", "orders:create", "orders:edit", "menu:view"],
+    "2": ["orders:view", "menu:view"]
+  },
+  "type": "access"
 }
 ```
 
-This allows frontend to check permissions without extra API calls.
+**Important Notes**:
+- `branchPermissions` contains permission arrays per branch (NOT role names)
+- Roles are templates only and are NOT included in JWT
+- Each branch can have different permissions for the same employee
+- Use `branchPermissions` for authorization checks
+- See `03-roles-permissions.md` for the roles-as-templates architecture
 
 ---
 

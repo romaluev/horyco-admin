@@ -639,18 +639,13 @@ Always warn users about cascade invalidation:
 
 When user reopens a step, pre-populate form with preserved step data:
 
-```typescript
-// Fetch current progress
-const progress = await api.get('/admin/onboarding/progress');
-
-// Pre-fill business identity form
-const businessData = progress.stepData.business_identity;
-if (businessData) {
-  form.setValue('businessName', businessData.businessName);
-  form.setValue('businessType', businessData.businessType);
-  form.setValue('slug', businessData.slug);
-}
-```
+**Steps:**
+1. Fetch current progress: `GET /admin/onboarding/progress`
+2. Extract step data from `response.stepData.business_identity`
+3. Pre-fill form fields with existing values:
+   - `businessName` → businessData.businessName
+   - `businessType` → businessData.businessType
+   - `slug` → businessData.slug
 
 #### 4. Highlight Invalidated Steps
 
@@ -719,13 +714,24 @@ After reopening a step, users must re-complete it and all subsequent steps:
 
 ## Step 0: Registration Complete
 
-This step is **automatically completed** during the signup process (`POST /auth/register/complete`).
+This step is **automatically completed** during the signup process:
+- **Self-registration path**: `POST /auth/register/complete` after OTP verification
+- **Waitlist approval path**: `POST /auth/invite/complete` after setting password from magic link
 
 **What Gets Created**:
-- Tenant entity with business name from OTP request
-- Default Branch entity
-- Owner Employee record with Admin role
+- Tenant entity with business name (status: `TRIAL`, 14-day trial period)
+- Default Branch entity ("Main Branch")
+- Owner Employee record with:
+  - `isOwner: true` flag (marks as tenant owner)
+  - Wildcard permission (`*`) for full access at the branch
+- Default Roles (Admin, Manager, Cashier, Waiter) as permission templates
 - OnboardingProgress entity with `registration_complete` step marked
+
+**Permission System Note**:
+Horyco uses **per-branch permissions, NOT role-based access**:
+- Owners get `isOwner: true` + wildcard permission (`*`)
+- Staff members get specific permissions per branch
+- See [Staff Management](./ADMIN_STAFF_MANAGEMENT.md) for details
 
 This step is not user-facing in the wizard - users land directly on Step 1 after signup.
 
@@ -1459,51 +1465,49 @@ Response: OnboardingProgressResponseDto
 **Implementation Requirements**:
 
 1. **Progress Management**:
-  - Fetch progress on mount using `GET /admin/onboarding/progress`
-  - Redirect to dashboard if `isCompleted` is true
-  - Display progress bar based on `completionPercentage` and `completedSteps`
+   - Fetch progress on mount using `GET /admin/onboarding/progress`
+   - Redirect to dashboard if `isCompleted` is true
+   - Display progress bar based on `completionPercentage` and `completedSteps`
 
 2. **Step Routing**:
-  - Use `progress.currentStep` to determine which step component to render
-  - Map step values to components:
-    - `registration_complete` → Skip (auto-completed)
-    - `business_identity` → Business Identity Form
-    - `branch_setup` → Branch Setup Form
-    - `menu_template` → Menu Template Selector
-    - `payment_setup` → Payment Methods Form
-    - `staff_invited` → Staff Invite Form
-    - `go_live` → Final Summary Screen
+   - Use `progress.currentStep` to determine which step component to render
+   - Map step values to components:
+     - `registration_complete` → Skip (auto-completed)
+     - `business_identity` → Business Identity Form
+     - `branch_setup` → Branch Setup Form
+     - `menu_template` → Menu Template Selector
+     - `payment_setup` → Payment Methods Form
+     - `staff_invited` → Staff Invite Form
+     - `go_live` → Final Summary Screen
 
 3. **Step Completion (NEW - Standardized)**:
-  - POST to appropriate endpoint based on current step
-  - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
-  - Extract `branchId` from response (available after branch setup)
-  - Extract `tenantId` from response (always available)
-  - Navigate using `response.nextStep` field
-  - Update progress bar using `response.completionPercentage`
-  - **No need to call `/progress` separately** - data is in step response!
+   - POST to appropriate endpoint based on current step
+   - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
+   - Extract `branchId` from response (available after branch setup)
+   - Extract `tenantId` from response (always available)
+   - Navigate using `response.nextStep` field
+   - Update progress bar using `response.completionPercentage`
+   - **No need to call `/progress` separately** - data is in step response!
 
 4. **Simplified Response Handler (NEW)**:
-   ```typescript
-   async function handleStepComplete(stepEndpoint: string, data: any) {
-     const response = await api.post(stepEndpoint, data);
-     // response is always OnboardingProgressResponseDto
-     setProgress(response);
-     if (response.branchId) {
-       setBranchId(response.branchId); // Available after branch setup
-     }
-     navigateToStep(response.nextStep);
-     updateProgressBar(response.completionPercentage);
-   }
-   ```
+
+   All step completion endpoints return `OnboardingProgressResponseDto`. Handle like this:
+
+   **Steps:**
+   - POST to step endpoint with data
+   - Extract `branchId` from response (available after branch setup)
+   - Extract `tenantId` from response (always available)
+   - Navigate using `response.nextStep` field
+   - Update progress bar using `response.completionPercentage`
+   - **No need to call `/progress` separately** - data is in step response!
 
 5. **Skip Functionality**:
-  - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
-  - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
-  - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
-  - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
-  - Skipped steps are marked as completed with skip metadata in `stepData`
-  - Update progress and move to next step on success
+   - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
+   - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
+   - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
+   - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
+   - Skipped steps are marked as completed with skip metadata in `stepData`
+   - Update progress and move to next step on success
 
 ---
 
@@ -1560,17 +1564,17 @@ GET /admin/onboarding/default-products?businessType=restaurant
 **Yes, in two ways**:
 
 1. **During onboarding** - Use the reopen step feature:
-  - Click "Edit" button next to any completed step
-  - Make your changes
-  - Re-complete subsequent steps
-  - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
+   - Click "Edit" button next to any completed step
+   - Make your changes
+   - Re-complete subsequent steps
+   - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
 
 2. **After onboarding** - Modify settings in the main admin panel:
-  - Business Settings
-  - Branch Management
-  - Menu Management
-  - Staff Management
-  - Payment Settings
+   - Business Settings
+   - Branch Management
+   - Menu Management
+   - Staff Management
+   - Payment Settings
 
 Onboarding wizard is just for initial setup - all configurations can be changed anytime.
 

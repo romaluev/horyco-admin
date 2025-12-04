@@ -21,7 +21,6 @@ This document explains how tax and service charge configuration works in Horyco,
 ### 🎯 Purpose
 
 The tax and pricing system allows restaurant owners to:
-
 - Configure taxes based on government regulations (VAT, sales tax, etc.)
 - Add service charges (gratuity, delivery fees, etc.)
 - Apply different rates for different order types (dine-in vs takeaway vs delivery)
@@ -31,7 +30,6 @@ The tax and pricing system allows restaurant owners to:
 ### 🌍 Real-World Use Cases
 
 **Scenario 1: Simple Restaurant**
-
 ```
 Single location in Tashkent
 - VAT 15% on all orders
@@ -39,7 +37,6 @@ Single location in Tashkent
 ```
 
 **Scenario 2: Restaurant Chain**
-
 ```
 3 branches in different cities
 - Branch A (Tashkent): VAT 15%, service charge 10%
@@ -48,7 +45,6 @@ Single location in Tashkent
 ```
 
 **Scenario 3: Food Delivery Platform**
-
 ```
 Multiple restaurants on platform
 - Dine-in: No delivery fee
@@ -63,47 +59,43 @@ Multiple restaurants on platform
 ### 1. Tax Configuration
 
 **What is a tax?**
-
 - A mandatory government-imposed charge on sales
 - Examples: VAT (Value Added Tax), Sales Tax, GST
 - Usually a percentage of the order subtotal
 - Must be included in receipts for accounting/audit
 
 **Tax Fields**:
-
 ```json
 {
   "name": "VAT",
   "description": "Value Added Tax (15%)",
-  "type": "percentage", // or "fixed"
-  "value": 15.0, // 15% or fixed amount
-  "isActive": true, // Currently enforced?
-  "branchId": null, // null = tenant-level, or specific branch
+  "type": "percentage",         // or "fixed"
+  "value": 15.0,                // 15% or fixed amount
+  "isActive": true,             // Currently enforced?
+  "branchId": null,             // null = tenant-level, or specific branch
   "orderTypes": ["dine_in", "takeaway", "delivery"],
-  "appliesTo": "subtotal" // or "subtotal_with_service_charge"
+  "appliesTo": "subtotal"       // or "subtotal_with_service_charge"
 }
 ```
 
 ### 2. Service Charge Configuration
 
 **What is a service charge?**
-
 - An optional fee added by the restaurant
 - Examples: Gratuity/tip, delivery fee, packaging fee
 - Can be percentage or fixed amount
 - Not required by government (unlike tax)
 
 **Service Charge Fields**:
-
 ```json
 {
   "name": "Service Charge",
   "description": "10% gratuity for dine-in orders",
-  "type": "percentage", // or "fixed"
+  "type": "percentage",         // or "fixed"
   "value": 10.0,
   "isActive": true,
   "branchId": null,
-  "orderTypes": ["dine_in"], // Only for dine-in
+  "orderTypes": ["dine_in"],    // Only for dine-in
   "appliesTo": "subtotal"
 }
 ```
@@ -111,7 +103,6 @@ Multiple restaurants on platform
 ### 3. Configuration Type: Percentage vs Fixed
 
 **Percentage**:
-
 ```
 value = 15.0  →  15% of base amount
 Example: Order subtotal = 100,000 UZS
@@ -119,34 +110,29 @@ Tax = 100,000 × 0.15 = 15,000 UZS
 ```
 
 **Fixed**:
-
 ```
 value = 15000  →  15,000 UZS flat fee
 Example: Delivery fee = 15,000 UZS (regardless of order size)
 ```
 
 **When to use each?**
-
 - Percentage: VAT, service charge % (scales with order size)
 - Fixed: Delivery fee, packaging fee (same for all orders)
 
 ### 4. Tenant-Level vs Branch-Level
 
 **Tenant-Level** (`branchId = null`):
-
 - Applies to ALL branches by default
 - Used for: VAT (same across all locations), standard service charge
 - Example: "All branches must charge 15% VAT"
 
 **Branch-Level** (`branchId = 123`):
-
 - Applies ONLY to specific branch
 - **Overrides tenant-level** for that branch
 - Used for: Local taxes, branch-specific service charges
 - Example: "Airport branch charges 20,000 UZS extra parking fee"
 
 **Priority Rules**:
-
 ```
 If branch-level config exists:
   → Use branch-level
@@ -159,13 +145,11 @@ Else:
 **Why filter by order type?**
 
 Different order types have different pricing:
-
 - **Dine-in**: Full service (service charge may apply)
 - **Takeaway**: No service, less overhead (lower/no service charge)
 - **Delivery**: Extra costs (delivery fee applies)
 
 **Example Configuration**:
-
 ```json
 // Service Charge #1: For dine-in only
 {
@@ -199,7 +183,6 @@ Different order types have different pricing:
 Determines what base amount to calculate from:
 
 **Option 1: `appliesTo = "subtotal"`**
-
 ```
 Subtotal:        100,000 UZS
 Service Charge:   10,000 UZS (10% of subtotal)
@@ -209,7 +192,6 @@ Total:           125,000 UZS
 ```
 
 **Option 2: `appliesTo = "subtotal_with_service_charge"`**
-
 ```
 Subtotal:        100,000 UZS
 Service Charge:   10,000 UZS (10% of subtotal)
@@ -221,7 +203,6 @@ Total:           126,500 UZS
 ```
 
 **Which should I use?**
-
 - Most countries: Tax applies to subtotal only → `"subtotal"`
 - Some regions: Tax applies after service charge → `"subtotal_with_service_charge"`
 - Check your local tax laws!
@@ -233,7 +214,6 @@ Total:           126,500 UZS
 ### Setting Up Taxes
 
 **Step 1: Determine Your Tax Requirements**
-
 ```
 Questions to answer:
 1. What taxes are required in your region?
@@ -250,7 +230,6 @@ Questions to answer:
 ```
 
 **Step 2: Create Tenant-Level Tax (Default for All Branches)**
-
 ```json
 {
   "name": "VAT",
@@ -258,22 +237,21 @@ Questions to answer:
   "type": "percentage",
   "value": 15.0,
   "isActive": true,
-  "branchId": null, // Applies to all branches
+  "branchId": null,                              // Applies to all branches
   "orderTypes": ["dine_in", "takeaway", "delivery"],
   "appliesTo": "subtotal"
 }
 ```
 
 **Step 3: Create Branch-Level Tax Override (If Needed)**
-
 ```json
 {
   "name": "VAT + City Tax",
   "description": "Tashkent VAT (15%) + City Tax (2%)",
   "type": "percentage",
-  "value": 17.0, // Combined rate
+  "value": 17.0,                                 // Combined rate
   "isActive": true,
-  "branchId": 10, // Only Branch A
+  "branchId": 10,                                // Only Branch A
   "orderTypes": ["dine_in", "takeaway", "delivery"],
   "appliesTo": "subtotal"
 }
@@ -284,7 +262,6 @@ Questions to answer:
 **Scenario**: Separate VAT and City Tax
 
 **Option 1: Combined (Simpler)**
-
 ```json
 {
   "name": "VAT + City Tax",
@@ -294,7 +271,6 @@ Questions to answer:
 ```
 
 **Option 2: Separate (More Detailed)**
-
 ```json
 [
   {
@@ -311,7 +287,6 @@ Questions to answer:
 ```
 
 **Which is better?**
-
 - Separate: Better for accounting (itemized receipts)
 - Combined: Simpler management
 - Choose based on your accounting requirements
@@ -323,46 +298,42 @@ Questions to answer:
 ### Common Service Charge Types
 
 **1. Gratuity / Table Service**
-
 ```json
 {
   "name": "Service Charge",
   "description": "10% gratuity for table service",
   "type": "percentage",
   "value": 10.0,
-  "orderTypes": ["dine_in"], // Only dine-in
+  "orderTypes": ["dine_in"],     // Only dine-in
   "appliesTo": "subtotal"
 }
 ```
 
 **2. Delivery Fee**
-
 ```json
 {
   "name": "Delivery Fee",
   "description": "Flat delivery charge",
   "type": "fixed",
-  "value": 15000, // 15,000 UZS flat
-  "orderTypes": ["delivery"], // Only delivery
+  "value": 15000,                // 15,000 UZS flat
+  "orderTypes": ["delivery"],    // Only delivery
   "appliesTo": "subtotal"
 }
 ```
 
 **3. Packaging Fee**
-
 ```json
 {
   "name": "Packaging Fee",
   "description": "Takeaway packaging cost",
   "type": "fixed",
-  "value": 2000, // 2,000 UZS per order
+  "value": 2000,                 // 2,000 UZS per order
   "orderTypes": ["takeaway", "delivery"],
   "appliesTo": "subtotal"
 }
 ```
 
 **4. Peak Hours Surcharge**
-
 ```json
 {
   "name": "Peak Hours Charge",
@@ -371,7 +342,7 @@ Questions to answer:
   "value": 5.0,
   "orderTypes": ["dine_in", "takeaway", "delivery"],
   "appliesTo": "subtotal",
-  "isActive": false // Enable during peak hours only
+  "isActive": false              // Enable during peak hours only
 }
 ```
 
@@ -380,14 +351,12 @@ Questions to answer:
 **Use Case**: Enable/disable charges without deleting them
 
 **Example: Weekend Delivery Fee**
-
 ```
 Monday-Friday:  isActive = false (no delivery fee)
 Saturday-Sunday: isActive = true (20,000 UZS delivery fee)
 ```
 
 **API Call**:
-
 ```
 // Enable charge
 PATCH /admin/service-charges/123/toggle-active
@@ -405,7 +374,6 @@ PATCH /admin/service-charges/123/toggle-active
 ### How Totals Are Calculated
 
 **Step-by-step calculation**:
-
 ```
 1. Calculate Subtotal
    → Sum of all order items (product price × quantity)
@@ -427,7 +395,6 @@ PATCH /admin/service-charges/123/toggle-active
 ### Example Calculation #1: Simple Dine-In
 
 **Order**:
-
 ```
 Subtotal: 100,000 UZS
 Order Type: dine_in
@@ -435,7 +402,6 @@ Branch: Branch A
 ```
 
 **Configurations**:
-
 ```json
 // Service Charge
 {
@@ -455,7 +421,6 @@ Branch: Branch A
 ```
 
 **Calculation**:
-
 ```
 Subtotal:             100,000 UZS
 Service Charge (10%):  10,000 UZS  (100,000 × 0.10)
@@ -467,7 +432,6 @@ Total:                125,000 UZS
 ### Example Calculation #2: Delivery Order
 
 **Order**:
-
 ```
 Subtotal: 50,000 UZS
 Order Type: delivery
@@ -475,7 +439,6 @@ Branch: Branch A
 ```
 
 **Configurations**:
-
 ```json
 // Service Charge #1
 {
@@ -503,7 +466,6 @@ Branch: Branch A
 ```
 
 **Calculation**:
-
 ```
 Subtotal:              50,000 UZS
 Delivery Fee (fixed):  15,000 UZS  (flat fee)
@@ -515,7 +477,6 @@ Total:                 72,500 UZS
 ### Example Calculation #3: Tax After Service Charge
 
 **Order**:
-
 ```
 Subtotal: 100,000 UZS
 Order Type: dine_in
@@ -523,7 +484,6 @@ Branch: Branch A
 ```
 
 **Configurations**:
-
 ```json
 // Service Charge
 {
@@ -543,7 +503,6 @@ Branch: Branch A
 ```
 
 **Calculation**:
-
 ```
 Subtotal:             100,000 UZS
 Service Charge (10%):  10,000 UZS  (100,000 × 0.10)
@@ -561,7 +520,6 @@ Total:                126,500 UZS
 ### 1. Tax Configuration Page
 
 **UI Layout**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Tax Configurations        [+ Add Tax Config]   │
@@ -592,7 +550,6 @@ Total:                126,500 UZS
 ```
 
 **Add/Edit Form**:
-
 ```
 Tax Configuration Form:
 
@@ -624,7 +581,6 @@ Status:
 ```
 
 **API Calls**:
-
 ```
 // Get all taxes
 GET /admin/tax-configurations
@@ -635,7 +591,6 @@ POST /admin/tax-configurations
 ```
 
 **Request Body**:
-
 ```json
 {
   "name": "VAT",
@@ -650,7 +605,6 @@ POST /admin/tax-configurations
 ```
 
 **Other operations**:
-
 ```
 // Update tax
 PUT /admin/tax-configurations/123
@@ -665,7 +619,6 @@ DELETE /admin/tax-configurations/123
 ### 2. Service Charge Configuration Page
 
 **UI Layout** (similar to tax page):
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Service Charges           [+ Add Charge]       │
@@ -696,7 +649,6 @@ DELETE /admin/tax-configurations/123
 ```
 
 **API Calls**:
-
 ```
 // Get all service charges
 GET /admin/service-charges
@@ -707,7 +659,6 @@ POST /admin/service-charges
 ```
 
 **Request Body**:
-
 ```json
 {
   "name": "Delivery Fee",
@@ -722,7 +673,6 @@ POST /admin/service-charges
 ```
 
 **Other operations**:
-
 ```
 // Update service charge
 PUT /admin/service-charges/123
@@ -739,7 +689,6 @@ DELETE /admin/service-charges/123
 **Use Case**: Let admin test their tax/charge configurations before applying
 
 **UI**:
-
 ```
 ┌─────────────────────────────────────────────────┐
 │  Order Totals Calculator                        │
@@ -777,13 +726,11 @@ DELETE /admin/service-charges/123
 ```
 
 **API Call**:
-
 ```
 POST /admin/calculate-order-totals
 ```
 
 **Request Body**:
-
 ```json
 {
   "subtotal": 100000,
@@ -794,7 +741,6 @@ POST /admin/calculate-order-totals
 ```
 
 **Response**:
-
 ```json
 {
   "subtotal": 100000,
@@ -824,7 +770,6 @@ POST /admin/calculate-order-totals
 ### 4. Showing Totals in POS/Order Form
 
 **When creating an order, show breakdown**:
-
 ```
 ┌─────────────────────────────────────────┐
 │  Order #1234                            │
@@ -906,7 +851,6 @@ POST /admin/calculate-order-totals
 ```
 
 **Request Body**:
-
 ```json
 {
   "subtotal": 100000,
@@ -927,7 +871,6 @@ POST /admin/calculate-order-totals
 **Yes**. You can create multiple tax configurations, and they will all be applied to orders.
 
 Example:
-
 - VAT: 15%
 - City Tax: 2%
 - Both will be calculated and added to the order
@@ -937,7 +880,6 @@ Example:
 **Branch-level overrides tenant-level** for that specific branch.
 
 Example:
-
 ```
 Tenant-level: VAT 15%
 Branch A override: VAT + City Tax 17%
@@ -959,7 +901,6 @@ This sets `isActive = false`, so it won't be applied to new orders, but the conf
 ### Q: Should tax apply before or after service charge?
 
 **It depends on your local regulations**. Use the `appliesTo` field:
-
 - `"subtotal"` - Tax calculated on subtotal only
 - `"subtotal_with_service_charge"` - Tax calculated after adding service charge
 
@@ -970,12 +911,11 @@ Most countries use `"subtotal"`, but some regions require tax after service char
 **Yes**. Use the `orderTypes` array.
 
 Example: No tax on takeaway orders (tax-exempt):
-
 ```json
 {
   "name": "VAT",
   "value": 15.0,
-  "orderTypes": ["dine_in", "delivery"] // Exclude "takeaway"
+  "orderTypes": ["dine_in", "delivery"]  // Exclude "takeaway"
 }
 ```
 
@@ -984,7 +924,6 @@ Example: No tax on takeaway orders (tax-exempt):
 **Current system**: The API calculates based on subtotal, order type, and branch.
 
 **For conditional fees** (minimum order amount, distance-based, etc.):
-
 - You'll need to implement this logic in the frontend before calling the API
 - Or create multiple configs and activate/deactivate programmatically
 
@@ -995,17 +934,14 @@ Example: No tax on takeaway orders (tax-exempt):
 ## Next Steps
 
 After configuring taxes and service charges:
-
 1. Test with the calculator endpoint to verify calculations
 2. Create sample orders in POS to see actual receipts
 3. Review receipts to ensure compliance with tax regulations
 4. Train staff on how to explain charges to customers
 
 For receipt customization, see:
-
 - `ADMIN_RECEIPT_TEMPLATES.md` (future)
 
 For POS order workflow, see:
-
 - `POS_ORDER_MANAGEMENT.md`
 - `POS_PAYMENT_PROCESSING.md`

@@ -6,7 +6,7 @@ This document provides a complete understanding of the Horyco Admin Panel: archi
 
 ## 📋 Table of Contents
 
-1. [Introduction to Horyco](#introduction-to-Horyco)
+1. [Introduction to Horyco](#introduction-to-horyco)
 2. [System Architecture](#system-architecture)
 3. [User Roles](#user-roles)
 4. [Admin Panel Structure](#admin-panel-structure)
@@ -24,18 +24,15 @@ This document provides a complete understanding of the Horyco Admin Panel: archi
 ### 🎯 What This Means
 
 **White-label:**
-
 - Each client gets the platform with their own branding
 - Customizable design, logos, colors
-- Own domain (example: `pizza-house.Horyco.uz`)
+- Own domain (example: `pizza-house.horyco.com`)
 
 **B2B2C:**
-
 - **B2B** — We sell the platform to restaurants (our clients)
 - **B2C** — Restaurants serve their customers through our platform
 
 **Multi-tenant:**
-
 - One backend serves multiple restaurants
 - Complete data isolation between tenants
 - Scalability and resource efficiency
@@ -44,7 +41,7 @@ This document provides a complete understanding of the Horyco Admin Panel: archi
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                    Horyco PLATFORM                     │
+│                    HORYCO PLATFORM                     │
 ├────────────────────────────────────────────────────────┤
 │                                                        │
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
@@ -72,13 +69,11 @@ This document provides a complete understanding of the Horyco Admin Panel: archi
 ### 📱 Who Uses Admin Panel?
 
 **Target Audience:**
-
 - 👨‍💼 **Restaurant Owners** — Strategic decisions, analytics
 - 👩‍💼 **Managers** — Operational management, staff control
 - 👨‍🍳 **Supervisors** — Menu, purchases, branch settings
 
 **Main Tasks:**
-
 - Menu management (categories, products, prices)
 - Staff control (schedules, salaries, roles)
 - Financial accounting (reports, cash registers, revenue)
@@ -116,25 +111,24 @@ src/
 
 **Each entity is tied to `tenantId`:**
 
-```typescript
-// Example: Product
+Example Product JSON:
+```json
 {
-  id: 101,
-  tenantId: 5,           // ← Restaurant "Pizza House"
-  name: "Margherita",
-  price: 890,
-  ...
+  "id": 101,
+  "tenantId": 5,
+  "name": "Margherita",
+  "price": 890
 }
 ```
 
-**Automatic Isolation:**
+**Note:** `tenantId: 5` associates this product with restaurant "Pizza House"
 
+**Automatic Isolation:**
 - All requests are automatically filtered by current tenant
 - Backend uses `AsyncLocalStorage` for request context
 - Frontend doesn't need to manually add `tenantId` to each request
 
 **How It Works:**
-
 ```
 1. Frontend makes request with JWT token
 2. Backend extracts tenantId from token
@@ -157,7 +151,6 @@ Tenant (Restaurant "Pizza House")
 ```
 
 **Branch Overrides:**
-
 - Each branch can override settings
 - Product prices can differ
 - Dish availability depends on location
@@ -196,27 +189,20 @@ Accountant
 
 **Permission-Based Access Control:**
 
-| Section   | Owner   | Manager  | Supervisor    | Accountant |
-| --------- | ------- | -------- | ------------- | ---------- |
-| Dashboard | ✅ All  | ✅ All   | ✅ Own branch | ✅ Finance |
-| Menu      | ✅ Full | ✅ Full  | ✅ Limited    | ❌ No      |
-| Staff     | ✅ Full | ✅ Full  | ✅ Own branch | ❌ No      |
-| Finance   | ✅ Full | ✅ View  | ✅ Own branch | ✅ View    |
-| Settings  | ✅ Full | ✅ Basic | ❌ No         | ❌ No      |
-| Billing   | ✅ Full | ❌ No    | ❌ No         | ❌ No      |
+| Section | Owner | Manager | Supervisor | Accountant |
+|---------|-------|---------|------------|------------|
+| Dashboard | ✅ All | ✅ All | ✅ Own branch | ✅ Finance |
+| Menu | ✅ Full | ✅ Full | ✅ Limited | ❌ No |
+| Staff | ✅ Full | ✅ Full | ✅ Own branch | ❌ No |
+| Finance | ✅ Full | ✅ View | ✅ Own branch | ✅ View |
+| Settings | ✅ Full | ✅ Basic | ❌ No | ❌ No |
+| Billing | ✅ Full | ❌ No | ❌ No | ❌ No |
 
 **Permission Check on Frontend:**
 
-```typescript
-// Example check
-if (user.hasPermission('menu:edit')) {
-  // Show "Edit" button
-}
-
-if (user.hasRole('owner', 'manager')) {
-  // Show "Analytics" section
-}
-```
+Example permission check logic:
+- Check if `user.permissions` array includes `'menu:edit'` → Show "Edit" button
+- Check if `user.roles` array includes `'owner'` or `'manager'` → Show "Analytics" section
 
 ---
 
@@ -277,7 +263,6 @@ if (user.hasRole('owner', 'manager')) {
 ### 📊 Dashboard (Home Page)
 
 **Key Metrics (KPI):**
-
 ```
 ┌──────────────────────────────────────────────────────┐
 │  Today                        This Month             │
@@ -290,14 +275,12 @@ if (user.hasRole('owner', 'manager')) {
 ```
 
 **Charts:**
-
 - Sales dynamics (by days/weeks/months)
 - Sales distribution by category
 - Dish popularity (Top 10)
 - Hourly traffic
 
 **Quick Actions:**
-
 - Create new product
 - Add employee
 - View active shifts
@@ -313,13 +296,11 @@ if (user.hasRole('owner', 'manager')) {
 A restaurant or restaurant chain using the platform.
 
 **Examples:**
-
 - "Pizza House" — one restaurant
 - "Coffee Time" — chain of 5 cafes
 - "Sushi Market" — franchise of 15 locations
 
 **Properties:**
-
 - Unique `tenantId`
 - Own customer database
 - Independent menu
@@ -331,13 +312,11 @@ A restaurant or restaurant chain using the platform.
 Physical restaurant location.
 
 **Examples:**
-
 - "Pizza House — Downtown"
 - "Pizza House — Mega Mall"
 - "Pizza House — Airport"
 
 **Why it matters:**
-
 - Branches can have different prices
 - Different menu (seasonality, regional dishes)
 - Own staff
@@ -349,7 +328,6 @@ Physical restaurant location.
 Work shift of cashier/waiter in POS.
 
 **Lifecycle:**
-
 ```
 1. Open Shift
    ├── Employee opens POS
@@ -369,7 +347,6 @@ Work shift of cashier/waiter in POS.
 ```
 
 **For Admin Panel:**
-
 - View all shifts
 - Shift analytics
 - Discrepancy control
@@ -378,7 +355,6 @@ Work shift of cashier/waiter in POS.
 ### 💳 Payment
 
 **Payment Methods:**
-
 - `cash` — Cash
 - `card` — Bank card
 - `payme` — Payme
@@ -386,7 +362,6 @@ Work shift of cashier/waiter in POS.
 - `uzum` — Uzum Bank
 
 **Split Payment:**
-
 ```
 Example: Bill for 10,000₽, split in half
 
@@ -404,20 +379,17 @@ Payment 2:
 ### 📝 Order
 
 **Order Types:**
-
 - `dine_in` — In-hall (at table)
 - `takeaway` — To-go
 - `delivery` — Delivery
 
 **Order Sources:**
-
 - `pos` — Created in POS by cashier
 - `web` — Through WebApp
 - `telegram` — Through Telegram bot
 - `aggregator` — From delivery platforms (Yandex.Eats)
 
 **Order Statuses:**
-
 ```
 created
   ↓
@@ -435,13 +407,11 @@ completed
 ### 🎫 Receipt
 
 **Receipt Types:**
-
 - `sale` — Sale
 - `refund` — Refund
 - `void` — Void
 
 **Formats:**
-
 - `thermal` — Thermal printer (58mm, 80mm)
 - `a4` — Laser printer
 - `email` — Electronic receipt
@@ -533,19 +503,16 @@ completed
 ### 🔄 Section Connections
 
 **Menu ↔ Orders:**
-
 ```
 Created new dish → Immediately available in POS → Customer orders → Appears in statistics
 ```
 
 **Staff ↔ Finance:**
-
 ```
 Added employee → Assigned "Cashier" role → Opens shift → Transactions tied to them → Employee report
 ```
 
 **Branches ↔ Menu:**
-
 ```
 Created branch → Applied menu template → Adjusted prices for branch → Branch operational
 ```
@@ -558,7 +525,7 @@ Created branch → Applied menu template → Adjusted prices for branch → Bran
 
 ```
 Development: http://localhost:3000
-Production:  https://api.Horyco.uz
+Production:  https://api.horyco.com
 ```
 
 ### 🔑 Authentication
@@ -571,7 +538,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **Get Token:**
-
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -595,7 +561,6 @@ Response:
 ```
 
 **Refresh Token:**
-
 ```http
 POST /auth/refresh
 Content-Type: application/json
@@ -608,7 +573,6 @@ Content-Type: application/json
 ### 📡 Response Format
 
 **Success Response:**
-
 ```json
 {
   "id": 101,
@@ -620,7 +584,6 @@ Content-Type: application/json
 ```
 
 **List with Pagination:**
-
 ```json
 {
   "data": [...],
@@ -632,17 +595,18 @@ Content-Type: application/json
 ```
 
 **Validation Error:**
-
 ```json
 {
   "statusCode": 400,
-  "message": ["name should not be empty", "price must be a number"],
+  "message": [
+    "name should not be empty",
+    "price must be a number"
+  ],
   "error": "Bad Request"
 }
 ```
 
 **Authorization Error:**
-
 ```json
 {
   "statusCode": 401,
@@ -652,7 +616,6 @@ Content-Type: application/json
 ```
 
 **Permission Error:**
-
 ```json
 {
   "statusCode": 403,
@@ -674,13 +637,11 @@ Content-Type: application/json
 ### 📚 Swagger Documentation
 
 **Available at:**
-
 ```
 http://localhost:3000/api/docs
 ```
 
 **What's there:**
-
 - Complete list of all endpoints
 - Request parameter descriptions
 - Response examples
@@ -696,7 +657,6 @@ Detailed documentation for each section:
 ### ✅ Available Documents
 
 1. **[ADMIN_MENU_MANAGEMENT.md](./ADMIN_MENU_MANAGEMENT.md)** — Menu Management
-
    - Categories
    - Products
    - Modifiers
@@ -705,51 +665,43 @@ Detailed documentation for each section:
    - Branch Overrides
 
 2. **[ADMIN_STAFF_MANAGEMENT.md](./ADMIN_STAFF_MANAGEMENT.md)** — Staff Management
-
    - Employee list
    - Roles and permissions
    - Work schedules
    - Salaries and payouts
 
 3. **[ADMIN_BRANCH_MANAGEMENT.md](./ADMIN_BRANCH_MANAGEMENT.md)** — Branch Management
-
    - Create branches
    - Halls and tables
    - Branch settings
 
 4. **[ADMIN_FINANCIAL_MANAGEMENT.md](./ADMIN_FINANCIAL_MANAGEMENT.md)** — Financial Management
-
    - Transactions
    - Cash register shifts
    - Reports
    - Payouts
 
 5. **[ADMIN_SETTINGS.md](./ADMIN_SETTINGS.md)** — System Settings
-
    - General settings
    - Integrations
    - Taxes and receipts
 
 6. **[ADMIN_ONBOARDING_WIZARD.md](./ADMIN_ONBOARDING_WIZARD.md)** — Onboarding Wizard
-
    - Business signup
    - Initial setup
    - Step-by-step configuration
 
 7. **[ADMIN_BUSINESS_SIGNUP.md](./ADMIN_BUSINESS_SIGNUP.md)** — Business Signup
-
    - Registration flow
    - Phone verification
    - Account creation
 
 8. **[ADMIN_OPERATING_HOURS.md](./ADMIN_OPERATING_HOURS.md)** — Operating Hours
-
    - Weekly schedules
    - Holiday management
    - Today's status
 
 9. **[ADMIN_TAX_AND_PRICING.md](./ADMIN_TAX_AND_PRICING.md)** — Tax & Pricing
-
    - Tax configuration
    - Service charges
    - Order calculations
@@ -766,58 +718,48 @@ Detailed documentation for each section:
 ### Frontend Stack (Recommendations)
 
 **Framework:**
-
 - React / Next.js (for SSR and SEO)
 - TypeScript (strict typing)
 
 **UI Libraries:**
-
 - Ant Design / Material-UI (ready components)
 - TailwindCSS (custom styling)
 
 **State Management:**
-
 - Zustand / Redux Toolkit
 - TanStack Query (React Query) for API work
 
 **Charts:**
-
 - Recharts / Chart.js
 - ApexCharts (interactive charts)
 
 **Forms:**
-
 - React Hook Form
 - Zod (schema validation)
 
 **Tables:**
-
 - TanStack Table (React Table)
 - AG Grid (for large datasets)
 
 ### Required Features
 
 **Authentication:**
-
 - Automatic token refresh
 - Redirect to login on 401
 - Save token in localStorage/cookies
 
 **Error Handling:**
-
 - Toast notifications
 - Display validation errors
 - Retry mechanism for failed requests
 
 **UX:**
-
 - Loading states (skeletons)
 - Optimistic updates
 - Debounce for search
 - Infinite scroll / pagination
 
 **Security:**
-
 - XSS protection
 - CSRF tokens
 - Frontend permission checks (duplicates backend)
@@ -825,14 +767,12 @@ Detailed documentation for each section:
 ### Performance
 
 **Optimizations:**
-
 - Lazy loading routes
 - Code splitting
 - Component memoization
 - Virtualization for long lists
 
 **Caching:**
-
 - React Query cache
 - LocalStorage for rarely changing data
 - Optimistic updates
@@ -870,13 +810,13 @@ Detailed documentation for each section:
 
 ## Glossary
 
-| Term         | Meaning                           |
-| ------------ | --------------------------------- |
-| **Tenant**   | Restaurant using the platform     |
-| **Branch**   | Restaurant location               |
+| Term | Meaning |
+|------|---------|
+| **Tenant** | Restaurant using the platform |
+| **Branch** | Restaurant location |
 | **Override** | Override settings at branch level |
-| **Shift**    | Cashier work shift                |
-| **DDD**      | Domain-Driven Design              |
-| **PBAC**     | Permission-Based Access Control   |
-| **DTO**      | Data Transfer Object              |
-| **KPI**      | Key Performance Indicator         |
+| **Shift** | Cashier work shift |
+| **DDD** | Domain-Driven Design |
+| **PBAC** | Permission-Based Access Control |
+| **DTO** | Data Transfer Object |
+| **KPI** | Key Performance Indicator |

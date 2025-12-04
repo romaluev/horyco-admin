@@ -49,7 +49,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - **Active** (`isActive: true`): Currently accepting transactions
 - **Closed** (`isActive: false`): Finalized and no longer accepting transactions
 
-### Endpoint: `GET /admin/finance/sessions/active`
+### Endpoint: `GET /admin/financial/sessions/active`
 
 **Purpose**: Retrieve all currently active payment sessions across branches.
 
@@ -107,7 +107,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - "View Details" button to see full transaction list
 - Alert if session open for > 24 hours
 
-### Endpoint: `GET /admin/finance/sessions`
+### Endpoint: `GET /admin/financial/sessions`
 
 **Purpose**: Retrieve paginated list of all payment sessions (active and closed).
 
@@ -125,7 +125,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - Audit past sessions
 - Reconcile daily revenue
 
-### Endpoint: `POST /admin/finance/sessions`
+### Endpoint: `POST /admin/financial/sessions`
 
 **Purpose**: Open a new payment session for a branch.
 
@@ -144,7 +144,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - Must have permission to manage finances
 - Session automatically includes userId as openedBy
 
-### Endpoint: `PUT /admin/finance/sessions/:id/close`
+### Endpoint: `PUT /admin/financial/sessions/:id/close`
 
 **Purpose**: Close an active payment session (end-of-shift settlement).
 
@@ -159,7 +159,7 @@ A payment session represents a discrete financial period (typically a shift or d
 
 ## Transactions
 
-### Endpoint: `GET /admin/finance/transactions`
+### Endpoint: `GET /admin/financial/transactions`
 
 **Purpose**: Retrieve paginated list of transactions.
 
@@ -186,7 +186,7 @@ A payment session represents a discrete financial period (typically a shift or d
 
 ## Financial Reports
 
-### Endpoint: `GET /admin/finance/transactions/summary`
+### Endpoint: `GET /admin/financial/transactions/summary`
 
 **Purpose**: Get aggregated transaction summary for a date range.
 
@@ -232,7 +232,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - Identify revenue trends
 - Tax reporting preparation
 
-### Endpoint: `GET /admin/finance/payments/summary`
+### Endpoint: `GET /admin/financial/payments/summary`
 
 **Purpose**: Get payment method breakdown and summary.
 
@@ -290,7 +290,7 @@ A payment session represents a discrete financial period (typically a shift or d
 - Identify failed payment patterns
 - Optimize payment gateway costs
 
-### Endpoint: `GET /admin/finance/transactions/hourly-stats`
+### Endpoint: `GET /admin/financial/transactions/hourly-stats`
 
 **Purpose**: Get transaction volume and revenue by hour of day.
 
@@ -334,47 +334,53 @@ A payment session represents a discrete financial period (typically a shift or d
 
 ## Dashboard Metrics
 
-### Endpoint: `GET /admin/finance/dashboard`
+### Endpoint: `GET /admin/financial/dashboard/summary`
 
-**Purpose**: Get comprehensive financial dashboard with key metrics.
+**Purpose**: Get comprehensive financial dashboard summary with key metrics.
 
 **Query Parameters**:
+- `startDate` (required): Start date (ISO string)
+- `endDate` (required): End date (ISO string)
 - `branchId` (optional): Filter by branch
-- `period` (optional): 'today', 'week', 'month', 'year' (default: 'today')
 
-**Response** (comprehensive dashboard data):
+**Response Structure** (`FinancialSummaryResponseDto`):
 
 ```json
 {
-  "period": "today",
-  "dateRange": {
-    "start": "2025-11-03T00:00:00Z",
-    "end": "2025-11-03T23:59:59Z"
+  "totalRevenue": 44500000,
+  "totalCash": 25000000,
+  "totalCard": 15000000,
+  "totalDigital": 4500000,
+  "totalRefunds": 1250000,
+  "totalTransactions": 1250,
+  "totalOrders": 1200,
+  "averageOrderValue": 37083,
+  "paymentMethodBreakdown": {
+    "CASH": 25000000,
+    "CARD": 15000000,
+    "PAYME": 3500000,
+    "CLICK": 1000000
   },
-  "revenue": {
-    "total": 5500000,
-    "cash": 3000000,
-    "card": 1500000,
-    "digital": 1000000
+  "period": {
+    "startDate": "2025-11-01T00:00:00Z",
+    "endDate": "2025-11-03T23:59:59Z"
   },
-  "transactions": {
-    "total": 150,
-    "completed": 145,
-    "pending": 3,
-    "failed": 2
-  },
-  "averages": {
-    "transactionValue": 36667,
-    "transactionsPerHour": 6.25
-  },
-  "activeSessions": 3,
-  "topPaymentMethod": "CASH",
-  "trends": {
-    "revenueChange": "+12.5%",
-    "transactionChange": "+8.3%"
-  }
+  "branchId": 5
 }
 ```
+
+**Response Fields**:
+- `totalRevenue` - Total completed payment amount
+- `totalCash` - Cash payment total (dynamically calculated)
+- `totalCard` - Card payment total (dynamically calculated)
+- `totalDigital` - Digital payment total (dynamically calculated)
+- `totalRefunds` - Total refunded amount
+- `totalTransactions` - Total transaction count
+- `totalOrders` - Total order count (payment count)
+- `averageOrderValue` - Average payment amount
+- `paymentMethodBreakdown` - Revenue by payment method
+- `period` - Date range for the summary
+- `branchId` - Branch filter (if applied)
 
 **Use Cases**:
 - Home dashboard overview
@@ -385,9 +391,9 @@ A payment session represents a discrete financial period (typically a shift or d
 **UI Recommendations**:
 - Large metric cards for revenue, transactions, averages
 - Charts for revenue trends and payment method breakdown
-- Period selector (today, week, month, year, custom)
+- Date range picker (today, week, month, custom)
 - Branch filter dropdown
-- Comparison to previous period
+- Payment method category breakdown (Cash, Card, Digital)
 
 ---
 
@@ -398,7 +404,7 @@ A payment session represents a discrete financial period (typically a shift or d
 **User Action**: Navigate to Financial Management → Active Sessions
 
 **Steps**:
-1. Call `GET /admin/finance/sessions/active`
+1. Call `GET /admin/financial/sessions/active`
 2. Display cards for each active session
 3. Show branch name, session duration, transaction count, total amount
 4. Highlight sessions open > 12 hours (warning indicator)
@@ -428,9 +434,9 @@ A payment session represents a discrete financial period (typically a shift or d
 **Steps**:
 1. User selects date range (e.g., "Last 7 Days")
 2. Optional: User selects specific branch
-3. Call `GET /admin/finance/transactions/summary?startDate=X&endDate=Y&branchId=Z`
+3. Call `GET /admin/financial/transactions/summary?startDate=X&endDate=Y&branchId=Z`
 4. Display summary metrics in cards
-5. Optional: Call `GET /admin/finance/transactions/hourly-stats` for chart data
+5. Optional: Call `GET /admin/financial/transactions/hourly-stats` for chart data
 6. Render visualizations (bar chart, pie chart, line graph)
 
 **UI Components**:
@@ -446,8 +452,8 @@ A payment session represents a discrete financial period (typically a shift or d
 **User Action**: View live transaction feed during business hours
 
 **Steps**:
-1. Call `GET /admin/finance/sessions/active` to get active sessions
-2. For each session, call `GET /admin/finance/transactions?sessionId=X&limit=10`
+1. Call `GET /admin/financial/sessions/active` to get active sessions
+2. For each session, call `GET /admin/financial/transactions?sessionId=X&limit=10`
 3. Display most recent transactions in chronological feed
 4. Poll for updates every 10-15 seconds or use WebSocket
 
@@ -470,7 +476,7 @@ A payment session represents a discrete financial period (typically a shift or d
    - Total revenue: 4,500,000 UZS
    - Payment breakdown: CASH (60%), CARD (30%), Digital (10%)
 4. User confirms closure
-5. Call `PUT /admin/finance/sessions/:id/close`
+5. Call `PUT /admin/financial/sessions/:id/close`
 6. Show success message: "Session closed successfully. Settlement report generated."
 7. Optional: Download/view settlement report
 
@@ -489,7 +495,7 @@ A payment session represents a discrete financial period (typically a shift or d
 1. Navigate to Analytics → Hourly Performance
 2. Select date (default: yesterday for complete data)
 3. Optional: Select branch
-4. Call `GET /admin/finance/transactions/hourly-stats?date=2025-11-02&branchId=5`
+4. Call `GET /admin/financial/transactions/hourly-stats?date=2025-11-02&branchId=5`
 5. Display bar chart with transaction count per hour
 6. Show total revenue per hour as overlay line
 7. Highlight peak hours (top 3 hours by transaction count)
@@ -645,13 +651,24 @@ When trying to access or close a non-existent session:
 
 | Method | Endpoint | Purpose | Pagination |
 |--------|----------|---------|------------|
-| `GET` | `/admin/finance/sessions/active` | Get active sessions | ❌ |
-| `GET` | `/admin/finance/sessions` | List all sessions | ✅ |
-| `POST` | `/admin/finance/sessions` | Open new session | ❌ |
-| `PUT` | `/admin/finance/sessions/:id/close` | Close session | ❌ |
-| `GET` | `/admin/finance/transactions` | List transactions | ✅ |
-| `GET` | `/admin/finance/transactions/summary` | Transaction summary report | ❌ |
-| `GET` | `/admin/finance/payments/summary` | Payment method summary | ❌ |
-| `GET` | `/admin/finance/transactions/hourly-stats` | Hourly analytics | ❌ |
-| `GET` | `/admin/finance/dashboard` | Dashboard metrics | ❌ |
+| `GET` | `/admin/financial/sessions/active` | Get active sessions | ❌ |
+| `GET` | `/admin/financial/sessions` | List all sessions | ✅ |
+| `GET` | `/admin/financial/sessions/:id` | Get session details with summary | ❌ |
+| `POST` | `/admin/financial/sessions` | Open new session | ❌ |
+| `PUT` | `/admin/financial/sessions/:id/close` | Close session | ❌ |
+| `GET` | `/admin/financial/transactions` | List transactions | ✅ |
+| `GET` | `/admin/financial/transactions/summary` | Transaction summary report | ❌ |
+| `GET` | `/admin/financial/transactions/hourly-stats` | Hourly analytics | ❌ |
+| `GET` | `/admin/financial/payments` | List payments | ✅ |
+| `GET` | `/admin/financial/payments/summary` | Payment method summary | ❌ |
+| `GET` | `/admin/financial/payments/failed` | Get failed payments | ❌ |
+| `POST` | `/admin/financial/payments` | Create payment | ❌ |
+| `PUT` | `/admin/financial/payments/:id/status` | Update payment status | ❌ |
+| `POST` | `/admin/financial/payments/:id/refund` | Refund payment | ❌ |
+| `POST` | `/admin/financial/reports/generate` | Generate financial report | ❌ |
+| `GET` | `/admin/financial/reports` | Get reports by filters | ❌ |
+| `GET` | `/admin/financial/reports/:id` | Get report by ID | ❌ |
+| `PUT` | `/admin/financial/reports/:id/finalize` | Finalize report | ❌ |
+| `DELETE` | `/admin/financial/reports/:id` | Delete report | ❌ |
+| `GET` | `/admin/financial/dashboard/summary` | Dashboard summary | ❌ |
 

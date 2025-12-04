@@ -395,6 +395,15 @@ Body: { "price": 320 }
 - Bulk endpoint more efficient for mass operations
 - Will be removed in v2.0
 
+**Migration:**
+```json
+{
+  "old": "PATCH /admin/menu/products/:id/price",
+  "new_single": "PATCH /admin/menu/products/:id",
+  "new_bulk": "PATCH /admin/menu/products/bulk-price"
+}
+```
+
 #### 6. Change availability
 ```
 PATCH /admin/menu/products/:id/availability
@@ -520,17 +529,13 @@ Form fields:
 - Single API call instead of 3
 
 **Frontend example:**
-```javascript
-const formData = new FormData();
-formData.append('image', imageFile);
-formData.append('name', 'Pizza Margherita');
-formData.append('price', '25000');
 
-await fetch('/admin/menu/products/with-image', {
-  method: 'POST',
-  body: formData
-});
-```
+Create a FormData object with these fields:
+- `image`: Binary file
+- `name`: "Pizza Margherita"
+- `price`: "25000"
+
+Send as POST to `/admin/menu/products/with-image` with `Content-Type: multipart/form-data`
 
 ### 🎨 UI Components
 
@@ -1319,25 +1324,17 @@ Body: {
 
 ### 📝 Frontend Migration Guide
 
-**Before:**
-```typescript
-// ❌ Old (DEPRECATED)
-const getTemplates = async (businessType: string) => {
-  return await api.get('/admin/menu/templates', {
-    params: { businessType }
-  });
-};
+**Before (DEPRECATED):**
+```
+GET /admin/menu/templates?businessType={type}
 ```
 
-**After:**
-```typescript
-// ✅ New (RECOMMENDED)
-const getTemplates = async (businessType: string) => {
-  return await api.get('/admin/onboarding/default-products', {
-    params: { businessType }
-  });
-};
+**After (RECOMMENDED):**
 ```
+GET /admin/onboarding/default-products?businessType={type}
+```
+
+Both endpoints accept `businessType` query parameter and return the same data structure.
 
 ---
 
@@ -1423,46 +1420,69 @@ Query:
 
 ### 2. Search Products
 
-```typescript
-const searchProducts = async (query: string) => {
-  return await api.get('/admin/menu/products', {
-    params: { q: query, page: 1, limit: 20 }
-  });
-};
+```
+GET /admin/menu/products?q={query}&page=1&limit=20
+```
+
+Example:
+```json
+{
+  "params": {
+    "q": "pizza",
+    "page": 1,
+    "limit": 20
+  }
+}
 ```
 
 ### 3. Quick Availability Toggle
 
-```typescript
-const toggleAvailability = async (productId, isAvailable) => {
-  await api.patch(`/admin/menu/products/${productId}/availability`, {
-    isAvailable
-  });
-};
+```
+PATCH /admin/menu/products/{productId}/availability
+```
+
+Request body:
+```json
+{
+  "isAvailable": true
+}
 ```
 
 ### 4. Bulk Price Increase
 
-```typescript
-const increaseCategoryPrices = async (categoryId, percentage) => {
-  const { data } = await api.get('/admin/menu/products', {
-    params: { categoryId, limit: 1000 }
-  });
+**Step 1**: Get all products in category
+```
+GET /admin/menu/products?categoryId={categoryId}&limit=1000
+```
 
-  await api.patch('/admin/menu/products/bulk-price', {
-    productIds: data.data.map(p => p.id),
-    priceChange: { type: 'percentage', value: percentage }
-  });
-};
+**Step 2**: Extract product IDs from response and update prices
+```
+PATCH /admin/menu/products/bulk-price
+```
+
+Request body:
+```json
+{
+  "productIds": [1, 2, 3, 4, 5],
+  "priceChange": {
+    "type": "percentage",
+    "value": 10
+  }
+}
 ```
 
 ### 5. Validate Menu
 
-```typescript
-const validateMenu = async () => {
-  const { data } = await api.get('/admin/menu/validate');
-  return data; // { errors: [], warnings: [] }
-};
+```
+GET /admin/menu/validate
+```
+
+Response:
+```json
+{
+  "errors": [],
+  "warnings": []
+}
 ```
 
 ---

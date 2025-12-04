@@ -27,7 +27,6 @@
 ### Purpose
 
 PIN management allows managers and administrators to:
-
 - ✅ Generate secure 4-digit PINs for fast POS authentication
 - ✅ View PIN status and expiration dates
 - ✅ Regenerate expired or compromised PINs
@@ -37,7 +36,6 @@ PIN management allows managers and administrators to:
 ### Why PINs?
 
 **PINs provide fast, secure access for POS operations:**
-
 - 🚀 **Speed**: 4-digit PIN faster than phone + password
 - 🔐 **Security**: Hashed with bcrypt, 30-day expiration
 - 🎯 **Convenience**: No need to remember complex passwords for daily shifts
@@ -46,7 +44,6 @@ PIN management allows managers and administrators to:
 ### Multi-Tenant Architecture
 
 **Important**: PIN management respects tenant isolation:
-
 - Every PIN belongs to a specific tenant (restaurant brand)
 - Managers can only manage PINs for employees within their tenant
 - PIN attempts are tracked per tenant automatically
@@ -79,7 +76,6 @@ PIN management allows managers and administrators to:
 ### PIN Security Model
 
 **Key Principles:**
-
 - **One-Time Display**: PIN shown only once after generation (security best practice)
 - **Hashed Storage**: Never stored in plain text (bcrypt with 10 salt rounds)
 - **Time-Limited**: 30-day expiration (configurable via business rules)
@@ -93,20 +89,17 @@ PIN management allows managers and administrators to:
 ### 1. PIN Generation
 
 **Who Can Generate PINs?**
-
 - ✅ Admin users (all employees)
 - ✅ Managers (employees within their branches)
 - ❌ Cashiers/Waiters cannot generate PINs
 
 **When to Generate?**
-
 - After creating a new employee
 - When employee loses/forgets their PIN
 - When PIN is compromised (security incident)
 - When PIN expires (30 days)
 
 **What Happens During Generation?**
-
 1. System generates random 4-digit PIN (1000-9999)
 2. PIN hashed with bcrypt (10 salt rounds)
 3. Expiration date set (30 days from now)
@@ -117,14 +110,13 @@ PIN management allows managers and administrators to:
 
 **3 PIN States:**
 
-| Status      | Description                            | Actions Available                |
-| ----------- | -------------------------------------- | -------------------------------- |
-| **No PIN**  | Employee never had PIN or PIN disabled | Generate PIN                     |
-| **Active**  | PIN exists and not expired             | View Status, Regenerate, Disable |
-| **Expired** | PIN expiration date passed             | Regenerate PIN                   |
+| Status | Description | Actions Available |
+|--------|-------------|-------------------|
+| **No PIN** | Employee never had PIN or PIN disabled | Generate PIN |
+| **Active** | PIN exists and not expired | View Status, Regenerate, Disable |
+| **Expired** | PIN expiration date passed | Regenerate PIN |
 
 **How to Check Status:**
-
 ```http
 GET /auth/pin-status/:employeeId
 
@@ -142,29 +134,26 @@ Response:
 
 **When to Use Each:**
 
-| Scenario                       | Use PIN | Use Password |
-| ------------------------------ | ------- | ------------ |
-| POS Login (fast shifts)        | ✅ Yes  | ❌ No        |
-| Admin Panel Login              | ❌ No   | ✅ Yes       |
-| First-time Setup               | ❌ No   | ✅ Yes       |
-| Sensitive Operations (refunds) | ❌ No   | ✅ Yes       |
+| Scenario | Use PIN | Use Password |
+|----------|---------|--------------|
+| POS Login (fast shifts) | ✅ Yes | ❌ No |
+| Admin Panel Login | ❌ No | ✅ Yes |
+| First-time Setup | ❌ No | ✅ Yes |
+| Sensitive Operations (refunds) | ❌ No | ✅ Yes |
 
 **Why Both?**
-
 - **PIN**: Fast, daily operations (taking orders, processing payments)
 - **Password**: Secure, administrative tasks (changing settings, viewing reports)
 
 ### 4. Rate Limiting
 
 **Protection Against Brute Force:**
-
 - **3 failed attempts** allowed within 15-minute window
 - After 3 failures → **15-minute lockout**
 - Tracked by: IP address, User-Agent, Employee ID
 - Counter resets after successful login
 
 **Example Timeline:**
-
 ```
 10:00 AM - Attempt 1: Wrong PIN (2 attempts left)
 10:02 AM - Attempt 2: Wrong PIN (1 attempt left)
@@ -419,7 +408,6 @@ Step 3: Manager Re-enables PIN (when safe)
 **Scenario:** Employee forgot PIN, tried 3 times, got locked out.
 
 **What Happened:**
-
 ```
 Attempt 1: Wrong PIN → "Invalid PIN (2 attempts remaining)"
 Attempt 2: Wrong PIN → "Invalid PIN (1 attempt remaining)"
@@ -475,7 +463,6 @@ Option 2: Regenerate PIN Immediately
 ### 1. PIN Generation Dialog
 
 **When to Show:**
-
 - Immediately after creating new employee (optional prompt)
 - From employee detail page (action button)
 - From employee list (quick action)
@@ -538,7 +525,6 @@ Option 2: Regenerate PIN Immediately
 ```
 
 **Implementation Notes:**
-
 - Default PIN to masked (e.g., `• • • •`)
 - Require clicking "Show" or "Copy" to reveal
 - Show warning before closing without confirming
@@ -589,7 +575,6 @@ Option 2: Regenerate PIN Immediately
 ```
 
 **Status Colors:**
-
 - ✅ Green: Active, >7 days until expiration
 - 🟡 Yellow: Active, <7 days until expiration (warning)
 - ⚠️ Orange: Expired (action needed)
@@ -651,7 +636,6 @@ Option 2: Regenerate PIN Immediately
 ```
 
 **When to Show:**
-
 - Dashboard widget (PINs expiring in next 7 days)
 - Employee detail page (banner at top)
 - Before starting shift (POS login screen)
@@ -661,9 +645,7 @@ Option 2: Regenerate PIN Immediately
 ## API Endpoints
 
 ### Base URL
-
 All PIN endpoints are under `/auth` (not `/admin`):
-
 ```
 POST   /auth/generate-pin
 POST   /auth/refresh-pin
@@ -680,13 +662,11 @@ POST   /auth/pin-login
 **Endpoint**: `POST /auth/generate-pin`
 
 **Who Can Use:**
-
 - ✅ Admin users (any employee)
 - ✅ Managers (employees in their branches)
 - ❌ Regular employees cannot generate PINs for others
 
 **Request**:
-
 ```http
 POST /auth/generate-pin
 Authorization: Bearer {admin_token}
@@ -698,7 +678,6 @@ Content-Type: application/json
 ```
 
 **Response (Success)**:
-
 ```json
 {
   "pin": "5847",
@@ -708,14 +687,12 @@ Content-Type: application/json
 ```
 
 **Important Notes:**
-
 - ⚠️ PIN shown **only once** in this response
 - Backend immediately hashes PIN after generation
 - If employee already has active PIN, it will be replaced
 - Old PIN becomes invalid immediately
 
 **Response (Error - Forbidden)**:
-
 ```json
 {
   "statusCode": 403,
@@ -725,7 +702,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - Rate Limited)**:
-
 ```json
 {
   "statusCode": 429,
@@ -741,12 +717,10 @@ Content-Type: application/json
 **Endpoint**: `POST /auth/refresh-pin`
 
 **Who Can Use:**
-
 - ✅ Any authenticated employee (for their own PIN)
 - Use case: Employee lost PIN, wants to reset
 
 **Request**:
-
 ```http
 POST /auth/refresh-pin
 Authorization: Bearer {employee_token}
@@ -758,12 +732,10 @@ Content-Type: application/json
 ```
 
 **Why Require Password?**
-
 - Security: Prevents unauthorized PIN reset if device left unlocked
 - Proof of identity: Ensures employee is legitimate owner
 
 **Response (Success)**:
-
 ```json
 {
   "pin": "9234",
@@ -773,7 +745,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - Invalid Password)**:
-
 ```json
 {
   "statusCode": 401,
@@ -789,20 +760,17 @@ Content-Type: application/json
 **Endpoint**: `GET /auth/pin-status/:employeeId`
 
 **Who Can Use:**
-
 - ✅ Admin/Manager (any employee)
 - ✅ Employee (their own status only)
 - Note: Rate limited to prevent enumeration attacks
 
 **Request**:
-
 ```http
 GET /auth/pin-status/123
 Authorization: Bearer {token}
 ```
 
 **Response (Has Active PIN)**:
-
 ```json
 {
   "employeeId": 123,
@@ -817,7 +785,6 @@ Authorization: Bearer {token}
 ```
 
 **Response (Expired PIN)**:
-
 ```json
 {
   "employeeId": 123,
@@ -832,7 +799,6 @@ Authorization: Bearer {token}
 ```
 
 **Response (No PIN)**:
-
 ```json
 {
   "employeeId": 123,
@@ -847,7 +813,6 @@ Authorization: Bearer {token}
 ```
 
 **Response (PIN Disabled)**:
-
 ```json
 {
   "employeeId": 123,
@@ -868,12 +833,10 @@ Authorization: Bearer {token}
 **Endpoint**: `POST /auth/pin-login`
 
 **Who Can Use:**
-
 - ✅ Anyone (unauthenticated endpoint)
 - Used by POS devices for fast login
 
 **Request**:
-
 ```http
 POST /auth/pin-login
 Content-Type: application/json
@@ -885,7 +848,6 @@ Content-Type: application/json
 ```
 
 **Response (Success)**:
-
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -903,7 +865,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - Invalid PIN)**:
-
 ```json
 {
   "statusCode": 401,
@@ -914,7 +875,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - PIN Expired)**:
-
 ```json
 {
   "statusCode": 401,
@@ -924,7 +884,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - PIN Disabled)**:
-
 ```json
 {
   "statusCode": 400,
@@ -934,7 +893,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - Rate Limited)**:
-
 ```json
 {
   "statusCode": 429,
@@ -951,7 +909,6 @@ Content-Type: application/json
 **Endpoint**: `PATCH /admin/staff/employees/:id`
 
 **Request**:
-
 ```http
 PATCH /admin/staff/employees/123
 Authorization: Bearer {admin_token}
@@ -963,13 +920,12 @@ Content-Type: application/json
 ```
 
 **Response**:
-
 ```json
 {
   "id": 123,
   "fullName": "John Doe",
   "pinEnabled": false,
-  "pin": "$2b$10$...", // Hashed, not visible
+  "pin": "$2b$10$...",  // Hashed, not visible
   "pinExpiresAt": "2025-12-24T10:30:00.000Z"
 }
 ```
@@ -981,7 +937,6 @@ Content-Type: application/json
 ### Rate Limiting Rules
 
 #### PIN Login Attempts
-
 - **Limit**: 3 failed attempts per 15 minutes
 - **Scope**: Per employee + IP address + User-Agent
 - **Lockout**: 15 minutes after 3rd failure
@@ -989,37 +944,28 @@ Content-Type: application/json
 
 **Tracking Mechanism:**
 
-```typescript
-// Backend tracks attempts in database
-PinAttempt {
-  id: number
-  employeeId: number
-  tenantId: number
-  ipAddress: string       // e.g., "192.168.1.100"
-  userAgent: string       // e.g., "Mozilla/5.0..."
-  success: boolean        // true = login succeeded, false = failed
-  attemptedAt: Date
-}
+Backend tracks attempts in database with the following data:
 
-// Query to check rate limit:
-SELECT COUNT(*) FROM pin_attempts
-WHERE employeeId = 123
-  AND tenantId = 1
-  AND ipAddress = '192.168.1.100'
-  AND success = false
-  AND attemptedAt > NOW() - INTERVAL '15 minutes'
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | number | Unique attempt ID |
+| `employeeId` | number | Employee who attempted login |
+| `tenantId` | number | Tenant context |
+| `ipAddress` | string | IP address (e.g., "192.168.1.100") |
+| `userAgent` | string | Browser/device identifier |
+| `success` | boolean | true = login succeeded, false = failed |
+| `attemptedAt` | Date | Timestamp of attempt |
 
-// If count >= 3 → Block with HTTP 429
-```
+**Rate Limit Check Logic:**
+- Count failed attempts in last 15 minutes for given employee + IP + user agent
+- If count >= 3 → Block with HTTP 429
 
 #### PIN Generation Requests
-
 - **Limit**: 10 generations per hour (per manager)
 - **Purpose**: Prevent abuse (regenerating PINs repeatedly)
 - **Scope**: Per admin/manager user
 
 #### PIN Status Checks
-
 - **Limit**: 100 requests per hour (per user)
 - **Purpose**: Prevent enumeration attacks
 - **Scope**: Per user
@@ -1050,14 +996,14 @@ WHERE employeeId = 123
 
 ### Common Errors
 
-| Status  | Error                       | Cause                            | Solution                              |
-| ------- | --------------------------- | -------------------------------- | ------------------------------------- |
-| **400** | PIN authentication disabled | Employee has `pinEnabled: false` | Enable PIN via employee settings      |
-| **401** | Invalid PIN                 | Wrong PIN entered                | Check PIN and retry (2 attempts left) |
-| **401** | PIN expired                 | PIN older than 30 days           | Regenerate PIN via admin panel        |
-| **403** | Permission denied           | User lacks admin/manager role    | Login as manager or admin             |
-| **404** | Employee not found          | Invalid employee ID              | Verify employee exists                |
-| **429** | Too many attempts           | Rate limit exceeded (3 failures) | Wait 15 minutes or regenerate PIN     |
+| Status | Error | Cause | Solution |
+|--------|-------|-------|----------|
+| **400** | PIN authentication disabled | Employee has `pinEnabled: false` | Enable PIN via employee settings |
+| **401** | Invalid PIN | Wrong PIN entered | Check PIN and retry (2 attempts left) |
+| **401** | PIN expired | PIN older than 30 days | Regenerate PIN via admin panel |
+| **403** | Permission denied | User lacks admin/manager role | Login as manager or admin |
+| **404** | Employee not found | Invalid employee ID | Verify employee exists |
+| **429** | Too many attempts | Rate limit exceeded (3 failures) | Wait 15 minutes or regenerate PIN |
 
 ### Error Response Format
 
@@ -1077,13 +1023,13 @@ WHERE employeeId = 123
 
 **Display to End Users:**
 
-| Backend Error      | User-Friendly Message                                                          |
-| ------------------ | ------------------------------------------------------------------------------ |
-| Invalid PIN        | "Incorrect PIN. You have 2 attempts remaining."                                |
-| PIN expired        | "Your PIN has expired. Please ask your manager for a new one."                 |
-| PIN disabled       | "PIN login is currently disabled. Please use your password instead."           |
-| Rate limited       | "Too many incorrect attempts. Please wait 12 minutes or contact your manager." |
-| Employee not found | "Employee not found. Please check your Employee ID."                           |
+| Backend Error | User-Friendly Message |
+|---------------|----------------------|
+| Invalid PIN | "Incorrect PIN. You have 2 attempts remaining." |
+| PIN expired | "Your PIN has expired. Please ask your manager for a new one." |
+| PIN disabled | "PIN login is currently disabled. Please use your password instead." |
+| Rate limited | "Too many incorrect attempts. Please wait 12 minutes or contact your manager." |
+| Employee not found | "Employee not found. Please check your Employee ID." |
 
 ---
 
@@ -1092,7 +1038,6 @@ WHERE employeeId = 123
 ### For Admin Panel Developers
 
 ✅ **DO:**
-
 - Show PIN immediately after generation in modal/dialog
 - Mask PIN by default, reveal on explicit user action (click "Show")
 - Warn user before closing PIN dialog ("Did you save the PIN?")
@@ -1103,7 +1048,6 @@ WHERE employeeId = 123
 - Cache PIN status to reduce API calls (with 5-minute TTL)
 
 ❌ **DON'T:**
-
 - Don't store PIN in frontend state/localStorage (security risk)
 - Don't auto-close PIN dialog (user might not have saved it)
 - Don't allow PIN regeneration without confirmation
@@ -1113,7 +1057,6 @@ WHERE employeeId = 123
 ### For POS Developers
 
 ✅ **DO:**
-
 - Implement numeric keypad for PIN entry (faster than keyboard)
 - Show remaining attempts after failed login
 - Display lockout timer clearly ("Try again in 12 minutes")
@@ -1122,7 +1065,6 @@ WHERE employeeId = 123
 - Vibrate/beep on failed attempt (tactile feedback)
 
 ❌ **DON'T:**
-
 - Don't show PIN in plain text on screen (shoulder surfing risk)
 - Don't cache employee PINs locally (security violation)
 - Don't allow unlimited retry attempts (bypass rate limiting)
@@ -1130,7 +1072,6 @@ WHERE employeeId = 123
 ### For Managers
 
 ✅ **DO:**
-
 - Generate PINs immediately after creating employees
 - Share PINs securely (phone call, SMS, in-person)
 - Regenerate PINs regularly (every 30 days automatic)
@@ -1138,7 +1079,6 @@ WHERE employeeId = 123
 - Disable PINs for inactive employees
 
 ❌ **DON'T:**
-
 - Don't share PINs via email or public chat (insecure)
 - Don't write PINs on paper left in public areas
 - Don't reuse the same PIN across multiple employees
@@ -1151,13 +1091,11 @@ WHERE employeeId = 123
 ### 1. SMS Notification for PINs
 
 **Planned Feature:**
-
 - Automatically send PIN via SMS after generation
 - Include expiration date in message
 - Resend PIN on request (rate limited)
 
 **API Design (Future)**:
-
 ```http
 POST /auth/generate-pin
 {
@@ -1175,7 +1113,6 @@ Response:
 ```
 
 **SMS Message Template:**
-
 ```
 Your Horyco POS PIN: 5847
 Valid until: Dec 24, 2025
@@ -1186,14 +1123,12 @@ Do not share this PIN.
 ### 2. Custom PIN Length
 
 **Planned Feature:**
-
 - Allow tenants to choose PIN length (4 or 6 digits)
 - Configurable via tenant settings
 
 ### 3. PIN Complexity Rules
 
 **Planned Feature:**
-
 - Prevent sequential PINs (e.g., 1234, 9876)
 - Prevent repeated digits (e.g., 1111, 5555)
 - Blacklist common PINs (e.g., 0000, 1234)
@@ -1201,7 +1136,6 @@ Do not share this PIN.
 ### 4. PIN History
 
 **Planned Feature:**
-
 - Track all PIN generations/regenerations
 - Show who generated PIN and when
 - Prevent reusing recent PINs
@@ -1260,7 +1194,6 @@ Do not share this PIN.
 ### Q: Can employees see their own PIN?
 
 **No.** Employees cannot retrieve their PIN via API. If they forget it, they must:
-
 1. Ask manager to regenerate (recommended)
 2. Use "Refresh PIN" with current password (self-service)
 
@@ -1279,7 +1212,6 @@ Do not share this PIN.
 ### Q: How is tenant isolation enforced for PINs?
 
 **Automatic via AsyncLocalStorage.** When you login with a PIN, the backend:
-
 1. Validates PIN belongs to employee
 2. Validates employee belongs to authenticated tenant
 3. Rejects if tenant mismatch
@@ -1291,21 +1223,18 @@ You never need to manually filter by tenant.
 ## Support
 
 **Issues with PIN management?**
-
 - Check employee has `pinEnabled: true`
 - Verify PIN not expired (check `expiresAt`)
 - Check rate limits (wait 15 minutes after 3 failures)
 - Verify JWT token is valid (not expired)
 
 **Security concerns?**
-
 - Contact your security team immediately
 - Regenerate all affected PINs
 - Review audit logs for suspicious activity
 - Consider temporarily disabling PIN auth
 
 **Questions?**
-
 - Swagger UI: http://localhost:3000/api/docs
 - Slack: #backend-api
 - Email: dev@horyco.com

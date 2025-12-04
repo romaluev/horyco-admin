@@ -45,3 +45,24 @@ export interface IRefreshPinRequest {
  * PIN status for display
  */
 export type PinStatus = 'active' | 'expired' | 'disabled' | 'none'
+
+/**
+ * Response from PIN login endpoint
+ * Includes access token and employee data with branchPermissions
+ */
+export interface IPinLoginResponse {
+  accessToken: string
+  refreshToken?: string
+  tokenType: string
+  expiresIn: number
+  employee: {
+    id: number
+    fullName: string
+    phone: string
+    tenantId: number
+    branchPermissions: Record<string, string[]> // Map of branchId -> permissions[]
+  }
+  hasActiveSession?: boolean
+  activeSessionId?: number
+  sessionOpenedAt?: string
+}

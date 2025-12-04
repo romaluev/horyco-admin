@@ -16,7 +16,7 @@ interface AuthState {
   token: string | null
 
   // Actions
-  login: (phone: string, password: string) => Promise<void>
+  login: (phone: string, password: string, tenantSlug?: string) => Promise<void>
   logout: () => void
   clearError: () => void
   me: () => Promise<void>
@@ -34,13 +34,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   error: null,
 
   // Login action
-  login: async (phone: string, password: string) => {
+  login: async (phone: string, password: string, tenantSlug?: string) => {
     try {
       set({ isLoading: true, error: null })
 
       const response = await authApi.login({
         phone,
         password,
+        tenantSlug,
       })
 
       // Extract token from nested structure

@@ -19,9 +19,10 @@ export interface IRole {
 export interface IEmployee {
   // Required fields
   id: number
+  authUserId?: number // Global auth_users.id for multi-tenant identity
   fullName: string
   phone: string
-  password: string
+  password?: string
 
   // Optional fields
   email?: string
@@ -36,12 +37,14 @@ export interface IEmployee {
 
   // System fields
   tenantId: number
+  tenantName?: string
   activeBranchId: number
   isActive: boolean
+  isOwner?: boolean // Whether this employee is the tenant owner
   status?: 'active' | 'inactive' | 'suspended' | 'terminated'
   lastLoginAt?: string
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
   createdBy?: number
   deletedAt?: string
   deletedBy?: number
@@ -51,6 +54,9 @@ export interface IEmployee {
   pin?: string
   pinExpiresAt?: string
   pinEnabled?: boolean
+
+  // Permission-related fields
+  branchPermissions?: Record<string, string[]> // Map of branchId -> permissions[]
 
   // Relationships (may not always be populated)
   roles?: IRole[]

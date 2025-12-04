@@ -5,6 +5,7 @@
 export interface AuthRequest {
   phone: string
   password: string
+  tenantSlug?: string // Optional for multi-tenant disambiguation
 }
 
 /**
@@ -20,15 +21,72 @@ export interface AuthResponse {
     expiresIn: number
     employee: {
       id: number
+      authUserId?: number // auth_users.id for identity management
       phone: string
       fullName: string
-      roles: string[]
       tenantId: number
+      tenantName?: string
       activeBranchId: number
+      isOwner: boolean
+      branchPermissions: Record<string, string[]> // Map of branchId -> permissions[]
     }
   }
   timestamp: string
   requestId: string
+}
+
+/**
+ * Magic Link / Invite - Verify invitation token
+ */
+export interface VerifyInviteRequest {
+  token: string
+}
+
+/**
+ * Magic Link / Invite - Verify invitation response
+ */
+export interface VerifyInviteResponse {
+  valid: boolean
+  tenantId?: number
+  tenantName?: string
+  ownerPhone?: string
+  ownerEmail?: string
+  requiresPassword?: boolean
+  expiresAt?: string
+  daysRemaining?: number
+  message?: string
+}
+
+/**
+ * Magic Link / Invite - Complete invitation (set password)
+ */
+export interface CompleteInviteRequest {
+  token: string
+  password: string
+}
+
+/**
+ * Magic Link / Invite - Complete invitation response
+ */
+export interface CompleteInviteResponse {
+  success: boolean
+  accessToken: string
+  refreshToken: string
+  tokenType: string
+  expiresIn: number
+  user?: {
+    id: number
+    fullName: string
+    phone: string
+    email?: string
+    isOwner: boolean
+  }
+  tenant?: {
+    id: number
+    name: string
+    slug: string
+  }
+  message?: string
 }
 
 /**
@@ -89,6 +147,7 @@ export interface CompleteRegistrationRequest {
   fullName: string
   email?: string
   password: string
+  businessName?: string // Business name from OTP request
 }
 
 /**
@@ -103,11 +162,14 @@ export interface CompleteRegistrationResponse {
     expiresIn: number
     employee: {
       id: number
+      authUserId?: number // auth_users.id for identity management
       phone: string
       fullName: string
-      roles: string[]
       tenantId: number
+      tenantName?: string
       activeBranchId: number
+      isOwner: boolean
+      branchPermissions: Record<string, string[]> // Map of branchId -> permissions[]
     }
   }
   timestamp: string
@@ -144,7 +206,7 @@ export interface ErrorResponse {
 export interface IUser {
   id: number
   fullName: string
-  password: string
+  password?: string // Optional - not exposed in API responses
   phone: string
   photoUrl?: string | null
   avatar?: {

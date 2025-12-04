@@ -50,6 +50,9 @@ Tenant (Restaurant Chain)
 
 **Endpoint:** `GET /admin/branches`
 
+**Query Parameters:**
+- `search` (optional): Search by branch name or address
+
 **Response:**
 ```json
 [
@@ -164,9 +167,9 @@ Tenant (Restaurant Chain)
 
 ## Update Branch
 
-**Endpoint:** `PATCH /admin/branches/:id`
+**Endpoint:** `PUT /admin/branches/:id`
 
-**Request (partial update):**
+**Request (full or partial update):**
 ```json
 {
   "phoneNumber": "+998901111111",
@@ -254,48 +257,46 @@ Tenant (Restaurant Chain)
 **Endpoint:** `GET /admin/branches/:id/statistics?period=week`
 
 **Query Parameters:**
-- `period`: `today` | `week` | `month` | `year`
+- `period`: `today` | `week` | `month` (defaults to `week`)
 
 **Response:**
 ```json
 {
-  "branchId": 1,
-  "branchName": "Downtown Branch",
-  "period": "week",
-  "startDate": "2025-03-01",
-  "endDate": "2025-03-07",
-  "revenue": {
-    "total": 5400000,
-    "cash": 2100000,
-    "card": 2800000,
-    "digital": 500000
-  },
-  "orders": {
-    "total": 342,
-    "completed": 338,
-    "cancelled": 4,
-    "averageValue": 15789
-  },
-  "capacity": {
-    "totalSeats": 80,
-    "averageOccupancy": 0.68,
-    "peakHour": "19:00",
-    "peakOccupancy": 0.95
-  },
-  "topProducts": [
-    {
-      "productId": 15,
-      "productName": "Margherita Pizza",
-      "quantitySold": 125,
-      "revenue": 890000
-    },
-    {
-      "productId": 8,
-      "productName": "Carbonara Pasta",
-      "quantitySold": 98,
-      "revenue": 745000
-    }
-  ]
+  "ordersCount": 150,
+  "revenue": 7500000,
+  "capacity": 120,
+  "employeeCount": 25,
+  "tableCount": 30,
+  "activeTableCount": 15,
+  "period": "week"
+}
+```
+
+**Example Responses:**
+
+**Weekly statistics:**
+```json
+{
+  "ordersCount": 150,
+  "revenue": 7500000,
+  "capacity": 120,
+  "employeeCount": 25,
+  "tableCount": 30,
+  "activeTableCount": 15,
+  "period": "week"
+}
+```
+
+**Today statistics:**
+```json
+{
+  "ordersCount": 32,
+  "revenue": 1200000,
+  "capacity": 120,
+  "employeeCount": 25,
+  "tableCount": 30,
+  "activeTableCount": 8,
+  "period": "today"
 }
 ```
 
@@ -581,11 +582,15 @@ Tenant (Restaurant Chain)
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
-| `GET` | `/admin/branches` | List all branches |
+| `GET` | `/admin/branches` | List all branches (supports ?search) |
 | `GET` | `/admin/branches/:id` | Get branch details |
 | `POST` | `/admin/branches` | Create branch |
-| `PATCH` | `/admin/branches/:id` | Update branch |
+| `PUT` | `/admin/branches/:id` | Update branch |
 | `DELETE` | `/admin/branches/:id` | Delete branch |
 | `GET` | `/admin/branches/:id/can-delete` | Check if can delete |
-| `GET` | `/admin/branches/:id/statistics` | Get branch stats |
+| `GET` | `/admin/branches/:id/statistics` | Get branch stats (period: today/week/month) |
 | `POST` | `/admin/branches/bulk` | Bulk create branches |
+| `GET` | `/admin/branches/:id/halls` | Get all halls in a branch (see ADMIN_TABLE_MANAGEMENT.md) |
+| `POST` | `/admin/branches/:id/halls` | Create hall in branch (see ADMIN_TABLE_MANAGEMENT.md) |
+
+**Note:** Hall and table management endpoints are documented in detail in ADMIN_TABLE_MANAGEMENT.md

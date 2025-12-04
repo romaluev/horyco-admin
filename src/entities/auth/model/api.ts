@@ -13,6 +13,10 @@ import type {
   SendOTPResponse,
   VerifyOTPRequest,
   VerifyOTPResponse,
+  VerifyInviteRequest,
+  VerifyInviteResponse,
+  CompleteInviteRequest,
+  CompleteInviteResponse,
 } from '.'
 import type { IEmployee } from '@/entities/employee'
 
@@ -189,5 +193,49 @@ export const authApi = {
       data
     )
     return response.data.data
+  },
+
+  /**
+   * Verify magic link / invitation token
+   * @param data - Invitation token
+   * @returns Promise with invitation verification result
+   */
+  verifyInvite: async (
+    data: VerifyInviteRequest
+  ): Promise<VerifyInviteResponse> => {
+    const response = await api.post<VerifyInviteResponse>(
+      '/auth/invite/verify',
+      data
+    )
+    return response.data
+  },
+
+  /**
+   * Complete invitation by setting password
+   * @param data - Invitation token and password
+   * @returns Promise with invitation completion result
+   */
+  completeInvite: async (
+    data: CompleteInviteRequest
+  ): Promise<CompleteInviteResponse> => {
+    const response = await api.post<CompleteInviteResponse>(
+      '/auth/invite/complete',
+      data
+    )
+
+    // Store tokens from response
+    if (response.data.success) {
+      const { accessToken, refreshToken, expiresIn } = response.data
+
+      console.log('Saving access token from invite:', accessToken)
+      console.log('Saving refresh token from invite:', refreshToken)
+      console.log('Token expires in:', expiresIn, 'seconds')
+
+      storeTokens(accessToken, refreshToken, expiresIn)
+
+      console.log('Cookie after setting:', Cookies.get('access_token'))
+    }
+
+    return response.data
   },
 }

@@ -155,26 +155,26 @@ All settings are **predefined in code** with validation schemas. You cannot crea
 **Branding Categories**:
 
 1. **Brand Identity**:
-  - `brand.name` - Business name
-  - `brand.description` - Business description
-  - `brand.logo.url` - Logo image URL
-  - `brand.logo.dark.url` - Dark theme logo
-  - `brand.favicon.url` - Favicon URL
+   - `brand.name` - Business name
+   - `brand.description` - Business description
+   - `brand.logo.url` - Logo image URL
+   - `brand.logo.dark.url` - Dark theme logo
+   - `brand.favicon.url` - Favicon URL
 
 2. **Visual Design**:
-  - `brand.primary_color` - Primary brand color (hex)
-  - `brand.secondary_color` - Secondary color (hex)
+   - `brand.primary_color` - Primary brand color (hex)
+   - `brand.secondary_color` - Secondary color (hex)
 
 3. **Social Media**:
-  - `brand.social.facebook` - Facebook page URL
-  - `brand.social.instagram` - Instagram handle
-  - `brand.social.telegram` - Telegram channel
-  - `brand.social.website` - Business website
+   - `brand.social.facebook` - Facebook page URL
+   - `brand.social.instagram` - Instagram handle
+   - `brand.social.telegram` - Telegram channel
+   - `brand.social.website` - Business website
 
 4. **Contact**:
-  - `brand.contact.phone` - Primary phone number
-  - `brand.contact.email` - Contact email
-  - `brand.contact.address` - Physical address
+   - `brand.contact.phone` - Primary phone number
+   - `brand.contact.email` - Contact email
+   - `brand.contact.address` - Physical address
 
 ### Endpoint: `PUT /admin/settings/branding`
 
@@ -602,7 +602,7 @@ Delivery Enabled: ON
 1. Display branch settings with override indicators
 2. User clicks "Reset to Default" button next to overridden setting
 3. Call `DELETE /admin/settings/{category}?branchId={id}&key={settingKey}`
-  - *(Note: This endpoint may need implementation)*
+   - *(Note: This endpoint may need implementation)*
 4. Or: Call PUT with null/undefined value to remove override
 5. Refresh settings to show tenant default now applies
 6. Show success: "Branch override removed. Now using tenant default."
@@ -681,24 +681,24 @@ Delivery Enabled: ON
 ### Error Handling Best Practices
 
 1. **Validation Before Submit**:
-  - Validate format client-side (colors, URLs, phone numbers)
-  - Disable submit button until valid
-  - Show inline validation errors
+   - Validate format client-side (colors, URLs, phone numbers)
+   - Disable submit button until valid
+   - Show inline validation errors
 
 2. **API Error Display**:
-  - Show user-friendly error messages (not raw API errors)
-  - Display errors near relevant form fields
-  - Provide actionable guidance ("Check your input" vs "An error occurred")
+   - Show user-friendly error messages (not raw API errors)
+   - Display errors near relevant form fields
+   - Provide actionable guidance ("Check your input" vs "An error occurred")
 
 3. **Optimistic Updates**:
-  - Update UI immediately on toggle switches
-  - Revert if API call fails
-  - Show error notification if revert occurs
+   - Update UI immediately on toggle switches
+   - Revert if API call fails
+   - Show error notification if revert occurs
 
 4. **Retry Logic**:
-  - Allow user to retry failed operations
-  - Don't lose form data on error
-  - Add "Retry" button in error notifications
+   - Allow user to retry failed operations
+   - Don't lose form data on error
+   - Add "Retry" button in error notifications
 
 ---
 
@@ -752,28 +752,24 @@ Delivery Enabled: ON
 
 ### AllSettingsResponseDto
 
-```typescript
-{
-  tenantId: number,
-  branchId?: number,
-  branding: Record<string, SettingValueResponseDto>,
-  features: Record<string, SettingValueResponseDto>,
-  payments: Record<string, SettingValueResponseDto>,
-  sms: Record<string, SettingValueResponseDto>
-}
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `tenantId` | number | Tenant identifier |
+| `branchId` | number (optional) | Branch identifier (if branch-specific) |
+| `branding` | object | Map of branding settings with metadata |
+| `features` | object | Map of feature flag settings with metadata |
+| `payments` | object | Map of payment settings with metadata |
+| `sms` | object | Map of SMS settings with metadata |
 
 ### SettingValueResponseDto
 
-```typescript
-{
-  key: string,              // e.g., "brand.name"
-  value: string | number | boolean | object,
-  scope: 'tenant' | 'branch',
-  isOverride: boolean,
-  inheritedFrom?: string    // Branch ID or 'tenant'
-}
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `key` | string | Setting identifier (e.g., "brand.name") |
+| `value` | string \| number \| boolean \| object | Actual setting value |
+| `scope` | 'tenant' \| 'branch' | Which level this value applies to |
+| `isOverride` | boolean | true if branch overrides tenant default |
+| `inheritedFrom` | string (optional) | Branch ID or 'tenant' |
 
 ### BrandingSettingsResponseDto
 
