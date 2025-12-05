@@ -53,8 +53,10 @@ export const useTogglePinEnabled = () => {
   return useMutation({
     mutationFn: ({ employeeId, enabled }: { employeeId: number; enabled: boolean }) =>
       togglePinEnabled(employeeId, enabled),
-    onSuccess: (_, { employeeId, enabled }) => {
+    onSuccess: (data, { employeeId, enabled }) => {
       queryClient.invalidateQueries({ queryKey: pinKeys.status(employeeId) })
+      // Update cache with returned data
+      queryClient.setQueryData(pinKeys.status(employeeId), data)
       toast.success(
         enabled
           ? 'PIN аутентификация включена'

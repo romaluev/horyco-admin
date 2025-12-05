@@ -32,10 +32,13 @@ interface ApiResponse<T> {
 export const generatePin = async (
   employeeId: number
 ): Promise<IPinGenerateResponse> => {
-  const response = await api.post<IPinGenerateResponse>('/auth/generate-pin', {
-    employeeId,
-  })
-  return response.data
+  const response = await api.post<ApiResponse<IPinGenerateResponse>>(
+    '/auth/generate-pin',
+    {
+      employeeId,
+    }
+  )
+  return response.data.data
 }
 
 /**
@@ -48,10 +51,13 @@ export const generatePin = async (
 export const refreshOwnPin = async (
   currentPassword: string
 ): Promise<IPinGenerateResponse> => {
-  const response = await api.post<IPinGenerateResponse>('/auth/refresh-pin', {
-    currentPassword,
-  })
-  return response.data
+  const response = await api.post<ApiResponse<IPinGenerateResponse>>(
+    '/auth/refresh-pin',
+    {
+      currentPassword,
+    }
+  )
+  return response.data.data
 }
 
 /**
@@ -80,10 +86,14 @@ export const getPinStatus = async (
 export const togglePinEnabled = async (
   employeeId: number,
   enabled: boolean
-): Promise<void> => {
-  await api.patch(`/admin/staff/employees/${employeeId}`, {
-    pinEnabled: enabled,
-  })
+): Promise<IPinStatusResponse> => {
+  const response = await api.patch<ApiResponse<IPinStatusResponse>>(
+    `/admin/staff/employees/${employeeId}`,
+    {
+      pinEnabled: enabled,
+    }
+  )
+  return response.data.data
 }
 
 /**
