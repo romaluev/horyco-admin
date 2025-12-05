@@ -23,6 +23,8 @@ import { useUpdateEmployee } from '@/entities/employee'
 import { PinManagementSection } from '@/entities/pin'
 
 import { EmployeeFormBasic } from './employee-form-basic'
+import { EmployeeFormBranches } from './employee-form-branches'
+import { EmployeeFormRoles } from './employee-form-roles'
 import { EmployeePermissionsEditor } from '@/features/employee-permissions'
 import { updateEmployeeSchema } from '../model/contract'
 
@@ -46,6 +48,9 @@ export const UpdateEmployeeDialog = ({
       birthDate: employee.birthDate,
       hireDate: employee.hireDate,
       notes: employee.notes,
+      roleIds: employee.roles?.map((r) => r.id) || [],
+      branchIds: employee.branches?.map((b) => b.id) || [],
+      activeBranchId: employee.activeBranchId,
     },
   })
 
@@ -59,6 +64,9 @@ export const UpdateEmployeeDialog = ({
         birthDate: employee.birthDate,
         hireDate: employee.hireDate,
         notes: employee.notes,
+        roleIds: employee.roles?.map((r) => r.id) || [],
+        branchIds: employee.branches?.map((b) => b.id) || [],
+        activeBranchId: employee.activeBranchId,
       })
     }
   }, [isOpen, employee, form])
@@ -92,10 +100,12 @@ export const UpdateEmployeeDialog = ({
         </DialogHeader>
 
         <Tabs defaultValue="info" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="info">Информация</TabsTrigger>
-            <TabsTrigger value="pin">PIN</TabsTrigger>
+            <TabsTrigger value="roles">Роли</TabsTrigger>
+            <TabsTrigger value="branches">Филиалы</TabsTrigger>
             <TabsTrigger value="permissions">Разрешения</TabsTrigger>
+            <TabsTrigger value="pin">PIN</TabsTrigger>
           </TabsList>
 
           {/* Basic Info Tab */}
@@ -121,11 +131,50 @@ export const UpdateEmployeeDialog = ({
             </form>
           </TabsContent>
 
-          {/* PIN Tab */}
-          <TabsContent value="pin">
-            <div className="my-6">
-              <PinManagementSection employee={employee} />
-            </div>
+          {/* Roles Tab */}
+          <TabsContent value="roles">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="my-6">
+                <EmployeeFormRoles form={form as any} />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </TabsContent>
+
+          {/* Branches Tab */}
+          <TabsContent value="branches">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="my-6">
+                <EmployeeFormBranches form={form as any} />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+                </Button>
+              </DialogFooter>
+            </form>
           </TabsContent>
 
           {/* Permissions Tab */}
@@ -148,6 +197,13 @@ export const UpdateEmployeeDialog = ({
                   </p>
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          {/* PIN Tab */}
+          <TabsContent value="pin">
+            <div className="my-6">
+              <PinManagementSection employee={employee} />
             </div>
           </TabsContent>
         </Tabs>
