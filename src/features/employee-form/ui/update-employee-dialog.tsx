@@ -22,10 +22,8 @@ import {
 import { useUpdateEmployee } from '@/entities/employee'
 import { PinManagementSection } from '@/entities/pin'
 
-import { EmployeeFormBasic } from './employee-form-basic'
-import { EmployeeFormBranches } from './employee-form-branches'
-import { EmployeeFormRoles } from './employee-form-roles'
-import { EmployeePermissionsEditor } from '@/features/employee-permissions'
+import { UpdateBranchPermissionsManager } from './update-branch-permissions-manager'
+import { UpdateEmployeeFormBasic } from './update-employee-form-basic'
 import { updateEmployeeSchema } from '../model/contract'
 
 import type { UpdateEmployeeFormData } from '../model/contract'
@@ -35,10 +33,37 @@ interface UpdateEmployeeDialogProps {
   employee: IEmployee
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const UpdateEmployeeDialog = ({
   employee,
 }: UpdateEmployeeDialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  // Get branch IDs from branchPermissions (which includes all assigned branches)
+  const getInitialBranchIds = (): number[] => {
+    // Check if branchPermissions is an array (from API response)
+    if (Array.isArray(employee.branchPermissions)) {
+      const branchIds = Array.from(
+        new Set(
+          employee.branchPermissions.map((bp) =>
+            (bp as { branchId: number }).branchId
+          )
+        )
+      )
+      return branchIds
+    }
+
+    // Check if branches is populated (fallback)
+    if (employee.branches && Array.isArray(employee.branches)) {
+      return employee.branches.map((b) => b.id)
+    }
+
+    return []
+  }
+
+  const [selectedBranchIds, setSelectedBranchIds] = useState<number[]>(
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getInitialBranchIds()
+  )
 
   const form = useForm<UpdateEmployeeFormData>({
     resolver: zodResolver(updateEmployeeSchema),
@@ -48,7 +73,6 @@ export const UpdateEmployeeDialog = ({
       birthDate: employee.birthDate,
       hireDate: employee.hireDate,
       notes: employee.notes,
-      roleIds: employee.roles?.map((r) => r.id) || [],
       branchIds: employee.branches?.map((b) => b.id) || [],
       activeBranchId: employee.activeBranchId,
     },
@@ -56,24 +80,32 @@ export const UpdateEmployeeDialog = ({
 
   const { mutate: updateEmployee, isPending } = useUpdateEmployee()
 
+  // Check if branches have changed
+  const initialBranchIds = getInitialBranchIds()
+  const isBranchesChanged =
+    selectedBranchIds.length !== initialBranchIds.length ||
+    selectedBranchIds.some((id) => !initialBranchIds.includes(id))
+
   useEffect(() => {
     if (isOpen) {
+      const branchIds = getInitialBranchIds()
+      setSelectedBranchIds(branchIds)
       form.reset({
         fullName: employee.fullName,
         email: employee.email || '',
         birthDate: employee.birthDate,
         hireDate: employee.hireDate,
         notes: employee.notes,
-        roleIds: employee.roles?.map((r) => r.id) || [],
-        branchIds: employee.branches?.map((b) => b.id) || [],
+        branchIds,
         activeBranchId: employee.activeBranchId,
       })
     }
-  }, [isOpen, employee, form])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, employee])
 
   const onSubmit = (data: UpdateEmployeeFormData): void => {
     updateEmployee(
-      { id: employee.id, data },
+      { id: employee.id, data: { ...data, branchIds: selectedBranchIds } },
       {
         onSuccess: () => {
           setIsOpen(false)
@@ -100,11 +132,9 @@ export const UpdateEmployeeDialog = ({
         </DialogHeader>
 
         <Tabs defaultValue="info" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="info">Информация</TabsTrigger>
-            <TabsTrigger value="roles">Роли</TabsTrigger>
-            <TabsTrigger value="branches">Филиалы</TabsTrigger>
-            <TabsTrigger value="permissions">Разрешения</TabsTrigger>
+            <TabsTrigger value="branches-permissions">Филиалы</TabsTrigger>
             <TabsTrigger value="pin">PIN</TabsTrigger>
           </TabsList>
 
@@ -112,7 +142,7 @@ export const UpdateEmployeeDialog = ({
           <TabsContent value="info">
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="my-6 space-y-6">
-                <EmployeeFormBasic form={form as any} />
+                <UpdateEmployeeFormBasic form={form} />
               </div>
 
               <DialogFooter>
@@ -131,73 +161,31 @@ export const UpdateEmployeeDialog = ({
             </form>
           </TabsContent>
 
-          {/* Roles Tab */}
-          <TabsContent value="roles">
+          {/* Branches and Permissions Tab */}
+          <TabsContent value="branches-permissions">
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="my-6">
-                <EmployeeFormRoles form={form as any} />
-              </div>
-
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Отмена
-                </Button>
-                <Button type="submit" disabled={isPending}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </TabsContent>
-
-          {/* Branches Tab */}
-          <TabsContent value="branches">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="my-6">
-                <EmployeeFormBranches form={form as any} />
-              </div>
-
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Отмена
-                </Button>
-                <Button type="submit" disabled={isPending}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </TabsContent>
-
-          {/* Permissions Tab */}
-          <TabsContent value="permissions">
-            <div className="my-6">
-              {employee.branches && employee.branches.length > 0 ? (
-                <EmployeePermissionsEditor
+                <UpdateBranchPermissionsManager
                   employeeId={employee.id}
-                  branches={employee.branches}
-                  onSave={() => {
-                    // Optionally refetch employee data or show success message
-                    setIsOpen(false)
-                  }}
+                  selectedBranchIds={selectedBranchIds}
+                  onBranchesChange={setSelectedBranchIds}
                 />
-              ) : (
-                <div className="rounded-lg border p-4 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Сотрудник не назначен ни одному филиалу.
-                    Сначала добавьте филиалы в информацию сотрудника.
-                  </p>
-                </div>
-              )}
-            </div>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Отмена
+                </Button>
+                <Button type="submit" disabled={isPending || !isBranchesChanged}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+                </Button>
+              </DialogFooter>
+            </form>
           </TabsContent>
 
           {/* PIN Tab */}

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   Button,
   Dialog,
@@ -15,10 +16,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  BaseLoading,
   Alert,
   AlertDescription,
 } from '@/shared/ui'
+
+import { employeeApi } from '@/entities/employee'
 
 interface PermissionCopyDialogProps {
   isOpen: boolean
@@ -30,6 +32,7 @@ interface PermissionCopyDialogProps {
   onCopySuccess: (toBranchId: number, permissionIds: number[]) => void
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const PermissionCopyDialog = ({
   isOpen,
   onClose,
@@ -56,9 +59,17 @@ export const PermissionCopyDialog = ({
 
     setIsLoading(true)
     try {
-      // Here we would call the API to copy permissions
-      // For now, we'll just update the UI
+      await employeeApi.copyPermissions(employeeId, {
+        fromBranchId: sourceBranchId,
+        toBranchId: targetBranchId,
+      })
+      toast.success('Разрешения успешно скопированы')
       onCopySuccess(targetBranchId, sourcePermissionIds)
+      onClose()
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Ошибка при копировании'
+      toast.error(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -88,14 +99,14 @@ export const PermissionCopyDialog = ({
 
           {/* Target Branch Selector */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">
+            <label htmlFor="target-branch" className="text-sm font-medium">
               Куда скопировать
             </label>
             <Select
               value={targetBranchId?.toString()}
               onValueChange={(value) => setTargetBranchId(Number(value))}
             >
-              <SelectTrigger>
+              <SelectTrigger id="target-branch">
                 <SelectValue placeholder="Выберите целевой филиал" />
               </SelectTrigger>
               <SelectContent>
@@ -134,7 +145,7 @@ export const PermissionCopyDialog = ({
             onClick={handleCopy}
             disabled={!targetBranchId || isLoading}
           >
-            {isLoading && <BaseLoading />}
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Копирование...' : 'Копировать'}
           </Button>
         </DialogFooter>

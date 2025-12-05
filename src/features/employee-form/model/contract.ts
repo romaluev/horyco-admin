@@ -14,16 +14,15 @@ export const createEmployeeSchema = z.object({
   hireDate: z.string().optional(),
   notes: z.string().optional(),
 
-  // Step 2: Roles
-  roleIds: z.array(z.number()).min(1, 'Выберите хотя бы одну роль'),
+  // Roles (optional - not required in creation flow)
+  roleIds: z.array(z.number()).optional().default([]),
 
-  // Step 3: Branches
+  // Step 2: Branches
   branchIds: z.array(z.number()).min(1, 'Выберите хотя бы один филиал'),
-  activeBranchId: z.number({
-    required_error: 'Выберите активный филиал',
-  }),
+  activeBranchId: z.number().optional(),
 
   // Credentials
+  // eslint-disable-next-line no-magic-numbers
   password: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
 })
 

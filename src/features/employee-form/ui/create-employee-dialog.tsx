@@ -20,27 +20,27 @@ import {
 import { useCreateEmployee } from '@/entities/employee'
 import { GeneratePinDialog } from '@/entities/pin'
 
+import { CreateBranchPermissionsManager } from './create-branch-permissions-manager'
 import { EmployeeFormBasic } from './employee-form-basic'
-import { EmployeeFormBranches } from './employee-form-branches'
-import { EmployeeFormRoles } from './employee-form-roles'
-import { EmployeeFormPermissions } from './employee-form-permissions'
 import { createEmployeeSchema } from '../model/contract'
 
 import type { CreateEmployeeFormData } from '../model/contract'
 import type { IEmployee } from '@/entities/employee'
 
 const STEPS = [
-  { number: 1, title: 'Основная информация', description: 'Шаг 1 из 4' },
-  { number: 2, title: 'Назначение ролей', description: 'Шаг 2 из 4' },
-  { number: 3, title: 'Назначение филиалов', description: 'Шаг 3 из 4' },
-  { number: 4, title: 'Разрешения', description: 'Шаг 4 из 4' },
+  { number: 1, title: 'Основная информация', description: 'Шаг 1 из 2' },
+  { number: 2, title: 'Филиалы и разрешения', description: 'Шаг 2 из 2' },
 ] as const
 
+// eslint-disable-next-line max-lines-per-function
 export const CreateEmployeeDialog = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [createdEmployee, setCreatedEmployee] = useState<IEmployee | null>(null)
-  const [showPinDialog, setShowPinDialog] = useState(false)
+  const [isShowingPinDialog, setIsShowingPinDialog] = useState(false)
+  const [branchPermissions, setBranchPermissions] = useState<
+    Record<number, number[]>
+  >({})
 
   const form = useForm<CreateEmployeeFormData>({
     resolver: zodResolver(createEmployeeSchema),
@@ -51,20 +51,38 @@ export const CreateEmployeeDialog = () => {
       password: '',
       roleIds: [],
       branchIds: [],
+      activeBranchId: 0,
     },
   })
 
   const { mutate: createEmployee, isPending } = useCreateEmployee()
+  const selectedBranchIds = form.watch('branchIds') || []
 
   const onSubmit = (data: CreateEmployeeFormData): void => {
-    createEmployee(data, {
+    // Set activeBranchId to first selected branch if not already set
+    const activeBranchId = data.activeBranchId ?? data.branchIds[0]
+
+    // Convert branchPermissions to the API format
+    const formattedBranchPermissions: Record<number, { permissionIds: number[] }> = {}
+    Object.entries(branchPermissions).forEach(([branchId, permissionIds]) => {
+      formattedBranchPermissions[Number(branchId)] = { permissionIds }
+    })
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    createEmployee({
+      ...data,
+      activeBranchId: activeBranchId!,
+      roleIds: data.roleIds || [],
+      branchPermissions: Object.keys(formattedBranchPermissions).length > 0 ? formattedBranchPermissions : undefined,
+    }, {
       onSuccess: (employee) => {
+        // Close dialog and open PIN generation
         setIsOpen(false)
         form.reset()
         setCurrentStep(1)
-        // Prompt for PIN generation
+        setBranchPermissions({})
         setCreatedEmployee(employee)
-        setShowPinDialog(true)
+        setIsShowingPinDialog(true)
       },
     })
   }
@@ -75,12 +93,10 @@ export const CreateEmployeeDialog = () => {
     if (currentStep === 1) {
       isValid = await form.trigger(['fullName', 'phone', 'email', 'password'])
     } else if (currentStep === 2) {
-      isValid = await form.trigger(['roleIds'])
-    } else if (currentStep === 3) {
-      isValid = await form.trigger(['branchIds', 'activeBranchId'])
+      isValid = await form.trigger(['branchIds'])
     }
 
-    if (isValid && currentStep < 4) {
+    if (isValid && currentStep < 2) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -89,6 +105,20 @@ export const CreateEmployeeDialog = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
     }
+  }
+
+  const handleBranchesChange = (branchIds: number[]): void => {
+    form.setValue('branchIds', branchIds)
+  }
+
+  const handlePermissionsChange = (
+    branchId: number,
+    permissionIds: number[]
+  ): void => {
+    setBranchPermissions((prev) => ({
+      ...prev,
+      [branchId]: permissionIds,
+    }))
   }
 
   return (
@@ -100,7 +130,7 @@ export const CreateEmployeeDialog = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{STEPS[currentStep - 1]?.title}</DialogTitle>
           <DialogDescription>
@@ -125,9 +155,14 @@ export const CreateEmployeeDialog = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="my-6">
             {currentStep === 1 && <EmployeeFormBasic form={form} />}
-            {currentStep === 2 && <EmployeeFormRoles form={form} />}
-            {currentStep === 3 && <EmployeeFormBranches form={form} />}
-            {currentStep === 4 && <EmployeeFormPermissions form={form} />}
+            {currentStep === 2 && (
+              <CreateBranchPermissionsManager
+                selectedBranchIds={selectedBranchIds}
+                onBranchesChange={handleBranchesChange}
+                onPermissionsChange={handlePermissionsChange}
+                branchPermissions={branchPermissions}
+              />
+            )}
           </div>
 
           <DialogFooter>
@@ -142,7 +177,7 @@ export const CreateEmployeeDialog = () => {
               </Button>
             )}
 
-            {currentStep < 4 ? (
+            {currentStep < 2 ? (
               <Button type="button" onClick={handleNext}>
                 Далее
               </Button>
@@ -160,9 +195,9 @@ export const CreateEmployeeDialog = () => {
       {createdEmployee && (
         <GeneratePinDialog
           employee={createdEmployee}
-          isOpen={showPinDialog}
+          isOpen={isShowingPinDialog}
           onClose={() => {
-            setShowPinDialog(false)
+            setIsShowingPinDialog(false)
             setCreatedEmployee(null)
           }}
         />
