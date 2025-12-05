@@ -11,6 +11,10 @@ export interface NavItem {
   description?: string
   isActive?: boolean
   items?: NavItem[]
+  // Permission-based access control
+  permission?: string
+  permissions?: string[]
+  permissionMode?: 'all' | 'any'
 }
 
 export interface NavItemWithChildren extends NavItem {

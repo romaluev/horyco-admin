@@ -111,7 +111,7 @@ export const listFiles = async (
   page: number = 1,
   limit: number = 20
 ): Promise<FileListResponse> => {
-  let url = '/files?'
+  const url = '/files?'
   const params = new URLSearchParams()
 
   if (entityType) params.append('entityType', entityType)

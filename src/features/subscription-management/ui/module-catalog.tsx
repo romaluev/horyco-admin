@@ -3,14 +3,13 @@
 import { useState } from 'react'
 
 import { formatPrice } from '@/shared/lib/format'
-import { BaseError } from '@/shared/ui/base-error'
-import { BaseLoading } from '@/shared/ui/base-loading'
+import { BaseError, BaseLoading } from '@/shared/ui'
+import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Separator } from '@/shared/ui/base/separator'
-import { Badge } from '@/shared/ui/base/badge'
 
-import { useGetModuleCatalog, useAddModule, type IModuleCatalogItem } from '@/entities/subscription'
+import { type IModuleCatalogItem, useAddModule, useGetModuleCatalog } from '@/entities/subscription'
 
 export const ModuleCatalog = () => {
   const { data: catalog, isLoading, error } = useGetModuleCatalog()

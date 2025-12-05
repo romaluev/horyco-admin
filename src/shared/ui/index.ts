@@ -14,6 +14,7 @@ export {
   FormMessage,
 } from './base/form'
 export { Checkbox } from './base/checkbox'
+export { Switch } from './base/switch'
 export {
   Select,
   SelectContent,

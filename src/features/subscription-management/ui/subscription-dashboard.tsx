@@ -1,13 +1,11 @@
 'use client'
 
 import { formatPrice } from '@/shared/lib/format'
-import { BaseError } from '@/shared/ui/base-error'
-import { BaseLoading } from '@/shared/ui/base-loading'
+import { BaseError, BaseLoading } from '@/shared/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Separator } from '@/shared/ui/base/separator'
 
-import { SubscriptionStatusBadge } from '@/entities/subscription'
-import { useGetSubscription } from '@/entities/subscription'
+import { SubscriptionStatusBadge, useGetSubscription } from '@/entities/subscription'
 
 export const SubscriptionDashboard = () => {
   const { data: subscription, isLoading, error } = useGetSubscription()

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -15,9 +16,9 @@ import {
 } from '@/shared/ui/base/card'
 import { Input } from '@/shared/ui/base/input'
 import { Label } from '@/shared/ui/base/label'
-import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 
 import { useOperatingHoursStore } from '@/entities/operating-hours/model/store'
+
 import type { OperatingHour } from '@/entities/operating-hours/model/types'
 
 const DAYS = [

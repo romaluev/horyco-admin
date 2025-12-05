@@ -1,8 +1,8 @@
 'use client'
 
 import { formatPrice } from '@/shared/lib/format'
-import { BaseError } from '@/shared/ui/base-error'
-import { BaseLoading } from '@/shared/ui/base-loading'
+import { BaseError, BaseLoading } from '@/shared/ui'
+import { Badge } from '@/shared/ui/base/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import {
   Table,
@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Badge } from '@/shared/ui/base/badge'
 
 import { useGetPaymentHistory } from '@/entities/subscription'
 

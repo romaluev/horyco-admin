@@ -2,12 +2,7 @@
  * React Query hooks for subscription management
  */
 
-import {
-  useQuery,
-  useQueries,
-  type UseQueryResult,
-  type UseQueryOptions,
-} from '@tanstack/react-query'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
 
 import {
   getCurrentSubscription,

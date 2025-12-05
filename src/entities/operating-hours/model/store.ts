@@ -5,6 +5,7 @@
 import { create } from 'zustand'
 
 import * as operatingHoursApi from './api'
+
 import type { OperatingHoursResponse, HolidaysResponse, Holiday, OperatingHoursRequest } from './types'
 
 interface OperatingHoursState {

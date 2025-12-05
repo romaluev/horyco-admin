@@ -22,7 +22,7 @@ import { CreateCategoryDialog } from '@/features/category-form'
 import type { JSX } from 'react'
 
 export default function CategoriesPage(): JSX.Element {
-  const [view, setView] = useState<'tree' | 'grid'>('tree')
+  const [view, setView] = useState<'tree' | 'grid'>('grid')
   const { data: categories, isLoading } = useGetCategories({
     includeProducts: true,
   })

@@ -1,3 +1,4 @@
+export { SubscriptionPage } from './subscription-page'
 export { SubscriptionDashboard } from './subscription-dashboard'
 export { ModuleCatalog } from './module-catalog'
 export { InvoicesList } from './invoices-list'

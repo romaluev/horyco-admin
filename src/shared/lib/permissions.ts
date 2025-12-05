@@ -113,6 +113,61 @@ export function getBranchesWithPermission(
 }
 
 /**
+ * Check if user has a permission at ANY branch (Admin Panel mode)
+ * Used for shared resources like menu, settings that span all branches
+ * @param branchPermissions - Map of branchId to permission arrays
+ * @param permission - The permission to check (e.g., "menu:edit")
+ * @returns true if user has the permission at any of their branches
+ */
+export function hasPermissionAnyBranch(
+  branchPermissions: Record<string, string[]> | undefined,
+  permission: string
+): boolean {
+  if (!branchPermissions) return false
+
+  return Object.values(branchPermissions).some((permissions) => {
+    if (!Array.isArray(permissions)) return false
+    return permissions.includes('*') || permissions.includes(permission)
+  })
+}
+
+/**
+ * Check if user has all permissions at ANY branch (Admin Panel mode)
+ * @param branchPermissions - Map of branchId to permission arrays
+ * @param permissions - Array of permissions to check
+ * @returns true if user has all of these permissions at any single branch
+ */
+export function hasAllPermissionsAnyBranch(
+  branchPermissions: Record<string, string[]> | undefined,
+  permissions: string[]
+): boolean {
+  if (!branchPermissions) return false
+
+  return Object.values(branchPermissions).some((branchPerms) => {
+    if (!Array.isArray(branchPerms)) return false
+    const hasWildcard = branchPerms.includes('*')
+    return permissions.every(
+      (perm) => hasWildcard || branchPerms.includes(perm)
+    )
+  })
+}
+
+/**
+ * Check if user has any of the given permissions at ANY branch (Admin Panel mode)
+ * @param branchPermissions - Map of branchId to permission arrays
+ * @param permissions - Array of permissions to check
+ * @returns true if user has any of these permissions at any branch
+ */
+export function hasAnyPermissionAnyBranch(
+  branchPermissions: Record<string, string[]> | undefined,
+  permissions: string[]
+): boolean {
+  return permissions.some((perm) =>
+    hasPermissionAnyBranch(branchPermissions, perm)
+  )
+}
+
+/**
  * Common permission names (for reference/autocomplete)
  */
 export const PERMISSIONS = {
@@ -161,6 +216,41 @@ export const PERMISSIONS = {
   // Customers
   CUSTOMERS_VIEW: 'customers:view',
   CUSTOMERS_MANAGE: 'customers:manage',
+
+  // Branches
+  BRANCHES_VIEW: 'branches:view',
+  BRANCHES_EDIT: 'branches:edit',
+  BRANCHES_MANAGE: 'branches:manage',
+  BRANCHES_TABLES: 'branches:tables',
+  BRANCHES_HALLS: 'branches:halls',
+
+  // Shifts
+  SHIFTS_OPEN: 'shifts:open',
+  SHIFTS_CLOSE: 'shifts:close',
+  SHIFTS_VIEW: 'shifts:view',
+  SHIFTS_MANAGE: 'shifts:manage',
+
+  // Orders (additional actions)
+  ORDERS_VOID: 'orders:void',
+  ORDERS_DISCOUNT: 'orders:discount',
+  ORDERS_REFUND: 'orders:refund',
+  ORDERS_CANCEL: 'orders:cancel',
+
+  // Payments (additional)
+  PAYMENTS_VOID: 'payments:void',
+  PAYMENTS_REFUND: 'payments:refund',
+
+  // Tables (additional)
+  TABLES_SESSIONS: 'tables:sessions',
+
+  // Finance (additional)
+  FINANCE_TRANSACTIONS: 'finance:transactions',
+  FINANCE_CASH: 'finance:cash',
+
+  // Reports (additional)
+  REPORTS_INVENTORY: 'reports:inventory',
+  REPORTS_STAFF: 'reports:staff',
+  REPORTS_FINANCIAL: 'reports:financial',
 
   // Wildcard (full access)
   ALL: '*',

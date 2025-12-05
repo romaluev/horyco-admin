@@ -40,10 +40,10 @@ export interface FileUploadResponse {
 
 export interface MultipleFilesUploadResponse {
   files: FileUploadResponse[]
-  failedFiles?: Array<{
+  failedFiles?: {
     fileName: string
     error: string
-  }>
+  }[]
 }
 
 export interface FileInfo {

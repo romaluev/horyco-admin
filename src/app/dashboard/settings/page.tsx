@@ -12,17 +12,11 @@ import { BrandingSettingsForm } from '@/features/branding-settings-form'
 import { FeatureFlagsManager } from '@/features/feature-flags-manager'
 import { PaymentSettingsForm } from '@/features/payment-settings-form'
 import { SmsSettingsForm } from '@/features/sms-settings-form'
-import {
-  SubscriptionDashboard,
-  ModuleCatalog,
-  InvoicesList,
-  PaymentsHistory,
-} from '@/features/subscription-management'
+import { SubscriptionPage } from '@/features/subscription-management'
 
 export default function SettingsPage() {
   const { selectedBranchId } = useBranchStore()
   const [activeTab, setActiveTab] = useState('branding')
-  const [subscriptionSubTab, setSubscriptionSubTab] = useState('overview')
 
   return (
     <PageContainer scrollable>
@@ -86,31 +80,8 @@ export default function SettingsPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="subscription" className="space-y-6 w-full">
-            <Tabs value={subscriptionSubTab} onValueChange={setSubscriptionSubTab}>
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="overview" className="w-full">Обзор</TabsTrigger>
-                <TabsTrigger value="modules" className="w-full">Модули</TabsTrigger>
-                <TabsTrigger value="invoices" className="w-full">Счета</TabsTrigger>
-                <TabsTrigger value="payments" className="w-full">Платежи</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="overview" className="space-y-4 w-full">
-                <SubscriptionDashboard />
-              </TabsContent>
-
-              <TabsContent value="modules" className="space-y-4 w-full">
-                <ModuleCatalog />
-              </TabsContent>
-
-              <TabsContent value="invoices" className="space-y-4 w-full">
-                <InvoicesList />
-              </TabsContent>
-
-              <TabsContent value="payments" className="space-y-4 w-full">
-                <PaymentsHistory />
-              </TabsContent>
-            </Tabs>
+          <TabsContent value="subscription" className="w-full">
+            <SubscriptionPage />
           </TabsContent>
         </Tabs>
       </div>

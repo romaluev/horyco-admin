@@ -3,9 +3,16 @@
 import { useState } from 'react'
 
 import { formatPrice } from '@/shared/lib/format'
-import { BaseError } from '@/shared/ui/base-error'
-import { BaseLoading } from '@/shared/ui/base-loading'
+import { BaseError, BaseLoading } from '@/shared/ui'
 import { Button } from '@/shared/ui/base/button'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/shared/ui/base/pagination'
 import {
   Table,
   TableBody,
@@ -14,16 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
-} from '@/shared/ui/base/pagination'
 
-import { useGetInvoices, InvoiceStatusBadge } from '@/entities/subscription'
+import { InvoiceStatusBadge, useGetInvoices } from '@/entities/subscription'
+
 import { InvoiceDetailDialog } from './invoice-detail-dialog'
 
 const INVOICES_PER_PAGE = 10

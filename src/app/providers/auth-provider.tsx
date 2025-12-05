@@ -13,16 +13,18 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { me, loadFullProfile } = useAuthStore()
+  const { me, loadFullProfile, setToken } = useAuthStore()
 
   useEffect(() => {
     const token = Cookies.get('access_token')
     if (token) {
+      // Sync token from cookies to store
+      setToken(token)
       me().catch((e: unknown) => console.error('Failed to load auth:', e))
       // Load full profile with avatar on app startup (non-blocking)
       void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
     }
-  }, [me, loadFullProfile])
+  }, [me, loadFullProfile, setToken])
 
   return children
 }

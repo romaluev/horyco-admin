@@ -3,6 +3,21 @@ import Cookies from 'js-cookie'
 
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
+// Lazy import to avoid circular dependency
+let useAuthStore: (() => { setToken?: (token: string | null) => void; logout?: () => void }) | null = null
+const getAuthStore = (): { setToken?: (token: string | null) => void; logout?: () => void } | null => {
+  try {
+    if (!useAuthStore) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+      useAuthStore = require('@/entities/auth').useAuthStore
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useAuthStore?.() ?? null
+  } catch {
+    return null
+  }
+}
+
 export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
 
 // Singleton flags to prevent multiple simultaneous operations
@@ -15,9 +30,11 @@ let refreshPromise: Promise<string> | null = null
  */
 const isTokenExpiringSoon = (): boolean => {
   const expiresAt = Cookies.get('token_expires_at')
-  if (!expiresAt) return true
+  if (!expiresAt) return false
 
   const expirationTime = parseInt(expiresAt, 10)
+  if (isNaN(expirationTime)) return false
+
   const currentTime = Date.now()
   const twoMinutesInMs = 2 * 60 * 1000
 
@@ -86,6 +103,12 @@ const refreshAccessToken = async (): Promise<string> => {
         sameSite: 'lax',
       })
 
+      // Sync new token with Zustand store
+      const authStore = getAuthStore()
+      if (authStore?.setToken) {
+        authStore.setToken(accessToken)
+      }
+
       console.log('Token refreshed successfully')
 
       return accessToken
@@ -112,14 +135,19 @@ const logoutUser = (): void => {
   if (typeof window !== 'undefined' && !isRedirectingToLogin) {
     isRedirectingToLogin = true
 
-    // Clear all tokens
-    Cookies.remove('access_token')
-    Cookies.remove('refresh_token')
-    Cookies.remove('token_expires_at')
+    // Use Zustand store logout which handles all cleanup
+    const authStore = getAuthStore()
+    if (authStore?.logout) {
+      authStore.logout()
+    } else {
+      // Fallback if store not available
+      Cookies.remove('access_token')
+      Cookies.remove('refresh_token')
+      Cookies.remove('token_expires_at')
 
-    // Redirect to login page if not already there
-    if (!window.location.href.includes('/auth/sign')) {
-      window.location.href = '/auth/sign-in'
+      if (!window.location.href.includes('/auth/sign')) {
+        window.location.href = '/auth/sign-in'
+      }
     }
   }
 }

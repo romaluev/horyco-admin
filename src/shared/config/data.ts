@@ -1,3 +1,5 @@
+import { PERMISSIONS } from '@/shared/lib/permissions'
+
 import type { NavItem } from '../types'
 
 export const MAX_FILE_SIZE = 5000000
@@ -34,26 +36,32 @@ export const getNavItems = (): NavItem[] => [
     icon: 'pizza',
     shortcut: ['M'],
     isActive: false,
+    permission: PERMISSIONS.MENU_VIEW,
     items: [
       {
         title: 'Категории',
         url: '/dashboard/menu/categories',
+        permission: PERMISSIONS.MENU_VIEW,
       },
       {
         title: 'Продукты',
         url: '/dashboard/menu/products',
+        permission: PERMISSIONS.MENU_VIEW,
       },
       {
         title: 'Модификаторы',
         url: '/dashboard/menu/modifiers',
+        permission: PERMISSIONS.MENU_VIEW,
       },
       {
         title: 'Дополнения',
         url: '/dashboard/menu/additions',
+        permission: PERMISSIONS.MENU_VIEW,
       },
       {
         title: 'Переопределения филиалов',
         url: '/dashboard/menu/branch-overrides',
+        permission: PERMISSIONS.MENU_VIEW,
       },
     ],
   },
@@ -63,14 +71,12 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/staff',
     icon: 'user',
     isActive: false,
+    permission: PERMISSIONS.STAFF_VIEW,
     items: [
       {
         title: 'Сотрудники',
         url: '/dashboard/staff/employees',
-      },
-      {
-        title: 'Роли и права',
-        url: '/dashboard/staff/roles',
+        permission: PERMISSIONS.STAFF_VIEW,
       },
     ],
   },
@@ -80,6 +86,7 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/branches',
     icon: 'hierarchy',
     isActive: false,
+    permission: PERMISSIONS.BRANCHES_VIEW,
     items: [],
   },
   {
@@ -88,6 +95,7 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/halls',
     icon: 'layoutGrid',
     isActive: false,
+    permission: PERMISSIONS.TABLES_VIEW,
     items: [],
   },
   {
@@ -96,6 +104,7 @@ export const getNavItems = (): NavItem[] => [
     url: '/dashboard/settings',
     icon: 'settings',
     isActive: false,
+    permission: PERMISSIONS.SETTINGS_VIEW,
     items: [],
   },
 ]

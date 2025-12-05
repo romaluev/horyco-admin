@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Loader2, Trash2, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -13,8 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
-import { Input } from '@/shared/ui/base/input'
-import { Label } from '@/shared/ui/base/label'
 import {
   Dialog,
   DialogContent,
@@ -23,7 +22,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/ui/base/dialog'
-import { Alert, AlertDescription } from '@/shared/ui/base/alert'
+import { Input } from '@/shared/ui/base/input'
+import { Label } from '@/shared/ui/base/label'
 
 import { useOperatingHoursStore } from '@/entities/operating-hours/model/store'
 

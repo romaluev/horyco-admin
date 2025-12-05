@@ -16,6 +16,11 @@ import {
 import logo from '@/shared/assets/logo.png'
 import { getNavItems } from '@/shared/config/data'
 import {
+  hasPermissionAnyBranch,
+  hasAllPermissionsAnyBranch,
+  hasAnyPermissionAnyBranch,
+} from '@/shared/lib/permissions'
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -49,15 +54,63 @@ import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 import { useAuthStore } from '@/entities/auth/model/store'
 import { useGetAllBranches, useBranchStore } from '@/entities/branch'
 
-import { BranchSelector } from '../branch-selector'
-import { Icons } from '../icons'
+import { BranchSelector } from '@/shared/ui/branch-selector'
+import { Icons } from '@/shared/ui/icons'
+
+/**
+ * Filter nav items based on user permissions
+ * Does NOT use hooks - called once per component mount
+ */
+function filterNavItemsByPermission(
+  items: ReturnType<typeof getNavItems>,
+  branchPermissions?: Record<string, string[]>
+): ReturnType<typeof getNavItems> {
+  // If permissions not loaded yet, show all items (will filter once they load)
+  if (!branchPermissions) return items
+
+  return items
+    .filter((item) => {
+      // If no permission requirement, always show
+      if (!item.permission && !item.permissions) {
+        return true
+      }
+
+      // Check permission
+      if (item.permission) {
+        return hasPermissionAnyBranch(branchPermissions, item.permission)
+      }
+
+      if (item.permissions) {
+        if (item.permissionMode === 'all') {
+          return hasAllPermissionsAnyBranch(branchPermissions, item.permissions)
+        }
+        return hasAnyPermissionAnyBranch(branchPermissions, item.permissions)
+      }
+
+      return true
+    })
+    .map((item) => ({
+      ...item,
+      // Recursively filter sub-items
+      items:
+        item.items && item.items.length > 0
+          ? filterNavItemsByPermission(item.items, branchPermissions)
+          : item.items,
+    }))
+}
 
 export default function AppSidebar() {
   const pathname = usePathname()
   const authStore = useAuthStore()
   const { user } = useAuthStore()
   const router = useRouter()
-  const navItems = getNavItems()
+  const allNavItems = getNavItems()
+
+  // Filter nav items based on user permissions
+  const navItems = filterNavItemsByPermission(
+    allNavItems,
+    user?.branchPermissions
+  )
 
   const { data: branchesData, isLoading: isBranchesLoading } =
     useGetAllBranches()
@@ -75,6 +128,124 @@ export default function AppSidebar() {
       setSelectedBranch(branches[0].id)
     }
   }, [branches, selectedBranchId, setSelectedBranch])
+
+  // Handle hover on menu items with subpages in icon mode
+  React.useEffect(() => {
+    let hoverTimeout: NodeJS.Timeout | null = null
+    const hoverStates = new WeakMap<Element, boolean>()
+
+    const handleMenuItemHover = (e: Event) => {
+      const target = e.currentTarget as HTMLElement
+      const menuItem = target.closest('[data-sidebar="menu-item"]')
+      if (!menuItem) return
+
+      const trigger = menuItem.querySelector(
+        '[data-slot="collapsible-trigger"]'
+      )
+      const button = menuItem.querySelector(
+        '[data-sidebar="menu-button"]'
+      ) as HTMLButtonElement | null
+
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout)
+        hoverTimeout = null
+      }
+
+      // Open collapsible on hover in icon mode
+      if (button && button.offsetParent !== null) {
+        const isIconMode =
+          window
+            .getComputedStyle(button)
+            .width.includes('3rem') ||
+          button.classList.toString().includes('size-8')
+
+        if (isIconMode && trigger) {
+          const content = menuItem.querySelector(
+            '[data-slot="collapsible-content"]'
+          )
+          if (content?.getAttribute('data-state') !== 'open') {
+            const triggerButton = trigger.querySelector('button')
+            triggerButton?.click()
+            hoverStates.set(menuItem, true)
+          }
+        }
+      }
+    }
+
+    const handleMenuItemLeave = (e: Event) => {
+      const target = e.currentTarget as HTMLElement
+      const menuItem = target.closest('[data-sidebar="menu-item"]')
+      if (!menuItem) return
+
+      const wasHoverOpened = hoverStates.get(menuItem)
+      if (!wasHoverOpened) return
+
+      // Delay close to allow moving to submenu
+      hoverTimeout = setTimeout(() => {
+        const trigger = menuItem.querySelector(
+          '[data-slot="collapsible-trigger"]'
+        )
+        const content = menuItem.querySelector(
+          '[data-slot="collapsible-content"]'
+        )
+
+        if (
+          trigger &&
+          content &&
+          content.getAttribute('data-state') === 'open'
+        ) {
+          const triggerButton = trigger.querySelector('button')
+          triggerButton?.click()
+          hoverStates.set(menuItem, false)
+        }
+      }, 200)
+    }
+
+    const handleSubmenuHover = (e: Event) => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout)
+        hoverTimeout = null
+      }
+    }
+
+    const menuItems = document.querySelectorAll('[data-sidebar="menu-item"]')
+    menuItems.forEach((item) => {
+      item.addEventListener('mouseenter', handleMenuItemHover as EventListener)
+      item.addEventListener('mouseleave', handleMenuItemLeave as EventListener)
+
+      // Keep submenu open when hovering over it
+      const submenu = item.querySelector('[data-sidebar="menu-sub"]')
+      if (submenu) {
+        submenu.addEventListener(
+          'mouseenter',
+          handleSubmenuHover as EventListener
+        )
+      }
+    })
+
+    return () => {
+      if (hoverTimeout) clearTimeout(hoverTimeout)
+
+      menuItems.forEach((item) => {
+        item.removeEventListener(
+          'mouseenter',
+          handleMenuItemHover as EventListener
+        )
+        item.removeEventListener(
+          'mouseleave',
+          handleMenuItemLeave as EventListener
+        )
+
+        const submenu = item.querySelector('[data-sidebar="menu-sub"]')
+        if (submenu) {
+          submenu.removeEventListener(
+            'mouseenter',
+            handleSubmenuHover as EventListener
+          )
+        }
+      })
+    }
+  }, [])
 
   const handleLogout = () => {
     authStore.logout()

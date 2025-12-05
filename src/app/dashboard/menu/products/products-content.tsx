@@ -8,9 +8,9 @@ import { ProductsFilters } from './products-filters'
 import { ProductsHeader } from './products-header'
 import { ProductsStats } from './products-stats'
 
+import type { Category } from './products-filters'
 import type { IProduct } from '@/entities/product'
 import type { JSX } from 'react'
-import type { Category } from './products-filters'
 
 export type { Category } from './products-filters'
 

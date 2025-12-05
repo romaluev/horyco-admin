@@ -22,6 +22,7 @@ interface AuthState {
   me: () => Promise<void>
   loadFullProfile: () => Promise<void>
   setUser: (user: IEmployee) => void
+  setToken: (token: string | null) => void
 }
 
 // Create the auth model
@@ -174,15 +175,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       }
 
-
       if (!currentUser?.id) {
         throw new Error('No user ID available')
       }
 
       const fullProfile = await authApi.getFullProfile(currentUser.id)
 
+      // IMPORTANT: Preserve branchPermissions from /auth/me
+      // The /admin/staff/employees/{id} endpoint returns different permission structure
+      // We must keep the branchPermissions from /auth/me which has the correct format
+      const preservedBranchPermissions = currentUser.branchPermissions
+
       set({
-        user: fullProfile,
+        user: {
+          ...fullProfile,
+          branchPermissions: preservedBranchPermissions,
+        },
         isLoadingProfile: false,
       })
     } catch (error: unknown) {
@@ -197,5 +205,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   setUser: (user: IEmployee) => {
     set({ user })
+  },
+
+  setToken: (token: string | null) => {
+    set({ token })
   },
 }))

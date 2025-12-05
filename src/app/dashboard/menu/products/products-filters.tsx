@@ -1,3 +1,6 @@
+import { Grid, List, } from 'lucide-react'
+
+import { Button } from '@/shared/ui/base/button'
 import { Input } from '@/shared/ui/base/input'
 import {
   Select,
@@ -6,9 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-import { Grid, List, } from 'lucide-react'
 
-import { Button } from '@/shared/ui/base/button'
 
 type ViewMode = 'table' | 'grid'
 

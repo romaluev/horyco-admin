@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 import { Pen } from 'lucide-react'
 
-import { ImageCell } from '@/shared/ui/image-cell'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -15,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
+import { ImageCell } from '@/shared/ui/image-cell'
 import { AlertModal } from '@/shared/ui/modal/alert-modal'
 
 import { useDeleteProduct } from '@/entities/product/model'

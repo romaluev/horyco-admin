@@ -20,6 +20,7 @@ import {
 import { ImageCell } from '@/shared/ui/image-cell'
 
 import { useDeleteProduct } from '@/entities/product/model'
+
 import type { IProduct } from '@/entities/product/model'
 
 interface ProductsGridViewProps {

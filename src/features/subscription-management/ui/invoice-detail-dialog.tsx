@@ -1,8 +1,7 @@
 'use client'
 
 import { formatPrice } from '@/shared/lib/format'
-import { BaseError } from '@/shared/ui/base-error'
-import { BaseLoading } from '@/shared/ui/base-loading'
+import { BaseError, BaseLoading } from '@/shared/ui'
 import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
