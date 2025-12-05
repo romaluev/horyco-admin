@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use client'
 
 import { useState } from 'react'
@@ -43,6 +44,7 @@ import { PhoneInput } from '@/shared/ui/base/phone-input'
 import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
+import { useGetAllBranches } from '@/entities/branch'
 import {
   useGetOnboardingProgress,
   useSubmitStaffInvite,
@@ -52,15 +54,29 @@ import {
   staffInviteSchema,
   type StaffInviteFormValues,
 } from '@/features/onboarding/model'
+import { OnboardingBranchPermissionsManager } from '@/features/onboarding/ui/onboarding-branch-permissions-manager'
 
-const WAITER_ROLE_ID = 2 // Hardcoded roleId for Waiter
+interface InvitationWithPermissions {
+  fullName: string
+  phone: string
+  email: string
+  branchPermissions: Record<string, { permissionIds: number[] }>
+}
 
+// eslint-disable-next-line max-lines-per-function
 export default function StaffInvitePage() {
   const router = useRouter()
   const [isSkipConfirmOpen, setSkipConfirmOpen] = useState(false)
+  const [branchPermissionsMap, setBranchPermissionsMap] = useState<
+    Record<number, InvitationWithPermissions>
+  >({})
 
   const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress()
+  const { data: branchesData, isLoading: isBranchesLoading } =
+    useGetAllBranches()
+
+  const branches = branchesData?.items || []
 
   // Form initialization
   const form = useForm<StaffInviteFormValues>({
@@ -102,14 +118,42 @@ export default function StaffInvitePage() {
     name: 'invitations',
   })
 
-  const isLoading = isSubmitting || isSkipping
+  const isLoading = isSubmitting || isSkipping || isBranchesLoading
 
   const addInvitation = () => {
+    const newIndex = fields.length
     append({
       fullName: '',
       phone: '',
       email: '',
     })
+    // Initialize empty branch permissions for new invitation
+    setBranchPermissionsMap((prev) => ({
+      ...prev,
+      [newIndex]: {
+        fullName: '',
+        phone: '',
+        email: '',
+        branchPermissions: {},
+      },
+    }))
+  }
+
+  const handleBranchPermissionsChange = (
+    invitationIndex: number,
+    branchPermissions: Record<string, { permissionIds: number[] }>
+  ) => {
+    setBranchPermissionsMap((prev) => ({
+      ...prev,
+      [invitationIndex]: {
+        ...(prev[invitationIndex] || {
+          fullName: fields[invitationIndex]?.fullName || '',
+          phone: fields[invitationIndex]?.phone || '',
+          email: fields[invitationIndex]?.email || '',
+        }),
+        branchPermissions,
+      },
+    }))
   }
 
   const onSubmit = async (data: StaffInviteFormValues) => {
@@ -120,12 +164,11 @@ export default function StaffInvitePage() {
     }
 
     submitStaffInvite({
-      invitations: data.invitations.map((inv) => ({
+      invitations: data.invitations.map((inv, index) => ({
         fullName: inv.fullName,
         phone: inv.phone,
         email: inv.email || undefined,
-        roleId: WAITER_ROLE_ID,
-        branchIds: [], // Empty array as per requirements
+        branchPermissions: branchPermissionsMap[index]?.branchPermissions || {},
       })),
     })
   }
@@ -183,17 +226,25 @@ export default function StaffInvitePage() {
                     </div>
                   ) : (
                     <div className="space-y-4">
+                      {/* eslint-disable-next-line max-lines-per-function */}
                       {fields.map((field, index) => (
                         <Card key={field.id} className="gap-2">
                           <CardHeader className="flex items-center justify-between">
                             <CardTitle className="text-base">
-                              Официант #{index + 1}
+                              Сотрудник #{index + 1}
                             </CardTitle>
                             <Button
                               type="button"
                               variant="ghost"
                               size="icon"
-                              onClick={() => remove(index)}
+                              onClick={() => {
+                                remove(index)
+                                setBranchPermissionsMap((prev) => {
+                                  const updated = { ...prev }
+                                  delete updated[index]
+                                  return updated
+                                })
+                              }}
                               disabled={isLoading}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -260,6 +311,27 @@ export default function StaffInvitePage() {
                                 </FormItem>
                               )}
                             />
+
+                            {/* Branch Permissions Manager */}
+                            {branches.length > 0 && (
+                              <div className="border-t pt-4">
+                                <h3 className="mb-3 text-sm font-medium">
+                                  Доступ по филиалам
+                                </h3>
+                                <OnboardingBranchPermissionsManager
+                                  branches={branches}
+                                  onBranchPermissionsChange={(
+                                    branchPermissions
+                                  ) =>
+                                    handleBranchPermissionsChange(
+                                      index,
+                                      branchPermissions
+                                    )
+                                  }
+                                  disabled={isLoading}
+                                />
+                              </div>
+                            )}
                           </CardContent>
                         </Card>
                       ))}

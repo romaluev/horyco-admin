@@ -135,8 +135,11 @@ export interface StaffInvitation {
   fullName: string
   phone: string
   email?: string
-  roleId: number
-  branchIds: number[]
+  roleId?: number
+  branchIds?: number[]
+  // Per-branch permission management
+  // Maps branchId (as string) to permission IDs
+  branchPermissions?: Record<string, { permissionIds: number[] }>
 }
 
 export interface StaffInviteRequest {

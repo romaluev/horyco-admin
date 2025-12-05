@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+/* eslint-disable no-magic-numbers */
+
 /**
  * Onboarding validation schemas (Zod)
  * All validation logic for onboarding features
@@ -60,7 +62,8 @@ export type BranchSetupFormValues = z.infer<typeof branchSetupSchema>
 
 /**
  * Staff Invite step schema
- * NOTE: roleId is hardcoded to 2 (Waiter) in the component, not in form
+ * Now includes per-branch permission management
+ * Each invitation can have different permissions at different branches
  */
 export const invitationSchema = z.object({
   fullName: z.string().min(2, { message: 'Введите полное имя' }),
@@ -78,3 +81,16 @@ export const staffInviteSchema = z.object({
 
 export type InvitationFormValues = z.infer<typeof invitationSchema>
 export type StaffInviteFormValues = z.infer<typeof staffInviteSchema>
+
+/**
+ * Branch permissions schema for onboarding
+ * Maps branchId to permission IDs for that branch
+ */
+export const branchPermissionsSchema = z.record(
+  z.string(),
+  z.object({
+    permissionIds: z.array(z.number()),
+  })
+)
+
+export type BranchPermissionsMap = z.infer<typeof branchPermissionsSchema>
