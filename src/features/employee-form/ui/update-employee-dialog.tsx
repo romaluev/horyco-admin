@@ -23,6 +23,7 @@ import { useUpdateEmployee } from '@/entities/employee'
 import { PinManagementSection } from '@/entities/pin'
 
 import { EmployeeFormBasic } from './employee-form-basic'
+import { EmployeePermissionsEditor } from '@/features/employee-permissions'
 import { updateEmployeeSchema } from '../model/contract'
 
 import type { UpdateEmployeeFormData } from '../model/contract'
@@ -130,16 +131,23 @@ export const UpdateEmployeeDialog = ({
           {/* Permissions Tab */}
           <TabsContent value="permissions">
             <div className="my-6">
-              <div className="rounded-lg border p-4">
-                <p className="text-sm text-muted-foreground">
-                  Управление разрешениями сотрудника для каждого филиала.
-                  Разрешения сохраняются отдельно для каждого филиала,
-                  в котором работает сотрудник.
-                </p>
-                <p className="text-sm font-medium mt-4">
-                  Функция управления разрешениями в разработке
-                </p>
-              </div>
+              {employee.branches && employee.branches.length > 0 ? (
+                <EmployeePermissionsEditor
+                  employeeId={employee.id}
+                  branches={employee.branches}
+                  onSave={() => {
+                    // Optionally refetch employee data or show success message
+                    setIsOpen(false)
+                  }}
+                />
+              ) : (
+                <div className="rounded-lg border p-4 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Сотрудник не назначен ни одному филиалу.
+                    Сначала добавьте филиалы в информацию сотрудника.
+                  </p>
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
