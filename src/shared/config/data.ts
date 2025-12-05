@@ -68,17 +68,11 @@ export const getNavItems = (): NavItem[] => [
   {
     title: 'Персонал',
     shortcut: ['S'],
-    url: '/dashboard/staff',
+    url: '/dashboard/staff/employees',
     icon: 'user',
     isActive: false,
     permission: PERMISSIONS.STAFF_VIEW,
-    items: [
-      {
-        title: 'Сотрудники',
-        url: '/dashboard/staff/employees',
-        permission: PERMISSIONS.STAFF_VIEW,
-      },
-    ],
+    items: [],
   },
   {
     title: 'Филиалы',
