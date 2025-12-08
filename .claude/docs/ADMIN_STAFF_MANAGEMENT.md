@@ -130,18 +130,42 @@ finance.*       → Financial operations
 ### Employee Lifecycle
 
 ```
-1. Creation
+1. Creation (via onboarding or staff invite)
    ↓
-2. Role Assignment
+2. Permission Assignment (per branch)
+   - Role template pre-fills permissions
+   - Owner customizes as needed
    ↓
 3. Branch Assignment
    ↓
-4. PIN Setup (optional, for fast POS login)
+4. Credentials Shared (auto-generated password)
    ↓
-5. Active (working)
+5. First Login + Password Change (mustChangePassword: true)
    ↓
-6. Deactivated (suspended, not deleted)
+6. PIN Setup (optional, for fast POS login)
+   ↓
+7. Active (working)
+   ↓
+8. Deactivated (suspended, not deleted)
 ```
+
+### Staff Invitation Flow
+
+**Two entry points for creating staff:**
+
+1. **During Onboarding (Step 4)**: `POST /admin/onboarding/steps/staff-invite`
+2. **After Onboarding**: `POST /admin/staff/employees/invite`
+
+**Key Flow:**
+```
+Owner fills form → Backend creates Employee → Returns temp password → Owner shares manually → Staff logs in → Forces password change
+```
+
+**Important:**
+- Employees are created **immediately** (not via invitation links)
+- Auto-generated password (8 chars) shown **once** - owner must copy it
+- `mustChangePassword: true` set on employee
+- Staff **must** change password on first login via `POST /auth/force-change-password`
 
 ### Employee Fields Explained
 
@@ -174,12 +198,19 @@ finance.*       → Financial operations
   "activeBranchId": 10,       // Current working location
   "isActive": true,           // Can login?
   "isOwner": false,           // Is this the business owner? (protected)
+  "mustChangePassword": false, // Must change password on next login?
   "status": "active",         // active | inactive | suspended
   "lastLoginAt": "2024-01-20T10:30:00Z",
   "createdAt": "2024-01-01T08:00:00Z",
   "createdBy": 1              // Who created this employee
 }
 ```
+
+**`mustChangePassword` Field:**
+- `true` when employee created via staff invitation with auto-generated password
+- `false` after employee changes their password
+- When `true`, login response includes `mustChangePassword: true`
+- Frontend must redirect to password change screen before allowing access
 
 ### Owner Protection
 
@@ -560,10 +591,37 @@ Response: {
 // Get employee details
 GET /admin/staff/employees/:id
 
-// Create employee
+// Create employee (standard - requires password)
 POST /admin/staff/employees
 Body: CreateEmployeeDto
 Note: Validates branchIds exist and role allows multi-branch assignment
+
+// Invite employee (auto-generates password, must change on first login)
+POST /admin/staff/employees/invite
+Body: {
+  fullName: string,          // Required
+  phone: string,             // Required, Uzbekistan format
+  email?: string,            // Optional
+  branchId: number,          // Required, which branch to assign
+  permissionIds: number[],   // Required, at least 1 permission
+  password?: string          // Optional, auto-generated if not provided
+}
+Response: {
+  employee: {
+    id: number,
+    fullName: string,
+    phone: string,
+    branchId: number
+  },
+  temporaryPassword: string,  // SHOWN ONLY ONCE - owner must copy!
+  permissionsApplied: string[],
+  loginInstructions: string
+}
+Notes:
+  - Creates Employee immediately with mustChangePassword: true
+  - Returns auto-generated password (8 chars) if not provided
+  - Assigns permissions to specified branch
+  - Staff must change password on first login via POST /auth/force-change-password
 
 // Bulk import employees from CSV
 POST /admin/staff/employees/bulk-import

@@ -57,7 +57,8 @@ export const OnboardingBranchPermissionsManager = ({
       {} as Record<string, { permissionIds: number[] }>
     )
     onBranchPermissionsChange(branchPermissionsMap)
-  }, [selectedBranches, onBranchPermissionsChange])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBranches])
 
   const handleBranchSelect = (branchId: string) => {
     const numId = parseInt(branchId, 10)

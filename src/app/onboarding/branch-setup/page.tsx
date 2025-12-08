@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -101,6 +101,42 @@ export default function BranchSetupPage() {
 
   // Unsaved changes warning
   const { confirmNavigation } = useUnsavedChangesWarning(form.formState.isDirty)
+
+  // Load existing data from API progress (takes priority over draft)
+  useEffect(() => {
+    if (progress?.stepData?.branch_setup) {
+      const data = progress.stepData.branch_setup as Record<string, unknown>
+
+      // Load form data from API
+      form.reset({
+        branchName: (data.branchName as string) || '',
+        address: (data.address as string) || '',
+        city: (data.city as string) || '',
+        region: (data.region as string) || '',
+        businessHours: {
+          monday: { open: '09:00', close: '23:00', isClosed: false },
+          tuesday: { open: '09:00', close: '23:00', isClosed: false },
+          wednesday: { open: '09:00', close: '23:00', isClosed: false },
+          thursday: { open: '09:00', close: '23:00', isClosed: false },
+          friday: { open: '09:00', close: '01:00', isClosed: false },
+          saturday: { open: '10:00', close: '01:00', isClosed: false },
+          sunday: { open: '10:00', close: '23:00', isClosed: false },
+        },
+        dineInEnabled: true,
+        takeawayEnabled: true,
+        deliveryEnabled: false,
+      })
+
+      // If city is available, set up regions
+      if (data.city) {
+        const city = UZBEKISTAN_CITIES.find((c) => c.name === data.city)
+        if (city) {
+          setSelectedCity(city.id)
+          setAvailableRegions(city.regions)
+        }
+      }
+    }
+  }, [progress, form])
 
   // Submit mutation
   const { mutate: submitBranchSetup, isPending: isSubmitting } =

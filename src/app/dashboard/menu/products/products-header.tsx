@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Grid, List, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
 

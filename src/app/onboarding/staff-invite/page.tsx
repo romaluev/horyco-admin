@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -139,22 +139,25 @@ export default function StaffInvitePage() {
     }))
   }
 
-  const handleBranchPermissionsChange = (
-    invitationIndex: number,
-    branchPermissions: Record<string, { permissionIds: number[] }>
-  ) => {
-    setBranchPermissionsMap((prev) => ({
-      ...prev,
-      [invitationIndex]: {
-        ...(prev[invitationIndex] || {
-          fullName: fields[invitationIndex]?.fullName || '',
-          phone: fields[invitationIndex]?.phone || '',
-          email: fields[invitationIndex]?.email || '',
-        }),
-        branchPermissions,
-      },
-    }))
-  }
+  const handleBranchPermissionsChange = useCallback(
+    (
+      invitationIndex: number,
+      branchPermissions: Record<string, { permissionIds: number[] }>
+    ) => {
+      setBranchPermissionsMap((prev) => ({
+        ...prev,
+        [invitationIndex]: {
+          ...(prev[invitationIndex] || {
+            fullName: fields[invitationIndex]?.fullName || '',
+            phone: fields[invitationIndex]?.phone || '',
+            email: fields[invitationIndex]?.email || '',
+          }),
+          branchPermissions,
+        },
+      }))
+    },
+    [fields]
+  )
 
   const onSubmit = async (data: StaffInviteFormValues) => {
     if (data.invitations.length === 0) {

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+
 import {
   Button,
   Dialog,
@@ -27,7 +29,7 @@ interface PermissionCopyDialogProps {
   onClose: () => void
   employeeId: number
   sourceBranchId: number
-  branches: Array<{ id: number; name: string }>
+  branches: { id: number; name: string }[]
   sourcePermissionIds: number[]
   onCopySuccess: (toBranchId: number, permissionIds: number[]) => void
 }

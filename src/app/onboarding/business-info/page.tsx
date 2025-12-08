@@ -97,7 +97,7 @@ export default function BusinessInfoPage() {
       },
     })
 
-  // Load existing data if available
+  // Load existing data from API progress (takes priority over draft)
   useEffect(() => {
     if (progress?.stepData?.business_identity) {
       const data = progress.stepData.business_identity as Record<
@@ -111,7 +111,7 @@ export default function BusinessInfoPage() {
         logoUrl: (data.logoUrl as string) || '',
       })
     }
-  }, [progress])
+  }, [progress, form])
 
   const onSubmit = async (data: BusinessInfoFormValues) => {
     setIsUploading(true)

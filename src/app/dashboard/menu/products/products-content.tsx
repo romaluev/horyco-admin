@@ -121,10 +121,6 @@ export function ProductsContent({
     return <ErrorState error={error} />
   }
 
-  if (products.length === 0) {
-    return <EmptyState />
-  }
-
   const handleViewModeChange = (mode: ViewMode): void => {
     onStateChange({ viewMode: mode })
   }
@@ -161,21 +157,27 @@ export function ProductsContent({
         onAvailabilityChange={handleAvailabilityChange}
       />
 
-      <ProductsStats
-        total={total}
-        products={products}
-        page={state.page}
-        limit={limit}
-      />
+      {products.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <ProductsStats
+            total={total}
+            products={products}
+            page={state.page}
+            limit={limit}
+          />
 
-      <ProductsList
-        state={state}
-        products={products}
-        total={total}
-        limit={limit}
-        onPageChange={handlePageChange}
-        onProductEdit={onProductEdit}
-      />
+          <ProductsList
+            state={state}
+            products={products}
+            total={total}
+            limit={limit}
+            onPageChange={handlePageChange}
+            onProductEdit={onProductEdit}
+          />
+        </>
+      )}
     </>
   )
 }

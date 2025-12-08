@@ -2,27 +2,24 @@
 
 import { useState, useEffect } from 'react'
 
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-import { Loader2, Check, Edit2, X } from 'lucide-react'
+import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 
 import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { Button } from '@/shared/ui/base/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/base/card'
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/shared/ui/base/collapsible'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/shared/ui/base/dialog'
 import { Input } from '@/shared/ui/base/input'
 import { Textarea } from '@/shared/ui/base/textarea'
@@ -60,11 +57,22 @@ interface MenuCategory {
 export default function MenuTemplatePage() {
   const router = useRouter()
   const [categories, setCategories] = useState<MenuCategory[]>([])
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set()
+  )
   const [editingProduct, setEditingProduct] = useState<MenuProduct | null>(null)
+  const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(
+    null
+  )
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false)
+  const [isNewProduct, setIsNewProduct] = useState(false)
+  const [isNewCategory, setIsNewCategory] = useState(false)
   const [editedName, setEditedName] = useState('')
   const [editedPrice, setEditedPrice] = useState('')
   const [editedDescription, setEditedDescription] = useState('')
+  const [editedCategoryName, setEditedCategoryName] = useState('')
+  const [editedCategoryDesc, setEditedCategoryDesc] = useState('')
 
   // Fetch onboarding progress
   const { data: progress, isLoading: isProgressLoading } =
@@ -121,21 +129,16 @@ export default function MenuTemplatePage() {
     },
   })
 
-  const handleToggleProduct = (categoryId: string, productId: string) => {
-    setCategories((prev) =>
-      prev.map((cat) =>
-        cat.id === categoryId
-          ? {
-              ...cat,
-              products: cat.products.map((prod) =>
-                prod.id === productId
-                  ? { ...prod, isSelected: !prod.isSelected }
-                  : prod
-              ),
-            }
-          : cat
-      )
-    )
+  const toggleCategoryExpand = (categoryId: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev)
+      if (next.has(categoryId)) {
+        next.delete(categoryId)
+      } else {
+        next.add(categoryId)
+      }
+      return next
+    })
   }
 
   const handleEditProduct = (product: MenuProduct) => {
@@ -143,30 +146,125 @@ export default function MenuTemplatePage() {
     setEditedName(product.name)
     setEditedPrice(product.price.toString())
     setEditedDescription(product.description || '')
+    setIsNewProduct(false)
+    setIsEditDialogOpen(true)
+  }
+
+  const handleAddProduct = (categoryId: string) => {
+    const category = categories.find((c) => c.id === categoryId)
+    if (!category) return
+
+    setEditingCategory(category)
+    setEditingProduct({
+      id: `product-${Date.now()}`,
+      name: '',
+      price: 0,
+      description: '',
+      isSelected: true,
+    })
+    setEditedName('')
+    setEditedPrice('0')
+    setEditedDescription('')
+    setIsNewProduct(true)
     setIsEditDialogOpen(true)
   }
 
   const handleSaveEdit = () => {
     if (!editingProduct) return
 
-    setCategories((prev) =>
-      prev.map((cat) => ({
-        ...cat,
-        products: cat.products.map((prod) =>
-          prod.id === editingProduct.id
+    const updatedProduct = {
+      ...editingProduct,
+      name: editedName,
+      price: Number(editedPrice),
+      description: editedDescription,
+    }
+
+    if (isNewProduct && editingCategory) {
+      // Add new product to category
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.id === editingCategory.id
             ? {
-                ...prod,
-                name: editedName,
-                price: Number(editedPrice),
-                description: editedDescription,
+                ...cat,
+                products: [...cat.products, updatedProduct],
               }
-            : prod
-        ),
-      }))
-    )
+            : cat
+        )
+      )
+    } else {
+      // Edit existing product
+      setCategories((prev) =>
+        prev.map((cat) => ({
+          ...cat,
+          products: cat.products.map((prod) =>
+            prod.id === editingProduct.id ? updatedProduct : prod
+          ),
+        }))
+      )
+    }
 
     setIsEditDialogOpen(false)
     setEditingProduct(null)
+    setEditingCategory(null)
+  }
+
+  const handleDeleteProduct = (categoryId: string, productId: string) => {
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              products: cat.products.filter((p) => p.id !== productId),
+            }
+          : cat
+      )
+    )
+  }
+
+  const handleEditCategory = (category: MenuCategory) => {
+    setEditingCategory(category)
+    setEditedCategoryName(category.name)
+    setEditedCategoryDesc(category.description || '')
+    setIsNewCategory(false)
+    setIsCategoryDialogOpen(true)
+  }
+
+  const handleAddCategory = () => {
+    setEditingCategory({
+      id: `category-${Date.now()}`,
+      name: '',
+      description: '',
+      products: [],
+    })
+    setEditedCategoryName('')
+    setEditedCategoryDesc('')
+    setIsNewCategory(true)
+    setIsCategoryDialogOpen(true)
+  }
+
+  const handleSaveCategoryEdit = () => {
+    if (!editingCategory || !editedCategoryName.trim()) return
+
+    const updated = {
+      ...editingCategory,
+      name: editedCategoryName,
+      description: editedCategoryDesc,
+    }
+
+    if (isNewCategory) {
+      setCategories((prev) => [...prev, updated])
+    } else {
+      setCategories((prev) =>
+        prev.map((cat) => (cat.id === editingCategory.id ? updated : cat))
+      )
+    }
+
+    setIsCategoryDialogOpen(false)
+    setEditingCategory(null)
+  }
+
+  const handleDeleteCategory = (categoryId: string) => {
+    setCategories((prev) => prev.filter((c) => c.id !== categoryId))
   }
 
   const handleSubmit = () => {
@@ -203,16 +301,16 @@ export default function MenuTemplatePage() {
     router.push(prevStep?.route || '/onboarding/branch-setup')
   }
 
-  const selectedCount = categories.reduce(
-    (total, cat) => total + cat.products.filter((p) => p.isSelected).length,
+  const totalProducts = categories.reduce(
+    (total, cat) => total + cat.products.length,
     0
   )
 
-  if (isProgressLoading || isProductsLoading) {
+  if (isProgressLoading) {
     return <BaseLoading />
   }
 
-  if (productsError) {
+  if (productsError && categories.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -234,9 +332,6 @@ export default function MenuTemplatePage() {
     )
   }
 
-  // Empty state when no categories available
-  const hasNoProducts = categories.length === 0
-
   return (
     <OnboardingLayout
       currentStep="menu_template"
@@ -245,134 +340,148 @@ export default function MenuTemplatePage() {
       }
       skippedSteps={progress?.skippedSteps || []}
       title="Настройка меню"
-      description="Выберите популярные блюда для вашего заведения"
+      description="Организуйте блюда по категориям"
     >
-      {/* Selected count badge */}
-      {selectedCount > 0 && (
-        <div className="bg-muted/50 mb-4 flex items-center justify-between rounded-lg border p-3">
+      {/* Menu info badge */}
+      {totalProducts > 0 && (
+        <div className="bg-muted/50 mb-6 flex items-center justify-between rounded-lg border p-3">
           <span className="text-sm font-medium">
-            Выбрано блюд: {selectedCount}
+            Всего блюд: {totalProducts}
           </span>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() =>
-              setCategories((prev) =>
-                prev.map((cat) => ({
-                  ...cat,
-                  products: cat.products.map((p) => ({
-                    ...p,
-                    isSelected: false,
-                  })),
-                }))
-              )
-            }
-          >
-            Сбросить всё
+        </div>
+      )}
+
+      {/* Empty state with option to create */}
+      {categories.length === 0 && !isProductsLoading && (
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+          <h3 className="mb-2 text-xl font-semibold">Меню пусто</h3>
+          <p className="text-muted-foreground mb-6 max-w-md">
+            Начните с создания категории, затем добавляйте блюда.
+          </p>
+          <Button onClick={handleAddCategory}>
+            <Plus className="mr-2 h-4 w-4" />
+            Создать категорию
           </Button>
         </div>
       )}
 
-      {/* Empty state */}
-      {hasNoProducts && (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-          <h3 className="mb-2 text-xl font-semibold">
-            Нет доступных шаблонов меню
-          </h3>
-          <p className="text-muted-foreground mb-4 max-w-md">
-            К сожалению, для вашего типа бизнеса пока нет готовых шаблонов. Вы
-            можете пропустить этот шаг и создать меню позже.
-          </p>
-        </div>
-      )}
-
-      {/* Categories with products */}
-      {!hasNoProducts && (
-        <div className="space-y-8">
+      {/* Categories with accordion */}
+      {categories.length > 0 && (
+        <div className="space-y-3">
           {categories.map((category) => (
-            <div key={category.id}>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold">{category.name}</h2>
-                <span className="text-muted-foreground text-sm">
-                  {category.products.filter((p) => p.isSelected).length} /{' '}
-                  {category.products.length}
-                </span>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {category.products.map((product) => (
-                  <Card
-                    key={product.id}
-                    className={`relative overflow-hidden p-0 transition-all ${
-                      product.isSelected ? 'ring-primary ring-2' : ''
-                    }`}
-                  >
-                    {product.isSelected && (
-                      <div className="bg-primary absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                    )}
-
-                    {/* Product Image */}
-                    <div className="bg-muted relative h-40 w-full overflow-hidden">
-                      {product.image ? (
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      ) : null}
-                    </div>
-
-                    <CardHeader className="space-y-2 p-4">
-                      <CardTitle className="line-clamp-1 text-base">
-                        {product.name}
-                      </CardTitle>
-                      <CardDescription className="line-clamp-2 text-xs">
-                        {product.description}
-                      </CardDescription>
-                      <div className="text-primary text-lg font-bold">
-                        {new Intl.NumberFormat('ru-RU').format(product.price)}{' '}
-                        сум
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="flex gap-2 p-4 pt-0">
-                      <Button
-                        size="sm"
-                        variant={product.isSelected ? 'secondary' : 'default'}
-                        className="flex-1"
-                        onClick={() =>
-                          handleToggleProduct(category.id, product.id)
-                        }
-                      >
-                        {product.isSelected ? (
-                          <>
-                            <X className="mr-1 h-3 w-3" />
-                            Убрать
-                          </>
-                        ) : (
-                          <>
-                            <Check className="mr-1 h-3 w-3" />
-                            Выбрать
-                          </>
+            <Collapsible
+              key={category.id}
+              open={expandedCategories.has(category.id)}
+              onOpenChange={() => toggleCategoryExpand(category.id)}
+            >
+              <div className="rounded-lg border">
+                <div className="flex items-center justify-between gap-2 px-4 py-3">
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex-1 justify-start gap-2 p-0 hover:bg-transparent"
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${
+                          expandedCategories.has(category.id)
+                            ? 'rotate-0'
+                            : '-rotate-90'
+                        }`}
+                      />
+                      <div className="text-left">
+                        <p className="font-semibold">{category.name}</p>
+                        {category.description && (
+                          <p className="text-muted-foreground text-xs">
+                            {category.description}
+                          </p>
                         )}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEditProduct(product)}
+                      </div>
+                    </Button>
+                  </CollapsibleTrigger>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-sm whitespace-nowrap">
+                      {category.products.length}{' '}
+                      {category.products.length === 1 ? 'блюдо' : 'блюд'}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEditCategory(category)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleDeleteCategory(category.id)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                </div>
+
+                <CollapsibleContent className="border-t p-4">
+                  <div className="space-y-3">
+                    {category.products.map((product) => (
+                      <div
+                        key={product.id}
+                        className="flex items-center gap-3 rounded-lg border p-3"
                       >
-                        <Edit2 className="h-3 w-3" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                        <div className="flex-1">
+                          <p className="font-medium">{product.name}</p>
+                          {product.description && (
+                            <p className="text-muted-foreground text-sm">
+                              {product.description}
+                            </p>
+                          )}
+                          <p className="text-primary mt-1 font-semibold">
+                            {new Intl.NumberFormat('ru-RU').format(
+                              product.price
+                            )}{' '}
+                            сум
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditProduct(product)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              handleDeleteProduct(category.id, product.id)
+                            }
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAddProduct(category.id)}
+                      className="w-full"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Добавить блюдо
+                    </Button>
+                  </div>
+                </CollapsibleContent>
               </div>
-            </div>
+            </Collapsible>
           ))}
+
+          <Button onClick={handleAddCategory} className="w-full">
+            <Plus className="mr-2 h-4 w-4" />
+            Добавить категорию
+          </Button>
         </div>
       )}
 
@@ -404,7 +513,7 @@ export default function MenuTemplatePage() {
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={selectedCount === 0 || isSubmitting || isSkipping}
+            disabled={totalProducts === 0 || isSubmitting || isSkipping}
           >
             {isSubmitting ? (
               <>
@@ -412,19 +521,23 @@ export default function MenuTemplatePage() {
                 Сохранение...
               </>
             ) : (
-              `Продолжить (${selectedCount})`
+              `Продолжить (${totalProducts})`
             )}
           </Button>
         </div>
       </div>
 
-      {/* Edit Product Dialog */}
+      {/* Edit/Add Product Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Редактировать блюдо</DialogTitle>
+            <DialogTitle>
+              {isNewProduct ? 'Добавить блюдо' : 'Редактировать блюдо'}
+            </DialogTitle>
             <DialogDescription>
-              Измените название, цену или описание блюда
+              {isNewProduct
+                ? 'Добавьте новое блюдо в категорию'
+                : 'Измените название, цену или описание блюда'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -433,7 +546,7 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-product-name"
                 className="mb-2 block text-sm font-medium"
               >
-                Название
+                Название *
               </label>
               <Input
                 id="edit-product-name"
@@ -447,7 +560,7 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-product-price"
                 className="mb-2 block text-sm font-medium"
               >
-                Цена (сум)
+                Цена (сум) *
               </label>
               <Input
                 id="edit-product-price"
@@ -480,7 +593,73 @@ export default function MenuTemplatePage() {
             >
               Отмена
             </Button>
-            <Button onClick={handleSaveEdit}>Сохранить</Button>
+            <Button
+              onClick={handleSaveEdit}
+              disabled={!editedName.trim() || !editedPrice.trim()}
+            >
+              {isNewProduct ? 'Добавить' : 'Сохранить'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit/Add Category Dialog */}
+      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {isNewCategory ? 'Добавить категорию' : 'Редактировать категорию'}
+            </DialogTitle>
+            <DialogDescription>
+              {isNewCategory
+                ? 'Создайте новую категорию для блюд'
+                : 'Измените название или описание категории'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label
+                htmlFor="edit-category-name"
+                className="mb-2 block text-sm font-medium"
+              >
+                Название категории *
+              </label>
+              <Input
+                id="edit-category-name"
+                value={editedCategoryName}
+                onChange={(e) => setEditedCategoryName(e.target.value)}
+                placeholder="Например: Закуски"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="edit-category-desc"
+                className="mb-2 block text-sm font-medium"
+              >
+                Описание
+              </label>
+              <Textarea
+                id="edit-category-desc"
+                value={editedCategoryDesc}
+                onChange={(e) => setEditedCategoryDesc(e.target.value)}
+                placeholder="Описание категории"
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsCategoryDialogOpen(false)}
+            >
+              Отмена
+            </Button>
+            <Button
+              onClick={handleSaveCategoryEdit}
+              disabled={!editedCategoryName.trim()}
+            >
+              {isNewCategory ? 'Создать' : 'Сохранить'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

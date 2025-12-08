@@ -470,7 +470,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
     <li
       data-slot="sidebar-menu-item"
       data-sidebar="menu-item"
-      className={cn('group/menu-item relative overflow-visible', className)}
+      className={cn('group/menu-item relative', className)}
       {...props}
     />
   )
@@ -647,7 +647,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-sidebar="menu-sub"
       className={cn(
         'border-sidebar-border mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l px-2.5 py-0.5',
-        'group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:left-full group-data-[collapsible=icon]:top-0 group-data-[collapsible=icon]:ml-2 group-data-[collapsible=icon]:min-w-48 group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:rounded-md group-data-[collapsible=icon]:border group-data-[collapsible=icon]:bg-sidebar group-data-[collapsible=icon]:p-1.5 group-data-[collapsible=icon]:shadow-md group-data-[collapsible=icon]:border-l group-data-[collapsible=icon]:gap-0.5 group-data-[collapsible=icon]:z-50 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:transition-opacity group-data-[collapsible=icon]:duration-200 group-hover/menu-item:group-data-[collapsible=icon]:opacity-100 group-hover/menu-item:group-data-[collapsible=icon]:pointer-events-auto',
+        'group-data-[collapsible=icon]:hidden',
         className
       )}
       {...props}
@@ -693,6 +693,7 @@ function SidebarMenuSubButton({
         'data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground',
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
+        'group-data-[collapsible=icon]:hidden',
         className
       )}
       {...props}

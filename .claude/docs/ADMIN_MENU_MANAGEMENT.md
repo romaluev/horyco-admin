@@ -44,10 +44,17 @@ The main menu unit — a dish, beverage, or item sold to customers.
 **Optional:**
 - `description` — dish description
 - `image` — product photo
-- `isAvailable` — available for ordering
+- `isActive` — master switch (permanent on/off, e.g., seasonal item removed from menu)
+- `isAvailable` — temporary availability (e.g., sold out today)
+- `stock` — inventory/stock count
 - `preparationTime` — preparation time (minutes)
 - `calories` — calorie count
-- `allergens` — list of allergens
+- `allergens` — list of allergens (e.g., `["milk", "nuts", "gluten"]`)
+
+**Availability Logic:**
+- Product is orderable when: `isActive = true` AND `isAvailable = true`
+- `isActive = false` → Product hidden from menu entirely (discontinued, seasonal)
+- `isAvailable = false` → Product shown but marked "Sold Out" (temporary)
 
 #### **Modifier**
 Option to modify a product with **additional price**. Modifiers are grouped into **Modifier Groups**.
@@ -76,32 +83,43 @@ Modifier Group: "Extra Ingredients"
 - Can set `minSelection` and `maxSelection` (e.g., "select 1-3 toppings")
 
 #### **Addition**
-Group of **optional items** that can be added to the main product. Unlike modifiers, additions consist of **Addition Items** — separate products with their own price.
+**Optional items** that can be added to the main product. Additions use a **hierarchical parent_id structure** where parent additions act as group headers and child additions are the selectable items.
 
 **Example for "Pizza Margherita":**
 ```
-Addition: "Sauces"
-├── Garlic Sauce (50)
-├── BBQ Sauce (50)
-└── Cheese Sauce (70)
+Addition (parent_id = null): "Sauces"      ← Group header
+├── Addition (parent_id = 1): "Garlic Sauce" (50)
+├── Addition (parent_id = 1): "BBQ Sauce" (50)
+└── Addition (parent_id = 1): "Cheese Sauce" (70)
 
-Addition: "Drinks with Pizza"
-├── Coca-Cola 0.5L (150)
-├── Fanta 0.5L (150)
-└── Mineral Water (100)
+Addition (parent_id = null): "Extra Toppings"   ← Another group
+├── Addition (parent_id = 2): "Extra Cheese" (40)
+├── Addition (parent_id = 2): "Bacon" (80)
+└── Addition (parent_id = 2): "Avocado" (70)
 ```
 
 **Addition Properties:**
-- `isRequired` — must at least one item be selected
-- `isMultiple` — can multiple items be selected
-- `isCountable` — can quantity be specified (e.g., 3 sauces)
-- `minSelection` / `maxSelection` — selection constraints
+- `name` — addition name
+- `price` — price (0 for group headers, actual price for items)
+- `parentId` — null for groups, parent's ID for items
+- `isDefault` — whether this item is pre-selected
+- `isAvailable` — temporary availability (can run out of stock)
+- `isActive` — master switch (permanent on/off)
+- `isRequired` — must at least one item be selected (on group level)
+- `sortOrder` — display order
+- `calories` — optional nutritional info
+- `image` — optional item image
+
+**Availability Logic for Additions:**
+- Item is selectable when: `isActive = true` AND `isAvailable = true`
+- Group is shown when: group `isActive = true` AND has at least one active/available child
 
 **Difference from Modifier:**
 | Characteristic | Modifier | Addition |
 |---------------|----------|----------|
 | Price | Added to product base price | Each item has separate price |
-| Structure | Flat list of options in group | Group → Items (two-level) |
+| Structure | ModifierGroup → Modifier (separate entities) | Addition with parent_id (single entity, self-referential) |
+| Availability | Only `isActive` | Both `isActive` and `isAvailable` |
 | Use | Changing dish characteristics | Additional items to dish |
 | Example | Size, doneness, toppings | Sauces, drinks, desserts |
 
@@ -109,10 +127,11 @@ Addition: "Drinks with Pizza"
 Ability to **override product parameters** for a specific branch without changing the base configuration.
 
 **What can be overridden:**
-- `price` — branch-specific price (e.g., higher in city center)
-- `isAvailable` — availability (seasonal dishes only in certain locations)
-- `image` — localized photo
-- `name` — localized name
+- `overridePrice` — branch-specific price (e.g., higher in city center)
+- `overrideAvailability` — availability (seasonal dishes only in certain locations)
+- `overrideImage` — localized photo
+- `overrideName` — localized name
+- `overrideDescription` — localized description
 
 **Usage example:**
 ```
@@ -120,9 +139,10 @@ Product: "Cappuccino"
 Base price: 350
 
 Branch Overrides:
-├── Branch "Downtown" → 450 (more expensive)
-├── Branch "Residential" → 300 (cheaper)
-└── Branch "Airport" → unavailable (isAvailable=false)
+├── Branch "Downtown" → price: 450 (more expensive)
+├── Branch "Residential" → price: 300 (cheaper)
+├── Branch "Airport" → availability: false (not available here)
+└── Branch "Tourist" → name: "Italian Cappuccino", description: "Premium blend"
 ```
 
 **Why needed:**
@@ -992,66 +1012,152 @@ Body: { "modifierIds": [3, 1, 2] }
 **Path:** `Admin Panel → Menu → Additions`
 **URL:** `/admin/menu/additions`
 
+**Alternative:** `Products → [Product] → "Additions" Tab`
+
 ### 🎯 Page Purpose
-Manage addition groups and items for products.
+Manage product additions using hierarchical parent_id structure. Parent additions act as groups, child additions are selectable items.
 
 ### 💡 Business Logic
 
 **Difference from modifiers:**
-- Modifiers — **modify product** (size, toppings)
-- Additions — **additional items** (sauces, drinks)
+- Modifiers — **modify product** (size, toppings) - attached at product level
+- Additions — **additional items** (sauces, drinks) - belong directly to product
 
-**Architecture:**
+**Architecture (Flat with parent_id):**
 ```
 Product (Pizza Margherita)
-  └── Addition: "Sauces"
-      ├── Item: "Garlic Sauce" 50
-      ├── Item: "BBQ Sauce" 50
-      └── Item: "Cheese Sauce" 70
+  └── Addition: "Sauces" (parentId: null)     ← GROUP
+      ├── Addition: "Garlic Sauce" (parentId: 1, price: 50)
+      ├── Addition: "BBQ Sauce" (parentId: 1, price: 50)
+      └── Addition: "Cheese Sauce" (parentId: 1, price: 70)
+  └── Addition: "Extra Toppings" (parentId: null)  ← GROUP
+      ├── Addition: "Extra Cheese" (parentId: 2, price: 40)
+      └── Addition: "Bacon" (parentId: 2, price: 80)
 ```
 
-**Properties:**
-- `isRequired` — must select at least one
-- `isMultiple` — can select multiple
-- `isCountable` — can specify quantity
-- `minSelection` / `maxSelection`
+**Addition Fields:**
+- `name` — display name
+- `description` — optional description (mainly for groups)
+- `price` — 0 for groups, actual price for items
+- `parentId` — null for groups, parent ID for items
+- `productId` — linked product
+- `isDefault` — pre-selected by default
+- `isAvailable` — temporary availability (sold out)
+- `isActive` — master switch (discontinued)
+- `isRequired` — must select at least one (for groups)
+- `sortOrder` — display order
+- `calories` — optional nutritional info
+- `image` — optional image URL
 
 ### 📋 API Endpoints
 
-#### 1. Get additions list
+#### 1. Get additions for product
 ```
-GET /admin/menu/additions
-Query: productId?
+GET /admin/menu/additions?productId=101
 ```
 
-#### 2. Create addition
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Sauces",
+    "description": "Choose your sauce",
+    "price": 0,
+    "parentId": null,
+    "productId": 101,
+    "isRequired": false,
+    "isDefault": false,
+    "isAvailable": true,
+    "isActive": true,
+    "sortOrder": 1,
+    "children": [
+      {
+        "id": 2,
+        "name": "Garlic Sauce",
+        "price": 50,
+        "parentId": 1,
+        "isDefault": false,
+        "isAvailable": true,
+        "isActive": true
+      }
+    ]
+  }
+]
+```
+
+#### 2. Create addition group (parent)
 ```
 POST /admin/menu/additions
 Body: {
   "name": "Sauces",
+  "description": "Choose your sauce",
   "productId": 101,
+  "parentId": null,
   "isRequired": false,
-  "isMultiple": true,
-  "maxSelection": 3
+  "sortOrder": 1
 }
 ```
 
-#### 3. Update addition
+#### 3. Create addition item (child)
 ```
-PATCH /admin/menu/additions/:id
-Body: { "maxSelection": 5 }
+POST /admin/menu/additions
+Body: {
+  "name": "Garlic Sauce",
+  "price": 50,
+  "productId": 101,
+  "parentId": 1,
+  "isDefault": false,
+  "calories": 80,
+  "sortOrder": 1
+}
 ```
 
-#### 4. Delete addition
+#### 4. Update addition
+```
+PATCH /admin/menu/additions/:id
+Body: { "price": 60, "isAvailable": false }
+```
+
+#### 5. Delete addition
 ```
 DELETE /admin/menu/additions/:id
 ```
 
+**⚠️ Important:** Deleting a group also deletes all its child items.
+
+### 🎨 UI Components
+
+**Addition Groups View:**
+```
+┌──────────────────────────────────────────┐
+│ Additions for "Pizza Margherita" [+ Add] │
+├──────────────────────────────────────────┤
+│ ☰ Sauces                    [✏️] [🗑️]   │
+│   Optional | 3 items                     │
+│   ├── Garlic Sauce     50  ✅ Available  │
+│   ├── BBQ Sauce        50  ✅ Available  │
+│   └── Cheese Sauce     70  ❌ Sold Out   │
+├──────────────────────────────────────────┤
+│ ☰ Extra Toppings            [✏️] [🗑️]   │
+│   Optional | 2 items                     │
+│   ├── Extra Cheese     40  ✅ Available  │
+│   └── Bacon            80  ✅ Available  │
+└──────────────────────────────────────────┘
+```
+
 ### ✅ Validation
 
-- `minSelection` <= `maxSelection`
-- If `isRequired=true`, then `minSelection >= 1`
-- If `isMultiple=false`, then `maxSelection = 1`
+- Group (`parentId = null`):
+  - `name` required
+  - `productId` required
+  - `price` should be 0
+
+- Item (`parentId` set):
+  - `name` required
+  - `price` required, min 0
+  - `parentId` must exist and belong to same product
+  - `productId` must match parent's productId
 
 ---
 
@@ -1562,6 +1668,18 @@ Category
 
 ## 📝 Change Log
 
+### Version 1.3 — 2025-12-03
+**Updated:**
+- ✅ Product entity documentation: added `isActive` (master switch) and `isAvailable` (temporary) distinction
+- ✅ Product fields: added `stock`, `calories`, `allergens` documentation
+- ✅ Addition entity: corrected to hierarchical parent_id model (not separate Group/Item entities)
+- ✅ Addition fields: documented actual fields (`isDefault`, `isAvailable`, `isActive`, `isRequired`, `calories`, `image`)
+- ✅ Branch Override: added `overrideDescription` field
+- ✅ Additions API: updated endpoints to match actual implementation
+
+**Removed incorrect documentation:**
+- ❌ Addition `isMultiple`, `isCountable`, `minSelection`, `maxSelection` (don't exist in entity)
+
 ### Version 1.2 — 2025-11-03
 **Added:**
 - ✅ New recommended association endpoints
@@ -1582,6 +1700,6 @@ Category
 
 ---
 
-**Current version:** 1.2
-**Last update:** 2025-11-03
+**Current version:** 1.3
+**Last update:** 2025-12-03
 **Questions:** #admin-panel-dev Slack channel

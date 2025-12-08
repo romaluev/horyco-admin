@@ -14,14 +14,13 @@ import {
   useSensor,
   useSensors,
   type UniqueIdentifier
-             } from '@dnd-kit/core'
+                ,
+ DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { CategoryTreeItem } from './category-tree-item'
 
 import type { ICategory } from '../model'
-import type {
- DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 
 interface CategoryTreeProps {
   categories: ICategory[]

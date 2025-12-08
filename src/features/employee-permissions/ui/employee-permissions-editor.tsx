@@ -1,15 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { Loader2 } from 'lucide-react'
+
 import { BaseError, BaseLoading, Button, Alert, AlertDescription } from '@/shared/ui'
-import { useGetAllRoles } from '@/entities/role'
+
 import { employeeApi } from '@/entities/employee'
+import { useGetAllRoles } from '@/entities/role'
+
 import { BranchPermissionManager } from './branch-permission-manager'
 
 interface EmployeePermissionsEditorProps {
   employeeId: number
-  branches: Array<{ id: number; name: string }>
+  branches: { id: number; name: string }[]
   onSave?: () => void
 }
 

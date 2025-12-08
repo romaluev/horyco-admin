@@ -1,16 +1,17 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Checkbox, Label } from '@/shared/ui'
+
 import { cn } from '@/shared/lib/utils'
+import { Checkbox, Label } from '@/shared/ui'
 
 interface PermissionGridProps {
-  permissions: Array<{
+  permissions: {
     id: number
     name: string
     category: string
     description?: string
-  }>
+  }[]
   selectedPermissionIds: number[]
   onPermissionChange: (permissionId: number, checked: boolean) => void
   disabled?: boolean
@@ -26,12 +27,12 @@ export const EmployeePermissionGrid = ({
   const groupedPermissions = useMemo(() => {
     const groups: Record<
       string,
-      Array<{
+      {
         id: number
         name: string
         category: string
         description?: string
-      }>
+      }[]
     > = {}
 
     permissions.forEach((perm) => {

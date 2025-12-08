@@ -1,7 +1,9 @@
 'use client'
 
 import { useMemo } from 'react'
+
 import { BaseError, BaseLoading, Label } from '@/shared/ui'
+
 import { useGetAllRoles } from '@/entities/role'
 import { EmployeePermissionGrid } from '@/features/employee-permissions/ui/employee-permission-grid'
 
@@ -86,7 +88,7 @@ export const EmployeeFormPermissions = ({
           permissions={rolePermissions}
           selectedPermissionIds={[]}
           onPermissionChange={() => {}}
-          disabled={true}
+          disabled
         />
       )}
 

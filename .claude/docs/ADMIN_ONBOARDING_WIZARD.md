@@ -1,903 +1,457 @@
-# Admin Panel — Onboarding Wizard (7-Step Setup)
+# Onboarding Wizard - Complete Step-by-Step Guide
 
-This document explains the complete onboarding wizard that new restaurant owners complete after signup to configure their restaurant for launch.
-
-**Note**: The system implements a 7-step flow including registration completion, business identity, branch setup, menu template, payment setup, staff invitation, and go live
+This document covers every screen and case for the 6-step setup wizard after signup.
 
 ---
 
-## 📋 Table of Contents
-
-1. [Overview](#overview)
-2. [⚡ Standardized Response Format](#-standardized-response-format-new)
-3. [Onboarding Progress Tracking](#onboarding-progress-tracking)
-4. [✅ Onboarding Validation (NEW)](#-onboarding-validation-new)
-5. [🔄 Reopen Step for Editing (NEW)](#-reopen-step-for-editing-new)
-6. [Step 0: Registration Complete](#step-0-registration-complete)
-7. [Step 1: Business Identity](#step-1-business-identity)
-8. [Step 2: Branch Setup](#step-2-branch-setup)
-9. [Step 3: Menu Template](#step-3-menu-template)
-10. [Step 4: Payment Methods](#step-4-payment-methods)
-11. [Step 5: Invite Staff (Optional)](#step-5-invite-staff-optional)
-12. [Step 6: Go Live](#step-6-go-live)
-13. [Frontend Implementation Guide](#frontend-implementation-guide)
-14. [API Endpoints](#api-endpoints)
-
----
-
-## Overview
-
-### 🎯 Purpose
-
-The onboarding wizard helps new restaurant owners:
-- Configure their restaurant in 10-15 minutes
-- Understand what settings are available
-- Launch with sensible defaults
-- Start taking orders quickly
-
-### 🚀 Why Onboarding Wizard?
-
-**Without wizard**:
-- Owner confused by all settings
-- Doesn't know where to start
-- Takes hours to configure
-- High abandonment rate
-
-**With wizard**:
-- Step-by-step guided process
-- Clear instructions for each step
-- Can skip optional steps
-- Gets to working system fast
-
-### 📊 Wizard Steps
+## Quick Summary
 
 ```
-After Signup:
-   ↓
-Step 0: Registration Complete (Auto)
-   → Account created with OTP verification
-   ↓
-Step 1: Business Identity (Required)
-   → Business name, type, slug, logo
-   ↓
-Step 2: Branch Setup (Required)
-   → Branch name, address, region, city
-   → Operating hours, service types (dine-in/delivery/takeaway)
-   ↓
-Step 3: Menu Template (Required)
-   → Select from pre-made templates or start from scratch
-   ↓
-Step 4: Payment Methods (Optional)
-   → Configure Payme/Click integration or skip
-   ↓
-Step 5: Invite Staff (Optional)
-   → Add employees or do it later
-   ↓
-Step 6: Go Live! (Complete)
-   → Review settings and launch
-   ↓
-Dashboard (System Ready)
-```
-
-### ⏱️ Expected Time
-
-- **Minimum (skip optionals)**: 5 minutes
-- **Complete (all steps)**: 10-15 minutes
-- **With menu customization**: 20-30 minutes
-
----
-
-## ⚡ Standardized Response Format (NEW)
-
-### 🎯 All Step Endpoints Return Same Format
-
-**IMPORTANT**: As of the latest update, **ALL onboarding step endpoints now return the same standardized `OnboardingProgressResponseDto`**. This means:
-
-✅ **No more different response formats** - Every step endpoint returns identical structure
-✅ **Frontend can use single response handler** - One function handles all step responses
-✅ **No extra `/progress` calls needed** - All necessary data included in step response
-✅ **branchId available immediately** - Returned in response after branch setup
-✅ **tenantId always included** - Available in every response
-
-### Standard Response Structure
-
-All step endpoints (`/steps/business-identity`, `/steps/branch-setup`, `/steps/menu-setup`, etc.) return:
-
-```json
-{
-  "currentStep": "branch_setup",
-  "completedSteps": ["registration_complete", "business_identity"],
-  "isCompleted": false,
-  "completionPercentage": 29,
-  "stepData": {
-    "business_identity": {
-      "businessName": "Golden Dragon",
-      "completedAt": "2025-10-30T10:30:00Z"
-    }
-  },
-  "nextStep": "branch_setup",
-  "remainingSteps": ["branch_setup", "menu_template", "payment_setup", "staff_invited", "go_live"],
-  "createdAt": "2025-10-30T09:00:00Z",
-  "updatedAt": "2025-10-30T10:30:00Z",
-  "tenantId": 1,
-  "branchId": 5  // Available after branch setup, null before
-}
-```
-
-### Key Fields
-
-- **`currentStep`**: Current onboarding step (use for navigation)
-- **`nextStep`**: Recommended next step to navigate to
-- **`completedSteps`**: Array of completed steps (use for progress indicator)
-- **`completionPercentage`**: 0-100 percentage (use for progress bar)
-- **`stepData`**: Step-specific data (e.g., menu stats, payment methods configured)
-- **`tenantId`**: Always present - tenant identifier
-- **`branchId`**: Available after branch setup step completes
-- **`remainingSteps`**: Steps left to complete
-
-### Migration Notes
-
-If you were using the old response formats:
-- Replace parsing of `{ message }` responses with `OnboardingProgressResponseDto`
-- Replace parsing of `{ success, categoriesCreated }` with `stepData.menu_template`
-- Remove extra calls to `/progress` between steps - data is in step response
-
----
-
-## Onboarding Progress Tracking
-
-### Progress Bar UI
-
-```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Setting up Samarkand Restaurant                │
-│                                                 │
-│  Step 2 of 7                                    │
-│  ▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░ 29%           │
-│                                                 │
-│  ✓ Registration                                 │
-│  ✓ Business Identity                            │
-│  → Branch Setup (current)                       │
-│    Menu Template                                │
-│    Payment Methods                              │
-│    Invite Staff                                 │
-│    Go Live                                      │
-│                                                 │
-└─────────────────────────────────────────────────┘
-```
-
-### Get Progress API
-
-**API Call**:
-```
+After Signup/Login
+    |
+    v
 GET /admin/onboarding/progress
-Headers: Authorization: Bearer {token}
-
-Response:
-{
-  "currentStep": "branch_setup",
-  "completedSteps": [
-    "registration_complete",
-    "business_identity"
-  ],
-  "isCompleted": false,
-  "completionPercentage": 29,
-  "completedAt": null,
-  "stepData": {
-    "business_identity": {
-      "completedAt": "2025-10-30T10:30:00Z",
-      "businessName": "Golden Dragon Restaurant",
-      "businessType": "restaurant",
-      "slug": "golden-dragon",
-      "logoUrl": "https://cdn.horyco.com/tenants/logos/golden-dragon.png"
-    }
-  },
-  "nextStep": "menu_template",
-  "remainingSteps": [
-    "branch_setup",
-    "menu_template",
-    "payment_setup",
-    "staff_invited",
-    "go_live"
-  ],
-  "createdAt": "2025-10-30T09:00:00Z",
-  "updatedAt": "2025-10-30T10:30:00Z"
-}
+    |
+    v
+isCompleted = true?
+    |
+    +-- YES --> [Dashboard]
+    |
+    +-- NO --> Start at currentStep
+                    |
+    +---------------+---------------+
+    |               |               |
+    v               v               v
+[Screen 1]    [Screen 2]    [Screen 3]
+Business      Branch        Menu
+Identity      Setup         Template
+(Required)    (Required)    (Can Skip)
+    |               |               |
+    +---------------+---------------+
+                    |
+    +---------------+---------------+
+    |               |               |
+    v               v               v
+[Screen 4]    [Screen 5]    [Screen 6]
+Payment       Invite        Go Live
+Methods       Staff         Review
+(Can Skip)    (Can Skip)    (Required)
+    |               |               |
+    +---------------+---------------+
+                    |
+                    v
+            [Dashboard]
 ```
 
 ---
 
-## ✅ Onboarding Validation (NEW)
+## What is the Onboarding Wizard?
 
-### 🎯 Purpose
+Think of it as a guided setup that ensures every new restaurant is properly configured before going live.
 
-The validation endpoint allows frontend to check if onboarding can be completed **before** showing the "Complete Onboarding" button or attempting to call `/complete`. This provides better UX by:
+Steps overview:
 
-- ✅ Proactively showing "You're ready to go live!" vs "Missing: Menu Setup"
-- ✅ Showing specific missing steps instead of generic error messages
-- ✅ Avoiding 400 errors from failed `/complete` calls
-- ✅ Displaying accurate completion progress with skipped steps
+| Step | Name | Required | What Gets Configured |
+|------|------|----------|----------------------|
+| 1 | Business Identity | Yes | Name, type, slug, logo |
+| 2 | Branch Setup | Yes | Address, hours, service types |
+| 3 | Menu Template | Can skip | Load defaults or start empty |
+| 4 | Payment Methods | Can skip | Payme, Click integration |
+| 5 | Invite Staff | Can skip | Create employee accounts |
+| 6 | Go Live | Yes | Review and launch |
 
-### When to Call Validation
-
-Call `GET /admin/onboarding/validation` in these scenarios:
-
-1. **Before showing "Complete Onboarding" button** - Check if all required steps are done
-2. **After completing each step** - Update UI to show remaining tasks
-3. **On wizard load** - Display current completion status
-4. **Before final step** - Verify readiness to go live
-
-### API Endpoint
-
-```
-GET /admin/onboarding/validation
-Headers: Authorization: Bearer {token}
-
-Response:
-{
-  "canComplete": true,
-  "missingSteps": [],
-  "completedSteps": [
-    "registration_complete",
-    "business_identity",
-    "branch_setup"
-  ],
-  "skippedSteps": ["menu_template"],
-  "completionPercentage": 100,
-  "requiredStepsCount": 4,
-  "completedStepsCount": 4
-}
-```
-
-### Response Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `canComplete` | boolean | Can the onboarding be completed? `true` if all required steps done |
-| `missingSteps` | string[] | Array of required steps that must be completed |
-| `completedSteps` | string[] | Array of steps actually completed (not skipped) |
-| `skippedSteps` | string[] | Array of steps that were skipped (count as completed) |
-| `completionPercentage` | number | 0-100 percentage based on required steps only |
-| `requiredStepsCount` | number | Total required steps (always 4) |
-| `completedStepsCount` | number | Total completed + skipped steps |
-
-### Required Steps Logic
-
-The validation checks these **4 required steps**:
-
-1. ✅ `REGISTRATION_COMPLETE` - Always completed during signup
-2. ✅ `BUSINESS_IDENTITY` - Must be completed
-3. ✅ `BRANCH_SETUP` - Must be completed
-4. ✅ `MENU_TEMPLATE` - Must be completed **OR** skipped
-
-**Optional steps** (don't block completion):
-- `PAYMENT_SETUP` - Can be skipped
-- `STAFF_INVITED` - Can be skipped
-
-**Important**: Skipped steps count as completed! If `MENU_TEMPLATE` is skipped, it will appear in `skippedSteps` array and will **NOT** be in `missingSteps`.
-
-### Example Validation Responses
-
-#### Scenario 1: New User (Just Registered)
-
-```json
-{
-  "canComplete": false,
-  "missingSteps": [
-    "business_identity",
-    "branch_setup",
-    "menu_template"
-  ],
-  "completedSteps": ["registration_complete"],
-  "skippedSteps": [],
-  "completionPercentage": 25,
-  "requiredStepsCount": 4,
-  "completedStepsCount": 1
-}
-```
-
-**UI Display**: "25% Complete - Missing: Business Identity, Branch Setup, Menu Template"
-
-#### Scenario 2: Mid-Onboarding (50% Complete)
-
-```json
-{
-  "canComplete": false,
-  "missingSteps": [
-    "branch_setup",
-    "menu_template"
-  ],
-  "completedSteps": [
-    "registration_complete",
-    "business_identity"
-  ],
-  "skippedSteps": [],
-  "completionPercentage": 50,
-  "requiredStepsCount": 4,
-  "completedStepsCount": 2
-}
-```
-
-**UI Display**: "50% Complete - Missing: Branch Setup, Menu Template"
-
-#### Scenario 3: Ready to Complete (All Done)
-
-```json
-{
-  "canComplete": true,
-  "missingSteps": [],
-  "completedSteps": [
-    "registration_complete",
-    "business_identity",
-    "branch_setup",
-    "menu_template"
-  ],
-  "skippedSteps": [],
-  "completionPercentage": 100,
-  "requiredStepsCount": 4,
-  "completedStepsCount": 4
-}
-```
-
-**UI Display**: "🎉 You're ready to go live! - Complete Onboarding"
-
-#### Scenario 4: With Skipped Menu (Still Ready)
-
-```json
-{
-  "canComplete": true,
-  "missingSteps": [],
-  "completedSteps": [
-    "registration_complete",
-    "business_identity",
-    "branch_setup"
-  ],
-  "skippedSteps": ["menu_template"],
-  "completionPercentage": 100,
-  "requiredStepsCount": 4,
-  "completedStepsCount": 4
-}
-```
-
-**UI Display**: "🎉 You're ready to go live! (Menu will be added later) - Complete Onboarding"
-
-### Best Practices
-
-1. **Always check validation before showing complete button** - Better UX than showing error after click
-2. **Update validation after each step** - Keep UI in sync with backend state
-3. **Show specific missing steps** - Don't just say "incomplete", tell them what's needed
-4. **Highlight skipped steps** - Let users know they can configure these later
-5. **Use completion percentage for progress bar** - More accurate than step count
-6. **Handle skipped steps properly** - They count as completed for validation purposes
-
-### Common Questions
-
-#### Q: What if I call `/complete` without checking validation first?
-
-**A**: The `/complete` endpoint will return a 400 error with the same missing steps information. However, it's better UX to check validation first and prevent the error.
-
-#### Q: Do skipped steps block completion?
-
-**A**: No! Skipped steps count as completed. If you skip `MENU_TEMPLATE`, `canComplete` will be `true` (assuming other required steps are done).
-
-#### Q: Can I rely on validation for all steps?
-
-**A**: Yes! The validation checks the exact same logic as `/complete`. If `canComplete = true`, the `/complete` call will succeed.
-
-#### Q: How often should I call validation?
-
-**A**:
-- On wizard load (to show current status)
-- After completing each step (to update progress)
-- Before showing the "Complete" button (to verify readiness)
-
-You don't need to call it on every render - cache the result and update only when progress changes.
+Why it matters for frontend:
+- Must check onboarding status on every admin panel load
+- Must prevent access to dashboard until onboarding complete
+- Must track progress and allow navigation between completed steps
+- Must handle step skipping for optional steps
 
 ---
 
-## 🔄 Reopen Step for Editing (NEW)
+## Screen 0: Onboarding Check (App Init)
 
-### 🎯 Purpose
+### When to Show
 
-The reopen step feature allows users to go back and edit previously completed onboarding steps without losing all their progress. This significantly improves UX for users who:
+This is NOT a visible screen. This is initialization logic that runs when:
+- User logs in successfully
+- User opens admin panel with valid session
+- User navigates to any admin route
 
-- Made a typo in business name (step 2) after completing steps 3-5
-- Need to change branch address after menu is configured
-- Want to update business type and see different menu templates
-- Realize they need to modify any completed step
-
-**Without reopen**: Users would have to reset entire onboarding or contact support
-**With reopen**: Click "Edit" on any completed step, fix the data, and re-complete subsequent steps
-
-### 🔑 Key Concepts
-
-#### Cascade Invalidation
-
-Reopening a step **automatically invalidates all subsequent steps** to maintain data consistency:
+### Initialization Logic
 
 ```
-Completed Steps: [1, 2, 3, 4, 5]
-                      ↓
-Reopen Step 2 (BUSINESS_IDENTITY)
-                      ↓
-Completed Steps: [1] only
-Steps 2-5 become incomplete
-```
-
-**Why cascade?** Because later steps may depend on earlier step data:
-- Menu templates depend on business type (step 2)
-- Branch settings may affect menu availability
-- Payment settings might change based on business type
-
-#### Data Preservation
-
-**Important**: Step data is **preserved** when reopening, not deleted. This allows users to:
-- See their previous answers when re-editing
-- Make small corrections without re-entering everything
-- Understand what they configured before
-
-```json
-// After reopening BUSINESS_IDENTITY
-{
-  "stepData": {
-    "business_identity": {
-      "businessName": "Golden Dragon",  // ← Still here!
-      "businessType": "restaurant",      // ← Available for editing
-      "slug": "golden-dragon",
-      "completedAt": "2025-10-30T10:30:00Z"
-    },
-    "branch_setup": {
-      "branchName": "Main Branch",  // ← Also preserved (even though step invalidated)
-      "address": "123 Main St"
-    }
-  }
-}
-```
-
-### Which Steps Can Be Reopened?
-
-| Step | Can Reopen? | Consequence |
-|------|-------------|-------------|
-| `REGISTRATION_COMPLETE` | ❌ No | Cannot undo registration |
-| `BUSINESS_IDENTITY` | ✅ Yes | Invalidates steps 3-6 (BRANCH_SETUP, MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
-| `BRANCH_SETUP` | ✅ Yes | Invalidates steps 4-6 (MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
-| `MENU_TEMPLATE` | ✅ Yes | Invalidates steps 5-6 (PAYMENT_SETUP, STAFF_INVITED, GO_LIVE) |
-| `PAYMENT_SETUP` | ✅ Yes | Invalidates step 6 (STAFF_INVITED, GO_LIVE) |
-| `STAFF_INVITED` | ✅ Yes | Invalidates step 7 (GO_LIVE only) |
-| `GO_LIVE` | ✅ Yes | Marks onboarding as incomplete, allows re-editing |
-
-**Note**: Can only reopen steps that were previously completed. Cannot reopen steps that were never completed.
-
-### API Endpoint
-
-```
-PATCH /admin/onboarding/steps/:step/reopen
-Headers: Authorization: Bearer {token}
-
-Response: OnboardingProgressResponseDto
-{
-  "currentStep": "business_identity",  // ← Updated to reopened step
-  "completedSteps": ["registration_complete"],  // ← Subsequent steps removed
-  "isCompleted": false,
-  "completionPercentage": 14,  // ← Recalculated
-  "stepData": {
-    "business_identity": {
-      "businessName": "Golden Dragon",  // ← Preserved for re-editing
-      "businessType": "restaurant",
-      "slug": "golden-dragon"
-    },
-    "branch_setup": { ... }  // ← Still available even though step invalidated
-  },
-  ...
-}
-```
-
-### Step Order & Invalidation Examples
-
-#### Example 1: Reopen Step 2 (BUSINESS_IDENTITY)
-
-**Before**:
-```
-Completed: [1:REGISTRATION, 2:BUSINESS, 3:BRANCH, 4:MENU, 5:PAYMENT]
-Current Step: STAFF_INVITED (step 6)
-```
-
-**Reopen BUSINESS_IDENTITY (step 2)**:
-```
-PATCH /admin/onboarding/steps/business_identity/reopen
-
-Completed: [1:REGISTRATION] only
-Current Step: BUSINESS_IDENTITY (step 2)
-Invalidated: [3:BRANCH, 4:MENU, 5:PAYMENT, 6:STAFF]
-```
-
-**User must now re-complete**: Steps 2, 3, 4, 5, 6
-
-#### Example 2: Reopen Step 4 (MENU_TEMPLATE)
-
-**Before**:
-```
-Completed: [1, 2, 3, 4, 5, 6, 7] (All done, onboarding completed)
-isCompleted: true
-```
-
-**Reopen MENU_TEMPLATE (step 4)**:
-```
-PATCH /admin/onboarding/steps/menu_template/reopen
-
-Completed: [1, 2, 3] only
-Current Step: MENU_TEMPLATE (step 4)
-Invalidated: [5:PAYMENT, 6:STAFF, 7:GO_LIVE]
-isCompleted: false  // ← Onboarding no longer complete
-```
-
-**User must now re-complete**: Steps 4, 5, 6, 7
-
-#### Example 3: Reopen Last Step (STAFF_INVITED)
-
-**Before**:
-```
-Completed: [1, 2, 3, 4, 5, 6]
-Current Step: GO_LIVE (step 7)
-```
-
-**Reopen STAFF_INVITED (step 6)**:
-```
-PATCH /admin/onboarding/steps/staff_invited/reopen
-
-Completed: [1, 2, 3, 4, 5] only
-Current Step: STAFF_INVITED (step 6)
-Invalidated: [7:GO_LIVE] only
-```
-
-**User must now re-complete**: Steps 6, 7
-
-### Error Responses
-
-#### Cannot Reopen REGISTRATION_COMPLETE
-
-```json
-// Request
-PATCH /admin/onboarding/steps/registration_complete/reopen
-
-// Response: 400 Bad Request
-{
-  "statusCode": 400,
-  "message": "Cannot reopen REGISTRATION_COMPLETE step. Registration cannot be undone.",
-  "error": "Bad Request"
-}
-```
-
-#### Cannot Reopen Uncompleted Step
-
-```json
-// Request: Trying to reopen PAYMENT_SETUP that was skipped (not completed)
-PATCH /admin/onboarding/steps/payment_setup/reopen
-
-// Response: 400 Bad Request
-{
-  "statusCode": 400,
-  "message": "Cannot reopen step 'payment_setup' - it was never completed. Only completed steps can be reopened.",
-  "error": "Bad Request"
-}
-```
-
-#### Invalid Step Name
-
-```json
-// Request
-PATCH /admin/onboarding/steps/invalid_step/reopen
-
-// Response: 400 Bad Request
-{
-  "statusCode": 400,
-  "message": "Invalid onboarding step: invalid_step",
-  "error": "Bad Request"
-}
-```
-
-### UI/UX Recommendations
-
-#### 1. Clear Visual Indication
-
-Show "Edit" buttons prominently on completed steps:
-
-```
-✅ Registration Complete                [Cannot Edit]
-✅ Business Identity                    [Edit ✏️]
-✅ Branch Setup                         [Edit ✏️]
-→  Menu Setup                           [In Progress]
-   Payment Methods                      [Not Started]
-```
-
-#### 2. Warning Before Reopening
-
-Always warn users about cascade invalidation:
-
-```
-┌─────────────────────────────────────────────────┐
-│  ⚠️ Edit Business Identity?                     │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Editing this step will mark the following      │
-│  steps as incomplete:                           │
-│                                                 │
-│  • Branch Setup                                 │
-│  • Menu Setup                                   │
-│  • Payment Methods                              │
-│                                                 │
-│  You'll need to re-complete these steps.        │
-│  Your previous answers will be saved.           │
-│                                                 │
-│  [ Cancel ]        [ Yes, Edit Step ]           │
-│                                                 │
-└─────────────────────────────────────────────────┘
-```
-
-#### 3. Pre-fill Forms with Existing Data
-
-When user reopens a step, pre-populate form with preserved step data:
-
-**Steps:**
-1. Fetch current progress: `GET /admin/onboarding/progress`
-2. Extract step data from `response.stepData.business_identity`
-3. Pre-fill form fields with existing values:
-   - `businessName` → businessData.businessName
-   - `businessType` → businessData.businessType
-   - `slug` → businessData.slug
-
-#### 4. Highlight Invalidated Steps
-
-After reopening, visually show which steps need re-completion:
-
-```
-✅ Registration Complete
-→  Business Identity                    [Editing...]
-⚠️ Branch Setup                        [Needs Re-completion]
-⚠️ Menu Setup                          [Needs Re-completion]
-⚠️ Payment Methods                     [Needs Re-completion]
-```
-
-### Re-completion Workflow
-
-After reopening a step, users must re-complete it and all subsequent steps:
-
-```
-1. User completes steps 1-5
-2. User realizes business name has typo
-3. User clicks "Edit" on Business Identity (step 2)
-   → Steps 3-5 become incomplete
-   → Step data preserved
-4. User fixes business name
-5. User clicks "Next" → re-completes step 2
-6. User re-completes step 3 (branch setup)
-   → Can use preserved data or change it
-7. User re-completes step 4 (menu)
-8. User re-completes step 5 (payment)
-9. Onboarding progress restored!
-```
-
-### Best Practices
-
-1. **Always show warning** - Users should understand cascade invalidation before confirming
-2. **Preserve data** - Pre-fill forms with existing stepData so users can make quick corrections
-3. **Visual feedback** - Clearly indicate which steps need re-completion after reopen
-4. **Cannot reopen registration** - Disable "Edit" button for REGISTRATION_COMPLETE step
-5. **Only completed steps** - Cannot reopen steps that were never completed or were skipped
-6. **Completion percentage updates** - Progress bar should reflect invalidated steps
-7. **Handle onboarding complete** - If user reopens GO_LIVE, `isCompleted` becomes `false`
-
-### Common Questions
-
-#### Q: What happens to my data when I reopen a step?
-
-**A**: Your data is **preserved**, not deleted. All `stepData` remains available so you can see your previous answers and make corrections without re-entering everything.
-
-#### Q: Can I reopen a step I skipped?
-
-**A**: No. You can only reopen steps that were actually completed. Skipped steps can be completed normally by navigating to them.
-
-#### Q: What if I reopen step 2 but don't want to re-complete step 4?
-
-**A**: Unfortunately, you must re-complete all subsequent steps after the reopened step. This ensures data consistency (e.g., menu templates match business type).
-
-#### Q: Can I undo a reopen?
-
-**A**: No direct "undo" feature, but you can simply re-complete the reopened step without making changes, then re-complete subsequent steps using the preserved data.
-
-#### Q: Why can't I reopen REGISTRATION_COMPLETE?
-
-**A**: Registration creates fundamental tenant data (phone number, initial tenant record, owner account). This cannot be undone without deleting the entire tenant, which would require contacting support.
-
----
-
-## Step 0: Registration Complete
-
-This step is **automatically completed** during the signup process:
-- **Self-registration path**: `POST /auth/register/complete` after OTP verification
-- **Waitlist approval path**: `POST /auth/invite/complete` after setting password from magic link
-
-**What Gets Created**:
-- Tenant entity with business name (status: `TRIAL`, 14-day trial period)
-- Default Branch entity ("Main Branch")
-- Owner Employee record with:
-  - `isOwner: true` flag (marks as tenant owner)
-  - Wildcard permission (`*`) for full access at the branch
-- Default Roles (Admin, Manager, Cashier, Waiter) as permission templates
-- OnboardingProgress entity with `registration_complete` step marked
-
-**Permission System Note**:
-Horyco uses **per-branch permissions, NOT role-based access**:
-- Owners get `isOwner: true` + wildcard permission (`*`)
-- Staff members get specific permissions per branch
-- See [Staff Management](./ADMIN_STAFF_MANAGEMENT.md) for details
-
-This step is not user-facing in the wizard - users land directly on Step 1 after signup.
-
----
-
-## Step 1: Business Identity
-
-### Purpose
-
-Set up the business identity including:
-- Business name and type
-- Tenant slug (for URLs)
-- Business logo
-- Public-facing branding
-
-### UI Form
-
-```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Step 1: Set up your business identity         │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Business Name *                                │
-│  ┌───────────────────────────────────────┐    │
-│  │ Golden Dragon Restaurant               │    │
-│  └───────────────────────────────────────┘    │
-│  ℹ️  This is your public-facing business name   │
-│                                                 │
-│  Business Type *                                │
-│  ○ Restaurant                                   │
-│  ○ Cafe                                         │
-│  ○ Fast Food                                    │
-│  ○ Bar                                          │
-│  ○ Bakery                                       │
-│  ○ Food Truck                                   │
-│  ○ Catering                                     │
-│  ○ Other                                        │
-│                                                 │
-│  Business Slug *                                │
-│  ┌───────────────────────────────────────┐    │
-│  │ golden-dragon                          │    │
-│  └───────────────────────────────────────┘    │
-│  ℹ️  Used in URLs: golden-dragon.horyco.com     │
-│                                                 │
-│  Business Logo (optional)                       │
-│  [📁 Upload Logo]                              │
-│  ℹ️  PNG or JPG, max 2MB                        │
-│                                                 │
-│  [Skip for Now]           [ Next Step → ]      │
-│                                                 │
-└─────────────────────────────────────────────────┘
+Step 1: Check onboarding status
+-------------------------------
+CALL GET /admin/onboarding/progress
+
+Step 2: Route based on status
+-----------------------------
+if response.isCompleted = true
+    Allow access to requested route
+    STOP
+
+if response.isCompleted = false
+    Store progress in app state
+    GO TO: Screen for response.currentStep
 ```
 
 ### API Call
 
 ```
-POST /admin/onboarding/steps/business-identity
-Headers: Authorization: Bearer {token}
+GET /admin/onboarding/progress
 
+Headers:
+- Authorization: Bearer {accessToken}
+
+Response (200):
+{
+  "currentStep": "branch_setup",
+  "completedSteps": ["registration_complete", "business_identity"],
+  "isCompleted": false,
+  "completionPercentage": 33,
+  "completedAt": null,
+  "nextStep": "branch_setup",
+  "remainingSteps": ["branch_setup", "menu_template", "payment_setup", "staff_invited", "go_live"],
+  "tenantId": 1,
+  "branchId": null,
+  "stepData": {
+    "registration_complete": {
+      "phone": "+998901234567",
+      "email": "owner@example.com",
+      "fullName": "John Doe",
+      "businessName": "Golden Dragon",
+      "completedAt": "2025-10-30T09:00:00Z"
+    },
+    "business_identity": {
+      "completedAt": "2025-10-30T10:30:00Z"
+    }
+  },
+  "createdAt": "2025-10-30T09:00:00Z",
+  "updatedAt": "2025-10-30T10:30:00Z"
+}
+```
+
+### Response Fields Explained
+
+| Field | What It Means | Frontend Use |
+|-------|---------------|--------------|
+| `currentStep` | Step user should be on | Navigate to this step |
+| `completedSteps` | Array of finished steps | Show checkmarks |
+| `isCompleted` | All required steps done | Allow dashboard access |
+| `completionPercentage` | 0-100 progress | Progress bar width |
+| `nextStep` | Where to go after current | Navigation after submit |
+| `branchId` | Available after step 2 | Needed for menu/staff APIs |
+| `stepData` | Saved data per step | Pre-fill forms |
+| `remainingSteps` | Steps not yet completed | Show in progress list |
+
+---
+
+## Progress Bar Component
+
+### UI Layout
+
+```
++-----------------------------------------------+
+|                                               |
+|  Setting up Golden Dragon Restaurant          |
+|                                               |
+|  Step 2 of 6                                  |
+|  [====--------] 33%                           |
+|                                               |
+|  [v] Business Identity                        |
+|  [>] Branch Setup (current)                   |
+|  [ ] Menu Template                            |
+|  [ ] Payment Methods                          |
+|  [ ] Invite Staff                             |
+|  [ ] Go Live                                  |
+|                                               |
++-----------------------------------------------+
+```
+
+### Step States
+
+| State | Icon | Style |
+|-------|------|-------|
+| Completed | [v] | Green checkmark |
+| Current | [>] | Blue highlight, bold text |
+| Pending | [ ] | Gray, not clickable |
+| Skipped | [-] | Gray checkmark (optional steps only) |
+
+### Navigation Rules
+
+```
+Can user click on step?
+-----------------------
+if step is completed
+    YES - allow navigation to review/edit
+
+if step is current
+    YES - already viewing
+
+if step is pending
+    NO - must complete previous steps first
+```
+
+---
+
+## Screen 1: Business Identity
+
+### When to Show
+
+Show this screen when:
+- `currentStep = "business_identity"`
+- User clicks on completed "Business Identity" step to edit
+
+Do NOT show when:
+- Onboarding is already completed (unless reopening step)
+
+### UI Layout
+
+```
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 1 of 6]                 |
+|                                               |
+|  Step 1: Set up your business identity        |
+|  ------------------------------------         |
+|                                               |
+|  Business Name *                              |
+|  +---------------------------------------+    |
+|  | Golden Dragon Restaurant              |    |
+|  +---------------------------------------+    |
+|  This is your public-facing business name     |
+|                                               |
+|  Business Type *                              |
+|  +---------------------------------------+    |
+|  | Restaurant                          v |    |
+|  +---------------------------------------+    |
+|  Options: Restaurant, Cafe, Bar,             |
+|  Bakery, Fast Food, Other                    |
+|                                               |
+|  Business Slug *                              |
+|  +---------------------------------------+    |
+|  | golden-dragon                         |    |
+|  +---------------------------------------+    |
+|  Your URL: golden-dragon.horyco.com           |
+|                                               |
+|  Business Logo (optional)                     |
+|  +---------------------------------------+    |
+|  |  [+] Upload Logo                      |    |
+|  |  PNG or JPG, max 2MB                  |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  |           [ Next Step ]               |    |  <- Disabled until valid
+|  +---------------------------------------+    |
+|                                               |
++-----------------------------------------------+
+```
+
+### User Actions
+
+| Action | What Happens |
+|--------|--------------|
+| Enter business name | Validate length (2-255) |
+| Select business type | Store selection |
+| Enter slug | Validate format |
+| Upload logo | Upload to CDN, store URL |
+| Click Next Step | Validate all, call API |
+
+### Input Validation
+
+| Field | Rule | Error Message |
+|-------|------|---------------|
+| Business Name | Required | "Business name is required" |
+| Business Name | 2-255 characters | "Name must be 2-255 characters" |
+| Business Type | Required | "Select a business type" |
+| Slug | Required | "Slug is required" |
+| Slug | 3-50 characters | "Slug must be 3-50 characters" |
+| Slug | Lowercase, alphanumeric, hyphens only | "Only lowercase letters, numbers, and hyphens" |
+| Slug | Format: `/^[a-z0-9]+(?:-[a-z0-9]+)*$/` | "Invalid slug format (no consecutive hyphens)" |
+| Logo | Max 2MB | "File too large. Max 2MB." |
+| Logo | PNG or JPG only | "Only PNG and JPG files allowed" |
+
+### Business Types Available
+
+| Value | Display Name |
+|-------|--------------|
+| `restaurant` | Restaurant |
+| `cafe` | Cafe |
+| `bar` | Bar |
+| `bakery` | Bakery |
+| `fast_food` | Fast Food |
+| `other` | Other |
+
+### API Call
+
+```
+POST /admin/onboarding/steps/business-identity
+
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
   "businessName": "Golden Dragon Restaurant",
   "businessType": "restaurant",
   "slug": "golden-dragon",
   "logoUrl": "https://cdn.horyco.com/tenants/logos/golden-dragon.png"
 }
+```
 
-Response: OnboardingProgressResponseDto
+### Handle Response
+
+Success Response (200):
+```
 {
   "currentStep": "branch_setup",
   "completedSteps": ["registration_complete", "business_identity"],
   "isCompleted": false,
-  "completionPercentage": 29,
-  "stepData": { ... },
+  "completionPercentage": 33,
   "nextStep": "branch_setup",
-  "remainingSteps": ["branch_setup", "menu_template", ...],
-  "tenantId": 1,
-  "branchId": null,
-  "createdAt": "2025-10-30T09:00:00Z",
-  "updatedAt": "2025-10-30T10:30:00Z"
+  "stepData": {
+    "business_identity": {
+      "completedAt": "2025-10-30T10:30:00Z"
+    }
+  },
+  ...
 }
 ```
 
-**Validation**:
-- `businessName`: Required, 2-255 characters
-- `businessType`: Required, enum (restaurant, cafe, fast_food, bar, bakery, food_truck, catering, other)
-- `slug`: Required, 3-50 characters, lowercase alphanumeric with hyphens, must be unique
-- `logoUrl`: Optional string
+### Decision Logic After Submit
 
-**What Happens**:
-- Updates Tenant entity (name, businessType, slug)
-- Stores metadata in stepData (completedAt)
-- Marks `business_identity` step as complete
-- Moves to `branch_setup` step
+```
+Step 1: Update progress state
+-----------------------------
+Store response in onboarding state
+
+Step 2: Navigate to next step
+-----------------------------
+GO TO: Screen 2 (Branch Setup)
+```
+
+### Error Handling
+
+| Code | Response | What to Show |
+|------|----------|--------------|
+| 400 | `{"message": "Slug already taken"}` | Show field error: "This slug is already taken" |
+| 400 | `{"message": "Invalid business type"}` | Show dropdown error |
+| 409 | Conflict | Show error message from response |
+
+### Loading State
+
+```
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 1 of 6]                 |
+|                                               |
+|  Business Name *                              |
+|  +---------------------------------------+    |
+|  | Golden Dragon Restaurant              |    |  <- Disabled
+|  +---------------------------------------+    |
+|                                               |
+|  Business Type *                              |
+|  +---------------------------------------+    |
+|  | Restaurant                          v |    |  <- Disabled
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  |     [Spinner] Saving...               |    |
+|  +---------------------------------------+    |
+|                                               |
++-----------------------------------------------+
+```
 
 ---
 
-## Step 2: Branch Setup
+## Screen 2: Branch Setup
 
-### Purpose
+### When to Show
 
-Configure the default branch (created during signup) with:
-- Branch name and address
-- Region and city
-- Operating hours
-- Service types (dine-in, takeaway, delivery)
+Show this screen when:
+- `currentStep = "branch_setup"`
+- Step 1 (Business Identity) is completed
 
-### UI Form
+Do NOT show when:
+- Step 1 is not completed
+
+### UI Layout
 
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Step 2: Configure your branch                 │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Branch Name *                                  │
-│  ┌───────────────────────────────────────┐    │
-│  │ Samarkand Restaurant (Main Branch)     │    │
-│  └───────────────────────────────────────┘    │
-│  ℹ️  You can add more branches later            │
-│                                                 │
-│  Branch Address                                 │
-│  ┌───────────────────────────────────────┐    │
-│  │ Same as business address               │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Region (Optional)                              │
-│  ┌───────────────────────────────────────┐    │
-│  │ Tashkent Region                        │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  City (Optional)                                │
-│  ┌───────────────────────────────────────┐    │
-│  │ Tashkent                               │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Service Types *                                │
-│  ☑ Dine-in (table service)                     │
-│  ☑ Takeaway (pickup orders)                    │
-│  ☐ Delivery (door-to-door)                     │
-│                                                 │
-│  Operating Hours *                              │
-│  ┌─────────────────────────────────────┐      │
-│  │ Monday     09:00 - 22:00   [✓]      │      │
-│  │ Tuesday    09:00 - 22:00   [✓]      │      │
-│  │ Wednesday  09:00 - 22:00   [✓]      │      │
-│  │ Thursday   09:00 - 22:00   [✓]      │      │
-│  │ Friday     09:00 - 23:00   [✓]      │      │
-│  │ Saturday   09:00 - 23:00   [✓]      │      │
-│  │ Sunday     09:00 - 22:00   [✓]      │      │
-│  └─────────────────────────────────────┘      │
-│  [Copy to All Days]                             │
-│                                                 │
-│  [← Back]                     [ Next Step → ]  │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 2 of 6]                 |
+|                                               |
+|  Step 2: Configure your branch                |
+|  -----------------------------                |
+|                                               |
+|  Branch Name                                  |
+|  +---------------------------------------+    |
+|  | Main Branch                           |    |
+|  +---------------------------------------+    |
+|  You can add more branches later              |
+|                                               |
+|  Address                                      |
+|  +---------------------------------------+    |
+|  | Tashkent, Amir Temur street 15        |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Region                    City               |
+|  +------------------+  +------------------+   |
+|  | Tashkent Region v|  | Tashkent       v|   |
+|  +------------------+  +------------------+   |
+|                                               |
+|  Service Types                                |
+|  +---------------------------------------+    |
+|  | [x] Dine-in (table service)           |    |
+|  | [x] Takeaway (pickup orders)          |    |
+|  | [ ] Delivery (door-to-door)           |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Operating Hours                              |
+|  +---------------------------------------+    |
+|  | Mon  [09:00] - [22:00]                |    |
+|  | Tue  [09:00] - [22:00]                |    |
+|  | Wed  [09:00] - [22:00]                |    |
+|  | Thu  [09:00] - [22:00]                |    |
+|  | Fri  [09:00] - [23:00]                |    |
+|  | Sat  [10:00] - [23:00]                |    |
+|  | Sun  [10:00] - [22:00]                |    |
+|  +---------------------------------------+    |
+|  [Copy Monday to all days]                    |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |    [ Back ]    |  |   [ Next Step ]    |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
 ```
+
+### User Actions
+
+| Action | What Happens |
+|--------|--------------|
+| Enter branch name | Store value (optional) |
+| Enter address | Store value (optional) |
+| Select region | Filter cities dropdown |
+| Select city | Store value |
+| Toggle service type | Update service flags |
+| Set hours | Store hours per day |
+| Click Copy to all | Copy Monday hours to all days |
+| Click Back | GO TO: Screen 1 |
+| Click Next Step | Call API |
 
 ### API Call
 
 ```
 POST /admin/onboarding/steps/branch-setup
-Headers: Authorization: Bearer {token}
 
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
   "branchName": "Main Branch",
   "address": "Tashkent, Amir Temur street 15",
@@ -912,524 +466,763 @@ Headers: Authorization: Bearer {token}
     "saturday": { "open": "10:00", "close": "23:00" },
     "sunday": { "open": "10:00", "close": "22:00" }
   },
-  "deliveryEnabled": true,
   "dineInEnabled": true,
-  "takeawayEnabled": true
+  "takeawayEnabled": true,
+  "deliveryEnabled": false
 }
+```
 
-Response: OnboardingProgressResponseDto
+All fields are optional. Update only what's provided.
+
+### Handle Response
+
+Success Response (200):
+```
 {
   "currentStep": "menu_template",
   "completedSteps": ["registration_complete", "business_identity", "branch_setup"],
-  "isCompleted": false,
-  "completionPercentage": 43,
-  "stepData": { ... },
-  "nextStep": "menu_template",
-  "remainingSteps": ["menu_template", "payment_setup", ...],
-  "tenantId": 1,
-  "branchId": 5,  // ← Available immediately after this step!
-  "createdAt": "2025-10-30T09:00:00Z",
-  "updatedAt": "2025-10-30T11:00:00Z"
+  "stepData": {
+    "branch_setup": {
+      "branchId": 5,
+      "completedAt": "2025-10-30T10:45:00Z"
+    }
+  },
+  "branchId": 5,
+  ...
 }
 ```
 
-**All fields are optional** - updates the default branch created during registration.
+### Decision Logic After Submit
 
-**What Happens**:
-- Updates default Branch entity (name, address, region, city)
-- Saves business hours to Settings (`branch.business_hours`)
-- Saves service types to Settings (`branch.service_types`)
-- Stores metadata in stepData (branchId, completedAt)
-- Marks `branch_setup` step as complete
-- Moves to `menu_template` step
+```
+Step 1: Store branchId
+----------------------
+branchId is now available for subsequent API calls
 
-### Why Service Types Matter?
+Step 2: Update progress
+-----------------------
+Store response in onboarding state
 
-**Dine-in**:
-- Enables table/hall management
-- Adds service charge option
-- Shows table session features
+Step 3: Navigate
+----------------
+GO TO: Screen 3 (Menu Template)
+```
 
-**Takeaway**:
-- Simpler order flow (no table)
-- Usually no service charge
-- Faster checkout
+### Service Types Explained
 
-**Delivery**:
-- Enables delivery address fields
-- Adds delivery fee configuration
-- Shows delivery radius settings
-
-**Operating Hours**:
-- Prevents orders outside business hours
-- Shown to customers in webapp/QR menu
-- Used for reporting and analytics
+| Type | What It Enables |
+|------|-----------------|
+| Dine-in | Table/hall management, service charge option |
+| Takeaway | Pickup orders, no table assignment needed |
+| Delivery | Delivery address fields, delivery fee settings |
 
 ---
 
-## Step 3: Menu Template
+## Screen 3: Menu Template
 
-### Purpose
+### When to Show
 
-Quickly populate menu with pre-configured defaults based on business type or start from scratch.
+Show this screen when:
+- `currentStep = "menu_template"`
+- Steps 1 and 2 are completed
 
-### UI Flow
-
-**Option 1: Load Defaults** → **Option 2: Customize Menu** → **Submit**
-
-### UI Screen
+### UI Layout (Initial)
 
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Step 3: Setup your menu                       │
-│                                                 │
-│  Load defaults for your business type or build │
-│  your own menu from scratch.                    │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Your Business Type: Restaurant                 │
-│                                                 │
-│  [Load Default Restaurant Menu]                │
-│                                                 │
-│  ─────────── OR ───────────                    │
-│                                                 │
-│  [Start with Empty Menu]                        │
-│                                                 │
-│  ────────────────────────────────────          │
-│                                                 │
-│  Current Menu (3 categories, 12 products):      │
-│                                                 │
-│  📁 Appetizers (4 products)                     │
-│     • Spring Rolls - 18,000 UZS                 │
-│     • Bruschetta - 25,000 UZS                   │
-│     • Hummus Plate - 22,000 UZS                 │
-│     • Garlic Bread - 15,000 UZS                 │
-│                                                 │
-│  📁 Main Courses (6 products)                   │
-│     • Plov - 35,000 UZS                         │
-│     • Lagman - 32,000 UZS                       │
-│     ... [Expand to see all]                     │
-│                                                 │
-│  📁 Desserts (2 products)                       │
-│     • Tiramisu - 28,000 UZS                     │
-│     • Ice Cream - 18,000 UZS                    │
-│                                                 │
-│  [ + Add Category ]  [ Edit Menu ]              │
-│                                                 │
-│  [← Back]  [Skip - Add Later]  [ Next Step → ] │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 3 of 6]                 |
+|                                               |
+|  Step 3: Set up your menu                     |
+|  ------------------------                     |
+|                                               |
+|  Your Business Type: Restaurant               |
+|                                               |
+|  Choose how to start:                         |
+|                                               |
+|  +---------------------------------------+    |
+|  |  [Restaurant Icon]                    |    |
+|  |                                       |    |
+|  |  Load Default Restaurant Menu         |    |
+|  |  Sample categories and products       |    |
+|  |  You can customize everything later   |    |
+|  |                                       |    |
+|  |  [ Load Default Menu ]                |    |
+|  +---------------------------------------+    |
+|                                               |
+|  -------------- OR --------------             |
+|                                               |
+|  +---------------------------------------+    |
+|  |  [Empty Icon]                         |    |
+|  |                                       |    |
+|  |  Start with Empty Menu                |    |
+|  |  Create everything from scratch       |    |
+|  |                                       |    |
+|  |  [ Skip This Step ]                   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +----------------+                           |
+|  |    [ Back ]    |                           |
+|  +----------------+                           |
+|                                               |
++-----------------------------------------------+
 ```
 
-### API Calls
+### After Loading Default Menu
 
 ```
-// 1. Get default products for business type
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 3 of 6]                 |
+|                                               |
+|  Step 3: Set up your menu                     |
+|                                               |
+|  Menu loaded! Review and customize:           |
+|                                               |
+|  +---------------------------------------+    |
+|  | v Appetizers (4 products)             |    |
+|  |   - Spring Rolls         18,000 UZS   |    |
+|  |   - Bruschetta           25,000 UZS   |    |
+|  |   - Hummus Plate         22,000 UZS   |    |
+|  |   - Garlic Bread         15,000 UZS   |    |
+|  +---------------------------------------+    |
+|  | > Main Courses (6 products)           |    |
+|  +---------------------------------------+    |
+|  | > Desserts (2 products)               |    |
+|  +---------------------------------------+    |
+|                                               |
+|  [+ Add Category]                             |
+|                                               |
+|  You can edit all items in Menu Management    |
+|  after completing setup.                      |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |    [ Back ]    |  |   [ Next Step ]    |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
+```
+
+### User Actions
+
+| Action | What Happens |
+|--------|--------------|
+| Click Load Default Menu | Fetch and display template |
+| Click Skip This Step | Skip step, go to Screen 4 |
+| Expand category | Show products in category |
+| Edit product price | Update price in local state |
+| Click Add Category | Open add category modal |
+| Click Back | GO TO: Screen 2 |
+| Click Next Step | Save menu, go to Screen 4 |
+
+### Get Default Products
+
+```
 GET /admin/onboarding/default-products?businessType=restaurant
-Headers: Authorization: Bearer {token}
 
-Response:
+Headers:
+- Authorization: Bearer {accessToken}
+
+Response (200):
 {
   "categories": [
     {
-      "name": "Main Dishes",
-      "description": "Our main course offerings",
+      "name": "Appetizers",
+      "description": "Starters and small plates",
       "products": [
         {
-          "name": "Pizza Margherita",
-          "description": "Classic Italian pizza",
-          "suggestedPrice": 25000,
-          "image": "https://cdn.example.com/pizza.jpg",
+          "name": "Spring Rolls",
+          "description": "Crispy vegetable rolls",
+          "suggestedPrice": 18000,
+          "image": "https://cdn.horyco.com/defaults/spring-rolls.jpg",
           "preparationTime": 15,
-          "calories": 280,
-          "allergens": ["gluten", "dairy"]
+          "calories": 250,
+          "allergens": ["gluten", "soy"]
         }
       ]
     }
   ]
 }
+```
 
-// 2. Apply menu setup with custom/modified data
+### Submit Menu
+
+```
 POST /admin/onboarding/steps/menu-setup
-Headers: Authorization: Bearer {token}
 
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
   "categories": [
     {
-      "name": "Pizzas",
-      "description": "Italian classics",
+      "name": "Appetizers",
+      "description": "Starters",
       "products": [
         {
-          "name": "Margherita",
-          "price": 25000,
-          "description": "Classic pizza with tomato sauce, mozzarella, and basil",
-          "image": "https://cdn.example.com/margherita.jpg",
+          "name": "Spring Rolls",
+          "price": 18000,
+          "description": "Crispy vegetable rolls",
+          "image": "https://cdn.horyco.com/defaults/spring-rolls.jpg",
           "preparationTime": 15,
-          "calories": 280,
-          "allergens": ["gluten", "dairy"]
-        },
-        {
-          "name": "Pepperoni",
-          "price": 30000,
-          "description": "Spicy pepperoni pizza"
+          "calories": 250,
+          "allergens": ["gluten", "soy"]
         }
       ]
     }
   ]
 }
+```
 
-Response: OnboardingProgressResponseDto
+### Handle Response
+
+Success Response (200):
+```
 {
-  "currentStep": "payment_setup",
-  "completedSteps": ["registration_complete", "business_identity", "branch_setup", "menu_template"],
-  "isCompleted": false,
-  "completionPercentage": 57,
+  "currentStep": "menu_template",
+  "completedSteps": [..., "menu_template"],
   "stepData": {
     "menu_template": {
+      "categoriesCreated": 3,
+      "productsCreated": 12,
       "success": true,
-      "categoriesCreated": 1,
-      "productsCreated": 2,
-      "completedAt": "2025-10-30T11:30:00Z"
+      "completedAt": "2025-10-30T11:00:00Z"
     }
   },
-  "nextStep": "payment_setup",
-  "remainingSteps": ["payment_setup", "staff_invited", "go_live"],
-  "tenantId": 1,
-  "branchId": 5,
-  "createdAt": "2025-10-30T09:00:00Z",
-  "updatedAt": "2025-10-30T11:30:00Z"
+  ...
 }
+```
 
-// 3. Or skip this step using unified skip endpoint
+Note: After menu-setup, currentStep stays at menu_template. Frontend should navigate to next step manually.
+
+### Skip Menu (Start Empty)
+
+```
 PATCH /admin/onboarding/skip-step
-Headers: Authorization: Bearer {token}
 
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
   "step": "menu_template",
   "reason": "Will add menu items manually later"
 }
 
-Response: OnboardingProgressResponseDto (with menu_template marked as skipped in stepData)
+Response (200):
+{
+  "currentStep": "payment_setup",
+  "completedSteps": [...],
+  "stepData": {
+    "menu_template": {
+      "skipped": true,
+      "skippedAt": "2025-10-30T11:00:00Z",
+      "reason": "Will add menu items manually later"
+    }
+  },
+  ...
+}
 ```
-
-### Frontend Implementation Notes
-
-1. **Load Defaults**: Call `GET /admin/onboarding/default-products?businessType=restaurant`
-2. **Let User Customize**: Display defaults in editable form
-3. **Submit Menu**: Send customized structure to `POST /admin/onboarding/steps/menu-setup`
-4. **Or Skip**: Call `PATCH /admin/onboarding/skip-step` with `step: "menu_template"` to start with empty menu
-
-**Validation**:
-- Categories array required (at least one)
-- Each category must have name and products array
-- Each product must have name and price (≥ 0)
-- Optional fields: description, image, preparationTime, calories, allergens
-
-**Error Handling**:
-- 400 if branch setup not completed first
 
 ---
 
-## Step 4: Payment Methods (Optional)
+## Screen 4: Payment Methods (Optional)
 
-### Purpose
+### When to Show
 
-Configure payment gateway integrations (Payme, Click, Uzum) or skip for now.
+Show this screen when:
+- `currentStep = "payment_setup"`
+- Steps 1, 2, 3 are completed (or step 3 skipped)
 
-**This step is OPTIONAL** - can be skipped using the skip-step endpoint.
-
-### UI Form
-
-```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Step 4: Payment methods (Optional)            │
-│                                                 │
-│  Configure online payment gateways or skip and  │
-│  accept only cash/card for now.                 │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Accepted by Default:                           │
-│  ✓ Cash                                         │
-│  ✓ Card (manual terminal)                       │
-│                                                 │
-│  ─────────────────────────────────────────      │
-│                                                 │
-│  Online Payment Gateways:                       │
-│                                                 │
-│  ☐ Payme                                        │
-│     [Configure Payme Integration]               │
-│                                                 │
-│  ☐ Click                                        │
-│     [Configure Click Integration]               │
-│                                                 │
-│  ☐ Uzum Bank                                    │
-│     [Configure Uzum Integration]                │
-│                                                 │
-│  ℹ️  You can configure these later in Settings  │
-│                                                 │
-│  [← Back]  [Skip for Now]  [ Next Step → ]     │
-│                                                 │
-└─────────────────────────────────────────────────┘
-```
-
-### Payme Configuration Modal
+### UI Layout
 
 ```
-┌─────────────────────────────────────────────────┐
-│  Payme Integration Setup                    × │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  To accept Payme payments, you need:            │
-│  1. Payme merchant account                      │
-│  2. Merchant ID and Secret Key                  │
-│                                                 │
-│  Get these from:                                │
-│  https://merchant.payme.uz                      │
-│                                                 │
-│  ─────────────────────────────────────────      │
-│                                                 │
-│  Merchant ID *                                  │
-│  ┌───────────────────────────────────────┐    │
-│  │ 5e730e8e0b852a417aa49ceb              │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Secret Key *                                   │
-│  ┌───────────────────────────────────────┐    │
-│  │ ••••••••••••••••••••                   │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Service ID *                                   │
-│  ┌───────────────────────────────────────┐    │
-│  │ 12345                                  │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  [ Test Connection ]                            │
-│                                                 │
-│  [ Cancel ]                    [ Save & Enable ]│
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 4 of 6]                 |
+|                                               |
+|  Step 4: Payment methods (Optional)           |
+|  ----------------------------------           |
+|                                               |
+|  Default payment methods (always enabled):    |
+|  [v] Cash                                     |
+|  [v] Card (manual terminal)                   |
+|                                               |
+|  ----------------------------------------     |
+|                                               |
+|  Online Payment Gateways:                     |
+|                                               |
+|  +---------------------------------------+    |
+|  | [ ] Payme                             |    |
+|  |     Merchant ID: [________________]   |    |
+|  |     Secret Key:  [________________]   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  | [ ] Click                             |    |
+|  |     Merchant ID: [________________]   |    |
+|  |     Service ID:  [________________]   |    |
+|  |     Secret Key:  [________________]   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  You can configure these later in Settings    |
+|                                               |
+|  +----------+  +--------+  +--------------+   |
+|  |  [ Back ]|  | [Skip] |  | [Next Step ] |   |
+|  +----------+  +--------+  +--------------+   |
+|                                               |
++-----------------------------------------------+
 ```
+
+### User Actions
+
+| Action | What Happens |
+|--------|--------------|
+| Toggle Payme | Show/hide Payme configuration fields |
+| Toggle Click | Show/hide Click configuration fields |
+| Enter credentials | Store in state |
+| Click Back | GO TO: Screen 3 |
+| Click Skip | Skip step, GO TO: Screen 5 |
+| Click Next Step | Validate if any enabled, call API |
 
 ### API Call
 
 ```
 POST /admin/onboarding/steps/payment-setup
-Headers: Authorization: Bearer {token}
 
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
-  "paymeMerchantId": "628c8b3d9e1234567890abcd",
-  "paymeSecretKey": "your-payme-secret-key",
-  "clickMerchantId": "12345",
-  "clickServiceId": "67890",
-  "clickSecretKey": "your-click-secret-key",
   "cashEnabled": true,
-  "cardEnabled": true
+  "cardEnabled": true,
+  "paymeMerchantId": "628c8b3d9e1234567890abcd",
+  "paymeSecretKey": "secret-key-here",
+  "clickMerchantId": null,
+  "clickServiceId": null,
+  "clickSecretKey": null
 }
-
-Response: OnboardingProgressResponseDto
-
-// Or skip this step
-PATCH /admin/onboarding/skip-step
-Headers: Authorization: Bearer {token}
-
-{
-  "step": "payment_setup",
-  "reason": "Will configure later"
-}
-
-Response: OnboardingProgressResponseDto
 ```
 
-**All fields are optional**. Stores payment methods configuration in stepData and marks step complete.
+### Handle Response
+
+Success Response (200):
+```
+{
+  "currentStep": "payment_setup",
+  "completedSteps": [..., "payment_setup"],
+  "stepData": {
+    "payment_setup": {
+      "paymentMethods": {
+        "payme": true,
+        "click": false,
+        "cash": true,
+        "card": true
+      },
+      "completedAt": "2025-10-30T11:15:00Z"
+    }
+  },
+  ...
+}
+```
+
+### Validation Logic
+
+```
+Payme is enabled only if:
+- paymeMerchantId is provided AND
+- paymeSecretKey is provided
+
+Click is enabled only if:
+- clickMerchantId is provided AND
+- clickServiceId is provided AND
+- clickSecretKey is provided
+
+Cash and Card are independent boolean flags (default true)
+```
+
+### Skip Step
+
+```
+PATCH /admin/onboarding/skip-step
+
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
+{
+  "step": "payment_setup",
+  "reason": "Will configure payment methods later"
+}
+```
 
 ---
 
-## Step 5: Invite Staff (Optional)
+## Screen 5: Invite Staff (Optional)
 
-### Purpose
+### When to Show
 
-Add employee invitations for staff members.
+Show this screen when:
+- `currentStep = "staff_invited"`
+- Steps 1-4 completed or skipped
 
-**This step is OPTIONAL** - can be skipped using the skip-step endpoint.
-
-### UI Form
+### UI Layout (Empty State)
 
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  Step 5: Invite your team (Optional)           │
-│                                                 │
-│  Add employees who will use the POS system.     │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Invited Staff (2):                             │
-│                                                 │
-│  ┌─────────────────────────────────────┐      │
-│  │ Farrux Aliyev                       │      │
-│  │ +998 90 987 65 43                   │      │
-│  │ Role: Cashier                       │      │
-│  │ Branch: Main Branch                 │      │
-│  │ [Edit] [Remove]                     │      │
-│  └─────────────────────────────────────┘      │
-│                                                 │
-│  ┌─────────────────────────────────────┐      │
-│  │ Dilnoza Rahimova                    │      │
-│  │ +998 93 123 45 67                   │      │
-│  │ Role: Waiter                        │      │
-│  │ Branch: Main Branch                 │      │
-│  │ [Edit] [Remove]                     │      │
-│  └─────────────────────────────────────┘      │
-│                                                 │
-│  [ + Add Another Employee ]                    │
-│                                                 │
-│  ℹ️  They'll receive SMS with login instructions│
-│                                                 │
-│  [← Back]  [Skip - Add Later]  [ Send Invites]│
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 5 of 6]                 |
+|                                               |
+|  Step 5: Invite your team (Optional)          |
+|  -----------------------------------          |
+|                                               |
+|  Create accounts for employees who will       |
+|  use the POS system. They'll receive a        |
+|  temporary password to change on first login. |
+|                                               |
+|  +---------------------------------------+    |
+|  |                                       |    |
+|  |  [Team Icon]                          |    |
+|  |                                       |    |
+|  |  No employees added yet               |    |
+|  |                                       |    |
+|  |  [+ Add First Employee]               |    |
+|  |                                       |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +----------+  +--------+  +--------------+   |
+|  |  [ Back ]|  | [Skip] |  | [Next Step ] |   |
+|  +----------+  +--------+  +--------------+   |
+|                                               |
++-----------------------------------------------+
+```
+
+### UI Layout (With Employees Added)
+
+```
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 5 of 6]                 |
+|                                               |
+|  Step 5: Invite your team (Optional)          |
+|                                               |
+|  Employees to create (2):                     |
+|                                               |
+|  +---------------------------------------+    |
+|  | Farrux Aliyev                         |    |
+|  | +998 90 987 65 43                     |    |
+|  | Permissions: 12                       |    |
+|  | [Edit] [Remove]                       |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  | Dilnoza Rahimova                      |    |
+|  | +998 93 123 45 67                     |    |
+|  | Permissions: 8                        |    |
+|  | [Edit] [Remove]                       |    |
+|  +---------------------------------------+    |
+|                                               |
+|  [+ Add Another Employee]                     |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |    [ Back ]    |  |   [ Create Staff ] |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
+```
+
+### After Staff Created (Success State)
+
+```
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 5 of 6]                 |
+|                                               |
+|  Staff Created Successfully!                  |
+|                                               |
+|  +---------------------------------------+    |
+|  | [!] Save these passwords! They won't  |    |  <- Warning banner
+|  |     be shown again.                   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  | Farrux Aliyev                         |    |
+|  | +998 90 987 65 43                     |    |
+|  | Temp Password: Xk9m2pL4      [Copy]   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +---------------------------------------+    |
+|  | Dilnoza Rahimova                      |    |
+|  | +998 93 123 45 67                     |    |
+|  | Temp Password: Zy7n3qR8      [Copy]   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |    [ Back ]    |  |   [ Next Step ]    |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
 ```
 
 ### Add Employee Modal
 
 ```
-┌─────────────────────────────────────────────────┐
-│  Invite Employee                            × │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Full Name *                                    │
-│  ┌───────────────────────────────────────┐    │
-│  │ Farrux Aliyev                          │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Phone Number *                                 │
-│  ┌───────────────────────────────────────┐    │
-│  │ +998 │ 90 987 65 43                   │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Email (optional)                               │
-│  ┌───────────────────────────────────────┐    │
-│  │ farrux@example.com                     │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  Role *                                         │
-│  ┌───────────────────────────────────────┐    │
-│  │ Cashier                    ▼           │    │
-│  └───────────────────────────────────────┘    │
-│                                                 │
-│  ℹ️  Employees will be automatically assigned  │
-│     to your default branch                      │
-│                                                 │
-│  [ Cancel ]                    [ Add Employee ] │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|  Add Employee                             [x] |
++-----------------------------------------------+
+|                                               |
+|  Full Name *                                  |
+|  +---------------------------------------+    |
+|  | Farrux Aliyev                         |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Phone Number *                               |
+|  +---------------------------------------+    |
+|  | +998 | 90 987 65 43                   |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Email (optional)                             |
+|  +---------------------------------------+    |
+|  | farrux@example.com                    |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Role Template (pre-fills permissions)        |
+|  +---------------------------------------+    |
+|  | Cashier                             v |    |
+|  +---------------------------------------+    |
+|                                               |
+|  Permissions * (customize as needed)          |
+|  +---------------------------------------+    |
+|  | Menu                                  |    |
+|  |   [x] menu:view    [ ] menu:create    |    |
+|  |   [ ] menu:edit    [ ] menu:delete    |    |
+|  |                                       |    |
+|  | Orders                                |    |
+|  |   [x] orders:view  [x] orders:create  |    |
+|  |   [x] orders:edit  [ ] orders:delete  |    |
+|  +---------------------------------------+    |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |   [ Cancel ]   |  |  [ Add Employee ]  |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
 ```
 
-### API Call
+### Input Validation
+
+| Field | Rule | Error Message |
+|-------|------|---------------|
+| Full Name | Required | "Full name is required" |
+| Phone | Required, +998 format | "Enter valid phone number" |
+| Email | Optional, valid format | "Enter valid email" |
+| Permissions | At least 1 required | "Select at least one permission" |
+
+### Submit Staff
 
 ```
 POST /admin/onboarding/steps/staff-invite
-Headers: Authorization: Bearer {token}
 
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
 {
   "invitations": [
     {
-      "fullName": "John Doe",
-      "phone": "+998901234567",
-      "email": "john.doe@example.com",
-      "roleId": 2
+      "fullName": "Farrux Aliyev",
+      "phone": "+998909876543",
+      "email": "farrux@example.com",
+      "permissionIds": [1, 5, 6, 7, 8, 12],
+      "password": null
     },
     {
-      "fullName": "Jane Smith",
-      "phone": "+998909876543",
-      "roleId": 3
+      "fullName": "Dilnoza Rahimova",
+      "phone": "+998931234567",
+      "email": null,
+      "permissionIds": [1, 10, 11, 12],
+      "password": null
     }
   ]
 }
-
-Response: OnboardingProgressResponseDto
-
-// Or skip this step
-PATCH /admin/onboarding/skip-step
-Headers: Authorization: Bearer {token}
-
-{
-  "step": "staff_invited",
-  "reason": "Will add staff later"
-}
-
-Response: OnboardingProgressResponseDto
 ```
 
-**Validation**:
-- `fullName`: Required string
-- `phone`: Required string (Uzbekistan format)
-- `email`: Optional email
-- `roleId`: Required number (role must exist)
+If password is null, system generates a secure random 8-character password.
 
-**Note**: Currently stores invitation data in stepData. Full employee creation logic to be implemented.
+### Handle Response
+
+Success Response (200):
+```
+{
+  "currentStep": "staff_invited",
+  "completedSteps": [..., "staff_invited"],
+  "stepData": {
+    "staff_invited": {
+      "employeesCreated": 2,
+      "credentials": [
+        {
+          "employeeId": 5,
+          "fullName": "Farrux Aliyev",
+          "phone": "+998909876543",
+          "temporaryPassword": "Xk9m2pL4",
+          "branchName": "Main Branch",
+          "permissionCount": 6
+        },
+        {
+          "employeeId": 6,
+          "fullName": "Dilnoza Rahimova",
+          "phone": "+998931234567",
+          "temporaryPassword": "Zy7n3qR8",
+          "branchName": "Main Branch",
+          "permissionCount": 4
+        }
+      ],
+      "completedAt": "2025-10-30T11:30:00Z"
+    }
+  }
+}
+```
+
+### Decision Logic After Submit
+
+```
+Step 1: Display credentials
+---------------------------
+Show temporary passwords for each employee
+These are shown ONLY ONCE - user must save them
+
+Step 2: Update state
+--------------------
+Store credentials in local state for display
+Mark step as completed
+
+Step 3: Navigate (after user clicks Next)
+-----------------------------------------
+GO TO: Screen 6 (Go Live)
+```
+
+### Skip Step
+
+```
+PATCH /admin/onboarding/skip-step
+
+Headers:
+- Authorization: Bearer {accessToken}
+- Content-Type: application/json
+
+Request Body:
+{
+  "step": "staff_invited",
+  "reason": "Will add employees later"
+}
+```
 
 ---
 
-## Step 6: Go Live
+## Screen 6: Go Live
 
-### Purpose
+### When to Show
 
-Complete the onboarding and mark tenant as fully operational.
+Show this screen when:
+- `currentStep = "go_live"`
+- All required steps completed (or optional ones skipped)
 
-### UI Screen
+### UI Layout
 
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  🎉 You're all set! Ready to go live?           │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Setup Summary:                                 │
-│                                                 │
-│  ✓ Business Information                         │
-│    Samarkand Restaurant                         │
-│    123 Amir Temur Street, Tashkent              │
-│                                                 │
-│  ✓ Branch Configured                            │
-│    Main Branch                                  │
-│    Open: Mon-Sun, 9 AM - 10 PM                  │
-│    Services: Dine-in, Takeaway                  │
-│                                                 │
-│  ✓ Menu Ready                                   │
-│    8 categories, 45 products                    │
-│                                                 │
-│  ✓ Payment Methods                              │
-│    Cash, Card, Payme                            │
-│                                                 │
-│  ✓ Team Invited                                 │
-│    2 employees invited                          │
-│                                                 │
-│  ─────────────────────────────────────────      │
-│                                                 │
-│  Next Steps:                                    │
-│  1. Customize your menu                         │
-│  2. Set up tables and halls                     │
-│  3. Configure taxes and pricing                 │
-│  4. Train your staff                            │
-│                                                 │
-│  [ Review Settings ]       [ Start Using POS ]  │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-----------------------------------------------+
+|                                               |
+|  [Progress Bar - Step 6 of 6]                 |
+|                                               |
+|  You're all set! Ready to go live?            |
+|  ---------------------------------            |
+|                                               |
+|  Setup Summary:                               |
+|                                               |
+|  [v] Business Information                     |
+|      Golden Dragon Restaurant                 |
+|      Type: Restaurant                         |
+|      URL: golden-dragon.horyco.com            |
+|                                               |
+|  [v] Branch Configured                        |
+|      Main Branch                              |
+|      Tashkent, Amir Temur street 15           |
+|      Open: Mon-Sun                            |
+|      Services: Dine-in, Takeaway              |
+|                                               |
+|  [v] Menu Ready                               |
+|      3 categories, 12 products                |
+|                                               |
+|  [v] Payment Methods                          |
+|      Cash, Card, Payme                        |
+|                                               |
+|  [v] Team Invited                             |
+|      2 employees                              |
+|                                               |
+|  ----------------------------------------     |
+|                                               |
+|  What's Next:                                 |
+|  - Customize your menu in Menu Management     |
+|  - Set up tables and halls                    |
+|  - Configure taxes and pricing                |
+|  - Train your staff on POS                    |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |[Review Settings]| | [Start Using POS] |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
 ```
 
-### API Call
+### User Actions
+
+| Action | What Happens |
+|--------|--------------|
+| Click Review Settings | GO TO: Settings page |
+| Click Start Using POS | Complete onboarding, GO TO: Dashboard |
+
+### Validation Before Complete
+
+```
+GET /admin/onboarding/validation
+
+Headers:
+- Authorization: Bearer {accessToken}
+
+Response (200):
+{
+  "canComplete": true,
+  "missingSteps": [],
+  "completedSteps": ["registration_complete", "business_identity", "branch_setup", "menu_template", "payment_setup", "staff_invited"],
+  "skippedSteps": [],
+  "completionPercentage": 100,
+  "requiredStepsCount": 4,
+  "completedStepsCount": 6
+}
+```
+
+Required steps for completion:
+- registration_complete
+- business_identity
+- branch_setup
+- menu_template (can be skipped, which counts as completed)
+
+### Complete Onboarding
 
 ```
 POST /admin/onboarding/complete
-Headers: Authorization: Bearer {token}
 
-Response: OnboardingProgressResponseDto
+Headers:
+- Authorization: Bearer {accessToken}
+
+Success Response (200):
 {
   "currentStep": "go_live",
   "completedSteps": [
@@ -1443,196 +1236,230 @@ Response: OnboardingProgressResponseDto
   ],
   "isCompleted": true,
   "completionPercentage": 100,
-  "completedAt": "2025-10-30T11:15:00Z",
+  "completedAt": "2025-10-30T11:45:00Z",
+  "stepData": {
+    "go_live": {
+      "completedAt": "2025-10-30T11:45:00Z"
+    }
+  }
+}
+```
+
+### Decision Logic After Complete
+
+```
+Step 1: Update state
+--------------------
+Set onboarding.isCompleted = true
+
+Step 2: Navigate
+----------------
+GO TO: Dashboard
+Show success toast: "Welcome to Horyco! Your restaurant is ready."
+```
+
+### Error Handling
+
+| Code | Response | What to Show |
+|------|----------|--------------|
+| 400 | `{"message": "Required steps not completed"}` | Show error, highlight missing steps |
+
+---
+
+## Reopen Step for Editing
+
+### When to Use
+
+When user wants to change data from a completed step.
+
+### Cascade Invalidation
+
+When a step is reopened, all subsequent steps become incomplete:
+
+```
+Step Order:
+1. REGISTRATION_COMPLETE (cannot reopen)
+2. BUSINESS_IDENTITY
+3. BRANCH_SETUP
+4. MENU_TEMPLATE
+5. PAYMENT_SETUP
+6. STAFF_INVITED
+7. GO_LIVE
+
+Example: Reopen BUSINESS_IDENTITY
+- BUSINESS_IDENTITY becomes incomplete
+- BRANCH_SETUP, MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED, GO_LIVE become incomplete
+- stepData is preserved (not deleted) for re-editing
+- isCompleted reset to false if onboarding was complete
+```
+
+### Warning Modal
+
+```
++-----------------------------------------------+
+|  Edit Business Identity?                  [x] |
++-----------------------------------------------+
+|                                               |
+|  Editing this step will mark the following    |
+|  steps as incomplete:                         |
+|                                               |
+|  - Branch Setup                               |
+|  - Menu Setup                                 |
+|  - Payment Methods                            |
+|  - Invite Staff                               |
+|  - Go Live                                    |
+|                                               |
+|  You'll need to re-complete these steps.      |
+|  Your previous answers will be saved.         |
+|                                               |
+|  +----------------+  +--------------------+   |
+|  |   [ Cancel ]   |  |  [ Yes, Edit ]     |   |
+|  +----------------+  +--------------------+   |
+|                                               |
++-----------------------------------------------+
+```
+
+### Reopen API
+
+```
+PATCH /admin/onboarding/steps/business_identity/reopen
+
+Headers:
+- Authorization: Bearer {accessToken}
+
+Response (200):
+{
+  "currentStep": "business_identity",
+  "completedSteps": ["registration_complete"],
+  "isCompleted": false,
   ...
 }
 ```
 
-**Validation**: Checks all required steps are completed:
-- `registration_complete`
-- `business_identity`
-- `branch_setup`
-- `menu_template`
+### Restrictions
 
-**Error**: 400 if missing required steps
+- Cannot reopen REGISTRATION_COMPLETE step (registration cannot be undone)
+- Step must have been previously completed
+- Only supports reopening completed steps
 
 ---
 
-## Frontend Implementation Guide
-
-### Onboarding Wizard Component
-
-**Implementation Requirements**:
-
-1. **Progress Management**:
-   - Fetch progress on mount using `GET /admin/onboarding/progress`
-   - Redirect to dashboard if `isCompleted` is true
-   - Display progress bar based on `completionPercentage` and `completedSteps`
-
-2. **Step Routing**:
-   - Use `progress.currentStep` to determine which step component to render
-   - Map step values to components:
-     - `registration_complete` → Skip (auto-completed)
-     - `business_identity` → Business Identity Form
-     - `branch_setup` → Branch Setup Form
-     - `menu_template` → Menu Template Selector
-     - `payment_setup` → Payment Methods Form
-     - `staff_invited` → Staff Invite Form
-     - `go_live` → Final Summary Screen
-
-3. **Step Completion (NEW - Standardized)**:
-   - POST to appropriate endpoint based on current step
-   - **All endpoints return `OnboardingProgressResponseDto`** - use single handler!
-   - Extract `branchId` from response (available after branch setup)
-   - Extract `tenantId` from response (always available)
-   - Navigate using `response.nextStep` field
-   - Update progress bar using `response.completionPercentage`
-   - **No need to call `/progress` separately** - data is in step response!
-
-4. **Simplified Response Handler (NEW)**:
-
-   All step completion endpoints return `OnboardingProgressResponseDto`. Handle like this:
-
-   **Steps:**
-   - POST to step endpoint with data
-   - Extract `branchId` from response (available after branch setup)
-   - Extract `tenantId` from response (always available)
-   - Navigate using `response.nextStep` field
-   - Update progress bar using `response.completionPercentage`
-   - **No need to call `/progress` separately** - data is in step response!
-
-5. **Skip Functionality**:
-   - PATCH to `/admin/onboarding/skip-step` with step name and optional reason
-   - Returns `OnboardingProgressResponseDto` (same as all other endpoints)
-   - **Skippable steps**: `menu_template`, `payment_setup`, `staff_invited`
-   - **Required steps** (cannot skip): `registration_complete`, `business_identity`, `branch_setup`, `go_live`
-   - Skipped steps are marked as completed with skip metadata in `stepData`
-   - Update progress and move to next step on success
-
----
-
-## API Endpoints
-
-### Progress Tracking
+## Complete Flow Chart
 
 ```
-// Get onboarding progress
-GET /admin/onboarding/progress
-
-// Validate if onboarding can be completed (NEW)
-GET /admin/onboarding/validation
-
-// Complete specific steps
-POST /admin/onboarding/steps/business-identity
-POST /admin/onboarding/steps/branch-setup
-POST /admin/onboarding/steps/menu-setup
-POST /admin/onboarding/steps/payment-setup
-POST /admin/onboarding/steps/staff-invite
-
-// Reopen a completed step for editing (NEW)
-PATCH /admin/onboarding/steps/:step/reopen
-Path Params: {
-  step: "business_identity" | "branch_setup" | "menu_template" |
-        "payment_setup" | "staff_invited" | "go_live"
-}
-Note: Cannot reopen "registration_complete"
-
-// Skip optional steps (MENU_TEMPLATE, PAYMENT_SETUP, STAFF_INVITED)
-PATCH /admin/onboarding/skip-step
-Body: {
-  step: "menu_template" | "payment_setup" | "staff_invited",
-  reason?: string  // Optional
-}
-
-// Complete entire onboarding
-POST /admin/onboarding/complete
-```
-
-### Menu Defaults
-
-```
-// Get default products for business type
-GET /admin/onboarding/default-products?businessType=restaurant
+                    +------------------+
+                    |   APP LOADS      |
+                    +--------+---------+
+                             |
+                             v
+                    +------------------+
+                    | GET /onboarding/ |
+                    | progress         |
+                    +--------+---------+
+                             |
+                        +----+----+
+                        |         |
+                        v         v
+                  isCompleted  isCompleted
+                    = true      = false
+                        |         |
+                        v         v
+                  +-----+----+  +-+-------------+
+                  | Dashboard|  | currentStep   |
+                  +----------+  +-------+-------+
+                                        |
+            +---------------------------+---------------------------+
+            |           |           |           |           |       |
+            v           v           v           v           v       v
+      business_   branch_     menu_      payment_   staff_    go_live
+      identity    setup       template   setup      invited
+            |           |           |           |           |       |
+            v           v           v           v           v       v
+      [Screen 1]  [Screen 2]  [Screen 3]  [Screen 4]  [Screen 5]  [Screen 6]
+            |           |           |           |           |       |
+            +-----+-----+     +-----+-----+     +-----+-----+       |
+                  |           |           |           |             |
+                  v           v           v           v             |
+              POST step   POST step   POST/SKIP   POST/SKIP        |
+                  |           |           |           |             |
+                  +-----+-----+-----+-----+-----+-----+             |
+                        |                                           |
+                        v                                           |
+                  Navigate to next screen                           |
+                        |                                           |
+                        +-------------------------------------------+
+                                        |
+                                        v
+                              +---------+---------+
+                              | POST /onboarding/ |
+                              | complete          |
+                              +---------+---------+
+                                        |
+                                        v
+                              +---------+---------+
+                              |    Dashboard      |
+                              +-------------------+
 ```
 
 ---
 
-## Common Questions
+## API Reference
 
-### Q: Can I go back and change previous steps?
-
-**Yes, in two ways**:
-
-1. **During onboarding** - Use the reopen step feature:
-   - Click "Edit" button next to any completed step
-   - Make your changes
-   - Re-complete subsequent steps
-   - See [Reopen Step for Editing](#-reopen-step-for-editing-new) section for details
-
-2. **After onboarding** - Modify settings in the main admin panel:
-   - Business Settings
-   - Branch Management
-   - Menu Management
-   - Staff Management
-   - Payment Settings
-
-Onboarding wizard is just for initial setup - all configurations can be changed anytime.
-
-### Q: What happens if I close the browser during onboarding?
-
-**Progress is saved**. When you log in again:
-- You'll be redirected back to onboarding
-- Progress bar shows where you left off
-- All completed steps are saved
-- You continue from where you stopped
-
-### Q: Can I skip the entire onboarding?
-
-**No**. Required steps must be completed:
-- Registration Complete (auto-completed during signup)
-- Business Identity
-- Branch Setup
-- Go Live (final step)
-
-Optional steps can be skipped using `PATCH /admin/onboarding/skip-step`:
-- **Menu Template** - Start with empty menu, add products later
-- **Payment Setup** - Accept only cash/card, configure gateways later
-- **Staff Invites** - Add employees later in Staff Management
-
-Note: The old `/steps/menu-skip` endpoint has been removed. Use the unified `/skip-step` endpoint for all optional steps.
-
-### Q: What if I choose the wrong menu template?
-
-**No problem**. After onboarding, you can:
-- Edit all menu items
-- Delete items you don't need
-- Add new items
-- Apply a different template
-- Start from scratch
-
-Templates are just a starting point.
-
-### Q: Do I need to configure payment gateways during onboarding?
-
-**No**. Payment gateways are optional. You can:
-- Skip during onboarding
-- Accept only cash/card initially
-- Configure Payme/Click later in Settings
-- Test without online payments first
+| Endpoint | Method | When | Auth |
+|----------|--------|------|------|
+| `/admin/onboarding/progress` | GET | Check current status | Yes |
+| `/admin/onboarding/validation` | GET | Before completing | Yes |
+| `/admin/onboarding/default-products` | GET | Load menu templates | Yes |
+| `/admin/onboarding/steps/business-identity` | POST | Complete step 1 | Yes |
+| `/admin/onboarding/steps/branch-setup` | POST | Complete step 2 | Yes |
+| `/admin/onboarding/steps/menu-setup` | POST | Complete step 3 | Yes |
+| `/admin/onboarding/steps/payment-setup` | POST | Complete step 4 | Yes |
+| `/admin/onboarding/steps/staff-invite` | POST | Complete step 5 | Yes |
+| `/admin/onboarding/skip-step` | PATCH | Skip optional step | Yes |
+| `/admin/onboarding/steps/:step/reopen` | PATCH | Edit completed step | Yes |
+| `/admin/onboarding/complete` | POST | Finish onboarding | Yes |
 
 ---
 
-## Next Steps
+## Storage Reference
 
-After completing onboarding:
-1. Customize your menu (prices, descriptions, images)
-2. Set up tables and halls (for dine-in)
-3. Configure taxes and service charges
-4. Add more staff if needed
-5. Train employees on POS usage
-6. Start taking orders!
+| Key | Type | Where | Set When | Clear When |
+|-----|------|-------|----------|------------|
+| `onboardingProgress` | object | Memory | GET progress call | Onboarding complete |
+| `currentStep` | string | Memory | Each step response | Onboarding complete |
+| `branchId` | number | Memory | Step 2 complete | Logout |
+| `staffCredentials` | array | Memory (temp) | Step 5 response | User navigates away |
 
-For post-onboarding configuration, see:
-- `ADMIN_MENU_MANAGEMENT.md`
-- `ADMIN_STAFF_MANAGEMENT.md`
-- `ADMIN_TAX_AND_PRICING.md`
+---
+
+## FAQ
+
+**Q: What if user closes browser during onboarding?**
+A: Progress is saved on server. On next login, they continue from `currentStep`.
+
+**Q: Can user skip required steps?**
+A: No. Steps 1, 2, 6 are required. Steps 3, 4, 5 can be skipped.
+
+**Q: What if user wants to change business name later?**
+A: After onboarding, use Settings. During onboarding, use reopen endpoint.
+
+**Q: Are staff passwords stored?**
+A: No. They're generated once and returned in API response only. Owner must save them.
+
+**Q: What if user chooses wrong menu template?**
+A: After onboarding, full menu editing is available in Menu Management.
+
+**Q: Can user go back to previous steps?**
+A: Yes. Click on completed step in progress bar, or use Back button.
+
+**Q: What happens if API fails mid-step?**
+A: Show error, keep form data, allow retry. Progress is not lost.
+
+**Q: Is branchId needed for all subsequent calls?**
+A: Some APIs require it (menu, staff). It's available after step 2 completes.
+
+**Q: Does skipping a step count as completing it?**
+A: Yes. Skipped steps count toward completion percentage and validation.
+
+**Q: What's the minimum to complete onboarding?**
+A: Steps 1 (Business Identity), 2 (Branch Setup), 3 (Menu - can be skipped), and 6 (Go Live).

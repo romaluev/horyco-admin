@@ -1,19 +1,21 @@
 'use client'
 
 import { useState } from 'react'
+
 import { BaseError, BaseLoading, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui'
+
 import { EmployeePermissionGrid } from './employee-permission-grid'
 import { PermissionCopyDialog } from './permission-copy-dialog'
 
 interface BranchPermissionManagerProps {
   employeeId: number
-  branches: Array<{ id: number; name: string }>
-  availablePermissions: Array<{
+  branches: { id: number; name: string }[]
+  availablePermissions: {
     id: number
     name: string
     category: string
     description?: string
-  }>
+  }[]
   currentPermissions: Record<number, number[]> // branchId -> permissionIds
   onPermissionsChange: (branchId: number, permissionIds: number[]) => void
   isLoading?: boolean

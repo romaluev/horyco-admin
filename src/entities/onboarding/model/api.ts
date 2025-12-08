@@ -66,13 +66,13 @@ export const onboardingApi = {
   async getDefaultProducts(
     businessType?: string
   ): Promise<DefaultProductsResponse> {
-    const response = await api.get<DefaultProductsResponse>(
+    const response = await api.get<{ data: DefaultProductsResponse }>(
       '/admin/onboarding/default-products',
       {
         params: { businessType },
       }
     )
-    return response.data
+    return response.data.data
   },
 
   // Submit menu setup
