@@ -44,7 +44,6 @@ import { PhoneInput } from '@/shared/ui/base/phone-input'
 import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
-import { useGetAllBranches } from '@/entities/branch'
 import {
   useGetOnboardingProgress,
   useSubmitStaffInvite,
@@ -54,29 +53,29 @@ import {
   staffInviteSchema,
   type StaffInviteFormValues,
 } from '@/features/onboarding/model'
-import { OnboardingBranchPermissionsManager } from '@/features/onboarding/ui/onboarding-branch-permissions-manager'
+import { PermissionsSelectorModal } from '@/features/onboarding/ui/permissions-selector-modal'
+import { useGetAllPermissions } from '@/entities/role'
+import type { IPermission } from '@/entities/employee'
 
-interface InvitationWithPermissions {
-  fullName: string
-  phone: string
-  email: string
-  branchPermissions: Record<string, { permissionIds: number[] }>
+interface InvitationPermissions {
+  permissionIds: number[]
 }
 
 // eslint-disable-next-line max-lines-per-function
 export default function StaffInvitePage() {
   const router = useRouter()
   const [isSkipConfirmOpen, setSkipConfirmOpen] = useState(false)
-  const [branchPermissionsMap, setBranchPermissionsMap] = useState<
-    Record<number, InvitationWithPermissions>
+  const [permissionsMap, setPermissionsMap] = useState<
+    Record<number, InvitationPermissions>
   >({})
+  const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
+  const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<number | null>(null)
 
   const { data: progress, isLoading: isProgressLoading } =
     useGetOnboardingProgress()
-  const { data: branchesData, isLoading: isBranchesLoading } =
-    useGetAllBranches()
-
-  const branches = branchesData?.items || []
+  const { data: allPermissionsData, isLoading: isLoadingPermissions } =
+    useGetAllPermissions()
+  const allPermissions = (allPermissionsData as IPermission[]) || []
 
   // Form initialization
   const form = useForm<StaffInviteFormValues>({
@@ -118,7 +117,20 @@ export default function StaffInvitePage() {
     name: 'invitations',
   })
 
-  const isLoading = isSubmitting || isSkipping || isBranchesLoading
+  const isLoading = isSubmitting || isSkipping || isLoadingPermissions
+
+  const handleOpenPermissionsModal = (index: number) => {
+    setSelectedInvitationIndex(index)
+    setIsPermissionsModalOpen(true)
+  }
+
+  const handleSavePermissions = (permissionIds: number[]) => {
+    if (selectedInvitationIndex !== null) {
+      handlePermissionsChange(selectedInvitationIndex, permissionIds)
+    }
+    setIsPermissionsModalOpen(false)
+    setSelectedInvitationIndex(null)
+  }
 
   const addInvitation = () => {
     const newIndex = fields.length
@@ -127,36 +139,25 @@ export default function StaffInvitePage() {
       phone: '',
       email: '',
     })
-    // Initialize empty branch permissions for new invitation
-    setBranchPermissionsMap((prev) => ({
+    // Initialize empty permissions for new invitation
+    setPermissionsMap((prev) => ({
       ...prev,
       [newIndex]: {
-        fullName: '',
-        phone: '',
-        email: '',
-        branchPermissions: {},
+        permissionIds: [],
       },
     }))
   }
 
-  const handleBranchPermissionsChange = useCallback(
-    (
-      invitationIndex: number,
-      branchPermissions: Record<string, { permissionIds: number[] }>
-    ) => {
-      setBranchPermissionsMap((prev) => ({
+  const handlePermissionsChange = useCallback(
+    (invitationIndex: number, permissionIds: number[]) => {
+      setPermissionsMap((prev) => ({
         ...prev,
         [invitationIndex]: {
-          ...(prev[invitationIndex] || {
-            fullName: fields[invitationIndex]?.fullName || '',
-            phone: fields[invitationIndex]?.phone || '',
-            email: fields[invitationIndex]?.email || '',
-          }),
-          branchPermissions,
+          permissionIds,
         },
       }))
     },
-    [fields]
+    []
   )
 
   const onSubmit = async (data: StaffInviteFormValues) => {
@@ -171,7 +172,7 @@ export default function StaffInvitePage() {
         fullName: inv.fullName,
         phone: inv.phone,
         email: inv.email || undefined,
-        branchPermissions: branchPermissionsMap[index]?.branchPermissions || {},
+        permissionIds: permissionsMap[index]?.permissionIds || [],
       })),
     })
   }
@@ -242,7 +243,7 @@ export default function StaffInvitePage() {
                               size="icon"
                               onClick={() => {
                                 remove(index)
-                                setBranchPermissionsMap((prev) => {
+                                setPermissionsMap((prev: Record<number, InvitationPermissions>) => {
                                   const updated = { ...prev }
                                   delete updated[index]
                                   return updated
@@ -315,26 +316,23 @@ export default function StaffInvitePage() {
                               )}
                             />
 
-                            {/* Branch Permissions Manager */}
-                            {branches.length > 0 && (
-                              <div className="border-t pt-4">
-                                <h3 className="mb-3 text-sm font-medium">
-                                  Доступ по филиалам
-                                </h3>
-                                <OnboardingBranchPermissionsManager
-                                  branches={branches}
-                                  onBranchPermissionsChange={(
-                                    branchPermissions
-                                  ) =>
-                                    handleBranchPermissionsChange(
-                                      index,
-                                      branchPermissions
-                                    )
-                                  }
-                                  disabled={isLoading}
-                                />
-                              </div>
-                            )}
+                            {/* Permissions Selection */}
+                            <div className="border-t pt-4">
+                              <h3 className="mb-3 text-sm font-medium">
+                                Права доступа
+                              </h3>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => handleOpenPermissionsModal(index)}
+                                disabled={isLoading}
+                                className="w-full"
+                              >
+                                Выбрать права (
+                                {permissionsMap[index]?.permissionIds?.length || 0}
+                                )
+                              </Button>
+                            </div>
                           </CardContent>
                         </Card>
                       ))}
@@ -385,6 +383,21 @@ export default function StaffInvitePage() {
               </Form>
             </CardContent>
           </Card>
+
+          {/* Permissions Modal */}
+          {selectedInvitationIndex !== null && (
+            <PermissionsSelectorModal
+              isOpen={isPermissionsModalOpen}
+              onOpenChange={setIsPermissionsModalOpen}
+              branchName="Филиал по умолчанию"
+              allPermissions={allPermissions}
+              currentPermissionIds={
+                permissionsMap[selectedInvitationIndex]?.permissionIds || []
+              }
+              isLoading={isLoadingPermissions}
+              onPermissionsSave={handleSavePermissions}
+            />
+          )}
 
           {/* Skip Confirmation Dialog */}
           <AlertDialog
