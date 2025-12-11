@@ -1,9 +1,31 @@
-import { cn } from '@/shared/lib/utils';
+import { AlertCircle } from 'lucide-react'
 
-export const BaseError = ({ className = '', message = 'Произошла ошибка' }) => {
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui'
+
+export const BaseError = ({
+  className = '',
+  message = 'Произошла ошибка',
+  onRetry,
+}: {
+  className?: string
+  message?: string
+  onRetry?: () => void
+}) => {
   return (
-    <div className={cn(className, 'flex items-center justify-center py-10')}>
-      <h2 className='text-destructive text-center text-2xl'>{message}</h2>
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center gap-4 py-10',
+        className
+      )}
+    >
+      <AlertCircle className="text-destructive h-12 w-12" />
+      <h2 className="text-destructive text-xl font-semibold">{message}</h2>
+      {onRetry && (
+        <Button onClick={onRetry} variant="outline">
+          Повторить
+        </Button>
+      )}
     </div>
-  );
-};
+  )
+}

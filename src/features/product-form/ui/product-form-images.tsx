@@ -1,48 +1,40 @@
-'use client';
+'use client'
 
-import { FileUploader } from '@/shared/ui/file-uploader';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/shared/ui/base/form';
-import { useFormContext } from 'react-hook-form';
-import { MAX_FILE_SIZE } from '@/shared/config/data';
-import { IFile } from '@/shared/types';
-import * as React from 'react';
+import * as React from 'react'
+
+import { useFormContext } from 'react-hook-form'
+
+import { FormItem, FormLabel, FormMessage } from '@/shared/ui/base/form'
+import { ImageUpload } from '@/shared/ui/image-upload'
+
+interface ProductFormImagesProps {
+  imageFile: File | null
+  setImageFile: (file: File | null) => void
+  currentImageUrl?: string
+  currentImageUrls?: {
+    thumb?: string
+    medium?: string
+    large?: string
+    original?: string
+  }
+}
 
 export function ProductFormImages({
-  images,
-  setDeletedImages
-}: {
-  images?: IFile[];
-  setDeletedImages?: React.Dispatch<React.SetStateAction<number[]>>;
-}) {
-  const form = useFormContext();
-
+  imageFile,
+  setImageFile,
+  currentImageUrl,
+  currentImageUrls,
+}: ProductFormImagesProps) {
   return (
-    <FormField
-      control={form.control}
-      name='image'
-      render={({ field }) => (
-        <FormItem className='md:col-span-6'>
-          <FormLabel>Картинки продукта</FormLabel>
-          <FormControl>
-            <FileUploader
-              setDeletedFiles={setDeletedImages}
-              variant='image'
-              uploadedFiles={images}
-              value={field.value}
-              onValueChange={field.onChange}
-              maxFiles={4}
-              maxSize={MAX_FILE_SIZE}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
+    <FormItem className="md:col-span-6">
+      <FormLabel>Изображение продукта</FormLabel>
+      <ImageUpload
+        value={imageFile}
+        onChange={setImageFile}
+        currentImageUrl={currentImageUrl}
+        currentImageUrls={currentImageUrls}
+      />
+      <FormMessage />
+    </FormItem>
+  )
 }

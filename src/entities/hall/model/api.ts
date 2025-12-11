@@ -1,61 +1,70 @@
-import api from '@/shared/lib/axios';
-import { IHall, IHallRequest } from './types';
-import {
-  ApiParams,
-  FilteringParams,
-  PaginatedResponse,
-  SortingParams
-} from '@/shared/types';
+import api from '@/shared/lib/axios'
+
+import type {
+  IHall,
+  ICreateHallDto,
+  IUpdateHallDto,
+  ICanDeleteHallResponse,
+} from './types'
 
 export const hallApi = {
   /**
-   * Получить все залы с пагинацией, сортировкой и фильтрацией
-   * @param params - Параметры API
+   * Get all halls for a branch
    */
-  async getAllHalls(params?: ApiParams): Promise<PaginatedResponse<IHall>> {
-    // Обязательно используем page и size параметры, как показано в примере cURL
-    const defaultParams = { page: 0, size: 100 };
-    const queryParams = { ...defaultParams, ...params };
-
-    const response = await api.get<PaginatedResponse<IHall>>('/hall', {
-      params: queryParams
-    });
-    return response.data;
+  async getHalls(branchId: number): Promise<IHall[]> {
+    const response = await api.get<{ success: boolean; data: IHall[] }>(
+      `/admin/branches/${branchId}/halls`
+    )
+    return response.data.data || []
   },
 
   /**
-   * Получить зал по ID
-   * @param id - ID зала
+   * Get hall by ID
    */
   async getHallById(id: number): Promise<IHall> {
-    const response = await api.get<IHall>(`/hall/${id}`);
-    return response.data;
+    const response = await api.get<{ success: boolean; data: IHall }>(
+      `/admin/halls/${id}`
+    )
+    return response.data.data
   },
 
   /**
-   * Создать новый зал
-   * @param body - Данные для создания зала
+   * Create a new hall
    */
-  async createHall(body: IHallRequest): Promise<IHall> {
-    const response = await api.post<IHall>('/hall', body);
-    return response.data;
+  async createHall(data: ICreateHallDto): Promise<IHall> {
+    const response = await api.post<{ success: boolean; data: IHall }>(
+      `/admin/branches/${data.branchId}/halls`,
+      data
+    )
+    return response.data.data
   },
 
   /**
-   * Обновить существующий зал
-   * @param id - ID зала
-   * @param body - Данные для обновления зала
+   * Update a hall
    */
-  async updateHall(id: string, body: IHallRequest): Promise<IHall> {
-    const response = await api.patch<IHall>(`/hall/${id}`, body);
-    return response.data;
+  async updateHall(id: number, data: IUpdateHallDto): Promise<IHall> {
+    const response = await api.put<{ success: boolean; data: IHall }>(
+      `/admin/halls/${id}`,
+      data
+    )
+    return response.data.data
   },
 
   /**
-   * Удалить зал
-   * @param id - ID зала
+   * Delete a hall
    */
-  async deleteHall(id: string): Promise<void> {
-    await api.delete(`/hall/${id}`);
-  }
-};
+  async deleteHall(id: number): Promise<void> {
+    await api.delete(`/admin/halls/${id}`)
+  },
+
+  /**
+   * Check if hall can be deleted
+   */
+  async canDeleteHall(id: number): Promise<ICanDeleteHallResponse> {
+    const response = await api.get<{
+      success: boolean
+      data: ICanDeleteHallResponse
+    }>(`/admin/halls/${id}/can-delete`)
+    return response.data.data
+  },
+}

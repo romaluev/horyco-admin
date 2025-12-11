@@ -1,75 +1,116 @@
-import { IBranch, ICreateBranchDto, IUpdateBranchDto } from './types';
-import api from '@/shared/lib/axios';
-import {
-  ApiParams,
-  FilteringParams,
-  PaginatedResponse,
-  PaginationParams,
-  SortingParams
-} from '@/shared/types';
+import api from '@/shared/lib/axios'
+
+import type {
+  IBranch,
+  ICreateBranchDto,
+  IUpdateBranchDto,
+  ICanDeleteResponse,
+  IBranchStatistics,
+  IBulkCreateBranchDto,
+  IBulkImportResponse,
+} from './types'
+import type { ApiParams, PaginatedResponse } from '@/shared/types'
+
+const BASE_URL = '/admin/branches'
 
 /**
  * Branch API functions
  */
-
 export const branchApi = {
   /**
-   * Create a new branches
-   * @param branchData - The branches data to create
-   * @returns Promise with the created branches
+   * Get all branches with pagination
    */
-  createBranch: async (branchData: ICreateBranchDto): Promise<IBranch> => {
-    const response = await api.post<IBranch>('/branch', branchData);
-    return response.data;
-  },
-
   getBranches: async (
     searchParams: ApiParams = {}
   ): Promise<PaginatedResponse<IBranch>> => {
-    const params = new URLSearchParams();
-
-    params.append('page', String(searchParams.page || '0'));
-    params.append('size', String(searchParams.size || '100'));
+    const params = new URLSearchParams()
+    params.append('page', String(searchParams.page || '0'))
+    params.append('size', String(searchParams.size || '100'))
     if (searchParams.filters) {
-      params.append('filters', searchParams.filters);
+      params.append('filters', searchParams.filters)
     }
 
-    const response = await api.get<PaginatedResponse<IBranch>>('/branch', {
-      params
-    });
-    return response.data;
+    const response = await api.get<{ success: boolean; data: IBranch[] }>(
+      BASE_URL,
+      { params }
+    )
+
+    return {
+      items: response.data.data || [],
+      totalItems: response.data.data?.length || 0,
+      page: searchParams.page || 0,
+      size: searchParams.size || 100,
+    }
   },
 
   /**
-   * Get a branches by ID
-   * @param id - The branches ID
-   * @returns Promise with the branches
+   * Get a branch by ID
    */
   getBranchById: async (id: number): Promise<IBranch> => {
-    const response = await api.get<IBranch>(`/branch/${id}`);
-    return response.data;
+    const response = await api.get<IBranch>(`${BASE_URL}/${id}`)
+    return response.data
   },
 
   /**
-   * Update a branches
-   * @param id - The branches ID
-   * @param branchData - The branches data to update
-   * @returns Promise with the updated branches
+   * Create a new branch
+   */
+  createBranch: async (branchData: ICreateBranchDto): Promise<IBranch> => {
+    const response = await api.post<IBranch>(BASE_URL, branchData)
+    return response.data
+  },
+
+  /**
+   * Update a branch (partial update)
    */
   updateBranch: async (
     id: number,
     branchData: IUpdateBranchDto
   ): Promise<IBranch> => {
-    const response = await api.put<IBranch>(`/branch/${id}`, branchData);
-    return response.data;
+    const response = await api.patch<IBranch>(`${BASE_URL}/${id}`, branchData)
+    return response.data
   },
 
   /**
-   * Delete a branches
-   * @param id - The branches ID
-   * @returns Promise with the deleted branches
+   * Delete a branch
    */
   deleteBranch: async (id: number): Promise<void> => {
-    await api.delete(`/branch/${id}`);
-  }
-};
+    await api.delete(`${BASE_URL}/${id}`)
+  },
+
+  /**
+   * Check if a branch can be deleted
+   */
+  canDeleteBranch: async (id: number): Promise<ICanDeleteResponse> => {
+    const response = await api.get<ICanDeleteResponse>(
+      `${BASE_URL}/${id}/can-delete`
+    )
+    return response.data
+  },
+
+  /**
+   * Get branch statistics
+   */
+  getBranchStatistics: async (
+    id: number,
+    period: 'today' | 'week' | 'month' | 'year' = 'week'
+  ): Promise<IBranchStatistics> => {
+    const response = await api.get<IBranchStatistics>(
+      `${BASE_URL}/${id}/statistics`,
+      { params: { period } }
+    )
+    return response.data
+  },
+
+  /**
+   * Bulk create branches
+   */
+  bulkCreateBranches: async (
+    data: IBulkCreateBranchDto
+  ): Promise<IBulkImportResponse> => {
+    const response = await api.post<IBulkImportResponse>(
+      `${BASE_URL}/bulk`,
+      data
+    )
+    return response.data
+  },
+}

@@ -1,41 +1,30 @@
-'use client';
+'use client'
 
-import { ReactNode, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuthStore } from '@/entities/auth';
-import { BaseLoading } from '@/shared/ui';
+import { useEffect } from 'react'
+
+import Cookies from 'js-cookie'
+
+import { useAuthStore } from '@/entities/auth'
+
+import type { ReactNode } from 'react'
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { setUser, me, isLoading, user } = useAuthStore();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { me, loadFullProfile, setToken } = useAuthStore()
 
   useEffect(() => {
-    me();
-  }, [me]);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    const redirectPath = searchParams?.get('redirect');
-
-    if (
-      !user &&
-      redirectPath &&
-      redirectPath.startsWith('/') &&
-      !redirectPath.startsWith('//') &&
-      !redirectPath.includes(':')
-    ) {
-      router.push(redirectPath);
+    const token = Cookies.get('access_token')
+    if (token) {
+      // Sync token from cookies to store
+      setToken(token)
+      me().catch((e: unknown) => console.error('Failed to load auth:', e))
+      // Load full profile with avatar on app startup (non-blocking)
+      void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
     }
-  }, [user, isLoading, router, searchParams, setUser]);
+  }, [me, loadFullProfile, setToken])
 
-  if (isLoading) {
-    return <BaseLoading className='min-h-screen items-center' />;
-  }
-  return <>{children}</>;
+  return children
 }

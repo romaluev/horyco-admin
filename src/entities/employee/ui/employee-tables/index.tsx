@@ -1,37 +1,72 @@
-'use client';
+'use client'
 
-import { DataTable } from '@/shared/ui/base/table/data-table';
+import { useState } from 'react'
 
-import { useDataTable } from '@/shared/hooks/use-data-table';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
+} from '@tanstack/react-table'
 
-import { ColumnDef } from '@tanstack/react-table';
-import { parseAsInteger, useQueryState } from 'nuqs';
-import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar';
+import { DataTable } from '@/shared/ui/base/table/data-table'
+import { DataTableToolbar } from '@/shared/ui/base/table/data-table-toolbar'
+
+export { columns, createEmployeeColumns } from './columns'
 
 interface EmployeeTableParams<TData, TValue> {
-  data: TData[];
-  totalItems: number;
-  columns: ColumnDef<TData, TValue>[];
+  data: TData[]
+  totalItems: number
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function EmployeeTable<TData, TValue>({
   data,
   totalItems,
-  columns
+  columns,
 }: EmployeeTableParams<TData, TValue>) {
-  const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
-  const { table } = useDataTable({
+  const table = useReactTable({
     data,
     columns,
-    pageCount: Math.ceil(totalItems / pageSize),
-    shallow: false,
-    debounceMs: 500
-  });
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: false, // Use client-side pagination
+    manualSorting: false, // Use client-side sorting
+    manualFiltering: false, // Use client-side filtering
+  })
 
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table} />
     </DataTable>
-  );
+  )
 }

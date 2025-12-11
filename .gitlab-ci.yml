@@ -1,0 +1,35 @@
+image: debian:bookworm
+
+stages:
+  - deploy
+
+before_script:
+  - apt-get update -y && apt-get install -y openssh-client util-linux
+  - eval "$(ssh-agent -s)"
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - cat "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+  - chmod 600 ~/.ssh/deploy_key
+  - ssh-add ~/.ssh/deploy_key
+  - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+.deploy_template: &deploy_template
+  stage: deploy
+  script:
+    - ssh root@$DEPLOY_HOST "cd $DEPLOY_DIR && git config --global --add safe.directory $DEPLOY_DIR && git pull && docker-compose down && docker-compose build --no-cache && docker-compose up -d"
+
+deploy_dev:
+  <<: *deploy_template
+  variables:
+    DEPLOY_HOST: "157.173.202.24"
+    DEPLOY_DIR: "/www/wwwroot/Horyco/oshxona/dev"
+  only:
+    - dev
+
+deploy_prod:
+  <<: *deploy_template
+  variables:
+    DEPLOY_HOST: "157.173.202.24"
+    DEPLOY_DIR: "/www/wwwroot/Horyco/oshxona/prod"
+  only:
+    - main

@@ -1,9 +1,9 @@
-import { ProfileView } from '@/entities/auth';
+import { ProfileView } from '@/entities/auth'
 
 export const metadata = {
-  title: 'Dashboard : Profile'
-};
+  title: 'Dashboard : Profile',
+}
 
 export default async function Page() {
-  return <ProfileView />;
+  return <ProfileView />
 }

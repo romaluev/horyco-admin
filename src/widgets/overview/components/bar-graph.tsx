@@ -1,23 +1,25 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+import * as React from 'react'
+
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
+  CardTitle,
+} from '@/shared/ui/base/card'
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
-} from '@/shared/ui/base/chart';
+  ChartTooltipContent,
+} from '@/shared/ui/base/chart'
 
-export const description = 'An interactive bar chart';
+import type { ChartConfig } from '@/shared/ui/base/chart'
+
+export const description = 'An interactive bar chart'
 
 const chartData = [
   { date: '2024-04-01', desktop: 222, mobile: 150 },
@@ -110,154 +112,154 @@ const chartData = [
   { date: '2024-06-27', desktop: 448, mobile: 490 },
   { date: '2024-06-28', desktop: 149, mobile: 200 },
   { date: '2024-06-29', desktop: 103, mobile: 160 },
-  { date: '2024-06-30', desktop: 446, mobile: 400 }
-];
+  { date: '2024-06-30', desktop: 446, mobile: 400 },
+]
 
 const chartConfig = {
   views: {
-    label: 'Page Views'
+    label: 'Page Views',
   },
   desktop: {
     label: 'Desktop',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   mobile: {
     label: 'Mobile',
-    color: 'var(--primary)'
+    color: 'var(--primary)',
   },
   error: {
     label: 'Error',
-    color: 'var(--primary)'
-  }
-} satisfies ChartConfig;
+    color: 'var(--primary)',
+  },
+} satisfies ChartConfig
 
 export function BarGraph() {
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>('desktop');
+    React.useState<keyof typeof chartConfig>('desktop')
 
   const total = React.useMemo(
     () => ({
       desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0)
+      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
     }),
     []
-  );
+  )
 
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false)
 
   React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
   React.useEffect(() => {
     if (activeChart === 'error') {
-      throw new Error('Mocking Error');
+      throw new Error('Mocking Error')
     }
-  }, [activeChart]);
+  }, [activeChart])
 
   if (!isClient) {
-    return null;
+    return null
   }
 
   return (
-    <Card className='@container/card !pt-3'>
-      <CardHeader className='flex flex-col items-stretch space-y-0 border-b !p-0 sm:flex-row'>
-        <div className='flex flex-1 flex-col justify-center gap-1 px-6 !py-0'>
+    <Card className="@container/card !pt-3">
+      <CardHeader className="flex flex-col items-stretch space-y-0 border-b !p-0 sm:flex-row">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-6 !py-0">
           <CardTitle>Активность в системе</CardTitle>
           <CardDescription>
-            <span className='hidden @[540px]/card:block'>
+            <span className="hidden @[540px]/card:block">
               Всего за 3 месяца
             </span>
-            <span className='@[540px]/card:hidden'>Last 3 months</span>
+            <span className="@[540px]/card:hidden">Last 3 months</span>
           </CardDescription>
         </div>
-        <div className='flex'>
+        <div className="flex">
           {['desktop', 'mobile'].map((key) => {
-            const chart = key as keyof typeof chartConfig;
-            if (!chart || total[key as keyof typeof total] === 0) return null;
+            const chart = key as keyof typeof chartConfig
+            if (!chart || total[key as keyof typeof total] === 0) return null
             return (
               <button
                 key={chart}
                 data-active={activeChart === chart}
-                className='data-[active=true]:bg-primary/5 hover:bg-primary/5 relative flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left transition-colors duration-200 even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6'
+                className="data-[active=true]:bg-primary/5 hover:bg-primary/5 relative flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left transition-colors duration-200 even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
                 onClick={() => setActiveChart(chart)}
               >
-                <span className='text-muted-foreground text-xs'>
+                <span className="text-muted-foreground text-xs">
                   {chartConfig[chart].label}
                 </span>
-                <span className='text-lg leading-none font-bold sm:text-3xl'>
+                <span className="text-lg leading-none font-bold sm:text-3xl">
                   {total[key as keyof typeof total]?.toLocaleString()}
                 </span>
               </button>
-            );
+            )
           })}
         </div>
       </CardHeader>
-      <CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className='aspect-auto h-[250px] w-full'
+          className="aspect-auto h-[250px] w-full"
         >
           <BarChart
             data={chartData}
             margin={{
               left: 12,
-              right: 12
+              right: 12,
             }}
           >
             <defs>
-              <linearGradient id='fillBar' x1='0' y1='0' x2='0' y2='1'>
+              <linearGradient id="fillBar" x1="0" y1="0" x2="0" y2="1">
                 <stop
-                  offset='0%'
-                  stopColor='var(--primary)'
+                  offset="0%"
+                  stopColor="var(--primary)"
                   stopOpacity={0.8}
                 />
                 <stop
-                  offset='100%'
-                  stopColor='var(--primary)'
+                  offset="100%"
+                  stopColor="var(--primary)"
                   stopOpacity={0.2}
                 />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey='date'
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
+                const date = new Date(value)
                 return date.toLocaleDateString('en-US', {
                   month: 'short',
-                  day: 'numeric'
-                });
+                  day: 'numeric',
+                })
               }}
             />
             <ChartTooltip
               cursor={{ fill: 'var(--primary)', opacity: 0.1 }}
               content={
                 <ChartTooltipContent
-                  className='w-[150px]'
-                  nameKey='views'
+                  className="w-[150px]"
+                  nameKey="views"
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
-                      year: 'numeric'
-                    });
+                      year: 'numeric',
+                    })
                   }}
                 />
               }
             />
             <Bar
               dataKey={activeChart}
-              fill='url(#fillBar)'
+              fill="url(#fillBar)"
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  );
+  )
 }

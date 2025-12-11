@@ -1,32 +1,34 @@
-'use client';
+'use client'
 
-import type { Table } from '@tanstack/react-table';
-import { Settings2 } from 'lucide-react';
+import * as React from 'react'
 
-import { Button } from '@/shared/ui/base/button';
+import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons'
+import { Settings2 } from 'lucide-react'
+
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/base/button'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
-} from '@/shared/ui/base/command';
+  CommandList,
+} from '@/shared/ui/base/command'
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
-} from '@/shared/ui/base/popover';
-import { cn } from '@/shared/lib/utils';
-import * as React from 'react';
-import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
+  PopoverTrigger,
+} from '@/shared/ui/base/popover'
+
+import type { Table } from '@tanstack/react-table'
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({
-  table
+  table,
 }: DataTableViewOptionsProps<TData>) {
   const columns = React.useMemo(
     () =>
@@ -37,26 +39,26 @@ export function DataTableViewOptions<TData>({
             typeof column.accessorFn !== 'undefined' && column.getCanHide()
         ),
     [table]
-  );
+  )
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          aria-label='Toggle columns'
-          role='combobox'
-          variant='outline'
-          size='sm'
-          className='ml-auto hidden h-8 lg:flex'
+          aria-label="Toggle columns"
+          role="combobox"
+          variant="outline"
+          size="sm"
+          className="ml-auto hidden h-8 lg:flex"
         >
           <Settings2 />
           Вид
-          <CaretSortIcon className='ml-auto opacity-50' />
+          <CaretSortIcon className="ml-auto opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align='end' className='w-44 p-0'>
+      <PopoverContent align="end" className="w-44 p-0">
         <Command>
-          <CommandInput placeholder='Search columns...' />
+          <CommandInput placeholder="Search columns..." />
           <CommandList>
             <CommandEmpty>No columns found.</CommandEmpty>
             <CommandGroup>
@@ -67,7 +69,7 @@ export function DataTableViewOptions<TData>({
                     column.toggleVisibility(!column.getIsVisible())
                   }
                 >
-                  <span className='truncate'>
+                  <span className="truncate">
                     {column.columnDef.meta?.label ?? column.id}
                   </span>
                   <CheckIcon
@@ -83,5 +85,5 @@ export function DataTableViewOptions<TData>({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

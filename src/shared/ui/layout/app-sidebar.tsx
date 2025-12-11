@@ -1,11 +1,30 @@
-'use client';
+'use client'
 
-import logo from '@/shared/assets/logo.png';
+import * as React from 'react'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+
+import {
+  IconChevronRight,
+  IconChevronsDown,
+  IconLogout,
+  IconUserCircle,
+} from '@tabler/icons-react'
+
+import logo from '@/shared/assets/logo.png'
+import { getNavItems } from '@/shared/config/data'
+import {
+  hasPermissionAnyBranch,
+  hasAllPermissionsAnyBranch,
+  hasAnyPermissionAnyBranch,
+} from '@/shared/lib/permissions'
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger
-} from '@/shared/ui/base/collapsible';
+  CollapsibleTrigger,
+} from '@/shared/ui/base/collapsible'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +32,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/shared/ui/base/dropdown-menu';
+  DropdownMenuTrigger,
+} from '@/shared/ui/base/dropdown-menu'
 import {
   Sidebar,
   SidebarContent,
@@ -27,66 +46,133 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail
-} from '@/shared/ui/base/sidebar';
-import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile';
-import { getNavItems } from '@/shared/config/data';
-import {
-  IconChevronRight,
-  IconChevronsDown,
-  IconLogout,
-  IconUserCircle
-} from '@tabler/icons-react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import * as React from 'react';
-import { Icons } from '../icons';
-import { useAuthStore } from '@/entities/auth/model/store';
-import Image from 'next/image';
+  SidebarRail,
+} from '@/shared/ui/base/sidebar'
+import { Skeleton } from '@/shared/ui/base/skeleton'
+import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
+
+import { useAuthStore } from '@/entities/auth/model/store'
+import { useGetAllBranches, useBranchStore } from '@/entities/branch'
+
+import { BranchSelector } from '../branch-selector'
+import { Icons } from '../icons'
+
+/**
+ * Filter nav items based on user permissions
+ * Does NOT use hooks - called once per component mount
+ */
+function filterNavItemsByPermission(
+  items: ReturnType<typeof getNavItems>,
+  branchPermissions?: Record<string, string[]>
+): ReturnType<typeof getNavItems> {
+  // If permissions not loaded yet, show all items (will filter once they load)
+  if (!branchPermissions) return items
+
+  return items
+    .filter((item) => {
+      // If no permission requirement, always show
+      if (!item.permission && !item.permissions) {
+        return true
+      }
+
+      // Check permission
+      if (item.permission) {
+        return hasPermissionAnyBranch(branchPermissions, item.permission)
+      }
+
+      if (item.permissions) {
+        if (item.permissionMode === 'all') {
+          return hasAllPermissionsAnyBranch(branchPermissions, item.permissions)
+        }
+        return hasAnyPermissionAnyBranch(branchPermissions, item.permissions)
+      }
+
+      return true
+    })
+    .map((item) => ({
+      ...item,
+      // Recursively filter sub-items
+      items:
+        item.items && item.items.length > 0
+          ? filterNavItemsByPermission(item.items, branchPermissions)
+          : item.items,
+    }))
+}
 
 export default function AppSidebar() {
-  const pathname = usePathname();
-  const authStore = useAuthStore();
-  const { user } = useAuthStore();
-  const router = useRouter();
-  const navItems = getNavItems();
+  const pathname = usePathname()
+  const authStore = useAuthStore()
+  const { user } = useAuthStore()
+  const router = useRouter()
+  const allNavItems = getNavItems()
+
+  // Filter nav items based on user permissions
+  const navItems = filterNavItemsByPermission(
+    allNavItems,
+    user?.branchPermissions
+  )
+
+  const { data: branchesData, isLoading: isBranchesLoading } =
+    useGetAllBranches()
+  const { selectedBranchId, setSelectedBranch, initializeFromStorage } =
+    useBranchStore()
+
+  const branches = branchesData?.items || []
+
+  React.useEffect(() => {
+    initializeFromStorage()
+  }, [initializeFromStorage])
+
+  React.useEffect(() => {
+    if (branches.length > 0 && selectedBranchId === null && branches[0]) {
+      setSelectedBranch(branches[0].id)
+    }
+  }, [branches, selectedBranchId, setSelectedBranch])
 
   const handleLogout = () => {
-    authStore.logout();
-    router.push('/auth/sign-in');
-  };
+    authStore.logout()
+    router.push('/auth/sign-in')
+  }
 
   return (
-    <Sidebar collapsible='icon'>
-      <SidebarContent className='overflow-x-hidden'>
+    <Sidebar collapsible="icon">
+      <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
-          <SidebarGroupLabel className='my-4'>
+          <SidebarGroupLabel className="my-4">
             <Image
-              className='mr-1 !h-10 !w-10 overflow-hidden rounded-2xl'
+              className="w-40 overflow-hidden rounded-2xl"
               src={logo}
-              alt=''
+              alt=""
             />
-            <h1 className='py-4 text-2xl font-bold text-[#023055]'>OshXona</h1>
           </SidebarGroupLabel>
+
+          <div className="mb-4 px-2 group-data-[collapsible=icon]:hidden">
+            {isBranchesLoading ? (
+              <Skeleton className="h-9 w-full" />
+            ) : (
+              <BranchSelector
+                value={selectedBranchId ?? undefined}
+                onChange={(branchId) => setSelectedBranch(branchId ?? null)}
+              />
+            )}
+          </div>
+
           <SidebarMenu>
             {navItems.map((item) => {
-              const Icon = item.icon ? Icons[item.icon] : Icons.logo;
+              const Icon = item.icon ? Icons[item.icon] : Icons.logo
               return item?.items && item?.items?.length > 0 ? (
                 <Collapsible
                   key={item.title}
                   asChild
                   defaultOpen={item.isActive}
-                  className='group/collapsible'
+                  className="group/collapsible"
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        isActive={pathname === item.url}
-                      >
-                        {item.icon && <Icon size={30} />}
-                        <span>{item.title}</span>
-                        <IconChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                      <SidebarMenuButton tooltip={item.title}>
+                        {item.icon && <Icon className="!h-6 !w-6" size={30} />}
+                        <span className="text-[17px]">{item.title}</span>
+                        <IconChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -94,11 +180,14 @@ export default function AppSidebar() {
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
+                              className="!p-3"
                               asChild
                               isActive={pathname === subItem.url}
                             >
                               <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
+                                <span className="text-[17px]">
+                                  {subItem.title}
+                                </span>
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -108,19 +197,19 @@ export default function AppSidebar() {
                   </SidebarMenuItem>
                 </Collapsible>
               ) : (
-                <SidebarMenuItem key={item.title} className='my-1'>
+                <SidebarMenuItem key={item.title} className="my-1">
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
                     isActive={pathname === item.url}
                   >
                     <Link href={item.url}>
-                      <Icon size={30} className='!h-6 !w-6' />
-                      <span className='text-[18px]'>{item.title}</span>
+                      <Icon size={30} className="!h-6 !w-6" />
+                      <span className="text-[17px]">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              );
+              )
             })}
           </SidebarMenu>
         </SidebarGroup>
@@ -131,30 +220,30 @@ export default function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
-                  size='lg'
-                  className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   {user && (
                     <UserAvatarProfile
-                      className='h-8 w-8 rounded-lg'
+                      className="h-8 w-8 rounded-lg"
                       showInfo
                       user={user}
                     />
                   )}
-                  <IconChevronsDown className='ml-auto size-4' />
+                  <IconChevronsDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
-                side='bottom'
-                align='end'
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel className='p-0 font-normal'>
-                  <div className='px-1 py-1.5'>
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="px-1 py-1.5">
                     {user && (
                       <UserAvatarProfile
-                        className='h-8 w-8 rounded-lg'
+                        className="h-8 w-8 rounded-lg"
                         showInfo
                         user={user}
                       />
@@ -167,13 +256,13 @@ export default function AppSidebar() {
                   <DropdownMenuItem
                     onClick={() => router.push('/dashboard/profile')}
                   >
-                    <IconUserCircle className='mr-2 h-4 w-4' />
+                    <IconUserCircle className="mr-2 h-4 w-4" />
                     Профиль
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <IconLogout className='mr-2 h-4 w-4' />
+                  <IconLogout className="mr-2 h-4 w-4" />
                   Выход из системы
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -183,5 +272,5 @@ export default function AppSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

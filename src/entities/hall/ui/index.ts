@@ -1,5 +1,3 @@
-'use client';
-
-export { HallPage } from './hall-page';
-export { HallTable } from './hall-table';
-export { HallForm } from './hall-form';
+export { HallCard } from './hall-card'
+export { HallList } from './hall-list'
+export { HallSelector } from './hall-selector'

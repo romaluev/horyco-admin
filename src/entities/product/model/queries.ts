@@ -1,26 +1,53 @@
-import { useQuery } from '@tanstack/react-query';
-import { productAPi } from './api';
-import { productKeys } from './query-keys';
-import { ApiParams } from '@/shared/types';
+/**
+ * Product Query Hooks
+ * React Query hooks for fetching product data
+ */
 
-export const useGetAllProducts = (params?: ApiParams) => {
-  return useQuery({
-    queryKey: [...productKeys.all(), JSON.stringify(params)],
-    queryFn: () => productAPi.getProducts(params)
-  });
-};
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
-export const useGetProductById = (id: number) => {
-  return useQuery({
-    queryKey: productKeys.byId(id),
-    queryFn: () => productAPi.getProductById(id),
-    enabled: Number.isFinite(id) && id > 0
-  });
-};
+import { productApi } from './api'
+import { productKeys } from './query-keys'
 
-export const useGetAllProductTypes = () => {
+import type {
+  IProduct,
+  IProductsResponse,
+  IGetProductsParams,
+} from './types'
+
+/**
+ * Get all products with filters and pagination
+ */
+export const useGetProducts = (
+  params?: IGetProductsParams,
+  options?: Omit<
+    UseQueryOptions<IProductsResponse, Error>,
+    'queryKey' | 'queryFn'
+  >
+) => {
   return useQuery({
-    queryKey: productKeys.productTypes(),
-    queryFn: () => productAPi.getAllProductTypes()
-  });
-};
+    queryKey: productKeys.list(params),
+    queryFn: () => productApi.getProducts(params),
+    ...options,
+  })
+}
+
+/**
+ * Get product by ID
+ */
+export const useGetProductById = (
+  id: number,
+  options?: Omit<UseQueryOptions<IProduct, Error>, 'queryKey' | 'queryFn'>
+) => {
+  return useQuery({
+    queryKey: productKeys.detail(id),
+    queryFn: () => productApi.getProductById(id),
+    enabled: !!id,
+    ...options,
+  })
+}
+
+/**
+ * Legacy exports for backward compatibility
+ * @deprecated Use useGetProducts instead
+ */
+export const useGetAllProducts = useGetProducts

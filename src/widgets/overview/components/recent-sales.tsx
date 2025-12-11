@@ -1,11 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import {
   Card,
   CardHeader,
   CardContent,
   CardTitle,
-  CardDescription
-} from '@/shared/ui/base/card';
+  CardDescription,
+} from '@/shared/ui/base/card'
 
 const salesData = [
   {
@@ -13,62 +13,62 @@ const salesData = [
     email: 'olivia.martin@email.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/1.png',
     fallback: 'OM',
-    amount: '+$1,999.00'
+    amount: '+$1,999.00',
   },
   {
     name: 'Jackson Lee',
     email: 'jackson.lee@email.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/2.png',
     fallback: 'JL',
-    amount: '+$39.00'
+    amount: '+$39.00',
   },
   {
     name: 'Isabella Nguyen',
     email: 'isabella.nguyen@email.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/3.png',
     fallback: 'IN',
-    amount: '+$299.00'
+    amount: '+$299.00',
   },
   {
     name: 'William Kim',
     email: 'will@email.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/4.png',
     fallback: 'WK',
-    amount: '+$99.00'
+    amount: '+$99.00',
   },
   {
     name: 'Sofia Davis',
     email: 'sofia.davis@email.com',
     avatar: 'https://api.slingacademy.com/public/sample-users/5.png',
     fallback: 'SD',
-    amount: '+$39.00'
-  }
-];
+    amount: '+$39.00',
+  },
+]
 
 export function RecentSales() {
   return (
-    <Card className='h-full'>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Недавние заказы</CardTitle>
         <CardDescription>Вы сделали 200 заказов в этом месяце.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {salesData.map((sale, index) => (
-            <div key={index} className='flex items-center'>
-              <Avatar className='h-9 w-9'>
-                <AvatarImage src={sale.avatar} alt='Avatar' />
+            <div key={index} className="flex items-center">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={sale.avatar} alt="Avatar" />
                 <AvatarFallback>{sale.fallback}</AvatarFallback>
               </Avatar>
-              <div className='ml-4 space-y-1'>
-                <p className='text-sm leading-none font-medium'>{sale.name}</p>
-                <p className='text-muted-foreground text-sm'>{sale.email}</p>
+              <div className="ml-4 space-y-1">
+                <p className="text-sm leading-none font-medium">{sale.name}</p>
+                <p className="text-muted-foreground text-sm">{sale.email}</p>
               </div>
-              <div className='ml-auto font-medium'>{sale.amount}</div>
+              <div className="ml-auto font-medium">{sale.amount}</div>
             </div>
           ))}
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

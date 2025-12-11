@@ -1,72 +1,104 @@
-import { NavItem } from '../types';
+import { PERMISSIONS } from '@/shared/lib/permissions'
 
-export const MAX_FILE_SIZE = 5000000;
+import type { NavItem } from '../types'
+
+export const MAX_FILE_SIZE = 5000000
 export const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/png',
-  'image/webp'
-];
+  'image/webp',
+]
 
 export const getStatuses = () => [
   {
     value: 'active',
-    label: 'Активный'
+    label: 'Активный',
   },
   {
     value: 'archived',
-    label: 'Архивирован'
-  }
-];
+    label: 'Архивирован',
+  },
+]
 
 export const getNavItems = (): NavItem[] => [
   {
     title: 'Панель управления',
     url: '/dashboard/overview',
     icon: 'dashboard',
+    shortcut: ['D'],
     isActive: false,
-    items: [] // Empty array as there are no child items for Dashboard
+    items: [],
   },
   {
-    title: 'Продукты',
-    url: '/dashboard/products',
-    icon: 'product',
-    isActive: false,
-    items: [] // No child items
-  },
-  {
-    title: 'Категории',
-    url: '/dashboard/categories',
+    title: 'Меню',
+    url: '/dashboard/menu',
     icon: 'pizza',
+    shortcut: ['M'],
     isActive: false,
-    items: [] // No child items
+    permission: PERMISSIONS.MENU_VIEW,
+    items: [
+      {
+        title: 'Категории',
+        url: '/dashboard/menu/categories',
+        permission: PERMISSIONS.MENU_VIEW,
+      },
+      {
+        title: 'Продукты',
+        url: '/dashboard/menu/products',
+        permission: PERMISSIONS.MENU_VIEW,
+      },
+      {
+        title: 'Модификаторы',
+        url: '/dashboard/menu/modifiers',
+        permission: PERMISSIONS.MENU_VIEW,
+      },
+      {
+        title: 'Дополнения',
+        url: '/dashboard/menu/additions',
+        permission: PERMISSIONS.MENU_VIEW,
+      },
+      {
+        title: 'Переопределения филиалов',
+        url: '/dashboard/menu/branch-overrides',
+        permission: PERMISSIONS.MENU_VIEW,
+      },
+    ],
   },
   {
-    title: 'Сотрудники',
-    url: '/dashboard/employee',
-    icon: 'product',
+    title: 'Персонал',
+    shortcut: ['S'],
+    url: '/dashboard/staff/employees',
+    icon: 'user',
     isActive: false,
-    items: [] // No child items
+    permission: PERMISSIONS.STAFF_VIEW,
+    items: [],
   },
   {
     title: 'Филиалы',
+    shortcut: ['B'],
     url: '/dashboard/branches',
     icon: 'hierarchy',
     isActive: false,
-    items: [] // No child items
+    permission: PERMISSIONS.BRANCHES_VIEW,
+    items: [],
   },
   {
-    title: 'Залы',
+    title: 'Управление залами',
+    shortcut: ['H'],
     url: '/dashboard/halls',
-    icon: 'kanban',
-    isActive: false,
-    items: [] // No child items
-  },
-  {
-    title: 'Стол менеджмент',
-    url: '/dashboard/table',
     icon: 'layoutGrid',
     isActive: false,
-    items: [] // No child items
-  }
-];
+    permission: PERMISSIONS.TABLES_VIEW,
+    items: [],
+  },
+  {
+    title: 'Настройки',
+    shortcut: ['T'],
+    url: '/dashboard/settings',
+    icon: 'settings',
+    isActive: false,
+    permission: PERMISSIONS.SETTINGS_VIEW,
+    items: [],
+  },
+]

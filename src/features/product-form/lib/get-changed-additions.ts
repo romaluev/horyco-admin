@@ -1,88 +1,100 @@
-import {
-  IAddition,
-  IAdditionProduct,
-  IUpdatedAddition
-} from '@/entities/product/model';
-
 export function getChangedAdditions(
-  initial: IAddition[] = [],
-  current: any[] = [],
+  initial: Record<string, unknown>[] = [],
+  current: Record<string, unknown>[] = [],
   productId: number
-): IUpdatedAddition[] {
-  const result: IUpdatedAddition[] = [];
+): Record<string, unknown>[] {
+  const result: Record<string, unknown>[] = []
 
-  current.forEach((currentAddition) => {
-    if (!currentAddition.id) {
-      result.push({ ...currentAddition, productId });
-      return;
+  current.forEach((currentAddition: Record<string, unknown>) => {
+    if (!(currentAddition as Record<string, unknown>).id) {
+      result.push({ ...currentAddition, productId })
+      return
     }
 
-    const originalAddition = initial.find((a) => a.id === currentAddition.id);
-    if (!originalAddition) return;
+    const originalAddition = initial.find(
+      (a: Record<string, unknown>) => a.id === currentAddition.id
+    )
+    if (!originalAddition) return
 
     const hasMainChanges =
       currentAddition.name !== originalAddition.name ||
       currentAddition.isRequired !== originalAddition.isRequired ||
       currentAddition.isMultiple !== originalAddition.isMultiple ||
-      currentAddition.limit !== originalAddition.limit;
+      currentAddition.limit !== originalAddition.limit
 
-    const changedProducts: any[] = [];
+    const changedProducts: any[] = []
 
-    (currentAddition.additionProducts || []).forEach((currentProduct: any) => {
+    const additionProducts = Array.isArray(currentAddition.additionProducts)
+      ? (currentAddition.additionProducts as Record<string, unknown>[])
+      : []
+    additionProducts.forEach((currentProduct: Record<string, unknown>) => {
       if (!currentProduct.id) {
         if (currentAddition.id) {
-          currentProduct.additionId = currentAddition.id;
+          currentProduct.additionId = currentAddition.id
         }
-        changedProducts.push(currentProduct);
-        return;
+        changedProducts.push(currentProduct)
+        return
       }
 
-      const originalProduct = originalAddition.additionProducts.find(
-        (p) => p.id === currentProduct.id
-      );
-      if (!originalProduct) return;
+      const origProducts = Array.isArray(originalAddition.additionProducts)
+        ? (originalAddition.additionProducts as Record<string, unknown>[])
+        : []
+      const originalProduct = origProducts.find(
+        (p: Record<string, unknown>) => p.id === currentProduct.id
+      )
+      if (!originalProduct) return
 
       if (
         currentProduct.name !== originalProduct.name ||
         currentProduct.price !== originalProduct.price
       ) {
-        changedProducts.push(currentProduct);
+        changedProducts.push(currentProduct)
       }
-    });
+    })
 
-    originalAddition.additionProducts.forEach((originalProduct) => {
-      if (!originalProduct.id) return;
+    const origAdditionProducts = Array.isArray(
+      originalAddition.additionProducts
+    )
+      ? (originalAddition.additionProducts as Record<string, unknown>[])
+      : []
+    origAdditionProducts.forEach((originalProduct: Record<string, unknown>) => {
+      if (!originalProduct.id) return
 
-      const isDeleted = !(currentAddition.additionProducts || []).some(
-        (p: any) => p.id === originalProduct.id
-      );
+      const currProducts = Array.isArray(currentAddition.additionProducts)
+        ? (currentAddition.additionProducts as Record<string, unknown>[])
+        : []
+      const isDeleted = !currProducts.some(
+        (p: Record<string, unknown>) => p.id === originalProduct.id
+      )
       if (isDeleted) {
-        changedProducts.push({ ...originalProduct, isDeleted: true });
+        changedProducts.push({ ...originalProduct, isDeleted: true })
       }
-    });
+    })
 
     if (hasMainChanges || changedProducts.length) {
       result.push({
         ...currentAddition,
         productId,
-        additionProducts: changedProducts.length ? changedProducts : undefined
-      });
+        additionProducts: changedProducts.length ? changedProducts : undefined,
+      })
     }
-  });
+  })
 
   // Handle deleted additions
-  initial.forEach((originalAddition) => {
-    if (!originalAddition.id) return;
+  initial.forEach((originalAddition: Record<string, unknown>) => {
+    if (!originalAddition.id) return
 
-    const isDeleted = !current.some((a: any) => a.id === originalAddition.id);
+    const isDeleted = !current.some(
+      (a: Record<string, unknown>) => a.id === originalAddition.id
+    )
     if (isDeleted) {
       result.push({
         ...originalAddition,
         productId,
-        isDeleted: true
-      });
+        isDeleted: true,
+      })
     }
-  });
+  })
 
-  return result;
+  return result
 }

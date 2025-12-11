@@ -1,3 +1,5 @@
-export { UpdateProductForm } from './ui/update-product-form';
-export { CreateProductForm } from './ui/create-product-form';
-export { DeleteProductButton } from './ui/delete-product-button';
+export { UpdateProductForm } from './ui/update-product-form'
+export { UpdateProductDialog } from './ui/update-product-dialog'
+export { CreateProductForm } from './ui/create-product-form'
+export { DeleteProductButton } from './ui/delete-product-button'
+export { ProductFormCategory } from './ui/product-form-category'

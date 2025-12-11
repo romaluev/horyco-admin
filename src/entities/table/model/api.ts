@@ -1,62 +1,122 @@
-import api from '@/shared/lib/axios';
-import { ITable, ICreateTableDto, IUpdateTableDto } from './types';
-import { ApiParams, PaginatedResponse } from '@/shared/types';
+import api from '@/shared/lib/axios'
+
+import type {
+  ITable,
+  ICreateTableDto,
+  IUpdateTableDto,
+  IUpdateTablePositionDto,
+  ITableSession,
+  ICloseSessionDto,
+  ICloseSessionResponse,
+} from './types'
+
+/**
+ * Transform backend response to frontend format
+ * Maps flat xPosition/yPosition to nested position object
+ */
+const transformTableResponse = (table: ITable): ITable => {
+  return {
+    ...table,
+    position: {
+      x: table.xPosition ?? 0,
+      y: table.yPosition ?? 0,
+      rotation: table.rotation ?? 0,
+    },
+  }
+}
 
 export const tableApi = {
   /**
-   * Create a new table
-   * @param tableData - The table data to create
-   * @returns Promise with the created table
+   * Get all tables for a hall
    */
-  async createTable(tableData: ICreateTableDto): Promise<ITable> {
-    const response = await api.post<ITable>('/table', tableData);
-    return response.data;
-  },
-
-  async getTables(
-    searchParams: ApiParams = {}
-  ): Promise<PaginatedResponse<ITable>> {
-    const params = new URLSearchParams();
-
-    params.append('page', String(searchParams.page || '0'));
-    params.append('size', String(searchParams.size || '100'));
-
-    if (searchParams.filters) {
-      params.append('filters', searchParams.filters);
-    }
-    const response = await api.get<PaginatedResponse<ITable>>('/table', {
-      params: params
-    });
-    return response.data;
+  async getTables(hallId: number): Promise<ITable[]> {
+    const response = await api.get<{ success: boolean; data: ITable[] }>(
+      `/admin/halls/${hallId}/tables`
+    )
+    const tables = response.data.data || []
+    return tables.map(transformTableResponse)
   },
 
   /**
-   * Get a table by ID
-   * @param id - The table ID
-   * @returns Promise with the table
+   * Get table by ID
    */
   async getTableById(id: number): Promise<ITable> {
-    const response = await api.get<ITable>(`/table/${id}`);
-    return response.data;
+    const response = await api.get<{ success: boolean; data: ITable }>(
+      `/admin/tables/${id}`
+    )
+    return transformTableResponse(response.data.data)
+  },
+
+  /**
+   * Create a new table
+   */
+  async createTable(data: ICreateTableDto): Promise<ITable> {
+    const response = await api.post<{ success: boolean; data: ITable }>(
+      `/admin/halls/${data.hallId}/tables`,
+      data
+    )
+    return response.data.data
   },
 
   /**
    * Update a table
-   * @param id - The table ID
-   * @param tableData - The updated table data
-   * @returns Promise with the updated table
    */
-  async updateTable(id: number, tableData: IUpdateTableDto): Promise<ITable> {
-    const response = await api.patch<ITable>(`/table/${id}`, tableData);
-    return response.data;
+  async updateTable(id: number, data: IUpdateTableDto): Promise<ITable> {
+    const response = await api.patch<{ success: boolean; data: ITable }>(
+      `/admin/tables/${id}`,
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Update table position (for drag & drop)
+   */
+  async updateTablePosition(
+    id: number,
+    data: IUpdateTablePositionDto
+  ): Promise<ITable> {
+    const response = await api.patch<{ success: boolean; data: ITable }>(
+      `/admin/tables/${id}/layout`,
+      data
+    )
+    return response.data.data
   },
 
   /**
    * Delete a table
-   * @param id - The table ID
-   * @returns Promise with void
    */
   async deleteTable(id: number): Promise<void> {
-    await api.delete(`/table/${id}`);
-  }
-};
+    await api.delete(`/admin/tables/${id}`)
+  },
+
+  /**
+   * Get table session status
+   */
+  async getSessionStatus(id: number): Promise<ITableSession> {
+    const response = await api.get<{ success: boolean; data: ITableSession }>(
+      `/admin/tables/${id}/session-status`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Close table session
+   */
+  async closeSession(
+    id: number,
+    data: ICloseSessionDto
+  ): Promise<ICloseSessionResponse> {
+    const response = await api.post<{
+      success: boolean
+      data: ICloseSessionResponse
+    }>(`/admin/tables/${id}/close-session`, data)
+    return response.data.data
+  },
+
+  /**
+   * Note: QR code generation and management endpoints are not yet implemented.
+   * QR codes are generated automatically when tables are created.
+   * Manual regeneration and download features are planned for future implementation.
+   */
+}

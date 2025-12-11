@@ -1,43 +1,92 @@
+import { IconUsers, IconQrcode } from '@tabler/icons-react'
+
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
+  CardFooter,
   CardHeader,
-  CardTitle
-} from '@/shared/ui/base/card';
-import { Armchair } from 'lucide-react';
-import { ITable } from '../model';
+  CardTitle,
+} from '@/shared/ui/base/card'
 
-type TableCardProps = {
-  table: ITable;
-  className?: string;
-  UpdateButton?: React.ComponentType<{ id: number }>;
-  DeleteButton?: React.ComponentType<{ id: number }>;
-};
+import { TableStatusBadge } from './table-status-badge'
+
+import type { ITable } from '../model/types'
+
+interface ITableCardProps {
+  table: ITable
+  onEdit?: (table: ITable) => void
+  onDelete?: (table: ITable) => void
+  onViewSession?: (table: ITable) => void
+  onShowQR?: (table: ITable) => void
+}
+
 export const TableCard = ({
   table,
-  className,
-  UpdateButton,
-  DeleteButton
-}: TableCardProps) => {
+  onEdit,
+  onDelete,
+  onViewSession,
+  onShowQR,
+}: ITableCardProps) => {
   return (
-    <Card className={className}>
-      <CardHeader className='grid-rows-1 items-center'>
-        <CardTitle>Стол: #{table.number}</CardTitle>
-        <CardAction className='row-span-1 grid grid-cols-2 gap-2'>
-          {UpdateButton && <UpdateButton id={table.id} />}
-          {DeleteButton && <DeleteButton id={table.id} />}
-        </CardAction>
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <CardTitle>Table {table.number}</CardTitle>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <IconUsers className="h-4 w-4" />
+              <span>{table.capacity} seats</span>
+            </div>
+          </div>
+          <TableStatusBadge status={table.status} />
+        </div>
       </CardHeader>
-      <CardContent>
-        <CardDescription>
-          <p className='text-md flex items-center gap-1'>
-            <Armchair size={18} />
-            Количество мест: <strong>{table.size}</strong>
-          </p>
-        </CardDescription>
+      <CardContent className="space-y-2">
+        {table.hallName && (
+          <p className="text-sm text-muted-foreground">Hall: {table.hallName}</p>
+        )}
+        {table.hasActiveSession && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={() => onViewSession?.(table)}
+          >
+            View Session
+          </Button>
+        )}
       </CardContent>
+      <CardFooter className="flex gap-2">
+        {onShowQR && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onShowQR(table)}
+          >
+            <IconQrcode className="h-4 w-4" />
+          </Button>
+        )}
+        {onEdit && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={() => onEdit(table)}
+          >
+            Edit
+          </Button>
+        )}
+        {onDelete && (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => onDelete(table)}
+          >
+            Delete
+          </Button>
+        )}
+      </CardFooter>
     </Card>
-  );
-};
+  )
+}

@@ -1,41 +1,66 @@
-'use client';
+'use client'
 
-import PageContainer from '@/shared/ui/layout/page-container';
-import { buttonVariants } from '@/shared/ui/base/button';
-import { Heading } from '@/shared/ui/base/heading';
-import { Separator } from '@/shared/ui/base/separator';
-import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton';
-import BranchListingPage from '@/entities/branch/ui/branch-listing';
-import { cn } from '@/shared/lib/utils';
-import { IconPlus } from '@tabler/icons-react';
-import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react'
+
+import Link from 'next/link'
+
+import { IconPlus, IconUpload } from '@tabler/icons-react'
+
+import { cn } from '@/shared/lib/utils'
+import { Button, buttonVariants } from '@/shared/ui/base/button'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton'
+import PageContainer from '@/shared/ui/layout/page-container'
+
+import BranchListingPage from '@/entities/branch/ui/branch-listing'
+import { CreateBranchDialog } from '@/features/branch-form'
 
 export default function Page() {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+
   return (
-    <PageContainer scrollable={false}>
-      <div className='flex flex-1 flex-col space-y-4'>
-        <div className='flex items-start justify-between'>
-          <Heading
-            title={'Филиалы'}
-            description={'Управление филиалами вашей организации'}
-          />
-          <Link
-            href='/dashboard/branches/new'
-            className={cn(buttonVariants(), 'text-xs md:text-sm')}
+    <>
+      <PageContainer scrollable={false}>
+        <div className="flex flex-1 flex-col space-y-4">
+          <div className="flex items-start justify-between">
+            <Heading
+              title={'Филиалы'}
+              description={'Управление филиалами вашей организации'}
+            />
+            <div className="flex gap-2">
+              <Link
+                href="/dashboard/branches/bulk-import"
+                className={cn(
+                  buttonVariants({ variant: 'outline' }),
+                  'text-xs md:text-sm'
+                )}
+              >
+                <IconUpload className="mr-2 h-4 w-4" /> Импорт
+              </Link>
+              <Button
+                onClick={() => setIsCreateDialogOpen(true)}
+                className="text-xs md:text-sm"
+              >
+                <IconPlus className="mr-2 h-4 w-4" /> Добавить филиал
+              </Button>
+            </div>
+          </div>
+          <Separator />
+          <Suspense
+            fallback={
+              <DataTableSkeleton columnCount={4} rowCount={8} filterCount={2} />
+            }
           >
-            <IconPlus className='mr-2 h-4 w-4' /> Добавить филиал
-          </Link>
+            <BranchListingPage />
+          </Suspense>
         </div>
-        <Separator />
-        <Suspense
-          fallback={
-            <DataTableSkeleton columnCount={4} rowCount={8} filterCount={2} />
-          }
-        >
-          <BranchListingPage />
-        </Suspense>
-      </div>
-    </PageContainer>
-  );
+      </PageContainer>
+
+      <CreateBranchDialog
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+      />
+    </>
+  )
 }

@@ -1,41 +1,44 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/shared/ui/base/button';
+import React, { useState, useEffect, useCallback } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { X, Filter } from 'lucide-react'
+
+import { Button } from '@/shared/ui/base/button'
+import { Input } from '@/shared/ui/base/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/shared/ui/base/popover'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/ui/base/select';
-import { Input } from '@/shared/ui/base/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/shared/ui/base/popover';
-import { X, Filter } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+  SelectValue,
+} from '@/shared/ui/base/select'
 
 interface Filter {
-  property: string;
-  rule: string;
-  value: string;
+  property: string
+  rule: string
+  value: string
 }
 
 interface FilterComponentProps {
-  properties: string[] | { value: string; label: string }[];
-  onChange: (filterString: string, filters: Filter[]) => void;
+  properties: string[] | { value: string; label: string }[]
+  onChange: (filterString: string, filters: Filter[]) => void
 }
 
 export const BaseFilter: React.FC<FilterComponentProps> = ({
   properties,
-  onChange
+  onChange,
 }) => {
-  const [filters, setFilters] = useState<Filter[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const [filters, setFilters] = useState<Filter[]>([])
+  const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
 
   // Filter rules matching backend FilterRule enum
   const filterRules = [
@@ -50,13 +53,13 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
     { value: 'in', label: 'в списке' },
     { value: 'nin', label: 'не в списке' },
     { value: 'isnull', label: 'пусто' },
-    { value: 'isnotnull', label: 'не пусто' }
-  ];
+    { value: 'isnotnull', label: 'не пусто' },
+  ]
 
   // Normalize properties to { value, label } format
   const normalizedProperties = properties.map((prop) =>
     typeof prop === 'string' ? { value: prop, label: prop } : prop
-  );
+  )
 
   // Emit filter string to parent via onChange
   const emitFilterString = useCallback(
@@ -66,109 +69,111 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
           f.property &&
           f.rule &&
           (f.value || f.rule === 'isnull' || f.rule === 'isnotnull')
-      );
+      )
       const filterString = validFilters
         .map((f) =>
           f.rule === 'isnull' || f.rule === 'isnotnull'
             ? `${f.property}:${f.rule}`
             : `${f.property}:${f.rule}:${f.value}`
         )
-        .join(';');
+        .join(';')
 
-      const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search)
       if (filterString) {
-        params.set('filter', filterString);
+        params.set('filter', filterString)
       } else {
-        params.delete('filter');
+        params.delete('filter')
       }
-      router.push(`?${params.toString()}`);
+      router.push(`?${params.toString()}`)
 
-      onChange(filterString, validFilters);
+      onChange(filterString, validFilters)
     },
     [onChange, router]
-  );
+  )
 
   // Update filters when initialFilters change (e.g., on URL change)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const filterParam = params.get('filter');
+    const params = new URLSearchParams(window.location.search)
+    const filterParam = params.get('filter')
     if (filterParam) {
       try {
         const parsedFilters = filterParam.split(';').map((filter) => {
-          const [property, rule, value] = filter.split(':');
+          const [property, rule, value] = filter.split(':')
           return {
-            property,
-            rule,
-            value: value || '' // Empty string for isnull/isnotnull
-          };
-        });
-        setFilters(parsedFilters);
+            property: property ?? '',
+            rule: rule ?? '',
+            value: value ?? '', // Empty string for isnull/isnotnull
+          }
+        })
+        setFilters(parsedFilters)
       } catch (error) {
-        console.error('Invalid filter parameter in URL:', error);
+        console.error('Invalid filter parameter in URL:', error)
       }
     }
-  }, []);
+  }, [])
 
   // Add a new filter
   const addFilter = () => {
-    const newFilters = [...filters, { property: '', rule: '', value: '' }];
-    setFilters(newFilters);
-    emitFilterString(newFilters);
-  };
+    const newFilters = [...filters, { property: '', rule: '', value: '' }]
+    setFilters(newFilters)
+    emitFilterString(newFilters)
+  }
 
   // Remove a filter by index
   const removeFilter = (index: number) => {
-    const newFilters = filters.filter((_, i) => i !== index);
-    setFilters(newFilters);
-    emitFilterString(newFilters);
-  };
+    const newFilters = filters.filter((_, i) => i !== index)
+    setFilters(newFilters)
+    emitFilterString(newFilters)
+  }
 
   // Update a filter field
   const updateFilter = (index: number, field: keyof Filter, value: string) => {
-    const newFilters = [...filters];
-    newFilters[index][field] = value;
-    setFilters(newFilters);
-    emitFilterString(newFilters);
-  };
+    const newFilters = [...filters]
+    if (newFilters[index]) {
+      newFilters[index][field] = value
+    }
+    setFilters(newFilters)
+    emitFilterString(newFilters)
+  }
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant='outline' className='flex items-center gap-2'>
-          <Filter className='h-4 w-4' />
+        <Button variant="outline" className="flex items-center gap-2">
+          <Filter className="h-4 w-4" />
           Фильтры {filters.length > 0 && `(${filters.length})`}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='mr-5 w-[600px] p-4'>
-        <div className='space-y-4'>
-          <div className='flex items-center justify-between'>
-            <h4 className='font-medium'>Фильтры</h4>
+      <PopoverContent className="mr-5 w-[600px] p-4">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium">Фильтры</h4>
             <Button
-              variant='ghost'
-              size='sm'
+              variant="ghost"
+              size="sm"
               onClick={() => {
-                setFilters([]);
-                onChange('', []);
+                setFilters([])
+                onChange('', [])
               }}
             >
               Очистить все
             </Button>
           </div>
           {filters.length === 0 ? (
-            <p className='text-muted-foreground text-sm'>
+            <p className="text-muted-foreground text-sm">
               Нет активных фильтров
             </p>
           ) : (
             filters.map((filter, index) => (
-              <div key={index} className='flex items-center gap-2'>
+              <div key={index} className="flex items-center gap-2">
                 <Select
                   value={filter.property}
                   onValueChange={(value) =>
                     updateFilter(index, 'property', value)
                   }
                 >
-                  <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Выберите поле' />
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Выберите поле" />
                   </SelectTrigger>
                   <SelectContent>
                     {normalizedProperties.map((prop) => (
@@ -182,8 +187,8 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                   value={filter.rule}
                   onValueChange={(value) => updateFilter(index, 'rule', value)}
                 >
-                  <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Выберите правило' />
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Выберите правило" />
                   </SelectTrigger>
                   <SelectContent>
                     {filterRules.map((rule) => (
@@ -195,26 +200,26 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
                 </Select>
                 {filter.rule !== 'isnull' && filter.rule !== 'isnotnull' && (
                   <Input
-                    placeholder='Введите значение'
+                    placeholder="Введите значение"
                     value={filter.value}
                     onChange={(e) =>
                       updateFilter(index, 'value', e.target.value)
                     }
-                    className='w-[180px]'
+                    className="w-[180px]"
                   />
                 )}
                 <Button
-                  variant='ghost'
-                  size='icon'
+                  variant="ghost"
+                  size="icon"
                   onClick={() => removeFilter(index)}
                 >
-                  <X className='h-4 w-4' />
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
             ))
           )}
-          <div className='flex gap-2'>
-            <Button variant='outline' onClick={addFilter}>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={addFilter}>
               Добавить фильтр
             </Button>
             <Button onClick={() => setIsOpen(false)}>Сохранить</Button>
@@ -222,5 +227,5 @@ export const BaseFilter: React.FC<FilterComponentProps> = ({
         </div>
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}
