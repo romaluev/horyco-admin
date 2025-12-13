@@ -30,10 +30,12 @@ const MILLION = 1000000
 
 export type ChartMetricType = 'revenue' | 'orders' | 'average'
 export type GroupByType = 'hour' | 'day' | 'week'
+export type HourStep = 1 | 2 | 3 | 6 | 12
 
 export interface ChartDataPoint {
   date: string
-  value: number
+  revenue: number
+  orders: number
 }
 
 export interface ChartData {
@@ -44,14 +46,16 @@ export interface ChartData {
 
 interface AnalyticsChartProps {
   data: ChartData
-  onMetricChange: (metric: 'revenue' | 'orders' | 'average') => void
   isLoading?: boolean
+  hourStep: HourStep
+  onHourStepChange: (step: HourStep) => void
 }
 
 export function AnalyticsChart({
   data,
-  onMetricChange,
   isLoading = false,
+  hourStep,
+  onHourStepChange,
 }: AnalyticsChartProps) {
   // Форматирование суммы в узбекские сумы - используем статический формат
   const formatCurrency = (amount: number) => {
@@ -62,21 +66,76 @@ export function AnalyticsChart({
     return `UZS ${formattedNumber}`
   }
 
+  const getMetricValue = React.useCallback(
+    (point: ChartDataPoint, metric: ChartMetricType) => {
+      if (metric === 'revenue') return point.revenue
+      if (metric === 'orders') return point.orders
+      return point.revenue / (point.orders || 1)
+    },
+    []
+  )
+
+  const bucketHourlyPoints = React.useCallback(
+    (points: ChartDataPoint[], step: HourStep) => {
+      const bucketMs = step * 60 * 60 * 1000
+      const buckets = new Map<
+        number,
+        { date: string; revenue: number; orders: number }
+      >()
+
+      for (const p of points) {
+        const ms = parseISO(p.date).getTime()
+        const bucketKey = Math.floor(ms / bucketMs)
+        const bucketStartMs = bucketKey * bucketMs
+
+        const existing = buckets.get(bucketKey)
+        if (!existing) {
+          buckets.set(bucketKey, {
+            date: new Date(bucketStartMs).toISOString(),
+            revenue: p.revenue,
+            orders: p.orders,
+          })
+          continue
+        }
+
+        existing.revenue += p.revenue
+        existing.orders += p.orders
+      }
+
+      return [...buckets.entries()]
+        .sort(([a], [b]) => a - b)
+        .map(([, v]) => v)
+    },
+    []
+  )
+
+  const downsampleToMaxPoints = React.useCallback(
+    <T,>(items: T[], maxPoints: number) => {
+      if (items.length <= maxPoints) return items
+      const step = Math.ceil(items.length / maxPoints)
+      return items.filter((_, idx) => idx % step === 0)
+    },
+    []
+  )
+
   // Форматирование данных для графика
   const formatChartData = () => {
     if (!data || !data.data) return []
 
-    // Ограничиваем количество точек для оптимизации пространства
-    const optimizedData =
-      data.data.length > 15
-        ? data.data.filter((_, index) => index % 2 === 0)
+    const aggregated =
+      data.groupBy === 'hour' && hourStep > 1
+        ? bucketHourlyPoints(data.data, hourStep)
         : data.data
 
-    return optimizedData.map((item) => ({
-      ...item,
-      date: formatDate(item.date, data.groupBy),
-      value: item.value,
-    }))
+    const optimizedData = downsampleToMaxPoints(aggregated, 15)
+
+    return optimizedData.map((item) => {
+      const value = getMetricValue(item, data.metric)
+      return {
+        date: item.date,
+        value: Math.round(value),
+      }
+    })
   }
 
   // Форматирование даты в зависимости от группировки
@@ -225,17 +284,30 @@ export function AnalyticsChart({
               </CardDescription>
             </div>
             <Tabs
-              defaultValue={data.metric}
-              value={data.metric}
-              onValueChange={(value) =>
-                onMetricChange(value as 'revenue' | 'orders' | 'average')
-              }
+              value={String(hourStep)}
+              onValueChange={(value) => {
+                if (data.groupBy !== 'hour') return
+                const parsed = Number(value) as HourStep
+                if ([1, 2, 3, 6, 12].includes(parsed)) onHourStepChange(parsed)
+              }}
               className="w-auto"
             >
-              <TabsList>
-                <TabsTrigger value="revenue">Выручка</TabsTrigger>
-                <TabsTrigger value="orders">Заказы</TabsTrigger>
-                <TabsTrigger value="average">Средний чек</TabsTrigger>
+              <TabsList aria-label="Интервал по часам">
+                <TabsTrigger disabled={data.groupBy !== 'hour'} value="1">
+                  1ч
+                </TabsTrigger>
+                <TabsTrigger disabled={data.groupBy !== 'hour'} value="2">
+                  2ч
+                </TabsTrigger>
+                <TabsTrigger disabled={data.groupBy !== 'hour'} value="3">
+                  3ч
+                </TabsTrigger>
+                <TabsTrigger disabled={data.groupBy !== 'hour'} value="6">
+                  6ч
+                </TabsTrigger>
+                <TabsTrigger disabled={data.groupBy !== 'hour'} value="12">
+                  12ч
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>

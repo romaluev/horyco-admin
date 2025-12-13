@@ -7,8 +7,10 @@ import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { cn } from '@/shared/lib/utils'
 
 import type { PeriodFilterDateRange, PeriodType } from './period-filter'
+import type { ChartMetricType } from './analytics-chart'
 
 // Типы данных для метрик
 export interface AnalyticsMetrics {
@@ -34,6 +36,8 @@ interface MetricCardProps {
   previousValue?: number
   formatValue: (value: number) => string
   period: string
+  isSelected?: boolean
+  onSelect?: () => void
 }
 
 function MetricCard({
@@ -42,6 +46,8 @@ function MetricCard({
   previousValue,
   formatValue,
   period,
+  isSelected = false,
+  onSelect,
 }: MetricCardProps) {
   // Расчет процента изменения, если есть предыдущее значение
   const changePercent = previousValue
@@ -51,8 +57,27 @@ function MetricCard({
   // Определение тренда (рост или падение)
   const isIncreasing = changePercent > 0
 
+  const isInteractive = Boolean(onSelect)
+
   return (
-    <Card>
+    <Card
+      role={isInteractive ? 'button' : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-pressed={isInteractive ? isSelected : undefined}
+      onClick={onSelect}
+      onKeyDown={(e) => {
+        if (!isInteractive) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect?.()
+        }
+      }}
+      className={cn(
+        isInteractive &&
+          'hover:bg-muted/40 focus-visible:ring-ring/50 cursor-pointer outline-none transition-colors focus-visible:ring-[3px]',
+        isSelected && 'border-primary ring-primary/15 ring-2'
+      )}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="text-muted-foreground text-sm font-medium">
           {title}
@@ -121,6 +146,8 @@ interface AnalyticsMetricsProps {
   isLoading?: boolean
   selectedRange: PeriodFilterDateRange
   selectedPeriod: PeriodType
+  selectedMetric: ChartMetricType
+  onMetricChange: (metric: ChartMetricType) => void
 }
 
 export function AnalyticsMetrics({
@@ -128,6 +155,8 @@ export function AnalyticsMetrics({
   isLoading = false,
   selectedRange,
   selectedPeriod,
+  selectedMetric,
+  onMetricChange,
 }: AnalyticsMetricsProps) {
   const formatCurrency = (amount: number) => {
     const formattedNumber = amount
@@ -188,6 +217,8 @@ export function AnalyticsMetrics({
         previousValue={metrics.previousPeriod?.revenue}
         formatValue={formatCurrency}
         period={getPeriodText()}
+        isSelected={selectedMetric === 'revenue'}
+        onSelect={() => onMetricChange('revenue')}
       />
 
       <MetricCard
@@ -196,6 +227,8 @@ export function AnalyticsMetrics({
         previousValue={metrics.previousPeriod?.ordersCount}
         formatValue={(value) => value.toString()}
         period={getPeriodText()}
+        isSelected={selectedMetric === 'orders'}
+        onSelect={() => onMetricChange('orders')}
       />
 
       <MetricCard
@@ -204,6 +237,8 @@ export function AnalyticsMetrics({
         previousValue={metrics.previousPeriod?.averageCheck}
         formatValue={formatCurrency}
         period={getPeriodText()}
+        isSelected={selectedMetric === 'average'}
+        onSelect={() => onMetricChange('average')}
       />
 
       <TopDishCard

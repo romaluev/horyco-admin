@@ -12,7 +12,11 @@ import {
   useDashboardAnalytics,
 } from '@/entities/analytics'
 
-import { AnalyticsChart, type ChartMetricType } from './analytics-chart'
+import {
+  AnalyticsChart,
+  type ChartMetricType,
+  type HourStep,
+} from './analytics-chart'
 import { AnalyticsMetrics } from './analytics-metrics'
 import { BranchSelector } from './branch-selector'
 import {
@@ -30,6 +34,9 @@ const AUTO_REFRESH_MS = AUTO_REFRESH_MINUTES * MINUTES_TO_MS
 export function AnalyticsOverview() {
   const queryClient = useQueryClient()
   const [scope, setScope] = useState<AnalyticsScopeType>('branch')
+  const [selectedBranchId, setSelectedBranchId] = useState<
+    number | null | undefined
+  >(undefined)
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('day')
   const [selectedRange, setSelectedRange] = useState<PeriodFilterDateRange>({
     from: undefined,
@@ -37,6 +44,7 @@ export function AnalyticsOverview() {
   })
   const [selectedMetric, setSelectedMetric] =
     useState<ChartMetricType>('revenue')
+  const [hourStep, setHourStep] = useState<HourStep>(2)
 
   const apiParams = useMemo(() => {
     const params: {
@@ -44,6 +52,7 @@ export function AnalyticsOverview() {
       period: AnalyticsPeriodType
       startDate?: string
       endDate?: string
+      branchId?: number
     } = {
       scope,
       period: selectedPeriod as AnalyticsPeriodType,
@@ -54,10 +63,21 @@ export function AnalyticsOverview() {
       params.endDate = format(selectedRange.to, 'yyyy-MM-dd')
     }
 
+    if (scope === 'branch' && typeof selectedBranchId === 'number') {
+      params.branchId = selectedBranchId
+    }
+
     return params
-  }, [scope, selectedPeriod, selectedRange])
+  }, [scope, selectedBranchId, selectedPeriod, selectedRange])
 
   const { data, isLoading, isRefetching } = useDashboardAnalytics(apiParams)
+
+  useEffect(() => {
+    if (scope !== 'branch') return
+    if (selectedBranchId !== undefined) return
+    if (!data?.branch?.id) return
+    setSelectedBranchId(data.branch.id)
+  }, [data?.branch?.id, scope, selectedBranchId])
 
   useEffect(() => {
     const id = setInterval(
@@ -112,19 +132,11 @@ export function AnalyticsOverview() {
   const chartData = useMemo(() => {
     if (!data) return null
 
-    const dataPoints = data.chart.points.map((point) => {
-      const value =
-        selectedMetric === 'revenue'
-          ? point.revenue
-          : selectedMetric === 'orders'
-            ? point.orders
-            : point.revenue / (point.orders || 1)
-
-      return {
-        date: point.timestamp,
-        value: Math.round(value),
-      }
-    })
+    const dataPoints = data.chart.points.map((point) => ({
+      date: point.timestamp,
+      revenue: point.revenue,
+      orders: point.orders,
+    }))
 
     return {
       data: dataPoints,
@@ -182,7 +194,9 @@ export function AnalyticsOverview() {
           <BranchSelector
             scope={scope}
             onScopeChange={setScope}
-            currentBranchName={data?.branch?.name || null}
+            currentBranchId={data?.branch?.id || null}
+            selectedBranchId={selectedBranchId}
+            onSelectedBranchIdChange={setSelectedBranchId}
           />
         </div>
       </div>
@@ -215,14 +229,17 @@ export function AnalyticsOverview() {
             selectedRange={selectedRange}
             selectedPeriod={selectedPeriod}
             isLoading={isRefetching}
+            selectedMetric={selectedMetric}
+            onMetricChange={setSelectedMetric}
           />
 
           <div className="grid gap-4 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <AnalyticsChart
                 data={chartData}
-                onMetricChange={setSelectedMetric}
                 isLoading={isRefetching}
+                hourStep={hourStep}
+                onHourStepChange={setHourStep}
               />
             </div>
             <div>

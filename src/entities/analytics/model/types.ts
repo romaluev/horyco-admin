@@ -85,6 +85,11 @@ export interface IDashboardAnalyticsResponse {
 
 export interface IDashboardAnalyticsParams {
   scope?: AnalyticsScopeType
+  /**
+   * Optional branch id for single-branch analytics.
+   * When omitted, backend may fall back to "current branch".
+   */
+  branchId?: number
   period?: AnalyticsPeriodType
   startDate?: string // Required if period=custom
   endDate?: string // Required if period=custom
