@@ -1,6 +1,5 @@
 'use client'
 
-
 import { MoreHorizontal } from 'lucide-react'
 
 import {
@@ -18,6 +17,7 @@ import {
 } from '@/features/employee-actions'
 import { UpdateEmployeeDialog } from '@/features/employee-form'
 import { GeneratePinButton } from '@/features/pin-actions'
+import { GenerateInviteLinkButton } from '@/features/staff-invite'
 
 import type { IEmployee } from '@/entities/employee'
 import type { JSX } from 'react'
@@ -41,6 +41,7 @@ export const EmployeeTableActions = ({
         <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <UpdateEmployeeDialog employee={employee} />
         <GeneratePinButton employee={employee} />
+        <GenerateInviteLinkButton employee={employee} />
         <ActivateEmployeeButton employee={employee} />
         <DeactivateEmployeeButton employee={employee} />
         <DeleteEmployeeButton employee={employee} />

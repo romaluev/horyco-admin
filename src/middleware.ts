@@ -11,6 +11,8 @@ const PUBLIC_ROUTES = [
   '/auth/sign-up',
   '/auth/register',
   '/auth/forgot-password',
+  '/invite', // Magic link invitation for owners
+  '/staff-invite', // Magic link invitation for employees
 ]
 
 // Define onboarding routes (require auth but not full onboarding completion)
@@ -21,6 +23,51 @@ const ONBOARDING_ROUTES = [
   '/onboarding/staff-invite',
   '/onboarding/complete',
 ]
+
+// Map onboarding step to route
+const STEP_ROUTES: Record<string, string> = {
+  registration_complete: '/onboarding/business-info',
+  business_identity: '/onboarding/branch-setup',
+  branch_setup: '/onboarding/menu-template',
+  menu_template: '/onboarding/staff-invite',
+  staff_invited: '/onboarding/complete',
+  go_live: '/dashboard',
+}
+
+interface OnboardingProgress {
+  currentStep: string
+  isCompleted: boolean
+}
+
+// Fetch onboarding progress from API
+async function getOnboardingProgress(
+  token: string
+): Promise<OnboardingProgress | null> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    if (!apiUrl) return null
+
+    const response = await fetch(`${apiUrl}/admin/onboarding/progress`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+
+    if (!response.ok) return null
+
+    const result = await response.json()
+    return result.data as OnboardingProgress
+  } catch {
+    return null
+  }
+}
+
+// Get the route for the current onboarding step
+function getRouteForStep(step: string): string {
+  return STEP_ROUTES[step] || '/onboarding/business-info'
+}
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -47,14 +94,25 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Redirect authenticated users from auth pages to dashboard
-  // (except registration which might redirect to onboarding)
+  // Redirect authenticated users from auth pages to dashboard (or onboarding)
   if (isAuthenticated && pathname.startsWith('/auth/sign-in')) {
+    // Check onboarding status before redirecting
+    const progress = await getOnboardingProgress(token)
+    if (progress && !progress.isCompleted) {
+      const onboardingRoute = getRouteForStep(progress.currentStep)
+      return NextResponse.redirect(new URL(onboardingRoute, req.url))
+    }
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  // Note: Onboarding completion check and redirects are handled client-side
-  // in the AuthProvider based on the user's onboarding progress from the API
+  // Check onboarding completion when accessing protected routes
+  if (isAuthenticated && isProtectedRoute) {
+    const progress = await getOnboardingProgress(token)
+    if (progress && !progress.isCompleted) {
+      const onboardingRoute = getRouteForStep(progress.currentStep)
+      return NextResponse.redirect(new URL(onboardingRoute, req.url))
+    }
+  }
 
   return NextResponse.next()
 }
