@@ -214,3 +214,42 @@ export interface IUser {
     thumb?: string
   }
 }
+
+// Staff Invite Types (for employees)
+export interface VerifyStaffInviteRequest {
+  token: string
+}
+
+export interface VerifyStaffInviteResponse {
+  valid: boolean
+  employeeId?: number
+  employeeName?: string
+  employeePhone?: string
+  tenantId?: number
+  requiresPassword: boolean
+  expiresAt?: string
+  daysRemaining?: number
+  message?: string
+}
+
+export interface CompleteStaffInviteRequest {
+  token: string
+  password: string
+}
+
+export interface CompleteStaffInviteResponse {
+  success: boolean
+  accessToken: string
+  refreshToken: string
+  expiresIn: number
+  employee: {
+    id: number
+    fullName: string
+    phone: string
+  }
+  tenant: {
+    id: number
+    name: string
+  }
+  message: string
+}

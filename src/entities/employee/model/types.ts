@@ -191,3 +191,64 @@ export interface IBulkImportResult {
     error?: string
   }[]
 }
+
+// Staff Invite Types
+export interface IGenerateInviteLinkResponse {
+  magicLink: string
+  expiresAt: string
+  daysRemaining: number
+  employee: {
+    id: number
+    fullName: string
+    phone: string
+  }
+  instructions: string
+}
+
+export interface IInviteStatusResponse {
+  hasActiveInvitation: boolean
+  invitationId?: number
+  expiresAt?: string
+  daysRemaining?: number
+  isCompleted: boolean
+  accessCount?: number
+  lastAccessedAt?: string
+}
+
+export interface IVerifyStaffInviteRequest {
+  token: string
+}
+
+export interface IVerifyStaffInviteResponse {
+  valid: boolean
+  employeeId?: number
+  employeeName?: string
+  employeePhone?: string
+  tenantId?: number
+  requiresPassword: boolean
+  expiresAt?: string
+  daysRemaining?: number
+  message?: string
+}
+
+export interface ICompleteStaffInviteRequest {
+  token: string
+  password: string
+}
+
+export interface ICompleteStaffInviteResponse {
+  success: boolean
+  accessToken: string
+  refreshToken: string
+  expiresIn: number
+  employee: {
+    id: number
+    fullName: string
+    phone: string
+  }
+  tenant: {
+    id: number
+    name: string
+  }
+  message: string
+}

@@ -12,6 +12,8 @@ import type {
   IAssignPermissionsFromRoleDto,
   ICopyPermissionsDto,
   IEmployeeBranchPermissions,
+  IGenerateInviteLinkResponse,
+  IInviteStatusResponse,
 } from './types'
 
 /**
@@ -395,5 +397,51 @@ export const employeeApi = {
       `${BASE_URL}/${employeeId}/permissions/copy`,
       data
     )
+  },
+
+  // ============================================
+  // Staff Invite Endpoints
+  // ============================================
+
+  /**
+   * Generate magic link for employee to set password
+   * @param employeeId - Employee ID
+   * @returns Promise with magic link and instructions
+   */
+  generateInviteLink: async (
+    employeeId: number
+  ): Promise<IGenerateInviteLinkResponse> => {
+    const response = await api.post<ApiResponse<IGenerateInviteLinkResponse>>(
+      `${BASE_URL}/${employeeId}/invite-link`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Regenerate magic link (invalidates previous)
+   * @param employeeId - Employee ID
+   * @returns Promise with new magic link
+   */
+  regenerateInviteLink: async (
+    employeeId: number
+  ): Promise<IGenerateInviteLinkResponse> => {
+    const response = await api.post<ApiResponse<IGenerateInviteLinkResponse>>(
+      `${BASE_URL}/${employeeId}/invite-link/regenerate`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Get invitation status for employee
+   * @param employeeId - Employee ID
+   * @returns Promise with invitation status
+   */
+  getInviteStatus: async (
+    employeeId: number
+  ): Promise<IInviteStatusResponse> => {
+    const response = await api.get<ApiResponse<IInviteStatusResponse>>(
+      `${BASE_URL}/${employeeId}/invite-link/status`
+    )
+    return response.data.data
   },
 }

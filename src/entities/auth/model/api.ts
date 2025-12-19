@@ -17,6 +17,10 @@ import type {
   VerifyInviteResponse,
   CompleteInviteRequest,
   CompleteInviteResponse,
+  VerifyStaffInviteRequest,
+  VerifyStaffInviteResponse,
+  CompleteStaffInviteRequest,
+  CompleteStaffInviteResponse,
 } from '.'
 import type { IEmployee } from '@/entities/employee'
 
@@ -203,11 +207,11 @@ export const authApi = {
   verifyInvite: async (
     data: VerifyInviteRequest
   ): Promise<VerifyInviteResponse> => {
-    const response = await api.post<VerifyInviteResponse>(
+    const response = await api.post<ApiResponse<VerifyInviteResponse>>(
       '/auth/invite/verify',
       data
     )
-    return response.data
+    return response.data.data
   },
 
   /**
@@ -218,14 +222,16 @@ export const authApi = {
   completeInvite: async (
     data: CompleteInviteRequest
   ): Promise<CompleteInviteResponse> => {
-    const response = await api.post<CompleteInviteResponse>(
+    const response = await api.post<ApiResponse<CompleteInviteResponse>>(
       '/auth/invite/complete',
       data
     )
 
+    const result = response.data.data
+
     // Store tokens from response
-    if (response.data.success) {
-      const { accessToken, refreshToken, expiresIn } = response.data
+    if (result.success) {
+      const { accessToken, refreshToken, expiresIn } = result
 
       console.log('Saving access token from invite:', accessToken)
       console.log('Saving refresh token from invite:', refreshToken)
@@ -236,6 +242,56 @@ export const authApi = {
       console.log('Cookie after setting:', Cookies.get('access_token'))
     }
 
-    return response.data
+    return result
+  },
+
+  // ============================================
+  // Staff Invite Endpoints (for employees)
+  // ============================================
+
+  /**
+   * Verify staff magic link token
+   * @param data - Staff invitation token
+   * @returns Promise with invitation verification result
+   */
+  verifyStaffInvite: async (
+    data: VerifyStaffInviteRequest
+  ): Promise<VerifyStaffInviteResponse> => {
+    const response = await api.post<ApiResponse<VerifyStaffInviteResponse>>(
+      '/auth/staff-invite/verify',
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Complete staff invitation by setting password
+   * @param data - Staff invitation token and password
+   * @returns Promise with invitation completion result
+   */
+  completeStaffInvite: async (
+    data: CompleteStaffInviteRequest
+  ): Promise<CompleteStaffInviteResponse> => {
+    const response = await api.post<ApiResponse<CompleteStaffInviteResponse>>(
+      '/auth/staff-invite/complete',
+      data
+    )
+
+    const result = response.data.data
+
+    // Store tokens from response
+    if (result.success) {
+      const { accessToken, refreshToken, expiresIn } = result
+
+      console.log('Saving access token from staff invite:', accessToken)
+      console.log('Saving refresh token from staff invite:', refreshToken)
+      console.log('Token expires in:', expiresIn, 'seconds')
+
+      storeTokens(accessToken, refreshToken, expiresIn)
+
+      console.log('Cookie after setting:', Cookies.get('access_token'))
+    }
+
+    return result
   },
 }
