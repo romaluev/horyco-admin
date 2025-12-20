@@ -49,12 +49,13 @@ import {
   useSubmitStaffInvite,
   useSkipStep,
 } from '@/entities/onboarding'
+import { useGetAllPermissions } from '@/entities/role'
 import {
   staffInviteSchema,
   type StaffInviteFormValues,
 } from '@/features/onboarding/model'
 import { PermissionsSelectorModal } from '@/features/onboarding/ui/permissions-selector-modal'
-import { useGetAllPermissions } from '@/entities/role'
+
 import type { IPermission } from '@/entities/employee'
 
 interface InvitationPermissions {

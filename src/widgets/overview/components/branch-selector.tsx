@@ -1,7 +1,5 @@
 'use client'
 
-import type { AnalyticsScopeType } from '@/entities/analytics'
-import { useGetAllBranches } from '@/entities/branch'
 import {
   Select,
   SelectContent,
@@ -9,6 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+
+import { useGetAllBranches } from '@/entities/branch'
+
+import type { AnalyticsScopeType } from '@/entities/analytics'
 
 interface IBranchSelectorProps {
   scope: AnalyticsScopeType
