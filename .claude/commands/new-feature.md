@@ -4,142 +4,76 @@ Docs: $ARGUMENTS
 
 ---
 
-## PHASE 1: UNDERSTAND
+## 1. UNDERSTAND
 
-**Load skills** (cached):
+Load: `skills/*`, `standards/*`
 
-- `.claude/skills/core.md`
-- `.claude/skills/design-system.md`
-- `.claude/skills/project-index.md`
-- `.claude/skills/ui-testing.md`
-
-**Load standards**:
-
-- `.claude/standards/architecture.md`
-- `.claude/standards/next.md`
-
-**Read user docs**. If unclear → ask. Do NOT assume.
+Read provided docs. **If unclear → ASK.** Do not assume.
 
 ---
 
-## PHASE 2: PLAN
+## 2. PLAN
 
-**Call architector agent** → get file structure.
+- Call **architector** → get file structure
+- Map to existing components (`project-index.md`)
+- Create todo list
 
-**Map components** (MANDATORY):
-
-- Use existing components, see list here `project-index.md`
-- NO custom components if reusable exists.
-
-**Create todo list** with steps.
+**Rule:** NO custom components if reusable exists.
 
 ---
 
-## PHASE 3: IMPLEMENT
+## 3. IMPLEMENT
 
-**Strict rules**:
+For each file:
 
-- Use ONLY existing components (no custom duplicates)
-- Follow `design-system.md` EXACTLY
-- Follow `core.md` EXACTLY
-- Match docs 100%
-
-**For each file**:
-
-1. Find similar pattern in codebase first
+1. Find similar pattern in codebase
 2. Reuse patterns, don't invent
 3. Write code + tests together
 
----
-
-## PHASE 3.5: GUARDIAN CHECK
-
-**Call code-guardian** → validate `core.md` rules
-
-**Call design-guardian** → validate `design-system.md` rules (if UI)
-
-**If violations** → fix before quality gates.
+**Follow exactly:** `core.md`, `design-system.md`
 
 ---
 
-## PHASE 4: VERIFY
+## 4. VALIDATE
 
-**Quality gates**:
+**Guardians:**
 
-```bash
-npm run type-check
-npm run lint
-npm run test
-```
+- Call **code-guardian** → fix violations
+- Call **design-guardian** → fix UI violations
 
-**UI test** (skip with `--skip-ui-test`):
+**Quality gates:** (see `workflow.md`)
 
-- `browser_navigate` → feature route
-- `browser_snapshot` → verify DOM
-- `browser_console_messages` → zero errors
-- `browser_take_screenshot` → capture
+**Live UI test** (skip: `--skip-ui-test`):
 
-**ANY fail** → PHASE 5
-**ALL pass** → PHASE 6
+- Run full LIVE UI TESTING from `workflow.md`
+- Test at 3 breakpoints (375, 768, 1440)
+- Test interactions (clicks, forms, keyboard)
+- Test states (loading, error, empty, success)
+- Verify 0 console errors
 
----
-
-## PHASE 5: FIX
-
-**Proper fix approach**:
-
-1. **Understand** - what is the error telling you?
-2. **Root cause** - why does this error exist?
-3. **Fix properly** - even if requires big changes
-4. **Verify** - error gone AND code correct
-
-**Fix by type**:
-
-- Type error → fix types properly, recheck `core.md`
-- Lint error → fix style properly, recheck `core.md`
-- Test fail → fix logic or update test correctly
-- UI error → fix component, recheck `design-system.md`
-- Console error → fix runtime issue at root
-
-**Return to PHASE 4**.
-
-**Max 3 cycles**. Still failing → report blocker.
+**If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 
 ---
 
-## PHASE 6: CLEANUP
+## 5. DONE
 
-**Final**:
+**Cleanup:** (see `workflow.md`)
 
-- Remove unused imports
-- Remove console.logs
-- No TODO comments
-- Run `npm run lint -- --fix`
-
-**Report**:
+**Report:**
 
 ```
 DONE: [feature]
-
 Files: [list]
-Components used: [list]
-
-Quality:
-- Types: ✓
-- Lint: ✓
-- Tests: ✓ (X%)
-- UI: ✓
+Quality: Types ✓ | Lint ✓ | Tests ✓ | UI ✓
+Issues: [blocker/high/medium/low counts]
 ```
 
 ---
 
-## SUCCESS CRITERIA
+## SUCCESS
 
 - Docs reflected 100%
-- Reusable components used (no duplicates)
-- Design system followed exactly
-- Architecture correct (FSD)
-- Best practices followed - Clean Code 100%
-- All standards are followed 100%
-- All quality gates pass
-- UI renders without errors
+- Reusable components used
+- All standards followed
+- All gates pass
+- UI works at all breakpoints
