@@ -21,6 +21,17 @@ analyze → refactor → validate
 
 ## **Call analyzer**: give related docs if provided and you will get all violations.
 
+---
+
+## Phase 1.5: Capture Baseline (if UI, skip with `--skip-ui-test`)
+
+- `browser_navigate` → affected pages
+- `browser_take_screenshot` → visual baseline
+- `browser_snapshot` → DOM baseline
+- `browser_console_messages` → note current state
+
+---
+
 ## Phase 2: Refactor
 
 **Fix systematically**:
@@ -35,6 +46,15 @@ analyze → refactor → validate
 
 ---
 
+## Phase 2.5: Guardian Check
+
+**Call code-guardian** → validate refactored code
+**Call design-guardian** → validate UI changes (if any)
+
+**If violations** → fix before validation.
+
+---
+
 ## Phase 3: Validate
 
 **Run**:
@@ -45,7 +65,27 @@ npm run lint
 npm run test
 ```
 
-**Fix errors, re-run**
+**FORBIDDEN fixes** (never use):
+
+- `@ts-ignore` / `@ts-expect-error`
+- `as any` type casting
+- Removing code to avoid errors
+- `// eslint-disable` comments
+
+**If errors** → understand root cause → fix properly → re-run.
+
+---
+
+## Phase 3.5: Visual Regression (if UI, skip with `--skip-ui-test`)
+
+- `browser_navigate` → same pages as baseline
+- Compare `browser_snapshot` → DOM should match
+- `browser_console_messages` → no new errors
+- `browser_take_screenshot` → compare visual
+
+**If regression** → fix before completion.
+
+---
 
 **Re-analyze**:
 

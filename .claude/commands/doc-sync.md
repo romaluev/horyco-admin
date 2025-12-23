@@ -38,6 +38,16 @@ analyze → sync → validate
 
 ---
 
+## Phase 2.5: Verify UI Matches Docs (if UI, skip with `--skip-ui-test`)
+
+- `browser_navigate` → documented pages
+- `browser_verify_element_visible` → required elements from docs
+- `browser_verify_text_visible` → required labels from docs
+- Test documented user flows
+- `browser_take_screenshot` → capture for comparison
+
+---
+
 ## Phase 3: Validate
 
 **Run**:
@@ -48,7 +58,14 @@ npm run lint
 npm run test
 ```
 
-**Fix errors, re-run**
+**FORBIDDEN fixes** (never use):
+
+- `@ts-ignore` / `@ts-expect-error`
+- `as any` type casting
+- Removing code to avoid errors
+- `// eslint-disable` comments
+
+**If errors** → understand root cause → fix properly → re-run.
 
 **Re-analyze**:
 

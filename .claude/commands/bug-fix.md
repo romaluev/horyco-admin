@@ -14,6 +14,15 @@ locate → fix → test → validate
 
 ---
 
+## Phase 1.5: Reproduce Bug (if UI-related, skip with `--skip-ui-test`)
+
+- `browser_navigate` → affected page
+- `browser_snapshot` → capture broken state
+- `browser_console_messages` → check for errors
+- Document reproduction steps
+
+---
+
 ## Phase 2: Fix
 
 **Load standards & use skills** (ensure fix follows rules):
@@ -35,7 +44,15 @@ locate → fix → test → validate
 ## Phase 3: Test
 
 **If tests exist**: Run + add regression test
-**If no tests**: Call **test-writer** to generate
+**If no tests**: Call **test-writer agent** to generate
+
+---
+
+## Phase 3.5: Guardian Check
+
+**Call code-guardian** → validate fix follows `core.md`
+
+**If violations** → fix before validation.
 
 ---
 
@@ -49,7 +66,24 @@ npm run lint
 npm run test
 ```
 
-**Fix errors, re-run**
+**FORBIDDEN fixes** (never use):
+
+- `@ts-ignore` / `@ts-expect-error`
+- `as any` type casting
+- Removing code to avoid errors
+- `// eslint-disable` comments
+- Quick hacks
+
+**If errors** → understand root cause → fix properly → re-run.
+
+---
+
+## Phase 4.5: Verify Fix (if UI-related, skip with `--skip-ui-test`)
+
+- Re-run reproduction steps from Phase 1.5
+- `browser_verify_*` → confirm bug fixed
+- `browser_console_messages` → zero new errors
+- `browser_take_screenshot` → capture fixed state
 
 ---
 

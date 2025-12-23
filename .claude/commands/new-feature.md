@@ -1,45 +1,70 @@
-Implement new feature i will provide you the documentation of the feature and you should implement it with 100% reflection of the documentation. Btw you should follow all standards and skills..
+Implement feature from documentation. Zero manual intervention.
 
 Docs: $ARGUMENTS
 
-## Workflow
-
-plan → implement → test → validate
-
 ---
 
-## Phase 1: Plan
+## PHASE 1: UNDERSTAND
 
-**Load context**:
+**Load skills** (cached):
 
 - `.claude/skills/core.md`
 - `.claude/skills/design-system.md`
 - `.claude/skills/project-index.md`
+- `.claude/skills/ui-testing.md`
+
+**Load standards**:
+
 - `.claude/standards/architecture.md`
 - `.claude/standards/next.md`
 
-**Read the docs&prompts** i've provided.
-
-**If you have any questions ask me before starting**
-
-- Plan the architecture.
-- Plan design system & ui kit component usage
-- Plan the actual implementation following all standards&docs.
+**Read user docs**. If unclear → ask. Do NOT assume.
 
 ---
 
-## Phase 2: Implement
+## PHASE 2: PLAN
 
-**Execute**:
+**Call architector agent** → get file structure.
 
-- Implement the feature following all rules (use todo list for clarity)
-- Don't hurry. Take your time. I want to get the best result you can give.
+**Map components** (MANDATORY):
+
+- Use existing components, see list here `project-index.md`
+- NO custom components if reusable exists.
+
+**Create todo list** with steps.
 
 ---
 
-## Phase 3: Validate
+## PHASE 3: IMPLEMENT
 
-**Run**:
+**Strict rules**:
+
+- Use ONLY existing components (no custom duplicates)
+- Follow `design-system.md` EXACTLY
+- Follow `core.md` EXACTLY
+- Match docs 100%
+
+**For each file**:
+
+1. Find similar pattern in codebase first
+2. Reuse patterns, don't invent
+3. Write code + tests together
+
+---
+
+## PHASE 3.5: GUARDIAN CHECK
+
+**Call code-guardian** → validate `core.md` rules
+
+**Call design-guardian** → validate `design-system.md` rules (if UI)
+
+**If violations** → fix before quality gates.
+
+---
+
+## PHASE 4: VERIFY
+
+**Quality gates**:
 
 ```bash
 npm run type-check
@@ -47,15 +72,74 @@ npm run lint
 npm run test
 ```
 
-**If errors**: fix and re-run
+**UI test** (skip with `--skip-ui-test`):
+
+- `browser_navigate` → feature route
+- `browser_snapshot` → verify DOM
+- `browser_console_messages` → zero errors
+- `browser_take_screenshot` → capture
+
+**ANY fail** → PHASE 5
+**ALL pass** → PHASE 6
 
 ---
 
-## Success Criteria
+## PHASE 5: FIX
 
-- All files created
-- Design system followed (no borders, shadows, CSS Modules)
-- Architecture followed (feature structure, state management)
-- Quality gates passed (tsc, eslint, tests ≥80%)
+**Proper fix approach**:
 
-See `.claude/standards/` for detailed rules.
+1. **Understand** - what is the error telling you?
+2. **Root cause** - why does this error exist?
+3. **Fix properly** - even if requires big changes
+4. **Verify** - error gone AND code correct
+
+**Fix by type**:
+
+- Type error → fix types properly, recheck `core.md`
+- Lint error → fix style properly, recheck `core.md`
+- Test fail → fix logic or update test correctly
+- UI error → fix component, recheck `design-system.md`
+- Console error → fix runtime issue at root
+
+**Return to PHASE 4**.
+
+**Max 3 cycles**. Still failing → report blocker.
+
+---
+
+## PHASE 6: CLEANUP
+
+**Final**:
+
+- Remove unused imports
+- Remove console.logs
+- No TODO comments
+- Run `npm run lint -- --fix`
+
+**Report**:
+
+```
+DONE: [feature]
+
+Files: [list]
+Components used: [list]
+
+Quality:
+- Types: ✓
+- Lint: ✓
+- Tests: ✓ (X%)
+- UI: ✓
+```
+
+---
+
+## SUCCESS CRITERIA
+
+- Docs reflected 100%
+- Reusable components used (no duplicates)
+- Design system followed exactly
+- Architecture correct (FSD)
+- Best practices followed - Clean Code 100%
+- All standards are followed 100%
+- All quality gates pass
+- UI renders without errors
