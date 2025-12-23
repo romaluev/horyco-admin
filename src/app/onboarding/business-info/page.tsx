@@ -43,8 +43,8 @@ import { FileUploader } from '@/shared/ui/file-uploader'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useSubmitBusinessInfo,
+  useStepValidation,
 } from '@/entities/onboarding'
 import {
   type BusinessInfoFormValues,
@@ -66,9 +66,9 @@ export default function BusinessInfoPage() {
   const [logoFiles, setLogoFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
 
-  // Fetch onboarding progress
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress, isLoading: isProgressLoading } =
+    useStepValidation('business_identity')
 
   // Form initialization
   const form = useForm<BusinessInfoFormValues>({

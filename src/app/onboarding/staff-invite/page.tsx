@@ -45,9 +45,9 @@ import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useSubmitStaffInvite,
   useSkipStep,
+  useStepValidation,
 } from '@/entities/onboarding'
 import { useGetAllPermissions } from '@/entities/role'
 import {
@@ -72,8 +72,9 @@ export default function StaffInvitePage() {
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
   const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<number | null>(null)
 
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress, isLoading: isProgressLoading } =
+    useStepValidation('staff_invited')
   const { data: allPermissionsData, isLoading: isLoadingPermissions } =
     useGetAllPermissions()
   const allPermissions = (allPermissionsData as IPermission[]) || []

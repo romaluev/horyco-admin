@@ -26,14 +26,16 @@ import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useCompleteOnboarding,
+  useStepValidation,
 } from '@/entities/onboarding'
 
 export default function CompletePage() {
   const router = useRouter()
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+
+  // Validate step access and redirect if needed
+  const { isLoading: isProgressLoading, progress } =
+    useStepValidation('go_live')
 
   const {
     mutate: completeOnboarding,
@@ -44,11 +46,19 @@ export default function CompletePage() {
     error,
   } = useCompleteOnboarding()
 
+  // Trigger completion once validation passes
   useEffect(() => {
-    if (!isCompleting && !isCompleted && !isError) {
+    if (!isProgressLoading && progress && !isCompleting && !isCompleted && !isError) {
       completeOnboarding()
     }
-  }, [completeOnboarding, isCompleting, isCompleted, isError])
+  }, [
+    progress,
+    isProgressLoading,
+    completeOnboarding,
+    isCompleting,
+    isCompleted,
+    isError,
+  ])
 
   const handleGoToDashboard = () => {
     router.push('/dashboard')

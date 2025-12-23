@@ -23,10 +23,10 @@ import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useGetDefaultProducts,
   useSubmitMenuSetup,
   useSkipStep,
+  useStepValidation,
   type MenuSetupRequest,
 } from '@/entities/onboarding'
 
@@ -69,9 +69,9 @@ export default function MenuTemplatePage() {
   const [editedCategoryName, setEditedCategoryName] = useState('')
   const [editedCategoryDesc, setEditedCategoryDesc] = useState('')
 
-  // Fetch onboarding progress
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress, isLoading: isProgressLoading } =
+    useStepValidation('menu_template')
 
   // Fetch default products based on business type from stepData
   const businessType = (
