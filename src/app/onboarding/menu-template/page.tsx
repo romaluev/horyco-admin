@@ -19,7 +19,6 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Input } from '@/shared/ui/base/input'
 import { Textarea } from '@/shared/ui/base/textarea'
-import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
@@ -70,8 +69,7 @@ export default function MenuTemplatePage() {
   const [editedCategoryDesc, setEditedCategoryDesc] = useState('')
 
   // Validate step access and get progress
-  const { progress, isLoading: isProgressLoading } =
-    useStepValidation('menu_template')
+  const { progress } = useStepValidation('menu_template')
 
   // Fetch default products based on business type from stepData
   const businessType = (
@@ -353,10 +351,6 @@ export default function MenuTemplatePage() {
   const selectedCategoriesCount = categories.filter(
     (cat) => cat.isSelected
   ).length
-
-  if (isProgressLoading) {
-    return <BaseLoading />
-  }
 
   if (productsError && categories.length === 0) {
     return (

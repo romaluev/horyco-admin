@@ -38,7 +38,6 @@ import {
 } from '@/shared/ui/base/select'
 import { Switch } from '@/shared/ui/base/switch'
 import { TimePicker } from '@/shared/ui/base/time-picker'
-import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
@@ -68,8 +67,7 @@ export default function BranchSetupPage() {
   >([])
 
   // Validate step access and get progress
-  const { progress, isLoading: isProgressLoading } =
-    useStepValidation('branch_setup')
+  const { progress } = useStepValidation('branch_setup')
 
   // Form initialization
   const form = useForm<BranchSetupFormValues>({
@@ -204,10 +202,6 @@ export default function BranchSetupPage() {
       const previousStep = getPreviousStep('branch_setup')
       router.push(previousStep?.route || '/onboarding/business-info')
     }
-  }
-
-  if (isProgressLoading) {
-    return <BaseLoading />
   }
 
   return (

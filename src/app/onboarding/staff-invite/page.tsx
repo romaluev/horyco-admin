@@ -41,7 +41,6 @@ import {
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
 import { PhoneInput } from '@/shared/ui/base/phone-input'
-import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
@@ -73,8 +72,7 @@ export default function StaffInvitePage() {
   const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<number | null>(null)
 
   // Validate step access and get progress
-  const { progress, isLoading: isProgressLoading } =
-    useStepValidation('staff_invited')
+  const { progress } = useStepValidation('staff_invited')
   const { data: allPermissionsData, isLoading: isLoadingPermissions } =
     useGetAllPermissions()
   const allPermissions = (allPermissionsData as IPermission[]) || []
@@ -199,10 +197,7 @@ export default function StaffInvitePage() {
       title="Пригласите сотрудников"
       description="Добавьте официантов для управления заказами"
     >
-      {isProgressLoading ? (
-        <BaseLoading />
-      ) : (
-        <>
+      <>
           <Card>
             <CardHeader>
               <CardTitle>Пригласить команду</CardTitle>
@@ -428,7 +423,6 @@ export default function StaffInvitePage() {
             </AlertDialogContent>
           </AlertDialog>
         </>
-      )}
     </OnboardingLayout>
   )
 }

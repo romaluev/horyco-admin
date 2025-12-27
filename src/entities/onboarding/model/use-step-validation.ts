@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -11,6 +11,9 @@ import type { OnboardingStep } from './types'
 /**
  * Hook to validate onboarding step access and redirect if needed
  * Ensures users cannot skip required steps or access steps out of order
+ *
+ * Validation runs silently in background - no loading states shown
+ * Content renders immediately, redirect happens if validation fails
  *
  * @param currentStep - The step ID of the current page
  * @param options - Configuration options
@@ -25,11 +28,38 @@ export const useStepValidation = (
   }
 ) => {
   const router = useRouter()
-  const { data: progress, isLoading } = useGetOnboardingProgress()
+  const {
+    data: progress,
+    isLoading,
+    isFetching,
+  } = useGetOnboardingProgress()
+
+  // Track if we've already validated to prevent loops
+  const hasValidatedRef = useRef(false)
+
+  // Reset validation state when step changes
+  useEffect(() => {
+    hasValidatedRef.current = false
+  }, [currentStep])
 
   useEffect(() => {
-    // Skip validation if explicitly disabled or still loading
-    if (options?.skipValidation || isLoading || !progress) return
+    // Skip validation if explicitly disabled
+    if (options?.skipValidation) {
+      return
+    }
+
+    // Wait for data to be loaded and not fetching
+    if (isLoading || isFetching || !progress) {
+      return
+    }
+
+    // Prevent multiple validations
+    if (hasValidatedRef.current) {
+      return
+    }
+
+    // Mark as validated
+    hasValidatedRef.current = true
 
     // If onboarding is already completed, redirect to dashboard
     if (progress.isCompleted) {
@@ -95,8 +125,17 @@ export const useStepValidation = (
         router.replace(route)
       }
     }
-  }, [currentStep, progress, isLoading, router, options?.skipValidation])
+  }, [
+    currentStep,
+    progress,
+    isLoading,
+    isFetching,
+    router,
+    options?.skipValidation,
+  ])
 
+  // Only return actual data loading state, not validation state
+  // This allows content to render immediately
   return {
     isLoading,
     progress,

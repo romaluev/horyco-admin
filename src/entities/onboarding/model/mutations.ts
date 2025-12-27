@@ -48,10 +48,13 @@ export const useSubmitBusinessInfo = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: BusinessInfoRequest) =>
-      onboardingApi.submitBusinessInfo(data),
+    mutationFn: async (data: BusinessInfoRequest) => {
+      const result = await onboardingApi.submitBusinessInfo(data)
+      // Wait for query invalidation to complete before returning
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Информация о бизнесе сохранена')
     },
     onError: (error: unknown) => {
@@ -71,10 +74,12 @@ export const useSubmitBranchSetup = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: BranchSetupRequest) =>
-      onboardingApi.submitBranchSetup(data),
+    mutationFn: async (data: BranchSetupRequest) => {
+      const result = await onboardingApi.submitBranchSetup(data)
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Филиал настроен')
     },
     onError: (error: unknown) => {
@@ -94,9 +99,12 @@ export const useSubmitMenuSetup = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: MenuSetupRequest) => onboardingApi.submitMenuSetup(data),
+    mutationFn: async (data: MenuSetupRequest) => {
+      const result = await onboardingApi.submitMenuSetup(data)
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success(
         `Меню создано: ${data.categoriesCreated} категорий, ${data.productsCreated} блюд`
       )
@@ -118,10 +126,12 @@ export const useSubmitStaffInvite = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: StaffInviteRequest) =>
-      onboardingApi.submitStaffInvite(data),
+    mutationFn: async (data: StaffInviteRequest) => {
+      const result = await onboardingApi.submitStaffInvite(data)
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       const count = data.progress.invitationsSent || 0
       toast.success(
         count > 0 ? `Отправлено ${count} приглашений` : 'Приглашения отправлены'
@@ -144,9 +154,12 @@ export const useCompleteOnboarding = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: () => onboardingApi.complete(),
+    mutationFn: async () => {
+      const result = await onboardingApi.complete()
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.success('Onboarding completed successfully')
     },
     onError: (error: unknown) => {
@@ -166,9 +179,12 @@ export const useSkipStep = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: SkipStepRequest) => onboardingApi.skipStep(data),
+    mutationFn: async (data: SkipStepRequest) => {
+      const result = await onboardingApi.skipStep(data)
+      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      return result
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
       toast.info('Шаг пропущен')
     },
     onError: (error: unknown) => {
