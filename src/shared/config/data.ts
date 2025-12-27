@@ -93,6 +93,66 @@ export const getNavItems = (): NavItem[] => [
     items: [],
   },
   {
+    title: 'Склад',
+    shortcut: ['I'],
+    url: '/dashboard/inventory',
+    icon: 'warehouse',
+    isActive: false,
+    permission: PERMISSIONS.INVENTORY_READ,
+    items: [
+      {
+        title: 'Обзор',
+        url: '/dashboard/inventory',
+        permission: PERMISSIONS.INVENTORY_READ,
+      },
+      {
+        title: 'Товары',
+        url: '/dashboard/inventory/items',
+        permission: PERMISSIONS.INVENTORY_READ,
+      },
+      {
+        title: 'Остатки',
+        url: '/dashboard/inventory/stock',
+        permission: PERMISSIONS.INVENTORY_READ,
+      },
+      {
+        title: 'Движения',
+        url: '/dashboard/inventory/movements',
+        permission: PERMISSIONS.INVENTORY_READ,
+      },
+      {
+        title: 'Техкарты',
+        url: '/dashboard/inventory/recipes',
+        permission: PERMISSIONS.INVENTORY_WRITE,
+      },
+      {
+        title: 'Поставщики',
+        url: '/dashboard/inventory/suppliers',
+        permission: PERMISSIONS.INVENTORY_PURCHASE,
+      },
+      {
+        title: 'Закупки',
+        url: '/dashboard/inventory/purchase-orders',
+        permission: PERMISSIONS.INVENTORY_PURCHASE,
+      },
+      {
+        title: 'Списания',
+        url: '/dashboard/inventory/writeoffs',
+        permission: PERMISSIONS.INVENTORY_WRITEOFF,
+      },
+      {
+        title: 'Инвентаризации',
+        url: '/dashboard/inventory/counts',
+        permission: PERMISSIONS.INVENTORY_COUNT,
+      },
+      {
+        title: 'Производство',
+        url: '/dashboard/inventory/production',
+        permission: PERMISSIONS.INVENTORY_PRODUCTION,
+      },
+    ],
+  },
+  {
     title: 'Настройки',
     shortcut: ['T'],
     url: '/dashboard/settings',
