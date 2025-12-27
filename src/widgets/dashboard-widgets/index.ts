@@ -1,0 +1,6 @@
+export { BarChartWidget } from './ui/bar-chart-widget'
+export { LineChartWidget } from './ui/line-chart-widget'
+export { ListWidget } from './ui/list-widget'
+export { NumberWidget } from './ui/number-widget'
+export { PieChartWidget } from './ui/pie-chart-widget'
+export { TextWidget } from './ui/text-widget'
