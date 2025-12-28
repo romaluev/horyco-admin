@@ -152,15 +152,15 @@ export function AnalyticsSidebarSection() {
                   </SidebarMenuSubItem>
                 ))}
 
-              {/* Add View Button */}
-              {!isLoading && (
+              {/* Add View Button - only show if user can create views (PRO plan) */}
+              {!isLoading && canCreateViews && (
                 <SidebarMenuSubItem>
                   <SidebarMenuSubButton
                     className="!p-3 text-muted-foreground hover:text-foreground"
                     onClick={() => setIsModalOpen(true)}
                   >
                     <IconPlus className="mr-1 size-4" />
-                    <span className="text-[17px]">Добавить представление</span>
+                    <span className="text-[17px]">Создать</span>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               )}

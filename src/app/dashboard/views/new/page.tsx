@@ -73,9 +73,9 @@ export default function NewViewPage() {
         },
       },
       {
-        onSuccess: () => {
-          resetConfig()
-          router.push('/dashboard/views')
+        onSuccess: (data) => {
+          // Navigate to the newly created view
+          router.push(`/dashboard/views/${data.id}`)
         },
       }
     )

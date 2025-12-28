@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { SortDirection } from '@/shared/api/graphql'
+import { SortBy, SortDirection } from '@/shared/api/graphql'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useUpdateView, useViewById } from '@/entities/view'
@@ -17,7 +17,7 @@ import {
 import { ViewDataTable } from '@/widgets/views'
 
 import type { IFilter, IViewConfig, IViewDataParams } from '@/entities/view'
-import type { Dataset, SortBy } from '@/shared/api/graphql'
+import type { Dataset } from '@/shared/api/graphql'
 
 interface IViewPageProps {
   params: Promise<{ id: string }>
@@ -55,7 +55,7 @@ export default function ViewPage({ params }: IViewPageProps) {
               field: view.config.sorting.column,
               direction: view.config.sorting.direction,
             }
-          : { field: 'revenue', direction: SortDirection.DESC },
+          : { field: SortBy.REVENUE, direction: SortDirection.DESC },
         display: (view.config.display as 'TABLE' | 'CHART') || 'TABLE',
       }
 
