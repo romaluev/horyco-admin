@@ -1,257 +1,261 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
-import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { IconCrown, IconPencil } from '@tabler/icons-react'
+import { toast } from 'sonner'
+
+import { PeriodType } from '@/shared/api/graphql'
+import { Button } from '@/shared/ui/base/button'
 
 import {
-  analyticsKeys,
-  type AnalyticsPeriodType,
-  type AnalyticsScopeType,
-  useDashboardAnalytics,
-} from '@/entities/analytics'
+  getDefaultDashboardConfig,
+  useDashboardConfig,
+  useKpiMetrics,
+  useSaveDashboardConfig,
+  useTimeSeries,
+  useCanCustomizeDashboard,
+  type IDashboardConfig,
+  type IPeriodInput,
+} from '@/entities/dashboard'
 
-import {
-  AnalyticsChart,
-  type ChartMetricType,
-  type HourStep,
-} from './analytics-chart'
-import { AnalyticsMetrics } from './analytics-metrics'
-import { BranchSelector } from './branch-selector'
-import {
-  PeriodFilter,
-  type PeriodFilterDateRange,
-  type PeriodType,
-} from './period-filter'
-import { RecentOrders } from './recent-orders'
-import { TopProducts } from './top-products'
+import { DashboardEditMode } from '@/features/dashboard-builder'
+import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
-const MINUTES_TO_MS = 60 * 1000
-const AUTO_REFRESH_MINUTES = 5
-const AUTO_REFRESH_MS = AUTO_REFRESH_MINUTES * MINUTES_TO_MS
+import { DashboardChart } from './dashboard-chart'
+import { DashboardKpiCards } from './dashboard-kpi-cards'
+import { DashboardPeriodSelector } from './dashboard-period-selector'
+import { DashboardBranchSelector } from './dashboard-branch-selector'
 
 export function AnalyticsOverview() {
-  const queryClient = useQueryClient()
-  const [scope, setScope] = useState<AnalyticsScopeType>('branch')
-  const [selectedBranchId, setSelectedBranchId] = useState<
-    number | null | undefined
-  >(undefined)
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('day')
-  const [selectedRange, setSelectedRange] = useState<PeriodFilterDateRange>({
-    from: undefined,
-    to: undefined,
-  })
-  const [selectedMetric, setSelectedMetric] =
-    useState<ChartMetricType>('revenue')
-  const [hourStep, setHourStep] = useState<HourStep>(2)
+  // State
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(PeriodType.TODAY)
+  const [customRange, setCustomRange] = useState<{ start?: string; end?: string }>({})
+  const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(undefined)
+  const [isEditMode, setIsEditMode] = useState(false)
 
-  const apiParams = useMemo(() => {
-    const params: {
-      scope: AnalyticsScopeType
-      period: AnalyticsPeriodType
-      startDate?: string
-      endDate?: string
-      branchId?: number
-    } = {
-      scope,
-      period: selectedPeriod as AnalyticsPeriodType,
+  // Build period input for GraphQL
+  const periodInput = useMemo<IPeriodInput>(() => {
+    if (selectedPeriod === PeriodType.CUSTOM && customRange.start && customRange.end) {
+      return {
+        type: PeriodType.CUSTOM,
+        customStart: customRange.start,
+        customEnd: customRange.end,
+      }
     }
+    return { type: selectedPeriod }
+  }, [selectedPeriod, customRange])
 
-    if (selectedPeriod === 'custom' && selectedRange.from && selectedRange.to) {
-      params.startDate = format(selectedRange.from, 'yyyy-MM-dd')
-      params.endDate = format(selectedRange.to, 'yyyy-MM-dd')
-    }
+  // Dashboard config (determines which KPIs and widgets to show)
+  const { data: dashboardConfig, isLoading: isConfigLoading } = useDashboardConfig()
+  const config = dashboardConfig ?? getDefaultDashboardConfig()
+  const canCustomize = useCanCustomizeDashboard()
 
-    if (scope === 'branch' && typeof selectedBranchId === 'number') {
-      params.branchId = selectedBranchId
-    }
+  // Save mutation
+  const { mutate: saveConfig, isPending: isSaving } = useSaveDashboardConfig()
 
-    return params
-  }, [scope, selectedBranchId, selectedPeriod, selectedRange])
+  // Get KPI types from config
+  const kpiTypes = useMemo(() => {
+    return config.kpiSlots
+      .filter((slot) => slot.visible)
+      .sort((a, b) => a.position - b.position)
+      .map((slot) => slot.type)
+  }, [config.kpiSlots])
 
-  const { data, isLoading, isRefetching } = useDashboardAnalytics(apiParams)
-
-  useEffect(() => {
-    if (scope !== 'branch') return
-    if (selectedBranchId !== undefined) return
-    if (!data?.branch?.id) return
-    setSelectedBranchId(data.branch.id)
-  }, [data?.branch?.id, scope, selectedBranchId])
-
-  useEffect(() => {
-    const id = setInterval(
-      () =>
-        queryClient.invalidateQueries({
-          queryKey: analyticsKeys.dashboard(apiParams),
-        }),
-      AUTO_REFRESH_MS
-    )
-    return () => clearInterval(id)
-  }, [apiParams, queryClient])
-
-  const metricsData = useMemo(() => {
-    if (!data) return null
-    const {
-      revenue,
-      revenueChangePct,
-      orders,
-      ordersChangePct,
-      avgCheck,
-      avgCheckChangePct,
-      topProduct,
-    } = data.summary
-    const calculatePrevious = (
-      current: number,
-      changePercent: number | null
-    ) =>
-      changePercent === null
-        ? current
-        : Math.round(current / (1 + changePercent / 100))
-
-    return {
-      revenue,
-      ordersCount: orders,
-      averageCheck: avgCheck,
-      topDish: topProduct
-        ? {
-            id: String(topProduct.productId),
-            name: topProduct.name,
-            quantity: topProduct.orders,
-            revenue: topProduct.revenue,
-          }
-        : { id: '0', name: 'Нет данных', quantity: 0, revenue: 0 },
-      previousPeriod: {
-        revenue: calculatePrevious(revenue, revenueChangePct),
-        ordersCount: calculatePrevious(orders, ordersChangePct),
-        averageCheck: calculatePrevious(avgCheck, avgCheckChangePct),
-      },
-    }
-  }, [data])
-
-  const chartData = useMemo(() => {
-    if (!data) return null
-
-    const dataPoints = data.chart.points.map((point) => ({
-      date: point.timestamp,
-      revenue: point.revenue,
-      orders: point.orders,
-    }))
-
-    return {
-      data: dataPoints,
-      metric: selectedMetric,
-      groupBy: data.chart.groupBy,
-    }
-  }, [data, selectedMetric])
-
-  const recentOrdersData = useMemo(
-    () =>
-      data
-        ? data.recentOrders.map((order) => ({
-            id: String(order.orderId),
-            number: order.number,
-            createdAt: order.createdAt,
-            total: order.total,
-            paymentMethod: order.paymentMethod,
-            status: order.status,
-            branch: order.branch || null,
-          }))
-        : [],
-    [data]
+  // Fetch KPI metrics
+  const {
+    data: kpiMetrics,
+    isLoading: isKpiLoading,
+    error: kpiError,
+  } = useKpiMetrics(
+    { types: kpiTypes, period: periodInput, branchId: selectedBranchId },
+    kpiTypes.length > 0 && !isEditMode
   )
 
-  // if (isLoading || !data || !metricsData || !chartData) {
-  //   return (
-  //     <div className="min-h-screen space-y-6 pb-8 w-full">
-  //       {/* Header section */}
-  //       <div className="space-y-4">
-  //         <div className="h-10 w-64 animate-pulse rounded-lg bg-muted" />
-  //         <div className="flex flex-wrap items-center gap-4">
-  //           <div className="h-10 w-96 animate-pulse rounded-lg bg-muted" />
-  //           <div className="h-8 w-px bg-border" />
-  //           <div className="h-10 w-48 animate-pulse rounded-lg bg-muted" />
-  //         </div>
-  //       </div>
-  //
-  //
-  //     </div>
-  //   )
-  // }
+  // Fetch time series for chart
+  const {
+    data: timeSeries,
+    isLoading: isChartLoading,
+    error: chartError,
+  } = useTimeSeries({
+    metric: config.chartMetric,
+    period: periodInput,
+    groupBy: config.chartGroupBy ?? undefined,
+    branchId: selectedBranchId,
+  }, !isEditMode)
 
+  // Handle period change
+  const handlePeriodChange = (period: PeriodType) => {
+    setSelectedPeriod(period)
+    if (period !== PeriodType.CUSTOM) {
+      setCustomRange({})
+    }
+  }
+
+  // Handle custom range change
+  const handleCustomRangeChange = (start: Date, end: Date) => {
+    setSelectedPeriod(PeriodType.CUSTOM)
+    setCustomRange({
+      start: format(start, 'yyyy-MM-dd'),
+      end: format(end, 'yyyy-MM-dd'),
+    })
+  }
+
+  // Handle branch change
+  const handleBranchChange = (branchId: number | undefined) => {
+    setSelectedBranchId(branchId)
+  }
+
+  // Handle edit mode
+  const handleEnterEditMode = useCallback(() => {
+    if (canCustomize) {
+      setIsEditMode(true)
+    }
+  }, [canCustomize])
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditMode(false)
+  }, [])
+
+  const handleSaveConfig = useCallback((newConfig: IDashboardConfig) => {
+    saveConfig(
+      {
+        kpiSlots: newConfig.kpiSlots,
+        chartMetric: newConfig.chartMetric,
+        chartGroupBy: newConfig.chartGroupBy,
+        widgets: newConfig.widgets.map((w) => ({
+          id: w.id,
+          type: w.type,
+          position: w.position,
+        })),
+      },
+      {
+        onSuccess: () => {
+          toast.success('Дашборд сохранен')
+          setIsEditMode(false)
+        },
+        onError: (error) => {
+          // Check for entitlement error
+          const errorMessage = error instanceof Error ? error.message : 'Ошибка'
+          if (errorMessage.includes('ENTITLEMENT_REQUIRED') || errorMessage.includes('PRO')) {
+            toast.error('Кастомизация доступна только на PRO плане')
+          } else {
+            toast.error('Не удалось сохранить: ' + errorMessage)
+          }
+        },
+      }
+    )
+  }, [saveConfig])
+
+  const isLoading = isConfigLoading || isKpiLoading || isChartLoading
+  const hasError = kpiError || chartError
+
+  // Edit Mode View
+  if (isEditMode) {
+    return (
+      <div className="w-full p-4 md:p-6">
+        <DashboardEditMode
+          config={config}
+          onSave={handleSaveConfig}
+          onCancel={handleCancelEdit}
+          isSaving={isSaving}
+        />
+      </div>
+    )
+  }
+
+  // Normal Dashboard View
   return (
     <div className="w-full space-y-6">
+      {/* Header */}
       <div className="flex flex-col gap-4">
-        <h2 className="text-3xl font-bold tracking-tight">Обзор продаж</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Аналитика</h2>
+          {canCustomize ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleEnterEditMode}
+            >
+              <IconPencil className="mr-1.5 h-4 w-4" />
+              Редактировать
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+              disabled
+            >
+              <IconCrown className="mr-1.5 h-4 w-4" />
+              Upgrade to edit
+            </Button>
+          )}
+        </div>
+
+        {/* Filters */}
         <div className="flex flex-wrap items-center gap-4">
-          <PeriodFilter
+          <DashboardPeriodSelector
             selectedPeriod={selectedPeriod}
-            onPeriodChange={setSelectedPeriod}
-            selectedRange={selectedRange}
-            onDateRangeChange={setSelectedRange}
+            onPeriodChange={handlePeriodChange}
+            customRange={customRange}
+            onCustomRangeChange={handleCustomRangeChange}
           />
-          <div className="bg-border h-8 w-px" />
-          <BranchSelector
-            scope={scope}
-            onScopeChange={setScope}
-            currentBranchId={data?.branch?.id || null}
+          <div className="h-8 w-px bg-border" />
+          <DashboardBranchSelector
             selectedBranchId={selectedBranchId}
-            onSelectedBranchIdChange={setSelectedBranchId}
+            onBranchChange={handleBranchChange}
           />
         </div>
       </div>
 
-      {isLoading || !data || !metricsData || !chartData ? (
+      {/* Error State */}
+      {hasError && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
+          <p className="text-sm text-destructive">
+            Не удалось загрузить данные. Проверьте подключение к интернету.
+          </p>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && !hasError && (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-muted h-36 animate-pulse rounded-lg" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-32 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <div className="bg-muted h-[450px] w-full animate-pulse rounded-lg" />
-            </div>
-            <div>
-              <div className="bg-muted h-[450px] w-full animate-pulse rounded-lg" />
-            </div>
+          <div className="h-[400px] animate-pulse rounded-lg bg-muted" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="h-72 animate-pulse rounded-lg bg-muted" />
+            <div className="h-72 animate-pulse rounded-lg bg-muted" />
           </div>
-
-          <div className="bg-muted h-96 w-full animate-pulse rounded-lg" />
         </>
-      ) : (
+      )}
+
+      {/* Data Display */}
+      {!isLoading && !hasError && (
         <>
-          <AnalyticsMetrics
-            metrics={metricsData}
-            period={selectedPeriod}
-            dateRange={selectedRange}
-            selectedRange={selectedRange}
-            selectedPeriod={selectedPeriod}
-            isLoading={isRefetching}
-            selectedMetric={selectedMetric}
-            onMetricChange={setSelectedMetric}
+          {/* KPI Cards */}
+          <DashboardKpiCards
+            metrics={kpiMetrics ?? []}
+            kpiTypes={kpiTypes}
           />
 
-          <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <AnalyticsChart
-                data={chartData}
-                isLoading={isRefetching}
-                hourStep={hourStep}
-                onHourStepChange={setHourStep}
-              />
-            </div>
-            <div>
-              <RecentOrders
-                orders={recentOrdersData}
-                compact
-                showBranch={scope === 'all_branches'}
-              />
-            </div>
-          </div>
+          {/* Main Chart */}
+          <DashboardChart
+            data={timeSeries}
+            metric={config.chartMetric}
+          />
 
-          <TopProducts products={data.topProducts} />
+          {/* Widgets */}
+          <DashboardWidgetsSection
+            widgets={config.widgets}
+            period={periodInput}
+            branchId={selectedBranchId}
+          />
         </>
       )}
     </div>

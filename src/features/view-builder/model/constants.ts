@@ -284,7 +284,7 @@ export const DEFAULT_VIEW_CONFIG: IViewConfig = {
   filters: [],
   columns: [],
   sorting: {
-    field: 'revenue',
+    field: SortBy.REVENUE,
     direction: SortDirection.DESC,
   },
   display: 'TABLE',

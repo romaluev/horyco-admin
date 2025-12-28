@@ -152,6 +152,8 @@ export const getNavItems = (): NavItem[] => [
       },
     ],
   },
+  // Note: Analytics section is handled by AnalyticsSidebarSection component
+  // which filters pages based on entitlements and includes custom views
   {
     title: 'Настройки',
     shortcut: ['T'],

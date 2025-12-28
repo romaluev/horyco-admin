@@ -193,6 +193,7 @@ export const PERMISSIONS = {
 
   // Reports
   REPORTS_VIEW: 'reports:view',
+  REPORTS_SALES: 'reports:sales',
   REPORTS_EXPORT: 'reports:export',
 
   // Finance

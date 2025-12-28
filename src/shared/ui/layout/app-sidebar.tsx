@@ -53,7 +53,7 @@ import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 
 import { useAuthStore } from '@/entities/auth/model/store'
 import { useGetAllBranches, useBranchStore } from '@/entities/branch'
-import { ViewsSidebarSection } from '@/widgets/views'
+import { AnalyticsSidebarSection } from '@/features/analytics'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
@@ -213,8 +213,8 @@ export default function AppSidebar() {
               )
             })}
 
-            {/* Views Section */}
-            <ViewsSidebarSection />
+            {/* Analytics Section with entitlement filtering and custom views */}
+            <AnalyticsSidebarSection />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
