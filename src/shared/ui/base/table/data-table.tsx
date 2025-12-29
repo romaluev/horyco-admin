@@ -25,9 +25,9 @@ export function DataTable<TData>({
   children,
 }: DataTableProps<TData>) {
   return (
-    <div className="flex flex-1 flex-col space-y-4">
+    <div className="flex h-full min-h-0 flex-1 flex-col space-y-4">
       {children}
-      <div className="relative flex min-h-[400px] flex-1">
+      <div className="relative flex min-h-0 flex-1">
         <div className="absolute inset-0 flex overflow-hidden rounded-lg border">
           <ScrollArea className="h-full w-full">
             <Table>

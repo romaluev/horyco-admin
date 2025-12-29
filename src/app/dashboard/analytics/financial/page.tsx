@@ -83,26 +83,136 @@ interface IProfitLossTabProps {
   period: PeriodType
 }
 
+// API response structure from the server
+interface IProfitLossPeriodData {
+  periodStart: string
+  periodEnd: string
+  grossRevenue: number
+  discounts: number
+  refunds: number
+  netRevenue: number
+  cogs: number
+  grossProfit: number
+  grossMarginPercent: number
+  operatingExpenses: {
+    category: string
+    name: string
+    amount: number
+    percentage: number
+  }[]
+  totalOperatingExpenses: number
+  operatingProfit: number
+  operatingMarginPercent: number
+  totalOrders: number
+  averageOrderValue: number
+  revenuePerOrder: number
+}
+
+interface IProfitLossApiResponse {
+  current: IProfitLossPeriodData
+  previous: IProfitLossPeriodData
+  insights: string[]
+  revenueChange: {
+    current: number
+    previous: number
+    change: number
+    changePercent: number
+    trend: 'up' | 'down' | 'neutral'
+  }
+  grossProfitChange: {
+    current: number
+    previous: number
+    change: number
+    changePercent: number
+    trend: 'up' | 'down' | 'neutral'
+  }
+  operatingProfitChange: {
+    current: number
+    previous: number
+    change: number
+    changePercent: number
+    trend: 'up' | 'down' | 'neutral'
+  }
+}
+
 function ProfitLossTab({ period }: IProfitLossTabProps) {
-  const { data, isLoading, error, refetch } = useProfitLoss({
+  const { data: rawData, isLoading, error, refetch } = useProfitLoss({
     period: { type: period },
     comparePreviousPeriod: true,
   })
 
   if (isLoading) return <PnlSkeleton />
   if (error) return <AnalyticsErrorState onRetry={() => refetch()} />
-  if (!data) return null
+  if (!rawData) return null
 
-  // Extract data with defensive checks
-  const revenue = data.revenue ?? []
-  const expenses = data.expenses ?? []
-  const netProfit = data.netProfit ?? 0
-  const previousNetProfit = data.previousNetProfit ?? 0
-  const profitMargin = data.profitMargin ?? 0
-  const previousProfitMargin = data.previousProfitMargin ?? 0
+  // Cast to the actual API response structure
+  const data = rawData as unknown as IProfitLossApiResponse
+  const current = data.current
+  const previous = data.previous
+
+  // Build revenue items from the API structure
+  const revenueItems = [
+    { label: 'Валовая выручка', currentValue: current.grossRevenue, previousValue: previous.grossRevenue },
+    { label: 'Скидки', currentValue: -current.discounts, previousValue: -previous.discounts },
+    { label: 'Возвраты', currentValue: -current.refunds, previousValue: -previous.refunds },
+    { label: 'Чистая выручка', currentValue: current.netRevenue, previousValue: previous.netRevenue, isTotal: true },
+    { label: 'Себестоимость', currentValue: current.cogs, previousValue: previous.cogs },
+    { label: 'Валовая прибыль', currentValue: current.grossProfit, previousValue: previous.grossProfit, isTotal: true },
+  ]
+
+  // Build expense items from operatingExpenses
+  interface IExpenseItem {
+    label: string
+    currentValue: number
+    previousValue: number
+    isTotal?: boolean
+  }
+
+  const expenseItems: IExpenseItem[] = [
+    ...current.operatingExpenses.map((exp, idx) => ({
+      label: exp.name,
+      currentValue: exp.amount,
+      previousValue: previous.operatingExpenses[idx]?.amount ?? 0,
+    })),
+    {
+      label: 'Итого операционные расходы',
+      currentValue: current.totalOperatingExpenses,
+      previousValue: previous.totalOperatingExpenses,
+      isTotal: true,
+    },
+  ]
+
+  const operatingProfit = current.operatingProfit
+  const previousOperatingProfit = previous.operatingProfit
+  const operatingMargin = current.operatingMarginPercent
+  const previousOperatingMargin = previous.operatingMarginPercent
 
   return (
     <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid gap-4 sm:grid-cols-4">
+        <MetricCard
+          label="Чистая выручка"
+          value={formatPrice(current.netRevenue)}
+          suffix={`${data.revenueChange.trend === 'up' ? '+' : ''}${data.revenueChange.changePercent.toFixed(1)}%`}
+        />
+        <MetricCard
+          label="Валовая прибыль"
+          value={formatPrice(current.grossProfit)}
+          suffix={`${current.grossMarginPercent}%`}
+        />
+        <MetricCard
+          label="Операционная прибыль"
+          value={formatPrice(current.operatingProfit)}
+          suffix={`${current.operatingMarginPercent}%`}
+        />
+        <MetricCard
+          label="Средний чек"
+          value={formatPrice(current.averageOrderValue)}
+          suffix={`${current.totalOrders} заказов`}
+        />
+      </div>
+
       <h3 className="text-sm font-medium">Отчет о прибылях и убытках</h3>
 
       <div className="rounded-lg border">
@@ -120,77 +230,92 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
             <TableRow className="bg-muted/30">
               <TableCell colSpan={4} className="font-medium">Выручка</TableCell>
             </TableRow>
-            {revenue.map((item, index) => (
+            {revenueItems.map((item, index) => (
               <TableRow key={item.label ?? index} className={cn(item.isTotal && 'bg-muted/50 font-medium')}>
                 <TableCell className={cn(!item.isTotal && 'pl-6')}>{item.label}</TableCell>
                 <TableCell className="text-right">
-                  {(item.currentValue ?? 0) < 0 ? `(${formatPrice(Math.abs(item.currentValue ?? 0))})` : formatPrice(item.currentValue ?? 0)}
+                  {item.currentValue < 0 ? `(${formatPrice(Math.abs(item.currentValue))})` : formatPrice(item.currentValue)}
                 </TableCell>
                 <TableCell className="text-right text-muted-foreground">
-                  {(item.previousValue ?? 0) < 0 ? `(${formatPrice(Math.abs(item.previousValue ?? 0))})` : formatPrice(item.previousValue ?? 0)}
+                  {item.previousValue < 0 ? `(${formatPrice(Math.abs(item.previousValue))})` : formatPrice(item.previousValue)}
                 </TableCell>
                 <TableCell className="text-right">
-                  <ChangeIndicator value={item.change ?? 0} inverted={(item.currentValue ?? 0) < 0} />
+                  <ChangeIndicator
+                    value={calculateChange(item.currentValue, item.previousValue)}
+                    inverted={item.currentValue < 0}
+                  />
                 </TableCell>
               </TableRow>
             ))}
 
             {/* Expenses Section */}
             <TableRow className="bg-muted/30">
-              <TableCell colSpan={4} className="font-medium">Расходы</TableCell>
+              <TableCell colSpan={4} className="font-medium">Операционные расходы</TableCell>
             </TableRow>
-            {expenses.map((item, index) => (
+            {expenseItems.map((item, index) => (
               <TableRow key={item.label ?? index} className={cn(item.isTotal && 'bg-muted/50 font-medium')}>
                 <TableCell className={cn(!item.isTotal && 'pl-6')}>{item.label}</TableCell>
-                <TableCell className="text-right">{formatPrice(item.currentValue ?? 0)}</TableCell>
+                <TableCell className="text-right">{formatPrice(item.currentValue)}</TableCell>
                 <TableCell className="text-right text-muted-foreground">
-                  {formatPrice(item.previousValue ?? 0)}
+                  {formatPrice(item.previousValue)}
                 </TableCell>
                 <TableCell className="text-right">
-                  <ChangeIndicator value={item.change ?? 0} inverted />
+                  <ChangeIndicator value={calculateChange(item.currentValue, item.previousValue)} inverted />
                 </TableCell>
               </TableRow>
             ))}
 
-            {/* Net Profit */}
+            {/* Operating Profit */}
             <TableRow className="border-t-2 bg-primary/5 font-semibold">
-              <TableCell>Чистая прибыль</TableCell>
-              <TableCell className="text-right">{formatPrice(netProfit)}</TableCell>
+              <TableCell>Операционная прибыль</TableCell>
+              <TableCell className="text-right">{formatPrice(operatingProfit)}</TableCell>
               <TableCell className="text-right text-muted-foreground">
-                {formatPrice(previousNetProfit)}
+                {formatPrice(previousOperatingProfit)}
               </TableCell>
               <TableCell className="text-right">
                 <ChangeIndicator
-                  value={previousNetProfit !== 0 ? ((netProfit - previousNetProfit) / Math.abs(previousNetProfit)) * 100 : 0}
+                  value={calculateChange(operatingProfit, previousOperatingProfit)}
                 />
               </TableCell>
             </TableRow>
 
-            {/* Profit Margin */}
+            {/* Operating Margin */}
             <TableRow className="bg-primary/5 font-semibold">
-              <TableCell>Рентабельность</TableCell>
-              <TableCell className="text-right">{(profitMargin ?? 0).toFixed(1)}%</TableCell>
+              <TableCell>Операционная рентабельность</TableCell>
+              <TableCell className="text-right">{operatingMargin.toFixed(1)}%</TableCell>
               <TableCell className="text-right text-muted-foreground">
-                {(previousProfitMargin ?? 0).toFixed(1)}%
+                {previousOperatingMargin.toFixed(1)}%
               </TableCell>
               <TableCell className="text-right">
                 <span
                   className={cn(
-                    profitMargin > previousProfitMargin
+                    operatingMargin > previousOperatingMargin
                       ? 'text-green-600 dark:text-green-500'
-                      : profitMargin < previousProfitMargin
+                      : operatingMargin < previousOperatingMargin
                         ? 'text-red-600 dark:text-red-500'
                         : 'text-muted-foreground'
                   )}
                 >
-                  {profitMargin > previousProfitMargin ? '+' : ''}
-                  {(profitMargin - previousProfitMargin).toFixed(1)}пп
+                  {operatingMargin > previousOperatingMargin ? '+' : ''}
+                  {(operatingMargin - previousOperatingMargin).toFixed(1)}пп
                 </span>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </div>
+
+      {/* Insights */}
+      {data.insights && data.insights.length > 0 && (
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+          <h4 className="mb-2 text-sm font-medium text-blue-800 dark:text-blue-300">Инсайты</h4>
+          <ul className="list-inside list-disc space-y-1 text-sm text-blue-700 dark:text-blue-400">
+            {data.insights.map((insight, idx) => (
+              <li key={idx}>{insight}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

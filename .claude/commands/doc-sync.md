@@ -51,11 +51,11 @@ For each violation:
 
 **Verify UI matches docs** (skip: `--skip-ui-test`):
 
-- Test at 3 breakpoints (375, 768, 1440)
-- `browser_verify_element_visible` → required elements from docs
-- `browser_verify_text_visible` → required labels from docs
-- Test documented user flows end-to-end
-- Verify all states (loading, error, empty, success)
+- Test EVERY documented user flow end-to-end using Playwright mcp
+- Test COMPLETE CRUD if documented
+- Verify ALL documented elements visible
+- Test ALL states (loading, error, empty, success)
+- `browser_console_messages` → 0 errors
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 
@@ -80,6 +80,6 @@ Verified: All documented features work ✓
 ## SUCCESS
 
 - Code matches docs 100%
-- All documented features verified in browser
+- Full documented flows tested in browser
 - All standards followed
 - All gates pass

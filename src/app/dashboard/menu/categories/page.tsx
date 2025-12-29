@@ -7,8 +7,7 @@
 
 import { useState } from 'react'
 
-import { BaseLoading } from '@/shared/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
+import { BaseLoading, ViewModeToggler } from '@/shared/ui'
 import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
@@ -59,14 +58,12 @@ export default function CategoriesPage(): JSX.Element {
           <CreateCategoryDialog />
         </div>
 
-        {/* View Tabs */}
-        <Tabs value={view} onValueChange={(v) => setView(v as 'tree' | 'grid')}>
-          <TabsList>
-            <TabsTrigger value="tree">Дерево</TabsTrigger>
-            <TabsTrigger value="grid">Сетка</TabsTrigger>
-          </TabsList>
+        {/* View Toggle */}
+        <ViewModeToggler value={view} onChange={setView} />
 
-          <TabsContent value="tree" className="space-y-6">
+        {/* View Content */}
+        {view === 'tree' ? (
+          <div className="space-y-6">
             {topLevelCategories.length === 0 ? (
               <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
                 <div className="text-center">
@@ -90,18 +87,16 @@ export default function CategoriesPage(): JSX.Element {
                 }}
               />
             )}
-          </TabsContent>
-
-          <TabsContent value="grid" className="space-y-6">
-            <CategoryList
-              categories={categories || []}
-              isLoading={isLoading}
-              onCategoryClick={(_category) => {
-                // Handle category click if needed
-              }}
-            />
-          </TabsContent>
-        </Tabs>
+          </div>
+        ) : (
+          <CategoryList
+            categories={categories || []}
+            isLoading={isLoading}
+            onCategoryClick={(_category) => {
+              // Handle category click if needed
+            }}
+          />
+        )}
 
         {/* Stats */}
         {categories && categories.length > 0 && (

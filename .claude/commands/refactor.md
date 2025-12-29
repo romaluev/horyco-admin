@@ -13,9 +13,9 @@ Call **design-guardian** → get UI violations (if UI code)
 
 **Capture baseline** (skip: `--skip-ui-test`):
 
-- Test at 3 breakpoints (375, 768, 1440)
-- `browser_take_screenshot` at each size
+- `browser_navigate` → affected pages
 - `browser_snapshot` → save DOM structure
+- Test current user flows
 - Note current behavior
 
 ---
@@ -42,10 +42,10 @@ Fix systematically:
 
 **Visual regression** (skip: `--skip-ui-test`):
 
-- Test at same 3 breakpoints
-- Compare screenshots → must match baseline
+- Test SAME user flows as baseline
 - Compare DOM → structure unchanged
-- Test interactions still work
+- Test ALL interactions still work
+- `browser_console_messages` → 0 errors
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 
@@ -70,7 +70,7 @@ Visual: unchanged ✓
 ## SUCCESS
 
 - All violations fixed
-- Visual output unchanged at all breakpoints
-- Interactions still work
+- Visual output unchanged
+- Full user flows still work
 - Coverage maintained
 - All gates pass

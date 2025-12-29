@@ -33,9 +33,12 @@ import {
 export default function CompletePage() {
   const router = useRouter()
 
-  // Validate step access and redirect if needed
-  const { isLoading: isProgressLoading, progress } =
-    useStepValidation('go_live')
+  // Validate step access but skip automatic redirect on completion
+  // The complete page manages its own success state and user-initiated redirect
+  const { isLoading: isProgressLoading, progress } = useStepValidation(
+    'go_live',
+    { skipCompletedRedirect: true }
+  )
 
   const {
     mutate: completeOnboarding,

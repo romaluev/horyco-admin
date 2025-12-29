@@ -29,7 +29,9 @@ export default async function DashboardLayout({
         <SidebarInset>
           <Header />
           <OnboardingReminderDialog />
-          {children}
+          <div className="relative min-h-0 flex-1">
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </KBar>

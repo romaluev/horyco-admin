@@ -45,11 +45,11 @@ For each file:
 
 **Live UI test** (skip: `--skip-ui-test`):
 
-- Run full LIVE UI TESTING from `workflow.md`
-- Test at 3 breakpoints (375, 768, 1440)
-- Test interactions (clicks, forms, keyboard)
-- Test states (loading, error, empty, success)
-- Verify 0 console errors
+- Run FULL FLOW TESTING using PlaywrightMCP from `workflow.md`
+- Test EVERY page/route created
+- Test COMPLETE CRUD if applicable (create → read → update → delete)
+- Test ALL form flows (valid + invalid data)
+- Verify design compliance + 0 console errors
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 
@@ -76,4 +76,4 @@ Issues: [blocker/high/medium/low counts]
 - Reusable components used
 - All standards followed
 - All gates pass
-- UI works at all breakpoints
+- Full user journey tested in browser

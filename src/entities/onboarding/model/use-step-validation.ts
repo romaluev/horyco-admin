@@ -22,9 +22,14 @@ export const useStepValidation = (
   currentStep: OnboardingStep,
   options?: {
     /**
-     * If true, skip validation (useful for edge cases)
+     * If true, skip all validation (useful for edge cases)
      */
     skipValidation?: boolean
+    /**
+     * If true, skip redirect when onboarding is completed
+     * Use this on completion page to let user see success state
+     */
+    skipCompletedRedirect?: boolean
   }
 ) => {
   const router = useRouter()
@@ -62,7 +67,8 @@ export const useStepValidation = (
     hasValidatedRef.current = true
 
     // If onboarding is already completed, redirect to dashboard
-    if (progress.isCompleted) {
+    // Skip this redirect on completion page to show success state
+    if (progress.isCompleted && !options?.skipCompletedRedirect) {
       router.replace('/dashboard')
       return
     }
@@ -132,6 +138,7 @@ export const useStepValidation = (
     isFetching,
     router,
     options?.skipValidation,
+    options?.skipCompletedRedirect,
   ])
 
   // Only return actual data loading state, not validation state

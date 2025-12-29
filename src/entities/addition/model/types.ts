@@ -19,6 +19,7 @@ export interface IAddition {
   sortOrder: number
   isActive: boolean
   itemsCount?: number
+  image?: string
   createdAt: string
   updatedAt: string
 }

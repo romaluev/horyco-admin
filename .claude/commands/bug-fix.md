@@ -36,8 +36,7 @@ For each bug:
 
 ## 3. TEST
 
-- If tests exist → run + add regression test
-- If no tests → call **test-writer** → generate tests
+Run Playwright MCP, test the ui.
 
 ---
 
@@ -50,9 +49,9 @@ For each bug:
 **Verify fix in browser** (skip: `--skip-ui-test`):
 
 - Re-run reproduction steps → bug should not occur
-- Test at 3 breakpoints (375, 768, 1440)
+- Test FULL related flow with playwright mcp (not just the fix)
 - `browser_console_messages` → 0 errors
-- Test related interactions still work
+- Verify no regressions in related features
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 
@@ -80,5 +79,5 @@ Verified: Bug no longer reproducible ✓
 - Bug located (file:line)
 - Root cause fixed (not symptoms)
 - Regression test added
-- Verified fixed at all breakpoints
+- Full related flow verified in browser
 - All gates pass

@@ -24,9 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
+import { ViewModeToggler } from '@/shared/ui/view-mode-toggler'
 
 import {
   AdditionList,
@@ -44,7 +44,7 @@ import type { JSX } from 'react'
 
 export default function AdditionsPage(): JSX.Element {
   const [productFilter, setProductFilter] = useState<string>('all')
-  const [view, setView] = useState<'tree' | 'grid'>('tree')
+  const [view, setView] = useState<'tree' | 'grid'>('grid')
   const [editingAddition, setEditingAddition] = useState<IAddition | null>(null)
 
   const { data: additions, isLoading } = useGetAdditions(
@@ -87,19 +87,22 @@ export default function AdditionsPage(): JSX.Element {
           />
         </div>
 
-        <Select value={productFilter} onValueChange={setProductFilter}>
-          <SelectTrigger className="w-[300px]">
-            <SelectValue placeholder="Выберите продукт" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Все продукты</SelectItem>
-            {products.map((product) => (
-              <SelectItem key={product.id} value={product.id.toString()}>
-                {product.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-4">
+          <ViewModeToggler value={view} onChange={setView} />
+          <Select value={productFilter} onValueChange={setProductFilter}>
+            <SelectTrigger className="w-[300px]">
+              <SelectValue placeholder="Выберите продукт" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все продукты</SelectItem>
+              {products.map((product) => (
+                <SelectItem key={product.id} value={product.id.toString()}>
+                  {product.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         {additions && additions.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2">
@@ -133,17 +136,7 @@ export default function AdditionsPage(): JSX.Element {
               </p>
             </div>
           </div>
-        ) : (
-          <Tabs
-            value={view}
-            onValueChange={(v) => setView(v as 'tree' | 'grid')}
-          >
-            <TabsList>
-              <TabsTrigger value="tree">Дерево</TabsTrigger>
-              <TabsTrigger value="grid">Сетка</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="tree" className="space-y-4">
+        ) : view === 'tree' ? (
               <Accordion type="multiple" className="space-y-4">
                 {additions.map((addition) => (
                   <AccordionItem
@@ -246,16 +239,12 @@ export default function AdditionsPage(): JSX.Element {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </TabsContent>
-
-            <TabsContent value="grid" className="space-y-6">
-              <AdditionList
-                additions={additions}
-                isLoading={isLoading}
-                onAdditionClick={(addition) => setEditingAddition(addition)}
-              />
-            </TabsContent>
-          </Tabs>
+        ) : (
+          <AdditionList
+            additions={additions}
+            isLoading={isLoading}
+            onAdditionClick={(addition) => setEditingAddition(addition)}
+          />
         )}
       </div>
 

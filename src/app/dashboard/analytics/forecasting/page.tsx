@@ -65,45 +65,80 @@ export default function ForecastingPage() {
 // FORECAST CONTENT
 // ============================================
 
-interface IForecastContentProps {
-  data: {
-    inflows: Array<{ source: string; amount: number; date: string }>
-    outflows: Array<{ category: string; amount: number; date: string }>
+// API response structure from the server
+interface ICashFlowApiResponse {
+  periodStart: string
+  periodEnd: string
+  totalInflow: number
+  totalOutflow: number
+  netCashFlow: number
+  dailyFlow: {
+    date: string
+    inflow: number
+    outflow: number
     netFlow: number
-    openingBalance: number
-    closingBalance: number
+    runningBalance: number
+  }[]
+  paymentMethodBreakdown: {
+    method: string
+    amount: number
+    share: number
+  }[]
+  cashToCardRatio: number
+  peakDay: {
+    date: string
+    amount: number
   }
+  averageDailyFlow: number
 }
 
-function ForecastContent({ data }: IForecastContentProps) {
-  // Calculate projections based on current cash flow trends
-  // Add defensive checks for undefined arrays and values
-  const inflows = data.inflows ?? []
-  const outflows = data.outflows ?? []
-  const totalInflow = inflows.reduce((sum, item) => sum + item.amount, 0)
-  const totalOutflow = outflows.reduce((sum, item) => sum + item.amount, 0)
-  const netFlow = data.netFlow ?? 0
-  const openingBalance = data.openingBalance ?? 0
-  const closingBalance = data.closingBalance ?? 0
+interface IForecastContentProps {
+  data: unknown
+}
+
+function ForecastContent({ data: rawData }: IForecastContentProps) {
+  // Cast to the actual API response structure
+  const data = rawData as ICashFlowApiResponse
+
+  const totalInflow = data.totalInflow ?? 0
+  const totalOutflow = data.totalOutflow ?? 0
+  const netCashFlow = data.netCashFlow ?? 0
+  const dailyFlow = data.dailyFlow ?? []
+  const averageDailyFlow = data.averageDailyFlow ?? 0
+  const peakDay = data.peakDay
+
+  // Calculate opening and closing balance from daily flow
+  const firstDay = dailyFlow[0]
+  const lastDay = dailyFlow[dailyFlow.length - 1]
+  const openingBalance = firstDay ? firstDay.runningBalance - firstDay.netFlow : 0
+  const closingBalance = lastDay ? lastDay.runningBalance : 0
+
+  // Get last 7 days for chart
+  const last7Days = dailyFlow.slice(-7)
 
   return (
     <div className="space-y-6">
       {/* Cash Flow Summary */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <SummaryCard
-          label="Прогноз притока"
+          label="Общий приток"
           value={formatPrice(totalInflow)}
           trend="UP"
         />
         <SummaryCard
-          label="Прогноз оттока"
+          label="Общий отток"
           value={formatPrice(totalOutflow)}
           trend="DOWN"
         />
         <SummaryCard
           label="Чистый денежный поток"
-          value={formatPrice(netFlow)}
-          trend={netFlow >= 0 ? 'UP' : 'DOWN'}
+          value={formatPrice(netCashFlow)}
+          trend={netCashFlow >= 0 ? 'UP' : 'DOWN'}
+        />
+        <SummaryCard
+          label="Средний дневной поток"
+          value={formatPrice(averageDailyFlow)}
+          trend="UP"
         />
       </div>
 
@@ -122,7 +157,7 @@ function ForecastContent({ data }: IForecastContentProps) {
             <span className="text-sm">→</span>
           </div>
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Прогноз баланса</div>
+            <div className="text-sm text-muted-foreground">Конечный баланс</div>
             <div className="mt-1 text-2xl font-semibold">
               {formatPrice(closingBalance)}
             </div>
@@ -130,49 +165,85 @@ function ForecastContent({ data }: IForecastContentProps) {
         </div>
       </div>
 
-      {/* Inflows Breakdown */}
+      {/* Peak Day */}
+      {peakDay && (
+        <div className="rounded-lg border p-4">
+          <h3 className="mb-2 text-sm font-medium">Пиковый день</h3>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">{new Date(peakDay.date).toLocaleDateString('ru-RU')}</span>
+            <span className="text-xl font-semibold text-green-600 dark:text-green-500">
+              {formatPrice(peakDay.amount)}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Daily Flow Table */}
       <div className="rounded-lg border">
         <div className="border-b p-4">
-          <h3 className="text-sm font-medium">Притоки по категориям</h3>
+          <h3 className="text-sm font-medium">Дневной денежный поток (последние 7 дней)</h3>
         </div>
         <div className="divide-y">
-          {inflows.map((inflow, index) => (
+          {last7Days.map((day, index) => (
             <div key={index} className="flex items-center justify-between p-4">
-              <span>{inflow.source}</span>
-              <span className="font-medium text-green-600 dark:text-green-500">
-                +{formatPrice(inflow.amount)}
-              </span>
+              <div>
+                <span className="font-medium">{new Date(day.date).toLocaleDateString('ru-RU')}</span>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <span className="text-green-600 dark:text-green-500">
+                  +{formatPrice(day.inflow)}
+                </span>
+                <span className="text-red-600 dark:text-red-500">
+                  -{formatPrice(day.outflow)}
+                </span>
+                <span className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
+                  {day.netFlow >= 0 ? '+' : ''}{formatPrice(day.netFlow)}
+                </span>
+                <span className="text-muted-foreground">
+                  Баланс: {formatPrice(day.runningBalance)}
+                </span>
+              </div>
             </div>
           ))}
-          {inflows.length === 0 && (
+          {last7Days.length === 0 && (
             <div className="p-4 text-center text-muted-foreground">
-              Нет данных о притоках
+              Нет данных о дневных потоках
             </div>
           )}
         </div>
       </div>
 
-      {/* Outflows Breakdown */}
-      <div className="rounded-lg border">
-        <div className="border-b p-4">
-          <h3 className="text-sm font-medium">Оттоки по категориям</h3>
-        </div>
-        <div className="divide-y">
-          {outflows.map((outflow, index) => (
-            <div key={index} className="flex items-center justify-between p-4">
-              <span>{outflow.category}</span>
-              <span className="font-medium text-red-600 dark:text-red-500">
-                -{formatPrice(outflow.amount)}
-              </span>
-            </div>
-          ))}
-          {outflows.length === 0 && (
-            <div className="p-4 text-center text-muted-foreground">
-              Нет данных об оттоках
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Full Daily Flow (collapsed) */}
+      {dailyFlow.length > 7 && (
+        <details className="rounded-lg border">
+          <summary className="cursor-pointer border-b p-4 font-medium">
+            Показать все дни ({dailyFlow.length} записей)
+          </summary>
+          <div className="divide-y">
+            {dailyFlow.map((day, index) => (
+              <div key={index} className="flex items-center justify-between p-4">
+                <div>
+                  <span className="font-medium">{new Date(day.date).toLocaleDateString('ru-RU')}</span>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                  <span className="text-green-600 dark:text-green-500">
+                    +{formatPrice(day.inflow)}
+                  </span>
+                  <span className="text-red-600 dark:text-red-500">
+                    -{formatPrice(day.outflow)}
+                  </span>
+                  <span className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
+                    {day.netFlow >= 0 ? '+' : ''}{formatPrice(day.netFlow)}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {formatPrice(day.runningBalance)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
 
       {/* Info Note */}
       <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">

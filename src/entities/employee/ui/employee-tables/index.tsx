@@ -65,8 +65,10 @@ export function EmployeeTable<TData, TValue>({
   })
 
   return (
-    <DataTable table={table}>
-      <DataTableToolbar table={table} />
-    </DataTable>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <DataTable table={table}>
+        <DataTableToolbar table={table} />
+      </DataTable>
+    </div>
   )
 }

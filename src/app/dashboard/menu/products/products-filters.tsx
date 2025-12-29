@@ -1,6 +1,3 @@
-import { Grid, List, } from 'lucide-react'
-
-import { Button } from '@/shared/ui/base/button'
 import { Input } from '@/shared/ui/base/input'
 import {
   Select,
@@ -9,14 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-
-
-type ViewMode = 'table' | 'grid'
+import { ViewModeToggler } from '@/shared/ui/view-mode-toggler'
 
 export interface Category {
   id: number
   name: string
 }
+
+type ProductViewMode = 'table' | 'grid'
 
 interface ProductsFiltersProps {
   search: string
@@ -26,8 +23,8 @@ interface ProductsFiltersProps {
   onSearchChange: (value: string) => void
   onCategoryChange: (value: string) => void
   onAvailabilityChange: (value: string) => void
-  viewMode: ViewMode
-  onViewModeChange: (mode: ViewMode) => void
+  viewMode: ProductViewMode
+  onViewModeChange: (mode: ProductViewMode) => void
 }
 
 export function ProductsFilters({
@@ -76,26 +73,7 @@ export function ProductsFilters({
           <SelectItem value="unavailable">Недоступные</SelectItem>
         </SelectContent>
       </Select>
-      <div className="flex gap-1 rounded-lg border p-1">
-        <Button
-          variant={viewMode === 'table' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => onViewModeChange('table')}
-          className="gap-2"
-        >
-          <List className="h-4 w-4" />
-          <span className="hidden md:inline">Таблица</span>
-        </Button>
-        <Button
-          variant={viewMode === 'grid' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => onViewModeChange('grid')}
-          className="gap-2"
-        >
-          <Grid className="h-4 w-4" />
-          <span className="hidden md:inline">Сетка</span>
-        </Button>
-      </div>
+      <ViewModeToggler value={viewMode} onChange={onViewModeChange} />
     </div>
   )
 }
