@@ -77,7 +77,7 @@ export const ProductsGridView = ({
               </div>
               <div className="text-sm">
                 <p className="font-semibold text-foreground">
-                  {product.price} ₽
+                  {product.price} UZS
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {product.isAvailable ? 'Доступен' : 'Недоступен'}

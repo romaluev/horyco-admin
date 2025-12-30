@@ -206,9 +206,9 @@ function ProductsTable({
   onSort,
 }: IProductsTableProps) {
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border h-[calc(100vh-350px)] overflow-auto [&_[data-slot=table-container]]:overflow-visible">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-gray-50 z-10">
           <TableRow>
             <TableHead className="w-[60px]">#</TableHead>
             <SortableHeader

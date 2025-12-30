@@ -136,7 +136,7 @@ export const UpdateModifierDialog = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена (₽)</FormLabel>
+                  <FormLabel>Цена (UZS)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

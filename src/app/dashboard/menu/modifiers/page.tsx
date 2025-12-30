@@ -177,7 +177,7 @@ const ModifierItem = ({ modifier, onEdit, onDelete }: ModifierItemProps) => (
         {modifier.isActive ? 'Активен' : 'Неактивен'}
       </Badge>
       <span className="min-w-[80px] text-right font-semibold">
-        {modifier.price} ₽
+        {modifier.price} UZS
       </span>
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="sm" onClick={() => onEdit(modifier)}>

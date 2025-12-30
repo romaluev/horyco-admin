@@ -176,7 +176,7 @@ export const CreateModifierDialog = ({
                           field.onChange(parseFloat(e.target.value) || 0)
                         }
                       />
-                      <span>₽</span>
+                      <span>UZS</span>
                     </div>
                   </FormControl>
                   <FormMessage />

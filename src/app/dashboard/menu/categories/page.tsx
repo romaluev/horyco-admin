@@ -58,6 +58,37 @@ export default function CategoriesPage(): JSX.Element {
           <CreateCategoryDialog />
         </div>
 
+        {/* Stats */}
+        {categories && categories.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-lg border px-6 py-4">
+              <p className="text-muted-foreground text-sm font-medium">
+                Всего категорий
+              </p>
+              <p className="text-2xl font-bold">{categories.length}</p>
+            </div>
+            <div className="rounded-lg border px-6 py-4">
+              <p className="text-muted-foreground text-sm font-medium">
+                Активных категорий
+              </p>
+              <p className="text-2xl font-bold">
+                {categories.filter((cat) => cat.isActive).length}
+              </p>
+            </div>
+            <div className="rounded-lg border px-6 py-4">
+              <p className="text-muted-foreground text-sm font-medium">
+                Всего продуктов
+              </p>
+              <p className="text-2xl font-bold">
+                {categories.reduce(
+                  (sum, cat) => sum + (cat.productCount || 0),
+                  0
+                )}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* View Toggle */}
         <ViewModeToggler value={view} onChange={setView} />
 
@@ -96,37 +127,6 @@ export default function CategoriesPage(): JSX.Element {
               // Handle category click if needed
             }}
           />
-        )}
-
-        {/* Stats */}
-        {categories && categories.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-lg border px-6 py-4">
-              <p className="text-muted-foreground text-sm font-medium">
-                Всего категорий
-              </p>
-              <p className="text-2xl font-bold">{categories.length}</p>
-            </div>
-            <div className="rounded-lg border px-6 py-4">
-              <p className="text-muted-foreground text-sm font-medium">
-                Активных категорий
-              </p>
-              <p className="text-2xl font-bold">
-                {categories.filter((cat) => cat.isActive).length}
-              </p>
-            </div>
-            <div className="rounded-lg border px-6 py-4">
-              <p className="text-muted-foreground text-sm font-medium">
-                Всего продуктов
-              </p>
-              <p className="text-2xl font-bold">
-                {categories.reduce(
-                  (sum, cat) => sum + (cat.productCount || 0),
-                  0
-                )}
-              </p>
-            </div>
-          </div>
         )}
       </div>
     </PageContainer>

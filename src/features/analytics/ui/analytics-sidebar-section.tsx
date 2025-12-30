@@ -19,11 +19,17 @@ import {
   CollapsibleTrigger,
 } from '@/shared/ui/base/collapsible'
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/shared/ui/base/hover-card'
+import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/shared/ui/base/sidebar'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
@@ -53,6 +59,8 @@ const ANALYTICS_PAGE_URLS: Record<AnalyticsPageCode, string> = {
 
 export function AnalyticsSidebarSection() {
   const pathname = usePathname()
+  const { state } = useSidebar()
+  const isCollapsed = state === 'collapsed'
   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
   // Get visible pages based on entitlements
@@ -75,6 +83,102 @@ export function AnalyticsSidebarSection() {
 
   // Check if current path is in analytics
   const isAnalyticsActive = pathname.startsWith('/dashboard/analytics') || pathname.startsWith('/dashboard/views')
+
+  if (isCollapsed) {
+    return (
+      <>
+        <SidebarMenuItem>
+          <HoverCard openDelay={0} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <SidebarMenuButton tooltip="Аналитика">
+                <IconReportAnalytics className="!size-6" />
+                <span className="text-[17px]">Аналитика</span>
+              </SidebarMenuButton>
+            </HoverCardTrigger>
+            <HoverCardContent
+              side="right"
+              align="start"
+              sideOffset={8}
+              className="w-48 max-h-80 overflow-y-auto p-1"
+            >
+              <div className="flex flex-col gap-0.5">
+                <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                  Аналитика
+                </div>
+
+                {/* Loading State */}
+                {isLoading && (
+                  <>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="mx-2 h-7 w-full" />
+                    ))}
+                  </>
+                )}
+
+                {/* Analytics Pages */}
+                {!isLoading &&
+                  visiblePages.map((pageCode) => {
+                    const config = PAGE_ACCESS_CONFIG[pageCode]
+                    const url = ANALYTICS_PAGE_URLS[pageCode]
+
+                    return (
+                      <Link
+                        key={pageCode}
+                        href={url}
+                        className={`flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                          pathname === url
+                            ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                            : ''
+                        }`}
+                      >
+                        {config.title}
+                      </Link>
+                    )
+                  })}
+
+                {/* Divider if there are custom views */}
+                {!isLoading && views && views.length > 0 && (
+                  <div className="mx-2 my-1 border-t" />
+                )}
+
+                {/* Custom Views */}
+                {!isLoading &&
+                  views?.map((view) => (
+                    <Link
+                      key={view.id}
+                      href={`/dashboard/views/${view.id}`}
+                      className={`flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                        pathname === `/dashboard/views/${view.id}`
+                          ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                          : ''
+                      }`}
+                    >
+                      {view.name}
+                      {view.isPinned && (
+                        <span className="text-xs text-muted-foreground">*</span>
+                      )}
+                    </Link>
+                  ))}
+
+                {/* Add View Button */}
+                {!isLoading && canCreateViews && (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex items-center rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
+                  >
+                    <IconPlus className="mr-1 size-4" />
+                    Создать
+                  </button>
+                )}
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </SidebarMenuItem>
+
+        <ViewTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </>
+    )
+  }
 
   return (
     <>

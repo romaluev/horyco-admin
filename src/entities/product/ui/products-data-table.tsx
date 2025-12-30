@@ -127,7 +127,7 @@ export const ProductsDataTable = ({
                   }}
                   className="w-20 rounded border px-2 py-1 text-sm"
                 />
-                <span>₽</span>
+                <span>UZS</span>
               </div>
             )
           }
@@ -137,7 +137,7 @@ export const ProductsDataTable = ({
               onClick={() => handlePriceEdit(product)}
               className="hover:text-primary"
             >
-              {product.price} ₽
+              {product.price} UZS
             </button>
           )
         },

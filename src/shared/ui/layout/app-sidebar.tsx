@@ -35,6 +35,11 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/base/dropdown-menu'
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/shared/ui/base/hover-card'
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -47,6 +52,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  useSidebar,
 } from '@/shared/ui/base/sidebar'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
@@ -98,6 +104,97 @@ function filterNavItemsByPermission(
           ? filterNavItemsByPermission(item.items, branchPermissions)
           : item.items,
     }))
+}
+
+interface NavItem {
+  title: string
+  url: string
+  icon?: keyof typeof Icons
+  isActive?: boolean
+  items?: NavItem[]
+}
+
+function NavItemWithSub({
+  item,
+  pathname,
+}: {
+  item: NavItem
+  pathname: string
+}) {
+  const { state } = useSidebar()
+  const isCollapsed = state === 'collapsed'
+  const Icon = item.icon ? Icons[item.icon] : Icons.logo
+
+  if (isCollapsed) {
+    return (
+      <SidebarMenuItem>
+        <HoverCard openDelay={0} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <SidebarMenuButton tooltip={item.title}>
+              {item.icon && <Icon className="!h-6 !w-6" size={30} />}
+              <span className="text-[17px]">{item.title}</span>
+            </SidebarMenuButton>
+          </HoverCardTrigger>
+          <HoverCardContent
+            side="right"
+            align="start"
+            sideOffset={8}
+            className="w-48 p-1"
+          >
+            <div className="flex flex-col gap-0.5">
+              <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                {item.title}
+              </div>
+              {item.items?.map((subItem) => (
+                <Link
+                  key={subItem.title}
+                  href={subItem.url}
+                  className={`flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                    pathname === subItem.url
+                      ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                      : ''
+                  }`}
+                >
+                  {subItem.title}
+                </Link>
+              ))}
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      </SidebarMenuItem>
+    )
+  }
+
+  return (
+    <Collapsible asChild defaultOpen={item.isActive} className="group/collapsible">
+      <SidebarMenuItem>
+        <CollapsibleTrigger asChild>
+          <SidebarMenuButton tooltip={item.title}>
+            {item.icon && <Icon className="!h-6 !w-6" size={30} />}
+            <span className="text-[17px]">{item.title}</span>
+            <IconChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <SidebarMenuSub>
+            {item.items?.map((subItem) => (
+              <SidebarMenuSubItem key={subItem.title}>
+                <SidebarMenuSubButton
+                  className="!p-3"
+                  asChild
+                  isActive={pathname === subItem.url}
+                >
+                  <Link href={subItem.url}>
+                    <span className="text-[17px]">{subItem.title}</span>
+                  </Link>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  )
 }
 
 export default function AppSidebar() {
@@ -162,41 +259,11 @@ export default function AppSidebar() {
             {navItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo
               return item?.items && item?.items?.length > 0 ? (
-                <Collapsible
+                <NavItemWithSub
                   key={item.title}
-                  asChild
-                  defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip={item.title}>
-                        {item.icon && <Icon className="!h-6 !w-6" size={30} />}
-                        <span className="text-[17px]">{item.title}</span>
-                        <IconChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              className="!p-3"
-                              asChild
-                              isActive={pathname === subItem.url}
-                            >
-                              <Link href={subItem.url}>
-                                <span className="text-[17px]">
-                                  {subItem.title}
-                                </span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
+                  item={item as NavItem}
+                  pathname={pathname}
+                />
               ) : (
                 <SidebarMenuItem key={item.title} className="my-1">
                   <SidebarMenuButton
