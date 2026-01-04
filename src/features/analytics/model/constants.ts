@@ -26,6 +26,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Обзор продаж',
     titleEn: 'Sales Overview',
     description: 'Сводка по продажам и выручке',
+    icon: 'chartBar',
     upgradeFeatures: [],
   },
   products: {
@@ -34,6 +35,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Продукты',
     titleEn: 'Products',
     description: 'Анализ продаж по продуктам',
+    icon: 'package',
     upgradeFeatures: [],
   },
   categories: {
@@ -42,6 +44,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Категории',
     titleEn: 'Categories',
     description: 'Анализ продаж по категориям',
+    icon: 'category',
     upgradeFeatures: [],
   },
   payments: {
@@ -50,6 +53,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Способы оплаты',
     titleEn: 'Payments',
     description: 'Анализ по способам оплаты',
+    icon: 'billing',
     upgradeFeatures: [],
   },
 
@@ -60,6 +64,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Персонал',
     titleEn: 'Staff',
     description: 'Анализ эффективности персонала',
+    icon: 'users',
     upgradeFeatures: [
       'Отслеживание производительности сотрудников',
       'Аналитика клиентов',
@@ -73,6 +78,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Клиенты',
     titleEn: 'Customers',
     description: 'Анализ клиентской базы',
+    icon: 'user',
     upgradeFeatures: [
       'RFM-сегментация',
       'Когортный анализ',
@@ -85,6 +91,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Тепловая карта',
     titleEn: 'Heatmap',
     description: 'Анализ нагрузки по часам и дням',
+    icon: 'layoutGrid',
     upgradeFeatures: [
       'Визуализация пиковых часов',
       'Оптимизация расписания',
@@ -96,6 +103,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Каналы продаж',
     titleEn: 'Channels',
     description: 'Анализ по каналам продаж',
+    icon: 'arrowsExchange',
     upgradeFeatures: [
       'Сравнение каналов',
       'Динамика по каналам',
@@ -109,6 +117,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Филиалы',
     titleEn: 'Branches',
     description: 'Сравнение и бенчмаркинг филиалов',
+    icon: 'hierarchy',
     upgradeFeatures: [
       'Сравнение филиалов',
       'Бенчмаркинг',
@@ -121,6 +130,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Финансы',
     titleEn: 'Financial',
     description: 'Финансовая аналитика и отчетность',
+    icon: 'billing',
     upgradeFeatures: [
       'Отчет о прибылях и убытках',
       'Анализ маржинальности',
@@ -133,6 +143,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Прогнозирование',
     titleEn: 'Forecasting',
     description: 'Прогноз продаж и спроса',
+    icon: 'chartPie',
     upgradeFeatures: [
       'Прогноз выручки',
       'Прогноз заказов',
@@ -145,6 +156,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
     title: 'Оповещения',
     titleEn: 'Alerts',
     description: 'Уведомления о важных событиях',
+    icon: 'warning',
     upgradeFeatures: [
       'Автоматические оповещения',
       'Обнаружение аномалий',

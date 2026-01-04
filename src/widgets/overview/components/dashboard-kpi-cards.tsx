@@ -33,7 +33,7 @@ export function DashboardKpiCards({ metrics, kpiTypes }: IDashboardKpiCardsProps
   const metricsMap = new Map(metrics.map((m) => [m.type, m]))
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
       {kpiTypes.map((type) => {
         const metric = metricsMap.get(type)
 

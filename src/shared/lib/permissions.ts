@@ -254,6 +254,8 @@ export const PERMISSIONS = {
   REPORTS_FINANCIAL: 'reports:financial',
 
   // Inventory
+  INVENTORY_VIEW: 'inventory:view',
+  INVENTORY_MANAGE: 'inventory:manage',
   INVENTORY_READ: 'inventory:read',
   INVENTORY_WRITE: 'inventory:write',
   INVENTORY_ADJUST: 'inventory:adjust',

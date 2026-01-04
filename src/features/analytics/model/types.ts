@@ -35,6 +35,7 @@ export interface IPageAccessConfig {
   title: string
   titleEn: string
   description: string
+  icon: string
   upgradeFeatures: string[]
 }
 

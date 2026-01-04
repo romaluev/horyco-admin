@@ -10,11 +10,12 @@ import {
   IconChevronRight,
   IconChevronsDown,
   IconLogout,
+  IconSettings,
   IconUserCircle,
 } from '@tabler/icons-react'
 
 import logo from '@/shared/assets/logo.png'
-import { getNavItems } from '@/shared/config/data'
+import { getNavItems, getSettingsNavItem } from '@/shared/config/data'
 import {
   hasPermissionAnyBranch,
   hasAllPermissionsAnyBranch,
@@ -111,6 +112,9 @@ interface NavItem {
   url: string
   icon?: keyof typeof Icons
   isActive?: boolean
+  permission?: string
+  permissions?: string[]
+  permissionMode?: 'all' | 'any'
   items?: NavItem[]
 }
 
@@ -123,15 +127,17 @@ function NavItemWithSub({
 }) {
   const { state } = useSidebar()
   const isCollapsed = state === 'collapsed'
-  const Icon = item.icon ? Icons[item.icon] : Icons.logo
 
   if (isCollapsed) {
+    // In collapsed mode, show first sub-item icon or fallback
+    const FirstSubIcon = item.items?.[0]?.icon ? Icons[item.items[0].icon] : Icons.logo
+
     return (
       <SidebarMenuItem>
         <HoverCard openDelay={0} closeDelay={100}>
           <HoverCardTrigger asChild>
             <SidebarMenuButton tooltip={item.title}>
-              {item.icon && <Icon className="!h-6 !w-6" size={30} />}
+              <FirstSubIcon className="!h-6 !w-6" />
               <span className="text-[17px]">{item.title}</span>
             </SidebarMenuButton>
           </HoverCardTrigger>
@@ -142,22 +148,28 @@ function NavItemWithSub({
             className="w-48 p-1"
           >
             <div className="flex flex-col gap-0.5">
-              <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+              <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {item.title}
               </div>
-              {item.items?.map((subItem) => (
-                <Link
-                  key={subItem.title}
-                  href={subItem.url}
-                  className={`flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                    pathname === subItem.url
-                      ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                      : ''
-                  }`}
-                >
-                  {subItem.title}
-                </Link>
-              ))}
+              {item.items?.map((subItem) => {
+                const SubIcon = subItem.icon ? Icons[subItem.icon] : null
+                return (
+                  <Link
+                    key={subItem.title}
+                    href={subItem.url}
+                    className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+                      pathname === subItem.url
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                        : ''
+                    }`}
+                  >
+                    {SubIcon && (
+                      <SubIcon className="!h-[1.25rem] !w-[1.25rem]" />
+                    )}
+                    {subItem.title}
+                  </Link>
+                )
+              })}
             </div>
           </HoverCardContent>
         </HoverCard>
@@ -169,27 +181,36 @@ function NavItemWithSub({
     <Collapsible asChild defaultOpen={item.isActive} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton tooltip={item.title}>
-            {item.icon && <Icon className="!h-6 !w-6" size={30} />}
-            <span className="text-[17px]">{item.title}</span>
-            <IconChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          {/* Group header - small, without icon */}
+          <SidebarMenuButton tooltip={item.title} size="sm">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{item.title}</span>
+            <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <SidebarMenuSub>
-            {item.items?.map((subItem) => (
-              <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  className="!p-3"
-                  asChild
-                  isActive={pathname === subItem.url}
-                >
-                  <Link href={subItem.url}>
-                    <span className="text-[17px]">{subItem.title}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
+          <SidebarMenuSub className="!border-l-0 !ml-0 !pl-0">
+            {item.items?.map((subItem) => {
+              const SubIcon = subItem.icon ? Icons[subItem.icon] : null
+              return (
+                <SidebarMenuSubItem key={subItem.title}>
+                  <SidebarMenuSubButton
+                    className="!p-3"
+                    asChild
+                    isActive={pathname === subItem.url}
+                  >
+                    <Link
+                      href={subItem.url}
+                      className="flex items-center gap-2"
+                    >
+                      {SubIcon && (
+                        <SubIcon className="!h-[1.25rem] !w-[1.25rem]" />
+                      )}
+                      <span className="text-[17px]">{subItem.title}</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              )
+            })}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>
@@ -203,12 +224,16 @@ export default function AppSidebar() {
   const { user } = useAuthStore()
   const router = useRouter()
   const allNavItems = getNavItems()
+  const settingsNavItem = getSettingsNavItem()
 
-  // Filter nav items based on user permissions
   const navItems = filterNavItemsByPermission(
     allNavItems,
     user?.branchPermissions
   )
+
+  // Filter settings nav item
+  const showSettings = !settingsNavItem.permission ||
+    hasPermissionAnyBranch(user?.branchPermissions, settingsNavItem.permission)
 
   const { data: branchesData, isLoading: isBranchesLoading } =
     useGetAllBranches()
@@ -256,37 +281,60 @@ export default function AppSidebar() {
           </div>
 
           <SidebarMenu>
-            {navItems.map((item) => {
+            {navItems.map((item, index) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo
-              return item?.items && item?.items?.length > 0 ? (
-                <NavItemWithSub
-                  key={item.title}
-                  item={item as NavItem}
-                  pathname={pathname}
-                />
-              ) : (
-                <SidebarMenuItem key={item.title} className="my-1">
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={item.title}
-                    isActive={pathname === item.url}
-                  >
-                    <Link href={item.url}>
-                      <Icon size={30} className="!h-6 !w-6" />
-                      <span className="text-[17px]">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              const isFirstItem = index === 0
+              const isDashboard = item.url === '/dashboard/overview'
+
+              return (
+                <React.Fragment key={item.title}>
+                  {item?.items && item?.items?.length > 0 ? (
+                    <NavItemWithSub
+                      item={item as NavItem}
+                      pathname={pathname}
+                    />
+                  ) : (
+                    <SidebarMenuItem className="my-1">
+                      <SidebarMenuButton
+                        asChild
+                        tooltip={item.title}
+                        isActive={pathname === item.url}
+                      >
+                        <Link href={item.url}>
+                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-pink-500' : ''}`} />
+                          <span className="text-[17px]">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
+
+                  {/* Analytics Section right after Dashboard */}
+                  {isFirstItem && <AnalyticsSidebarSection />}
+                </React.Fragment>
               )
             })}
-
-            {/* Analytics Section with entitlement filtering and custom views */}
-            <AnalyticsSidebarSection />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          {/* Settings button */}
+          {showSettings && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip="Настройки"
+                isActive={pathname === settingsNavItem.url}
+              >
+                <Link href={settingsNavItem.url}>
+                  <IconSettings className="!h-6 !w-6" />
+                  <span className="text-[17px]">Настройки</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+
+          {/* User profile dropdown */}
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -10,9 +10,10 @@ import { columns } from './branch-tables/columns'
 
 export default function BranchListingPage() {
   const [size] = useQueryState('perPage', parseAsInteger.withDefault(10))
-  const [page] = useQueryState('page', parseAsInteger.withDefault(0))
+  const [page] = useQueryState('page', parseAsInteger.withDefault(1))
 
-  const { data: branches, isLoading, error } = useGetAllBranches({ size, page })
+  // API uses 0-indexed pages
+  const { data: branches, isLoading, error } = useGetAllBranches({ size, page: page - 1 })
 
   if (isLoading) {
     return <BaseLoading />

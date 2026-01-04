@@ -11,7 +11,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { IconChevronRight, IconPlus, IconReportAnalytics } from '@tabler/icons-react'
+import { IconChevronRight, IconPlus } from '@tabler/icons-react'
 
 import {
   Collapsible,
@@ -32,6 +32,7 @@ import {
   useSidebar,
 } from '@/shared/ui/base/sidebar'
 import { Skeleton } from '@/shared/ui/base/skeleton'
+import { Icons } from '@/shared/ui/icons'
 
 import { useViews } from '@/entities/view'
 import { ViewTypeModal } from '@/features/view-builder'
@@ -84,6 +85,10 @@ export function AnalyticsSidebarSection() {
   // Check if current path is in analytics
   const isAnalyticsActive = pathname.startsWith('/dashboard/analytics') || pathname.startsWith('/dashboard/views')
 
+  // Get first visible page icon for collapsed state
+  const firstPageIcon = visiblePages[0] ? PAGE_ACCESS_CONFIG[visiblePages[0]].icon : 'chartBar'
+  const FirstIcon = Icons[firstPageIcon as keyof typeof Icons] || Icons.chartBar
+
   if (isCollapsed) {
     return (
       <>
@@ -91,7 +96,7 @@ export function AnalyticsSidebarSection() {
           <HoverCard openDelay={0} closeDelay={100}>
             <HoverCardTrigger asChild>
               <SidebarMenuButton tooltip="Аналитика">
-                <IconReportAnalytics className="!size-6" />
+                <FirstIcon className="!size-6" />
                 <span className="text-[17px]">Аналитика</span>
               </SidebarMenuButton>
             </HoverCardTrigger>
@@ -102,7 +107,7 @@ export function AnalyticsSidebarSection() {
               className="w-48 max-h-80 overflow-y-auto p-1"
             >
               <div className="flex flex-col gap-0.5">
-                <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Аналитика
                 </div>
 
@@ -120,17 +125,19 @@ export function AnalyticsSidebarSection() {
                   visiblePages.map((pageCode) => {
                     const config = PAGE_ACCESS_CONFIG[pageCode]
                     const url = ANALYTICS_PAGE_URLS[pageCode]
+                    const PageIcon = Icons[config.icon as keyof typeof Icons] || Icons.chartBar
 
                     return (
                       <Link
                         key={pageCode}
                         href={url}
-                        className={`flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                        className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                           pathname === url
                             ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
                             : ''
                         }`}
                       >
+                        <PageIcon className="h-6 w-6" />
                         {config.title}
                       </Link>
                     )
@@ -188,14 +195,14 @@ export function AnalyticsSidebarSection() {
       >
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
-            <SidebarMenuButton tooltip="Аналитика">
-              <IconReportAnalytics className="!size-6" />
-              <span className="text-[17px]">Аналитика</span>
-              <IconChevronRight className="ml-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            {/* Group header - small, without icon */}
+            <SidebarMenuButton tooltip="Аналитика" size="sm">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Аналитика</span>
+              <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <SidebarMenuSub>
+            <SidebarMenuSub className="!border-l-0 !ml-0 !pl-0">
               {/* Loading State */}
               {isLoading && (
                 <>
@@ -212,6 +219,7 @@ export function AnalyticsSidebarSection() {
                 visiblePages.map((pageCode) => {
                   const config = PAGE_ACCESS_CONFIG[pageCode]
                   const url = ANALYTICS_PAGE_URLS[pageCode]
+                  const PageIcon = Icons[config.icon as keyof typeof Icons] || Icons.chartBar
 
                   return (
                     <SidebarMenuSubItem key={pageCode}>
@@ -220,7 +228,8 @@ export function AnalyticsSidebarSection() {
                         asChild
                         isActive={pathname === url}
                       >
-                        <Link href={url}>
+                        <Link href={url} className="flex items-center gap-2">
+                          <PageIcon className="!h-[1.25rem] !w-[1.25rem]" />
                           <span className="text-[17px]">{config.title}</span>
                         </Link>
                       </SidebarMenuSubButton>
@@ -244,7 +253,8 @@ export function AnalyticsSidebarSection() {
                       asChild
                       isActive={pathname === `/dashboard/views/${view.id}`}
                     >
-                      <Link href={`/dashboard/views/${view.id}`}>
+                      <Link href={`/dashboard/views/${view.id}`} className="flex items-center gap-2">
+                        <Icons.chartPie className="h-6 w-6" />
                         <span className="text-[17px]">{view.name}</span>
                         {view.isPinned && (
                           <span className="ml-auto text-xs text-muted-foreground">

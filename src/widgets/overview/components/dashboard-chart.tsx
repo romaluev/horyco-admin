@@ -96,7 +96,7 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
         <div>
           <CardTitle>{METRIC_LABELS[metric] ?? metric}</CardTitle>
           <CardDescription className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-foreground">
+            <span className="text-foreground text-2xl font-bold">
               {formatValue(data.totalValue)}
             </span>
             <span
@@ -104,12 +104,16 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
                 'flex items-center gap-1 text-sm font-medium',
                 isPositiveChange && 'text-green-600 dark:text-green-500',
                 isNegativeChange && 'text-red-600 dark:text-red-500',
-                !isPositiveChange && !isNegativeChange && 'text-muted-foreground'
+                !isPositiveChange &&
+                  !isNegativeChange &&
+                  'text-muted-foreground'
               )}
             >
               {isPositiveChange && <IconTrendingUp className="size-4" />}
               {isNegativeChange && <IconTrendingDown className="size-4" />}
-              {!isPositiveChange && !isNegativeChange && <IconMinus className="size-4" />}
+              {!isPositiveChange && !isNegativeChange && (
+                <IconMinus className="size-4" />
+              )}
               {changePercent > 0 ? '+' : ''}
               {changePercent.toFixed(1)}%
             </span>
@@ -117,7 +121,10 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[300px] w-full"
+        >
           <AreaChart
             data={chartData}
             margin={{ left: 12, right: 12, top: 12, bottom: 0 }}
@@ -126,14 +133,10 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
               <linearGradient id="fillValue" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="hsl(var(--primary))"
-                  stopOpacity={0.8}
+                  stopColor="#fe4a49"
+                  stopOpacity={1}
                 />
-                <stop
-                  offset="95%"
-                  stopColor="hsl(var(--primary))"
-                  stopOpacity={0.1}
-                />
+                <stop offset="95%" stopColor="#fe4a49" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -161,7 +164,10 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
               content={
                 <ChartTooltipContent
                   labelFormatter={(label) => label}
-                  formatter={(value) => [formatValue(Number(value)), METRIC_LABELS[metric]]}
+                  formatter={(value) => [
+                    formatValue(Number(value)),
+                    METRIC_LABELS[metric],
+                  ]}
                 />
               }
             />
