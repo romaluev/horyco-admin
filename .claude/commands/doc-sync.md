@@ -1,82 +1,85 @@
-Sync code with documentations. You should carefully go through feature/logic documentation and change code to suit the docs for 100%
+Sync code with documentation. Code must match docs 100%.
 
-## #1 Priority - User Prompts&Docs: $ARGUMENTS
-
-## The highest Priority: To make code the same as docs and user prompts.
-
-## Workflow
-
-analyze → sync → validate
+Docs: $ARGUMENTS
 
 ---
 
-## Phase 1: Analyze & Plan
+## 1. ANALYZE
 
-**Load ALL standards & Docs**:
+Load: `skills/*`, `standards/*`
 
-- Most important: The docs are provided by the user (if not enough ask questions)
-- Use all skills you have.
-- `.claude/standards/architecture.md`
-- `.claude/standards/next.md`
+Read provided docs thoroughly.
 
-**Optional**: Focus area (typescript/design-system/architecture/all)
+Compare code vs docs:
 
-**Call analyzer subagent**: Give him the provided docs and get all violations against them.
+- Missing features
+- Wrong behavior
+- UI differences
+- API mismatches
 
-**Carefully plan**: Plan your refactoring process (use phases for clarity).
-
----
-
-## Phase 2: SYNC!!!
-
-**Apply ALL standards & Docs**:
-
-1. **Most important: Documentation**: Make sure that the code 100% the same as the documentation. ANY VIOLATIONS SHOULD BE FIXED.
-2. **Design System**: Remove borders → shadows, inline styles → CSS Modules, Arco → Radix
-3. **Architecture**: Fix folder structure, Zustand vs React Query, import order, prop drilling
-4. **TypeScript**: Replace `any`, add explicit types, use type guards, `import type`, etc.
+**If conflicts → ASK** before proceeding.
 
 ---
 
-## Phase 3: Validate
+## 2. SYNC
 
-**Run**:
+For each violation:
 
-```bash
-npm run type-check
-npm run lint
-npm run test
+1. Update code to match docs exactly
+2. Follow all standards
+3. Update/add tests
+
+**Priority order:**
+
+1. Functionality (logic matches docs)
+2. UI (matches documented design)
+3. API (endpoints/params match)
+4. Types (match documented schemas)
+
+**Follow exactly:** `core.md`, `design-system.md`
+
+---
+
+## 3. VALIDATE
+
+**Guardians:**
+
+- Call **code-guardian** → fix violations
+- Call **design-guardian** → fix UI violations
+
+**Quality gates:** (see `workflow.md`)
+
+**Verify UI matches docs** (skip: `--skip-ui-test`):
+
+- Test EVERY documented user flow end-to-end using Playwright mcp
+- Test COMPLETE CRUD if documented
+- Verify ALL documented elements visible
+- Test ALL states (loading, error, empty, success)
+- `browser_console_messages` → 0 errors
+
+**If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
+
+---
+
+## 4. DONE
+
+**Report:**
+
+```
+SYNCED: [feature/module]
+
+Changes: [count] files
+Docs compliance: 100%
+
+Quality: Types ✓ | Lint ✓ | Tests ✓ | UI ✓
+Verified: All documented features work ✓
 ```
 
-**Fix errors, re-run**
-
-**Re-analyze**:
-
-```
-Standards & Docs compliance: 100%
-
-✓ Docs: The code is completely the same as docs.
-✓ TypeScript: all rules
-✓ Design System: all rules
-✓ Architecture: all rules
-```
-
 ---
 
-## Example
+## SUCCESS
 
-**User**: "Sync orders feature with docs"
-
-**Analyze**: 22 violations (TypeScript, design, architecture)
-
-**Sync**: Applied all standards (15 files modified)
-
-**Validate**: 100% compliance ✓
-
----
-
-## Success Criteria
-
-- All standards violations fixed (ts, ui, architecture, linters, DOCS).
-
-See `.claude/standards/` for all rules.
+- Code matches docs 100%
+- Full documented flows tested in browser
+- All standards followed
+- All gates pass

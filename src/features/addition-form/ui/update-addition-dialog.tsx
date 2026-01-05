@@ -5,6 +5,7 @@
 
 'use client'
 
+import * as React from 'react'
 import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -30,8 +31,9 @@ import {
 import { Input } from '@/shared/ui/base/input'
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
+import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useUpdateAddition } from '@/entities/addition'
+import { additionApi, useUpdateAddition } from '@/entities/addition'
 
 import { additionSchema, type AdditionFormValues } from '../model/contract'
 
@@ -48,6 +50,7 @@ export const UpdateAdditionDialog = ({
   isOpen,
   onClose,
 }: UpdateAdditionDialogProps) => {
+  const [imageFile, setImageFile] = React.useState<File | null>(null)
   const { mutate: updateAddition, isPending } = useUpdateAddition()
 
   const form = useForm<AdditionFormValues>({
@@ -81,18 +84,45 @@ export const UpdateAdditionDialog = ({
         sortOrder: addition.sortOrder || 0,
         isActive: addition.isActive ?? true,
       })
+      setImageFile(null)
     }
   }, [addition, form])
 
-  const handleSubmit = (values: AdditionFormValues): void => {
-    updateAddition(
-      { id: addition.id, data: values },
-      {
-        onSuccess: () => {
-          onClose()
-        },
+  const handleSubmit = async (values: AdditionFormValues): Promise<void> => {
+    try {
+      // Upload image if provided
+      if (imageFile) {
+        const { uploadFile } = await import('@/shared/lib/file-upload')
+
+        const response = await uploadFile({
+          file: imageFile,
+          entityType: 'ADDITION',
+          entityId: addition.id,
+          altText: values.name,
+        })
+
+        // Update addition with image ID
+        const imageId = String(response.id)
+        await additionApi.updateAddition(addition.id, {
+          ...values,
+          image: imageId,
+        })
+        onClose()
+        return
       }
-    )
+
+      // Update without image change
+      updateAddition(
+        { id: addition.id, data: values },
+        {
+          onSuccess: () => {
+            onClose()
+          },
+        }
+      )
+    } catch (error) {
+      console.error('Error updating addition:', error)
+    }
   }
 
   return (
@@ -137,6 +167,15 @@ export const UpdateAdditionDialog = ({
                 </FormItem>
               )}
             />
+
+            <div>
+              <FormLabel className="pb-2">Изображение</FormLabel>
+              <ImageUpload
+                value={imageFile}
+                onChange={setImageFile}
+                currentImageUrl={addition.image}
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <FormField

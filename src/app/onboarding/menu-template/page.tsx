@@ -8,11 +8,7 @@ import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 
 import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { Button } from '@/shared/ui/base/button'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/shared/ui/base/collapsible'
+import { Checkbox } from '@/shared/ui/base/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -23,14 +19,13 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Input } from '@/shared/ui/base/input'
 import { Textarea } from '@/shared/ui/base/textarea'
-import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useGetDefaultProducts,
   useSubmitMenuSetup,
   useSkipStep,
+  useStepValidation,
   type MenuSetupRequest,
 } from '@/entities/onboarding'
 
@@ -52,14 +47,13 @@ interface MenuCategory {
   name: string
   description?: string
   products: MenuProduct[]
+  isSelected: boolean
+  isExpanded: boolean
 }
 
 export default function MenuTemplatePage() {
   const router = useRouter()
   const [categories, setCategories] = useState<MenuCategory[]>([])
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set()
-  )
   const [editingProduct, setEditingProduct] = useState<MenuProduct | null>(null)
   const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(
     null
@@ -74,9 +68,8 @@ export default function MenuTemplatePage() {
   const [editedCategoryName, setEditedCategoryName] = useState('')
   const [editedCategoryDesc, setEditedCategoryDesc] = useState('')
 
-  // Fetch onboarding progress
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress } = useStepValidation('menu_template')
 
   // Fetch default products based on business type from stepData
   const businessType = (
@@ -97,6 +90,8 @@ export default function MenuTemplatePage() {
           id: `category-${catIndex}`,
           name: cat.name,
           description: cat.description,
+          isSelected: false,
+          isExpanded: false,
           products: cat.products.map((prod, prodIndex) => ({
             id: `product-${catIndex}-${prodIndex}`,
             name: prod.name,
@@ -129,16 +124,59 @@ export default function MenuTemplatePage() {
     },
   })
 
+  const toggleCategorySelect = (categoryId: string) => {
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              isSelected: !cat.isSelected,
+              // When selecting, also select all products
+              products: cat.products.map((prod) => ({
+                ...prod,
+                isSelected: !cat.isSelected,
+              })),
+            }
+          : cat
+      )
+    )
+  }
+
   const toggleCategoryExpand = (categoryId: string) => {
-    setExpandedCategories((prev) => {
-      const next = new Set(prev)
-      if (next.has(categoryId)) {
-        next.delete(categoryId)
-      } else {
-        next.add(categoryId)
-      }
-      return next
-    })
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              isExpanded: !cat.isExpanded,
+            }
+          : cat
+      )
+    )
+  }
+
+  const toggleProductSelect = (categoryId: string, productId: string) => {
+    setCategories((prev) =>
+      prev.map((cat) => {
+        if (cat.id !== categoryId) return cat
+
+        const updatedProducts = cat.products.map((prod) =>
+          prod.id === productId
+            ? { ...prod, isSelected: !prod.isSelected }
+            : prod
+        )
+
+        // Update category selection based on product selection
+        const areAllSelected = updatedProducts.every((p) => p.isSelected)
+        const areSomeSelected = updatedProducts.some((p) => p.isSelected)
+
+        return {
+          ...cat,
+          products: updatedProducts,
+          isSelected: areAllSelected || areSomeSelected,
+        }
+      })
+    )
   }
 
   const handleEditProduct = (product: MenuProduct) => {
@@ -235,6 +273,8 @@ export default function MenuTemplatePage() {
       name: '',
       description: '',
       products: [],
+      isSelected: true,
+      isExpanded: false,
     })
     setEditedCategoryName('')
     setEditedCategoryDesc('')
@@ -268,14 +308,15 @@ export default function MenuTemplatePage() {
   }
 
   const handleSubmit = () => {
-    // Prepare data: only selected products grouped by category
+    // Prepare data: only selected categories with selected products
     const menuData: MenuSetupRequest = {
       categories: categories
+        .filter((cat) => cat.isSelected) // Only selected categories
         .map((cat) => ({
           name: cat.name,
           description: cat.description,
           products: cat.products
-            .filter((p) => p.isSelected)
+            .filter((p) => p.isSelected) // Only selected products
             .map((p) => ({
               name: p.name,
               price: p.price,
@@ -286,7 +327,7 @@ export default function MenuTemplatePage() {
               allergens: p.allergens,
             })),
         }))
-        .filter((cat) => cat.products.length > 0),
+        .filter((cat) => cat.products.length > 0), // Ensure category has products
     }
 
     submitMenu(menuData)
@@ -301,14 +342,15 @@ export default function MenuTemplatePage() {
     router.push(prevStep?.route || '/onboarding/branch-setup')
   }
 
-  const totalProducts = categories.reduce(
-    (total, cat) => total + cat.products.length,
+  const selectedProductsCount = categories.reduce(
+    (total, cat) =>
+      total + cat.products.filter((p) => p.isSelected).length,
     0
   )
 
-  if (isProgressLoading) {
-    return <BaseLoading />
-  }
+  const selectedCategoriesCount = categories.filter(
+    (cat) => cat.isSelected
+  ).length
 
   if (productsError && categories.length === 0) {
     return (
@@ -342,14 +384,31 @@ export default function MenuTemplatePage() {
       title="Настройка меню"
       description="Организуйте блюда по категориям"
     >
-      {/* Menu info badge */}
-      {totalProducts > 0 && (
-        <div className="bg-muted/50 mb-6 flex items-center justify-between rounded-lg border p-3">
-          <span className="text-sm font-medium">
-            Всего блюд: {totalProducts}
-          </span>
+      {/* Create Category Button at Top */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          {selectedProductsCount > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Выбрано: {selectedCategoriesCount}{' '}
+              {selectedCategoriesCount === 1
+                ? 'категория'
+                : selectedCategoriesCount > 4
+                  ? 'категорий'
+                  : 'категории'}
+              , {selectedProductsCount}{' '}
+              {selectedProductsCount === 1
+                ? 'блюдо'
+                : selectedProductsCount > 4
+                  ? 'блюд'
+                  : 'блюда'}
+            </p>
+          )}
         </div>
-      )}
+        <Button onClick={handleAddCategory} variant="outline">
+          <Plus className="mr-2 h-4 w-4" />
+          Создать категорию
+        </Button>
+      </div>
 
       {/* Empty state with option to create */}
       {categories.length === 0 && !isProductsLoading && (
@@ -365,123 +424,153 @@ export default function MenuTemplatePage() {
         </div>
       )}
 
-      {/* Categories with accordion */}
+      {/* Categories as Cards */}
       {categories.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {categories.map((category) => (
-            <Collapsible
+            <div
               key={category.id}
-              open={expandedCategories.has(category.id)}
-              onOpenChange={() => toggleCategoryExpand(category.id)}
+              className={`rounded-lg border-2 transition-all ${
+                category.isSelected
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border bg-background'
+              }`}
             >
-              <div className="rounded-lg border">
-                <div className="flex items-center justify-between gap-2 px-4 py-3">
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex-1 justify-start gap-2 p-0 hover:bg-transparent"
-                    >
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          expandedCategories.has(category.id)
-                            ? 'rotate-0'
-                            : '-rotate-90'
-                        }`}
-                      />
-                      <div className="text-left">
-                        <p className="font-semibold">{category.name}</p>
-                        {category.description && (
-                          <p className="text-muted-foreground text-xs">
-                            {category.description}
-                          </p>
-                        )}
+              {/* Category Card Header */}
+              <div className="flex items-start gap-3 p-4">
+                <Checkbox
+                  checked={category.isSelected}
+                  onCheckedChange={() => toggleCategorySelect(category.id)}
+                  className="mt-1"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg">
+                        {category.name}
+                      </h3>
+                      {category.description && (
+                        <p className="text-muted-foreground text-sm mt-1">
+                          {category.description}
+                        </p>
+                      )}
+                      <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>
+                          {category.products.filter((p) => p.isSelected).length}{' '}
+                          из {category.products.length} выбрано
+                        </span>
                       </div>
-                    </Button>
-                  </CollapsibleTrigger>
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground text-sm whitespace-nowrap">
-                      {category.products.length}{' '}
-                      {category.products.length === 1 ? 'блюдо' : 'блюд'}
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEditCategory(category)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDeleteCategory(category.id)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleEditCategory(category)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeleteCategory(category.id)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toggleCategoryExpand(category.id)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform ${
+                            category.isExpanded ? 'rotate-0' : '-rotate-90'
+                          }`}
+                        />
+                      </Button>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <CollapsibleContent className="border-t p-4">
-                  <div className="space-y-3">
+              {/* Products Grid - Show when expanded */}
+              {category.isExpanded && (
+                <div className="border-t p-4 bg-muted/30">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     {category.products.map((product) => (
                       <div
                         key={product.id}
-                        className="flex items-center gap-3 rounded-lg border p-3"
+                        className={`rounded-lg border p-3 transition-all ${
+                          product.isSelected
+                            ? 'border-primary bg-background'
+                            : 'border-border bg-background/50'
+                        }`}
                       >
-                        <div className="flex-1">
-                          <p className="font-medium">{product.name}</p>
-                          {product.description && (
-                            <p className="text-muted-foreground text-sm">
-                              {product.description}
-                            </p>
-                          )}
-                          <p className="text-primary mt-1 font-semibold">
-                            {new Intl.NumberFormat('ru-RU').format(
-                              product.price
-                            )}{' '}
-                            сум
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEditProduct(product)}
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              handleDeleteProduct(category.id, product.id)
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            checked={product.isSelected}
+                            onCheckedChange={() =>
+                              toggleProductSelect(category.id, product.id)
                             }
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
+                            className="mt-1"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium">{product.name}</p>
+                                {product.description && (
+                                  <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
+                                    {product.description}
+                                  </p>
+                                )}
+                                <p className="text-primary mt-2 font-semibold">
+                                  {new Intl.NumberFormat('ru-RU').format(
+                                    product.price
+                                  )}{' '}
+                                  сум
+                                </p>
+                              </div>
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleEditProduct(product)}
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Edit2 className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() =>
+                                    handleDeleteProduct(category.id, product.id)
+                                  }
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Trash2 className="h-3 w-3 text-destructive" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAddProduct(category.id)}
-                      className="w-full"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Добавить блюдо
-                    </Button>
                   </div>
-                </CollapsibleContent>
-              </div>
-            </Collapsible>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddProduct(category.id)}
+                    className="w-full"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Добавить блюдо в категорию
+                  </Button>
+                </div>
+              )}
+            </div>
           ))}
-
-          <Button onClick={handleAddCategory} className="w-full">
-            <Plus className="mr-2 h-4 w-4" />
-            Добавить категорию
-          </Button>
         </div>
       )}
 
@@ -513,7 +602,7 @@ export default function MenuTemplatePage() {
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={totalProducts === 0 || isSubmitting || isSkipping}
+            disabled={selectedProductsCount === 0 || isSubmitting || isSkipping}
           >
             {isSubmitting ? (
               <>
@@ -521,7 +610,7 @@ export default function MenuTemplatePage() {
                 Сохранение...
               </>
             ) : (
-              `Продолжить (${totalProducts})`
+              `Продолжить (${selectedProductsCount})`
             )}
           </Button>
         </div>

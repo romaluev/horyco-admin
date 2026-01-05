@@ -5,6 +5,7 @@
 
 'use client'
 
+import * as React from 'react'
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,8 +39,9 @@ import {
 } from '@/shared/ui/base/select'
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
+import { ImageUpload } from '@/shared/ui/image-upload'
 
-import { useCreateAddition } from '@/entities/addition'
+import { additionApi, useCreateAddition } from '@/entities/addition'
 import { useGetProducts } from '@/entities/product'
 
 import { type AdditionFormValues, additionSchema } from '../model/contract'
@@ -54,6 +56,7 @@ export const CreateAdditionDialog = ({
   trigger,
 }: CreateAdditionDialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [imageFile, setImageFile] = React.useState<File | null>(null)
   const { mutate: createAddition, isPending } = useCreateAddition()
   const { data: productsData } = useGetProducts({ limit: 100 })
 
@@ -75,13 +78,40 @@ export const CreateAdditionDialog = ({
     },
   })
 
-  const handleSubmit = (values: AdditionFormValues): void => {
-    createAddition(values, {
-      onSuccess: () => {
-        setIsOpen(false)
-        form.reset()
-      },
-    })
+  const handleSubmit = async (values: AdditionFormValues): Promise<void> => {
+    try {
+      // First create the addition
+      const createdAddition = await new Promise<{ id: number }>((resolve, reject) => {
+        createAddition(values, {
+          onSuccess: (addition) => resolve(addition),
+          onError: (error) => reject(error),
+        })
+      })
+
+      // Upload image if provided
+      if (imageFile && createdAddition?.id) {
+        const { uploadFile } = await import('@/shared/lib/file-upload')
+
+        const response = await uploadFile({
+          file: imageFile,
+          entityType: 'ADDITION',
+          entityId: createdAddition.id,
+          altText: values.name,
+        })
+
+        // Update addition with image ID
+        const imageId = String(response.id)
+        await additionApi.updateAddition(createdAddition.id, {
+          image: imageId,
+        })
+      }
+
+      setIsOpen(false)
+      form.reset()
+      setImageFile(null)
+    } catch (error) {
+      console.error('Error creating addition:', error)
+    }
   }
 
   return (
@@ -162,6 +192,11 @@ export const CreateAdditionDialog = ({
                 </FormItem>
               )}
             />
+
+            <div>
+              <FormLabel className="pb-2">Изображение</FormLabel>
+              <ImageUpload value={imageFile} onChange={setImageFile} />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <FormField

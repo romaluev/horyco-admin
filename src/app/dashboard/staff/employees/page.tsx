@@ -35,7 +35,7 @@ export default function EmployeesPage() {
     : employeesResponse?.meta?.total || 0
 
   return (
-    <div className="space-y-6 p-6 h-full">
+    <div className="absolute inset-0 flex flex-col gap-6 overflow-hidden p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Сотрудники</h1>
@@ -50,7 +50,7 @@ export default function EmployeesPage() {
       {isError && <BaseError message="Ошибка при загрузке сотрудников" />}
 
       {employees.length === 0 && !isLoading && !isError && (
-        <div className="flex flex-col items-center justify-center gap-4 py-16">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <h2 className="text-muted-foreground text-lg font-semibold">
             Сотрудников пока нет
           </h2>
@@ -59,11 +59,13 @@ export default function EmployeesPage() {
       )}
 
       {employees.length > 0 && (
-        <EmployeeTable
-          data={employees}
-          totalItems={totalItems}
-          columns={columns}
-        />
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <EmployeeTable
+            data={employees}
+            totalItems={totalItems}
+            columns={columns}
+          />
+        </div>
       )}
     </div>
   )

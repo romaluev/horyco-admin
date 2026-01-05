@@ -38,13 +38,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-import BaseLoading from '@/shared/ui/base-loading'
 import { FileUploader } from '@/shared/ui/file-uploader'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useSubmitBusinessInfo,
+  useStepValidation,
 } from '@/entities/onboarding'
 import {
   type BusinessInfoFormValues,
@@ -66,9 +65,8 @@ export default function BusinessInfoPage() {
   const [logoFiles, setLogoFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
 
-  // Fetch onboarding progress
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress } = useStepValidation('business_identity')
 
   // Form initialization
   const form = useForm<BusinessInfoFormValues>({
@@ -143,10 +141,7 @@ export default function BusinessInfoPage() {
       title="Расскажите о вашем бизнесе"
       description="Эта информация поможет нам настроить систему под ваши потребности"
     >
-      {isProgressLoading ? (
-        <BaseLoading />
-      ) : (
-        <Card>
+      <Card>
           <CardHeader>
             <CardTitle>Информация о заведении</CardTitle>
             <CardDescription>
@@ -296,7 +291,6 @@ export default function BusinessInfoPage() {
             </Form>
           </CardContent>
         </Card>
-      )}
     </OnboardingLayout>
   )
 }

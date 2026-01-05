@@ -1,61 +1,79 @@
-Implement new feature i will provide you the documentation of the feature and you should implement it with 100% reflection of the documentation. Btw you should follow all standards and skills..
+Implement feature from documentation. Zero manual intervention.
 
 Docs: $ARGUMENTS
 
-## Workflow
+---
 
-plan → implement → test → validate
+## 1. UNDERSTAND
+
+Load: `skills/*`, `standards/*`
+
+Read provided docs. **If unclear → ASK.** Do not assume.
 
 ---
 
-## Phase 1: Plan
+## 2. PLAN
 
-**Load context**:
+- Call **architector** → get file structure
+- Map to existing components (`project-index.md`)
+- Create todo list
 
-- `.claude/skills/core.md`
-- `.claude/skills/design-system.md`
-- `.claude/skills/project-index.md`
-- `.claude/standards/architecture.md`
-- `.claude/standards/next.md`
-
-**Read the docs&prompts** i've provided.
-
-**If you have any questions ask me before starting**
-
-- Plan the architecture.
-- Plan design system & ui kit component usage
-- Plan the actual implementation following all standards&docs.
+**Rule:** NO custom components if reusable exists.
 
 ---
 
-## Phase 2: Implement
+## 3. IMPLEMENT
 
-**Execute**:
+For each file:
 
-- Implement the feature following all rules (use todo list for clarity)
-- Don't hurry. Take your time. I want to get the best result you can give.
+1. Find similar pattern in codebase
+2. Reuse patterns, don't invent
+3. Write code + tests together
+
+**Follow exactly:** `core.md`, `design-system.md`
 
 ---
 
-## Phase 3: Validate
+## 4. VALIDATE
 
-**Run**:
+**Guardians:**
 
-```bash
-npm run type-check
-npm run lint
-npm run test
+- Call **code-guardian** → fix violations
+- Call **design-guardian** → fix UI violations
+
+**Quality gates:** (see `workflow.md`)
+
+**Live UI test** (skip: `--skip-ui-test`):
+
+- Run FULL FLOW TESTING using PlaywrightMCP from `workflow.md`
+- Test EVERY page/route created
+- Test COMPLETE CRUD if applicable (create → read → update → delete)
+- Test ALL form flows (valid + invalid data)
+- Verify design compliance + 0 console errors
+
+**If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
+
+---
+
+## 5. DONE
+
+**Cleanup:** (see `workflow.md`)
+
+**Report:**
+
+```
+DONE: [feature]
+Files: [list]
+Quality: Types ✓ | Lint ✓ | Tests ✓ | UI ✓
+Issues: [blocker/high/medium/low counts]
 ```
 
-**If errors**: fix and re-run
-
 ---
 
-## Success Criteria
+## SUCCESS
 
-- All files created
-- Design system followed (no borders, shadows, CSS Modules)
-- Architecture followed (feature structure, state management)
-- Quality gates passed (tsc, eslint, tests ≥80%)
-
-See `.claude/standards/` for detailed rules.
+- Docs reflected 100%
+- Reusable components used
+- All standards followed
+- All gates pass
+- Full user journey tested in browser

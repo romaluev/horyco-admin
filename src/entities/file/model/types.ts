@@ -7,6 +7,7 @@ export type EntityType =
   | 'PRODUCT'
   | 'CATEGORY'
   | 'MODIFIER'
+  | 'ADDITION'
   | 'ADDITION_ITEM'
   | 'EMPLOYEE'
   | 'TENANT'

@@ -4,6 +4,8 @@ import { useMemo } from 'react'
 
 import { usePathname } from 'next/navigation'
 
+import { useViewBuilderStore } from '@/features/view-builder'
+
 interface BreadcrumbItem {
   title: string
   link: string
@@ -78,15 +80,35 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
     { title: 'Панель управления', link: '/dashboard' },
     { title: 'Профиль', link: '/dashboard/profile' },
   ],
+  '/dashboard/views': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Представления', link: '/dashboard/views' },
+  ],
+  '/dashboard/views/new': [
+    { title: 'Панель управления', link: '/dashboard' },
+    { title: 'Представления', link: '/dashboard/views' },
+    { title: 'Новое представление', link: '/dashboard/views/new' },
+  ],
 }
 
 export function useBreadcrumbs() {
   const pathname = usePathname()
+  const viewName = useViewBuilderStore((state) => state.viewName)
 
   const breadcrumbs = useMemo(() => {
     // Check if we have a custom mapping for this exact path
     if (routeMapping[pathname]) {
       return routeMapping[pathname]
+    }
+
+    // Handle dynamic view pages /dashboard/views/[id]
+    const viewPageMatch = pathname.match(/^\/dashboard\/views\/([^/]+)$/)
+    if (viewPageMatch) {
+      return [
+        { title: 'Панель управления', link: '/dashboard' },
+        { title: 'Представления', link: '/dashboard/views' },
+        { title: viewName || 'Загрузка...', link: pathname },
+      ]
     }
 
     // If no exact match, fall back to generating breadcrumbs from the path
@@ -98,7 +120,7 @@ export function useBreadcrumbs() {
         link: path,
       }
     })
-  }, [pathname])
+  }, [pathname, viewName])
 
   return breadcrumbs
 }

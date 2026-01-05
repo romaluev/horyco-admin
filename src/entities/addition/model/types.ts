@@ -19,6 +19,7 @@ export interface IAddition {
   sortOrder: number
   isActive: boolean
   itemsCount?: number
+  image?: string
   createdAt: string
   updatedAt: string
 }
@@ -46,6 +47,7 @@ export interface IUpdateAdditionDto {
   maxSelection?: number
   sortOrder?: number
   isActive?: boolean
+  image?: string
 }
 
 export interface IGetAdditionsParams {

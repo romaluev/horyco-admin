@@ -7,8 +7,7 @@
 
 import { useState } from 'react'
 
-import { BaseLoading } from '@/shared/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
+import { BaseLoading, ViewModeToggler } from '@/shared/ui'
 import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
@@ -59,50 +58,6 @@ export default function CategoriesPage(): JSX.Element {
           <CreateCategoryDialog />
         </div>
 
-        {/* View Tabs */}
-        <Tabs value={view} onValueChange={(v) => setView(v as 'tree' | 'grid')}>
-          <TabsList>
-            <TabsTrigger value="tree">Дерево</TabsTrigger>
-            <TabsTrigger value="grid">Сетка</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="tree" className="space-y-6">
-            {topLevelCategories.length === 0 ? (
-              <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
-                <div className="text-center">
-                  <p className="text-muted-foreground text-lg font-medium">
-                    Категории не найдены
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Создайте первую категорию для начала работы
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <CategoryTree
-                categories={topLevelCategories}
-                onReorder={handleReorder}
-                onEdit={(_category) => {
-                  // Edit dialog is triggered via the tree item component
-                }}
-                onDelete={(_categoryId) => {
-                  // Delete is handled via the tree item component
-                }}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="grid" className="space-y-6">
-            <CategoryList
-              categories={categories || []}
-              isLoading={isLoading}
-              onCategoryClick={(_category) => {
-                // Handle category click if needed
-              }}
-            />
-          </TabsContent>
-        </Tabs>
-
         {/* Stats */}
         {categories && categories.length > 0 && (
           <div className="grid gap-6 md:grid-cols-3">
@@ -132,6 +87,46 @@ export default function CategoriesPage(): JSX.Element {
               </p>
             </div>
           </div>
+        )}
+
+        {/* View Toggle */}
+        <ViewModeToggler value={view} onChange={setView} />
+
+        {/* View Content */}
+        {view === 'tree' ? (
+          <div className="space-y-6">
+            {topLevelCategories.length === 0 ? (
+              <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
+                <div className="text-center">
+                  <p className="text-muted-foreground text-lg font-medium">
+                    Категории не найдены
+                  </p>
+                  <p className="text-muted-foreground text-sm">
+                    Создайте первую категорию для начала работы
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <CategoryTree
+                categories={topLevelCategories}
+                onReorder={handleReorder}
+                onEdit={(_category) => {
+                  // Edit dialog is triggered via the tree item component
+                }}
+                onDelete={(_categoryId) => {
+                  // Delete is handled via the tree item component
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <CategoryList
+            categories={categories || []}
+            isLoading={isLoading}
+            onCategoryClick={(_category) => {
+              // Handle category click if needed
+            }}
+          />
         )}
       </div>
     </PageContainer>

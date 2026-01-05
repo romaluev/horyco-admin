@@ -6,11 +6,11 @@ import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { cn } from '@/shared/lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { PeriodFilterDateRange, PeriodType } from './period-filter'
 import type { ChartMetricType } from './analytics-chart'
+import type { PeriodFilterDateRange, PeriodType } from './period-filter'
 
 // Типы данных для метрик
 export interface AnalyticsMetrics {

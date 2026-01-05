@@ -14,14 +14,15 @@ import type { JSX } from 'react'
 
 export type { Category } from './products-filters'
 
-type ViewMode = 'table' | 'grid'
+// Local ViewMode type for products (table | grid only)
+type ProductViewMode = 'table' | 'grid'
 
 export interface ProductsPageState {
   page: number
   search: string
   categoryFilter: string
   availabilityFilter: string
-  viewMode: ViewMode
+  viewMode: ProductViewMode
 }
 
 interface ProductsContentProps {
@@ -121,7 +122,7 @@ export function ProductsContent({
     return <ErrorState error={error} />
   }
 
-  const handleViewModeChange = (mode: ViewMode): void => {
+  const handleViewModeChange = (mode: ProductViewMode): void => {
     onStateChange({ viewMode: mode })
   }
 

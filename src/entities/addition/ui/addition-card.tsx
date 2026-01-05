@@ -5,7 +5,9 @@
 
 'use client'
 
-import { CheckCircle2, XCircle } from 'lucide-react'
+import Image from 'next/image'
+
+import { CheckCircle2, ImageIcon, XCircle } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/base/badge'
 import { Card, CardContent, CardHeader } from '@/shared/ui/base/card'
@@ -20,9 +22,26 @@ interface AdditionCardProps {
 export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
   return (
     <Card
-      className="cursor-pointer transition-colors hover:bg-accent"
+      className="cursor-pointer overflow-hidden transition-colors hover:bg-accent"
       onClick={onClick}
     >
+      {/* Image Section */}
+      {addition.image ? (
+        <div className="relative aspect-video w-full">
+          <Image
+            src={addition.image}
+            alt={addition.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </div>
+      ) : (
+        <div className="flex aspect-video w-full items-center justify-center bg-muted">
+          <ImageIcon className="h-12 w-12 text-muted-foreground/50" />
+        </div>
+      )}
+
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between">
           <h3 className="font-semibold">{addition.name}</h3>

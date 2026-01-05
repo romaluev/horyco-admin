@@ -1,5 +1,7 @@
 import type { Icons } from '@/shared/ui/icons'
 
+export * from './inventory'
+
 export interface NavItem {
   title: string
   url: string

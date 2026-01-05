@@ -7,12 +7,6 @@ import Header from '@/shared/ui/layout/header'
 
 import { OnboardingReminderDialog } from '@/widgets/onboarding-reminder-dialog'
 
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn',
-}
 
 export default async function DashboardLayout({
   children,
@@ -29,7 +23,9 @@ export default async function DashboardLayout({
         <SidebarInset>
           <Header />
           <OnboardingReminderDialog />
-          {children}
+          <div className="relative min-h-0 flex-1">
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </KBar>

@@ -7,6 +7,8 @@
 
 import { useState } from 'react'
 
+import type {
+ DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import {
   DndContext,
   DragOverlay,
@@ -14,8 +16,7 @@ import {
   useSensor,
   useSensors,
   type UniqueIdentifier
-                ,
- DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+                    } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { CategoryTreeItem } from './category-tree-item'

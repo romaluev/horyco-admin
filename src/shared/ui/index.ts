@@ -75,3 +75,4 @@ export {
   AlertDescription,
   AlertTitle,
 } from './base/alert'
+export { ViewModeToggler, type ViewMode } from './view-mode-toggler'

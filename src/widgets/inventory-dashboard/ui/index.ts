@@ -1,0 +1,5 @@
+export { StockSummaryCards } from './inventory-stats-cards'
+export { LowStockItemsList } from './low-stock-items-list'
+export { RecentMovementsWidget } from './recent-movements-widget'
+export { PendingApprovalsWidget } from './pending-approvals-widget'
+export { UpcomingDeliveriesWidget } from './upcoming-deliveries-widget'

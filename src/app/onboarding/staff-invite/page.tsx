@@ -41,20 +41,20 @@ import {
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
 import { PhoneInput } from '@/shared/ui/base/phone-input'
-import BaseLoading from '@/shared/ui/base-loading'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
 import {
-  useGetOnboardingProgress,
   useSubmitStaffInvite,
   useSkipStep,
+  useStepValidation,
 } from '@/entities/onboarding'
+import { useGetAllPermissions } from '@/entities/role'
 import {
   staffInviteSchema,
   type StaffInviteFormValues,
 } from '@/features/onboarding/model'
 import { PermissionsSelectorModal } from '@/features/onboarding/ui/permissions-selector-modal'
-import { useGetAllPermissions } from '@/entities/role'
+
 import type { IPermission } from '@/entities/employee'
 
 interface InvitationPermissions {
@@ -71,8 +71,8 @@ export default function StaffInvitePage() {
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
   const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<number | null>(null)
 
-  const { data: progress, isLoading: isProgressLoading } =
-    useGetOnboardingProgress()
+  // Validate step access and get progress
+  const { progress } = useStepValidation('staff_invited')
   const { data: allPermissionsData, isLoading: isLoadingPermissions } =
     useGetAllPermissions()
   const allPermissions = (allPermissionsData as IPermission[]) || []
@@ -197,10 +197,7 @@ export default function StaffInvitePage() {
       title="Пригласите сотрудников"
       description="Добавьте официантов для управления заказами"
     >
-      {isProgressLoading ? (
-        <BaseLoading />
-      ) : (
-        <>
+      <>
           <Card>
             <CardHeader>
               <CardTitle>Пригласить команду</CardTitle>
@@ -426,7 +423,6 @@ export default function StaffInvitePage() {
             </AlertDialogContent>
           </AlertDialog>
         </>
-      )}
     </OnboardingLayout>
   )
 }
