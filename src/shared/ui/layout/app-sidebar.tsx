@@ -125,8 +125,9 @@ function NavItemWithSub({
   item: NavItem
   pathname: string
 }) {
-  const { state } = useSidebar()
-  const isCollapsed = state === 'collapsed'
+  const { state, isMobile } = useSidebar()
+  // On mobile, always show expanded view (never show HoverCard tooltips)
+  const isCollapsed = state === 'collapsed' && !isMobile
 
   if (isCollapsed) {
     // In collapsed mode, show first sub-item icon or fallback

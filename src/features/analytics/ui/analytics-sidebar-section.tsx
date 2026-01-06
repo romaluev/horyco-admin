@@ -60,8 +60,9 @@ const ANALYTICS_PAGE_URLS: Record<AnalyticsPageCode, string> = {
 
 export function AnalyticsSidebarSection() {
   const pathname = usePathname()
-  const { state } = useSidebar()
-  const isCollapsed = state === 'collapsed'
+  const { state, isMobile } = useSidebar()
+  // On mobile, always show expanded view (never show HoverCard tooltips)
+  const isCollapsed = state === 'collapsed' && !isMobile
   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
   // Get visible pages based on entitlements
