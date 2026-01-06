@@ -20,11 +20,11 @@ export const useGetBranchById = (id: number) => {
   })
 }
 
-export const useCanDeleteBranch = (id: number) => {
+export const useCanDeleteBranch = (id: number, enabled = true) => {
   return useQuery({
     queryKey: queryKeys.canDelete(id),
     queryFn: () => branchApi.canDeleteBranch(id),
-    enabled: Number.isFinite(id) && id > 0,
+    enabled: enabled && Number.isFinite(id) && id > 0,
   })
 }
 
