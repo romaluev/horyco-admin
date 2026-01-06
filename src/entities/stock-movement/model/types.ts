@@ -52,13 +52,8 @@ export interface IGetMovementsParams {
   limit?: number
 }
 
-export interface IMovementsResponse {
-  data: IStockMovement[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns movements array directly
+export type IMovementsResponse = IStockMovement[]
 
 export interface IMovementsSummary {
   totalIn: number

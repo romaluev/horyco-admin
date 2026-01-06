@@ -77,7 +77,7 @@ export const CreateProductionDialog = ({
     )
   }
 
-  const recipes = recipesData?.data || []
+  const recipes = recipesData || []
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

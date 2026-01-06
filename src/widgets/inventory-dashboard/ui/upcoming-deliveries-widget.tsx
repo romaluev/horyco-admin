@@ -30,7 +30,7 @@ export const UpcomingDeliveriesWidget = ({
   limit = 5,
 }: IUpcomingDeliveriesWidgetProps) => {
   const { data, isLoading } = useGetUpcomingDeliveries(branchId)
-  const deliveries = data?.data?.slice(0, limit) || []
+  const deliveries = data?.slice(0, limit) || []
 
   return (
     <Card>

@@ -21,6 +21,7 @@ export const useGetMovements = (
   return useQuery({
     queryKey: stockMovementKeys.list(params),
     queryFn: () => stockMovementApi.getMovements(params),
+    enabled: !!params?.warehouseId,
     ...options,
   })
 }
@@ -32,6 +33,7 @@ export const useGetMovementSummary = (
   return useQuery({
     queryKey: stockMovementKeys.summary(params),
     queryFn: () => stockMovementApi.getMovementSummary(params),
+    enabled: !!params?.warehouseId,
     ...options,
   })
 }

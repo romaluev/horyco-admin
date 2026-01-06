@@ -15,7 +15,7 @@ import type {
   ICountVarianceSummary,
 } from './types'
 
-const BASE_URL = '/api/admin/inventory/counts'
+const BASE_URL = '/admin/inventory/counts'
 
 export const inventoryCountApi = {
   // List inventory counts

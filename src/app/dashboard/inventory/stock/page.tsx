@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { IconSearch, IconDownload } from '@tabler/icons-react'
 
@@ -24,7 +24,7 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useBranchStore } from '@/entities/branch'
-import { WarehouseSelector } from '@/entities/warehouse'
+import { useGetWarehouses, WarehouseSelector } from '@/entities/warehouse'
 import { useGetStock, StockLevelIndicator } from '@/entities/stock'
 import { StockSummaryCards } from '@/widgets/inventory-dashboard'
 import { AdjustStockDialog } from '@/features/stock-adjustment'
@@ -35,12 +35,30 @@ export default function StockPage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
   const [search, setSearch] = useState('')
 
+  // Fetch warehouses to auto-select default
+  const { data: warehousesData } = useGetWarehouses(
+    { branchId: selectedBranchId!, isActive: true },
+    { enabled: !!selectedBranchId }
+  )
+
+  // Filter warehouses by branchId and auto-select default or first
+  useEffect(() => {
+    if (warehousesData && warehousesData.length > 0 && !selectedWarehouse && selectedBranchId) {
+      const branchWarehouses = warehousesData.filter(w => w.branchId === selectedBranchId)
+      if (branchWarehouses.length > 0) {
+        const defaultWarehouse = branchWarehouses.find(w => w.isDefault)
+        const firstWarehouse = branchWarehouses[0]
+        setSelectedWarehouse(defaultWarehouse?.id ?? firstWarehouse?.id ?? null)
+      }
+    }
+  }, [warehousesData, selectedWarehouse, selectedBranchId])
+
   const { data, isLoading } = useGetStock(
     { warehouseId: selectedWarehouse || 0, search: search || undefined },
     { enabled: !!selectedBranchId && !!selectedWarehouse }
   )
 
-  const stocks = data?.items || []
+  const stocks = data || []
 
   if (!selectedBranchId) {
     return (

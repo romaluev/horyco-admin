@@ -57,7 +57,7 @@ export default function InventoryItemsPage() {
     { enabled: !!selectedBranchId }
   )
 
-  const items = data?.data || []
+  const items = data || []
 
   if (!selectedBranchId) {
     return (

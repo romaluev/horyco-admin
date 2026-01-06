@@ -36,10 +36,10 @@ export function SupplierSelector({
     limit: 100,
   })
 
-  const suppliers = useMemo(() => data?.data ?? [], [data])
+  const suppliers = useMemo(() => data ?? [], [data])
 
   const selectedSupplier = useMemo(
-    () => suppliers.find((s) => s.id === value),
+    () => suppliers.find((s: ISupplier) => s.id === value),
     [suppliers, value]
   )
 
@@ -52,7 +52,7 @@ export function SupplierSelector({
       value={value?.toString()}
       onValueChange={(val) => {
         const id = Number(val)
-        const supplier = suppliers.find((s) => s.id === id)
+        const supplier = suppliers.find((s: ISupplier) => s.id === id)
         onValueChange(id, supplier)
       }}
       disabled={disabled || suppliers.length === 0}
@@ -63,7 +63,7 @@ export function SupplierSelector({
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {suppliers.map((supplier) => (
+        {suppliers.map((supplier: ISupplier) => (
           <SelectItem key={supplier.id} value={supplier.id.toString()}>
             {supplier.name}
             {supplier.code && (

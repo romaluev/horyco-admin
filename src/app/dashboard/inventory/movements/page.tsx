@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { IconSearch, IconDownload, IconCalendar } from '@tabler/icons-react'
 import { format } from 'date-fns'
@@ -32,7 +32,7 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useBranchStore } from '@/entities/branch'
-import { WarehouseSelector } from '@/entities/warehouse'
+import { useGetWarehouses, WarehouseSelector } from '@/entities/warehouse'
 import {
   useGetMovements,
   MovementTypeBadge,
@@ -50,16 +50,31 @@ export default function MovementsPage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
   const [typeFilter, setTypeFilter] = useState<string>('all')
 
-  const { data, isLoading } = useGetMovements(
-    {
-      warehouseId: selectedWarehouse || undefined,
-      movementType: typeFilter !== 'all' ? (typeFilter as MovementType) : undefined,
-      limit: 50,
-    },
+  // Fetch warehouses to auto-select default
+  const { data: warehousesData } = useGetWarehouses(
+    { branchId: selectedBranchId!, isActive: true },
     { enabled: !!selectedBranchId }
   )
 
-  const movements = data?.data || []
+  // Filter warehouses by branchId and auto-select default or first
+  useEffect(() => {
+    if (warehousesData && warehousesData.length > 0 && !selectedWarehouse && selectedBranchId) {
+      const branchWarehouses = warehousesData.filter(w => w.branchId === selectedBranchId)
+      if (branchWarehouses.length > 0) {
+        const defaultWarehouse = branchWarehouses.find(w => w.isDefault)
+        const firstWarehouse = branchWarehouses[0]
+        setSelectedWarehouse(defaultWarehouse?.id ?? firstWarehouse?.id ?? null)
+      }
+    }
+  }, [warehousesData, selectedWarehouse, selectedBranchId])
+
+  const { data, isLoading } = useGetMovements({
+    warehouseId: selectedWarehouse || undefined,
+    movementType: typeFilter !== 'all' ? (typeFilter as MovementType) : undefined,
+    limit: 50,
+  })
+
+  const movements = data || []
 
   if (!selectedBranchId) {
     return (
@@ -128,7 +143,15 @@ export default function MovementsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? (
+              {!selectedWarehouse ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <p className="text-muted-foreground">
+                      Выберите склад для просмотра движений
+                    </p>
+                  </TableCell>
+                </TableRow>
+              ) : isLoading ? (
                 Array.from({ length: 10 }).map((_, i) => (
                   <TableRow key={i}>
                     <TableCell><Skeleton className="h-4 w-24" /></TableCell>

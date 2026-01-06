@@ -33,7 +33,7 @@ export default function RecipesPage() {
     { enabled: !!selectedBranchId }
   )
 
-  const recipes = data?.data || []
+  const recipes = data || []
 
   if (!selectedBranchId) {
     return (

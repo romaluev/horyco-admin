@@ -14,7 +14,7 @@ import type {
   IProductionSuggestion,
 } from './types'
 
-const BASE_URL = '/api/admin/inventory/production'
+const BASE_URL = '/admin/inventory/production'
 
 export const productionOrderApi = {
   // List production orders

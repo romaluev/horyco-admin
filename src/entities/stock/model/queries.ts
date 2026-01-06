@@ -46,7 +46,8 @@ export const useGetLowStock = (
 ) => {
   return useQuery({
     queryKey: stockKeys.low(warehouseId),
-    queryFn: () => stockApi.getLowStock(warehouseId),
+    queryFn: () => stockApi.getLowStock(warehouseId!),
+    enabled: !!warehouseId,
     ...options,
   })
 }
@@ -57,7 +58,8 @@ export const useGetOutOfStock = (
 ) => {
   return useQuery({
     queryKey: stockKeys.out(warehouseId),
-    queryFn: () => stockApi.getOutOfStock(warehouseId),
+    queryFn: () => stockApi.getOutOfStock(warehouseId!),
+    enabled: !!warehouseId,
     ...options,
   })
 }
@@ -68,7 +70,8 @@ export const useGetStockSummary = (
 ) => {
   return useQuery({
     queryKey: stockKeys.summary(warehouseId),
-    queryFn: () => stockApi.getStockSummary(warehouseId),
+    queryFn: () => stockApi.getStockSummary(warehouseId!),
+    enabled: !!warehouseId,
     ...options,
   })
 }

@@ -180,7 +180,7 @@ export default function WriteoffsPage() {
                       <WriteoffStatusBadge status={writeoff.status} />
                     </TableCell>
                     <TableCell>{writeoff.totalItems}</TableCell>
-                    <TableCell>{writeoff.totalCost.toLocaleString()} сум</TableCell>
+                    <TableCell>{(writeoff.totalCost ?? 0).toLocaleString()} сум</TableCell>
                     <TableCell className="text-muted-foreground">
                       {writeoff.createdByName}
                     </TableCell>

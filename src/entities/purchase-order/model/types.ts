@@ -113,10 +113,5 @@ export interface IGetPurchaseOrdersParams {
   limit?: number
 }
 
-export interface IPurchaseOrdersResponse {
-  data: IPurchaseOrder[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns purchase orders array directly
+export type IPurchaseOrdersResponse = IPurchaseOrder[]

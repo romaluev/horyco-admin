@@ -167,50 +167,62 @@ export default function CountsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                counts.map((count) => (
-                  <TableRow key={count.id}>
-                    <TableCell className="font-medium">{count.name}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {format(new Date(count.createdAt), 'dd.MM.yyyy', {
-                        locale: ru,
-                      })}
-                    </TableCell>
-                    <TableCell>{count.warehouseName}</TableCell>
-                    <TableCell>
-                      <CountTypeBadge type={count.type} />
-                    </TableCell>
-                    <TableCell>
-                      <CountStatusBadge status={count.status} />
-                    </TableCell>
-                    <TableCell className="w-40">
-                      <CountProgressBar
-                        totalItems={count.totalItems}
-                        countedItems={count.countedItems}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={
-                          count.totalVariance > 0
-                            ? 'text-green-600'
-                            : count.totalVariance < 0
-                              ? 'text-red-600'
-                              : ''
-                        }
-                      >
-                        {count.totalVariance > 0 ? '+' : ''}
-                        {count.totalVarianceCost.toLocaleString()} сум
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/dashboard/inventory/counts/${count.id}`}>
-                          <IconEye className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                counts.map((count) => {
+                  // Map API fields to expected fields (API uses different naming)
+                  const name = count.name || count.countNumber || `#${count.id}`
+                  const type = count.type || count.countType
+                  const warehouseName = count.warehouseName || `Склад ${count.warehouseId}`
+                  const totalItems = count.totalItems ?? count.itemsCounted ?? 0
+                  const countedItems = count.countedItems ?? count.itemsCounted ?? 0
+                  const totalVariance = count.totalVariance ?? count.itemsWithVariance ?? 0
+                  const totalVarianceCost = count.totalVarianceCost ?? 0
+                  const dateStr = count.createdAt || count.countDate
+
+                  return (
+                    <TableRow key={count.id}>
+                      <TableCell className="font-medium">{name}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {dateStr ? format(new Date(dateStr), 'dd.MM.yyyy', {
+                          locale: ru,
+                        }) : '-'}
+                      </TableCell>
+                      <TableCell>{warehouseName}</TableCell>
+                      <TableCell>
+                        <CountTypeBadge type={type as CountType} />
+                      </TableCell>
+                      <TableCell>
+                        <CountStatusBadge status={count.status} />
+                      </TableCell>
+                      <TableCell className="w-40">
+                        <CountProgressBar
+                          totalItems={totalItems}
+                          countedItems={countedItems}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={
+                            totalVariance > 0
+                              ? 'text-green-600'
+                              : totalVariance < 0
+                                ? 'text-red-600'
+                                : ''
+                          }
+                        >
+                          {totalVariance > 0 ? '+' : ''}
+                          {totalVarianceCost.toLocaleString()} сум
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link href={`/dashboard/inventory/counts/${count.id}`}>
+                            <IconEye className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>

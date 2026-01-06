@@ -93,10 +93,5 @@ export interface IGetInventoryItemsParams {
   limit?: number
 }
 
-export interface IInventoryItemsResponse {
-  data: IInventoryItem[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns inventory items array directly
+export type IInventoryItemsResponse = IInventoryItem[]

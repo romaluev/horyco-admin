@@ -172,7 +172,7 @@ export default function ProductionPage() {
                       <ProductionStatusBadge status={order.status} />
                     </TableCell>
                     <TableCell>
-                      {(order.actualCost || order.estimatedCost).toLocaleString()} сум
+                      {(order.actualCost ?? order.estimatedCost ?? 0).toLocaleString()} сум
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
