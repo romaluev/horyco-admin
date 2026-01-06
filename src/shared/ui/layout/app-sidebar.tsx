@@ -263,7 +263,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
             <Image
-              className="w-40 overflow-hidden rounded-2xl"
+              className="w-40 overflow-hidden"
               src={logo}
               alt=""
             />
@@ -301,7 +301,7 @@ export default function AppSidebar() {
                         isActive={pathname === item.url}
                       >
                         <Link href={item.url}>
-                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-pink-500' : ''}`} />
+                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`} />
                           <span className="text-[17px]">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
