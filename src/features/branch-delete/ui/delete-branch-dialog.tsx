@@ -32,7 +32,7 @@ export const DeleteBranchDialog = ({
   onSuccess,
 }: DeleteBranchDialogProps) => {
   const { data: canDeleteData, isLoading: isCheckingDelete } =
-    useCanDeleteBranch(branch.id)
+    useCanDeleteBranch(branch.id, isOpen)
   const { mutate: deleteBranch, isPending } = useDeleteBranch()
 
   const canDelete = canDeleteData?.canDelete ?? false
