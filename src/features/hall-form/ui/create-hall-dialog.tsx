@@ -78,7 +78,7 @@ export const CreateHallDialog = ({ branchId }: ICreateHallDialogProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input placeholder="Main Dining Room" {...field} />
                   </FormControl>
@@ -109,7 +109,7 @@ export const CreateHallDialog = ({ branchId }: ICreateHallDialogProps) => {
                 name="capacity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Capacity</FormLabel>
+                    <FormLabel>Вместимость</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -127,7 +127,7 @@ export const CreateHallDialog = ({ branchId }: ICreateHallDialogProps) => {
                 name="floor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Floor</FormLabel>
+                    <FormLabel>Этаж</FormLabel>
                     <FormControl>
                       <Input
                         type="number"

@@ -54,6 +54,11 @@ export interface IViewConfig {
     direction: SortDirection
   }
   display: 'TABLE' | 'CHART'
+  // Enhanced view config
+  chart?: IChartConfig
+  widgets?: IViewWidget[]
+  showKpiCards?: boolean
+  kpiTypes?: string[]
 }
 
 // ============================================
