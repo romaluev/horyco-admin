@@ -9,7 +9,16 @@ import { create } from 'zustand'
 
 import { DATASET_CONFIG, DEFAULT_VIEW_CONFIG } from './constants'
 
-import type { IColumnDef, IFilter, IFilterDef, IViewConfig } from '@/entities/view'
+import type {
+  IColumnDef,
+  IFilter,
+  IFilterDef,
+  IViewConfig,
+  ChartType,
+  ChartMetric,
+  WidgetType,
+  IViewWidget,
+} from '@/entities/view'
 import type { Dataset, GroupBy, SortDirection } from '@/shared/api/graphql'
 
 // Stable empty arrays for selectors (prevents infinite loops)
@@ -160,6 +169,71 @@ export const useViewBuilderStore = create<IViewBuilderStore>((set, get) => ({
   setDisplay: (display) =>
     set((state) => ({
       workingConfig: { ...state.workingConfig, display },
+    })),
+
+  // Actions - Chart
+  setChartType: (type) =>
+    set((state) => ({
+      workingConfig: {
+        ...state.workingConfig,
+        chart: { ...state.workingConfig.chart, type } as IViewConfig['chart'],
+      },
+    })),
+
+  setChartMetric: (metric) =>
+    set((state) => ({
+      workingConfig: {
+        ...state.workingConfig,
+        chart: { ...state.workingConfig.chart, metric } as IViewConfig['chart'],
+      },
+    })),
+
+  setChartGroupBy: (groupBy) =>
+    set((state) => ({
+      workingConfig: {
+        ...state.workingConfig,
+        chart: { ...state.workingConfig.chart, groupBy } as IViewConfig['chart'],
+      },
+    })),
+
+  // Actions - Widgets
+  addWidget: (type) =>
+    set((state) => {
+      const newWidget: IViewWidget = {
+        id: `widget-${Date.now()}`,
+        type,
+        position: (state.workingConfig.widgets?.length ?? 0) + 1,
+      }
+      return {
+        workingConfig: {
+          ...state.workingConfig,
+          widgets: [...(state.workingConfig.widgets ?? []), newWidget],
+        },
+      }
+    }),
+
+  removeWidget: (id) =>
+    set((state) => ({
+      workingConfig: {
+        ...state.workingConfig,
+        widgets: state.workingConfig.widgets?.filter((w) => w.id !== id) ?? [],
+      },
+    })),
+
+  reorderWidgets: (widgets) =>
+    set((state) => ({
+      workingConfig: { ...state.workingConfig, widgets },
+    })),
+
+  // Actions - KPI
+  toggleKpiCards: (show) =>
+    set((state) => ({
+      workingConfig: { ...state.workingConfig, showKpiCards: show },
+    })),
+
+  setKpiTypes: (types) =>
+    set((state) => ({
+      workingConfig: { ...state.workingConfig, kpiTypes: types },
     })),
 
   // Actions - Filters
