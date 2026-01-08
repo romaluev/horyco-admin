@@ -41,7 +41,12 @@ export function WarehouseSelector({
     { enabled: !!branchId }
   )
 
-  const warehouses = useMemo(() => data?.data ?? [], [data])
+  // Filter warehouses by branchId client-side (backend may not filter properly)
+  const warehouses = useMemo(() => {
+    if (!data) return []
+    if (!branchId) return data
+    return data.filter(w => w.branchId === branchId)
+  }, [data, branchId])
 
   const handleChange = (val: string) => {
     const numValue = val === '' || val === '0' ? null : Number(val)

@@ -38,7 +38,11 @@ export const LowStockItemsList = ({
         <CardDescription>Товары, требующие пополнения</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {!warehouseId ? (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Выберите склад
+          </p>
+        ) : isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center justify-between">

@@ -54,6 +54,20 @@ interface IViewBuilderStore {
   setGroupBy: (groupBy: GroupBy | undefined) => void
   setDisplay: (display: 'TABLE' | 'CHART') => void
 
+  // Actions - Chart
+  setChartType: (type: ChartType) => void
+  setChartMetric: (metric: ChartMetric) => void
+  setChartGroupBy: (groupBy: GroupBy) => void
+
+  // Actions - Widgets
+  addWidget: (type: WidgetType) => void
+  removeWidget: (id: string) => void
+  reorderWidgets: (widgets: IViewWidget[]) => void
+
+  // Actions - KPI
+  toggleKpiCards: (show: boolean) => void
+  setKpiTypes: (types: string[]) => void
+
   // Actions - Filters
   addFilter: (filter: IFilter) => void
   updateFilter: (index: number, filter: IFilter) => void

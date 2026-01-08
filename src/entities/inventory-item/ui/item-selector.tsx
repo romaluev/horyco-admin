@@ -55,8 +55,8 @@ export function ItemSelector({
   })
 
   const items = useMemo(() => {
-    const allItems = data?.data ?? []
-    return allItems.filter((item) => !excludeIds.includes(item.id))
+    const allItems = data ?? []
+    return allItems.filter((item: IInventoryItem) => !excludeIds.includes(item.id))
   }, [data, excludeIds])
 
   const selectedItem = useMemo(

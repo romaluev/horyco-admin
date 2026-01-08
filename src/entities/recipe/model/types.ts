@@ -114,13 +114,8 @@ export interface IGetRecipesParams {
   limit?: number
 }
 
-export interface IRecipesResponse {
-  data: IRecipe[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns recipes array directly
+export type IRecipesResponse = IRecipe[]
 
 export interface IRecipeCostResult {
   calculatedCost: number

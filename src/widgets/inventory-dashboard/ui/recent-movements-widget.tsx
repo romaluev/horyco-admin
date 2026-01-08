@@ -28,7 +28,7 @@ export const RecentMovementsWidget = ({
 }: IRecentMovementsWidgetProps) => {
   const { data, isLoading } = useGetMovements({ warehouseId, limit })
 
-  const movements = data?.data || []
+  const movements = data || []
 
   return (
     <Card>
@@ -40,7 +40,11 @@ export const RecentMovementsWidget = ({
         <CardDescription>История движения товаров</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {!warehouseId ? (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Выберите склад
+          </p>
+        ) : isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center justify-between">

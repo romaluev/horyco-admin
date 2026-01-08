@@ -41,10 +41,5 @@ export interface IGetWarehousesParams {
   limit?: number
 }
 
-export interface IWarehousesResponse {
-  data: IWarehouse[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns warehouses array directly, not paginated
+export type IWarehousesResponse = IWarehouse[]

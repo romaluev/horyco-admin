@@ -125,8 +125,9 @@ function NavItemWithSub({
   item: NavItem
   pathname: string
 }) {
-  const { state } = useSidebar()
-  const isCollapsed = state === 'collapsed'
+  const { state, isMobile } = useSidebar()
+  // On mobile, always show expanded view (never show HoverCard tooltips)
+  const isCollapsed = state === 'collapsed' && !isMobile
 
   if (isCollapsed) {
     // In collapsed mode, show first sub-item icon or fallback
@@ -263,7 +264,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
             <Image
-              className="w-40 overflow-hidden rounded-2xl"
+              className="w-40 overflow-hidden"
               src={logo}
               alt=""
             />
@@ -301,7 +302,7 @@ export default function AppSidebar() {
                         isActive={pathname === item.url}
                       >
                         <Link href={item.url}>
-                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-pink-500' : ''}`} />
+                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`} />
                           <span className="text-[17px]">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>

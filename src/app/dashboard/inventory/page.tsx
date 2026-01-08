@@ -5,16 +5,9 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import PageContainer from '@/shared/ui/layout/page-container'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/base/select'
 
 import { useBranchStore } from '@/entities/branch'
 import { useGetWarehouses, WarehouseSelector } from '@/entities/warehouse'
@@ -30,6 +23,24 @@ import {
 export default function InventoryDashboardPage() {
   const { selectedBranchId } = useBranchStore()
   const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
+
+  // Fetch warehouses to auto-select default
+  const { data: warehousesData } = useGetWarehouses(
+    { branchId: selectedBranchId!, isActive: true },
+    { enabled: !!selectedBranchId }
+  )
+
+  // Filter warehouses by branchId and auto-select default or first
+  useEffect(() => {
+    if (warehousesData && warehousesData.length > 0 && !selectedWarehouse && selectedBranchId) {
+      const branchWarehouses = warehousesData.filter(w => w.branchId === selectedBranchId)
+      if (branchWarehouses.length > 0) {
+        const defaultWarehouse = branchWarehouses.find(w => w.isDefault)
+        const firstWarehouse = branchWarehouses[0]
+        setSelectedWarehouse(defaultWarehouse?.id ?? firstWarehouse?.id ?? null)
+      }
+    }
+  }, [warehousesData, selectedWarehouse, selectedBranchId])
 
   if (!selectedBranchId) {
     return (

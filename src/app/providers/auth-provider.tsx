@@ -2,8 +2,7 @@
 
 import { useEffect } from 'react'
 
-import Cookies from 'js-cookie'
-
+import { getAccessToken } from '@/shared/lib/token-manager'
 import { useAuthStore } from '@/entities/auth'
 
 import type { ReactNode } from 'react'
@@ -16,7 +15,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { me, loadFullProfile, setToken } = useAuthStore()
 
   useEffect(() => {
-    const token = Cookies.get('access_token')
+    const token = getAccessToken()
     if (token) {
       // Sync token from cookies to store
       setToken(token)

@@ -19,7 +19,7 @@ export default function SignInViewPage() {
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
         <Image
-          className="w-32 overflow-hidden rounded-2xl"
+          className="w-32 overflow-hidden"
           src={logo}
           alt=""
         />

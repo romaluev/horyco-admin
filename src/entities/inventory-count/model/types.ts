@@ -53,24 +53,35 @@ export interface IInventoryCount {
 
 export interface IInventoryCountListItem {
   id: number
-  branchId: number
+  branchId?: number
   warehouseId: number
-  warehouseName: string
-  type: CountType
+  warehouseName?: string
+  type?: CountType
   status: CountStatus
-  name: string
-  notes: string | null
-  totalItems: number
-  countedItems: number
-  totalVariance: number
-  totalVarianceCost: number
-  createdById: number
-  createdByName: string
-  startedAt: string | null
-  completedAt: string | null
-  approvedAt: string | null
-  createdAt: string
-  updatedAt: string
+  name?: string
+  notes?: string | null
+  totalItems?: number
+  countedItems?: number
+  totalVariance?: number
+  totalVarianceCost?: number
+  createdById?: number
+  createdByName?: string
+  startedAt?: string | null
+  completedAt?: string | null
+  approvedAt?: string | null
+  createdAt?: string
+  updatedAt?: string | null
+  // Alternative field names from API
+  countNumber?: string
+  countType?: string
+  countDate?: string
+  itemsCounted?: number
+  itemsWithVariance?: number
+  accuracyPct?: number
+  isEditable?: boolean
+  needsApproval?: boolean
+  createdBy?: number
+  approvedBy?: number | null
 }
 
 export interface ICountVarianceSummary {

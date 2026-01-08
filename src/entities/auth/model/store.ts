@@ -1,7 +1,7 @@
-import Cookies from 'js-cookie'
 import { toast } from 'sonner'
 import { create } from 'zustand'
 
+import { clearTokens } from '@/shared/lib/token-manager'
 import { authApi } from '@/entities/auth/model/api'
 import { useBranchStore } from '@/entities/branch'
 
@@ -90,10 +90,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   // Logout action
   logout: () => {
-    // Remove all tokens and expiration from cookies
-    Cookies.remove('access_token')
-    Cookies.remove('refresh_token')
-    Cookies.remove('token_expires_at')
+    // Remove all tokens using centralized token manager
+    clearTokens()
 
     // Clear branch selection
     useBranchStore.getState().clearSelectedBranch()
@@ -126,7 +124,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         user: myProfile,
       })
     } catch (error: unknown) {
-      // Don't show toast for 401 errors (handled by axios interceptor)
+      // Check if error is 401 (handled by axios interceptor with token refresh)
       let is401 = false
       if (typeof error === 'object' && error !== null && 'response' in error) {
         const errorObj = error as Record<string, unknown>
@@ -141,16 +139,23 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       }
 
-      if (!is401) {
+      // Only clear auth state on 401 errors (token invalid/expired and refresh failed)
+      // Other errors (network, 500, etc.) should NOT invalidate the session
+      if (is401) {
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
+      } else {
+        // For non-401 errors, just clear user but keep auth state
+        // User can retry the request
         toast.error('Не удалось получить данные о вас')
+        set({
+          user: null,
+          isLoading: false,
+        })
       }
-
-      // Clear user state on any error (401 redirect handled by axios interceptor)
-      set({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-      })
 
       throw error
     }

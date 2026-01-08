@@ -114,13 +114,8 @@ export interface IGetSuppliersParams {
   limit?: number
 }
 
-export interface ISuppliersResponse {
-  data: ISupplier[]
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-}
+// API returns suppliers array directly
+export type ISuppliersResponse = ISupplier[]
 
 export interface IGetPriceHistoryParams {
   itemId?: number
@@ -130,9 +125,5 @@ export interface IGetPriceHistoryParams {
   limit?: number
 }
 
-export interface IPriceHistoryResponse {
-  data: ISupplierPriceHistory[]
-  total: number
-  page: number
-  limit: number
-}
+// API returns price history array directly
+export type IPriceHistoryResponse = ISupplierPriceHistory[]

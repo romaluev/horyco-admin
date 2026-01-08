@@ -1,5 +1,11 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
+
+import {
+  getAccessToken,
+  clearTokens,
+  isTokenExpiringSoon,
+  refreshAccessToken,
+} from '@/shared/lib/token-manager'
 
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
@@ -20,113 +26,8 @@ const getAuthStore = (): { setToken?: (token: string | null) => void; logout?: (
 
 export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
 
-// Singleton flags to prevent multiple simultaneous operations
+// Singleton flag to prevent multiple simultaneous redirects
 let isRedirectingToLogin = false
-let isRefreshing = false
-let refreshPromise: Promise<string> | null = null
-
-/**
- * Check if token is expired or will expire soon (within 2 minutes)
- */
-const isTokenExpiringSoon = (): boolean => {
-  const expiresAt = Cookies.get('token_expires_at')
-  if (!expiresAt) return false
-
-  const expirationTime = parseInt(expiresAt, 10)
-  if (isNaN(expirationTime)) return false
-
-  const currentTime = Date.now()
-  const twoMinutesInMs = 2 * 60 * 1000
-
-  return currentTime + twoMinutesInMs >= expirationTime
-}
-
-/**
- * Refresh the access token using the refresh token
- */
-const refreshAccessToken = async (): Promise<string> => {
-  // If already refreshing, return the existing promise
-  if (isRefreshing && refreshPromise) {
-    return refreshPromise
-  }
-
-  isRefreshing = true
-
-  refreshPromise = (async () => {
-    try {
-      const refreshToken = Cookies.get('refresh_token')
-
-      if (!refreshToken) {
-        throw new Error('No refresh token available')
-      }
-
-      console.log('Refreshing access token...')
-
-      // Call refresh endpoint without authorization header
-      const response = await axios.post<{
-        accessToken: string
-        refreshToken: string
-        expiresIn: number
-      }>(
-        `${BASE_API_URL}/auth/refresh`,
-        { refreshToken },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-
-      const {
-        accessToken,
-        refreshToken: newRefreshToken,
-        expiresIn,
-      } = response.data
-      const expirationTime = Date.now() + expiresIn * 1000
-
-      // Store new tokens
-      Cookies.set('access_token', accessToken, {
-        expires: 7,
-        secure: false,
-        sameSite: 'lax',
-      })
-
-      Cookies.set('refresh_token', newRefreshToken, {
-        expires: 7,
-        secure: false,
-        sameSite: 'lax',
-      })
-
-      Cookies.set('token_expires_at', String(expirationTime), {
-        expires: 7,
-        secure: false,
-        sameSite: 'lax',
-      })
-
-      // Sync new token with Zustand store
-      const authStore = getAuthStore()
-      if (authStore?.setToken) {
-        authStore.setToken(accessToken)
-      }
-
-      console.log('Token refreshed successfully')
-
-      return accessToken
-    } catch (error) {
-      console.error('Failed to refresh token:', error)
-      // Clear tokens on refresh failure
-      Cookies.remove('access_token')
-      Cookies.remove('refresh_token')
-      Cookies.remove('token_expires_at')
-      throw error
-    } finally {
-      isRefreshing = false
-      refreshPromise = null
-    }
-  })()
-
-  return refreshPromise
-}
 
 /**
  * Logout user and redirect to login page
@@ -141,9 +42,7 @@ const logoutUser = (): void => {
       authStore.logout()
     } else {
       // Fallback if store not available
-      Cookies.remove('access_token')
-      Cookies.remove('refresh_token')
-      Cookies.remove('token_expires_at')
+      clearTokens()
 
       if (!window.location.href.includes('/auth/sign')) {
         window.location.href = '/auth/sign-in'
@@ -173,15 +72,21 @@ api.interceptors.request.use(
     }
 
     // Get current access token
-    let token = Cookies.get('access_token')
+    let token = getAccessToken()
 
     // Check if token is expiring soon and refresh if needed
     if (token && isTokenExpiringSoon()) {
       try {
-        console.log('Token expiring soon, refreshing...')
-        token = await refreshAccessToken()
+        console.log('[Axios] Token expiring soon, refreshing...')
+        token = await refreshAccessToken(BASE_API_URL || '')
+
+        // Sync new token with Zustand store
+        const authStore = getAuthStore()
+        if (authStore?.setToken) {
+          authStore.setToken(token)
+        }
       } catch (error) {
-        console.error('Token refresh failed, logging out...')
+        console.error('[Axios] Token refresh failed, logging out...')
         logoutUser()
         return Promise.reject(error)
       }
@@ -228,20 +133,26 @@ api.interceptors.response.use(
       originalRequest._retry = true
 
       try {
-        console.log('Received 401, attempting token refresh...')
+        console.log('[Axios] Received 401, attempting token refresh...')
 
         // Try to refresh the token
-        const newAccessToken = await refreshAccessToken()
+        const newAccessToken = await refreshAccessToken(BASE_API_URL || '')
+
+        // Sync new token with Zustand store
+        const authStore = getAuthStore()
+        if (authStore?.setToken) {
+          authStore.setToken(newAccessToken)
+        }
 
         // Update the authorization header with new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
 
         // Retry the original request with new token
-        console.log('Retrying original request with new token...')
+        console.log('[Axios] Retrying original request with new token...')
         return api(originalRequest)
       } catch (refreshError) {
         // If refresh fails, logout user
-        console.error('Token refresh failed on 401, logging out...')
+        console.error('[Axios] Token refresh failed on 401, logging out...')
         logoutUser()
         return Promise.reject(refreshError)
       }

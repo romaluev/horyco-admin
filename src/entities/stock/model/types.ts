@@ -60,13 +60,8 @@ export interface IGetStockParams {
   limit?: number
 }
 
-export interface IStockResponse {
-  items: IStock[]
-  summary: IStockSummary
-  total: number
-  page: number
-  limit: number
-}
+// API returns stock array directly, not wrapped in items/summary
+export type IStockResponse = IStock[]
 
 export interface ILowStockItem {
   id: number

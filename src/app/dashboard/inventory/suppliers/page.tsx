@@ -32,7 +32,7 @@ export default function SuppliersPage() {
     { enabled: !!selectedBranchId }
   )
 
-  const suppliers = data?.data || []
+  const suppliers = data || []
 
   if (!selectedBranchId) {
     return (

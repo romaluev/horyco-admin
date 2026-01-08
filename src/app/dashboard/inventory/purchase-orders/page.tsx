@@ -50,7 +50,7 @@ export default function PurchaseOrdersPage() {
     { enabled: !!selectedBranchId }
   )
 
-  const orders = data?.data || []
+  const orders = data || []
 
   if (!selectedBranchId) {
     return (

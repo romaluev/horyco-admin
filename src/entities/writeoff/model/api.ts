@@ -15,7 +15,7 @@ import type {
   IRejectWriteoffDto,
 } from './types'
 
-const BASE_URL = '/api/admin/inventory/writeoffs'
+const BASE_URL = '/admin/inventory/writeoffs'
 
 export const writeoffApi = {
   // List writeoffs
