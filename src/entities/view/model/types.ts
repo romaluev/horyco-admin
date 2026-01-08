@@ -40,6 +40,41 @@ export type FilterOperator =
   | 'isEmpty'
   | 'isNotEmpty'
 
+// ============================================
+// CHART AND WIDGET TYPES
+// ============================================
+
+export type ChartType =
+  | 'area'
+  | 'bar'
+  | 'line'
+  | 'pie'
+  | 'donut'
+  | 'radial'
+  | 'radar'
+  | 'composed'
+
+export type ChartMetric = 'revenue' | 'orders' | 'avgCheck' | 'customers'
+
+export type WidgetType =
+  | 'topProducts'
+  | 'paymentMethods'
+  | 'channelSplit'
+  | 'staffRanking'
+  | 'hourlyBreakdown'
+
+export interface IChartConfig {
+  type: ChartType
+  metric: ChartMetric
+  groupBy?: GroupBy
+}
+
+export interface IViewWidget {
+  id: string
+  type: WidgetType
+  position: number
+}
+
 export interface IViewConfig {
   timeframe: {
     type: PeriodType
