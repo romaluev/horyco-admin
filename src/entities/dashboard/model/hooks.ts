@@ -81,10 +81,11 @@ export function useEntitlements() {
 
 /**
  * Hook to check if user can customize dashboard
+ * Users with dashboard_custom OR analytics_full (ultra plan) can customize
  */
 export function useCanCustomizeDashboard(): boolean {
   const { data } = useEntitlements()
-  return data?.dashboard_custom ?? false
+  return data?.dashboard_custom || data?.analytics_full || false
 }
 
 // ============================================
@@ -201,9 +202,12 @@ export function getDefaultDashboardConfig(): IDashboardConfig {
     ],
     chartMetric: KpiType.REVENUE,
     chartGroupBy: null,
+    chartType: 'area',
     widgets: [
-      { id: 'w1', type: 'TOP_PRODUCTS', position: 0, config: null },
-      { id: 'w2', type: 'PAYMENT_METHODS', position: 1, config: null },
+      { id: 'w1', type: 'REVENUE_OVERVIEW', position: 0, config: null },
+      { id: 'w2', type: 'TOP_PRODUCTS', position: 1, config: null },
+      { id: 'w3', type: 'PAYMENT_METHODS', position: 2, config: null },
+      { id: 'w4', type: 'CHANNEL_SPLIT', position: 3, config: null },
     ],
   }
 }

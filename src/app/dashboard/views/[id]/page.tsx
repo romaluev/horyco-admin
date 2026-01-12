@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { SortBy, SortDirection } from '@/shared/api/graphql'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useUpdateView, useViewById } from '@/entities/view'
+import { useDeleteView, useUpdateView, useViewById } from '@/entities/view'
 import {
   FilterBar,
   DisplaySettings,
@@ -30,6 +30,7 @@ export default function ViewPage({ params }: IViewPageProps) {
 
   const { data: view, isLoading } = useViewById(viewId)
   const { mutate: updateView, isPending } = useUpdateView()
+  const { mutate: deleteView, isPending: isDeleting } = useDeleteView()
 
   const {
     selectedDataset,
@@ -52,7 +53,9 @@ export default function ViewPage({ params }: IViewPageProps) {
         groupBy: view.config.groupBy,
         sorting: view.config.sorting
           ? {
-              field: view.config.sorting.column,
+              field: Object.values(SortBy).includes(view.config.sorting.column as SortBy)
+                ? (view.config.sorting.column as SortBy)
+                : SortBy.REVENUE,
               direction: view.config.sorting.direction,
             }
           : { field: SortBy.REVENUE, direction: SortDirection.DESC },
@@ -101,12 +104,23 @@ export default function ViewPage({ params }: IViewPageProps) {
     )
   }
 
+  const handleDelete = () => {
+    if (!viewId) return
+
+    deleteView(viewId, {
+      onSuccess: () => {
+        resetConfig()
+        router.push('/dashboard/views')
+      },
+    })
+  }
+
   // Build data params for table
   const dataParams: IViewDataParams | null = selectedDataset
     ? {
         dataset: selectedDataset,
         period: workingConfig.timeframe,
-        sortBy: workingConfig.sorting.field as SortBy,
+        sortBy: workingConfig.sorting.field,
         sortDirection: workingConfig.sorting.direction,
         limit: 50,
         filters: workingConfig.filters,
@@ -128,7 +142,12 @@ export default function ViewPage({ params }: IViewPageProps) {
   return (
     <div className="flex h-full flex-col gap-4 p-4 md:p-6">
       {/* Header with title/description and save */}
-      <ViewHeader onSave={handleSave} isPending={isPending} />
+      <ViewHeader
+        onSave={handleSave}
+        onDelete={handleDelete}
+        isPending={isPending}
+        isDeleting={isDeleting}
+      />
 
       {/* Toolbar: Filters and Display Settings */}
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">

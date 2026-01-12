@@ -19,6 +19,7 @@ export const DASHBOARD_CONFIG_QUERY = gql`
       }
       chartMetric
       chartGroupBy
+      chartType
       widgets {
         id
         type

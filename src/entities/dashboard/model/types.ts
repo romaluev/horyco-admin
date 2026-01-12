@@ -25,6 +25,36 @@ export type WidgetType =
   | 'BRANCH_COMPARISON'
   | 'GOAL_PROGRESS'
   | 'ALERTS'
+  | 'REVENUE_OVERVIEW'
+  | 'ORDERS_CHART'
+  | 'TRANSACTIONS_SUMMARY'
+  | 'PERFORMANCE_RADAR'
+  | 'DAILY_COMPARISON'
+  | 'INCOME_EXPENSE'
+  | 'CUSTOMER_RATINGS'
+  | 'CONVERSION_FUNNEL'
+  | 'ORDERS_BY_CATEGORY'
+  | 'ANOMALY_DETECTION'
+  | 'VISITORS_TRAFFIC'
+  | 'SALES_METRICS'
+  | 'GOAL_RADIAL'
+
+export type ChartType =
+  | 'area'
+  | 'bar'
+  | 'line'
+  | 'pie'
+  | 'donut'
+  | 'radial'
+  | 'radar'
+  | 'composed'
+
+export type ChartVariant =
+  | 'default'
+  | 'stacked'
+  | 'grouped'
+  | 'interactive'
+  | 'gradient'
 
 export interface IDashboardWidget {
   id: string
@@ -33,10 +63,20 @@ export interface IDashboardWidget {
   config: Record<string, unknown> | null
 }
 
+export interface IMainChartConfig {
+  metric: KpiType
+  chartType: ChartType
+  variant: ChartVariant
+  groupBy: GroupBy | null
+  showComparison: boolean
+  showLegend: boolean
+}
+
 export interface IDashboardConfig {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
   chartGroupBy: GroupBy | null
+  chartType: ChartType
   widgets: IDashboardWidget[]
 }
 
@@ -44,6 +84,7 @@ export interface IDashboardConfigInput {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
   chartGroupBy: GroupBy | null
+  chartType: ChartType
   widgets: Omit<IDashboardWidget, 'config'>[]
 }
 
