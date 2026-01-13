@@ -1,19 +1,15 @@
-/**
- * Stock Movements Page
- * Page for viewing stock movement history
- */
-
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-import { IconSearch, IconDownload, IconCalendar } from '@tabler/icons-react'
+import { IconSearch } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
-import { Button } from '@/shared/ui/base/button'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -29,177 +25,142 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import PageContainer from '@/shared/ui/layout/page-container'
+import { MOVEMENT_TYPES, MOVEMENT_TYPE_LABELS, type MovementType } from '@/shared/types/inventory'
 
-import { useBranchStore } from '@/entities/branch'
-import { useGetWarehouses, WarehouseSelector } from '@/entities/warehouse'
-import {
-  useGetMovements,
-  MovementTypeBadge,
-  MovementQuantityBadge,
-} from '@/entities/stock-movement'
-import {
-  MovementType,
-  MOVEMENT_TYPE_LABELS,
-  UNIT_LABELS,
-  type InventoryUnit,
-} from '@/shared/types/inventory'
+import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
+import { useGetWarehouses } from '@/entities/warehouse'
 
 export default function MovementsPage() {
-  const { selectedBranchId } = useBranchStore()
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
-  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [warehouseId, setWarehouseId] = useState<number | undefined>()
+  const [movementType, setMovementType] = useState<MovementType | ''>('')
 
-  // Fetch warehouses to auto-select default
-  const { data: warehousesData } = useGetWarehouses(
-    { branchId: selectedBranchId!, isActive: true },
-    { enabled: !!selectedBranchId }
-  )
-
-  // Filter warehouses by branchId and auto-select default or first
-  useEffect(() => {
-    if (warehousesData && warehousesData.length > 0 && !selectedWarehouse && selectedBranchId) {
-      const branchWarehouses = warehousesData.filter(w => w.branchId === selectedBranchId)
-      if (branchWarehouses.length > 0) {
-        const defaultWarehouse = branchWarehouses.find(w => w.isDefault)
-        const firstWarehouse = branchWarehouses[0]
-        setSelectedWarehouse(defaultWarehouse?.id ?? firstWarehouse?.id ?? null)
-      }
-    }
-  }, [warehousesData, selectedWarehouse, selectedBranchId])
-
-  const { data, isLoading } = useGetMovements({
-    warehouseId: selectedWarehouse || undefined,
-    movementType: typeFilter !== 'all' ? (typeFilter as MovementType) : undefined,
-    limit: 50,
+  const { data: warehouses } = useGetWarehouses()
+  const { data: movementsData, isLoading } = useGetMovements({
+    warehouseId,
+    type: movementType || undefined,
   })
 
-  const movements = data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+  const movements = movementsData?.data ?? []
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Движения</h1>
-            <p className="text-muted-foreground">
-              История движения товаров на складах
-            </p>
-          </div>
-          <Button variant="outline">
-            <IconDownload className="mr-2 h-4 w-4" />
-            Экспорт
-          </Button>
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Движения товаров"
+            description="История всех операций с товарами на складах"
+          />
         </div>
+        <Separator />
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="w-full sm:w-64">
-            <WarehouseSelector
-              branchId={selectedBranchId}
-              value={selectedWarehouse}
-              onChange={setSelectedWarehouse}
-              placeholder="Все склады"
-              allowClear
-            />
-          </div>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-full sm:w-56">
-              <SelectValue placeholder="Тип операции" />
+        <div className="flex flex-wrap gap-4">
+          <Select
+            value={warehouseId ? String(warehouseId) : 'all'}
+            onValueChange={(value) =>
+              setWarehouseId(value === 'all' ? undefined : Number(value))
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все склады" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все типы</SelectItem>
-              {Object.values(MovementType).map((type) => (
-                <SelectItem key={type} value={type}>
-                  {MOVEMENT_TYPE_LABELS[type]}
+              <SelectItem value="all">Все склады</SelectItem>
+              {warehouses?.map((warehouse) => (
+                <SelectItem key={warehouse.id} value={String(warehouse.id)}>
+                  {warehouse.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={movementType} onValueChange={(val) => setMovementType(val === 'all' ? '' : val as MovementType)}>
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Все типы операций" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все типы операций</SelectItem>
+              {Object.entries(MOVEMENT_TYPE_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Дата</TableHead>
-                <TableHead>Товар</TableHead>
-                <TableHead>Склад</TableHead>
-                <TableHead>Тип</TableHead>
-                <TableHead>Количество</TableHead>
-                <TableHead>Источник</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {!selectedWarehouse ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <p className="text-muted-foreground">
+                  <TableHead>Дата</TableHead>
+                  <TableHead>Товар</TableHead>
+                  <TableHead>Склад</TableHead>
+                  <TableHead>Тип операции</TableHead>
+                  <TableHead className="text-right">Количество</TableHead>
+                  <TableHead className="text-right">До</TableHead>
+                  <TableHead className="text-right">После</TableHead>
+                  <TableHead>Документ</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {!warehouseId ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       Выберите склад для просмотра движений
-                    </p>
-                  </TableCell>
-                </TableRow>
-              ) : isLoading ? (
-                Array.from({ length: 10 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : movements.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <p className="text-muted-foreground">
+                ) : movements.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8">
                       Движения не найдены
-                    </p>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                movements.map((movement) => (
-                  <TableRow key={movement.id}>
-                    <TableCell className="text-muted-foreground">
-                      {format(new Date(movement.createdAt), 'dd.MM.yyyy HH:mm', {
-                        locale: ru,
-                      })}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {movement.inventoryItemName || movement.item?.name}
-                    </TableCell>
-                    <TableCell>{movement.warehouseName || movement.warehouse?.name}</TableCell>
-                    <TableCell>
-                      <MovementTypeBadge type={movement.movementType} />
-                    </TableCell>
-                    <TableCell>
-                      <MovementQuantityBadge
-                        quantity={movement.quantity}
-                        unit={movement.unit || movement.item?.unit || ''}
-                      />
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {movement.reference || movement.referenceNumber || '—'}
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  movements.map((movement) => (
+                    <TableRow key={movement.id}>
+                      <TableCell className="text-muted-foreground">
+                        {format(new Date(movement.createdAt), 'dd MMM yyyy HH:mm', {
+                          locale: ru,
+                        })}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {movement.item?.name}
+                      </TableCell>
+                      <TableCell>{movement.warehouse?.name}</TableCell>
+                      <TableCell>
+                        <MovementTypeBadge type={movement.type} />
+                      </TableCell>
+                      <TableCell
+                        className={`text-right font-medium ${
+                          movement.quantity > 0 ? 'text-green-600' : 'text-red-600'
+                        }`}
+                      >
+                        {movement.quantity > 0 ? '+' : ''}
+                        {movement.quantity} {movement.item?.unit}
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground">
+                        {movement.previousQuantity}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {movement.newQuantity}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {movement.referenceNumber || '—'}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </PageContainer>
   )

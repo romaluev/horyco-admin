@@ -1,238 +1,136 @@
-/**
- * Inventory Count Mutation Hooks
- * TanStack React Query hooks for modifying inventory count data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { stockKeys } from '../../stock/model/query-keys'
-import { stockMovementKeys } from '../../stock-movement/model/query-keys'
 import { inventoryCountApi } from './api'
 import { inventoryCountKeys } from './query-keys'
+import { stockKeys } from '@/entities/stock/model/query-keys'
+import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+
 import type {
-  ICreateCountDto,
-  IUpdateCountDto,
-  ICountItemDto,
-  IRejectCountDto,
+  ICreateInventoryCountDto,
+  ICreateCountItemDto,
+  IUpdateCountItemDto,
 } from './types'
 
+/**
+ * Create inventory count mutation
+ */
 export const useCreateInventoryCount = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      branchId,
-      data,
-    }: {
-      branchId: number
-      data: ICreateCountDto
-    }) => inventoryCountApi.createCount(branchId, data),
+    mutationFn: (data: ICreateInventoryCountDto) => inventoryCountApi.createCount(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       toast.success('Инвентаризация создана')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при создании инвентаризации')
-      console.error('Create inventory count error:', error)
     },
   })
 }
 
-export const useUpdateInventoryCount = () => {
+/**
+ * Add item to count mutation
+ */
+export const useAddCountItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IUpdateCountDto }) =>
-      inventoryCountApi.updateCount(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.detail(variables.id),
-      })
-      toast.success('Инвентаризация обновлена')
+    mutationFn: ({ countId, data }: { countId: number; data: ICreateCountItemDto }) =>
+      inventoryCountApi.addItem(countId, data),
+    onSuccess: (_, { countId }) => {
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(countId) })
+      toast.success('Товар добавлен')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при обновлении инвентаризации')
-      console.error('Update inventory count error:', error)
+    onError: () => {
+      toast.error('Ошибка при добавлении товара')
     },
   })
 }
 
-export const useDeleteInventoryCount = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (id: number) => inventoryCountApi.deleteCount(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
-      toast.success('Инвентаризация удалена')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при удалении инвентаризации')
-      console.error('Delete inventory count error:', error)
-    },
-  })
-}
-
-// Item counting mutations
-
-export const useCountItem = () => {
+/**
+ * Update count item mutation
+ */
+export const useUpdateCountItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({
       countId,
-      itemId,
+      countItemId,
       data,
     }: {
       countId: number
-      itemId: number
-      data: ICountItemDto
-    }) => inventoryCountApi.countItem(countId, itemId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.detail(variables.countId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.variance(variables.countId),
-      })
+      countItemId: number
+      data: IUpdateCountItemDto
+    }) => inventoryCountApi.updateItem(countId, countItemId, data),
+    onSuccess: (_, { countId }) => {
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(countId) })
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.variance(countId) })
+      toast.success('Данные сохранены')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при сохранении подсчёта')
-      console.error('Count item error:', error)
+    onError: () => {
+      toast.error('Ошибка при сохранении')
     },
   })
 }
 
-export const useClearItemCount = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ countId, itemId }: { countId: number; itemId: number }) =>
-      inventoryCountApi.clearItemCount(countId, itemId),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.detail(variables.countId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.variance(variables.countId),
-      })
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при сбросе подсчёта')
-      console.error('Clear item count error:', error)
-    },
-  })
-}
-
-// Status action mutations
-
-export const useStartCount = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (id: number) => inventoryCountApi.startCount(id),
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
-      toast.success('Инвентаризация начата')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при начале инвентаризации')
-      console.error('Start count error:', error)
-    },
-  })
-}
-
+/**
+ * Complete count mutation
+ */
 export const useCompleteCount = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => inventoryCountApi.completeCount(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
-      toast.success('Подсчёт завершён')
+      toast.success('Инвентаризация завершена и отправлена на согласование')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при завершении подсчёта')
-      console.error('Complete count error:', error)
+    onError: () => {
+      toast.error('Ошибка при завершении инвентаризации')
     },
   })
 }
 
-export const useSubmitCount = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (id: number) => inventoryCountApi.submitForApproval(id),
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
-      toast.success('Инвентаризация отправлена на утверждение')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при отправке на утверждение')
-      console.error('Submit count error:', error)
-    },
-  })
-}
-
+/**
+ * Approve count mutation
+ */
 export const useApproveCount = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => inventoryCountApi.approveCount(id),
     onSuccess: (_, id) => {
-      // Invalidate count queries
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
-      // Invalidate stock (approval adjusts stock levels)
-      queryClient.invalidateQueries({ queryKey: stockKeys.all() })
-      queryClient.invalidateQueries({ queryKey: stockMovementKeys.all() })
-      toast.success('Инвентаризация утверждена, остатки скорректированы')
+      queryClient.invalidateQueries({ queryKey: stockKeys.all })
+      queryClient.invalidateQueries({ queryKey: movementKeys.all })
+      toast.success('Инвентаризация одобрена, корректировки применены')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при утверждении инвентаризации')
-      console.error('Approve count error:', error)
+    onError: () => {
+      toast.error('Ошибка при одобрении инвентаризации')
     },
   })
 }
 
-export const useRejectCount = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IRejectCountDto }) =>
-      inventoryCountApi.rejectCount(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: inventoryCountKeys.detail(variables.id),
-      })
-      toast.success('Инвентаризация отклонена')
-    },
-    onError: (error: Error) => {
-      toast.error('Ошибка при отклонении инвентаризации')
-      console.error('Reject count error:', error)
-    },
-  })
-}
-
+/**
+ * Cancel count mutation
+ */
 export const useCancelCount = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => inventoryCountApi.cancelCount(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.all() })
+      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
       toast.success('Инвентаризация отменена')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при отмене инвентаризации')
-      console.error('Cancel count error:', error)
     },
   })
 }

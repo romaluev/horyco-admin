@@ -1,130 +1,135 @@
-/**
- * Recipe Mutation Hooks
- * TanStack React Query hooks for modifying recipe data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { recipeApi } from './api'
 import { recipeKeys } from './query-keys'
+
 import type {
   ICreateRecipeDto,
   IUpdateRecipeDto,
   ICreateRecipeIngredientDto,
   IUpdateRecipeIngredientDto,
+  IDuplicateRecipeDto,
 } from './types'
 
+/**
+ * Create recipe mutation
+ */
 export const useCreateRecipe = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: ICreateRecipeDto) => recipeApi.createRecipe(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.all() })
-      toast.success('Техкарта успешно создана')
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
+      toast.success('Техкарта создана')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при создании техкарты')
-      console.error('Create recipe error:', error)
     },
   })
 }
 
+/**
+ * Update recipe mutation
+ */
 export const useUpdateRecipe = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IUpdateRecipeDto }) =>
       recipeApi.updateRecipe(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.all() })
-      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(variables.id) })
-      toast.success('Техкарта успешно обновлена')
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(id) })
+      toast.success('Техкарта обновлена')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении техкарты')
-      console.error('Update recipe error:', error)
     },
   })
 }
 
+/**
+ * Delete recipe mutation
+ */
 export const useDeleteRecipe = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => recipeApi.deleteRecipe(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.all() })
-      toast.success('Техкарта успешно удалена')
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
+      toast.success('Техкарта удалена')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении техкарты')
-      console.error('Delete recipe error:', error)
     },
   })
 }
 
+/**
+ * Duplicate recipe mutation
+ */
 export const useDuplicateRecipe = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => recipeApi.duplicateRecipe(id),
+    mutationFn: ({ id, data }: { id: number; data: IDuplicateRecipeDto }) =>
+      recipeApi.duplicateRecipe(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.all() })
-      toast.success('Техкарта успешно скопирована')
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
+      toast.success('Техкарта дублирована')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при копировании техкарты')
-      console.error('Duplicate recipe error:', error)
+    onError: () => {
+      toast.error('Ошибка при дублировании техкарты')
     },
   })
 }
 
-export const useRecalculateCost = () => {
+/**
+ * Recalculate recipe cost mutation
+ */
+export const useRecalculateRecipeCost = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => recipeApi.recalculateCost(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(id) })
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(id) })
       toast.success('Себестоимость пересчитана')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при пересчёте себестоимости')
-      console.error('Recalculate cost error:', error)
+    onError: () => {
+      toast.error('Ошибка при пересчете себестоимости')
     },
   })
 }
 
-// Ingredient Mutations
-
-export const useAddIngredient = () => {
+/**
+ * Add ingredient to recipe mutation
+ */
+export const useAddRecipeIngredient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      recipeId,
-      data,
-    }: {
-      recipeId: number
-      data: ICreateRecipeIngredientDto
-    }) => recipeApi.addIngredient(recipeId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.detail(variables.recipeId),
-      })
+    mutationFn: ({ recipeId, data }: { recipeId: number; data: ICreateRecipeIngredientDto }) =>
+      recipeApi.addIngredient(recipeId, data),
+    onSuccess: (_, { recipeId }) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент добавлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при добавлении ингредиента')
-      console.error('Add ingredient error:', error)
     },
   })
 }
 
-export const useUpdateIngredient = () => {
+/**
+ * Update recipe ingredient mutation
+ */
+export const useUpdateRecipeIngredient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -137,39 +142,33 @@ export const useUpdateIngredient = () => {
       ingredientId: number
       data: IUpdateRecipeIngredientDto
     }) => recipeApi.updateIngredient(recipeId, ingredientId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.detail(variables.recipeId),
-      })
-      toast.success('Ингредиент обновлён')
+    onSuccess: (_, { recipeId }) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
+      toast.success('Ингредиент обновлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении ингредиента')
-      console.error('Update ingredient error:', error)
     },
   })
 }
 
-export const useRemoveIngredient = () => {
+/**
+ * Remove ingredient from recipe mutation
+ */
+export const useRemoveRecipeIngredient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      recipeId,
-      ingredientId,
-    }: {
-      recipeId: number
-      ingredientId: number
-    }) => recipeApi.removeIngredient(recipeId, ingredientId),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.detail(variables.recipeId),
-      })
-      toast.success('Ингредиент удалён')
+    mutationFn: ({ recipeId, ingredientId }: { recipeId: number; ingredientId: number }) =>
+      recipeApi.removeIngredient(recipeId, ingredientId),
+    onSuccess: (_, { recipeId }) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
+      toast.success('Ингредиент удален')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении ингредиента')
-      console.error('Remove ingredient error:', error)
     },
   })
 }

@@ -1,132 +1,99 @@
 /**
  * Inventory Count Entity Types
- * Types for inventory counting (stocktaking) management
+ * Based on Inventory Management System documentation
  */
 
-import type { CountType, CountStatus } from '@/shared/types/inventory'
+export type CountType = 'full' | 'cycle' | 'spot'
+export type CountStatus = 'in_progress' | 'pending_approval' | 'completed' | 'cancelled'
+
+export interface IInventoryCount {
+  id: number
+  warehouseId: number
+  warehouseName: string
+  countNumber: string
+  countType: CountType
+  status: CountStatus
+  countDate: string
+  startedAt: string | null
+  completedAt: string | null
+  itemsCounted: number
+  itemsWithVariance: number
+  shortageValue: number
+  surplusValue: number
+  netAdjustmentValue: number
+  approvedBy: number | null
+  approvedAt: string | null
+  notes: string | null
+  createdAt: string
+  updatedAt: string
+  items?: ICountItem[]
+}
 
 export interface ICountItem {
   id: number
   countId: number
-  inventoryItemId: number
-  inventoryItemName: string
-  inventoryItemSku: string | null
-  unit: string
+  itemId: number
+  itemName: string
+  itemUnit: string
   systemQuantity: number
   countedQuantity: number | null
   variance: number | null
-  varianceCost: number | null
+  varianceValue: number | null
+  unitCost: number
+  isCounted: boolean
   notes: string | null
-  countedAt: string | null
-  countedById: number | null
-  countedByName: string | null
-  createdAt: string
-  updatedAt: string
-}
-
-export interface IInventoryCount {
-  id: number
-  branchId: number
-  warehouseId: number
-  warehouseName: string
-  type: CountType
-  status: CountStatus
-  name: string
-  notes: string | null
-  totalItems: number
-  countedItems: number
-  totalVariance: number
-  totalVarianceCost: number
-  createdById: number
-  createdByName: string
-  startedAt: string | null
-  completedAt: string | null
-  submittedAt: string | null
-  approvedById: number | null
-  approvedByName: string | null
-  approvedAt: string | null
-  rejectionReason: string | null
-  items: ICountItem[]
-  createdAt: string
-  updatedAt: string
-}
-
-export interface IInventoryCountListItem {
-  id: number
-  branchId?: number
-  warehouseId: number
-  warehouseName?: string
-  type?: CountType
-  status: CountStatus
-  name?: string
-  notes?: string | null
-  totalItems?: number
-  countedItems?: number
-  totalVariance?: number
-  totalVarianceCost?: number
-  createdById?: number
-  createdByName?: string
-  startedAt?: string | null
-  completedAt?: string | null
-  approvedAt?: string | null
-  createdAt?: string
-  updatedAt?: string | null
-  // Alternative field names from API
-  countNumber?: string
-  countType?: string
-  countDate?: string
-  itemsCounted?: number
-  itemsWithVariance?: number
-  accuracyPct?: number
-  isEditable?: boolean
-  needsApproval?: boolean
-  createdBy?: number
-  approvedBy?: number | null
 }
 
 export interface ICountVarianceSummary {
-  totalItems: number
-  countedItems: number
-  progressPercent: number
-  positiveVariance: number
-  negativeVariance: number
-  netVariance: number
-  netVarianceCost: number
+  totalItemsCounted: number
+  itemsWithVariance: number
+  itemsWithoutVariance: number
+  shortageValue: number
+  surplusValue: number
+  netAdjustmentValue: number
+  accuracyPct: number
+  shortageCount: number
+  surplusCount: number
 }
 
-// DTOs
-
-export interface ICreateCountDto {
+export interface ICreateInventoryCountDto {
   warehouseId: number
-  type: CountType
-  name: string
+  countType: CountType
+  countDate: string
   notes?: string
-  itemIds?: number[] // For CYCLE/SPOT counts - specific items to count
-  categoryFilter?: string // For CYCLE counts - filter by category
+  items?: ICreateCountItemDto[]
 }
 
-export interface IUpdateCountDto {
-  name?: string
-  notes?: string
-}
-
-export interface ICountItemDto {
+export interface ICreateCountItemDto {
+  itemId: number
+  systemQuantity: number
   countedQuantity: number
+  unitCost: number
   notes?: string
 }
 
-export interface IRejectCountDto {
-  reason: string
+export interface IUpdateCountItemDto {
+  countedQuantity?: number
+  notes?: string
 }
 
-// Query params
-
-export interface ICountListParams {
-  warehouseId?: number
+export interface IGetInventoryCountsParams {
   status?: CountStatus
-  type?: CountType
-  dateFrom?: string
-  dateTo?: string
-  page?: number
-  limit?: number
+  countType?: CountType
+  warehouseId?: number
+  from?: string
+  to?: string
+}
+
+export const COUNT_TYPE_LABELS: Record<CountType, string> = {
+  full: 'Полная',
+  cycle: 'Циклическая',
+  spot: 'Выборочная',
+}
+
+export const COUNT_STATUS_LABELS: Record<CountStatus, string> = {
+  in_progress: 'В процессе',
+  pending_approval: 'На согласовании',
+  completed: 'Завершена',
+  cancelled: 'Отменена',
 }

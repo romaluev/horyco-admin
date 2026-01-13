@@ -1,20 +1,23 @@
-'use client'
+/**
+ * Warehouse Badge Component
+ * Display warehouse status badge
+ */
 
 import { Badge } from '@/shared/ui/base/badge'
-import { Icons } from '@/shared/ui/icons'
+import { cn } from '@/shared/lib/utils'
 
 interface WarehouseBadgeProps {
-  name: string
-  isDefault?: boolean
+  isActive: boolean
   className?: string
 }
 
-export function WarehouseBadge({ name, isDefault, className }: WarehouseBadgeProps) {
+export const WarehouseBadge = ({ isActive, className }: WarehouseBadgeProps) => {
   return (
-    <Badge variant="outline" className={className}>
-      <Icons.warehouse className="mr-1 h-3 w-3" />
-      {name}
-      {isDefault && ' (основной)'}
+    <Badge
+      variant={isActive ? 'default' : 'secondary'}
+      className={cn(className)}
+    >
+      {isActive ? 'Активен' : 'Неактивен'}
     </Badge>
   )
 }

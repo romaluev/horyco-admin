@@ -1,115 +1,147 @@
 /**
- * Writeoff API
- * REST API client for writeoff operations
+ * Writeoff API Client
+ * Based on /admin/inventory/writeoffs endpoints
  */
 
 import api from '@/shared/lib/axios'
+
 import type {
   IWriteoff,
-  IWriteoffListItem,
+  IWriteoffItem,
   ICreateWriteoffDto,
   IUpdateWriteoffDto,
-  IAddWriteoffItemDto,
+  IGetWriteoffsParams,
+  ICreateWriteoffItemDto,
   IUpdateWriteoffItemDto,
-  IWriteoffListParams,
   IRejectWriteoffDto,
 } from './types'
 
-const BASE_URL = '/admin/inventory/writeoffs'
+interface ApiResponse<T> {
+  success: boolean
+  data: T
+}
 
 export const writeoffApi = {
-  // List writeoffs
-  getWriteoffs: async (
-    branchId: number,
-    params?: IWriteoffListParams
-  ): Promise<{ data: IWriteoffListItem[]; total: number }> => {
-    const response = await api.get(BASE_URL, {
-      params: { branchId, ...params },
-    })
-    return response.data
+  /**
+   * Get all writeoffs
+   * GET /admin/inventory/writeoffs
+   */
+  async getWriteoffs(params?: IGetWriteoffsParams): Promise<IWriteoff[]> {
+    const response = await api.get<ApiResponse<IWriteoff[]> | IWriteoff[]>(
+      '/admin/inventory/writeoffs',
+      { params }
+    )
+    const data = response.data
+    if (Array.isArray(data)) return data
+    return data.data || []
   },
 
-  // Get single writeoff with items
-  getWriteoffById: async (id: number): Promise<IWriteoff> => {
-    const response = await api.get(`${BASE_URL}/${id}`)
-    return response.data
+  /**
+   * Get writeoff by ID with items
+   * GET /admin/inventory/writeoffs/:id
+   */
+  async getWriteoffById(id: number): Promise<IWriteoff> {
+    const response = await api.get<ApiResponse<IWriteoff>>(
+      `/admin/inventory/writeoffs/${id}`
+    )
+    return response.data.data
   },
 
-  // Create writeoff
-  createWriteoff: async (
-    branchId: number,
-    data: ICreateWriteoffDto
-  ): Promise<IWriteoff> => {
-    const response = await api.post(BASE_URL, { branchId, ...data })
-    return response.data
-  },
-
-  // Update writeoff (only in DRAFT status)
-  updateWriteoff: async (
-    id: number,
-    data: IUpdateWriteoffDto
-  ): Promise<IWriteoff> => {
-    const response = await api.patch(`${BASE_URL}/${id}`, data)
-    return response.data
-  },
-
-  // Delete writeoff (only in DRAFT status)
-  deleteWriteoff: async (id: number): Promise<void> => {
-    await api.delete(`${BASE_URL}/${id}`)
-  },
-
-  // Item management
-
-  // Add item to writeoff
-  addItem: async (
-    writeoffId: number,
-    data: IAddWriteoffItemDto
-  ): Promise<IWriteoff> => {
-    const response = await api.post(`${BASE_URL}/${writeoffId}/items`, data)
-    return response.data
-  },
-
-  // Update item in writeoff
-  updateItem: async (
-    writeoffId: number,
-    itemId: number,
-    data: IUpdateWriteoffItemDto
-  ): Promise<IWriteoff> => {
-    const response = await api.patch(
-      `${BASE_URL}/${writeoffId}/items/${itemId}`,
+  /**
+   * Create writeoff
+   * POST /admin/inventory/writeoffs
+   */
+  async createWriteoff(data: ICreateWriteoffDto): Promise<IWriteoff> {
+    const response = await api.post<ApiResponse<IWriteoff>>(
+      '/admin/inventory/writeoffs',
       data
     )
-    return response.data
+    return response.data.data
   },
 
-  // Remove item from writeoff
-  removeItem: async (writeoffId: number, itemId: number): Promise<IWriteoff> => {
-    const response = await api.delete(
-      `${BASE_URL}/${writeoffId}/items/${itemId}`
+  /**
+   * Update writeoff (draft only)
+   * PATCH /admin/inventory/writeoffs/:id
+   */
+  async updateWriteoff(id: number, data: IUpdateWriteoffDto): Promise<IWriteoff> {
+    const response = await api.patch<ApiResponse<IWriteoff>>(
+      `/admin/inventory/writeoffs/${id}`,
+      data
     )
-    return response.data
+    return response.data.data
   },
 
-  // Status actions
-
-  // Submit writeoff for approval
-  submitForApproval: async (id: number): Promise<IWriteoff> => {
-    const response = await api.post(`${BASE_URL}/${id}/submit`)
-    return response.data
+  /**
+   * Delete writeoff (draft only)
+   * DELETE /admin/inventory/writeoffs/:id
+   */
+  async deleteWriteoff(id: number): Promise<void> {
+    await api.delete(`/admin/inventory/writeoffs/${id}`)
   },
 
-  // Approve writeoff (deducts from stock)
-  approveWriteoff: async (id: number): Promise<IWriteoff> => {
-    const response = await api.post(`${BASE_URL}/${id}/approve`)
-    return response.data
+  /**
+   * Add item to writeoff
+   * POST /admin/inventory/writeoffs/:id/items
+   */
+  async addItem(id: number, data: ICreateWriteoffItemDto): Promise<IWriteoffItem> {
+    const response = await api.post<ApiResponse<IWriteoffItem>>(
+      `/admin/inventory/writeoffs/${id}/items`,
+      data
+    )
+    return response.data.data
   },
 
-  // Reject writeoff
-  rejectWriteoff: async (
-    id: number,
-    data: IRejectWriteoffDto
-  ): Promise<IWriteoff> => {
-    const response = await api.post(`${BASE_URL}/${id}/reject`, data)
-    return response.data
+  /**
+   * Update writeoff item
+   * PATCH /admin/inventory/writeoffs/:id/items/:itemId
+   */
+  async updateItem(writeoffId: number, itemId: number, data: IUpdateWriteoffItemDto): Promise<IWriteoffItem> {
+    const response = await api.patch<ApiResponse<IWriteoffItem>>(
+      `/admin/inventory/writeoffs/${writeoffId}/items/${itemId}`,
+      data
+    )
+    return response.data.data
+  },
+
+  /**
+   * Remove item from writeoff
+   * DELETE /admin/inventory/writeoffs/:id/items/:itemId
+   */
+  async removeItem(writeoffId: number, itemId: number): Promise<void> {
+    await api.delete(`/admin/inventory/writeoffs/${writeoffId}/items/${itemId}`)
+  },
+
+  /**
+   * Submit writeoff for approval
+   * POST /admin/inventory/writeoffs/:id/submit
+   */
+  async submitWriteoff(id: number): Promise<IWriteoff> {
+    const response = await api.post<ApiResponse<IWriteoff>>(
+      `/admin/inventory/writeoffs/${id}/submit`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Approve writeoff
+   * POST /admin/inventory/writeoffs/:id/approve
+   */
+  async approveWriteoff(id: number): Promise<IWriteoff> {
+    const response = await api.post<ApiResponse<IWriteoff>>(
+      `/admin/inventory/writeoffs/${id}/approve`
+    )
+    return response.data.data
+  },
+
+  /**
+   * Reject writeoff
+   * POST /admin/inventory/writeoffs/:id/reject
+   */
+  async rejectWriteoff(id: number, data: IRejectWriteoffDto): Promise<IWriteoff> {
+    const response = await api.post<ApiResponse<IWriteoff>>(
+      `/admin/inventory/writeoffs/${id}/reject`,
+      data
+    )
+    return response.data.data
   },
 }

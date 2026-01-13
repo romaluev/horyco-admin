@@ -10,6 +10,7 @@ export type {
   IDashboardWidget,
   IKpiSlot,
   WidgetType,
+  ChartType,
   IKpiMetricValue,
   ITimeSeriesData,
   ITimeSeriesPoint,

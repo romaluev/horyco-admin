@@ -1,62 +1,118 @@
 'use client'
 
-import { Badge } from '@/shared/ui/base/badge'
-import { MovementType, MOVEMENT_TYPE_LABELS } from '@/shared/types/inventory'
-import { cn } from '@/shared/lib/utils'
+import {
+  ArrowDownToLine,
+  ArrowUpFromLine,
+  ArrowLeftRight,
+  RotateCcw,
+  Package,
+  Trash2,
+  ClipboardCheck,
+  Settings,
+  ChefHat,
+} from 'lucide-react'
 
-interface MovementTypeBadgeProps {
+import { cn } from '@/shared/lib/utils'
+import { Badge } from '@/shared/ui/base/badge'
+import {
+  MOVEMENT_TYPES,
+  MOVEMENT_TYPE_LABELS,
+  type MovementType,
+} from '@/shared/types/inventory'
+
+interface IMovementTypeBadgeProps {
   type: MovementType
   className?: string
+  showIcon?: boolean
 }
 
-const typeStyles: Record<MovementType, string> = {
-  [MovementType.PURCHASE_RECEIVE]: 'bg-green-100 text-green-800 border-green-200',
-  [MovementType.SALE_DEDUCTION]: 'bg-blue-100 text-blue-800 border-blue-200',
-  [MovementType.SALE_REVERSAL]: 'bg-purple-100 text-purple-800 border-purple-200',
-  [MovementType.WRITEOFF]: 'bg-red-100 text-red-800 border-red-200',
-  [MovementType.COUNT_ADJUSTMENT]: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  [MovementType.PRODUCTION_OUT]: 'bg-orange-100 text-orange-800 border-orange-200',
-  [MovementType.PRODUCTION_IN]: 'bg-teal-100 text-teal-800 border-teal-200',
-  [MovementType.MANUAL_ADJUSTMENT]: 'bg-gray-100 text-gray-800 border-gray-200',
-  [MovementType.OPENING_BALANCE]: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  [MovementType.TRANSFER_OUT]: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-  [MovementType.TRANSFER_IN]: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+const typeConfig: Record<
+  MovementType,
+  {
+    variant: 'default' | 'secondary' | 'destructive' | 'outline'
+    icon: typeof ArrowDownToLine
+    colorClass: string
+  }
+> = {
+  [MOVEMENT_TYPES.PURCHASE_RECEIVE]: {
+    variant: 'default',
+    icon: ArrowDownToLine,
+    colorClass: 'bg-green-100 text-green-800 hover:bg-green-100',
+  },
+  [MOVEMENT_TYPES.SALE_DEDUCTION]: {
+    variant: 'secondary',
+    icon: ArrowUpFromLine,
+    colorClass: 'bg-blue-100 text-blue-800 hover:bg-blue-100',
+  },
+  [MOVEMENT_TYPES.SALE_REVERSAL]: {
+    variant: 'secondary',
+    icon: RotateCcw,
+    colorClass: 'bg-orange-100 text-orange-800 hover:bg-orange-100',
+  },
+  [MOVEMENT_TYPES.TRANSFER_IN]: {
+    variant: 'outline',
+    icon: ArrowLeftRight,
+    colorClass: 'bg-purple-100 text-purple-800 hover:bg-purple-100',
+  },
+  [MOVEMENT_TYPES.TRANSFER_OUT]: {
+    variant: 'outline',
+    icon: ArrowLeftRight,
+    colorClass: 'bg-purple-100 text-purple-800 hover:bg-purple-100',
+  },
+  [MOVEMENT_TYPES.WRITEOFF]: {
+    variant: 'destructive',
+    icon: Trash2,
+    colorClass: 'bg-red-100 text-red-800 hover:bg-red-100',
+  },
+  [MOVEMENT_TYPES.COUNT_ADJUSTMENT]: {
+    variant: 'outline',
+    icon: ClipboardCheck,
+    colorClass: 'bg-gray-100 text-gray-800 hover:bg-gray-100',
+  },
+  [MOVEMENT_TYPES.PRODUCTION_OUT]: {
+    variant: 'secondary',
+    icon: Package,
+    colorClass: 'bg-teal-100 text-teal-800 hover:bg-teal-100',
+  },
+  [MOVEMENT_TYPES.PRODUCTION_IN]: {
+    variant: 'default',
+    icon: ChefHat,
+    colorClass: 'bg-teal-100 text-teal-800 hover:bg-teal-100',
+  },
+  [MOVEMENT_TYPES.PRODUCTION_REVERSAL]: {
+    variant: 'secondary',
+    icon: RotateCcw,
+    colorClass: 'bg-orange-100 text-orange-800 hover:bg-orange-100',
+  },
+  [MOVEMENT_TYPES.MANUAL_ADJUSTMENT]: {
+    variant: 'outline',
+    icon: Settings,
+    colorClass: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100',
+  },
+  [MOVEMENT_TYPES.OPENING_BALANCE]: {
+    variant: 'outline',
+    icon: Package,
+    colorClass: 'bg-indigo-100 text-indigo-800 hover:bg-indigo-100',
+  },
 }
 
-export function MovementTypeBadge({ type, className }: MovementTypeBadgeProps) {
-  return (
-    <Badge
-      variant="outline"
-      className={cn('font-normal', typeStyles[type], className)}
-    >
-      {MOVEMENT_TYPE_LABELS[type]}
-    </Badge>
-  )
-}
-
-interface MovementQuantityBadgeProps {
-  quantity: number
-  unit: string
-  className?: string
-}
-
-export function MovementQuantityBadge({
-  quantity,
-  unit,
+export function MovementTypeBadge({
+  type,
   className,
-}: MovementQuantityBadgeProps) {
-  const isPositive = quantity > 0
-  const formattedQty = isPositive ? `+${quantity}` : quantity.toString()
+  showIcon = true,
+}: IMovementTypeBadgeProps) {
+  const config = typeConfig[type] || {
+    variant: 'outline' as const,
+    icon: Package,
+    colorClass: '',
+  }
+  const Icon = config.icon
+  const label = MOVEMENT_TYPE_LABELS[type] || type
 
   return (
-    <span
-      className={cn(
-        'font-medium',
-        isPositive ? 'text-green-600' : 'text-red-600',
-        className
-      )}
-    >
-      {formattedQty} {unit}
-    </span>
+    <Badge variant="outline" className={cn('gap-1', config.colorClass, className)}>
+      {showIcon && <Icon className="h-3 w-3" />}
+      <span>{label}</span>
+    </Badge>
   )
 }

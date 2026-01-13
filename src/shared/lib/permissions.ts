@@ -249,21 +249,14 @@ export const PERMISSIONS = {
   FINANCE_CASH: 'finance:cash',
 
   // Reports (additional)
-  REPORTS_INVENTORY: 'reports:inventory',
   REPORTS_STAFF: 'reports:staff',
   REPORTS_FINANCIAL: 'reports:financial',
 
   // Inventory
   INVENTORY_VIEW: 'inventory:view',
   INVENTORY_MANAGE: 'inventory:manage',
-  INVENTORY_READ: 'inventory:read',
-  INVENTORY_WRITE: 'inventory:write',
   INVENTORY_ADJUST: 'inventory:adjust',
-  INVENTORY_PURCHASE: 'inventory:purchase',
-  INVENTORY_WRITEOFF: 'inventory:writeoff',
   INVENTORY_APPROVE: 'inventory:approve',
-  INVENTORY_COUNT: 'inventory:count',
-  INVENTORY_PRODUCTION: 'inventory:production',
 
   // Wildcard (full access)
   ALL: '*',

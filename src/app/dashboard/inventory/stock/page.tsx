@@ -1,17 +1,20 @@
-/**
- * Stock Levels Page
- * Page for viewing current stock levels by warehouse
- */
-
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-import { IconSearch, IconDownload } from '@tabler/icons-react'
+import { IconSearch } from '@tabler/icons-react'
 
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
-import { Button } from '@/shared/ui/base/button'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui/base/select'
 import {
   Table,
   TableBody,
@@ -20,112 +23,92 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Badge } from '@/shared/ui/base/badge'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { useGetWarehouses, WarehouseSelector } from '@/entities/warehouse'
 import { useGetStock, StockLevelIndicator } from '@/entities/stock'
-import { StockSummaryCards } from '@/widgets/inventory-dashboard'
+import { useGetWarehouses } from '@/entities/warehouse'
 import { AdjustStockDialog } from '@/features/stock-adjustment'
-import { UNIT_LABELS, type InventoryUnit } from '@/shared/types/inventory'
 
 export default function StockPage() {
-  const { selectedBranchId } = useBranchStore()
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
   const [search, setSearch] = useState('')
+  const [warehouseId, setWarehouseId] = useState<number | undefined>()
+  const [filter, setFilter] = useState<string>('all')
 
-  // Fetch warehouses to auto-select default
-  const { data: warehousesData } = useGetWarehouses(
-    { branchId: selectedBranchId!, isActive: true },
-    { enabled: !!selectedBranchId }
-  )
+  const { data: warehouses } = useGetWarehouses()
+  const { data: stockData, isLoading } = useGetStock({
+    search: search || undefined,
+    warehouseId,
+  })
 
-  // Filter warehouses by branchId and auto-select default or first
-  useEffect(() => {
-    if (warehousesData && warehousesData.length > 0 && !selectedWarehouse && selectedBranchId) {
-      const branchWarehouses = warehousesData.filter(w => w.branchId === selectedBranchId)
-      if (branchWarehouses.length > 0) {
-        const defaultWarehouse = branchWarehouses.find(w => w.isDefault)
-        const firstWarehouse = branchWarehouses[0]
-        setSelectedWarehouse(defaultWarehouse?.id ?? firstWarehouse?.id ?? null)
-      }
+  const stockItems = stockData?.data ?? []
+
+  const filteredStock = stockItems.filter((stock) => {
+    if (filter === 'low') {
+      return stock.item?.minStockLevel && stock.quantity < stock.item.minStockLevel
     }
-  }, [warehousesData, selectedWarehouse, selectedBranchId])
-
-  const { data, isLoading } = useGetStock(
-    { warehouseId: selectedWarehouse || 0, search: search || undefined },
-    { enabled: !!selectedBranchId && !!selectedWarehouse }
-  )
-
-  const stocks = data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+    if (filter === 'out') {
+      return stock.quantity <= 0
+    }
+    return true
+  })
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Остатки</h1>
-            <p className="text-muted-foreground">
-              Текущие остатки товаров на складах
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <AdjustStockDialog
-              branchId={selectedBranchId}
-              warehouseId={selectedWarehouse || 0}
-            />
-            <Button variant="outline">
-              <IconDownload className="mr-2 h-4 w-4" />
-              Экспорт
-            </Button>
-          </div>
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Остатки"
+            description="Текущие остатки товаров на складах"
+          />
+          <AdjustStockDialog />
         </div>
+        <Separator />
 
-        {/* Summary Cards */}
-        <StockSummaryCards
-          warehouseId={selectedWarehouse || undefined}
-        />
-
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="w-full sm:w-64">
-            <WarehouseSelector
-              branchId={selectedBranchId}
-              value={selectedWarehouse}
-              onChange={setSelectedWarehouse}
-              placeholder="Выберите склад"
-            />
-          </div>
-          <div className="relative flex-1">
+        <div className="flex flex-wrap gap-4">
+          <div className="relative flex-1 min-w-[200px]">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Поиск товара..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
-              disabled={!selectedWarehouse}
             />
           </div>
+          <Select
+            value={warehouseId ? String(warehouseId) : 'all'}
+            onValueChange={(value) =>
+              setWarehouseId(value === 'all' ? undefined : Number(value))
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все склады" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все склады</SelectItem>
+              {warehouses?.map((warehouse) => (
+                <SelectItem key={warehouse.id} value={String(warehouse.id)}>
+                  {warehouse.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={filter} onValueChange={setFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Фильтр" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все товары</SelectItem>
+              <SelectItem value="low">Мало на складе</SelectItem>
+              <SelectItem value="out">Нет в наличии</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Table */}
-        {!selectedWarehouse ? (
-          <div className="flex h-[300px] items-center justify-center rounded-md border">
-            <p className="text-muted-foreground">
-              Выберите склад для просмотра остатков
-            </p>
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
           </div>
         ) : (
           <div className="rounded-md border">
@@ -133,58 +116,60 @@ export default function StockPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Товар</TableHead>
-                  <TableHead>Артикул</TableHead>
-                  <TableHead>Остаток</TableHead>
-                  <TableHead>Мин. остаток</TableHead>
+                  <TableHead>SKU</TableHead>
+                  <TableHead>Склад</TableHead>
+                  <TableHead className="text-right">Количество</TableHead>
+                  <TableHead className="text-right">Резерв</TableHead>
+                  <TableHead className="text-right">Доступно</TableHead>
                   <TableHead>Статус</TableHead>
-                  <TableHead>Стоимость</TableHead>
+                  <TableHead className="text-right">Ср. себестоимость</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    </TableRow>
-                  ))
-                ) : stocks.length === 0 ? (
+                {!warehouseId ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8">
-                      <p className="text-muted-foreground">
-                        {search ? 'Товары не найдены' : 'Нет товаров на складе'}
-                      </p>
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                      Выберите склад для просмотра остатков
+                    </TableCell>
+                  </TableRow>
+                ) : filteredStock.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8">
+                      Остатки не найдены
                     </TableCell>
                   </TableRow>
                 ) : (
-                  stocks.map((stock) => (
+                  filteredStock.map((stock) => (
                     <TableRow key={stock.id}>
                       <TableCell className="font-medium">
-                        {stock.inventoryItemName}
+                        {stock.item?.name}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {stock.inventoryItemSku || '—'}
+                        {stock.item?.sku || '—'}
                       </TableCell>
-                      <TableCell>
-                        {stock.quantity} {UNIT_LABELS[stock.unit as InventoryUnit] || stock.unit}
+                      <TableCell>{stock.warehouse?.name}</TableCell>
+                      <TableCell className="text-right">
+                        {stock.quantity} {stock.item?.unit}
                       </TableCell>
-                      <TableCell>
-                        {stock.minStock
-                          ? `${stock.minStock} ${UNIT_LABELS[stock.unit as InventoryUnit] || stock.unit}`
-                          : '—'}
+                      <TableCell className="text-right text-muted-foreground">
+                        {stock.reservedQuantity}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {stock.quantity - stock.reservedQuantity}
                       </TableCell>
                       <TableCell>
                         <StockLevelIndicator
                           quantity={stock.quantity}
-                          minStockLevel={stock.minStock}
+                          minLevel={stock.item?.minStockLevel}
+                          maxLevel={stock.item?.maxStockLevel}
                         />
                       </TableCell>
-                      <TableCell>
-                        {(stock.quantity * stock.avgCost).toLocaleString()} сум
+                      <TableCell className="text-right">
+                        {new Intl.NumberFormat('ru-RU', {
+                          style: 'currency',
+                          currency: 'UZS',
+                          maximumFractionDigits: 0,
+                        }).format(stock.averageCost)}
                       </TableCell>
                     </TableRow>
                   ))

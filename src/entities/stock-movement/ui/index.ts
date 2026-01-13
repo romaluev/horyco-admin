@@ -1,1 +1,1 @@
-export { MovementTypeBadge, MovementQuantityBadge } from './movement-type-badge'
+export { MovementTypeBadge } from './movement-type-badge'

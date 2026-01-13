@@ -1,198 +1,190 @@
-/**
- * Purchase Order Mutation Hooks
- * TanStack React Query hooks for modifying purchase order data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { stockKeys } from '../../stock/model/query-keys'
-import { stockMovementKeys } from '../../stock-movement/model/query-keys'
 import { purchaseOrderApi } from './api'
 import { purchaseOrderKeys } from './query-keys'
+import { stockKeys } from '@/entities/stock/model/query-keys'
+import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+
 import type {
   ICreatePurchaseOrderDto,
   IUpdatePurchaseOrderDto,
   ICreatePOItemDto,
   IUpdatePOItemDto,
   IReceivePODto,
+  ICancelPODto,
 } from './types'
 
+/**
+ * Create purchase order mutation
+ */
 export const useCreatePurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreatePurchaseOrderDto) =>
-      purchaseOrderApi.createPurchaseOrder(data),
+    mutationFn: (data: ICreatePurchaseOrderDto) => purchaseOrderApi.createPurchaseOrder(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       toast.success('Заказ поставщику создан')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при создании заказа')
-      console.error('Create purchase order error:', error)
     },
   })
 }
 
+/**
+ * Update purchase order mutation
+ */
 export const useUpdatePurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IUpdatePurchaseOrderDto }) =>
       purchaseOrderApi.updatePurchaseOrder(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: purchaseOrderKeys.detail(variables.id),
-      })
-      toast.success('Заказ обновлён')
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
+      toast.success('Заказ обновлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении заказа')
-      console.error('Update purchase order error:', error)
     },
   })
 }
 
+/**
+ * Delete purchase order mutation
+ */
 export const useDeletePurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => purchaseOrderApi.deletePurchaseOrder(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
-      toast.success('Заказ удалён')
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
+      toast.success('Заказ удален')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении заказа')
-      console.error('Delete purchase order error:', error)
     },
   })
 }
 
-// PO Item Mutations
-
+/**
+ * Add item to purchase order mutation
+ */
 export const useAddPOItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ poId, data }: { poId: number; data: ICreatePOItemDto }) =>
       purchaseOrderApi.addItem(poId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: purchaseOrderKeys.detail(variables.poId),
-      })
-      toast.success('Товар добавлен в заказ')
+    onSuccess: (_, { poId }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      toast.success('Товар добавлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при добавлении товара')
-      console.error('Add PO item error:', error)
     },
   })
 }
 
+/**
+ * Update purchase order item mutation
+ */
 export const useUpdatePOItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      poId,
-      itemId,
-      data,
-    }: {
-      poId: number
-      itemId: number
-      data: IUpdatePOItemDto
-    }) => purchaseOrderApi.updateItem(poId, itemId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: purchaseOrderKeys.detail(variables.poId),
-      })
-      toast.success('Товар обновлён')
+    mutationFn: ({ poId, poItemId, data }: { poId: number; poItemId: number; data: IUpdatePOItemDto }) =>
+      purchaseOrderApi.updateItem(poId, poItemId, data),
+    onSuccess: (_, { poId }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      toast.success('Товар обновлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении товара')
-      console.error('Update PO item error:', error)
     },
   })
 }
 
+/**
+ * Remove item from purchase order mutation
+ */
 export const useRemovePOItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ poId, itemId }: { poId: number; itemId: number }) =>
-      purchaseOrderApi.removeItem(poId, itemId),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: purchaseOrderKeys.detail(variables.poId),
-      })
-      toast.success('Товар удалён из заказа')
+    mutationFn: ({ poId, poItemId }: { poId: number; poItemId: number }) =>
+      purchaseOrderApi.removeItem(poId, poItemId),
+    onSuccess: (_, { poId }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      toast.success('Товар удален')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении товара')
-      console.error('Remove PO item error:', error)
     },
   })
 }
 
-// Status Action Mutations
-
-export const useSendToSupplier = () => {
+/**
+ * Send purchase order mutation
+ */
+export const useSendPurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => purchaseOrderApi.sendToSupplier(id),
+    mutationFn: (id: number) => purchaseOrderApi.sendPurchaseOrder(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
       toast.success('Заказ отправлен поставщику')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при отправке заказа')
-      console.error('Send to supplier error:', error)
     },
   })
 }
 
-export const useReceiveItems = () => {
+/**
+ * Receive purchase order mutation
+ */
+export const useReceivePurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IReceivePODto }) =>
-      purchaseOrderApi.receiveItems(id, data),
-    onSuccess: (_, variables) => {
-      // Invalidate PO queries
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: purchaseOrderKeys.detail(variables.id),
-      })
-      // Invalidate stock queries (receiving updates stock)
-      queryClient.invalidateQueries({ queryKey: stockKeys.all() })
-      queryClient.invalidateQueries({ queryKey: stockMovementKeys.all() })
-      toast.success('Товары приняты на склад')
+      purchaseOrderApi.receivePurchaseOrder(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
+      queryClient.invalidateQueries({ queryKey: stockKeys.all })
+      queryClient.invalidateQueries({ queryKey: movementKeys.all })
+      toast.success('Товары приняты')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при приёме товаров')
-      console.error('Receive items error:', error)
     },
   })
 }
 
+/**
+ * Cancel purchase order mutation
+ */
 export const useCancelPurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => purchaseOrderApi.cancelPurchaseOrder(id),
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all() })
+    mutationFn: ({ id, data }: { id: number; data: ICancelPODto }) =>
+      purchaseOrderApi.cancelPurchaseOrder(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
-      toast.success('Заказ отменён')
+      toast.success('Заказ отменен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при отмене заказа')
-      console.error('Cancel purchase order error:', error)
     },
   })
 }

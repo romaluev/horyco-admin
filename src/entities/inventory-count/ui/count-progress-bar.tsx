@@ -1,42 +1,24 @@
 'use client'
 
-import { cn } from '@/shared/lib/utils'
+import { Progress } from '@/shared/ui/base/progress'
 
-interface CountProgressBarProps {
-  totalItems: number
-  countedItems: number
-  className?: string
-  showLabel?: boolean
+interface ICountProgressBarProps {
+  counted: number
+  total: number
 }
 
-export function CountProgressBar({
-  totalItems,
-  countedItems,
-  className,
-  showLabel = true,
-}: CountProgressBarProps) {
-  const percentage = totalItems > 0 ? (countedItems / totalItems) * 100 : 0
-  const isComplete = countedItems >= totalItems
+export function CountProgressBar({ counted, total }: ICountProgressBarProps) {
+  const percentage = total > 0 ? (counted / total) * 100 : 0
 
   return (
-    <div className={cn('space-y-1', className)}>
-      {showLabel && (
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>
-            {countedItems} из {totalItems}
-          </span>
-          <span>{Math.round(percentage)}%</span>
-        </div>
-      )}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-        <div
-          className={cn(
-            'h-full transition-all duration-300',
-            isComplete ? 'bg-green-500' : 'bg-primary'
-          )}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
+    <div className="space-y-1">
+      <div className="flex justify-between text-sm">
+        <span className="text-muted-foreground">Прогресс</span>
+        <span className="font-medium">
+          {counted} / {total} ({percentage.toFixed(0)}%)
+        </span>
       </div>
+      <Progress value={percentage} />
     </div>
   )
 }

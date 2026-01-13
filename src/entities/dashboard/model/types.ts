@@ -25,6 +25,21 @@ export type WidgetType =
   | 'BRANCH_COMPARISON'
   | 'GOAL_PROGRESS'
   | 'ALERTS'
+  | 'REVENUE_OVERVIEW'
+  | 'ORDERS_CHART'
+  | 'TRANSACTIONS_SUMMARY'
+  | 'PERFORMANCE_RADAR'
+  | 'DAILY_COMPARISON'
+  | 'INCOME_EXPENSE'
+  | 'CUSTOMER_RATINGS'
+  | 'CONVERSION_FUNNEL'
+  | 'ORDERS_BY_CATEGORY'
+  | 'ANOMALY_DETECTION'
+  | 'VISITORS_TRAFFIC'
+  | 'SALES_METRICS'
+  | 'GOAL_RADIAL'
+
+export type ChartType = 'area' | 'bar' | 'line' | 'radial' | 'radar'
 
 export interface IDashboardWidget {
   id: string
@@ -36,6 +51,7 @@ export interface IDashboardWidget {
 export interface IDashboardConfig {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
+  chartType?: ChartType
   chartGroupBy: GroupBy | null
   widgets: IDashboardWidget[]
 }
@@ -43,6 +59,7 @@ export interface IDashboardConfig {
 export interface IDashboardConfigInput {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
+  chartType?: ChartType
   chartGroupBy: GroupBy | null
   widgets: Omit<IDashboardWidget, 'config'>[]
 }

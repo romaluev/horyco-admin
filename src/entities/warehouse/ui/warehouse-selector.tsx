@@ -1,6 +1,9 @@
-'use client'
+/**
+ * Warehouse Selector Component
+ * Dropdown for selecting a warehouse
+ */
 
-import { useMemo } from 'react'
+'use client'
 
 import {
   Select,
@@ -9,83 +12,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useGetWarehouses } from '../model/queries'
 
 interface WarehouseSelectorProps {
-  value?: number | null
-  onValueChange?: (value: number) => void
-  onChange?: (value: number | null) => void
-  branchId?: number
+  value?: number
+  onChange: (value: number | undefined) => void
   placeholder?: string
   disabled?: boolean
   showAll?: boolean
-  allowClear?: boolean
-  className?: string
 }
 
-export function WarehouseSelector({
+export const WarehouseSelector = ({
   value,
-  onValueChange,
   onChange,
-  branchId,
   placeholder = 'Выберите склад',
   disabled = false,
   showAll = false,
-  allowClear = false,
-  className,
-}: WarehouseSelectorProps) {
-  const { data, isLoading } = useGetWarehouses(
-    { branchId, isActive: true },
-    { enabled: !!branchId }
-  )
-
-  // Filter warehouses by branchId client-side (backend may not filter properly)
-  const warehouses = useMemo(() => {
-    if (!data) return []
-    if (!branchId) return data
-    return data.filter(w => w.branchId === branchId)
-  }, [data, branchId])
+}: WarehouseSelectorProps) => {
+  const { data: warehouses = [], isLoading } = useGetWarehouses({
+    isActive: true,
+  })
 
   const handleChange = (val: string) => {
-    const numValue = val === '' || val === '0' ? null : Number(val)
-    if (onValueChange && numValue !== null) {
-      onValueChange(numValue)
+    if (val === 'all') {
+      onChange(undefined)
+    } else {
+      onChange(Number(val))
     }
-    if (onChange) {
-      onChange(numValue)
-    }
-  }
-
-  if (isLoading) {
-    return <Skeleton className="h-9 w-full" />
   }
 
   return (
     <Select
-      value={value?.toString() || ''}
+      value={value?.toString() ?? (showAll ? 'all' : '')}
       onValueChange={handleChange}
-      disabled={disabled || warehouses.length === 0}
+      disabled={disabled || isLoading}
     >
-      <SelectTrigger className={className}>
+      <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {(showAll || allowClear) && (
-          <SelectItem value="0">Все склады</SelectItem>
-        )}
+        {showAll && <SelectItem value="all">Все склады</SelectItem>}
         {warehouses.map((warehouse) => (
           <SelectItem key={warehouse.id} value={warehouse.id.toString()}>
             {warehouse.name}
-            {warehouse.isDefault && ' (основной)'}
+            {warehouse.code && (
+              <span className="text-muted-foreground ml-2">
+                ({warehouse.code})
+              </span>
+            )}
           </SelectItem>
         ))}
-        {warehouses.length === 0 && (
-          <SelectItem value="__no_warehouses__" disabled>
-            Нет доступных складов
-          </SelectItem>
-        )}
       </SelectContent>
     </Select>
   )

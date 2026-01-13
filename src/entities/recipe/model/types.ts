@@ -1,78 +1,50 @@
 /**
- * Recipe (Tech Card) Entity Types
- * Based on /api/admin/inventory/recipes endpoints
+ * Recipe Entity Types (Tech Cards)
+ * Based on Inventory Management System documentation
  */
-
-import { RecipeLinkType } from '@/shared/types/inventory'
 
 export interface IRecipe {
   id: number
-  tenantId: number
   name: string
-  linkType: RecipeLinkType
-  productId?: number
-  product?: {
-    id: number
-    name: string
-    price: number
-  }
-  modifierId?: number
-  modifier?: {
-    id: number
-    name: string
-    price: number
-  }
-  itemId?: number
-  item?: {
-    id: number
-    name: string
-    isSemiFinished: boolean
-  }
+  productId: number | null
+  modifierId: number | null
+  itemId: number | null
   outputQuantity: number
-  outputUnit: string
-  prepTimeMinutes?: number
-  notes?: string
+  outputUnit: string | null
+  prepTimeMinutes: number | null
   isActive: boolean
   version: number
   calculatedCost: number
-  costUpdatedAt?: string
-  grossMargin?: number
-  ingredients: IRecipeIngredient[]
+  costUpdatedAt: string | null
+  notes: string | null
   createdAt: string
   updatedAt: string
-  // Convenience flat fields for list views
-  ingredientCount?: number
-  totalCost?: number
-  linkedName?: string
+  ingredients?: IRecipeIngredient[]
 }
 
 export interface IRecipeIngredient {
   id: number
   recipeId: number
   itemId: number
-  item?: {
-    id: number
-    name: string
-    sku?: string
-    unit: string
-    isSemiFinished: boolean
-  }
+  itemName: string
+  itemUnit: string
   quantity: number
   unit: string
   wasteFactor: number
+  isOptional: boolean
+  sortOrder: number
   unitCost: number
   lineCost: number
-  sortOrder: number
+  notes: string | null
 }
 
 export interface ICreateRecipeDto {
   name: string
-  linkType: RecipeLinkType
   productId?: number
   modifierId?: number
   itemId?: number
-  outputQuantity: number
-  outputUnit: string
+  outputQuantity?: number
+  outputUnit?: string
   prepTimeMinutes?: number
   notes?: string
   isActive?: boolean
@@ -81,6 +53,9 @@ export interface ICreateRecipeDto {
 
 export interface IUpdateRecipeDto {
   name?: string
+  productId?: number
+  modifierId?: number
+  itemId?: number
   outputQuantity?: number
   outputUnit?: string
   prepTimeMinutes?: number
@@ -93,39 +68,27 @@ export interface ICreateRecipeIngredientDto {
   quantity: number
   unit: string
   wasteFactor?: number
+  isOptional?: boolean
   sortOrder?: number
+  notes?: string
 }
 
 export interface IUpdateRecipeIngredientDto {
   quantity?: number
   unit?: string
   wasteFactor?: number
+  isOptional?: boolean
   sortOrder?: number
+  notes?: string
 }
 
 export interface IGetRecipesParams {
-  search?: string
   productId?: number
   modifierId?: number
   itemId?: number
-  linkType?: RecipeLinkType
   isActive?: boolean
-  page?: number
-  limit?: number
 }
 
-// API returns recipes array directly
-export type IRecipesResponse = IRecipe[]
-
-export interface IRecipeCostResult {
-  calculatedCost: number
-  ingredients: Array<{
-    itemId: number
-    itemName: string
-    quantity: number
-    unitCost: number
-    lineCost: number
-    wasteFactor: number
-  }>
-  costUpdatedAt: string
+export interface IDuplicateRecipeDto {
+  name: string
 }

@@ -1,127 +1,82 @@
 /**
  * Production Order Entity Types
- * Types for production order management
+ * Based on Inventory Management System documentation
  */
 
-import type { ProductionStatus } from '@/shared/types/inventory'
-
-export interface IProductionOrderIngredient {
-  id: number
-  productionOrderId: number
-  inventoryItemId: number
-  inventoryItemName: string
-  inventoryItemSku: string | null
-  requiredQuantity: number
-  usedQuantity: number | null
-  unit: string
-  unitCost: number
-  totalCost: number
-  createdAt: string
-  updatedAt: string
-}
+export type ProductionStatus = 'planned' | 'in_progress' | 'completed' | 'cancelled'
 
 export interface IProductionOrder {
   id: number
-  branchId: number
   warehouseId: number
   warehouseName: string
   recipeId: number
   recipeName: string
+  outputItemId: number
+  outputItemName: string
+  productionNumber: string
   status: ProductionStatus
-  quantity: number
-  unit: string
-  notes: string | null
-  plannedDate: string | null
+  plannedQuantity: number
+  actualQuantity: number | null
+  outputUnit: string
+  plannedDate: string
   startedAt: string | null
   completedAt: string | null
-  cancelledAt: string | null
-  createdById: number
-  createdByName: string
-  completedById: number | null
-  completedByName: string | null
-  estimatedCost: number
-  actualCost: number | null
-  outputItemId: number | null
-  outputItemName: string | null
-  ingredients: IProductionOrderIngredient[]
+  notes: string | null
+  createdBy: number
   createdAt: string
   updatedAt: string
+  ingredients?: IProductionIngredient[]
 }
 
-export interface IProductionOrderListItem {
+export interface IProductionIngredient {
   id: number
-  branchId: number
-  warehouseId: number
-  warehouseName: string
-  recipeId: number
-  recipeName: string
-  status: ProductionStatus
-  quantity: number
-  unit: string
-  notes: string | null
-  plannedDate: string | null
-  startedAt: string | null
-  completedAt: string | null
-  createdById: number
-  createdByName: string
-  estimatedCost: number
-  actualCost: number | null
-  outputItemName: string | null
-  createdAt: string
-  updatedAt: string
+  productionOrderId: number
+  itemId: number
+  itemName: string
+  itemUnit: string
+  plannedQuantity: number
+  actualQuantity: number | null
+  unitCost: number
 }
-
-// DTOs
 
 export interface ICreateProductionOrderDto {
   warehouseId: number
   recipeId: number
-  quantity: number
-  plannedDate?: string
+  plannedQuantity: number
+  plannedDate: string
   notes?: string
 }
 
 export interface IUpdateProductionOrderDto {
-  quantity?: number
+  plannedQuantity?: number
   plannedDate?: string
   notes?: string
 }
 
+export interface IStartProductionDto {
+  actualIngredients?: {
+    itemId: number
+    actualQuantity: number
+  }[]
+}
+
 export interface ICompleteProductionDto {
-  usedIngredients?: Array<{
-    ingredientId: number
-    usedQuantity: number
-  }>
+  actualQuantity: number
   notes?: string
 }
 
-// Query params
-
-export interface IProductionOrderListParams {
+export interface IGetProductionOrdersParams {
+  status?: ProductionStatus
   warehouseId?: number
   recipeId?: number
-  status?: ProductionStatus
-  dateFrom?: string
-  dateTo?: string
-  page?: number
-  limit?: number
+  outputItemId?: number
+  from?: string
+  to?: string
 }
 
-// Production planning
-
-export interface IProductionSuggestion {
-  recipeId: number
-  recipeName: string
-  currentStock: number
-  minStock: number
-  suggestedQuantity: number
-  estimatedCost: number
-  canProduce: boolean
-  missingIngredients: Array<{
-    inventoryItemId: number
-    inventoryItemName: string
-    required: number
-    available: number
-    shortage: number
-  }>
+export const PRODUCTION_STATUS_LABELS: Record<ProductionStatus, string> = {
+  planned: 'Запланировано',
+  in_progress: 'В процессе',
+  completed: 'Завершено',
+  cancelled: 'Отменено',
 }

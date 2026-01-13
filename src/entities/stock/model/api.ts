@@ -1,94 +1,100 @@
-/**
- * Stock API Client
- * Based on /api/admin/inventory/stock endpoints
- */
-
 import api from '@/shared/lib/axios'
 
 import type {
-  IStockResponse,
-  IStockSummary,
-  IGetStockParams,
-  ILowStockItem,
-  IStockAdjustmentDto,
   IStock,
+  IStockSummary,
+  IStockAlert,
+  IAdjustStockDto,
+  IGetStockParams,
+  IStockAlertParams,
+  IStockListResponse,
+  IGetStockAlertsParams,
 } from './types'
-
-interface ApiResponse<T> {
-  success: boolean
-  data: T
-  timestamp: string
-  requestId: string
-}
 
 export const stockApi = {
   /**
-   * Get stock levels by warehouse
    * GET /admin/inventory/stock
+   * Get stock levels with filters
    */
-  async getStock(params: IGetStockParams): Promise<IStockResponse> {
-    const response = await api.get<ApiResponse<IStockResponse>>(
-      '/admin/inventory/stock',
-      { params }
-    )
-    return response.data.data
+  async getStock(params?: IGetStockParams): Promise<IStockListResponse> {
+    const response = await api.get<{
+      success: boolean
+      data: IStock[]
+      meta: IStockListResponse['meta']
+    }>('/admin/inventory/stock', { params })
+    return {
+      data: response.data.data || [],
+      meta: response.data.meta || { total: 0, page: 0, size: 20, totalPages: 0 },
+    }
   },
 
   /**
-   * Get stock for specific item across all warehouses
-   * GET /admin/inventory/stock/item/:itemId
-   */
-  async getStockByItem(itemId: number): Promise<IStock[]> {
-    const response = await api.get<ApiResponse<IStock[]>>(
-      `/admin/inventory/stock/item/${itemId}`
-    )
-    return response.data.data
-  },
-
-  /**
-   * Get low stock items
-   * GET /admin/inventory/stock/low
-   */
-  async getLowStock(warehouseId?: number): Promise<ILowStockItem[]> {
-    const response = await api.get<ApiResponse<ILowStockItem[]>>(
-      '/admin/inventory/stock/low',
-      { params: { warehouseId } }
-    )
-    return response.data.data
-  },
-
-  /**
-   * Get out of stock items
-   * GET /admin/inventory/stock/out
-   */
-  async getOutOfStock(warehouseId?: number): Promise<ILowStockItem[]> {
-    const response = await api.get<ApiResponse<ILowStockItem[]>>(
-      '/admin/inventory/stock/out',
-      { params: { warehouseId } }
-    )
-    return response.data.data
-  },
-
-  /**
-   * Get stock summary/statistics
    * GET /admin/inventory/stock/summary
+   * Get stock summary for dashboard
    */
   async getStockSummary(warehouseId?: number): Promise<IStockSummary> {
-    const response = await api.get<ApiResponse<IStockSummary>>(
+    const response = await api.get<{ success: boolean; data: IStockSummary }>(
       '/admin/inventory/stock/summary',
-      { params: { warehouseId } }
+      { params: warehouseId ? { warehouseId } : undefined }
     )
     return response.data.data
   },
 
   /**
-   * Adjust stock manually
-   * POST /admin/inventory/stock/adjust
+   * GET /admin/inventory/stock/low
+   * Get items with low stock
    */
-  async adjustStock(data: IStockAdjustmentDto): Promise<IStock> {
-    const response = await api.post<ApiResponse<IStock>>(
+  async getLowStock(params?: IStockAlertParams): Promise<IStock[]> {
+    const response = await api.get<{ success: boolean; data: IStock[] }>(
+      '/admin/inventory/stock/low',
+      { params }
+    )
+    return response.data.data || []
+  },
+
+  /**
+   * GET /admin/inventory/stock/out
+   * Get items that are out of stock
+   */
+  async getOutOfStock(params?: IStockAlertParams): Promise<IStock[]> {
+    const response = await api.get<{ success: boolean; data: IStock[] }>(
+      '/admin/inventory/stock/out',
+      { params }
+    )
+    return response.data.data || []
+  },
+
+  /**
+   * POST /admin/inventory/stock/adjust
+   * Manually adjust stock level
+   */
+  async adjustStock(data: IAdjustStockDto): Promise<IStock> {
+    const response = await api.post<{ success: boolean; data: IStock }>(
       '/admin/inventory/stock/adjust',
       data
+    )
+    return response.data.data
+  },
+
+  /**
+   * GET /admin/inventory/alerts
+   * Get stock alerts
+   */
+  async getAlerts(params?: IGetStockAlertsParams): Promise<IStockAlert[]> {
+    const response = await api.get<{ success: boolean; data: IStockAlert[] }>(
+      '/admin/inventory/alerts',
+      { params }
+    )
+    return response.data.data || []
+  },
+
+  /**
+   * POST /admin/inventory/alerts/:id/acknowledge
+   * Acknowledge a stock alert
+   */
+  async acknowledgeAlert(id: number): Promise<IStockAlert> {
+    const response = await api.post<{ success: boolean; data: IStockAlert }>(
+      `/admin/inventory/alerts/${id}/acknowledge`
     )
     return response.data.data
   },

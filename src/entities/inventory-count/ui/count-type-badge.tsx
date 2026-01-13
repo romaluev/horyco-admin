@@ -1,26 +1,15 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
-import { CountType, COUNT_TYPE_LABELS } from '@/shared/types/inventory'
-import { cn } from '@/shared/lib/utils'
+import { COUNT_TYPE_LABELS, type CountType } from '../model/types'
 
-interface CountTypeBadgeProps {
+interface ICountTypeBadgeProps {
   type: CountType
-  className?: string
 }
 
-const typeStyles: Record<CountType, string> = {
-  [CountType.FULL]: 'bg-purple-100 text-purple-800 border-purple-200',
-  [CountType.CYCLE]: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  [CountType.SPOT]: 'bg-pink-100 text-pink-800 border-pink-200',
-}
-
-export function CountTypeBadge({ type, className }: CountTypeBadgeProps) {
+export function CountTypeBadge({ type }: ICountTypeBadgeProps) {
   return (
-    <Badge
-      variant="outline"
-      className={cn('font-normal', typeStyles[type], className)}
-    >
+    <Badge variant="outline">
       {COUNT_TYPE_LABELS[type]}
     </Badge>
   )

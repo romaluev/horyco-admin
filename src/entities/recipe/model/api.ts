@@ -1,20 +1,19 @@
 /**
  * Recipe API Client
- * Based on /api/admin/inventory/recipes endpoints
+ * Based on /admin/inventory/recipes endpoints
  */
 
 import api from '@/shared/lib/axios'
 
 import type {
   IRecipe,
-  IRecipesResponse,
+  IRecipeIngredient,
   ICreateRecipeDto,
   IUpdateRecipeDto,
   IGetRecipesParams,
-  IRecipeIngredient,
   ICreateRecipeIngredientDto,
   IUpdateRecipeIngredientDto,
-  IRecipeCostResult,
+  IDuplicateRecipeDto,
 } from './types'
 
 interface ApiResponse<T> {
@@ -26,15 +25,19 @@ interface ApiResponse<T> {
 
 export const recipeApi = {
   /**
-   * Get all recipes with filters
+   * Get all recipes
    * GET /admin/inventory/recipes
    */
-  async getRecipes(params?: IGetRecipesParams): Promise<IRecipesResponse> {
-    const response = await api.get<ApiResponse<IRecipesResponse>>(
+  async getRecipes(params?: IGetRecipesParams): Promise<IRecipe[]> {
+    const response = await api.get<ApiResponse<IRecipe[]> | IRecipe[]>(
       '/admin/inventory/recipes',
       { params }
     )
-    return response.data.data
+    const data = response.data
+    if (Array.isArray(data)) {
+      return data
+    }
+    return data.data || []
   },
 
   /**
@@ -49,7 +52,7 @@ export const recipeApi = {
   },
 
   /**
-   * Create new recipe
+   * Create recipe
    * POST /admin/inventory/recipes
    */
   async createRecipe(data: ICreateRecipeDto): Promise<IRecipe> {
@@ -84,9 +87,10 @@ export const recipeApi = {
    * Duplicate recipe
    * POST /admin/inventory/recipes/:id/duplicate
    */
-  async duplicateRecipe(id: number): Promise<IRecipe> {
+  async duplicateRecipe(id: number, data: IDuplicateRecipeDto): Promise<IRecipe> {
     const response = await api.post<ApiResponse<IRecipe>>(
-      `/admin/inventory/recipes/${id}/duplicate`
+      `/admin/inventory/recipes/${id}/duplicate`,
+      data
     )
     return response.data.data
   },
@@ -95,32 +99,38 @@ export const recipeApi = {
    * Recalculate recipe cost
    * POST /admin/inventory/recipes/:id/recalculate
    */
-  async recalculateCost(id: number): Promise<IRecipeCostResult> {
-    const response = await api.post<ApiResponse<IRecipeCostResult>>(
+  async recalculateCost(id: number): Promise<IRecipe> {
+    const response = await api.post<ApiResponse<IRecipe>>(
       `/admin/inventory/recipes/${id}/recalculate`
     )
     return response.data.data
   },
 
-  // ===== Ingredients =====
+  /**
+   * Get recipe ingredients
+   * GET /admin/inventory/recipes/:id/ingredients
+   */
+  async getIngredients(id: number): Promise<IRecipeIngredient[]> {
+    const response = await api.get<ApiResponse<IRecipeIngredient[]>>(
+      `/admin/inventory/recipes/${id}/ingredients`
+    )
+    return response.data.data
+  },
 
   /**
    * Add ingredient to recipe
    * POST /admin/inventory/recipes/:id/ingredients
    */
-  async addIngredient(
-    recipeId: number,
-    data: ICreateRecipeIngredientDto
-  ): Promise<IRecipeIngredient> {
+  async addIngredient(id: number, data: ICreateRecipeIngredientDto): Promise<IRecipeIngredient> {
     const response = await api.post<ApiResponse<IRecipeIngredient>>(
-      `/admin/inventory/recipes/${recipeId}/ingredients`,
+      `/admin/inventory/recipes/${id}/ingredients`,
       data
     )
     return response.data.data
   },
 
   /**
-   * Update ingredient
+   * Update recipe ingredient
    * PATCH /admin/inventory/recipes/:id/ingredients/:ingredientId
    */
   async updateIngredient(
@@ -140,8 +150,6 @@ export const recipeApi = {
    * DELETE /admin/inventory/recipes/:id/ingredients/:ingredientId
    */
   async removeIngredient(recipeId: number, ingredientId: number): Promise<void> {
-    await api.delete(
-      `/admin/inventory/recipes/${recipeId}/ingredients/${ingredientId}`
-    )
+    await api.delete(`/admin/inventory/recipes/${recipeId}/ingredients/${ingredientId}`)
   },
 }

@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { IconTrash } from '@tabler/icons-react'
 
-import { Button } from '@/shared/ui/base/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,18 +15,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 
 import { useDeleteInventoryItem } from '@/entities/inventory-item'
 
 interface IDeleteItemButtonProps {
   itemId: number
   itemName: string
+  trigger?: React.ReactNode
   onSuccess?: () => void
 }
 
 export const DeleteItemButton = ({
   itemId,
   itemName,
+  trigger,
   onSuccess,
 }: IDeleteItemButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -45,15 +47,17 @@ export const DeleteItemButton = ({
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-destructive">
-          <IconTrash className="h-4 w-4" />
-        </Button>
+        {trigger || (
+          <Button variant="ghost" size="icon">
+            <IconTrash className="h-4 w-4 text-destructive" />
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить товар?</AlertDialogTitle>
           <AlertDialogDescription>
-            Вы уверены, что хотите удалить товар «{itemName}»? Это действие
+            Вы уверены, что хотите удалить товар &quot;{itemName}&quot;? Это действие
             нельзя отменить.
           </AlertDialogDescription>
         </AlertDialogHeader>
