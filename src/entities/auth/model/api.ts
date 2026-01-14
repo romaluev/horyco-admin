@@ -21,6 +21,10 @@ import type {
   VerifyStaffInviteResponse,
   CompleteStaffInviteRequest,
   CompleteStaffInviteResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from '.'
 import type { IEmployee } from '@/entities/employee'
 
@@ -293,5 +297,39 @@ export const authApi = {
     }
 
     return result
+  },
+
+  // ============================================
+  // Password Recovery Endpoints
+  // ============================================
+
+  /**
+   * Request password reset OTP
+   * @param data - Email address
+   * @returns Promise with success message and OTP expiration time
+   */
+  forgotPassword: async (
+    data: ForgotPasswordRequest
+  ): Promise<ForgotPasswordResponse> => {
+    const response = await api.post<ForgotPasswordResponse>(
+      '/auth/forgot-password',
+      data
+    )
+    return response.data
+  },
+
+  /**
+   * Reset password with OTP code
+   * @param data - Email, OTP code, and new password
+   * @returns Promise with success message
+   */
+  resetPassword: async (
+    data: ResetPasswordRequest
+  ): Promise<ResetPasswordResponse> => {
+    const response = await api.post<ResetPasswordResponse>(
+      '/auth/reset-password',
+      data
+    )
+    return response.data
   },
 }
