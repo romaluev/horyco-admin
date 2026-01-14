@@ -1,97 +1,115 @@
 /**
  * Purchase Order Entity Types
- * Based on /api/admin/inventory/purchase-orders endpoints
+ * Based on Inventory Management System documentation
  */
 
-import { POStatus } from '@/shared/types/inventory'
+export type POStatus = 'draft' | 'sent' | 'partial' | 'received' | 'cancelled'
 
 export interface IPurchaseOrder {
   id: number
-  tenantId: number
-  branchId: number
-  poNumber: string
-  supplierId: number
-  supplier?: {
-    id: number
-    name: string
-    code?: string
-  }
   warehouseId: number
-  warehouse?: {
-    id: number
-    name: string
-  }
+  supplierId: number
+  warehouseName: string
+  supplierName: string
+  poNumber: string
   status: POStatus
-  expectedDate?: string
-  receivedDate?: string
+  orderDate: string
+  expectedDate: string | null
+  receivedDate: string | null
   subtotal: number
+  discountAmount: number
   taxAmount: number
-  total: number
-  notes?: string
-  items: IPurchaseOrderItem[]
-  createdBy?: number
-  createdByUser?: {
-    id: number
-    name: string
-  }
+  totalAmount: number
+  currency: string
+  notes: string | null
+  sentAt: string | null
+  sentBy: number | null
+  cancelledAt: string | null
+  cancelledBy: number | null
+  cancelReason: string | null
   createdAt: string
   updatedAt: string
-  // Convenience flat fields for list views
-  supplierName?: string
-  warehouseName?: string
-  totalItems?: number
-  totalAmount?: number
+  items?: IPurchaseOrderItem[]
+  receives?: IPurchaseOrderReceive[]
 }
 
 export interface IPurchaseOrderItem {
   id: number
   purchaseOrderId: number
   itemId: number
-  item?: {
-    id: number
-    name: string
-    sku?: string
-    unit: string
-  }
-  quantity: number
+  itemName: string
+  itemUnit: string
+  quantityOrdered: number
+  quantityReceived: number
   unit: string
   unitPrice: number
-  totalPrice: number
-  receivedQuantity: number
-  actualPrice?: number
-  // Convenience flat field
-  inventoryItemName?: string
+  discountPct: number
+  taxRate: number
+  lineTotal: number
+  notes: string | null
+}
+
+export interface IPurchaseOrderReceive {
+  id: number
+  purchaseOrderId: number
+  receiveNumber: string
+  receiveDate: string
+  notes: string | null
+  receivedBy: number
+  createdAt: string
+  items?: IPurchaseOrderReceiveItem[]
+}
+
+export interface IPurchaseOrderReceiveItem {
+  id: number
+  receiveId: number
+  poItemId: number
+  quantityReceived: number
+  unitPrice: number
+  notes: string | null
 }
 
 export interface ICreatePurchaseOrderDto {
-  branchId: number
-  supplierId: number
   warehouseId: number
+  supplierId: number
+  orderDate: string
   expectedDate?: string
+  discountAmount?: number
+  taxAmount?: number
+  currency?: string
   notes?: string
-  items: ICreatePOItemDto[]
+  items?: ICreatePOItemDto[]
 }
 
 export interface IUpdatePurchaseOrderDto {
   expectedDate?: string
+  discountAmount?: number
+  taxAmount?: number
   notes?: string
 }
 
 export interface ICreatePOItemDto {
   itemId: number
-  quantity: number
+  quantityOrdered: number
   unit: string
   unitPrice: number
+  discountPct?: number
+  taxRate?: number
+  notes?: string
 }
 
 export interface IUpdatePOItemDto {
-  quantity?: number
+  quantityOrdered?: number
   unit?: string
   unitPrice?: number
+  discountPct?: number
+  taxRate?: number
+  notes?: string
 }
 
 export interface IReceivePODto {
   receiveDate: string
+  receiveNumber?: string
   notes?: string
   items: IReceivePOItemDto[]
 }
@@ -99,19 +117,34 @@ export interface IReceivePODto {
 export interface IReceivePOItemDto {
   poItemId: number
   quantityReceived: number
-  actualPrice?: number
+  unitPrice?: number
+  notes?: string
+}
+
+export interface ICancelPODto {
+  reason: string
 }
 
 export interface IGetPurchaseOrdersParams {
-  branchId?: number
   status?: POStatus
   supplierId?: number
   warehouseId?: number
   from?: string
   to?: string
-  page?: number
-  limit?: number
 }
 
-// API returns purchase orders array directly
-export type IPurchaseOrdersResponse = IPurchaseOrder[]
+export const PO_STATUS_LABELS: Record<POStatus, string> = {
+  draft: 'Черновик',
+  sent: 'Отправлен',
+  partial: 'Частично получен',
+  received: 'Получен',
+  cancelled: 'Отменён',
+}
+
+export const PO_STATUS_COLORS: Record<POStatus, string> = {
+  draft: 'secondary',
+  sent: 'warning',
+  partial: 'default',
+  received: 'success',
+  cancelled: 'destructive',
+}

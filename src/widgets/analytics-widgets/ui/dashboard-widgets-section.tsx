@@ -23,22 +23,36 @@ interface DashboardWidgetsSectionProps {
 }
 
 // Widget type configurations
-const WIDGET_CONFIG: Record<
-  IDashboardWidget['type'],
-  {
-    title: string
-    component: 'topProducts' | 'paymentMethods' | 'channelSplit' | 'staffRanking' | 'hourlyBreakdown' | 'goalProgress' | 'alerts'
-  }
-> = {
-  TOP_PRODUCTS: { title: 'Топ продукты', component: 'topProducts' },
-  PAYMENT_METHODS: { title: 'Способы оплаты', component: 'paymentMethods' },
-  CHANNEL_SPLIT: { title: 'Каналы продаж', component: 'channelSplit' },
-  STAFF_RANKING: { title: 'Рейтинг сотрудников', component: 'staffRanking' },
-  HOURLY_BREAKDOWN: { title: 'По часам', component: 'hourlyBreakdown' },
-  GOAL_PROGRESS: { title: 'Цели', component: 'goalProgress' },
-  ALERTS: { title: 'Уведомления', component: 'alerts' },
-  CUSTOMER_SEGMENTS: { title: 'Сегменты клиентов', component: 'topProducts' },
-  BRANCH_COMPARISON: { title: 'Сравнение филиалов', component: 'topProducts' },
+const WIDGET_CONFIG: Record<IDashboardWidget['type'], { title: string }> = {
+  // Data widgets
+  TOP_PRODUCTS: { title: 'Топ продукты' },
+  PAYMENT_METHODS: { title: 'Способы оплаты' },
+  CHANNEL_SPLIT: { title: 'Каналы продаж' },
+  STAFF_RANKING: { title: 'Рейтинг сотрудников' },
+  CUSTOMER_SEGMENTS: { title: 'Сегменты клиентов' },
+  BRANCH_COMPARISON: { title: 'Сравнение филиалов' },
+  ORDERS_BY_CATEGORY: { title: 'Заказы по категориям' },
+  VISITORS_TRAFFIC: { title: 'Трафик посетителей' },
+
+  // Chart widgets
+  REVENUE_OVERVIEW: { title: 'Обзор дохода' },
+  ORDERS_CHART: { title: 'График заказов' },
+  TRANSACTIONS_SUMMARY: { title: 'Сводка транзакций' },
+  INCOME_EXPENSE: { title: 'Доходы и расходы' },
+  DAILY_COMPARISON: { title: 'Дневное сравнение' },
+  CUSTOMER_RATINGS: { title: 'Рейтинг клиентов' },
+
+  // Analytics widgets
+  PERFORMANCE_RADAR: { title: 'Эффективность' },
+  CONVERSION_FUNNEL: { title: 'Воронка конверсии' },
+  HOURLY_BREAKDOWN: { title: 'По часам' },
+  GOAL_PROGRESS: { title: 'Цели' },
+  GOAL_RADIAL: { title: 'Прогресс целей' },
+  ANOMALY_DETECTION: { title: 'Обнаружение аномалий' },
+  SALES_METRICS: { title: 'Метрики продаж' },
+
+  // System widgets
+  ALERTS: { title: 'Уведомления' },
 }
 
 export function DashboardWidgetsSection({

@@ -1,18 +1,13 @@
-/**
- * Writeoffs Page
- * Page for managing inventory writeoffs
- */
-
 'use client'
 
 import { useState } from 'react'
 
-import { IconEye } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import PageContainer from '@/shared/ui/layout/page-container'
-import { Button } from '@/shared/ui/base/button'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -28,168 +23,140 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import { Button } from '@/shared/ui/base/button'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { WarehouseSelector } from '@/entities/warehouse'
 import {
   useGetWriteoffs,
   WriteoffStatusBadge,
   WriteoffReasonBadge,
-} from '@/entities/writeoff'
-import { CreateWriteoffDialog } from '@/features/writeoff-form'
-import {
-  WriteoffStatus,
-  WriteoffReason,
   WRITEOFF_STATUS_LABELS,
   WRITEOFF_REASON_LABELS,
-} from '@/shared/types/inventory'
+  type WriteoffStatus,
+  type WriteoffReason,
+} from '@/entities/writeoff'
+import { CreateWriteoffDialog } from '@/features/writeoff-form'
 
 export default function WriteoffsPage() {
-  const { selectedBranchId } = useBranchStore()
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [reasonFilter, setReasonFilter] = useState<string>('all')
+  const [status, setStatus] = useState<WriteoffStatus | ''>('')
+  const [reason, setReason] = useState<WriteoffReason | ''>('')
 
-  const { data, isLoading } = useGetWriteoffs(
-    selectedBranchId || 0,
-    {
-      warehouseId: selectedWarehouse || undefined,
-      status: statusFilter !== 'all' ? (statusFilter as WriteoffStatus) : undefined,
-      reason: reasonFilter !== 'all' ? (reasonFilter as WriteoffReason) : undefined,
-    },
-    !!selectedBranchId
-  )
+  const { data: writeoffs, isLoading } = useGetWriteoffs({
+    status: status || undefined,
+    reason: reason || undefined,
+  })
 
-  const writeoffs = data?.data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'UZS',
+      maximumFractionDigits: 0,
+    }).format(value)
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Списания</h1>
-            <p className="text-muted-foreground">
-              Учёт списаний и потерь
-            </p>
-          </div>
-          <CreateWriteoffDialog branchId={selectedBranchId} />
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Списания"
+            description="Акты списания товаров со склада"
+          />
+          <CreateWriteoffDialog />
         </div>
+        <Separator />
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="w-full sm:w-48">
-            <WarehouseSelector
-              branchId={selectedBranchId}
-              value={selectedWarehouse}
-              onChange={setSelectedWarehouse}
-              placeholder="Все склады"
-              allowClear
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Статус" />
+        <div className="flex flex-wrap gap-4">
+          <Select
+            value={status || 'all'}
+            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as WriteoffStatus))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все статусы" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все статусы</SelectItem>
-              {Object.values(WriteoffStatus).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {WRITEOFF_STATUS_LABELS[status]}
+              {Object.entries(WRITEOFF_STATUS_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Select value={reasonFilter} onValueChange={setReasonFilter}>
-            <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Причина" />
+
+          <Select
+            value={reason || 'all'}
+            onValueChange={(val) => setReason(val === 'all' ? '' : (val as WriteoffReason))}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Все причины" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все причины</SelectItem>
-              {Object.values(WriteoffReason).map((reason) => (
-                <SelectItem key={reason} value={reason}>
-                  {WRITEOFF_REASON_LABELS[reason]}
+              {Object.entries(WRITEOFF_REASON_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>№</TableHead>
-                <TableHead>Дата</TableHead>
-                <TableHead>Склад</TableHead>
-                <TableHead>Причина</TableHead>
-                <TableHead>Статус</TableHead>
-                <TableHead>Позиций</TableHead>
-                <TableHead>Сумма</TableHead>
-                <TableHead>Создал</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                  </TableRow>
-                ))
-              ) : writeoffs.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      Списания не найдены
-                    </p>
-                  </TableCell>
+                  <TableHead>Номер</TableHead>
+                  <TableHead>Склад</TableHead>
+                  <TableHead>Причина</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead className="text-right">Сумма</TableHead>
+                  <TableHead>Дата</TableHead>
+                  <TableHead className="w-[100px]" />
                 </TableRow>
-              ) : (
-                writeoffs.map((writeoff) => (
-                  <TableRow key={writeoff.id}>
-                    <TableCell className="font-medium">#{writeoff.id}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {format(new Date(writeoff.createdAt), 'dd.MM.yyyy', {
-                        locale: ru,
-                      })}
-                    </TableCell>
-                    <TableCell>{writeoff.warehouseName}</TableCell>
-                    <TableCell>
-                      <WriteoffReasonBadge reason={writeoff.reason} />
-                    </TableCell>
-                    <TableCell>
-                      <WriteoffStatusBadge status={writeoff.status} />
-                    </TableCell>
-                    <TableCell>{writeoff.totalItems}</TableCell>
-                    <TableCell>{(writeoff.totalCost ?? 0).toLocaleString()} сум</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {writeoff.createdByName}
+              </TableHeader>
+              <TableBody>
+                {!writeoffs?.length ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Списания не найдены
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  writeoffs.map((writeoff) => (
+                    <TableRow key={writeoff.id}>
+                      <TableCell className="font-medium">{writeoff.writeoffNumber}</TableCell>
+                      <TableCell>{writeoff.warehouseName}</TableCell>
+                      <TableCell>
+                        <WriteoffReasonBadge reason={writeoff.reason} />
+                      </TableCell>
+                      <TableCell>
+                        <WriteoffStatusBadge status={writeoff.status} />
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {formatCurrency(writeoff.totalValue)}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(new Date(writeoff.createdAt), 'dd MMM yyyy', { locale: ru })}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm" disabled>
+                          Открыть
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </PageContainer>
   )

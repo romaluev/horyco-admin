@@ -1,38 +1,73 @@
 /**
  * Inventory Item Entity Types
- * Based on /api/admin/inventory/items endpoints
+ * Based on Inventory Management System documentation
  */
-
-import type { ItemCategory, InventoryUnit } from '@/shared/types/inventory'
 
 export interface IInventoryItem {
   id: number
-  tenantId: number
   name: string
-  sku?: string
-  barcode?: string
-  category: string
-  unit: InventoryUnit
+  sku: string | null
+  barcode: string | null
+  category: string | null
+  unit: string
   minStockLevel: number
-  maxStockLevel?: number
-  reorderPoint?: number
-  reorderQuantity?: number
+  maxStockLevel: number | null
+  reorderPoint: number | null
+  reorderQuantity: number | null
   isActive: boolean
   isSemiFinished: boolean
   isTrackable: boolean
-  taxRate?: number
-  defaultSupplierId?: number
-  defaultSupplier?: {
-    id: number
-    name: string
-  }
-  conversions?: IUnitConversion[]
-  notes?: string
+  shelfLifeDays: number | null
+  defaultSupplierId: number | null
+  taxRate: number
+  notes: string | null
   createdAt: string
   updatedAt: string
-  // Convenience aliases for pages
-  minStock?: number
-  maxStock?: number
+}
+
+export interface ICreateInventoryItemDto {
+  name: string
+  sku?: string
+  barcode?: string
+  category?: string
+  unit: string
+  minStockLevel?: number
+  maxStockLevel?: number
+  reorderPoint?: number
+  reorderQuantity?: number
+  isActive?: boolean
+  isSemiFinished?: boolean
+  isTrackable?: boolean
+  shelfLifeDays?: number
+  defaultSupplierId?: number
+  taxRate?: number
+  notes?: string
+}
+
+export interface IUpdateInventoryItemDto {
+  name?: string
+  sku?: string
+  barcode?: string
+  category?: string
+  unit?: string
+  minStockLevel?: number
+  maxStockLevel?: number
+  reorderPoint?: number
+  reorderQuantity?: number
+  isActive?: boolean
+  isSemiFinished?: boolean
+  isTrackable?: boolean
+  shelfLifeDays?: number
+  defaultSupplierId?: number
+  taxRate?: number
+  notes?: string
+}
+
+export interface IGetInventoryItemsParams {
+  category?: string
+  isActive?: boolean
+  isSemiFinished?: boolean
+  search?: string
 }
 
 export interface IUnitConversion {
@@ -41,57 +76,12 @@ export interface IUnitConversion {
   fromUnit: string
   toUnit: string
   conversionFactor: number
-  createdAt: string
-}
-
-export interface ICreateInventoryItemDto {
-  name: string
-  sku?: string
-  barcode?: string
-  category?: string
-  unit: InventoryUnit
-  minStockLevel?: number
-  maxStockLevel?: number
-  reorderPoint?: number
-  reorderQuantity?: number
-  isActive?: boolean
-  isSemiFinished?: boolean
-  isTrackable?: boolean
-  taxRate?: number
-  defaultSupplierId?: number
-}
-
-export interface IUpdateInventoryItemDto {
-  name?: string
-  sku?: string
-  barcode?: string
-  category?: string
-  unit?: InventoryUnit
-  minStockLevel?: number
-  maxStockLevel?: number
-  reorderPoint?: number
-  reorderQuantity?: number
-  isActive?: boolean
-  isSemiFinished?: boolean
-  isTrackable?: boolean
-  taxRate?: number
-  defaultSupplierId?: number
+  notes: string | null
 }
 
 export interface ICreateUnitConversionDto {
   fromUnit: string
   toUnit: string
   conversionFactor: number
+  notes?: string
 }
-
-export interface IGetInventoryItemsParams {
-  search?: string
-  category?: ItemCategory | string
-  isActive?: boolean
-  isSemiFinished?: boolean
-  page?: number
-  limit?: number
-}
-
-// API returns inventory items array directly
-export type IInventoryItemsResponse = IInventoryItem[]

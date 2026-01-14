@@ -1,34 +1,41 @@
-/**
- * Warehouse Query Hooks
- * TanStack React Query hooks for fetching warehouse data
- */
-
 import { useQuery } from '@tanstack/react-query'
-import type { UseQueryOptions } from '@tanstack/react-query'
 
 import { warehouseApi } from './api'
 import { warehouseKeys } from './query-keys'
-import type { IWarehouse, IWarehousesResponse, IGetWarehousesParams } from './types'
 
-export const useGetWarehouses = (
-  params?: IGetWarehousesParams,
-  options?: Omit<UseQueryOptions<IWarehousesResponse>, 'queryKey' | 'queryFn'>
-) => {
+import type { IGetWarehousesParams } from './types'
+
+/**
+ * Get all warehouses
+ */
+export const useGetWarehouses = (params?: IGetWarehousesParams) => {
   return useQuery({
     queryKey: warehouseKeys.list(params),
     queryFn: () => warehouseApi.getWarehouses(params),
-    ...options,
   })
 }
 
-export const useGetWarehouseById = (
-  id: number,
-  options?: Omit<UseQueryOptions<IWarehouse>, 'queryKey' | 'queryFn'>
-) => {
+// Alias for backward compatibility
+export const useWarehouseList = useGetWarehouses
+
+/**
+ * Get warehouse by ID
+ */
+export const useWarehouseById = (id: number) => {
   return useQuery({
     queryKey: warehouseKeys.detail(id),
     queryFn: () => warehouseApi.getWarehouseById(id),
     enabled: !!id,
-    ...options,
+  })
+}
+
+/**
+ * Get warehouse stock summary
+ */
+export const useWarehouseStockSummary = (id: number) => {
+  return useQuery({
+    queryKey: warehouseKeys.stockSummary(id),
+    queryFn: () => warehouseApi.getWarehouseStockSummary(id),
+    enabled: !!id,
   })
 }

@@ -1,92 +1,84 @@
 'use client'
 
-import { IconArrowsExchange } from '@tabler/icons-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { ArrowLeftRight } from 'lucide-react'
+import Link from 'next/link'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/base/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
-import { ScrollArea } from '@/shared/ui/base/scroll-area'
 
-import { useGetMovements } from '@/entities/stock-movement'
-import { MovementTypeBadge, MovementQuantityBadge } from '@/entities/stock-movement'
+import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
 
 interface IRecentMovementsWidgetProps {
   warehouseId?: number
-  limit?: number
+  size?: number
 }
 
-export const RecentMovementsWidget = ({
+export function RecentMovementsWidget({
   warehouseId,
-  limit = 5,
-}: IRecentMovementsWidgetProps) => {
-  const { data, isLoading } = useGetMovements({ warehouseId, limit })
+  size = 5,
+}: IRecentMovementsWidgetProps) {
+  const { data, isLoading } = useGetMovements({
+    warehouseId,
+    size,
+  })
 
-  const movements = data || []
+  const movements = data?.data ?? []
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <IconArrowsExchange className="h-5 w-5 text-blue-500" />
-          Последние движения
-        </CardTitle>
-        <CardDescription>История движения товаров</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <ArrowLeftRight className="h-5 w-5" />
+            Последние движения
+          </CardTitle>
+          <CardDescription>История операций с товарами</CardDescription>
+        </div>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/dashboard/inventory/movements">Все</Link>
+        </Button>
       </CardHeader>
       <CardContent>
         {!warehouseId ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            Выберите склад
+          <p className="text-center text-sm text-muted-foreground py-4">
+            Выберите склад для просмотра
           </p>
         ) : isLoading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex items-center justify-between">
-                <Skeleton className="h-4 w-40" />
-                <Skeleton className="h-6 w-16" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+                <Skeleton className="h-6 w-24" />
               </div>
             ))}
           </div>
-        ) : movements.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
+        ) : !movements.length ? (
+          <p className="text-center text-sm text-muted-foreground py-4">
             Нет движений товаров
           </p>
         ) : (
-          <ScrollArea className="h-[200px]">
-            <div className="space-y-3">
-              {movements.map((movement) => (
-                <div
-                  key={movement.id}
-                  className="flex items-center justify-between"
-                >
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {movement.inventoryItemName || movement.item?.name}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <MovementTypeBadge type={movement.movementType} />
-                      <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(movement.createdAt), {
-                          addSuffix: true,
-                          locale: ru,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  <MovementQuantityBadge
-                    quantity={movement.quantity}
-                    unit={movement.unit || movement.item?.unit || ''}
-                  />
+          <div className="space-y-3">
+            {movements.map((movement) => (
+              <div
+                key={movement.id}
+                className="flex items-center justify-between rounded-lg border p-3"
+              >
+                <div className="space-y-1">
+                  <p className="font-medium leading-none">{movement.item?.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {movement.warehouse?.name} •{' '}
+                    {movement.quantity > 0 ? '+' : ''}
+                    {movement.quantity} {movement.item?.unit}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </ScrollArea>
+                <MovementTypeBadge type={movement.type} showIcon={false} />
+              </div>
+            ))}
+          </div>
         )}
       </CardContent>
     </Card>

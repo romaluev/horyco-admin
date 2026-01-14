@@ -1,13 +1,9 @@
-/**
- * Supplier Mutation Hooks
- * TanStack React Query hooks for modifying supplier data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { supplierApi } from './api'
 import { supplierKeys } from './query-keys'
+
 import type {
   ICreateSupplierDto,
   IUpdateSupplierDto,
@@ -15,82 +11,123 @@ import type {
   IUpdateSupplierItemDto,
 } from './types'
 
+/**
+ * Create supplier mutation
+ */
 export const useCreateSupplier = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: ICreateSupplierDto) => supplierApi.createSupplier(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all() })
-      toast.success('Поставщик успешно создан')
+      queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
+      toast.success('Поставщик создан')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при создании поставщика')
-      console.error('Create supplier error:', error)
     },
   })
 }
 
+/**
+ * Update supplier mutation
+ */
 export const useUpdateSupplier = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IUpdateSupplierDto }) =>
       supplierApi.updateSupplier(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all() })
-      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(variables.id) })
-      toast.success('Поставщик успешно обновлён')
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(id) })
+      toast.success('Поставщик обновлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении поставщика')
-      console.error('Update supplier error:', error)
     },
   })
 }
 
+/**
+ * Delete supplier mutation
+ */
 export const useDeleteSupplier = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => supplierApi.deleteSupplier(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all() })
-      toast.success('Поставщик успешно удалён')
+      queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
+      toast.success('Поставщик удален')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении поставщика')
-      console.error('Delete supplier error:', error)
     },
   })
 }
 
-// Supplier Item Mutations
+/**
+ * Activate supplier mutation
+ */
+export const useActivateSupplier = () => {
+  const queryClient = useQueryClient()
 
+  return useMutation({
+    mutationFn: (id: number) => supplierApi.activateSupplier(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(id) })
+      toast.success('Поставщик активирован')
+    },
+    onError: () => {
+      toast.error('Ошибка при активации поставщика')
+    },
+  })
+}
+
+/**
+ * Deactivate supplier mutation
+ */
+export const useDeactivateSupplier = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number) => supplierApi.deactivateSupplier(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(id) })
+      toast.success('Поставщик деактивирован')
+    },
+    onError: () => {
+      toast.error('Ошибка при деактивации поставщика')
+    },
+  })
+}
+
+/**
+ * Add item to supplier catalog mutation
+ */
 export const useAddSupplierItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      supplierId,
-      data,
-    }: {
-      supplierId: number
-      data: ICreateSupplierItemDto
-    }) => supplierApi.addSupplierItem(supplierId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: supplierKeys.items(variables.supplierId),
-      })
+    mutationFn: ({ supplierId, data }: { supplierId: number; data: ICreateSupplierItemDto }) =>
+      supplierApi.addSupplierItem(supplierId, data),
+    onSuccess: (_, { supplierId }) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
       toast.success('Товар добавлен к поставщику')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при добавлении товара')
-      console.error('Add supplier item error:', error)
     },
   })
 }
 
+/**
+ * Update supplier item mutation
+ */
 export const useUpdateSupplierItem = () => {
   const queryClient = useQueryClient()
 
@@ -104,42 +141,33 @@ export const useUpdateSupplierItem = () => {
       itemId: number
       data: IUpdateSupplierItemDto
     }) => supplierApi.updateSupplierItem(supplierId, itemId, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: supplierKeys.items(variables.supplierId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: supplierKeys.priceHistory(variables.supplierId),
-      })
-      toast.success('Товар обновлён')
+    onSuccess: (_, { supplierId }) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
+      toast.success('Товар поставщика обновлен')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при обновлении товара')
-      console.error('Update supplier item error:', error)
     },
   })
 }
 
+/**
+ * Remove item from supplier catalog mutation
+ */
 export const useRemoveSupplierItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      supplierId,
-      itemId,
-    }: {
-      supplierId: number
-      itemId: number
-    }) => supplierApi.removeSupplierItem(supplierId, itemId),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: supplierKeys.items(variables.supplierId),
-      })
-      toast.success('Товар удалён от поставщика')
+    mutationFn: ({ supplierId, itemId }: { supplierId: number; itemId: number }) =>
+      supplierApi.removeSupplierItem(supplierId, itemId),
+    onSuccess: (_, { supplierId }) => {
+      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
+      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
+      toast.success('Товар удален от поставщика')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при удалении товара')
-      console.error('Remove supplier item error:', error)
     },
   })
 }

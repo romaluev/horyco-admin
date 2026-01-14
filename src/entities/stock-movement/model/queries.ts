@@ -1,39 +1,32 @@
-/**
- * Stock Movement Query Hooks
- * TanStack React Query hooks for fetching movement data
- */
-
 import { useQuery } from '@tanstack/react-query'
-import type { UseQueryOptions } from '@tanstack/react-query'
 
 import { stockMovementApi } from './api'
-import { stockMovementKeys } from './query-keys'
-import type {
-  IMovementsResponse,
-  IMovementsSummary,
-  IGetMovementsParams,
-} from './types'
+import { movementKeys } from './query-keys'
 
-export const useGetMovements = (
-  params?: IGetMovementsParams,
-  options?: Omit<UseQueryOptions<IMovementsResponse>, 'queryKey' | 'queryFn'>
-) => {
+import type { IGetMovementsParams } from './types'
+
+/**
+ * Get stock movements with filters
+ * Note: warehouseId is required by the backend
+ */
+export const useGetMovements = (params?: IGetMovementsParams) => {
   return useQuery({
-    queryKey: stockMovementKeys.list(params),
+    queryKey: movementKeys.list(params),
     queryFn: () => stockMovementApi.getMovements(params),
     enabled: !!params?.warehouseId,
-    ...options,
   })
 }
 
-export const useGetMovementSummary = (
-  params?: { warehouseId?: number; from?: string; to?: string },
-  options?: Omit<UseQueryOptions<IMovementsSummary>, 'queryKey' | 'queryFn'>
-) => {
+// Alias
+export const useMovementList = useGetMovements
+
+/**
+ * Get single movement by ID
+ */
+export const useMovementById = (id: number) => {
   return useQuery({
-    queryKey: stockMovementKeys.summary(params),
-    queryFn: () => stockMovementApi.getMovementSummary(params),
-    enabled: !!params?.warehouseId,
-    ...options,
+    queryKey: movementKeys.detail(id),
+    queryFn: () => stockMovementApi.getMovementById(id),
+    enabled: !!id,
   })
 }

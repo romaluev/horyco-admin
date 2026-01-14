@@ -1,61 +1,64 @@
-/**
- * Warehouse Mutation Hooks
- * TanStack React Query hooks for modifying warehouse data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { warehouseApi } from './api'
 import { warehouseKeys } from './query-keys'
+
 import type { ICreateWarehouseDto, IUpdateWarehouseDto } from './types'
 
+/**
+ * Create a new warehouse
+ */
 export const useCreateWarehouse = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateWarehouseDto) => warehouseApi.createWarehouse(data),
+    mutationFn: (data: ICreateWarehouseDto) =>
+      warehouseApi.createWarehouse(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: warehouseKeys.all() })
+      queryClient.invalidateQueries({ queryKey: warehouseKeys.lists() })
       toast.success('Склад успешно создан')
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при создании склада')
-      console.error('Create warehouse error:', error)
+      toast.error(`Ошибка при создании склада: ${error.message}`)
     },
   })
 }
 
+/**
+ * Update a warehouse
+ */
 export const useUpdateWarehouse = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IUpdateWarehouseDto }) =>
       warehouseApi.updateWarehouse(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: warehouseKeys.all() })
-      queryClient.invalidateQueries({ queryKey: warehouseKeys.detail(variables.id) })
-      toast.success('Склад успешно обновлён')
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: warehouseKeys.detail(data.id) })
+      queryClient.invalidateQueries({ queryKey: warehouseKeys.lists() })
+      toast.success('Склад успешно обновлен')
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при обновлении склада')
-      console.error('Update warehouse error:', error)
+      toast.error(`Ошибка при обновлении склада: ${error.message}`)
     },
   })
 }
 
+/**
+ * Delete a warehouse
+ */
 export const useDeleteWarehouse = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => warehouseApi.deleteWarehouse(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: warehouseKeys.all() })
-      toast.success('Склад успешно удалён')
+      queryClient.invalidateQueries({ queryKey: warehouseKeys.lists() })
+      toast.success('Склад успешно удален')
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при удалении склада')
-      console.error('Delete warehouse error:', error)
+      toast.error(`Ошибка при удалении склада: ${error.message}`)
     },
   })
 }

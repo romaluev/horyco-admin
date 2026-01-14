@@ -1,16 +1,14 @@
-/**
- * Inventory Items Page
- * Page for managing inventory items (raw materials, ingredients)
- */
-
 'use client'
 
 import { useState } from 'react'
 
-import { IconSearch } from '@tabler/icons-react'
+import { IconPlus, IconSearch } from '@tabler/icons-react'
 
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Heading } from '@/shared/ui/base/heading'
+import { Button } from '@/shared/ui/base/button'
 import { Input } from '@/shared/ui/base/input'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -27,152 +25,136 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 import { Badge } from '@/shared/ui/base/badge'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { useGetInventoryItems, ItemStatusBadge } from '@/entities/inventory-item'
+import { useGetInventoryItems } from '@/entities/inventory-item'
 import {
   CreateItemDialog,
   UpdateItemDialog,
   DeleteItemButton,
+  categoryOptions,
 } from '@/features/inventory-item-form'
-import {
-  ITEM_CATEGORIES,
-  ITEM_CATEGORY_LABELS,
-  UNIT_LABELS,
-  type ItemCategory,
-  type InventoryUnit,
-} from '@/shared/types/inventory'
 
 export default function InventoryItemsPage() {
-  const { selectedBranchId } = useBranchStore()
   const [search, setSearch] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [category, setCategory] = useState<string>('')
+  const [isActive, setIsActive] = useState<boolean | undefined>()
 
-  const { data, isLoading } = useGetInventoryItems(
-    {
-      search: search || undefined,
-      category: categoryFilter !== 'all' ? categoryFilter : undefined,
-    },
-    { enabled: !!selectedBranchId }
-  )
+  const { data: items, isLoading } = useGetInventoryItems({
+    search: search || undefined,
+    category: category || undefined,
+    isActive,
+  })
 
-  const items = data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+  const filteredItems = items ?? []
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Товары</h1>
-            <p className="text-muted-foreground">
-              Сырьё, ингредиенты и расходные материалы
-            </p>
-          </div>
-          <CreateItemDialog branchId={selectedBranchId} />
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Товары"
+            description="Управление номенклатурой складских товаров"
+          />
+          <CreateItemDialog />
         </div>
+        <Separator />
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap gap-4">
+          <div className="relative flex-1 min-w-[200px]">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск по названию или артикулу..."
+              placeholder="Поиск по названию, SKU..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
             />
           </div>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Категория" />
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все категории" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все категории</SelectItem>
-              {ITEM_CATEGORIES.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {ITEM_CATEGORY_LABELS[cat]}
+              {categoryOptions.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value}>
+                  {cat.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          <Select
+            value={isActive === undefined ? 'all' : isActive ? 'active' : 'inactive'}
+            onValueChange={(value) =>
+              setIsActive(value === 'all' ? undefined : value === 'active')
+            }
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Статус" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все</SelectItem>
+              <SelectItem value="active">Активные</SelectItem>
+              <SelectItem value="inactive">Неактивные</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Название</TableHead>
-                <TableHead>Артикул</TableHead>
-                <TableHead>Категория</TableHead>
-                <TableHead>Единица</TableHead>
-                <TableHead>Мин. остаток</TableHead>
-                <TableHead className="w-[100px]">Действия</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-16" /></TableCell>
-                  </TableRow>
-                ))
-              ) : items.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <p className="text-muted-foreground">Товары не найдены</p>
-                  </TableCell>
+                  <TableHead>Название</TableHead>
+                  <TableHead>SKU</TableHead>
+                  <TableHead>Категория</TableHead>
+                  <TableHead>Единица</TableHead>
+                  <TableHead>Мин. остаток</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead className="w-[100px]">Действия</TableHead>
                 </TableRow>
-              ) : (
-                items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {item.sku || '—'}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {ITEM_CATEGORY_LABELS[item.category as ItemCategory] || item.category}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {UNIT_LABELS[item.unit as InventoryUnit] || item.unit}
-                    </TableCell>
-                    <TableCell>
-                      {item.minStock ? `${item.minStock} ${UNIT_LABELS[item.unit as InventoryUnit] || item.unit}` : '—'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <UpdateItemDialog item={item} />
-                        <DeleteItemButton
-                          itemId={item.id}
-                          itemName={item.name}
-                        />
-                      </div>
+              </TableHeader>
+              <TableBody>
+                {filteredItems.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Товары не найдены
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  filteredItems.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {item.sku || '—'}
+                      </TableCell>
+                      <TableCell>{item.category || '—'}</TableCell>
+                      <TableCell>{item.unit}</TableCell>
+                      <TableCell>{item.minStockLevel}</TableCell>
+                      <TableCell>
+                        <Badge variant={item.isActive ? 'default' : 'secondary'}>
+                          {item.isActive ? 'Активен' : 'Неактивен'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <UpdateItemDialog item={item} />
+                          <DeleteItemButton itemId={item.id} itemName={item.name} />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </PageContainer>
   )

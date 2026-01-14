@@ -1,224 +1,191 @@
 /**
- * Shared Inventory Types
- * Common enums and types used across inventory entities
+ * Inventory Management System - Shared Types
+ * Module: addon_inventory
  */
 
-// Stock Movement Types
-export enum MovementType {
-  PURCHASE_RECEIVE = 'PURCHASE_RECEIVE',
-  SALE_DEDUCTION = 'SALE_DEDUCTION',
-  SALE_REVERSAL = 'SALE_REVERSAL',
-  WRITEOFF = 'WRITEOFF',
-  COUNT_ADJUSTMENT = 'COUNT_ADJUSTMENT',
-  PRODUCTION_OUT = 'PRODUCTION_OUT',
-  PRODUCTION_IN = 'PRODUCTION_IN',
-  MANUAL_ADJUSTMENT = 'MANUAL_ADJUSTMENT',
-  OPENING_BALANCE = 'OPENING_BALANCE',
-  TRANSFER_OUT = 'TRANSFER_OUT',
-  TRANSFER_IN = 'TRANSFER_IN',
-}
+// ============================================
+// ENUMS
+// ============================================
 
-// Purchase Order Status
-export enum POStatus {
-  DRAFT = 'DRAFT',
-  SENT = 'SENT',
-  PARTIAL = 'PARTIAL',
-  RECEIVED = 'RECEIVED',
-  CANCELLED = 'CANCELLED',
-}
+export const MOVEMENT_TYPES = {
+  PURCHASE_RECEIVE: 'PURCHASE_RECEIVE',
+  SALE_DEDUCTION: 'SALE_DEDUCTION',
+  SALE_REVERSAL: 'SALE_REVERSAL',
+  TRANSFER_OUT: 'TRANSFER_OUT',
+  TRANSFER_IN: 'TRANSFER_IN',
+  WRITEOFF: 'WRITEOFF',
+  COUNT_ADJUSTMENT: 'COUNT_ADJUSTMENT',
+  PRODUCTION_OUT: 'PRODUCTION_OUT',
+  PRODUCTION_IN: 'PRODUCTION_IN',
+  PRODUCTION_REVERSAL: 'PRODUCTION_REVERSAL',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT',
+  OPENING_BALANCE: 'OPENING_BALANCE',
+} as const
 
-// Writeoff Reasons
-export enum WriteoffReason {
-  SPOILAGE = 'SPOILAGE',
-  THEFT = 'THEFT',
-  DAMAGE = 'DAMAGE',
-  STAFF_MEAL = 'STAFF_MEAL',
-  SAMPLE = 'SAMPLE',
-  EXPIRED = 'EXPIRED',
-  PRODUCTION = 'PRODUCTION',
-  OTHER = 'OTHER',
-}
+export const PO_STATUSES = {
+  DRAFT: 'draft',
+  SENT: 'sent',
+  PARTIAL: 'partial',
+  RECEIVED: 'received',
+  CANCELLED: 'cancelled',
+} as const
 
-// Writeoff Status
-export enum WriteoffStatus {
-  DRAFT = 'DRAFT',
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
+export const WRITEOFF_REASONS = {
+  SPOILAGE: 'spoilage',
+  THEFT: 'theft',
+  DAMAGE: 'damage',
+  STAFF_MEAL: 'staff_meal',
+  SAMPLE: 'sample',
+  EXPIRED: 'expired',
+  PRODUCTION: 'production',
+  OTHER: 'other',
+} as const
 
-// Inventory Count Type
-export enum CountType {
-  FULL = 'FULL',
-  CYCLE = 'CYCLE',
-  SPOT = 'SPOT',
-}
+export const COUNT_TYPES = {
+  FULL: 'full',
+  CYCLE: 'cycle',
+  SPOT: 'spot',
+} as const
 
-// Inventory Count Status
-export enum CountStatus {
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  PENDING_APPROVAL = 'PENDING_APPROVAL',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
-}
+export const COUNT_STATUSES = {
+  IN_PROGRESS: 'in_progress',
+  PENDING_APPROVAL: 'pending_approval',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const
 
-// Production Order Status
-export enum ProductionStatus {
-  PLANNED = 'PLANNED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
+export const PRODUCTION_STATUSES = {
+  PLANNED: 'planned',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const
 
-// Common status for approval workflows
-export enum ApprovalStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
+export const ALERT_TYPES = {
+  LOW_STOCK: 'LOW_STOCK',
+  OUT_OF_STOCK: 'OUT_OF_STOCK',
+  NEGATIVE_STOCK: 'NEGATIVE_STOCK',
+  EXPIRING_SOON: 'EXPIRING_SOON',
+} as const
 
-// Recipe link types
-export enum RecipeLinkType {
-  PRODUCT = 'PRODUCT',
-  MODIFIER = 'MODIFIER',
-  ITEM = 'ITEM',
-}
+// ============================================
+// TYPE DEFINITIONS
+// ============================================
 
-// Inventory item categories (commonly used)
-export const ITEM_CATEGORIES = [
-  'vegetables',
-  'fruits',
-  'dairy',
-  'meat',
-  'poultry',
-  'seafood',
-  'dry_goods',
-  'oils',
-  'spices',
-  'beverages',
-  'bakery',
-  'frozen',
-  'packaging',
-  'cleaning',
-  'other',
-] as const
+export type MovementType = (typeof MOVEMENT_TYPES)[keyof typeof MOVEMENT_TYPES]
+export type POStatus = (typeof PO_STATUSES)[keyof typeof PO_STATUSES]
+export type WriteoffReason =
+  (typeof WRITEOFF_REASONS)[keyof typeof WRITEOFF_REASONS]
+export type CountType = (typeof COUNT_TYPES)[keyof typeof COUNT_TYPES]
+export type CountStatus = (typeof COUNT_STATUSES)[keyof typeof COUNT_STATUSES]
+export type ProductionStatus =
+  (typeof PRODUCTION_STATUSES)[keyof typeof PRODUCTION_STATUSES]
+export type AlertType = (typeof ALERT_TYPES)[keyof typeof ALERT_TYPES]
 
-export type ItemCategory = (typeof ITEM_CATEGORIES)[number]
+// ============================================
+// LABEL MAPS (for UI display)
+// ============================================
 
-// Common units for inventory items
-export const INVENTORY_UNITS = [
-  'kg',
-  'g',
-  'liter',
-  'ml',
-  'pcs',
-  'box',
-  'pack',
-  'bottle',
-  'can',
-  'bag',
-  'case',
-  'dozen',
-  'portion',
-] as const
-
-export type InventoryUnit = (typeof INVENTORY_UNITS)[number]
-
-// Label mappings for UI display
 export const MOVEMENT_TYPE_LABELS: Record<MovementType, string> = {
-  [MovementType.PURCHASE_RECEIVE]: 'Приход по закупке',
-  [MovementType.SALE_DEDUCTION]: 'Списание по заказу',
-  [MovementType.SALE_REVERSAL]: 'Возврат по отмене',
-  [MovementType.WRITEOFF]: 'Списание',
-  [MovementType.COUNT_ADJUSTMENT]: 'Корректировка инвентаризации',
-  [MovementType.PRODUCTION_OUT]: 'Расход на производство',
-  [MovementType.PRODUCTION_IN]: 'Приход от производства',
-  [MovementType.MANUAL_ADJUSTMENT]: 'Ручная корректировка',
-  [MovementType.OPENING_BALANCE]: 'Начальный остаток',
-  [MovementType.TRANSFER_OUT]: 'Перемещение (расход)',
-  [MovementType.TRANSFER_IN]: 'Перемещение (приход)',
+  PURCHASE_RECEIVE: 'Приход по закупке',
+  SALE_DEDUCTION: 'Списание по заказу',
+  SALE_REVERSAL: 'Возврат по отмене',
+  TRANSFER_OUT: 'Перемещение (исход)',
+  TRANSFER_IN: 'Перемещение (приход)',
+  WRITEOFF: 'Списание',
+  COUNT_ADJUSTMENT: 'Корректировка',
+  PRODUCTION_OUT: 'Производство (расход)',
+  PRODUCTION_IN: 'Производство (выход)',
+  PRODUCTION_REVERSAL: 'Отмена производства',
+  MANUAL_ADJUSTMENT: 'Ручная корректировка',
+  OPENING_BALANCE: 'Начальный остаток',
 }
 
 export const PO_STATUS_LABELS: Record<POStatus, string> = {
-  [POStatus.DRAFT]: 'Черновик',
-  [POStatus.SENT]: 'Отправлен',
-  [POStatus.PARTIAL]: 'Частично получен',
-  [POStatus.RECEIVED]: 'Получен',
-  [POStatus.CANCELLED]: 'Отменён',
+  draft: 'Черновик',
+  sent: 'Отправлен',
+  partial: 'Частично получен',
+  received: 'Получен',
+  cancelled: 'Отменён',
 }
 
 export const WRITEOFF_REASON_LABELS: Record<WriteoffReason, string> = {
-  [WriteoffReason.SPOILAGE]: 'Порча',
-  [WriteoffReason.THEFT]: 'Кража',
-  [WriteoffReason.DAMAGE]: 'Повреждение',
-  [WriteoffReason.STAFF_MEAL]: 'Питание персонала',
-  [WriteoffReason.SAMPLE]: 'Дегустация',
-  [WriteoffReason.EXPIRED]: 'Истёк срок',
-  [WriteoffReason.PRODUCTION]: 'Производство',
-  [WriteoffReason.OTHER]: 'Другое',
-}
-
-export const WRITEOFF_STATUS_LABELS: Record<WriteoffStatus, string> = {
-  [WriteoffStatus.DRAFT]: 'Черновик',
-  [WriteoffStatus.PENDING]: 'На рассмотрении',
-  [WriteoffStatus.APPROVED]: 'Одобрено',
-  [WriteoffStatus.REJECTED]: 'Отклонено',
-}
-
-export const COUNT_TYPE_LABELS: Record<CountType, string> = {
-  [CountType.FULL]: 'Полная',
-  [CountType.CYCLE]: 'Циклическая',
-  [CountType.SPOT]: 'Выборочная',
-}
-
-export const COUNT_STATUS_LABELS: Record<CountStatus, string> = {
-  [CountStatus.IN_PROGRESS]: 'В процессе',
-  [CountStatus.COMPLETED]: 'Завершена',
-  [CountStatus.PENDING_APPROVAL]: 'На утверждении',
-  [CountStatus.APPROVED]: 'Утверждена',
-  [CountStatus.REJECTED]: 'Отклонена',
-  [CountStatus.CANCELLED]: 'Отменена',
-}
-
-export const PRODUCTION_STATUS_LABELS: Record<ProductionStatus, string> = {
-  [ProductionStatus.PLANNED]: 'Запланировано',
-  [ProductionStatus.IN_PROGRESS]: 'В процессе',
-  [ProductionStatus.COMPLETED]: 'Завершено',
-  [ProductionStatus.CANCELLED]: 'Отменено',
-}
-
-export const ITEM_CATEGORY_LABELS: Record<ItemCategory, string> = {
-  vegetables: 'Овощи',
-  fruits: 'Фрукты',
-  dairy: 'Молочные',
-  meat: 'Мясо',
-  poultry: 'Птица',
-  seafood: 'Морепродукты',
-  dry_goods: 'Сухие продукты',
-  oils: 'Масла',
-  spices: 'Специи',
-  beverages: 'Напитки',
-  bakery: 'Выпечка',
-  frozen: 'Замороженные',
-  packaging: 'Упаковка',
-  cleaning: 'Хоз. товары',
+  spoilage: 'Порча',
+  theft: 'Кража',
+  damage: 'Повреждение',
+  staff_meal: 'Питание персонала',
+  sample: 'Дегустация',
+  expired: 'Истёк срок',
+  production: 'Производство',
   other: 'Другое',
 }
 
-export const UNIT_LABELS: Record<InventoryUnit, string> = {
-  kg: 'кг',
-  g: 'г',
-  liter: 'л',
-  ml: 'мл',
-  pcs: 'шт',
-  box: 'коробка',
-  pack: 'упаковка',
-  bottle: 'бутылка',
-  can: 'банка',
-  bag: 'мешок',
-  case: 'ящик',
-  dozen: 'дюжина',
-  portion: 'порция',
+export const COUNT_TYPE_LABELS: Record<CountType, string> = {
+  full: 'Полная',
+  cycle: 'Циклическая',
+  spot: 'Выборочная',
+}
+
+export const COUNT_STATUS_LABELS: Record<CountStatus, string> = {
+  in_progress: 'В процессе',
+  pending_approval: 'Ожидает одобрения',
+  completed: 'Завершена',
+  cancelled: 'Отменена',
+}
+
+export const PRODUCTION_STATUS_LABELS: Record<ProductionStatus, string> = {
+  planned: 'Запланировано',
+  in_progress: 'В процессе',
+  completed: 'Завершено',
+  cancelled: 'Отменено',
+}
+
+export const ALERT_TYPE_LABELS: Record<AlertType, string> = {
+  LOW_STOCK: 'Низкий остаток',
+  OUT_OF_STOCK: 'Нет в наличии',
+  NEGATIVE_STOCK: 'Отрицательный остаток',
+  EXPIRING_SOON: 'Скоро истекает срок',
+}
+
+// ============================================
+// COLOR MAPS (for status badges)
+// ============================================
+
+export const MOVEMENT_TYPE_COLORS: Record<
+  MovementType,
+  'default' | 'success' | 'warning' | 'destructive' | 'secondary'
+> = {
+  PURCHASE_RECEIVE: 'success',
+  SALE_DEDUCTION: 'default',
+  SALE_REVERSAL: 'secondary',
+  TRANSFER_OUT: 'warning',
+  TRANSFER_IN: 'warning',
+  WRITEOFF: 'destructive',
+  COUNT_ADJUSTMENT: 'secondary',
+  PRODUCTION_OUT: 'default',
+  PRODUCTION_IN: 'success',
+  PRODUCTION_REVERSAL: 'secondary',
+  MANUAL_ADJUSTMENT: 'secondary',
+  OPENING_BALANCE: 'secondary',
+}
+
+export const PO_STATUS_COLORS: Record<
+  POStatus,
+  'default' | 'success' | 'warning' | 'destructive' | 'secondary'
+> = {
+  draft: 'secondary',
+  sent: 'warning',
+  partial: 'default',
+  received: 'success',
+  cancelled: 'destructive',
+}
+
+export const ALERT_TYPE_COLORS: Record<
+  AlertType,
+  'default' | 'success' | 'warning' | 'destructive' | 'secondary'
+> = {
+  LOW_STOCK: 'warning',
+  OUT_OF_STOCK: 'destructive',
+  NEGATIVE_STOCK: 'destructive',
+  EXPIRING_SOON: 'warning',
 }

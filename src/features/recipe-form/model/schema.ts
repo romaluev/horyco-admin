@@ -1,41 +1,21 @@
 import * as z from 'zod'
 
-import { RecipeLinkType } from '@/shared/types/inventory'
-
-export const recipeIngredientSchema = z.object({
-  inventoryItemId: z.number().optional(),
-  recipeId: z.number().optional(),
-  quantity: z.number().min(0.001, 'Количество должно быть больше 0'),
-  unit: z.string().min(1, 'Единица обязательна'),
-  wastagePercent: z.number().min(0).max(100).optional(),
-})
-
 export const recipeFormSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
-  outputQuantity: z.number().min(0.001, 'Выход должен быть больше 0'),
-  outputUnit: z.string().min(1, 'Единица выхода обязательна'),
-  linkedType: z.nativeEnum(RecipeLinkType).optional(),
-  linkedId: z.number().optional(),
+  outputQuantity: z.number().min(0.01, 'Количество должно быть больше 0').default(1),
+  outputUnit: z.string().optional(),
+  prepTimeMinutes: z.number().min(0).optional(),
+  isActive: z.boolean().default(true),
   notes: z.string().optional(),
-  ingredients: z.array(recipeIngredientSchema).min(1, 'Добавьте хотя бы один ингредиент'),
 })
 
 export type RecipeFormValues = z.infer<typeof recipeFormSchema>
 
-export const recipeIngredientFormSchema = z.object({
-  type: z.enum(['item', 'recipe']),
-  inventoryItemId: z.number().optional(),
-  recipeId: z.number().optional(),
-  quantity: z.number().min(0.001, 'Количество должно быть больше 0'),
-  unit: z.string().min(1, 'Единица обязательна'),
-  wastagePercent: z.number().min(0).max(100).optional(),
-}).refine(
-  (data) => {
-    if (data.type === 'item') return !!data.inventoryItemId
-    if (data.type === 'recipe') return !!data.recipeId
-    return false
-  },
-  { message: 'Выберите товар или полуфабрикат' }
-)
-
-export type RecipeIngredientFormValues = z.infer<typeof recipeIngredientFormSchema>
+export const outputUnitOptions = [
+  { value: 'шт', label: 'Штуки' },
+  { value: 'порция', label: 'Порция' },
+  { value: 'кг', label: 'Килограмм' },
+  { value: 'г', label: 'Грамм' },
+  { value: 'л', label: 'Литр' },
+  { value: 'мл', label: 'Миллилитр' },
+]

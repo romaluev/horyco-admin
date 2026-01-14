@@ -1,20 +1,13 @@
-/**
- * Inventory Counts Page
- * Page for managing inventory counts (stocktaking)
- */
-
 'use client'
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-
-import { IconEye } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import PageContainer from '@/shared/ui/layout/page-container'
-import { Button } from '@/shared/ui/base/button'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -30,203 +23,145 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import { Button } from '@/shared/ui/base/button'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { WarehouseSelector } from '@/entities/warehouse'
 import {
   useGetInventoryCounts,
   CountStatusBadge,
   CountTypeBadge,
-  CountProgressBar,
-} from '@/entities/inventory-count'
-import { CreateCountDialog } from '@/features/inventory-count-form'
-import {
-  CountStatus,
-  CountType,
   COUNT_STATUS_LABELS,
   COUNT_TYPE_LABELS,
-} from '@/shared/types/inventory'
+  type CountStatus,
+  type CountType,
+} from '@/entities/inventory-count'
+import { CreateCountDialog } from '@/features/inventory-count-form'
 
-export default function CountsPage() {
-  const { selectedBranchId } = useBranchStore()
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [typeFilter, setTypeFilter] = useState<string>('all')
+export default function InventoryCountsPage() {
+  const [status, setStatus] = useState<CountStatus | ''>('')
+  const [countType, setCountType] = useState<CountType | ''>('')
 
-  const { data, isLoading } = useGetInventoryCounts(
-    selectedBranchId || 0,
-    {
-      warehouseId: selectedWarehouse || undefined,
-      status: statusFilter !== 'all' ? (statusFilter as CountStatus) : undefined,
-      type: typeFilter !== 'all' ? (typeFilter as CountType) : undefined,
-    },
-    !!selectedBranchId
-  )
+  const { data: counts, isLoading } = useGetInventoryCounts({
+    status: status || undefined,
+    countType: countType || undefined,
+  })
 
-  const counts = data?.data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'UZS',
+      maximumFractionDigits: 0,
+    }).format(value)
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Инвентаризации</h1>
-            <p className="text-muted-foreground">
-              Подсчёт и сверка остатков
-            </p>
-          </div>
-          <CreateCountDialog branchId={selectedBranchId} />
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Инвентаризации"
+            description="Учёт и сверка фактических остатков"
+          />
+          <CreateCountDialog />
         </div>
+        <Separator />
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="w-full sm:w-48">
-            <WarehouseSelector
-              branchId={selectedBranchId}
-              value={selectedWarehouse}
-              onChange={setSelectedWarehouse}
-              placeholder="Все склады"
-              allowClear
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Статус" />
+        <div className="flex flex-wrap gap-4">
+          <Select
+            value={status || 'all'}
+            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as CountStatus))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все статусы" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все статусы</SelectItem>
-              {Object.values(CountStatus).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {COUNT_STATUS_LABELS[status]}
+              {Object.entries(COUNT_STATUS_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-full sm:w-40">
-              <SelectValue placeholder="Тип" />
+
+          <Select
+            value={countType || 'all'}
+            onValueChange={(val) => setCountType(val === 'all' ? '' : (val as CountType))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все типы" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все типы</SelectItem>
-              {Object.values(CountType).map((type) => (
-                <SelectItem key={type} value={type}>
-                  {COUNT_TYPE_LABELS[type]}
+              {Object.entries(COUNT_TYPE_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Название</TableHead>
-                <TableHead>Дата</TableHead>
-                <TableHead>Склад</TableHead>
-                <TableHead>Тип</TableHead>
-                <TableHead>Статус</TableHead>
-                <TableHead>Прогресс</TableHead>
-                <TableHead>Расхождение</TableHead>
-                <TableHead className="w-[80px]">Действия</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-                  </TableRow>
-                ))
-              ) : counts.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      Инвентаризации не найдены
-                    </p>
-                  </TableCell>
+                  <TableHead>Номер</TableHead>
+                  <TableHead>Склад</TableHead>
+                  <TableHead>Тип</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead className="text-right">Расхождение</TableHead>
+                  <TableHead>Дата</TableHead>
+                  <TableHead className="w-[100px]" />
                 </TableRow>
-              ) : (
-                counts.map((count) => {
-                  // Map API fields to expected fields (API uses different naming)
-                  const name = count.name || count.countNumber || `#${count.id}`
-                  const type = count.type || count.countType
-                  const warehouseName = count.warehouseName || `Склад ${count.warehouseId}`
-                  const totalItems = count.totalItems ?? count.itemsCounted ?? 0
-                  const countedItems = count.countedItems ?? count.itemsCounted ?? 0
-                  const totalVariance = count.totalVariance ?? count.itemsWithVariance ?? 0
-                  const totalVarianceCost = count.totalVarianceCost ?? 0
-                  const dateStr = count.createdAt || count.countDate
-
-                  return (
+              </TableHeader>
+              <TableBody>
+                {!counts?.length ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Инвентаризации не найдены
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  counts.map((count) => (
                     <TableRow key={count.id}>
-                      <TableCell className="font-medium">{name}</TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {dateStr ? format(new Date(dateStr), 'dd.MM.yyyy', {
-                          locale: ru,
-                        }) : '-'}
-                      </TableCell>
-                      <TableCell>{warehouseName}</TableCell>
+                      <TableCell className="font-medium">{count.countNumber}</TableCell>
+                      <TableCell>{count.warehouseName}</TableCell>
                       <TableCell>
-                        <CountTypeBadge type={type as CountType} />
+                        <CountTypeBadge type={count.countType} />
                       </TableCell>
                       <TableCell>
                         <CountStatusBadge status={count.status} />
                       </TableCell>
-                      <TableCell className="w-40">
-                        <CountProgressBar
-                          totalItems={totalItems}
-                          countedItems={countedItems}
-                        />
+                      <TableCell
+                        className={`text-right font-medium ${
+                          count.netAdjustmentValue < 0 ? 'text-red-600' : 'text-green-600'
+                        }`}
+                      >
+                        {count.netAdjustmentValue >= 0 ? '+' : ''}
+                        {formatCurrency(count.netAdjustmentValue)}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(new Date(count.countDate), 'dd MMM yyyy', { locale: ru })}
                       </TableCell>
                       <TableCell>
-                        <span
-                          className={
-                            totalVariance > 0
-                              ? 'text-green-600'
-                              : totalVariance < 0
-                                ? 'text-red-600'
-                                : ''
-                          }
-                        >
-                          {totalVariance > 0 ? '+' : ''}
-                          {totalVarianceCost.toLocaleString()} сум
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/dashboard/inventory/counts/${count.id}`}>
-                            <IconEye className="h-4 w-4" />
-                          </Link>
+                        <Button variant="ghost" size="sm" disabled>
+                          Открыть
                         </Button>
                       </TableCell>
                     </TableRow>
-                  )
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </PageContainer>
   )

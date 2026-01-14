@@ -1,23 +1,27 @@
 /**
  * Inventory Item Query Hooks
- * TanStack React Query hooks for fetching inventory item data
  */
 
-import { useQuery } from '@tanstack/react-query'
-import type { UseQueryOptions } from '@tanstack/react-query'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 
 import { inventoryItemApi } from './api'
 import { inventoryItemKeys } from './query-keys'
+
 import type {
   IInventoryItem,
-  IInventoryItemsResponse,
   IGetInventoryItemsParams,
   IUnitConversion,
 } from './types'
 
+/**
+ * Get all inventory items
+ */
 export const useGetInventoryItems = (
   params?: IGetInventoryItemsParams,
-  options?: Omit<UseQueryOptions<IInventoryItemsResponse>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<IInventoryItem[], Error>,
+    'queryKey' | 'queryFn'
+  >
 ) => {
   return useQuery({
     queryKey: inventoryItemKeys.list(params),
@@ -26,9 +30,12 @@ export const useGetInventoryItems = (
   })
 }
 
+/**
+ * Get inventory item by ID
+ */
 export const useGetInventoryItemById = (
   id: number,
-  options?: Omit<UseQueryOptions<IInventoryItem>, 'queryKey' | 'queryFn'>
+  options?: Omit<UseQueryOptions<IInventoryItem, Error>, 'queryKey' | 'queryFn'>
 ) => {
   return useQuery({
     queryKey: inventoryItemKeys.detail(id),
@@ -38,14 +45,33 @@ export const useGetInventoryItemById = (
   })
 }
 
-export const useGetItemConversions = (
-  itemId: number,
-  options?: Omit<UseQueryOptions<IUnitConversion[]>, 'queryKey' | 'queryFn'>
+/**
+ * Get all item categories
+ */
+export const useGetItemCategories = (
+  options?: Omit<UseQueryOptions<string[], Error>, 'queryKey' | 'queryFn'>
 ) => {
   return useQuery({
-    queryKey: inventoryItemKeys.conversions(itemId),
-    queryFn: () => inventoryItemApi.getItemConversions(itemId),
-    enabled: !!itemId,
+    queryKey: inventoryItemKeys.categories(),
+    queryFn: () => inventoryItemApi.getCategories(),
+    ...options,
+  })
+}
+
+/**
+ * Get unit conversions for item
+ */
+export const useGetItemConversions = (
+  id: number,
+  options?: Omit<
+    UseQueryOptions<IUnitConversion[], Error>,
+    'queryKey' | 'queryFn'
+  >
+) => {
+  return useQuery({
+    queryKey: inventoryItemKeys.conversions(id),
+    queryFn: () => inventoryItemApi.getItemConversions(id),
+    enabled: !!id,
     ...options,
   })
 }

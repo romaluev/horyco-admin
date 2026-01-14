@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconPlus } from '@tabler/icons-react'
+import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/shared/ui/base/button'
@@ -23,7 +24,6 @@ import {
   FormMessage,
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Select,
   SelectContent,
@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useCreateProductionOrder } from '@/entities/production-order'
 import { useGetRecipes } from '@/entities/recipe'
@@ -40,56 +41,46 @@ import { productionOrderFormSchema } from '../model/schema'
 
 import type { ProductionOrderFormValues } from '../model/schema'
 
-interface ICreateProductionDialogProps {
-  branchId: number
-}
-
-export const CreateProductionDialog = ({
-  branchId,
-}: ICreateProductionDialogProps) => {
+export function CreateProductionDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: createProduction, isPending } = useCreateProductionOrder()
-  const { data: recipesData, isLoading: recipesLoading } = useGetRecipes(
-    {},
-    { enabled: isOpen }
-  )
+  const { data: recipes = [], isLoading: recipesLoading } = useGetRecipes({ isActive: true })
 
   const form = useForm<ProductionOrderFormValues>({
     resolver: zodResolver(productionOrderFormSchema),
     defaultValues: {
-      warehouseId: 0,
-      recipeId: 0,
-      quantity: 1,
-      plannedDate: '',
+      warehouseId: undefined,
+      recipeId: undefined,
+      plannedQuantity: 1,
+      plannedDate: format(new Date(), 'yyyy-MM-dd'),
       notes: '',
     },
   })
 
   const onSubmit = (data: ProductionOrderFormValues) => {
-    createProduction(
-      { branchId, data },
-      {
-        onSuccess: () => {
-          setIsOpen(false)
-          form.reset()
-        },
-      }
-    )
-  }
+    const cleanData = Object.fromEntries(
+      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+    ) as ProductionOrderFormValues
 
-  const recipes = recipesData || []
+    createProduction(cleanData, {
+      onSuccess: () => {
+        setIsOpen(false)
+        form.reset()
+      },
+    })
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>
           <IconPlus className="mr-2 h-4 w-4" />
-          Создать производство
+          Создать заказ
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Создать производственный заказ</DialogTitle>
+          <DialogTitle>Создать заказ на производство</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -98,12 +89,12 @@ export const CreateProductionDialog = ({
               name="warehouseId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Склад</FormLabel>
+                  <FormLabel>Склад *</FormLabel>
                   <FormControl>
                     <WarehouseSelector
-                      branchId={branchId}
-                      value={field.value || undefined}
-                      onValueChange={(id) => field.onChange(id)}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Выберите склад"
                     />
                   </FormControl>
                   <FormMessage />
@@ -116,24 +107,20 @@ export const CreateProductionDialog = ({
               name="recipeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Техкарта</FormLabel>
+                  <FormLabel>Техкарта *</FormLabel>
                   <Select
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    value={field.value ? String(field.value) : ''}
+                    onValueChange={(val) => field.onChange(Number(val))}
+                    value={field.value?.toString()}
                     disabled={recipesLoading}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            recipesLoading ? 'Загрузка...' : 'Выберите техкарту'
-                          }
-                        />
+                        <SelectValue placeholder={recipesLoading ? 'Загрузка...' : 'Выберите техкарту'} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {recipes.map((recipe) => (
-                        <SelectItem key={recipe.id} value={String(recipe.id)}>
+                        <SelectItem key={recipe.id} value={recipe.id.toString()}>
                           {recipe.name}
                         </SelectItem>
                       ))}
@@ -147,15 +134,15 @@ export const CreateProductionDialog = ({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="quantity"
+                name="plannedQuantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Количество</FormLabel>
+                    <FormLabel>Количество *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        step="0.01"
-                        min={0.001}
+                        min={0.01}
+                        step={0.01}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -170,7 +157,7 @@ export const CreateProductionDialog = ({
                 name="plannedDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Плановая дата</FormLabel>
+                    <FormLabel>План. дата *</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
                     </FormControl>
@@ -188,9 +175,9 @@ export const CreateProductionDialog = ({
                   <FormLabel>Примечания</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Дополнительная информация..."
-                      rows={2}
+                      placeholder="Комментарий..."
                       {...field}
+                      value={field.value ?? ''}
                     />
                   </FormControl>
                   <FormMessage />
@@ -198,9 +185,19 @@ export const CreateProductionDialog = ({
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? 'Создание...' : 'Создать заказ'}
-            </Button>
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Отмена
+              </Button>
+              <Button type="submit" className="flex-1" disabled={isPending}>
+                {isPending ? 'Создание...' : 'Создать'}
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

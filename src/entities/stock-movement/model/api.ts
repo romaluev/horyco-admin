@@ -1,48 +1,35 @@
-/**
- * Stock Movement API Client
- * Based on /api/admin/inventory/movements endpoints
- */
-
 import api from '@/shared/lib/axios'
 
 import type {
-  IMovementsResponse,
-  IMovementsSummary,
+  IStockMovement,
   IGetMovementsParams,
+  IMovementListResponse,
 } from './types'
-
-interface ApiResponse<T> {
-  success: boolean
-  data: T
-  timestamp: string
-  requestId: string
-}
 
 export const stockMovementApi = {
   /**
-   * Get movement history with filters
    * GET /admin/inventory/movements
+   * Get stock movements with filters (read-only)
    */
-  async getMovements(params?: IGetMovementsParams): Promise<IMovementsResponse> {
-    const response = await api.get<ApiResponse<IMovementsResponse>>(
-      '/admin/inventory/movements',
-      { params }
-    )
-    return response.data.data
+  async getMovements(params?: IGetMovementsParams): Promise<IMovementListResponse> {
+    const response = await api.get<{
+      success: boolean
+      data: IStockMovement[]
+      meta: IMovementListResponse['meta']
+    }>('/admin/inventory/movements', { params })
+    return {
+      data: response.data.data || [],
+      meta: response.data.meta || { total: 0, page: 0, size: 20, totalPages: 0 },
+    }
   },
 
   /**
-   * Get movement summary for period
-   * GET /admin/inventory/movements/summary
+   * GET /admin/inventory/movements/:id
+   * Get single movement by ID
    */
-  async getMovementSummary(params?: {
-    warehouseId?: number
-    from?: string
-    to?: string
-  }): Promise<IMovementsSummary> {
-    const response = await api.get<ApiResponse<IMovementsSummary>>(
-      '/admin/inventory/movements/summary',
-      { params }
+  async getMovementById(id: number): Promise<IStockMovement> {
+    const response = await api.get<{ success: boolean; data: IStockMovement }>(
+      `/admin/inventory/movements/${id}`
     )
     return response.data.data
   },

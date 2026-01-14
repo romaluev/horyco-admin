@@ -1,85 +1,80 @@
 'use client'
 
-import { IconAlertTriangle } from '@tabler/icons-react'
+import { AlertTriangle } from 'lucide-react'
+import Link from 'next/link'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/base/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
-import { ScrollArea } from '@/shared/ui/base/scroll-area'
 
-import { useGetLowStock } from '@/entities/stock'
+import { useLowStock } from '@/entities/stock'
 
 interface ILowStockItemsListProps {
   warehouseId?: number
-  limit?: number
+  size?: number
 }
 
-export const LowStockItemsList = ({
-  warehouseId,
-  limit = 5,
-}: ILowStockItemsListProps) => {
-  const { data: items, isLoading } = useGetLowStock(warehouseId)
-
-  const displayItems = items?.slice(0, limit) || []
+export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListProps) {
+  const { data: lowStockItems, isLoading } = useLowStock({
+    warehouseId,
+    size,
+  })
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <IconAlertTriangle className="h-5 w-5 text-yellow-500" />
-          Низкий остаток
-        </CardTitle>
-        <CardDescription>Товары, требующие пополнения</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-yellow-600" />
+            Мало на складе
+          </CardTitle>
+          <CardDescription>Товары требующие пополнения</CardDescription>
+        </div>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/dashboard/inventory/stock?filter=low">Все</Link>
+        </Button>
       </CardHeader>
       <CardContent>
         {!warehouseId ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            Выберите склад
+          <p className="text-center text-sm text-muted-foreground py-4">
+            Выберите склад для просмотра
           </p>
         ) : isLoading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex items-center justify-between">
-                <Skeleton className="h-4 w-32" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
                 <Skeleton className="h-6 w-16" />
               </div>
             ))}
           </div>
-        ) : displayItems.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            Все товары в достаточном количестве
+        ) : !lowStockItems?.length ? (
+          <p className="text-center text-sm text-muted-foreground py-4">
+            Нет товаров с низким остатком
           </p>
         ) : (
-          <ScrollArea className="h-[200px]">
-            <div className="space-y-3">
-              {displayItems.map((item) => (
-                <div
-                  key={item.inventoryItemId}
-                  className="flex items-center justify-between"
-                >
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {item.inventoryItemName}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Мин: {item.minStock} {item.unit}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={item.quantity === 0 ? 'destructive' : 'secondary'}
-                  >
-                    {item.quantity} {item.unit}
-                  </Badge>
+          <div className="space-y-3">
+            {lowStockItems.map((stock) => (
+              <div
+                key={stock.id}
+                className="flex items-center justify-between rounded-lg border p-3"
+              >
+                <div className="space-y-1">
+                  <p className="font-medium leading-none">{stock.item?.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {stock.warehouse?.name} • Мин: {stock.item?.minStockLevel}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </ScrollArea>
+                <Badge variant="outline" className="text-yellow-600">
+                  {stock.quantity} {stock.item?.unit}
+                </Badge>
+              </div>
+            ))}
+          </div>
         )}
       </CardContent>
     </Card>

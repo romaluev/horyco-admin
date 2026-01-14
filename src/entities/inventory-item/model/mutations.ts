@@ -1,6 +1,5 @@
 /**
  * Inventory Item Mutation Hooks
- * TanStack React Query hooks for modifying inventory item data
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -8,17 +7,22 @@ import { toast } from 'sonner'
 
 import { inventoryItemApi } from './api'
 import { inventoryItemKeys } from './query-keys'
+
 import type {
   ICreateInventoryItemDto,
   IUpdateInventoryItemDto,
   ICreateUnitConversionDto,
 } from './types'
 
+/**
+ * Create inventory item mutation
+ */
 export const useCreateInventoryItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateInventoryItemDto) => inventoryItemApi.createItem(data),
+    mutationFn: (data: ICreateInventoryItemDto) =>
+      inventoryItemApi.createItem(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: inventoryItemKeys.all() })
       toast.success('Товар успешно создан')
@@ -30,15 +34,18 @@ export const useCreateInventoryItem = () => {
   })
 }
 
+/**
+ * Update inventory item mutation
+ */
 export const useUpdateInventoryItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: IUpdateInventoryItemDto }) =>
       inventoryItemApi.updateItem(id, data),
-    onSuccess: (_, variables) => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: inventoryItemKeys.all() })
-      queryClient.invalidateQueries({ queryKey: inventoryItemKeys.detail(variables.id) })
+      queryClient.invalidateQueries({ queryKey: inventoryItemKeys.detail(id) })
       toast.success('Товар успешно обновлён')
     },
     onError: (error: Error) => {
@@ -48,6 +55,9 @@ export const useUpdateInventoryItem = () => {
   })
 }
 
+/**
+ * Delete inventory item mutation
+ */
 export const useDeleteInventoryItem = () => {
   const queryClient = useQueryClient()
 
@@ -64,58 +74,46 @@ export const useDeleteInventoryItem = () => {
   })
 }
 
-// Unit Conversion Mutations
-
+/**
+ * Add unit conversion mutation
+ */
 export const useAddUnitConversion = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      itemId,
-      data,
-    }: {
-      itemId: number
-      data: ICreateUnitConversionDto
-    }) => inventoryItemApi.addConversion(itemId, data),
-    onSuccess: (_, variables) => {
+    mutationFn: ({ id, data }: { id: number; data: ICreateUnitConversionDto }) =>
+      inventoryItemApi.addConversion(id, data),
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
-        queryKey: inventoryItemKeys.conversions(variables.itemId),
+        queryKey: inventoryItemKeys.conversions(id),
       })
-      queryClient.invalidateQueries({
-        queryKey: inventoryItemKeys.detail(variables.itemId),
-      })
-      toast.success('Единица измерения добавлена')
+      toast.success('Конверсия добавлена')
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при добавлении единицы измерения')
+      toast.error('Ошибка при добавлении конверсии')
       console.error('Add unit conversion error:', error)
     },
   })
 }
 
-export const useDeleteUnitConversion = () => {
+/**
+ * Remove unit conversion mutation
+ */
+export const useRemoveUnitConversion = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      itemId,
-      conversionId,
-    }: {
-      itemId: number
-      conversionId: number
-    }) => inventoryItemApi.deleteConversion(itemId, conversionId),
-    onSuccess: (_, variables) => {
+    mutationFn: ({ id, conversionId }: { id: number; conversionId: number }) =>
+      inventoryItemApi.removeConversion(id, conversionId),
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
-        queryKey: inventoryItemKeys.conversions(variables.itemId),
+        queryKey: inventoryItemKeys.conversions(id),
       })
-      queryClient.invalidateQueries({
-        queryKey: inventoryItemKeys.detail(variables.itemId),
-      })
-      toast.success('Единица измерения удалена')
+      toast.success('Конверсия удалена')
     },
     onError: (error: Error) => {
-      toast.error('Ошибка при удалении единицы измерения')
-      console.error('Delete unit conversion error:', error)
+      toast.error('Ошибка при удалении конверсии')
+      console.error('Remove unit conversion error:', error)
     },
   })
 }

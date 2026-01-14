@@ -1,63 +1,63 @@
 /**
  * Supplier Entity Types
- * Based on /api/admin/inventory/suppliers endpoints
+ * Based on Inventory Management System documentation
  */
 
 export interface ISupplier {
   id: number
-  tenantId: number
   name: string
-  code?: string
-  legalName?: string
-  taxId?: string
-  contactName?: string
-  phone?: string
-  email?: string
-  address?: string
-  paymentTerms?: string
-  leadTimeDays?: number
-  minimumOrder?: number
-  notes?: string
+  code: string | null
+  legalName: string | null
+  taxId: string | null
+  contactName: string | null
+  phone: string | null
+  email: string | null
+  address: string | null
+  bankName: string | null
+  bankAccount: string | null
+  paymentTerms: string | null
+  leadTimeDays: number
+  minimumOrder: number | null
   isActive: boolean
-  totalOrders?: number
-  totalSpent?: number
+  notes: string | null
+  totalOrders: number
+  totalAmount: number
+  lastOrderAt: string | null
+  averageOrderValue: number
   createdAt: string
   updatedAt: string
-  // Convenience flat field for list views
-  itemCount?: number
+  items?: ISupplierItem[]
 }
 
 export interface ISupplierItem {
   id: number
   supplierId: number
   itemId: number
-  item?: {
-    id: number
-    name: string
-    sku?: string
-    unit: string
-  }
-  supplierSku?: string
+  itemName: string
+  itemUnit: string
+  supplierSku: string | null
   unitPrice: number
-  minOrderQuantity?: number
+  minOrderQuantity: number
   isPreferred: boolean
-  lastOrderDate?: string
+  notes: string | null
   createdAt: string
   updatedAt: string
 }
 
-export interface ISupplierPriceHistory {
+export interface IPriceHistory {
   id: number
   supplierId: number
   itemId: number
-  item?: {
-    id: number
-    name: string
-  }
+  itemName: string
   oldPrice: number
   newPrice: number
-  changedAt: string
-  changedBy?: number
+  priceChange: number
+  priceChangePct: number
+  effectiveDate: string
+  source: string
+  purchaseOrderId: number | null
+  notes: string | null
+  createdAt: string
 }
 
 export interface ICreateSupplierDto {
@@ -69,11 +69,13 @@ export interface ICreateSupplierDto {
   phone?: string
   email?: string
   address?: string
+  bankName?: string
+  bankAccount?: string
   paymentTerms?: string
   leadTimeDays?: number
   minimumOrder?: number
-  notes?: string
   isActive?: boolean
+  notes?: string
 }
 
 export interface IUpdateSupplierDto {
@@ -85,11 +87,18 @@ export interface IUpdateSupplierDto {
   phone?: string
   email?: string
   address?: string
+  bankName?: string
+  bankAccount?: string
   paymentTerms?: string
   leadTimeDays?: number
   minimumOrder?: number
-  notes?: string
   isActive?: boolean
+  notes?: string
+}
+
+export interface IGetSuppliersParams {
+  isActive?: boolean
+  search?: string
 }
 
 export interface ICreateSupplierItemDto {
@@ -98,6 +107,7 @@ export interface ICreateSupplierItemDto {
   unitPrice: number
   minOrderQuantity?: number
   isPreferred?: boolean
+  notes?: string
 }
 
 export interface IUpdateSupplierItemDto {
@@ -105,25 +115,9 @@ export interface IUpdateSupplierItemDto {
   unitPrice?: number
   minOrderQuantity?: number
   isPreferred?: boolean
+  notes?: string
 }
-
-export interface IGetSuppliersParams {
-  search?: string
-  isActive?: boolean
-  page?: number
-  limit?: number
-}
-
-// API returns suppliers array directly
-export type ISuppliersResponse = ISupplier[]
 
 export interface IGetPriceHistoryParams {
   itemId?: number
-  from?: string
-  to?: string
-  page?: number
-  limit?: number
 }
-
-// API returns price history array directly
-export type IPriceHistoryResponse = ISupplierPriceHistory[]
