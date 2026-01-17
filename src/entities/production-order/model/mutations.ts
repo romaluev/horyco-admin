@@ -5,6 +5,7 @@ import { productionOrderApi } from './api'
 import { productionOrderKeys } from './query-keys'
 import { stockKeys } from '@/entities/stock/model/query-keys'
 import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateProductionOrderDto,
@@ -25,8 +26,8 @@ export const useCreateProductionOrder = () => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
       toast.success('Заказ на производство создан')
     },
-    onError: () => {
-      toast.error('Ошибка при создании заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании заказа'))
     },
   })
 }
@@ -45,8 +46,8 @@ export const useUpdateProductionOrder = () => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
       toast.success('Заказ обновлен')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении заказа'))
     },
   })
 }
@@ -63,8 +64,8 @@ export const useDeleteProductionOrder = () => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
       toast.success('Заказ удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении заказа'))
     },
   })
 }
@@ -85,8 +86,8 @@ export const useStartProduction = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство начато')
     },
-    onError: () => {
-      toast.error('Ошибка при запуске производства')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при запуске производства'))
     },
   })
 }
@@ -107,8 +108,8 @@ export const useCompleteProduction = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство завершено')
     },
-    onError: () => {
-      toast.error('Ошибка при завершении производства')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при завершении производства'))
     },
   })
 }
@@ -128,8 +129,8 @@ export const useCancelProduction = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство отменено')
     },
-    onError: () => {
-      toast.error('Ошибка при отмене производства')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отмене производства'))
     },
   })
 }

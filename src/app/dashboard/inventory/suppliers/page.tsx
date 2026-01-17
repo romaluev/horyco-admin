@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 import { IconSearch } from '@tabler/icons-react'
 
+import { formatCurrency } from '@/shared/lib/format'
 import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
 import { Separator } from '@/shared/ui/base/separator'
@@ -20,33 +22,18 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetSuppliers, type ISupplier } from '@/entities/supplier'
+import { useGetSuppliers } from '@/entities/supplier'
 import {
   CreateSupplierDialog,
-  UpdateSupplierDialog,
   DeleteSupplierButton,
 } from '@/features/supplier-form'
 
 export default function SuppliersPage() {
   const [search, setSearch] = useState('')
-  const [selectedSupplier, setSelectedSupplier] = useState<ISupplier | null>(null)
-  const [isEditOpen, setIsEditOpen] = useState(false)
 
   const { data: suppliers, isLoading } = useGetSuppliers({
     search: search || undefined,
   })
-
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'UZS',
-      maximumFractionDigits: 0,
-    }).format(value)
-
-  const handleEdit = (supplier: ISupplier) => {
-    setSelectedSupplier(supplier)
-    setIsEditOpen(true)
-  }
 
   return (
     <PageContainer scrollable>
@@ -133,12 +120,10 @@ export default function SuppliersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(supplier)}
-                          >
-                            Изменить
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link href={`/dashboard/inventory/suppliers/${supplier.id}`}>
+                              Открыть
+                            </Link>
                           </Button>
                           <DeleteSupplierButton
                             supplierId={supplier.id}
@@ -154,12 +139,6 @@ export default function SuppliersPage() {
           </div>
         )}
       </div>
-
-      <UpdateSupplierDialog
-        supplier={selectedSupplier}
-        open={isEditOpen}
-        onOpenChange={setIsEditOpen}
-      />
     </PageContainer>
   )
 }

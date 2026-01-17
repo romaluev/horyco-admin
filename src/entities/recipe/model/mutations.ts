@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 
 import { recipeApi } from './api'
 import { recipeKeys } from './query-keys'
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateRecipeDto,
@@ -24,8 +25,8 @@ export const useCreateRecipe = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
       toast.success('Техкарта создана')
     },
-    onError: () => {
-      toast.error('Ошибка при создании техкарты')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании техкарты'))
     },
   })
 }
@@ -44,8 +45,8 @@ export const useUpdateRecipe = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(id) })
       toast.success('Техкарта обновлена')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении техкарты')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении техкарты'))
     },
   })
 }
@@ -62,8 +63,8 @@ export const useDeleteRecipe = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
       toast.success('Техкарта удалена')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении техкарты')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении техкарты'))
     },
   })
 }
@@ -81,8 +82,8 @@ export const useDuplicateRecipe = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() })
       toast.success('Техкарта дублирована')
     },
-    onError: () => {
-      toast.error('Ошибка при дублировании техкарты')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при дублировании техкарты'))
     },
   })
 }
@@ -100,8 +101,8 @@ export const useRecalculateRecipeCost = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(id) })
       toast.success('Себестоимость пересчитана')
     },
-    onError: () => {
-      toast.error('Ошибка при пересчете себестоимости')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при пересчете себестоимости'))
     },
   })
 }
@@ -120,8 +121,8 @@ export const useAddRecipeIngredient = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент добавлен')
     },
-    onError: () => {
-      toast.error('Ошибка при добавлении ингредиента')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при добавлении ингредиента'))
     },
   })
 }
@@ -147,8 +148,8 @@ export const useUpdateRecipeIngredient = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент обновлен')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении ингредиента')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении ингредиента'))
     },
   })
 }
@@ -167,8 +168,8 @@ export const useRemoveRecipeIngredient = () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении ингредиента')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении ингредиента'))
     },
   })
 }

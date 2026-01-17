@@ -5,6 +5,7 @@ import { purchaseOrderApi } from './api'
 import { purchaseOrderKeys } from './query-keys'
 import { stockKeys } from '@/entities/stock/model/query-keys'
 import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreatePurchaseOrderDto,
@@ -27,8 +28,8 @@ export const useCreatePurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       toast.success('Заказ поставщику создан')
     },
-    onError: () => {
-      toast.error('Ошибка при создании заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании заказа'))
     },
   })
 }
@@ -47,8 +48,8 @@ export const useUpdatePurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
       toast.success('Заказ обновлен')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении заказа'))
     },
   })
 }
@@ -65,8 +66,8 @@ export const useDeletePurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       toast.success('Заказ удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении заказа'))
     },
   })
 }
@@ -84,8 +85,8 @@ export const useAddPOItem = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
       toast.success('Товар добавлен')
     },
-    onError: () => {
-      toast.error('Ошибка при добавлении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при добавлении товара'))
     },
   })
 }
@@ -103,8 +104,8 @@ export const useUpdatePOItem = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
       toast.success('Товар обновлен')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении товара'))
     },
   })
 }
@@ -122,8 +123,8 @@ export const useRemovePOItem = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
       toast.success('Товар удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении товара'))
     },
   })
 }
@@ -141,8 +142,8 @@ export const useSendPurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
       toast.success('Заказ отправлен поставщику')
     },
-    onError: () => {
-      toast.error('Ошибка при отправке заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отправке заказа'))
     },
   })
 }
@@ -163,8 +164,8 @@ export const useReceivePurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Товары приняты')
     },
-    onError: () => {
-      toast.error('Ошибка при приёме товаров')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при приёме товаров'))
     },
   })
 }
@@ -183,8 +184,8 @@ export const useCancelPurchaseOrder = () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) })
       toast.success('Заказ отменен')
     },
-    onError: () => {
-      toast.error('Ошибка при отмене заказа')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отмене заказа'))
     },
   })
 }

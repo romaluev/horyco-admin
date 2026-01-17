@@ -44,3 +44,31 @@ export function formatPrice(amount: number, options?: IFormatPriceOptions): stri
 
   return currency ? formatted + ' UZS' : formatted
 }
+
+/**
+ * Format currency value in UZS with proper locale
+ * Cached formatter for performance (per Vercel best practices 7.4)
+ */
+const currencyFormatter = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'UZS',
+  maximumFractionDigits: 0,
+})
+
+export function formatCurrency(value: number): string {
+  return currencyFormatter.format(value)
+}
+
+/**
+ * Format currency with compact notation for large values
+ */
+const compactCurrencyFormatter = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'UZS',
+  maximumFractionDigits: 0,
+  notation: 'compact',
+})
+
+export function formatCurrencyCompact(value: number): string {
+  return compactCurrencyFormatter.format(value)
+}

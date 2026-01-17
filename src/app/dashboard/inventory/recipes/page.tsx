@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 import { IconSearch } from '@tabler/icons-react'
 
+import { formatCurrency } from '@/shared/lib/format'
 import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
 import { Separator } from '@/shared/ui/base/separator'
@@ -31,13 +33,6 @@ export default function RecipesPage() {
   const filteredRecipes = recipes?.filter((recipe) =>
     recipe.name.toLowerCase().includes(search.toLowerCase())
   )
-
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'UZS',
-      maximumFractionDigits: 0,
-    }).format(value)
 
   return (
     <PageContainer scrollable>
@@ -112,8 +107,10 @@ export default function RecipesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" disabled>
-                          Изменить
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/dashboard/inventory/recipes/${recipe.id}`}>
+                            Открыть
+                          </Link>
                         </Button>
                       </TableCell>
                     </TableRow>

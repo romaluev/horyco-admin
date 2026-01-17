@@ -13,7 +13,7 @@ export const inventoryItemFormSchema = z.object({
   isActive: z.boolean().default(true),
   isSemiFinished: z.boolean().default(false),
   isTrackable: z.boolean().default(true),
-  shelfLifeDays: z.number().min(1).optional(),
+  shelfLifeDays: z.number().min(0, 'Срок годности не может быть отрицательным').optional(),
   defaultSupplierId: z.number().optional(),
   taxRate: z.number().min(0).max(100).default(0),
   notes: z.string().optional(),

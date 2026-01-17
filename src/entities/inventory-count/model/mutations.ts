@@ -5,6 +5,7 @@ import { inventoryCountApi } from './api'
 import { inventoryCountKeys } from './query-keys'
 import { stockKeys } from '@/entities/stock/model/query-keys'
 import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateInventoryCountDto,
@@ -24,8 +25,8 @@ export const useCreateInventoryCount = () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       toast.success('Инвентаризация создана')
     },
-    onError: () => {
-      toast.error('Ошибка при создании инвентаризации')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании инвентаризации'))
     },
   })
 }
@@ -43,8 +44,8 @@ export const useAddCountItem = () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(countId) })
       toast.success('Товар добавлен')
     },
-    onError: () => {
-      toast.error('Ошибка при добавлении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при добавлении товара'))
     },
   })
 }
@@ -70,8 +71,8 @@ export const useUpdateCountItem = () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.variance(countId) })
       toast.success('Данные сохранены')
     },
-    onError: () => {
-      toast.error('Ошибка при сохранении')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при сохранении'))
     },
   })
 }
@@ -89,8 +90,8 @@ export const useCompleteCount = () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
       toast.success('Инвентаризация завершена и отправлена на согласование')
     },
-    onError: () => {
-      toast.error('Ошибка при завершении инвентаризации')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при завершении инвентаризации'))
     },
   })
 }
@@ -110,8 +111,8 @@ export const useApproveCount = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Инвентаризация одобрена, корректировки применены')
     },
-    onError: () => {
-      toast.error('Ошибка при одобрении инвентаризации')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при одобрении инвентаризации'))
     },
   })
 }
@@ -129,8 +130,8 @@ export const useCancelCount = () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(id) })
       toast.success('Инвентаризация отменена')
     },
-    onError: () => {
-      toast.error('Ошибка при отмене инвентаризации')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отмене инвентаризации'))
     },
   })
 }

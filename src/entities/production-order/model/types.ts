@@ -42,13 +42,14 @@ export interface IProductionIngredient {
 export interface ICreateProductionOrderDto {
   warehouseId: number
   recipeId: number
-  plannedQuantity: number
-  plannedDate: string
+  quantityPlanned: number
+  plannedDate?: string
+  unit?: string
   notes?: string
 }
 
 export interface IUpdateProductionOrderDto {
-  plannedQuantity?: number
+  quantityPlanned?: number
   plannedDate?: string
   notes?: string
 }
