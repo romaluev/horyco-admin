@@ -3,8 +3,9 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { IconPlus } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -24,80 +25,44 @@ import {
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
 import { Textarea } from '@/shared/ui/base/textarea'
-import { ScrollArea } from '@/shared/ui/base/scroll-area'
-import { Separator } from '@/shared/ui/base/separator'
 
 import { useCreatePurchaseOrder } from '@/entities/purchase-order'
 import { WarehouseSelector } from '@/entities/warehouse'
 import { SupplierSelector } from '@/entities/supplier'
-import { ItemSelector } from '@/entities/inventory-item'
 
 import { purchaseOrderFormSchema } from '../model/schema'
 
 import type { PurchaseOrderFormValues } from '../model/schema'
 
-interface ICreatePODialogProps {
-  branchId: number
-}
-
-export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
+export function CreatePODialog() {
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: createPO, isPending } = useCreatePurchaseOrder()
 
   const form = useForm<PurchaseOrderFormValues>({
     resolver: zodResolver(purchaseOrderFormSchema),
     defaultValues: {
-      warehouseId: 0,
-      supplierId: 0,
+      warehouseId: undefined,
+      supplierId: undefined,
+      orderDate: format(new Date(), 'yyyy-MM-dd'),
       expectedDate: '',
+      discountAmount: 0,
+      currency: 'UZS',
       notes: '',
-      items: [],
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'items',
-  })
-
   const onSubmit = (data: PurchaseOrderFormValues) => {
-    createPO(
-      {
-        branchId,
-        supplierId: data.supplierId,
-        warehouseId: data.warehouseId,
-        expectedDate: data.expectedDate || undefined,
-        notes: data.notes || undefined,
-        items: data.items.map((item) => ({
-          itemId: item.inventoryItemId,
-          quantity: item.quantity,
-          unit: 'pcs',
-          unitPrice: item.unitPrice,
-        })),
-      },
-      {
-        onSuccess: () => {
-          setIsOpen(false)
-          form.reset()
-        },
-      }
-    )
-  }
+    const cleanData = Object.fromEntries(
+      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+    ) as PurchaseOrderFormValues
 
-  const addItem = () => {
-    append({
-      inventoryItemId: 0,
-      quantity: 1,
-      unitPrice: 0,
+    createPO(cleanData, {
+      onSuccess: () => {
+        setIsOpen(false)
+        form.reset()
+      },
     })
   }
-
-  // Calculate total
-  const watchItems = form.watch('items')
-  const total = watchItems.reduce(
-    (sum, item) => sum + item.quantity * item.unitPrice,
-    0
-  )
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -107,24 +72,57 @@ export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
           Создать заказ
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Создать заказ поставщику</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="warehouseId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Склад *</FormLabel>
+                  <FormControl>
+                    <WarehouseSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Выберите склад"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="supplierId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Поставщик *</FormLabel>
+                  <FormControl>
+                    <SupplierSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Выберите поставщика"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="supplierId"
+                name="orderDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Поставщик</FormLabel>
+                    <FormLabel>Дата заказа *</FormLabel>
                     <FormControl>
-                      <SupplierSelector
-                        value={field.value || undefined}
-                        onValueChange={(id) => field.onChange(id)}
-                      />
+                      <Input type="date" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,16 +131,12 @@ export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
 
               <FormField
                 control={form.control}
-                name="warehouseId"
+                name="expectedDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Склад получения</FormLabel>
+                    <FormLabel>Ожидаемая дата</FormLabel>
                     <FormControl>
-                      <WarehouseSelector
-                        branchId={branchId}
-                        value={field.value || undefined}
-                        onValueChange={(id) => field.onChange(id)}
-                      />
+                      <Input type="date" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,151 +146,22 @@ export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
 
             <FormField
               control={form.control}
-              name="expectedDate"
+              name="discountAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ожидаемая дата доставки</FormLabel>
+                  <FormLabel>Скидка (UZS)</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input
+                      type="number"
+                      min={0}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <Separator />
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <FormLabel>Товары</FormLabel>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addItem}
-                >
-                  <IconPlus className="mr-1 h-3 w-3" />
-                  Добавить
-                </Button>
-              </div>
-
-              <ScrollArea className="h-[200px] rounded-md border p-4">
-                {fields.length === 0 ? (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    Добавьте товары в заказ
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {fields.map((field, index) => (
-                      <div
-                        key={field.id}
-                        className="grid grid-cols-12 gap-2 items-end"
-                      >
-                        <div className="col-span-5">
-                          <FormField
-                            control={form.control}
-                            name={`items.${index}.inventoryItemId`}
-                            render={({ field }) => (
-                              <FormItem>
-                                {index === 0 && (
-                                  <FormLabel className="text-xs">Товар</FormLabel>
-                                )}
-                                <FormControl>
-                                  <ItemSelector
-                                    value={field.value || undefined}
-                                    onValueChange={(id) => field.onChange(id)}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <FormField
-                            control={form.control}
-                            name={`items.${index}.quantity`}
-                            render={({ field }) => (
-                              <FormItem>
-                                {index === 0 && (
-                                  <FormLabel className="text-xs">Кол-во</FormLabel>
-                                )}
-                                <FormControl>
-                                  <Input
-                                    type="number"
-                                    step="0.01"
-                                    min={0.001}
-                                    {...field}
-                                    onChange={(e) =>
-                                      field.onChange(Number(e.target.value))
-                                    }
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <FormField
-                            control={form.control}
-                            name={`items.${index}.unitPrice`}
-                            render={({ field }) => (
-                              <FormItem>
-                                {index === 0 && (
-                                  <FormLabel className="text-xs">Цена</FormLabel>
-                                )}
-                                <FormControl>
-                                  <Input
-                                    type="number"
-                                    step="0.01"
-                                    min={0}
-                                    {...field}
-                                    onChange={(e) =>
-                                      field.onChange(Number(e.target.value))
-                                    }
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="col-span-2 text-right text-sm text-muted-foreground">
-                          {index === 0 && (
-                            <span className="block text-xs mb-2">Сумма</span>
-                          )}
-                          {(
-                            (watchItems[index]?.quantity ?? 0) *
-                            (watchItems[index]?.unitPrice ?? 0)
-                          ).toLocaleString()}{' '}
-                          сум
-                        </div>
-                        <div className="col-span-1">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => remove(index)}
-                            className="text-destructive"
-                          >
-                            <IconTrash className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </ScrollArea>
-              {form.formState.errors.items && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.items.message}
-                </p>
-              )}
-
-              {fields.length > 0 && (
-                <div className="flex justify-end pt-2 font-medium">
-                  Итого: {total.toLocaleString()} сум
-                </div>
-              )}
-            </div>
 
             <FormField
               control={form.control}
@@ -306,9 +171,9 @@ export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
                   <FormLabel>Примечания</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Дополнительная информация..."
-                      rows={2}
+                      placeholder="Комментарий к заказу..."
                       {...field}
+                      value={field.value ?? ''}
                     />
                   </FormControl>
                   <FormMessage />
@@ -316,9 +181,19 @@ export const CreatePODialog = ({ branchId }: ICreatePODialogProps) => {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? 'Создание...' : 'Создать заказ'}
-            </Button>
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Отмена
+              </Button>
+              <Button type="submit" className="flex-1" disabled={isPending}>
+                {isPending ? 'Создание...' : 'Создать'}
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

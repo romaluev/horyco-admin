@@ -1,153 +1,135 @@
-/**
- * Production Order Mutation Hooks
- * TanStack React Query hooks for modifying production order data
- */
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { stockKeys } from '../../stock/model/query-keys'
-import { stockMovementKeys } from '../../stock-movement/model/query-keys'
 import { productionOrderApi } from './api'
 import { productionOrderKeys } from './query-keys'
+import { stockKeys } from '@/entities/stock/model/query-keys'
+import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+
 import type {
   ICreateProductionOrderDto,
   IUpdateProductionOrderDto,
+  IStartProductionDto,
   ICompleteProductionDto,
 } from './types'
 
+/**
+ * Create production order mutation
+ */
 export const useCreateProductionOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      branchId,
-      data,
-    }: {
-      branchId: number
-      data: ICreateProductionOrderDto
-    }) => productionOrderApi.createProductionOrder(branchId, data),
+    mutationFn: (data: ICreateProductionOrderDto) => productionOrderApi.createProductionOrder(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
-      toast.success('Производственный заказ создан')
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
+      toast.success('Заказ на производство создан')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при создании производственного заказа')
-      console.error('Create production order error:', error)
+    onError: () => {
+      toast.error('Ошибка при создании заказа')
     },
   })
 }
 
+/**
+ * Update production order mutation
+ */
 export const useUpdateProductionOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number
-      data: IUpdateProductionOrderDto
-    }) => productionOrderApi.updateProductionOrder(id, data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: productionOrderKeys.detail(variables.id),
-      })
-      toast.success('Производственный заказ обновлён')
+    mutationFn: ({ id, data }: { id: number; data: IUpdateProductionOrderDto }) =>
+      productionOrderApi.updateProductionOrder(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      toast.success('Заказ обновлен')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при обновлении производственного заказа')
-      console.error('Update production order error:', error)
+    onError: () => {
+      toast.error('Ошибка при обновлении заказа')
     },
   })
 }
 
+/**
+ * Delete production order mutation
+ */
 export const useDeleteProductionOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => productionOrderApi.deleteProductionOrder(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
-      toast.success('Производственный заказ удалён')
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
+      toast.success('Заказ удален')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при удалении производственного заказа')
-      console.error('Delete production order error:', error)
+    onError: () => {
+      toast.error('Ошибка при удалении заказа')
     },
   })
 }
 
-// Status action mutations
-
+/**
+ * Start production mutation
+ */
 export const useStartProduction = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => productionOrderApi.startProduction(id),
-    onSuccess: (_, id) => {
-      // Invalidate production queries
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
+    mutationFn: ({ id, data }: { id: number; data?: IStartProductionDto }) =>
+      productionOrderApi.startProduction(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
-      // Invalidate stock (starting deducts ingredients)
-      queryClient.invalidateQueries({ queryKey: stockKeys.all() })
-      queryClient.invalidateQueries({ queryKey: stockMovementKeys.all() })
-      toast.success('Производство начато, ингредиенты списаны')
+      queryClient.invalidateQueries({ queryKey: stockKeys.all })
+      queryClient.invalidateQueries({ queryKey: movementKeys.all })
+      toast.success('Производство начато')
     },
-    onError: (error: Error) => {
-      toast.error('Ошибка при начале производства')
-      console.error('Start production error:', error)
+    onError: () => {
+      toast.error('Ошибка при запуске производства')
     },
   })
 }
 
+/**
+ * Complete production mutation
+ */
 export const useCompleteProduction = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number
-      data?: ICompleteProductionDto
-    }) => productionOrderApi.completeProduction(id, data),
-    onSuccess: (_, variables) => {
-      // Invalidate production queries
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
-      queryClient.invalidateQueries({
-        queryKey: productionOrderKeys.detail(variables.id),
-      })
-      // Invalidate stock (completing adds produced items)
-      queryClient.invalidateQueries({ queryKey: stockKeys.all() })
-      queryClient.invalidateQueries({ queryKey: stockMovementKeys.all() })
-      toast.success('Производство завершено, продукция оприходована')
+    mutationFn: ({ id, data }: { id: number; data: ICompleteProductionDto }) =>
+      productionOrderApi.completeProduction(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      queryClient.invalidateQueries({ queryKey: stockKeys.all })
+      queryClient.invalidateQueries({ queryKey: movementKeys.all })
+      toast.success('Производство завершено')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при завершении производства')
-      console.error('Complete production error:', error)
     },
   })
 }
 
+/**
+ * Cancel production mutation
+ */
 export const useCancelProduction = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (id: number) => productionOrderApi.cancelProduction(id),
     onSuccess: (_, id) => {
-      // Invalidate production queries
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.all() })
+      queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
-      // Invalidate stock (cancelling may return ingredients)
-      queryClient.invalidateQueries({ queryKey: stockKeys.all() })
-      queryClient.invalidateQueries({ queryKey: stockMovementKeys.all() })
+      queryClient.invalidateQueries({ queryKey: stockKeys.all })
+      queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство отменено')
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error('Ошибка при отмене производства')
-      console.error('Cancel production error:', error)
     },
   })
 }

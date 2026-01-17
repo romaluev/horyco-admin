@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { IconTrash } from '@tabler/icons-react'
 
-import { Button } from '@/shared/ui/base/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,20 +15,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
 
 import { useDeleteSupplier } from '@/entities/supplier'
 
 interface IDeleteSupplierButtonProps {
   supplierId: number
   supplierName: string
-  onSuccess?: () => void
+  variant?: 'default' | 'ghost' | 'outline'
+  size?: 'default' | 'sm' | 'icon'
 }
 
-export const DeleteSupplierButton = ({
+export function DeleteSupplierButton({
   supplierId,
   supplierName,
-  onSuccess,
-}: IDeleteSupplierButtonProps) => {
+  variant = 'ghost',
+  size = 'icon',
+}: IDeleteSupplierButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: deleteSupplier, isPending } = useDeleteSupplier()
 
@@ -37,7 +39,6 @@ export const DeleteSupplierButton = ({
     deleteSupplier(supplierId, {
       onSuccess: () => {
         setIsOpen(false)
-        onSuccess?.()
       },
     })
   }
@@ -45,16 +46,17 @@ export const DeleteSupplierButton = ({
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-destructive">
-          <IconTrash className="h-4 w-4" />
+        <Button variant={variant} size={size}>
+          <IconTrash className="h-4 w-4 text-destructive" />
+          {size !== 'icon' && <span className="ml-2">Удалить</span>}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить поставщика?</AlertDialogTitle>
           <AlertDialogDescription>
-            Вы уверены, что хотите удалить поставщика «{supplierName}»? Это
-            действие нельзя отменить.
+            Вы уверены, что хотите удалить поставщика &quot;{supplierName}&quot;?
+            Это действие нельзя отменить.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

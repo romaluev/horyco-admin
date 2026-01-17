@@ -1,69 +1,66 @@
+import type { MovementType } from '@/shared/types/inventory'
+
 /**
- * Stock Movement Entity Types
- * Based on /api/admin/inventory/movements endpoints
+ * Stock movement record (read-only, created by system)
  */
-
-import { MovementType } from '@/shared/types/inventory'
-
 export interface IStockMovement {
   id: number
   warehouseId: number
-  warehouse?: {
-    id: number
-    name: string
-  }
   itemId: number
-  item?: {
-    id: number
-    name: string
-    sku?: string
-    unit: string
-  }
-  movementType: MovementType
+  type: MovementType
   quantity: number
+  previousQuantity: number
+  newQuantity: number
   unitCost: number
   totalCost: number
-  balanceAfter: number
   referenceType?: string
   referenceId?: number
   referenceNumber?: string
   notes?: string
   createdBy?: number
-  createdByUser?: {
+  createdAt: string
+  // Expanded relations
+  warehouse?: {
+    id: number
+    name: string
+    code?: string
+  }
+  item?: {
+    id: number
+    name: string
+    sku: string
+    unit: string
+  }
+  creator?: {
     id: number
     name: string
   }
-  createdAt: string
-  // Convenience flat fields for list views
-  inventoryItemName?: string
-  warehouseName?: string
-  type?: MovementType
-  unit?: string
-  reference?: string
 }
 
+/**
+ * Params for getting movement list
+ */
 export interface IGetMovementsParams {
   warehouseId?: number
   itemId?: number
-  movementType?: MovementType
-  from?: string
-  to?: string
+  type?: MovementType
+  referenceType?: string
+  referenceId?: number
+  dateFrom?: string
+  dateTo?: string
   page?: number
-  limit?: number
+  size?: number
 }
 
-// API returns movements array directly
-export type IMovementsResponse = IStockMovement[]
-
-export interface IMovementsSummary {
-  totalIn: number
-  totalOut: number
-  netChange: number
-  valueIn: number
-  valueOut: number
-  netValueChange: number
-  period: {
-    from: string
-    to: string
+/**
+ * Paginated movement response
+ */
+export interface IMovementListResponse {
+  data: IStockMovement[]
+  meta: {
+    total: number
+    page: number
+    size: number
+    totalPages: number
   }
 }

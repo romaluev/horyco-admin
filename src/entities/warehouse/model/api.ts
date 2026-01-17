@@ -1,55 +1,60 @@
-/**
- * Warehouse API Client
- * Based on /api/admin/inventory/warehouses endpoints
- */
-
 import api from '@/shared/lib/axios'
 
 import type {
   IWarehouse,
-  IWarehousesResponse,
+  IWarehouseStockSummary,
   ICreateWarehouseDto,
   IUpdateWarehouseDto,
   IGetWarehousesParams,
 } from './types'
 
-interface ApiResponse<T> {
-  success: boolean
-  data: T
-  timestamp: string
-  requestId: string
-}
-
 export const warehouseApi = {
   /**
-   * Get all warehouses with filters
    * GET /admin/inventory/warehouses
+   * Get all warehouses
    */
-  async getWarehouses(params?: IGetWarehousesParams): Promise<IWarehousesResponse> {
-    const response = await api.get<ApiResponse<IWarehousesResponse>>(
+  async getWarehouses(params?: IGetWarehousesParams): Promise<IWarehouse[]> {
+    const response = await api.get<{ success: boolean; data: IWarehouse[] } | IWarehouse[]>(
       '/admin/inventory/warehouses',
       { params }
     )
-    return response.data.data
+    // Handle both wrapped and unwrapped response formats
+    const data = response.data
+    if (Array.isArray(data)) {
+      return data
+    }
+    return data.data || []
   },
 
   /**
-   * Get warehouse by ID
    * GET /admin/inventory/warehouses/:id
+   * Get warehouse by ID
    */
   async getWarehouseById(id: number): Promise<IWarehouse> {
-    const response = await api.get<ApiResponse<IWarehouse>>(
+    const response = await api.get<{ success: boolean; data: IWarehouse }>(
       `/admin/inventory/warehouses/${id}`
     )
     return response.data.data
   },
 
   /**
-   * Create new warehouse
+   * GET /admin/inventory/warehouses/:id/stock-summary
+   * Get warehouse stock summary
+   */
+  async getWarehouseStockSummary(id: number): Promise<IWarehouseStockSummary> {
+    const response = await api.get<{
+      success: boolean
+      data: IWarehouseStockSummary
+    }>(`/admin/inventory/warehouses/${id}/stock-summary`)
+    return response.data.data
+  },
+
+  /**
    * POST /admin/inventory/warehouses
+   * Create a new warehouse
    */
   async createWarehouse(data: ICreateWarehouseDto): Promise<IWarehouse> {
-    const response = await api.post<ApiResponse<IWarehouse>>(
+    const response = await api.post<{ success: boolean; data: IWarehouse }>(
       '/admin/inventory/warehouses',
       data
     )
@@ -57,11 +62,14 @@ export const warehouseApi = {
   },
 
   /**
-   * Update warehouse
    * PATCH /admin/inventory/warehouses/:id
+   * Update a warehouse
    */
-  async updateWarehouse(id: number, data: IUpdateWarehouseDto): Promise<IWarehouse> {
-    const response = await api.patch<ApiResponse<IWarehouse>>(
+  async updateWarehouse(
+    id: number,
+    data: IUpdateWarehouseDto
+  ): Promise<IWarehouse> {
+    const response = await api.patch<{ success: boolean; data: IWarehouse }>(
       `/admin/inventory/warehouses/${id}`,
       data
     )
@@ -69,8 +77,8 @@ export const warehouseApi = {
   },
 
   /**
-   * Delete warehouse
    * DELETE /admin/inventory/warehouses/:id
+   * Delete a warehouse
    */
   async deleteWarehouse(id: number): Promise<void> {
     await api.delete(`/admin/inventory/warehouses/${id}`)

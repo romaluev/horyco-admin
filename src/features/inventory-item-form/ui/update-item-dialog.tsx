@@ -17,13 +17,13 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Select,
   SelectContent,
@@ -31,19 +31,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateInventoryItem } from '@/entities/inventory-item'
-import type { IInventoryItem } from '@/entities/inventory-item'
+import { useUpdateInventoryItem, type IInventoryItem } from '@/entities/inventory-item'
+
 import {
-  ITEM_CATEGORIES,
-  ITEM_CATEGORY_LABELS,
-  INVENTORY_UNITS,
-  UNIT_LABELS,
-  type ItemCategory,
-  type InventoryUnit,
-} from '@/shared/types/inventory'
-
-import { inventoryItemFormSchema } from '../model/schema'
+  inventoryItemFormSchema,
+  unitOptions,
+  categoryOptions,
+} from '../model/schema'
 
 import type { InventoryItemFormValues } from '../model/schema'
 
@@ -60,12 +57,20 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
     resolver: zodResolver(inventoryItemFormSchema),
     defaultValues: {
       name: item.name,
-      sku: item.sku || '',
-      category: item.category,
+      sku: item.sku ?? '',
+      barcode: item.barcode ?? '',
+      category: item.category ?? '',
       unit: item.unit,
-      minStock: item.minStock || 0,
-      maxStock: item.maxStock || undefined,
-      notes: item.notes || '',
+      minStockLevel: item.minStockLevel,
+      maxStockLevel: item.maxStockLevel ?? undefined,
+      reorderPoint: item.reorderPoint ?? undefined,
+      reorderQuantity: item.reorderQuantity ?? undefined,
+      isActive: item.isActive,
+      isSemiFinished: item.isSemiFinished,
+      isTrackable: item.isTrackable,
+      shelfLifeDays: item.shelfLifeDays ?? undefined,
+      taxRate: item.taxRate,
+      notes: item.notes ?? '',
     },
   })
 
@@ -73,29 +78,27 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
     if (isOpen) {
       form.reset({
         name: item.name,
-        sku: item.sku || '',
-        category: item.category,
+        sku: item.sku ?? '',
+        barcode: item.barcode ?? '',
+        category: item.category ?? '',
         unit: item.unit,
-        minStock: item.minStock || 0,
-        maxStock: item.maxStock || undefined,
-        notes: item.notes || '',
+        minStockLevel: item.minStockLevel,
+        maxStockLevel: item.maxStockLevel ?? undefined,
+        reorderPoint: item.reorderPoint ?? undefined,
+        reorderQuantity: item.reorderQuantity ?? undefined,
+        isActive: item.isActive,
+        isSemiFinished: item.isSemiFinished,
+        isTrackable: item.isTrackable,
+        shelfLifeDays: item.shelfLifeDays ?? undefined,
+        taxRate: item.taxRate,
+        notes: item.notes ?? '',
       })
     }
   }, [isOpen, item, form])
 
   const onSubmit = (data: InventoryItemFormValues) => {
     updateItem(
-      {
-        id: item.id,
-        data: {
-          name: data.name,
-          category: data.category,
-          unit: data.unit as InventoryUnit,
-          sku: data.sku || undefined,
-          minStockLevel: data.minStock,
-          maxStockLevel: data.maxStock,
-        },
-      },
+      { id: item.id, data },
       {
         onSuccess: () => {
           setIsOpen(false)
@@ -113,41 +116,55 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Редактировать товар</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Название</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Помидоры" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="sku"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Артикул (SKU)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="TOM-001" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Название *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Название товара" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sku"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Артикул (SKU)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="SKU-001" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="barcode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Штрихкод</FormLabel>
+                    <FormControl>
+                      <Input placeholder="4600000000000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="category"
@@ -157,13 +174,13 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите" />
+                          <SelectValue placeholder="Выберите категорию" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {ITEM_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat} value={cat}>
-                            {ITEM_CATEGORY_LABELS[cat as ItemCategory]}
+                        {categoryOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -178,17 +195,17 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                 name="unit"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Единица</FormLabel>
+                    <FormLabel>Единица измерения *</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите" />
+                          <SelectValue placeholder="Выберите единицу" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {INVENTORY_UNITS.map((unit) => (
-                          <SelectItem key={unit} value={unit}>
-                            {UNIT_LABELS[unit]}
+                        {unitOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -197,12 +214,10 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="minStock"
+                name="minStockLevel"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Мин. остаток</FormLabel>
@@ -210,8 +225,27 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                       <Input
                         type="number"
                         min={0}
-                        step="0.01"
                         {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormDescription>Уведомление при достижении</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="maxStockLevel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Макс. остаток</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(e.target.value ? Number(e.target.value) : undefined)
                         }
@@ -224,22 +258,88 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
 
               <FormField
                 control={form.control}
-                name="maxStock"
+                name="taxRate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Макс. остаток</FormLabel>
+                    <FormLabel>НДС (%)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min={0}
-                        step="0.01"
+                        max={100}
                         {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="shelfLifeDays"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Срок годности (дней)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(e.target.value ? Number(e.target.value) : undefined)
                         }
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Активен</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="isTrackable"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Учёт остатков</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="isSemiFinished"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Полуфабрикат</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -252,16 +352,30 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                 <FormItem>
                   <FormLabel>Примечания</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Дополнительная информация..." rows={2} {...field} />
+                    <Textarea
+                      placeholder="Дополнительная информация..."
+                      {...field}
+                      value={field.value ?? ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? 'Сохранение...' : 'Сохранить'}
-            </Button>
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Отмена
+              </Button>
+              <Button type="submit" className="flex-1" disabled={isPending}>
+                {isPending ? 'Сохранение...' : 'Сохранить'}
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

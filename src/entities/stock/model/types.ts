@@ -1,89 +1,124 @@
-/**
- * Stock Entity Types
- * Based on /api/admin/inventory/stock endpoints
- */
+import type { MovementType } from '@/shared/types/inventory'
 
+/**
+ * Stock record for an item at a specific warehouse
+ */
 export interface IStock {
   id: number
   warehouseId: number
+  itemId: number
+  quantity: number
+  reservedQuantity: number
+  averageCost: number
+  lastCost: number
+  lastMovementAt: string | null
+  createdAt: string
+  updatedAt: string
+  // Expanded relations
   warehouse?: {
     id: number
     name: string
+    code?: string
   }
-  itemId: number
   item?: {
     id: number
     name: string
-    sku?: string
+    sku: string
     unit: string
-    minStockLevel: number
+    minStockLevel?: number
     maxStockLevel?: number
-    isSemiFinished: boolean
   }
-  quantity: number
-  reservedQuantity: number
-  availableQuantity: number
-  avgCost: number
-  lastCost: number
-  totalValue: number
-  lastMovementAt?: string
-  updatedAt: string
-  // Convenience flat fields for list views
-  inventoryItemName?: string
-  inventoryItemSku?: string
-  unit?: string
-  minStock?: number
 }
 
+/**
+ * Stock summary for dashboard
+ */
 export interface IStockSummary {
   totalItems: number
   totalValue: number
   lowStockCount: number
   outOfStockCount: number
-  warehouseId?: number
+  overstockCount: number
 }
 
-export interface IStockAdjustmentDto {
-  warehouseId: number
-  itemId: number
-  newQuantity: number
-  reason: string
-}
-
-export interface IGetStockParams {
-  warehouseId: number
-  category?: string
-  search?: string
-  lowStockOnly?: boolean
-  outOfStockOnly?: boolean
-  page?: number
-  limit?: number
-}
-
-// API returns stock array directly, not wrapped in items/summary
-export type IStockResponse = IStock[]
-
-export interface ILowStockItem {
+/**
+ * Stock alert
+ */
+export interface IStockAlert {
   id: number
-  itemId: number
-  item: {
-    id: number
-    name: string
-    sku?: string
-    unit: string
-    minStockLevel: number
-  }
   warehouseId: number
-  warehouse: {
+  itemId: number
+  alertType: 'LOW_STOCK' | 'OUT_OF_STOCK' | 'OVERSTOCK' | 'EXPIRING_SOON'
+  threshold: number
+  currentValue: number
+  isAcknowledged: boolean
+  acknowledgedBy?: number
+  acknowledgedAt?: string
+  createdAt: string
+  // Expanded relations
+  warehouse?: {
     id: number
     name: string
   }
-  quantity: number
-  minStockLevel: number
-  percentageOfMin: number
-  // Convenience flat fields for widgets
-  inventoryItemId?: number
-  inventoryItemName?: string
-  minStock?: number
-  unit?: string
+  item?: {
+    id: number
+    name: string
+    sku: string
+  }
+}
+
+/**
+ * DTO for manual stock adjustment
+ */
+export interface IAdjustStockDto {
+  warehouseId: number
+  itemId: number
+  quantityChange: number
+  reason: MovementType
+  notes?: string
+  referenceNumber?: string
+}
+
+/**
+ * Params for getting stock list
+ */
+export interface IGetStockParams {
+  warehouseId?: number
+  itemId?: number
+  search?: string
+  page?: number
+  size?: number
+}
+
+/**
+ * Params for low/out of stock queries
+ */
+export interface IStockAlertParams {
+  warehouseId?: number
+  page?: number
+  size?: number
+}
+
+/**
+ * Paginated stock response
+ */
+export interface IStockListResponse {
+  data: IStock[]
+  meta: {
+    total: number
+    page: number
+    size: number
+    totalPages: number
+  }
+}
+
+/**
+ * Params for stock alerts
+ */
+export interface IGetStockAlertsParams {
+  warehouseId?: number
+  alertType?: string
+  isAcknowledged?: boolean
+  page?: number
+  size?: number
 }

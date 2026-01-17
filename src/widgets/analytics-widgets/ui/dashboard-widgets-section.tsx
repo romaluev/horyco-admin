@@ -32,10 +32,6 @@ import { TransactionsSummaryWidget } from './transactions-summary-widget'
 import { VisitorsTrafficWidget } from './visitors-traffic-widget'
 import { WidgetCard } from './widget-card'
 
-// ============================================
-// TYPES
-// ============================================
-
 interface IDashboardWidgetsSectionProps {
   widgets: IDashboardWidget[]
   period: IPeriodInput
@@ -75,10 +71,6 @@ const CONTAINER_WIDGETS: Record<string, ComponentType<IWidgetContainerProps>> = 
   REVENUE_OVERVIEW: RevenueOverviewContainer,
   TRANSACTIONS_SUMMARY: TransactionsSummaryContainer,
 }
-
-// ============================================
-// MAIN COMPONENT
-// ============================================
 
 export function DashboardWidgetsSection({
   widgets,
@@ -121,10 +113,6 @@ export function DashboardWidgetsSection({
   )
 }
 
-// ============================================
-// WIDGET RENDERER (uses component map)
-// ============================================
-
 interface IWidgetRendererProps {
   widget: IDashboardWidget
   period: IPeriodInput
@@ -155,10 +143,6 @@ function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
     </WidgetCard>
   )
 }
-
-// ============================================
-// DATA CONTAINER COMPONENTS
-// ============================================
 
 function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useRankedList({

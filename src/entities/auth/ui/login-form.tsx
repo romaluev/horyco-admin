@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -198,7 +199,15 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Пароль</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Пароль</FormLabel>
+                    <Link
+                      href="/auth/forgot-password"
+                      className="text-muted-foreground hover:text-primary text-sm underline-offset-4 hover:underline"
+                    >
+                      Забыли пароль?
+                    </Link>
+                  </div>
                   <FormControl>
                     <PasswordInput
                       type="password"

@@ -1,21 +1,13 @@
-/**
- * Purchase Orders Page
- * Page for managing purchase orders
- */
-
 'use client'
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-
-import { IconSearch, IconEye } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
-import PageContainer from '@/shared/ui/layout/page-container'
-import { Input } from '@/shared/ui/base/input'
-import { Button } from '@/shared/ui/base/button'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -31,134 +23,132 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Skeleton } from '@/shared/ui/base/skeleton'
+import { Button } from '@/shared/ui/base/button'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { useGetPurchaseOrders, POStatusBadge } from '@/entities/purchase-order'
+import {
+  useGetPurchaseOrders,
+  POStatusBadge,
+  PO_STATUS_LABELS,
+  type POStatus,
+} from '@/entities/purchase-order'
+import { SupplierSelector } from '@/entities/supplier'
 import { CreatePODialog } from '@/features/purchase-order-form'
-import { POStatus, PO_STATUS_LABELS } from '@/shared/types/inventory'
 
 export default function PurchaseOrdersPage() {
-  const { selectedBranchId } = useBranchStore()
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [status, setStatus] = useState<POStatus | ''>('')
+  const [supplierId, setSupplierId] = useState<number | undefined>()
 
-  const { data, isLoading } = useGetPurchaseOrders(
-    {
-      branchId: selectedBranchId || undefined,
-      status: statusFilter !== 'all' ? (statusFilter as POStatus) : undefined,
-    },
-    { enabled: !!selectedBranchId }
-  )
+  const { data: orders, isLoading } = useGetPurchaseOrders({
+    status: status || undefined,
+    supplierId,
+  })
 
-  const orders = data || []
-
-  if (!selectedBranchId) {
-    return (
-      <PageContainer>
-        <div className="flex h-[50vh] items-center justify-center">
-          <p className="text-muted-foreground">Выберите филиал</p>
-        </div>
-      </PageContainer>
-    )
-  }
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'UZS',
+      maximumFractionDigits: 0,
+    }).format(value)
 
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Закупки</h1>
-            <p className="text-muted-foreground">
-              Заказы поставщикам и приёмка товаров
-            </p>
-          </div>
-          <CreatePODialog branchId={selectedBranchId} />
+    <PageContainer scrollable>
+      <div className="flex flex-1 flex-col space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Заказы поставщикам"
+            description="Управление закупками и приёмом товаров"
+          />
+          <CreatePODialog />
         </div>
+        <Separator />
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Статус" />
+        <div className="flex flex-wrap gap-4">
+          <Select
+            value={status || 'all'}
+            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as POStatus))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Все статусы" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все статусы</SelectItem>
-              {Object.values(POStatus).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {PO_STATUS_LABELS[status]}
+              {Object.entries(PO_STATUS_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+
+          <div className="w-[200px]">
+            <SupplierSelector
+              value={supplierId}
+              onChange={setSupplierId}
+              showAll
+              placeholder="Все поставщики"
+            />
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>№</TableHead>
-                <TableHead>Дата</TableHead>
-                <TableHead>Поставщик</TableHead>
-                <TableHead>Склад</TableHead>
-                <TableHead>Статус</TableHead>
-                <TableHead>Позиций</TableHead>
-                <TableHead>Сумма</TableHead>
-                <TableHead className="w-[80px]">Действия</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-                  </TableRow>
-                ))
-              ) : orders.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      Заказы не найдены
-                    </p>
-                  </TableCell>
+                  <TableHead>Номер</TableHead>
+                  <TableHead>Поставщик</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead>Дата заказа</TableHead>
+                  <TableHead>Ожидается</TableHead>
+                  <TableHead className="text-right">Сумма</TableHead>
+                  <TableHead className="w-[100px]" />
                 </TableRow>
-              ) : (
-                orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">#{order.id}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {format(new Date(order.createdAt), 'dd.MM.yyyy', {
-                        locale: ru,
-                      })}
-                    </TableCell>
-                    <TableCell>{order.supplierName || order.supplier?.name}</TableCell>
-                    <TableCell>{order.warehouseName || order.warehouse?.name}</TableCell>
-                    <TableCell>
-                      <POStatusBadge status={order.status} />
-                    </TableCell>
-                    <TableCell>{order.totalItems || order.items?.length || 0}</TableCell>
-                    <TableCell>{(order.totalAmount || order.total || 0).toLocaleString()} сум</TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/dashboard/inventory/purchase-orders/${order.id}`}>
-                          <IconEye className="h-4 w-4" />
-                        </Link>
-                      </Button>
+              </TableHeader>
+              <TableBody>
+                {!orders?.length ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Заказы не найдены
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ) : (
+                  orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">{order.poNumber}</TableCell>
+                      <TableCell>{order.supplierName}</TableCell>
+                      <TableCell>
+                        <POStatusBadge status={order.status} />
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(new Date(order.orderDate), 'dd MMM yyyy', { locale: ru })}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {order.expectedDate
+                          ? format(new Date(order.expectedDate), 'dd MMM yyyy', { locale: ru })
+                          : '—'}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {formatCurrency(order.totalAmount)}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm" disabled>
+                          Открыть
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </PageContainer>
   )

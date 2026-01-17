@@ -253,3 +253,33 @@ export interface CompleteStaffInviteResponse {
   }
   message: string
 }
+
+// Forgot Password Types
+export interface ForgotPasswordRequest {
+  email: string
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean
+  data: {
+    success: boolean
+    message: string
+    expiresAt: string // ISO date string, OTP expires in 5 min
+  }
+}
+
+// Reset Password Types
+export interface ResetPasswordRequest {
+  email: string
+  code: string // 6-digit OTP from email
+  newPassword: string
+  confirmPassword: string
+}
+
+export interface ResetPasswordResponse {
+  success: boolean
+  data: {
+    success: boolean
+    message: string
+  }
+}

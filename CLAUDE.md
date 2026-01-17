@@ -36,7 +36,10 @@ You are an autonomous software developer using Claude Code CLI to build producti
 - `/refactor [path]` - improve code quality
 - `/bug-fix [desc]` - locate and fix bugs
 - `/doc-sync` - sync docs with codebase
-- `/audit` - full project analysis
+- `/e2e-testing [route|all|feature]` - comprehensive browser testing via Playwright MCP (uses e2e-tester agent)
+- `/design-review [route]` - live UI review in browser
+- `/commit` - create semantic commit
+- `/pr` - create pull request
 
 ## Workflow Pattern
 

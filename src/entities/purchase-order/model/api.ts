@@ -1,46 +1,44 @@
 /**
  * Purchase Order API Client
- * Based on /api/admin/inventory/purchase-orders endpoints
+ * Based on /admin/inventory/purchase-orders endpoints
  */
 
 import api from '@/shared/lib/axios'
 
 import type {
   IPurchaseOrder,
-  IPurchaseOrdersResponse,
   ICreatePurchaseOrderDto,
   IUpdatePurchaseOrderDto,
   IGetPurchaseOrdersParams,
-  IPurchaseOrderItem,
   ICreatePOItemDto,
   IUpdatePOItemDto,
   IReceivePODto,
+  ICancelPODto,
+  IPurchaseOrderItem,
 } from './types'
 
 interface ApiResponse<T> {
   success: boolean
   data: T
-  timestamp: string
-  requestId: string
 }
 
 export const purchaseOrderApi = {
   /**
-   * Get all purchase orders with filters
+   * Get all purchase orders
    * GET /admin/inventory/purchase-orders
    */
-  async getPurchaseOrders(
-    params?: IGetPurchaseOrdersParams
-  ): Promise<IPurchaseOrdersResponse> {
-    const response = await api.get<ApiResponse<IPurchaseOrdersResponse>>(
+  async getPurchaseOrders(params?: IGetPurchaseOrdersParams): Promise<IPurchaseOrder[]> {
+    const response = await api.get<ApiResponse<IPurchaseOrder[]> | IPurchaseOrder[]>(
       '/admin/inventory/purchase-orders',
       { params }
     )
-    return response.data.data
+    const data = response.data
+    if (Array.isArray(data)) return data
+    return data.data || []
   },
 
   /**
-   * Get purchase order by ID
+   * Get purchase order by ID with items and receives
    * GET /admin/inventory/purchase-orders/:id
    */
   async getPurchaseOrderById(id: number): Promise<IPurchaseOrder> {
@@ -51,7 +49,7 @@ export const purchaseOrderApi = {
   },
 
   /**
-   * Create new purchase order
+   * Create purchase order
    * POST /admin/inventory/purchase-orders
    */
   async createPurchaseOrder(data: ICreatePurchaseOrderDto): Promise<IPurchaseOrder> {
@@ -63,13 +61,10 @@ export const purchaseOrderApi = {
   },
 
   /**
-   * Update draft purchase order
+   * Update purchase order (draft only)
    * PATCH /admin/inventory/purchase-orders/:id
    */
-  async updatePurchaseOrder(
-    id: number,
-    data: IUpdatePurchaseOrderDto
-  ): Promise<IPurchaseOrder> {
+  async updatePurchaseOrder(id: number, data: IUpdatePurchaseOrderDto): Promise<IPurchaseOrder> {
     const response = await api.patch<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}`,
       data
@@ -78,22 +73,20 @@ export const purchaseOrderApi = {
   },
 
   /**
-   * Delete draft purchase order
+   * Delete purchase order (draft only)
    * DELETE /admin/inventory/purchase-orders/:id
    */
   async deletePurchaseOrder(id: number): Promise<void> {
     await api.delete(`/admin/inventory/purchase-orders/${id}`)
   },
 
-  // ===== PO Items =====
-
   /**
    * Add item to purchase order
    * POST /admin/inventory/purchase-orders/:id/items
    */
-  async addItem(poId: number, data: ICreatePOItemDto): Promise<IPurchaseOrderItem> {
+  async addItem(id: number, data: ICreatePOItemDto): Promise<IPurchaseOrderItem> {
     const response = await api.post<ApiResponse<IPurchaseOrderItem>>(
-      `/admin/inventory/purchase-orders/${poId}/items`,
+      `/admin/inventory/purchase-orders/${id}/items`,
       data
     )
     return response.data.data
@@ -101,15 +94,11 @@ export const purchaseOrderApi = {
 
   /**
    * Update purchase order item
-   * PATCH /admin/inventory/purchase-orders/:id/items/:itemId
+   * PATCH /admin/inventory/purchase-orders/:id/items/:poItemId
    */
-  async updateItem(
-    poId: number,
-    itemId: number,
-    data: IUpdatePOItemDto
-  ): Promise<IPurchaseOrderItem> {
+  async updateItem(id: number, poItemId: number, data: IUpdatePOItemDto): Promise<IPurchaseOrderItem> {
     const response = await api.patch<ApiResponse<IPurchaseOrderItem>>(
-      `/admin/inventory/purchase-orders/${poId}/items/${itemId}`,
+      `/admin/inventory/purchase-orders/${id}/items/${poItemId}`,
       data
     )
     return response.data.data
@@ -117,19 +106,17 @@ export const purchaseOrderApi = {
 
   /**
    * Remove item from purchase order
-   * DELETE /admin/inventory/purchase-orders/:id/items/:itemId
+   * DELETE /admin/inventory/purchase-orders/:id/items/:poItemId
    */
-  async removeItem(poId: number, itemId: number): Promise<void> {
-    await api.delete(`/admin/inventory/purchase-orders/${poId}/items/${itemId}`)
+  async removeItem(id: number, poItemId: number): Promise<void> {
+    await api.delete(`/admin/inventory/purchase-orders/${id}/items/${poItemId}`)
   },
-
-  // ===== Status Actions =====
 
   /**
    * Send purchase order to supplier
    * POST /admin/inventory/purchase-orders/:id/send
    */
-  async sendToSupplier(id: number): Promise<IPurchaseOrder> {
+  async sendPurchaseOrder(id: number): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}/send`
     )
@@ -137,10 +124,10 @@ export const purchaseOrderApi = {
   },
 
   /**
-   * Receive items for purchase order
+   * Receive items from purchase order
    * POST /admin/inventory/purchase-orders/:id/receive
    */
-  async receiveItems(id: number, data: IReceivePODto): Promise<IPurchaseOrder> {
+  async receivePurchaseOrder(id: number, data: IReceivePODto): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}/receive`,
       data
@@ -152,9 +139,10 @@ export const purchaseOrderApi = {
    * Cancel purchase order
    * POST /admin/inventory/purchase-orders/:id/cancel
    */
-  async cancelPurchaseOrder(id: number): Promise<IPurchaseOrder> {
+  async cancelPurchaseOrder(id: number, data: ICancelPODto): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
-      `/admin/inventory/purchase-orders/${id}/cancel`
+      `/admin/inventory/purchase-orders/${id}/cancel`,
+      data
     )
     return response.data.data
   },

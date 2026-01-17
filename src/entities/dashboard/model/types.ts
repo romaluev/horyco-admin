@@ -90,6 +90,7 @@ export interface IMainChartConfig {
 export interface IDashboardConfig {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
+  chartType?: ChartType
   chartGroupBy: GroupBy | null
   widgets: IDashboardWidget[]
 }
@@ -97,6 +98,7 @@ export interface IDashboardConfig {
 export interface IDashboardConfigInput {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
+  chartType?: ChartType
   chartGroupBy: GroupBy | null
   widgets: Omit<IDashboardWidget, 'config'>[]
 }

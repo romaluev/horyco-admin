@@ -1,41 +1,30 @@
-/**
- * Writeoff Query Hooks
- * TanStack React Query hooks for fetching writeoff data
- */
-
 import { useQuery } from '@tanstack/react-query'
 
 import { writeoffApi } from './api'
 import { writeoffKeys } from './query-keys'
-import type { IWriteoffListParams } from './types'
-import { WriteoffStatus } from '@/shared/types/inventory'
 
-export const useGetWriteoffs = (
-  branchId: number,
-  params?: IWriteoffListParams,
-  enabled = true
-) => {
+import type { IGetWriteoffsParams } from './types'
+
+/**
+ * Get all writeoffs
+ */
+export const useGetWriteoffs = (params?: IGetWriteoffsParams) => {
   return useQuery({
-    queryKey: writeoffKeys.list(branchId, params),
-    queryFn: () => writeoffApi.getWriteoffs(branchId, params),
-    enabled: enabled && !!branchId,
+    queryKey: writeoffKeys.list(params),
+    queryFn: () => writeoffApi.getWriteoffs(params),
   })
 }
 
-export const useGetWriteoffById = (id: number, enabled = true) => {
+// Alias
+export const useWriteoffList = useGetWriteoffs
+
+/**
+ * Get writeoff by ID with items
+ */
+export const useWriteoffById = (id: number) => {
   return useQuery({
     queryKey: writeoffKeys.detail(id),
     queryFn: () => writeoffApi.getWriteoffById(id),
-    enabled: enabled && !!id,
-  })
-}
-
-export const useGetPendingWriteoffs = (branchId: number, enabled = true) => {
-  return useQuery({
-    queryKey: writeoffKeys.pending(branchId),
-    queryFn: () =>
-      writeoffApi.getWriteoffs(branchId, { status: WriteoffStatus.PENDING }),
-    enabled: enabled && !!branchId,
-    select: (data) => data.data,
+    enabled: !!id,
   })
 }

@@ -1,110 +1,114 @@
 /**
- * Production Order API
- * REST API client for production order operations
+ * Production Order API Client
+ * Based on /admin/inventory/production endpoints
  */
 
 import api from '@/shared/lib/axios'
+
 import type {
   IProductionOrder,
-  IProductionOrderListItem,
   ICreateProductionOrderDto,
   IUpdateProductionOrderDto,
+  IGetProductionOrdersParams,
+  IStartProductionDto,
   ICompleteProductionDto,
-  IProductionOrderListParams,
-  IProductionSuggestion,
 } from './types'
 
-const BASE_URL = '/admin/inventory/production'
+interface ApiResponse<T> {
+  success: boolean
+  data: T
+}
 
 export const productionOrderApi = {
-  // List production orders
-  getProductionOrders: async (
-    branchId: number,
-    params?: IProductionOrderListParams
-  ): Promise<{ data: IProductionOrderListItem[]; total: number }> => {
-    const response = await api.get(BASE_URL, {
-      params: { branchId, ...params },
-    })
-    return response.data
+  /**
+   * Get all production orders
+   * GET /admin/inventory/production
+   */
+  async getProductionOrders(params?: IGetProductionOrdersParams): Promise<IProductionOrder[]> {
+    const response = await api.get<ApiResponse<IProductionOrder[]> | IProductionOrder[]>(
+      '/admin/inventory/production',
+      { params }
+    )
+    const data = response.data
+    if (Array.isArray(data)) return data
+    return data.data || []
   },
 
-  // Get single production order with ingredients
-  getProductionOrderById: async (id: number): Promise<IProductionOrder> => {
-    const response = await api.get(`${BASE_URL}/${id}`)
-    return response.data
+  /**
+   * Get production order by ID with ingredients
+   * GET /admin/inventory/production/:id
+   */
+  async getProductionOrderById(id: number): Promise<IProductionOrder> {
+    const response = await api.get<ApiResponse<IProductionOrder>>(
+      `/admin/inventory/production/${id}`
+    )
+    return response.data.data
   },
 
-  // Get production suggestions based on low stock items
-  getProductionSuggestions: async (
-    branchId: number,
-    warehouseId?: number
-  ): Promise<IProductionSuggestion[]> => {
-    const response = await api.get(`${BASE_URL}/suggestions`, {
-      params: { branchId, warehouseId },
-    })
-    return response.data
+  /**
+   * Create production order
+   * POST /admin/inventory/production
+   */
+  async createProductionOrder(data: ICreateProductionOrderDto): Promise<IProductionOrder> {
+    const response = await api.post<ApiResponse<IProductionOrder>>(
+      '/admin/inventory/production',
+      data
+    )
+    return response.data.data
   },
 
-  // Create production order
-  createProductionOrder: async (
-    branchId: number,
-    data: ICreateProductionOrderDto
-  ): Promise<IProductionOrder> => {
-    const response = await api.post(BASE_URL, { branchId, ...data })
-    return response.data
+  /**
+   * Update production order (planned only)
+   * PATCH /admin/inventory/production/:id
+   */
+  async updateProductionOrder(id: number, data: IUpdateProductionOrderDto): Promise<IProductionOrder> {
+    const response = await api.patch<ApiResponse<IProductionOrder>>(
+      `/admin/inventory/production/${id}`,
+      data
+    )
+    return response.data.data
   },
 
-  // Update production order (only PLANNED status)
-  updateProductionOrder: async (
-    id: number,
-    data: IUpdateProductionOrderDto
-  ): Promise<IProductionOrder> => {
-    const response = await api.patch(`${BASE_URL}/${id}`, data)
-    return response.data
+  /**
+   * Delete production order (planned only)
+   * DELETE /admin/inventory/production/:id
+   */
+  async deleteProductionOrder(id: number): Promise<void> {
+    await api.delete(`/admin/inventory/production/${id}`)
   },
 
-  // Delete production order (only PLANNED status)
-  deleteProductionOrder: async (id: number): Promise<void> => {
-    await api.delete(`${BASE_URL}/${id}`)
+  /**
+   * Start production (deducts ingredients)
+   * POST /admin/inventory/production/:id/start
+   */
+  async startProduction(id: number, data?: IStartProductionDto): Promise<IProductionOrder> {
+    const response = await api.post<ApiResponse<IProductionOrder>>(
+      `/admin/inventory/production/${id}/start`,
+      data
+    )
+    return response.data.data
   },
 
-  // Status actions
-
-  // Start production (deducts ingredients from stock)
-  startProduction: async (id: number): Promise<IProductionOrder> => {
-    const response = await api.post(`${BASE_URL}/${id}/start`)
-    return response.data
+  /**
+   * Complete production (adds output to stock)
+   * POST /admin/inventory/production/:id/complete
+   */
+  async completeProduction(id: number, data: ICompleteProductionDto): Promise<IProductionOrder> {
+    const response = await api.post<ApiResponse<IProductionOrder>>(
+      `/admin/inventory/production/${id}/complete`,
+      data
+    )
+    return response.data.data
   },
 
-  // Complete production (adds produced items to stock)
-  completeProduction: async (
-    id: number,
-    data?: ICompleteProductionDto
-  ): Promise<IProductionOrder> => {
-    const response = await api.post(`${BASE_URL}/${id}/complete`, data || {})
-    return response.data
-  },
-
-  // Cancel production (returns ingredients if already started)
-  cancelProduction: async (id: number): Promise<IProductionOrder> => {
-    const response = await api.post(`${BASE_URL}/${id}/cancel`)
-    return response.data
-  },
-
-  // Check ingredient availability for a production order
-  checkAvailability: async (
-    id: number
-  ): Promise<{
-    canStart: boolean
-    missingIngredients: Array<{
-      inventoryItemId: number
-      inventoryItemName: string
-      required: number
-      available: number
-      shortage: number
-    }>
-  }> => {
-    const response = await api.get(`${BASE_URL}/${id}/availability`)
-    return response.data
+  /**
+   * Cancel production (reverses ingredient deductions if started)
+   * POST /admin/inventory/production/:id/cancel
+   */
+  async cancelProduction(id: number): Promise<IProductionOrder> {
+    const response = await api.post<ApiResponse<IProductionOrder>>(
+      `/admin/inventory/production/${id}/cancel`
+    )
+    return response.data.data
   },
 }
