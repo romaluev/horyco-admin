@@ -43,7 +43,8 @@ export interface ICreateProductionOrderDto {
   warehouseId: number
   recipeId: number
   quantityPlanned: number
-  plannedDate: string
+  plannedDate?: string
+  unit?: string
   notes?: string
 }
 

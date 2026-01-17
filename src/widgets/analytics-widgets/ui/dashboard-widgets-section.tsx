@@ -124,37 +124,13 @@ function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
 
   switch (widget.type) {
     case 'TOP_PRODUCTS':
-      return (
-        <TopProductsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
+      return <TopProductsContainer period={period} branchId={branchId} />
     case 'PAYMENT_METHODS':
-      return (
-        <PaymentMethodsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
+      return <PaymentMethodsContainer period={period} branchId={branchId} />
     case 'CHANNEL_SPLIT':
-      return (
-        <ChannelSplitWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
+      return <ChannelSplitContainer period={period} branchId={branchId} />
     case 'STAFF_RANKING':
-      return (
-        <StaffRankingWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
+      return <StaffRankingContainer period={period} branchId={branchId} />
     default:
       return (
         <WidgetCard title={config?.title}>
