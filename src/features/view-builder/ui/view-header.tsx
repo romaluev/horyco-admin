@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { IconCheck, IconX } from '@tabler/icons-react'
+import { IconCheck, IconTrash, IconX } from '@tabler/icons-react'
 
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
@@ -13,10 +13,12 @@ import { useViewBuilderStore } from '../model/store'
 
 interface IViewHeaderProps {
   onSave: () => void
+  onDelete?: () => void
   isPending?: boolean
+  isDeleting?: boolean
 }
 
-export function ViewHeader({ onSave, isPending }: IViewHeaderProps) {
+export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHeaderProps) {
   const router = useRouter()
   const {
     viewName,
@@ -184,25 +186,40 @@ export function ViewHeader({ onSave, isPending }: IViewHeaderProps) {
           )}
         </div>
 
-        {/* Only show buttons when there are changes */}
-        {hasConfigChanges && (
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={handleCancel}>
-              <IconX className="mr-1 size-4" />
-              Отмена
-            </Button>
+        <div className="flex items-center gap-2">
+          {/* Delete button - only in edit mode */}
+          {isEditMode && onDelete && (
             <Button
+              variant="ghost"
               size="sm"
-              onClick={onSave}
-              disabled={!viewName.trim() || isPending}
+              onClick={onDelete}
+              disabled={isDeleting}
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
             >
-              <IconCheck className="mr-1 size-4" />
-              {isPending && 'Сохранение...'}
-              {!isPending && isEditMode && 'Сохранить'}
-              {!isPending && !isEditMode && 'Создать'}
+              <IconTrash className="mr-1 size-4" />
             </Button>
-          </div>
-        )}
+          )}
+
+          {/* Cancel and Save buttons - only when there are changes */}
+          {hasConfigChanges && (
+            <>
+              <Button variant="ghost" size="sm" onClick={handleCancel}>
+                <IconX className="mr-1 size-4" />
+                Отмена
+              </Button>
+              <Button
+                size="sm"
+                onClick={onSave}
+                disabled={!viewName.trim() || isPending}
+              >
+                <IconCheck className="mr-1 size-4" />
+                {isPending && 'Сохранение...'}
+                {!isPending && isEditMode && 'Сохранить'}
+                {!isPending && !isEditMode && 'Создать'}
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -166,7 +166,7 @@ export const ALERT_SUMMARY_QUERY = gql`
     alertSummary(branchId: $branchId) {
       alerts {
         id
-        type
+        severity
         message
         timestamp
         isRead

@@ -2,15 +2,15 @@
  * View Entity Types
  */
 
-import type {
-  Dataset,
-  GroupBy,
-  IView,
-  IViewConfigInput,
-  IViewConfigOutput,
-  PeriodType,
+import {
+  type Dataset,
+  type GroupBy,
+  type IView,
+  type IViewConfigInput,
+  type IViewConfigOutput,
+  type PeriodType,
   SortBy,
-  SortDirection,
+  type SortDirection,
 } from '@/shared/api/graphql'
 
 // Re-export from GraphQL types for convenience
@@ -85,7 +85,7 @@ export interface IViewConfig {
   columns: string[]
   groupBy?: GroupBy
   sorting: {
-    field: string
+    field: SortBy
     direction: SortDirection
   }
   display: 'TABLE' | 'CHART'

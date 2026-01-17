@@ -17,7 +17,6 @@ import {
 import { ViewDataTable } from '@/widgets/views'
 
 import type { IViewDataParams } from '@/entities/view'
-import type { SortBy } from '@/shared/api/graphql'
 
 export default function NewViewPage() {
   const router = useRouter()
@@ -86,7 +85,7 @@ export default function NewViewPage() {
     ? {
         dataset: selectedDataset,
         period: workingConfig.timeframe,
-        sortBy: workingConfig.sorting.field as SortBy,
+        sortBy: workingConfig.sorting.field,
         sortDirection: workingConfig.sorting.direction,
         limit: 50,
         filters: workingConfig.filters,

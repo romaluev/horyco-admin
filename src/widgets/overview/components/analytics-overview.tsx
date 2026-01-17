@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import { IconCrown, IconPencil } from '@tabler/icons-react'
 import { toast } from 'sonner'
 
-import { PeriodType } from '@/shared/api/graphql'
+import { GroupBy, PeriodType } from '@/shared/api/graphql'
 import { Button } from '@/shared/ui/base/button'
 
 import {
@@ -23,19 +23,18 @@ import {
 import { DashboardEditMode } from '@/features/dashboard-builder'
 import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
-import { DashboardChart } from './dashboard-chart'
+import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'
 import { DashboardKpiCards } from './dashboard-kpi-cards'
 import { DashboardPeriodSelector } from './dashboard-period-selector'
 import { DashboardBranchSelector } from './dashboard-branch-selector'
 
 export function AnalyticsOverview() {
-  // State
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(PeriodType.TODAY)
   const [customRange, setCustomRange] = useState<{ start?: string; end?: string }>({})
   const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(undefined)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [localGroupBy, setLocalGroupBy] = useState<GroupBy | null>(null)
 
-  // Build period input for GraphQL
   const periodInput = useMemo<IPeriodInput>(() => {
     if (selectedPeriod === PeriodType.CUSTOM && customRange.start && customRange.end) {
       return {
@@ -47,15 +46,12 @@ export function AnalyticsOverview() {
     return { type: selectedPeriod }
   }, [selectedPeriod, customRange])
 
-  // Dashboard config (determines which KPIs and widgets to show)
   const { data: dashboardConfig, isLoading: isConfigLoading } = useDashboardConfig()
   const config = dashboardConfig ?? getDefaultDashboardConfig()
   const canCustomize = useCanCustomizeDashboard()
 
-  // Save mutation
   const { mutate: saveConfig, isPending: isSaving } = useSaveDashboardConfig()
 
-  // Get KPI types from config
   const kpiTypes = useMemo(() => {
     return config.kpiSlots
       .filter((slot) => slot.visible)
@@ -63,7 +59,6 @@ export function AnalyticsOverview() {
       .map((slot) => slot.type)
   }, [config.kpiSlots])
 
-  // Fetch KPI metrics
   const {
     data: kpiMetrics,
     isLoading: isKpiLoading,
@@ -73,19 +68,22 @@ export function AnalyticsOverview() {
     kpiTypes.length > 0 && !isEditMode
   )
 
-  // Fetch time series for chart
+  const activeGroupBy = localGroupBy ?? config.chartGroupBy ?? GroupBy.DAY
+
   const {
     data: timeSeries,
     isLoading: isChartLoading,
     error: chartError,
-  } = useTimeSeries({
-    metric: config.chartMetric,
-    period: periodInput,
-    groupBy: config.chartGroupBy ?? undefined,
-    branchId: selectedBranchId,
-  }, !isEditMode)
+  } = useTimeSeries(
+    {
+      metric: config.chartMetric,
+      period: periodInput,
+      groupBy: activeGroupBy,
+      branchId: selectedBranchId,
+    },
+    !isEditMode
+  )
 
-  // Handle period change
   const handlePeriodChange = (period: PeriodType) => {
     setSelectedPeriod(period)
     if (period !== PeriodType.CUSTOM) {
@@ -93,7 +91,6 @@ export function AnalyticsOverview() {
     }
   }
 
-  // Handle custom range change
   const handleCustomRangeChange = (start: Date, end: Date) => {
     setSelectedPeriod(PeriodType.CUSTOM)
     setCustomRange({
@@ -102,12 +99,10 @@ export function AnalyticsOverview() {
     })
   }
 
-  // Handle branch change
   const handleBranchChange = (branchId: number | undefined) => {
     setSelectedBranchId(branchId)
   }
 
-  // Handle edit mode
   const handleEnterEditMode = useCallback(() => {
     if (canCustomize) {
       setIsEditMode(true)
@@ -118,40 +113,48 @@ export function AnalyticsOverview() {
     setIsEditMode(false)
   }, [])
 
-  const handleSaveConfig = useCallback((newConfig: IDashboardConfig) => {
-    saveConfig(
-      {
-        kpiSlots: newConfig.kpiSlots,
-        chartMetric: newConfig.chartMetric,
-        chartGroupBy: newConfig.chartGroupBy,
-        widgets: newConfig.widgets.map((w) => ({
-          id: w.id,
-          type: w.type,
-          position: w.position,
-        })),
-      },
-      {
-        onSuccess: () => {
-          toast.success('Дашборд сохранен')
-          setIsEditMode(false)
-        },
-        onError: (error) => {
-          // Check for entitlement error
-          const errorMessage = error instanceof Error ? error.message : 'Ошибка'
-          if (errorMessage.includes('ENTITLEMENT_REQUIRED') || errorMessage.includes('PRO')) {
-            toast.error('Кастомизация доступна только на PRO плане')
-          } else {
-            toast.error('Не удалось сохранить: ' + errorMessage)
-          }
-        },
-      }
-    )
-  }, [saveConfig])
+  const handleGroupByChange = useCallback((groupBy: GroupBy) => {
+    setLocalGroupBy(groupBy)
+  }, [])
 
-  const isLoading = isConfigLoading || isKpiLoading || isChartLoading
+  const handleSaveConfig = useCallback(
+    (newConfig: IDashboardConfig) => {
+      saveConfig(
+        {
+          kpiSlots: newConfig.kpiSlots,
+          chartMetric: newConfig.chartMetric,
+          chartGroupBy: newConfig.chartGroupBy,
+          widgets: newConfig.widgets.map((w) => ({
+            id: w.id,
+            type: w.type,
+            position: w.position,
+          })),
+        },
+        {
+          onSuccess: () => {
+            toast.success('Дашборд сохранен')
+            setIsEditMode(false)
+            setLocalGroupBy(null)
+          },
+          onError: (error) => {
+            const errorMessage = error instanceof Error ? error.message : 'Ошибка'
+            if (
+              errorMessage.includes('ENTITLEMENT_REQUIRED') ||
+              errorMessage.includes('PRO')
+            ) {
+              toast.error('Кастомизация доступна только на PRO плане')
+            } else {
+              toast.error('Не удалось сохранить: ' + errorMessage)
+            }
+          },
+        }
+      )
+    },
+    [saveConfig]
+  )
+
   const hasError = kpiError || chartError
 
-  // Edit Mode View
   if (isEditMode) {
     return (
       <div className="w-full p-4 md:p-6">
@@ -165,21 +168,20 @@ export function AnalyticsOverview() {
     )
   }
 
-  // Normal Dashboard View
   return (
     <div className="w-full space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Аналитика</h2>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Аналитика</h2>
+            <p className="text-muted-foreground">
+              Отслеживайте ключевые показатели вашего бизнеса
+            </p>
+          </div>
           {canCustomize ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleEnterEditMode}
-            >
+            <Button variant="outline" size="sm" onClick={handleEnterEditMode}>
               <IconPencil className="mr-1.5 h-4 w-4" />
-              Редактировать
+              Настроить
             </Button>
           ) : (
             <Button
@@ -189,12 +191,11 @@ export function AnalyticsOverview() {
               disabled
             >
               <IconCrown className="mr-1.5 h-4 w-4" />
-              Upgrade to edit
+              PRO
             </Button>
           )}
         </div>
 
-        {/* Filters */}
         <div className="flex flex-wrap items-center gap-4">
           <DashboardPeriodSelector
             selectedPeriod={selectedPeriod}
@@ -210,7 +211,6 @@ export function AnalyticsOverview() {
         </div>
       </div>
 
-      {/* Error State */}
       {hasError && (
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
           <p className="text-sm text-destructive">
@@ -219,45 +219,29 @@ export function AnalyticsOverview() {
         </div>
       )}
 
-      {/* Loading State */}
-      {isLoading && !hasError && (
-        <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-32 animate-pulse rounded-lg bg-muted" />
-            ))}
-          </div>
-          <div className="h-[400px] animate-pulse rounded-lg bg-muted" />
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="h-72 animate-pulse rounded-lg bg-muted" />
-            <div className="h-72 animate-pulse rounded-lg bg-muted" />
-          </div>
-        </>
-      )}
+      <div className="space-y-6">
+        <DashboardKpiCards
+          metrics={kpiMetrics ?? []}
+          kpiTypes={kpiTypes}
+          isLoading={isKpiLoading}
+        />
 
-      {/* Data Display */}
-      {!isLoading && !hasError && (
-        <>
-          {/* KPI Cards */}
-          <DashboardKpiCards
-            metrics={kpiMetrics ?? []}
-            kpiTypes={kpiTypes}
-          />
+        <DashboardMainChart
+          data={timeSeries}
+          metric={config.chartMetric}
+          chartType="area"
+          variant="gradient"
+          groupBy={activeGroupBy}
+          onGroupByChange={handleGroupByChange}
+          isLoading={isChartLoading}
+        />
 
-          {/* Main Chart */}
-          <DashboardChart
-            data={timeSeries}
-            metric={config.chartMetric}
-          />
-
-          {/* Widgets */}
-          <DashboardWidgetsSection
-            widgets={config.widgets}
-            period={periodInput}
-            branchId={selectedBranchId}
-          />
-        </>
-      )}
+        <DashboardWidgetsSection
+          widgets={config.widgets}
+          period={periodInput}
+          branchId={selectedBranchId}
+        />
+      </div>
     </div>
   )
 }

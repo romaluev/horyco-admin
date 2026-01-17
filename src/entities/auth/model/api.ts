@@ -1,6 +1,9 @@
-import Cookies from 'js-cookie'
+/**
+ * Authentication API
+ */
 
 import api from '@/shared/lib/axios'
+import { storeTokens } from '@/shared/lib/token-manager'
 
 import type {
   AuthRequest,
@@ -28,9 +31,10 @@ import type {
 } from '.'
 import type { IEmployee } from '@/entities/employee'
 
-/**
- * API Response wrapper from backend
- */
+// ============================================================================
+// Types
+// ============================================================================
+
 interface ApiResponse<T> {
   success: boolean
   data: T
@@ -38,122 +42,78 @@ interface ApiResponse<T> {
   requestId: string
 }
 
-/**
- * Helper function to store tokens with expiration time
- */
-const storeTokens = (
-  accessToken: string,
-  refreshToken: string,
+interface TokenData {
+  accessToken: string
+  refreshToken: string
   expiresIn: number
-): void => {
-  const expirationTime = Date.now() + expiresIn * 1000 // Convert to milliseconds
-
-  Cookies.set('access_token', accessToken, {
-    expires: 7, // 7 days
-    secure: false, // Changed to false for localhost
-    sameSite: 'lax',
-  })
-
-  Cookies.set('refresh_token', refreshToken, {
-    expires: 7,
-    secure: false, // Changed to false for localhost
-    sameSite: 'lax',
-  })
-
-  // Store token expiration time
-  Cookies.set('token_expires_at', String(expirationTime), {
-    expires: 7,
-    secure: false,
-    sameSite: 'lax',
-  })
 }
 
-/**
- * Authentication API functions
- */
+// ============================================================================
+// Helpers
+// ============================================================================
 
-/**
- * Login with phone and password
- * @param credentials - The login credentials (phone and password)
- * @returns Promise with the authentication response
- */
+const extractTokenData = (response: unknown): TokenData | null => {
+  const data = response as { data?: TokenData } & TokenData
+
+  // Handle both wrapped { data: {...} } and flat response
+  const tokenData = data.data ?? data
+
+  if (tokenData.accessToken && tokenData.refreshToken && tokenData.expiresIn) {
+    return tokenData
+  }
+  return null
+}
+
+const saveTokensFromResponse = (response: unknown): void => {
+  const tokenData = extractTokenData(response)
+  if (tokenData) {
+    storeTokens(tokenData.accessToken, tokenData.refreshToken, tokenData.expiresIn)
+  }
+}
+
+// ============================================================================
+// Auth API
+// ============================================================================
+
 export const authApi = {
+  // Login
   login: async (credentials: AuthRequest): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/login', credentials)
 
-    console.log('Login response:', response.data)
-
-    // Store tokens from nested data structure
     if (response.data.success && response.data.data) {
-      const { accessToken, refreshToken, expiresIn } = response.data.data
-
-      console.log('Saving access token:', accessToken)
-      console.log('Saving refresh token:', refreshToken)
-      console.log('Token expires in:', expiresIn, 'seconds')
-
-      storeTokens(accessToken, refreshToken, expiresIn)
-
-      // Verify cookie was set
-      console.log('Cookie after setting:', Cookies.get('access_token'))
-    } else {
-      console.error('Login response structure is wrong:', response.data)
+      saveTokensFromResponse(response.data.data)
     }
 
     return response.data
   },
 
-  /**
-   * Refresh access token using refresh token
-   * @param data - Refresh token request
-   * @returns Promise with new tokens
-   */
-  refreshToken: async (
-    data: RefreshTokenRequest
-  ): Promise<RefreshTokenResponse> => {
-    const response = await api.post<RefreshTokenResponse>('/auth/refresh', data)
+  // Refresh Token
+  refreshToken: async (data: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+    const response = await api.post<RefreshTokenResponse | ApiResponse<RefreshTokenResponse>>(
+      '/auth/refresh',
+      data
+    )
 
-    const { accessToken, refreshToken, expiresIn } = response.data
+    const tokenData = extractTokenData(response.data)
+    if (tokenData) {
+      storeTokens(tokenData.accessToken, tokenData.refreshToken, tokenData.expiresIn)
+      return tokenData as RefreshTokenResponse
+    }
 
-    console.log('Refreshing tokens...')
-    console.log('New access token:', accessToken)
-    console.log('New refresh token:', refreshToken)
-
-    storeTokens(accessToken, refreshToken, expiresIn)
-
-    return response.data
+    return response.data as RefreshTokenResponse
   },
 
-  /**
-   * Send OTP code for registration
-   * @param data - Phone number and business name
-   * @returns Promise with OTP send response
-   */
+  // Registration Flow
   sendOTP: async (data: SendOTPRequest): Promise<SendOTPResponse> => {
-    const response = await api.post<SendOTPResponse>(
-      '/auth/register/request-otp',
-      data
-    )
+    const response = await api.post<SendOTPResponse>('/auth/register/request-otp', data)
     return response.data
   },
 
-  /**
-   * Verify OTP code (Step 2 of registration)
-   * @param data - Phone and OTP code
-   * @returns Promise with verification result
-   */
   verifyOTP: async (data: VerifyOTPRequest): Promise<VerifyOTPResponse> => {
-    const response = await api.post<VerifyOTPResponse>(
-      '/auth/register/verify-otp',
-      data
-    )
+    const response = await api.post<VerifyOTPResponse>('/auth/register/verify-otp', data)
     return response.data
   },
 
-  /**
-   * Complete registration (Step 3 of registration)
-   * @param data - Registration completion data
-   * @returns Promise with registration response
-   */
   completeRegistration: async (
     data: CompleteRegistrationRequest
   ): Promise<CompleteRegistrationResponse> => {
@@ -162,26 +122,16 @@ export const authApi = {
       data
     )
 
-    console.log('Registration response:', response.data)
-
-    // Store tokens from nested data structure
     if (response.data.success && response.data.data) {
-      const { accessToken, refreshToken, expiresIn } = response.data.data
-
-      console.log('Saving access token:', accessToken)
-      console.log('Saving refresh token:', refreshToken)
-      console.log('Token expires in:', expiresIn, 'seconds')
-
-      storeTokens(accessToken, refreshToken, expiresIn)
-
-      console.log('Cookie after setting:', Cookies.get('access_token'))
+      saveTokensFromResponse(response.data.data)
     }
 
     return response.data
   },
 
+  // Profile
   myProfile: async (): Promise<IEmployee> => {
-    const response = await api.get<{data: IEmployee}>('/auth/me')
+    const response = await api.get<{ data: IEmployee }>('/auth/me')
     return response.data.data
   },
 
@@ -203,14 +153,8 @@ export const authApi = {
     return response.data.data
   },
 
-  /**
-   * Verify magic link / invitation token
-   * @param data - Invitation token
-   * @returns Promise with invitation verification result
-   */
-  verifyInvite: async (
-    data: VerifyInviteRequest
-  ): Promise<VerifyInviteResponse> => {
+  // Owner Invite
+  verifyInvite: async (data: VerifyInviteRequest): Promise<VerifyInviteResponse> => {
     const response = await api.post<ApiResponse<VerifyInviteResponse>>(
       '/auth/invite/verify',
       data
@@ -218,46 +162,21 @@ export const authApi = {
     return response.data.data
   },
 
-  /**
-   * Complete invitation by setting password
-   * @param data - Invitation token and password
-   * @returns Promise with invitation completion result
-   */
-  completeInvite: async (
-    data: CompleteInviteRequest
-  ): Promise<CompleteInviteResponse> => {
+  completeInvite: async (data: CompleteInviteRequest): Promise<CompleteInviteResponse> => {
     const response = await api.post<ApiResponse<CompleteInviteResponse>>(
       '/auth/invite/complete',
       data
     )
 
     const result = response.data.data
-
-    // Store tokens from response
     if (result.success) {
-      const { accessToken, refreshToken, expiresIn } = result
-
-      console.log('Saving access token from invite:', accessToken)
-      console.log('Saving refresh token from invite:', refreshToken)
-      console.log('Token expires in:', expiresIn, 'seconds')
-
-      storeTokens(accessToken, refreshToken, expiresIn)
-
-      console.log('Cookie after setting:', Cookies.get('access_token'))
+      saveTokensFromResponse(result)
     }
 
     return result
   },
 
-  // ============================================
-  // Staff Invite Endpoints (for employees)
-  // ============================================
-
-  /**
-   * Verify staff magic link token
-   * @param data - Staff invitation token
-   * @returns Promise with invitation verification result
-   */
+  // Staff Invite
   verifyStaffInvite: async (
     data: VerifyStaffInviteRequest
   ): Promise<VerifyStaffInviteResponse> => {
@@ -268,11 +187,6 @@ export const authApi = {
     return response.data.data
   },
 
-  /**
-   * Complete staff invitation by setting password
-   * @param data - Staff invitation token and password
-   * @returns Promise with invitation completion result
-   */
   completeStaffInvite: async (
     data: CompleteStaffInviteRequest
   ): Promise<CompleteStaffInviteResponse> => {
@@ -282,18 +196,8 @@ export const authApi = {
     )
 
     const result = response.data.data
-
-    // Store tokens from response
     if (result.success) {
-      const { accessToken, refreshToken, expiresIn } = result
-
-      console.log('Saving access token from staff invite:', accessToken)
-      console.log('Saving refresh token from staff invite:', refreshToken)
-      console.log('Token expires in:', expiresIn, 'seconds')
-
-      storeTokens(accessToken, refreshToken, expiresIn)
-
-      console.log('Cookie after setting:', Cookies.get('access_token'))
+      saveTokensFromResponse(result)
     }
 
     return result

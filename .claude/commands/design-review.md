@@ -6,15 +6,17 @@ Target: $ARGUMENTS (route like `/dashboard` or component path)
 
 ## 1. SETUP
 
-```
-1. browser_navigate → target route
-2. browser_console_messages → note baseline
-3. browser_snapshot → get DOM structure
+```bash
+agent-browser open <target-url>    # Navigate to target route
+agent-browser console              # Note baseline errors
+agent-browser snapshot -i          # Get interactive elements
 ```
 
 ---
 
 ## 2. FULL FLOW TEST
+
+**Call browser-tester agent** for comprehensive testing.
 
 Test COMPLETE user journey:
 
@@ -61,8 +63,8 @@ Check against `design-system.md`:
 
 ## 5. CONSOLE CHECK
 
-```
-browser_console_messages → 0 errors required
+```bash
+agent-browser console → 0 errors required
 ```
 
 ---

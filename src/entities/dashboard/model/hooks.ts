@@ -3,7 +3,7 @@
  * Based on documentation: /.claude/docs/24-analytics-dashboard.md
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 
 import { KpiType } from '@/shared/api/graphql'
 
@@ -81,10 +81,11 @@ export function useEntitlements() {
 
 /**
  * Hook to check if user can customize dashboard
+ * Users with dashboard_custom OR analytics_full (ultra plan) can customize
  */
 export function useCanCustomizeDashboard(): boolean {
   const { data } = useEntitlements()
-  return data?.dashboard_custom ?? false
+  return data?.dashboard_custom || data?.analytics_full || false
 }
 
 // ============================================
@@ -99,6 +100,7 @@ export function useKpiMetrics(params: IKpiMetricsParams, enabled = true) {
     queryKey: dashboardKeys.kpiMetrics(params),
     queryFn: () => getKpiMetrics(params),
     staleTime: FIVE_MINUTES_MS,
+    placeholderData: keepPreviousData,
     enabled,
   })
 }
@@ -115,6 +117,7 @@ export function useTimeSeries(params: ITimeSeriesParams, enabled = true) {
     queryKey: dashboardKeys.timeSeries(params),
     queryFn: () => getTimeSeries(params),
     staleTime: FIVE_MINUTES_MS,
+    placeholderData: keepPreviousData,
     enabled,
   })
 }
@@ -131,6 +134,7 @@ export function useRankedList(params: IRankedListParams, enabled = true) {
     queryKey: dashboardKeys.rankedList(params),
     queryFn: () => getRankedList(params),
     staleTime: FIVE_MINUTES_MS,
+    placeholderData: keepPreviousData,
     enabled,
   })
 }
@@ -143,6 +147,7 @@ export function useProportions(params: IProportionsParams, enabled = true) {
     queryKey: dashboardKeys.proportions(params),
     queryFn: () => getProportions(params),
     staleTime: FIVE_MINUTES_MS,
+    placeholderData: keepPreviousData,
     enabled,
   })
 }
@@ -155,6 +160,7 @@ export function useHeatmap(params: IHeatmapParams, enabled = true) {
     queryKey: dashboardKeys.heatmap(params),
     queryFn: () => getHeatmap(params),
     staleTime: FIVE_MINUTES_MS,
+    placeholderData: keepPreviousData,
     enabled,
   })
 }
@@ -202,8 +208,10 @@ export function getDefaultDashboardConfig(): IDashboardConfig {
     chartMetric: KpiType.REVENUE,
     chartGroupBy: null,
     widgets: [
-      { id: 'w1', type: 'TOP_PRODUCTS', position: 0, config: null },
-      { id: 'w2', type: 'PAYMENT_METHODS', position: 1, config: null },
+      { id: 'w1', type: 'REVENUE_OVERVIEW', position: 0, config: null },
+      { id: 'w2', type: 'TOP_PRODUCTS', position: 1, config: null },
+      { id: 'w3', type: 'PAYMENT_METHODS', position: 2, config: null },
+      { id: 'w4', type: 'CHANNEL_SPLIT', position: 3, config: null },
     ],
   }
 }

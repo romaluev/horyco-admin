@@ -310,8 +310,9 @@ export function useVisiblePages(): IVisiblePagesResult {
  * Per docs/24-analytics-dashboard.md:
  * - BASIC: Cannot customize (uses default layout)
  * - PRO+: Can customize KPIs, chart, widgets
+ * - ULTRA (analytics_full): Full access including dashboard customization
  */
 export function useCanCustomizeDashboard(): boolean {
   const { data: entitlements } = useEntitlements()
-  return entitlements?.dashboard_custom ?? false
+  return entitlements?.dashboard_custom || entitlements?.analytics_full || false
 }

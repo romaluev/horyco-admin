@@ -13,8 +13,12 @@ Call **design-guardian** → get UI violations (if UI code)
 
 **Capture baseline** (skip: `--skip-ui-test`):
 
-- `browser_navigate` → affected pages
-- `browser_snapshot` → save DOM structure
+```bash
+agent-browser open <affected-url>  # Navigate to affected pages
+agent-browser snapshot -i          # Save DOM structure
+agent-browser screenshot           # Capture visual baseline
+```
+
 - Test current user flows
 - Note current behavior
 
@@ -42,10 +46,11 @@ Fix systematically:
 
 **Visual regression** (skip: `--skip-ui-test`):
 
+- Call **browser-tester** agent for comprehensive testing
 - Test SAME user flows as baseline
 - Compare DOM → structure unchanged
 - Test ALL interactions still work
-- `browser_console_messages` → 0 errors
+- `agent-browser console` → 0 errors
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 

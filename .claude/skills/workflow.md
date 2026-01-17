@@ -2,7 +2,7 @@
 name: workflow
 description: Common workflow patterns for all commands
 model: haiku
-triggers: ['workflow', 'validate', 'fix loop', 'quality gates', 'playwright']
+triggers: ['workflow', 'validate', 'fix loop', 'quality gates', 'agent-browser', 'browser-test']
 ---
 
 # Workflow Patterns
@@ -61,133 +61,65 @@ After implementation:
 
 ---
 
-## PLAYWRIGHT MCP TESTING
+## BROWSER TESTING (agent-browser CLI)
 
 Skip with `--skip-ui-test` flag.
 
-**Credentials:**
+### ⚠️ CRITICAL - Tool Selection
+
+**❌ FORBIDDEN - Never use these for browser testing:**
+```
+mcp__playwright__*           # ANY Playwright MCP tool
+mcp__chrome-devtools__*      # ANY Chrome DevTools MCP tool
+browser_navigate, browser_snapshot, browser_click, etc.
+```
+
+**✅ REQUIRED - Only use Bash with agent-browser:**
+```bash
+Bash("agent-browser open 'http://localhost:3000'")
+Bash("agent-browser snapshot -i")
+Bash("agent-browser click @e1")
+```
+
+### Call browser-tester Agent
+
+**→ Call `browser-tester` agent for comprehensive testing.**
+
+The agent uses `agent-browser` CLI commands via Bash tool.
+
+### Test Credentials
 - Phone: +998201000022
 - Password: Password123
 - PIN (John): 0000
 
-**Playwright Tools:**
-> npx @playwright/mcp@latest --help
---allowed-hosts <hosts...>            comma-separated list of hosts this
-server is allowed to serve from.
-Defaults to the host the server is bound
-to. Pass '*' to disable the host check.
---allowed-origins <origins>           semicolon-separated list of TRUSTED
-origins to allow the browser to request.
-Default is to allow all.
-Important: *does not* serve as a
-security boundary and *does not* affect
-redirects.
---blocked-origins <origins>           semicolon-separated list of origins to
-block the browser from requesting.
-Blocklist is evaluated before allowlist.
-If used without the allowlist, requests
-not matching the blocklist are still
-allowed.
-Important: *does not* serve as a
-security boundary and *does not* affect
-redirects.
---block-service-workers               block service workers
---browser <browser>                   browser or chrome channel to use,
-possible values: chrome, firefox,
-webkit, msedge.
---caps <caps>                         comma-separated list of additional
-capabilities to enable, possible values:
-vision, pdf.
---cdp-endpoint <endpoint>             CDP endpoint to connect to.
---cdp-header <headers...>             CDP headers to send with the connect
-request, multiple can be specified.
---config <path>                       path to the configuration file.
---console-level <level>               level of console messages to return:
-"error", "warning", "info", "debug".
-Each level includes the messages of more
-severe levels.
---device <device>                     device to emulate, for example: "iPhone
-15"
---executable-path <path>              path to the browser executable.
---extension                           Connect to a running browser instance
-(Edge/Chrome only). Requires the
-"Playwright MCP Bridge" browser
-extension to be installed.
---grant-permissions <permissions...>  List of permissions to grant to the
-browser context, for example
-"geolocation", "clipboard-read",
-"clipboard-write".
---headless                            run browser in headless mode, headed by
-default
---host <host>                         host to bind server to. Default is
-localhost. Use 0.0.0.0 to bind to all
-interfaces.
---ignore-https-errors                 ignore https errors
---init-page <path...>                 path to TypeScript file to evaluate on
-Playwright page object
---init-script <path...>               path to JavaScript file to add as an
-initialization script. The script will
-be evaluated in every page before any of
-the page's scripts. Can be specified
-multiple times.
---isolated                            keep the browser profile in memory, do
-not save it to disk.
---image-responses <mode>              whether to send image responses to the
-client. Can be "allow" or "omit",
-Defaults to "allow".
---no-sandbox                          disable the sandbox for all process
-types that are normally sandboxed.
---output-dir <path>                   path to the directory for output files.
---port <port>                         port to listen on for SSE transport.
---proxy-bypass <bypass>               comma-separated domains to bypass proxy,
-for example
-".com,chromium.org,.domain.com"
---proxy-server <proxy>                specify proxy server, for example
-"http://myproxy:3128" or
-"socks5://myproxy:8080"
---save-session                        Whether to save the Playwright MCP
-session into the output directory.
---save-trace                          Whether to save the Playwright Trace of
-the session into the output directory.
---save-video <size>                   Whether to save the video of the session
-into the output directory. For example
-"--save-video=800x600"
---secrets <path>                      path to a file containing secrets in the
-dotenv format
---shared-browser-context              reuse the same browser context between
-all connected HTTP clients.
---snapshot-mode <mode>                when taking snapshots for responses,
-specifies the mode to use. Can be
-"incremental", "full", or "none".
-Default is incremental.
---storage-state <path>                path to the storage state file for
-isolated sessions.
---test-id-attribute <attribute>       specify the attribute to use for test
-ids, defaults to "data-testid"
---timeout-action <timeout>            specify action timeout in milliseconds,
-defaults to 5000ms
---timeout-navigation <timeout>        specify navigation timeout in
-milliseconds, defaults to 60000ms
---user-agent <ua string>              specify user agent string
---user-data-dir <path>                path to the user data directory. If not
-specified, a temporary directory will be
-created.
---viewport-size <size>                specify browser viewport size in pixels,
-for example "1280x720"
+### agent-browser Commands (via Bash)
+```bash
+# Install once
+npm install -g agent-browser && agent-browser install
+
+# Core workflow - ALL via Bash tool
+agent-browser open <url>           # Navigate
+agent-browser snapshot -i          # Get interactive elements (@e1, @e2...)
+agent-browser click @e1            # Interact
+agent-browser fill @e2 "text"      # Fill inputs
+agent-browser screenshot           # Capture state
+agent-browser console              # Check errors
+agent-browser network              # Check API calls
+```
 
 **FULL FLOW TESTING (mandatory):**
 
 Test the COMPLETE user journey for every change:
 
 1. **CRUD features** → test ALL operations:
-   - Create → verify item appears
+   - Create → verify item appears in list
    - Read → verify data displays correctly
    - Update → verify changes persist
    - Delete → verify item removed
 
 2. **Multiple pages** → visit EACH page:
    - Navigate to every affected route
-   - Check design compliance
+   - Take screenshots for verification
    - Verify no console errors
    - Test all interactive elements
 
@@ -196,17 +128,21 @@ Test the COMPLETE user journey for every change:
    - Fill with invalid data → verify error messages
    - Test required field validation
 
-4. **State changes** → verify ALL states:
+4. **State & Error handling** → verify ALL states:
    - Loading state visible
    - Success feedback shown
    - Error handling works
    - Empty states display correctly
 
+5. **Network & Console** → monitor continuously:
+   - No API failures (4xx/5xx)
+   - No JavaScript errors
+   - No React warnings
+
 **Test pattern:**
 ```
-browser_navigate → browser_snapshot → browser_console_messages
-→ browser_fill_form/browser_click → verify result
-→ repeat for each operation/page
+open → snapshot -i → interact → snapshot → console → network → verify
+     ↑__________________________________________________|
 ```
 
 ---

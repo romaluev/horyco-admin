@@ -22,13 +22,13 @@ import { useOperatingHoursStore } from '@/entities/operating-hours/model/store'
 import type { OperatingHour } from '@/entities/operating-hours/model/types'
 
 const DAYS = [
-  { number: 0, name: 'Sunday' },
-  { number: 1, name: 'Monday' },
-  { number: 2, name: 'Tuesday' },
-  { number: 3, name: 'Wednesday' },
-  { number: 4, name: 'Thursday' },
-  { number: 5, name: 'Friday' },
-  { number: 6, name: 'Saturday' },
+  { number: 0, name: 'Воскресенье' },
+  { number: 1, name: 'Понедельник' },
+  { number: 2, name: 'Вторник' },
+  { number: 3, name: 'Среда' },
+  { number: 4, name: 'Четверг' },
+  { number: 5, name: 'Пятница' },
+  { number: 6, name: 'Суббота' },
 ]
 
 interface OperatingHoursEditorProps {

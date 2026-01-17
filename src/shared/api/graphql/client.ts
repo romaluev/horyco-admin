@@ -1,103 +1,107 @@
 /**
- * GraphQL Client for Analytics API
- * Uses graphql-request with JWT authentication from cookies
+ * GraphQL Client with automatic authentication
  */
 
-import { GraphQLClient, ClientError, type RequestDocument, type Variables } from 'graphql-request'
+import {
+  GraphQLClient,
+  ClientError,
+  type RequestDocument,
+  type Variables,
+} from 'graphql-request'
 
 import { BASE_API_URL } from '@/shared/lib/axios'
-import {
-  getAccessToken,
-  refreshAccessToken,
-} from '@/shared/lib/token-manager'
+import { getAccessToken, refreshAccessToken } from '@/shared/lib/token-manager'
 
-// GraphQL endpoint - remove trailing slash from BASE_API_URL if present
-const getGraphQLEndpoint = () => {
-  const baseUrl = BASE_API_URL || ''
-  return `${baseUrl.replace(/\/$/, '')}/graphql`
-}
+// ============================================================================
+// Configuration
+// ============================================================================
 
-/**
- * Check if error is a 401 Unauthorized
- */
-const is401Error = (error: unknown): boolean => {
-  if (error instanceof ClientError) {
-    return error.response.status === 401
+const GRAPHQL_ENDPOINT = `${(BASE_API_URL ?? '').replace(/\/$/, '')}/graphql`
+
+// ============================================================================
+// Auth Error Detection
+// ============================================================================
+
+interface GraphQLError {
+  message: string
+  extensions?: {
+    code?: string
+    originalError?: { statusCode?: number }
   }
-  return false
 }
 
-/**
- * Create GraphQL client with auth headers
- */
-function createGraphQLClient(): GraphQLClient {
+const isAuthError = (error: unknown): boolean => {
+  if (!(error instanceof ClientError)) return false
+
+  if (error.response.status === 401) return true
+
+  // GraphQL can return 200 with UNAUTHENTICATED in body
+  const errors = error.response.errors as GraphQLError[] | undefined
+  return (
+    errors?.some(
+      (err) =>
+        err.extensions?.code === 'UNAUTHENTICATED' ||
+        err.extensions?.originalError?.statusCode === 401 ||
+        err.message === 'Unauthorized'
+    ) ?? false
+  )
+}
+
+// ============================================================================
+// Client Factory
+// ============================================================================
+
+const createClient = (): GraphQLClient => {
   const token = getAccessToken()
 
-  return new GraphQLClient(getGraphQLEndpoint(), {
+  return new GraphQLClient(GRAPHQL_ENDPOINT, {
     headers: {
-      ...(token && { Authorization: `Bearer ${token}` }),
       'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
   })
 }
 
-/**
- * Execute GraphQL request with automatic token handling and 401 retry
- * Token is read fresh on each request to handle refresh scenarios
- */
+// ============================================================================
+// Request Executor
+// ============================================================================
+
+async function handleAuthErrorRetry<T>(
+  document: RequestDocument,
+  variables?: Variables
+): Promise<T> {
+  try {
+    await refreshAccessToken(BASE_API_URL ?? '')
+    return await graphqlRequest<T>(document, variables, true)
+  } catch {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth/sign-in'
+    }
+    throw new Error('Token refresh failed')
+  }
+}
+
 export async function graphqlRequest<T>(
   document: RequestDocument,
   variables?: Variables,
-  retried = false
+  isRetry = false
 ): Promise<T> {
-  const client = createGraphQLClient()
-
   try {
-    return await client.request<T>(document, variables)
+    return await createClient().request<T>(document, variables)
   } catch (error) {
-    // Handle 401 errors with token refresh (only retry once)
-    if (is401Error(error) && !retried) {
-      console.log('[GraphQL] Received 401, attempting token refresh...')
-
-      try {
-        await refreshAccessToken(BASE_API_URL || '')
-        // Retry with new token
-        console.log('[GraphQL] Retrying request with new token...')
-        return await graphqlRequest<T>(document, variables, true)
-      } catch (refreshError) {
-        console.error('[GraphQL] Token refresh failed, redirecting to login...')
-        // Redirect to login on refresh failure
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/sign-in'
-        }
-        throw refreshError
-      }
+    if (isAuthError(error) && !isRetry) {
+      return handleAuthErrorRetry<T>(document, variables)
     }
-
     throw error
   }
 }
 
-/**
- * GraphQL client singleton for direct usage
- * Note: Prefer graphqlRequest() for auto token handling with 401 retry
- */
-export const graphqlClient = createGraphQLClient()
-
-/**
- * Typed request helper with error handling
- */
 export async function executeQuery<TData, TVariables extends Variables = Variables>(
   query: RequestDocument,
   variables?: TVariables
 ): Promise<TData> {
-  try {
-    return await graphqlRequest<TData>(query, variables)
-  } catch (error) {
-    // Handle GraphQL errors
-    if (error instanceof Error) {
-      console.error('GraphQL Error:', error.message)
-    }
-    throw error
-  }
+  return graphqlRequest<TData>(query, variables)
 }
+
+// Legacy export for direct client access (prefer graphqlRequest for auto-retry)
+export const graphqlClient = createClient()
