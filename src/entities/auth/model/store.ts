@@ -118,12 +118,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   me: async () => {
     try {
+      console.log('[AuthStore] me() called - fetching profile')
       const myProfile = await authApi.myProfile()
+      console.log('[AuthStore] me() success - profile loaded')
 
       set({
         user: myProfile,
       })
     } catch (error: unknown) {
+      console.log('[AuthStore] me() error:', error)
+
       // Check if error is 401 (handled by axios interceptor with token refresh)
       let is401 = false
       if (typeof error === 'object' && error !== null && 'response' in error) {
@@ -139,14 +143,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       }
 
+      console.log('[AuthStore] me() is 401 error:', is401)
+
+      // DEBUG: NOT clearing auth state to investigate logout issue
       // Only clear auth state on 401 errors (token invalid/expired and refresh failed)
       // Other errors (network, 500, etc.) should NOT invalidate the session
       if (is401) {
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-        })
+        console.log('[AuthStore] 401 detected - DEBUG: NOT clearing auth state')
+        // set({
+        //   user: null,
+        //   isAuthenticated: false,
+        //   isLoading: false,
+        // })
       } else {
         // For non-401 errors, just clear user but keep auth state
         // User can retry the request

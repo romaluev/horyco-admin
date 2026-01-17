@@ -1,3 +1,7 @@
+/**
+ * Axios HTTP Client with automatic token management
+ */
+
 import axios from 'axios'
 
 import {
@@ -9,152 +13,136 @@ import {
 
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
-// Lazy import to avoid circular dependency
-let useAuthStore: (() => { setToken?: (token: string | null) => void; logout?: () => void }) | null = null
-const getAuthStore = (): { setToken?: (token: string | null) => void; logout?: () => void } | null => {
+// ============================================================================
+// Configuration
+// ============================================================================
+
+export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
+
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/refresh', '/auth/register']
+
+const isAuthEndpoint = (url?: string): boolean =>
+  AUTH_ENDPOINTS.some((endpoint) => url?.includes(endpoint))
+
+// ============================================================================
+// Auth Store Access (lazy import to avoid circular dependency)
+// ============================================================================
+
+interface AuthStore {
+  setToken?: (token: string | null) => void
+  logout?: () => void
+}
+
+let authStoreGetter: (() => AuthStore) | null = null
+
+const getAuthStore = (): AuthStore | null => {
   try {
-    if (!useAuthStore) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
-      useAuthStore = require('@/entities/auth').useAuthStore
+    if (!authStoreGetter) {
+      // Dynamic require to avoid circular dependency
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+      authStoreGetter = require('@/entities/auth').useAuthStore
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useAuthStore?.() ?? null
+    return authStoreGetter?.() ?? null
   } catch {
     return null
   }
 }
 
-export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
+const syncTokenToStore = (token: string): void => {
+  getAuthStore()?.setToken?.(token)
+}
 
-// Singleton flag to prevent multiple simultaneous redirects
+// ============================================================================
+// Logout Handler
+// ============================================================================
+
 let isRedirectingToLogin = false
 
-/**
- * Logout user and redirect to login page
- */
-const logoutUser = (): void => {
-  if (typeof window !== 'undefined' && !isRedirectingToLogin) {
-    isRedirectingToLogin = true
+const logoutAndRedirect = (): void => {
+  if (typeof window === 'undefined' || isRedirectingToLogin) return
 
-    // Use Zustand store logout which handles all cleanup
-    const authStore = getAuthStore()
-    if (authStore?.logout) {
-      authStore.logout()
-    } else {
-      // Fallback if store not available
-      clearTokens()
+  isRedirectingToLogin = true
 
-      if (!window.location.href.includes('/auth/sign')) {
-        window.location.href = '/auth/sign-in'
-      }
+  const authStore = getAuthStore()
+  if (authStore?.logout) {
+    authStore.logout()
+  } else {
+    clearTokens()
+    if (!window.location.href.includes('/auth/sign')) {
+      window.location.href = '/auth/sign-in'
     }
   }
 }
 
+// ============================================================================
+// Axios Instance
+// ============================================================================
+
 const api = axios.create({
   baseURL: BASE_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 })
 
-// Request interceptor: Check token expiration and refresh if needed
+// ============================================================================
+// Request Interceptor
+// ============================================================================
+
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // Skip token refresh for auth endpoints
-    if (
-      config.url?.includes('/auth/login') ||
-      config.url?.includes('/auth/refresh') ||
-      config.url?.includes('/auth/register')
-    ) {
+    if (isAuthEndpoint(config.url)) {
       return config
     }
 
-    // Get current access token
     let token = getAccessToken()
 
-    // Check if token is expiring soon and refresh if needed
+    // Proactively refresh token if expiring soon
     if (token && isTokenExpiringSoon()) {
       try {
-        console.log('[Axios] Token expiring soon, refreshing...')
-        token = await refreshAccessToken(BASE_API_URL || '')
-
-        // Sync new token with Zustand store
-        const authStore = getAuthStore()
-        if (authStore?.setToken) {
-          authStore.setToken(token)
-        }
-      } catch (error) {
-        console.error('[Axios] Token refresh failed, logging out...')
-        logoutUser()
-        return Promise.reject(error)
+        token = await refreshAccessToken(BASE_API_URL ?? '')
+        syncTokenToStore(token)
+      } catch {
+        return Promise.reject(new Error('Token refresh failed'))
       }
     }
 
-    // Add token to request headers
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
 
     return config
   },
-  (error) => {
-    return Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
 
-// Response interceptor: Handle 401 errors with token refresh
-api.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean
-    }
+// ============================================================================
+// Response Interceptor
+// ============================================================================
 
-    // Handle 401 Unauthorized errors
-    if (
+type RetryableRequest = InternalAxiosRequestConfig & { _retry?: boolean }
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RetryableRequest
+
+    const shouldRetry =
       error.response?.status === 401 &&
       originalRequest &&
-      !originalRequest._retry
-    ) {
-      // Skip retry for auth endpoints
-      if (
-        originalRequest.url?.includes('/auth/login') ||
-        originalRequest.url?.includes('/auth/refresh') ||
-        originalRequest.url?.includes('/auth/register')
-      ) {
-        return Promise.reject(error)
-      }
+      !originalRequest._retry &&
+      !isAuthEndpoint(originalRequest.url)
 
-      // Mark request as retried to prevent infinite loops
+    if (shouldRetry) {
       originalRequest._retry = true
 
       try {
-        console.log('[Axios] Received 401, attempting token refresh...')
-
-        // Try to refresh the token
-        const newAccessToken = await refreshAccessToken(BASE_API_URL || '')
-
-        // Sync new token with Zustand store
-        const authStore = getAuthStore()
-        if (authStore?.setToken) {
-          authStore.setToken(newAccessToken)
-        }
-
-        // Update the authorization header with new token
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-
-        // Retry the original request with new token
-        console.log('[Axios] Retrying original request with new token...')
+        const newToken = await refreshAccessToken(BASE_API_URL ?? '')
+        syncTokenToStore(newToken)
+        originalRequest.headers.Authorization = `Bearer ${newToken}`
         return api(originalRequest)
-      } catch (refreshError) {
-        // If refresh fails, logout user
-        console.error('[Axios] Token refresh failed on 401, logging out...')
-        logoutUser()
-        return Promise.reject(refreshError)
+      } catch {
+        logoutAndRedirect()
+        return Promise.reject(error)
       }
     }
 
