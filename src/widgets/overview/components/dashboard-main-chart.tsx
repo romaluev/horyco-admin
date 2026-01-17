@@ -21,7 +21,7 @@ import {
   RadarChart,
 } from 'recharts'
 
-import { KpiType } from '@/shared/api/graphql'
+import { KpiType, GroupBy } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import {
@@ -38,9 +38,15 @@ import {
 } from '@/shared/ui/base/chart'
 import { ToggleGroup, ToggleGroupItem } from '@/shared/ui/base/toggle-group'
 
-import { GroupBy } from '@/shared/api/graphql'
+import {
+  KPI_LABELS,
+  CURRENCY_METRICS,
+  PRIMARY_COLOR,
+  type ITimeSeriesData,
+  type ChartType,
+  type ChartVariant,
+} from '@/entities/dashboard'
 
-import type { ITimeSeriesData, ChartType, ChartVariant } from '@/entities/dashboard'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface IDashboardMainChartProps {
@@ -51,35 +57,13 @@ interface IDashboardMainChartProps {
   groupBy?: GroupBy | null
   onGroupByChange?: (groupBy: GroupBy) => void
   className?: string
-}
-
-const METRIC_LABELS: Record<KpiType, string> = {
-  [KpiType.REVENUE]: 'Выручка',
-  [KpiType.ORDERS]: 'Заказы',
-  [KpiType.AVG_CHECK]: 'Средний чек',
-  [KpiType.CUSTOMERS]: 'Клиенты',
-  [KpiType.NEW_CUSTOMERS]: 'Новые клиенты',
-  [KpiType.RETURNING_CUSTOMERS]: 'Постоянные клиенты',
-  [KpiType.TIPS]: 'Чаевые',
-  [KpiType.REFUNDS]: 'Возвраты',
-  [KpiType.CANCELLATIONS]: 'Отмены',
-  [KpiType.MARGIN]: 'Маржа',
-  [KpiType.RETENTION_RATE]: 'Удержание',
-  [KpiType.STAFF_PRODUCTIVITY]: 'Продуктивность',
+  isLoading?: boolean
 }
 
 const GROUPBY_OPTIONS: { value: GroupBy; label: string }[] = [
   { value: GroupBy.HOUR, label: 'Часы' },
   { value: GroupBy.DAY, label: 'Дни' },
   { value: GroupBy.WEEK, label: 'Неделя' },
-]
-
-const CURRENCY_METRICS = [
-  KpiType.REVENUE,
-  KpiType.AVG_CHECK,
-  KpiType.TIPS,
-  KpiType.REFUNDS,
-  KpiType.MARGIN,
 ]
 
 export function DashboardMainChart({
@@ -90,6 +74,7 @@ export function DashboardMainChart({
   groupBy,
   onGroupByChange,
   className,
+  isLoading = false,
 }: IDashboardMainChartProps) {
   const activeChart = chartType
   const activeGroupBy = groupBy ?? GroupBy.DAY
@@ -105,7 +90,7 @@ export function DashboardMainChart({
 
   const chartConfig = useMemo<ChartConfig>(() => ({
     value: {
-      label: METRIC_LABELS[metric],
+      label: KPI_LABELS[metric],
       color: 'hsl(var(--primary))',
     },
     previous: {
@@ -137,11 +122,15 @@ export function DashboardMainChart({
     }
   }
 
+  if (isLoading && !data) {
+    return <DashboardMainChartSkeleton className={className} />
+  }
+
   if (!data || chartData.length === 0) {
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle>{METRIC_LABELS[metric] ?? metric}</CardTitle>
+          <CardTitle>{KPI_LABELS[metric] ?? metric}</CardTitle>
           <CardDescription>Нет данных для отображения</CardDescription>
         </CardHeader>
         <CardContent>
@@ -154,13 +143,17 @@ export function DashboardMainChart({
   }
 
   const gradientId = `gradient-${metric}-${activeChart}`
-  const primaryColor = '#fe4a49'
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card className={cn('relative overflow-hidden', className)}>
+      {isLoading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      )}
       <CardHeader className="flex flex-col gap-4 space-y-0 border-b py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col justify-center gap-1">
-          <CardTitle className="text-xl">{METRIC_LABELS[metric] ?? metric}</CardTitle>
+          <CardTitle className="text-xl">{KPI_LABELS[metric] ?? metric}</CardTitle>
           <CardDescription className="flex items-center gap-3">
             <span className="text-3xl font-bold text-foreground">
               {formatValue(data.totalValue)}
@@ -209,8 +202,8 @@ export function DashboardMainChart({
             <AreaChart data={chartData} margin={{ left: 12, right: 12, top: 12, bottom: 0 }}>
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={primaryColor} stopOpacity={0.4} />
-                  <stop offset="100%" stopColor={primaryColor} stopOpacity={0.05} />
+                  <stop offset="0%" stopColor={PRIMARY_COLOR} stopOpacity={0.4} />
+                  <stop offset="100%" stopColor={PRIMARY_COLOR} stopOpacity={0.05} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
@@ -234,7 +227,7 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), METRIC_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
                   />
                 }
               />
@@ -242,7 +235,7 @@ export function DashboardMainChart({
                 dataKey="value"
                 type="monotone"
                 fill={`url(#${gradientId})`}
-                stroke={primaryColor}
+                stroke={PRIMARY_COLOR}
                 strokeWidth={2}
               />
             </AreaChart>
@@ -269,13 +262,13 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), METRIC_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
                   />
                 }
               />
               <Bar
                 dataKey="value"
-                fill={primaryColor}
+                fill={PRIMARY_COLOR}
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>
@@ -302,22 +295,22 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), METRIC_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
                   />
                 }
               />
               <Line
                 dataKey="value"
                 type="monotone"
-                stroke={primaryColor}
+                stroke={PRIMARY_COLOR}
                 strokeWidth={2}
-                dot={{ fill: primaryColor, strokeWidth: 2, r: 4 }}
+                dot={{ fill: PRIMARY_COLOR, strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, strokeWidth: 2 }}
               />
             </LineChart>
           ) : activeChart === 'radial' ? (
             <RadialBarChart
-              data={[{ value: data.totalValue, fill: primaryColor }]}
+              data={[{ value: data.totalValue, fill: PRIMARY_COLOR }]}
               startAngle={90}
               endAngle={-270}
               innerRadius="60%"
@@ -351,21 +344,21 @@ export function DashboardMainChart({
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    formatter={(value) => [formatValue(Number(value)), METRIC_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
                   />
                 }
               />
               <Radar
                 dataKey="value"
-                fill={primaryColor}
+                fill={PRIMARY_COLOR}
                 fillOpacity={0.3}
-                stroke={primaryColor}
+                stroke={PRIMARY_COLOR}
                 strokeWidth={2}
               />
             </RadarChart>
           ) : (
             <AreaChart data={chartData}>
-              <Area dataKey="value" fill={primaryColor} />
+              <Area dataKey="value" fill={PRIMARY_COLOR} />
             </AreaChart>
           )}
         </ChartContainer>

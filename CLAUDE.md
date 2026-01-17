@@ -80,6 +80,30 @@ Every completed task must have:
 
 ---
 
+## ⚠️ CRITICAL: Browser Testing Rules
+
+**DO NOT USE** any of these tools for browser testing:
+- ❌ `mcp__playwright__*` (ANY Playwright MCP tool)
+- ❌ `mcp__chrome-devtools__*` (ANY Chrome DevTools MCP tool)
+- ❌ `browser_navigate`, `browser_snapshot`, `browser_click`, etc.
+- ❌ Any MCP-based browser automation
+
+**ONLY USE** `agent-browser` CLI via Bash tool:
+```bash
+# This is the ONLY way to do browser testing
+agent-browser open "http://localhost:3000"
+agent-browser snapshot -i
+agent-browser click @e1
+agent-browser fill @e2 "text"
+agent-browser console
+agent-browser network
+agent-browser screenshot
+```
+
+**browser-tester agent**: Uses `agent-browser` CLI commands via Bash. Read `.claude/agents/browser-tester.md` for full command reference.
+
+---
+
 ### Important rules:
 
 - When user request completely violates the docs ask clarifying questions. It's always better to clarify rather then messing up code.

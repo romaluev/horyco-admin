@@ -1,15 +1,18 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, type ComponentType } from 'react'
+
+import { KpiType } from '@/shared/api/graphql'
 
 import {
   useRankedList,
   useProportions,
   useTimeSeries,
+  WIDGET_CONFIG,
   type IDashboardWidget,
   type IPeriodInput,
+  type WidgetType,
 } from '@/entities/dashboard'
-import { KpiType } from '@/shared/api/graphql'
 
 import { AnomalyDetectionWidget } from './anomaly-detection-widget'
 import { ChannelSplitWidget } from './channel-split-widget'
@@ -29,84 +32,67 @@ import { TransactionsSummaryWidget } from './transactions-summary-widget'
 import { VisitorsTrafficWidget } from './visitors-traffic-widget'
 import { WidgetCard } from './widget-card'
 
-interface DashboardWidgetsSectionProps {
+// ============================================
+// TYPES
+// ============================================
+
+interface IDashboardWidgetsSectionProps {
   widgets: IDashboardWidget[]
   period: IPeriodInput
   branchId?: number
   className?: string
 }
 
-type WidgetComponent =
-  | 'topProducts'
-  | 'paymentMethods'
-  | 'channelSplit'
-  | 'staffRanking'
-  | 'hourlyBreakdown'
-  | 'goalProgress'
-  | 'alerts'
-  | 'revenueOverview'
-  | 'ordersChart'
-  | 'transactionsSummary'
-  | 'performanceRadar'
-  | 'dailyComparison'
-  | 'incomeExpense'
-  | 'customerRatings'
-  | 'conversionFunnel'
-  | 'ordersByCategory'
-  | 'anomalyDetection'
-  | 'visitorsTraffic'
-  | 'salesMetrics'
-  | 'goalRadial'
-
-const WIDGET_CONFIG: Record<
-  IDashboardWidget['type'],
-  {
-    title: string
-    component: WidgetComponent
-    size?: 'normal' | 'wide' | 'tall'
-  }
-> = {
-  TOP_PRODUCTS: { title: 'Топ продукты', component: 'topProducts' },
-  PAYMENT_METHODS: { title: 'Способы оплаты', component: 'paymentMethods' },
-  CHANNEL_SPLIT: { title: 'Каналы продаж', component: 'channelSplit' },
-  STAFF_RANKING: { title: 'Рейтинг сотрудников', component: 'staffRanking' },
-  HOURLY_BREAKDOWN: { title: 'По часам', component: 'hourlyBreakdown' },
-  GOAL_PROGRESS: { title: 'Цели', component: 'goalProgress' },
-  ALERTS: { title: 'Уведомления', component: 'alerts' },
-  CUSTOMER_SEGMENTS: { title: 'Сегменты клиентов', component: 'topProducts' },
-  BRANCH_COMPARISON: { title: 'Сравнение филиалов', component: 'topProducts' },
-  REVENUE_OVERVIEW: { title: 'Обзор дохода', component: 'revenueOverview', size: 'wide' },
-  ORDERS_CHART: { title: 'График заказов', component: 'ordersChart' },
-  TRANSACTIONS_SUMMARY: { title: 'Сводка транзакций', component: 'transactionsSummary', size: 'wide' },
-  PERFORMANCE_RADAR: { title: 'Эффективность', component: 'performanceRadar' },
-  DAILY_COMPARISON: { title: 'Дневное сравнение', component: 'dailyComparison' },
-  INCOME_EXPENSE: { title: 'Доходы и расходы', component: 'incomeExpense', size: 'wide' },
-  CUSTOMER_RATINGS: { title: 'Рейтинг клиентов', component: 'customerRatings' },
-  CONVERSION_FUNNEL: { title: 'Конверсионная воронка', component: 'conversionFunnel' },
-  ORDERS_BY_CATEGORY: { title: 'Заказы по категориям', component: 'ordersByCategory' },
-  ANOMALY_DETECTION: { title: 'Обнаружение аномалий', component: 'anomalyDetection' },
-  VISITORS_TRAFFIC: { title: 'Трафик посетителей', component: 'visitorsTraffic' },
-  SALES_METRICS: { title: 'Метрики продаж', component: 'salesMetrics', size: 'wide' },
-  GOAL_RADIAL: { title: 'Прогресс целей', component: 'goalRadial' },
+interface IWidgetContainerProps {
+  period: IPeriodInput
+  branchId?: number
 }
+
+// ============================================
+// WIDGET COMPONENT MAP (replaces switch)
+// ============================================
+
+// Static widgets (no data fetching needed)
+const STATIC_WIDGETS: Partial<Record<WidgetType, ComponentType>> = {
+  PERFORMANCE_RADAR: PerformanceRadarWidget,
+  DAILY_COMPARISON: DailyComparisonWidget,
+  INCOME_EXPENSE: IncomeExpenseWidget,
+  CUSTOMER_RATINGS: CustomerRatingsWidget,
+  CONVERSION_FUNNEL: ConversionFunnelWidget,
+  ORDERS_BY_CATEGORY: OrdersByCategoryWidget,
+  ANOMALY_DETECTION: AnomalyDetectionWidget,
+  VISITORS_TRAFFIC: VisitorsTrafficWidget,
+  SALES_METRICS: SalesMetricsWidget,
+  GOAL_RADIAL: GoalRadialWidget,
+}
+
+// Dynamic widgets (need data fetching containers)
+const CONTAINER_WIDGETS: Record<string, ComponentType<IWidgetContainerProps>> = {
+  TOP_PRODUCTS: TopProductsContainer,
+  PAYMENT_METHODS: PaymentMethodsContainer,
+  CHANNEL_SPLIT: ChannelSplitContainer,
+  STAFF_RANKING: StaffRankingContainer,
+  REVENUE_OVERVIEW: RevenueOverviewContainer,
+  TRANSACTIONS_SUMMARY: TransactionsSummaryContainer,
+}
+
+// ============================================
+// MAIN COMPONENT
+// ============================================
 
 export function DashboardWidgetsSection({
   widgets,
   period,
   branchId,
   className,
-}: DashboardWidgetsSectionProps) {
+}: IDashboardWidgetsSectionProps) {
   const sortedWidgets = useMemo(
     () => [...widgets].sort((a, b) => a.position - b.position),
     [widgets]
   )
 
-  const wideWidgets = sortedWidgets.filter(
-    (w) => WIDGET_CONFIG[w.type]?.size === 'wide'
-  )
-  const normalWidgets = sortedWidgets.filter(
-    (w) => WIDGET_CONFIG[w.type]?.size !== 'wide'
-  )
+  const wideWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size === 'wide')
+  const normalWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size !== 'wide')
 
   return (
     <div className={className}>
@@ -135,100 +121,46 @@ export function DashboardWidgetsSection({
   )
 }
 
-interface WidgetRendererProps {
+// ============================================
+// WIDGET RENDERER (uses component map)
+// ============================================
+
+interface IWidgetRendererProps {
   widget: IDashboardWidget
   period: IPeriodInput
   branchId?: number
 }
 
-function WidgetRenderer({ widget, period, branchId }: WidgetRendererProps) {
+function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
   const config = WIDGET_CONFIG[widget.type]
 
-  switch (widget.type) {
-    case 'TOP_PRODUCTS':
-      return (
-        <TopProductsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'PAYMENT_METHODS':
-      return (
-        <PaymentMethodsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'CHANNEL_SPLIT':
-      return (
-        <ChannelSplitWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'STAFF_RANKING':
-      return (
-        <StaffRankingWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'REVENUE_OVERVIEW':
-      return (
-        <RevenueOverviewWidgetContainer
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'TRANSACTIONS_SUMMARY':
-      return (
-        <TransactionsSummaryWidgetContainer
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'PERFORMANCE_RADAR':
-      return <PerformanceRadarWidget />
-    case 'DAILY_COMPARISON':
-      return <DailyComparisonWidget />
-    case 'INCOME_EXPENSE':
-      return <IncomeExpenseWidget />
-    case 'CUSTOMER_RATINGS':
-      return <CustomerRatingsWidget />
-    case 'CONVERSION_FUNNEL':
-      return <ConversionFunnelWidget />
-    case 'ORDERS_BY_CATEGORY':
-      return <OrdersByCategoryWidget />
-    case 'ANOMALY_DETECTION':
-      return <AnomalyDetectionWidget />
-    case 'VISITORS_TRAFFIC':
-      return <VisitorsTrafficWidget />
-    case 'SALES_METRICS':
-      return <SalesMetricsWidget />
-    case 'GOAL_RADIAL':
-      return <GoalRadialWidget />
-    default:
-      return (
-        <WidgetCard title={config.title}>
-          <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-            Скоро
-          </div>
-        </WidgetCard>
-      )
+  // Check static widgets first
+  const StaticComponent = STATIC_WIDGETS[widget.type]
+  if (StaticComponent) {
+    return <StaticComponent />
   }
+
+  // Check container widgets
+  const ContainerComponent = CONTAINER_WIDGETS[widget.type]
+  if (ContainerComponent) {
+    return <ContainerComponent period={period} branchId={branchId} />
+  }
+
+  // Fallback for unimplemented widgets
+  return (
+    <WidgetCard title={config?.title ?? widget.type}>
+      <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+        Скоро
+      </div>
+    </WidgetCard>
+  )
 }
 
-interface WidgetContainerProps {
-  title: string
-  period: IPeriodInput
-  branchId?: number
-}
+// ============================================
+// DATA CONTAINER COMPONENTS
+// ============================================
 
-function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'PRODUCTS',
     period,
@@ -239,7 +171,7 @@ function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainer
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.TOP_PRODUCTS.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -250,7 +182,7 @@ function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainer
   )
 }
 
-function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function PaymentMethodsContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'PAYMENT_METHOD',
     period,
@@ -259,7 +191,7 @@ function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContai
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.PAYMENT_METHODS.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -270,7 +202,7 @@ function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContai
   )
 }
 
-function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function ChannelSplitContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'CHANNEL',
     period,
@@ -279,7 +211,7 @@ function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContaine
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.CHANNEL_SPLIT.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -290,7 +222,7 @@ function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContaine
   )
 }
 
-function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function StaffRankingContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'STAFF',
     period,
@@ -301,7 +233,7 @@ function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContaine
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.STAFF_RANKING.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -312,10 +244,7 @@ function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContaine
   )
 }
 
-function RevenueOverviewWidgetContainer({
-  period,
-  branchId,
-}: Omit<WidgetContainerProps, 'title'>) {
+function RevenueOverviewContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading } = useTimeSeries({
     metric: KpiType.REVENUE,
     period,
@@ -325,10 +254,7 @@ function RevenueOverviewWidgetContainer({
   return <RevenueOverviewWidget data={data ?? null} isLoading={isLoading} />
 }
 
-function TransactionsSummaryWidgetContainer({
-  period,
-  branchId,
-}: Omit<WidgetContainerProps, 'title'>) {
+function TransactionsSummaryContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading } = useTimeSeries({
     metric: KpiType.ORDERS,
     period,

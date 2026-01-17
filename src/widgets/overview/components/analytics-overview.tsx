@@ -124,7 +124,6 @@ export function AnalyticsOverview() {
           kpiSlots: newConfig.kpiSlots,
           chartMetric: newConfig.chartMetric,
           chartGroupBy: newConfig.chartGroupBy,
-          chartType: newConfig.chartType,
           widgets: newConfig.widgets.map((w) => ({
             id: w.id,
             type: w.type,
@@ -154,7 +153,6 @@ export function AnalyticsOverview() {
     [saveConfig]
   )
 
-  const isLoading = isConfigLoading || isKpiLoading || isChartLoading
   const hasError = kpiError || chartError
 
   if (isEditMode) {
@@ -221,48 +219,29 @@ export function AnalyticsOverview() {
         </div>
       )}
 
-      {isLoading && !hasError && (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-[120px] animate-pulse rounded-xl bg-muted"
-              />
-            ))}
-          </div>
-          <DashboardMainChartSkeleton />
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="h-80 animate-pulse rounded-xl bg-muted" />
-            <div className="h-80 animate-pulse rounded-xl bg-muted" />
-          </div>
-        </div>
-      )}
+      <div className="space-y-6">
+        <DashboardKpiCards
+          metrics={kpiMetrics ?? []}
+          kpiTypes={kpiTypes}
+          isLoading={isKpiLoading}
+        />
 
-      {!isLoading && !hasError && (
-        <div className="space-y-6">
-          <DashboardKpiCards
-            metrics={kpiMetrics ?? []}
-            kpiTypes={kpiTypes}
-            isLoading={isKpiLoading}
-          />
+        <DashboardMainChart
+          data={timeSeries}
+          metric={config.chartMetric}
+          chartType="area"
+          variant="gradient"
+          groupBy={activeGroupBy}
+          onGroupByChange={handleGroupByChange}
+          isLoading={isChartLoading}
+        />
 
-          <DashboardMainChart
-            data={timeSeries}
-            metric={config.chartMetric}
-            chartType={config.chartType ?? 'area'}
-            variant="gradient"
-            groupBy={activeGroupBy}
-            onGroupByChange={handleGroupByChange}
-          />
-
-          <DashboardWidgetsSection
-            widgets={config.widgets}
-            period={periodInput}
-            branchId={selectedBranchId}
-          />
-        </div>
-      )}
+        <DashboardWidgetsSection
+          widgets={config.widgets}
+          period={periodInput}
+          branchId={selectedBranchId}
+        />
+      </div>
     </div>
   )
 }

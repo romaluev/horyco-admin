@@ -19,7 +19,6 @@ export const DASHBOARD_CONFIG_QUERY = gql`
       }
       chartMetric
       chartGroupBy
-      chartType
       widgets {
         id
         type
@@ -167,7 +166,7 @@ export const ALERT_SUMMARY_QUERY = gql`
     alertSummary(branchId: $branchId) {
       alerts {
         id
-        type
+        severity
         message
         timestamp
         isRead

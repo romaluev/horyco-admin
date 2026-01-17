@@ -16,13 +16,12 @@ export interface IKpiSlot {
 }
 
 export type WidgetType =
+  // Core Widgets
   | 'TOP_PRODUCTS'
   | 'PAYMENT_METHODS'
   | 'CHANNEL_SPLIT'
   | 'STAFF_RANKING'
   | 'HOURLY_BREAKDOWN'
-  | 'CUSTOMER_SEGMENTS'
-  | 'BRANCH_COMPARISON'
   | 'GOAL_PROGRESS'
   | 'ALERTS'
   | 'REVENUE_OVERVIEW'
@@ -38,6 +37,22 @@ export type WidgetType =
   | 'VISITORS_TRAFFIC'
   | 'SALES_METRICS'
   | 'GOAL_RADIAL'
+  // Enhanced Widgets
+  | 'EARNINGS_REPORT'
+  | 'GROWTH_GAUGE'
+  | 'COMBO_CHART'
+  | 'CHANNEL_SALES_BREAKDOWN'
+  | 'PERFORMANCE_TABS'
+  | 'SALES_PLAN_PROGRESS'
+  | 'YEAR_COMPARISON'
+  | 'FINANCE_REPORT'
+  | 'TOP_SERVICES_BARS'
+  | 'TOTAL_EARNING_DUAL'
+  | 'WEEKLY_OVERVIEW_COMBO'
+  // Legacy (backwards compatibility)
+  | 'RECENT_ORDERS'
+  | 'CUSTOMER_SEGMENTS'
+  | 'BRANCH_COMPARISON'
 
 export type ChartType =
   | 'area'
@@ -76,7 +91,6 @@ export interface IDashboardConfig {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
   chartGroupBy: GroupBy | null
-  chartType: ChartType
   widgets: IDashboardWidget[]
 }
 
@@ -84,7 +98,6 @@ export interface IDashboardConfigInput {
   kpiSlots: IKpiSlot[]
   chartMetric: KpiType
   chartGroupBy: GroupBy | null
-  chartType: ChartType
   widgets: Omit<IDashboardWidget, 'config'>[]
 }
 
@@ -181,7 +194,7 @@ export interface IGoalsSummary {
 
 export interface IAlert {
   id: string
-  type: 'WARNING' | 'INFO' | 'ERROR'
+  severity: 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO'
   message: string
   timestamp: string
   isRead: boolean
