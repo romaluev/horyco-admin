@@ -20,6 +20,8 @@ import {
   LowStockItemsList,
   RecentMovementsWidget,
   StockAlertsWidget,
+  PendingApprovalsWidget,
+  UpcomingDeliveriesWidget,
 } from '@/widgets/inventory-dashboard'
 
 export default function InventoryDashboardPage() {
@@ -56,6 +58,11 @@ export default function InventoryDashboardPage() {
         <Separator />
 
         <InventoryStatsCards warehouseId={selectedWarehouse} />
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <PendingApprovalsWidget warehouseId={selectedWarehouse} />
+          <UpcomingDeliveriesWidget warehouseId={selectedWarehouse} />
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <LowStockItemsList warehouseId={selectedWarehouse} />

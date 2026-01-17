@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -115,8 +116,10 @@ export default function ProductionPage() {
                         {format(new Date(order.plannedDate), 'dd MMM yyyy', { locale: ru })}
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" disabled>
-                          Открыть
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/dashboard/inventory/production/${order.id}`}>
+                            Открыть
+                          </Link>
                         </Button>
                       </TableCell>
                     </TableRow>

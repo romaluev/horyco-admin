@@ -5,6 +5,7 @@ import { writeoffApi } from './api'
 import { writeoffKeys } from './query-keys'
 import { stockKeys } from '@/entities/stock/model/query-keys'
 import { movementKeys } from '@/entities/stock-movement/model/query-keys'
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateWriteoffDto,
@@ -26,8 +27,8 @@ export const useCreateWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.lists() })
       toast.success('Списание создано')
     },
-    onError: () => {
-      toast.error('Ошибка при создании списания')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании списания'))
     },
   })
 }
@@ -46,8 +47,8 @@ export const useUpdateWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(id) })
       toast.success('Списание обновлено')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении списания')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении списания'))
     },
   })
 }
@@ -64,8 +65,8 @@ export const useDeleteWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.lists() })
       toast.success('Списание удалено')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении списания')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении списания'))
     },
   })
 }
@@ -83,8 +84,8 @@ export const useAddWriteoffItem = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
       toast.success('Товар добавлен')
     },
-    onError: () => {
-      toast.error('Ошибка при добавлении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при добавлении товара'))
     },
   })
 }
@@ -109,8 +110,8 @@ export const useUpdateWriteoffItem = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
       toast.success('Товар обновлен')
     },
-    onError: () => {
-      toast.error('Ошибка при обновлении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при обновлении товара'))
     },
   })
 }
@@ -128,8 +129,8 @@ export const useRemoveWriteoffItem = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
       toast.success('Товар удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении товара')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении товара'))
     },
   })
 }
@@ -147,8 +148,8 @@ export const useSubmitWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(id) })
       toast.success('Списание отправлено на согласование')
     },
-    onError: () => {
-      toast.error('Ошибка при отправке на согласование')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отправке на согласование'))
     },
   })
 }
@@ -168,8 +169,8 @@ export const useApproveWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Списание одобрено')
     },
-    onError: () => {
-      toast.error('Ошибка при одобрении списания')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при одобрении списания'))
     },
   })
 }
@@ -188,8 +189,8 @@ export const useRejectWriteoff = () => {
       queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(id) })
       toast.success('Списание отклонено')
     },
-    onError: () => {
-      toast.error('Ошибка при отклонении списания')
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Ошибка при отклонении списания'))
     },
   })
 }

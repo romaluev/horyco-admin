@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
-import { IconPlus, IconSearch } from '@tabler/icons-react'
+import { IconSearch } from '@tabler/icons-react'
 
 import { Heading } from '@/shared/ui/base/heading'
 import { Button } from '@/shared/ui/base/button'
@@ -30,7 +31,6 @@ import PageContainer from '@/shared/ui/layout/page-container'
 import { useGetInventoryItems } from '@/entities/inventory-item'
 import {
   CreateItemDialog,
-  UpdateItemDialog,
   DeleteItemButton,
   categoryOptions,
 } from '@/features/inventory-item-form'
@@ -70,7 +70,10 @@ export default function InventoryItemsPage() {
               className="pl-10"
             />
           </div>
-          <Select value={category} onValueChange={setCategory}>
+          <Select
+            value={category}
+            onValueChange={(val) => setCategory(val === 'all' ? '' : val)}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Все категории" />
             </SelectTrigger>
@@ -144,7 +147,11 @@ export default function InventoryItemsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
-                          <UpdateItemDialog item={item} />
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link href={`/dashboard/inventory/items/${item.id}`}>
+                              Открыть
+                            </Link>
+                          </Button>
                           <DeleteItemButton itemId={item.id} itemName={item.name} />
                         </div>
                       </TableCell>

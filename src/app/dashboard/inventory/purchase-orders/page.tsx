@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
+import { formatCurrency } from '@/shared/lib/format'
 import { Heading } from '@/shared/ui/base/heading'
 import { Separator } from '@/shared/ui/base/separator'
 import { Skeleton } from '@/shared/ui/base/skeleton'
@@ -43,13 +45,6 @@ export default function PurchaseOrdersPage() {
     status: status || undefined,
     supplierId,
   })
-
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'UZS',
-      maximumFractionDigits: 0,
-    }).format(value)
 
   return (
     <PageContainer scrollable>
@@ -138,8 +133,10 @@ export default function PurchaseOrdersPage() {
                         {formatCurrency(order.totalAmount)}
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" disabled>
-                          Открыть
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/dashboard/inventory/purchase-orders/${order.id}`}>
+                            Открыть
+                          </Link>
                         </Button>
                       </TableCell>
                     </TableRow>

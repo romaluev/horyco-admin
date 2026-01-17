@@ -122,26 +122,48 @@ interface IWidgetRendererProps {
 function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
   const config = WIDGET_CONFIG[widget.type]
 
-  // Check static widgets first
-  const StaticComponent = STATIC_WIDGETS[widget.type]
-  if (StaticComponent) {
-    return <StaticComponent />
+  switch (widget.type) {
+    case 'TOP_PRODUCTS':
+      return (
+        <TopProductsWidgetContainer
+          title={config.title}
+          period={period}
+          branchId={branchId}
+        />
+      )
+    case 'PAYMENT_METHODS':
+      return (
+        <PaymentMethodsWidgetContainer
+          title={config.title}
+          period={period}
+          branchId={branchId}
+        />
+      )
+    case 'CHANNEL_SPLIT':
+      return (
+        <ChannelSplitWidgetContainer
+          title={config.title}
+          period={period}
+          branchId={branchId}
+        />
+      )
+    case 'STAFF_RANKING':
+      return (
+        <StaffRankingWidgetContainer
+          title={config.title}
+          period={period}
+          branchId={branchId}
+        />
+      )
+    default:
+      return (
+        <WidgetCard title={config?.title}>
+          <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+            Скоро
+          </div>
+        </WidgetCard>
+      )
   }
-
-  // Check container widgets
-  const ContainerComponent = CONTAINER_WIDGETS[widget.type]
-  if (ContainerComponent) {
-    return <ContainerComponent period={period} branchId={branchId} />
-  }
-
-  // Fallback for unimplemented widgets
-  return (
-    <WidgetCard title={config?.title ?? widget.type}>
-      <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-        Скоро
-      </div>
-    </WidgetCard>
-  )
 }
 
 function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {

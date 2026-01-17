@@ -67,7 +67,7 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
       icon: AlertTriangle,
       description: 'Требуют пополнения',
       alert: (summary?.lowStockCount ?? 0) > 0,
-      alertColor: 'text-yellow-600',
+      alertColor: 'text-amber-500',
     },
     {
       title: 'Нет в наличии',

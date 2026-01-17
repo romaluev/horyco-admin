@@ -26,7 +26,7 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-yellow-600" />
+            <AlertTriangle className="h-5 w-5 text-amber-500" />
             Мало на складе
           </CardTitle>
           <CardDescription>Товары требующие пополнения</CardDescription>
@@ -69,7 +69,7 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
                     {stock.warehouse?.name} • Мин: {stock.item?.minStockLevel}
                   </p>
                 </div>
-                <Badge variant="outline" className="text-yellow-600">
+                <Badge variant="outline" className="text-amber-500">
                   {stock.quantity} {stock.item?.unit}
                 </Badge>
               </div>

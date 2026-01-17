@@ -2,12 +2,10 @@
 
 import { useState } from 'react'
 
-import { IconSearch } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
 import { Heading } from '@/shared/ui/base/heading'
-import { Input } from '@/shared/ui/base/input'
 import { Separator } from '@/shared/ui/base/separator'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
@@ -26,7 +24,7 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
-import { MOVEMENT_TYPES, MOVEMENT_TYPE_LABELS, type MovementType } from '@/shared/types/inventory'
+import { MOVEMENT_TYPE_LABELS, type MovementType } from '@/shared/types/inventory'
 
 import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
 import { useGetWarehouses } from '@/entities/warehouse'
@@ -139,7 +137,7 @@ export default function MovementsPage() {
                       </TableCell>
                       <TableCell
                         className={`text-right font-medium ${
-                          movement.quantity > 0 ? 'text-green-600' : 'text-red-600'
+                          movement.quantity > 0 ? 'text-emerald-600 dark:text-emerald-500' : 'text-destructive'
                         }`}
                       >
                         {movement.quantity > 0 ? '+' : ''}

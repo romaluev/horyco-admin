@@ -51,7 +51,7 @@ export function CreateProductionDialog() {
     defaultValues: {
       warehouseId: undefined,
       recipeId: undefined,
-      plannedQuantity: 1,
+      quantityPlanned: 1,
       plannedDate: format(new Date(), 'yyyy-MM-dd'),
       notes: '',
     },
@@ -134,7 +134,7 @@ export function CreateProductionDialog() {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="plannedQuantity"
+                name="quantityPlanned"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Количество *</FormLabel>

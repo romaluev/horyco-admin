@@ -61,8 +61,8 @@ export const AdjustStockDialog = ({
   const form = useForm<StockAdjustmentFormValues>({
     resolver: zodResolver(stockAdjustmentSchema),
     defaultValues: {
-      warehouseId: defaultWarehouseId ?? 0,
-      itemId: defaultItemId ?? 0,
+      warehouseId: defaultWarehouseId || undefined,
+      itemId: defaultItemId || undefined,
       quantityChange: 0,
       reason: 'MANUAL_ADJUSTMENT',
       notes: '',
@@ -171,9 +171,9 @@ export const AdjustStockDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                       className={
                         quantityChange > 0
-                          ? 'border-green-500'
+                          ? 'border-emerald-600 dark:border-emerald-500'
                           : quantityChange < 0
-                            ? 'border-red-500'
+                            ? 'border-destructive'
                             : ''
                       }
                     />
