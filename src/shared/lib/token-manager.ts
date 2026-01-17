@@ -1,57 +1,73 @@
 /**
  * Centralized Token Management
- * Single source of truth for token operations
+ * Single source of truth for all token operations
  */
 
 import Cookies from 'js-cookie'
 
+// ============================================================================
+// Configuration
+// ============================================================================
+
 const COOKIE_OPTIONS = {
   expires: 7,
-  secure: false, // Set to true in production with HTTPS
+  secure: process.env.NODE_ENV === 'production',
   sameSite: 'lax' as const,
 }
 
-/**
- * Token storage keys
- */
+const TOKEN_EXPIRY_BUFFER_MS = 2 * 60 * 1000 // Refresh 2 minutes before expiry
+
 export const TOKEN_KEYS = {
   ACCESS: 'access_token',
   REFRESH: 'refresh_token',
   EXPIRES_AT: 'token_expires_at',
 } as const
 
-/**
- * Get access token from cookies
- */
-export const getAccessToken = (): string | undefined => {
-  return Cookies.get(TOKEN_KEYS.ACCESS)
-}
+// ============================================================================
+// Token Getters
+// ============================================================================
 
-/**
- * Get refresh token from cookies
- */
-export const getRefreshToken = (): string | undefined => {
-  return Cookies.get(TOKEN_KEYS.REFRESH)
-}
+export const getAccessToken = (): string | undefined => Cookies.get(TOKEN_KEYS.ACCESS)
 
-/**
- * Get token expiration time
- */
+export const getRefreshToken = (): string | undefined => Cookies.get(TOKEN_KEYS.REFRESH)
+
 export const getTokenExpiresAt = (): number | null => {
   const expiresAt = Cookies.get(TOKEN_KEYS.EXPIRES_AT)
   if (!expiresAt) return null
+
   const parsed = parseInt(expiresAt, 10)
   return isNaN(parsed) ? null : parsed
 }
 
-/**
- * Store all tokens
- */
+export const hasValidTokens = (): boolean => {
+  return !!getAccessToken() && !!getRefreshToken()
+}
+
+export const isTokenExpiringSoon = (): boolean => {
+  const expirationTime = getTokenExpiresAt()
+  if (!expirationTime) return false
+
+  return Date.now() + TOKEN_EXPIRY_BUFFER_MS >= expirationTime
+}
+
+// ============================================================================
+// Token Storage
+// ============================================================================
+
 export const storeTokens = (
   accessToken: string,
   refreshToken: string,
   expiresIn: number
 ): void => {
+  if (!accessToken || !refreshToken || typeof expiresIn !== 'number') {
+    console.error('[TokenManager] Invalid tokens:', {
+      accessToken: accessToken ? 'valid' : 'MISSING',
+      refreshToken: refreshToken ? 'valid' : 'MISSING',
+      expiresIn,
+    })
+    throw new Error('Cannot store invalid tokens')
+  }
+
   const expirationTime = Date.now() + expiresIn * 1000
 
   Cookies.set(TOKEN_KEYS.ACCESS, accessToken, COOKIE_OPTIONS)
@@ -59,47 +75,23 @@ export const storeTokens = (
   Cookies.set(TOKEN_KEYS.EXPIRES_AT, String(expirationTime), COOKIE_OPTIONS)
 }
 
-/**
- * Clear all tokens - used on logout or refresh failure
- */
 export const clearTokens = (): void => {
   Cookies.remove(TOKEN_KEYS.ACCESS)
   Cookies.remove(TOKEN_KEYS.REFRESH)
   Cookies.remove(TOKEN_KEYS.EXPIRES_AT)
 }
 
-/**
- * Check if token is expired or will expire soon (within 2 minutes)
- */
-export const isTokenExpiringSoon = (): boolean => {
-  const expirationTime = getTokenExpiresAt()
-  if (!expirationTime) return false
+// ============================================================================
+// Token Refresh
+// ============================================================================
 
-  const currentTime = Date.now()
-  const twoMinutesInMs = 2 * 60 * 1000
-
-  return currentTime + twoMinutesInMs >= expirationTime
-}
-
-/**
- * Check if user has valid tokens
- */
-export const hasValidTokens = (): boolean => {
-  const accessToken = getAccessToken()
-  const refreshToken = getRefreshToken()
-  return !!accessToken && !!refreshToken
-}
-
-// Singleton flags for token refresh to prevent race conditions
 let isRefreshing = false
 let refreshPromise: Promise<string> | null = null
 
-/**
- * Refresh access token using refresh token
- * Handles concurrent refresh requests with singleton pattern
- */
+export const isRefreshInProgress = (): boolean => isRefreshing
+
 export const refreshAccessToken = async (apiUrl: string): Promise<string> => {
-  // If already refreshing, return the existing promise
+  // Return existing promise if refresh already in progress (prevents race conditions)
   if (isRefreshing && refreshPromise) {
     return refreshPromise
   }
@@ -109,12 +101,9 @@ export const refreshAccessToken = async (apiUrl: string): Promise<string> => {
   refreshPromise = (async () => {
     try {
       const refreshToken = getRefreshToken()
-
       if (!refreshToken) {
         throw new Error('No refresh token available')
       }
-
-      console.log('[TokenManager] Refreshing access token...')
 
       const response = await fetch(`${apiUrl}/auth/refresh`, {
         method: 'POST',
@@ -126,19 +115,16 @@ export const refreshAccessToken = async (apiUrl: string): Promise<string> => {
         throw new Error(`Token refresh failed: ${response.status}`)
       }
 
-      const data = await response.json()
-      const {
-        accessToken,
-        refreshToken: newRefreshToken,
-        expiresIn,
-      } = data
+      const responseData = await response.json()
+
+      // Handle both wrapped { data: {...} } and flat response structures
+      const tokenData = responseData.data ?? responseData
+      const { accessToken, refreshToken: newRefreshToken, expiresIn } = tokenData
 
       storeTokens(accessToken, newRefreshToken, expiresIn)
 
-      console.log('[TokenManager] Token refreshed successfully')
       return accessToken
     } catch (error) {
-      console.error('[TokenManager] Failed to refresh token:', error)
       clearTokens()
       throw error
     } finally {
@@ -149,8 +135,3 @@ export const refreshAccessToken = async (apiUrl: string): Promise<string> => {
 
   return refreshPromise
 }
-
-/**
- * Check if refresh is currently in progress
- */
-export const isRefreshInProgress = (): boolean => isRefreshing

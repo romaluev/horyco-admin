@@ -15,11 +15,16 @@ interface AlertsWidgetProps {
   className?: string
 }
 
-const ALERT_CONFIG: Record<IAlert['type'], {
+const ALERT_CONFIG: Record<IAlert['severity'], {
   icon: typeof AlertCircle
   className: string
   badgeVariant: 'default' | 'destructive' | 'outline'
 }> = {
+  CRITICAL: {
+    icon: AlertCircle,
+    className: 'text-destructive',
+    badgeVariant: 'destructive',
+  },
   ERROR: {
     icon: AlertCircle,
     className: 'text-destructive',
@@ -80,7 +85,7 @@ export function AlertsWidget({
       {/* Alerts list */}
       <div className="space-y-2">
         {data.alerts.map((alert) => {
-          const config = ALERT_CONFIG[alert.type]
+          const config = ALERT_CONFIG[alert.severity]
           const Icon = config.icon
 
           return (

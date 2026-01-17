@@ -45,11 +45,11 @@ For each file:
 
 **Live UI test** (skip: `--skip-ui-test`):
 
-- Run FULL FLOW TESTING using PlaywrightMCP from `workflow.md`
+- Call **browser-tester** agent for comprehensive testing
 - Test EVERY page/route created
 - Test COMPLETE CRUD if applicable (create → read → update → delete)
 - Test ALL form flows (valid + invalid data)
-- Verify design compliance + 0 console errors
+- Verify design compliance + 0 console errors + 0 network failures
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 

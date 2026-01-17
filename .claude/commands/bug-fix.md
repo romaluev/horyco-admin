@@ -10,10 +10,12 @@ Call **locator** → get file:line locations
 
 **Reproduce in browser** (skip: `--skip-ui-test`):
 
-```
-browser_navigate → trigger bug → browser_snapshot
-browser_console_messages → capture errors
-browser_take_screenshot → document broken state
+```bash
+agent-browser open <url>        # Navigate to affected page
+agent-browser snapshot -i       # Get interactive elements
+# Trigger the bug
+agent-browser console           # Capture errors
+agent-browser screenshot        # Document broken state
 ```
 
 Document exact reproduction steps.
@@ -36,7 +38,7 @@ For each bug:
 
 ## 3. TEST
 
-Run Playwright MCP, test the ui.
+**Call browser-tester agent** to verify fix in browser.
 
 ---
 
@@ -49,8 +51,8 @@ Run Playwright MCP, test the ui.
 **Verify fix in browser** (skip: `--skip-ui-test`):
 
 - Re-run reproduction steps → bug should not occur
-- Test FULL related flow with playwright mcp (not just the fix)
-- `browser_console_messages` → 0 errors
+- Call **browser-tester** agent for full related flow testing
+- `agent-browser console` → 0 errors
 - Verify no regressions in related features
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)

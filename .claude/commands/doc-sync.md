@@ -51,11 +51,12 @@ For each violation:
 
 **Verify UI matches docs** (skip: `--skip-ui-test`):
 
-- Test EVERY documented user flow end-to-end using Playwright mcp
+- Call **browser-tester** agent for comprehensive testing
+- Test EVERY documented user flow end-to-end
 - Test COMPLETE CRUD if documented
 - Verify ALL documented elements visible
 - Test ALL states (loading, error, empty, success)
-- `browser_console_messages` → 0 errors
+- `agent-browser console` → 0 errors
 
 **If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
 

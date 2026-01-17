@@ -11,6 +11,8 @@ export type {
   IKpiSlot,
   WidgetType,
   ChartType,
+  ChartVariant,
+  IMainChartConfig,
   IKpiMetricValue,
   ITimeSeriesData,
   ITimeSeriesPoint,
@@ -50,3 +52,26 @@ export {
 
 // Query keys
 export { dashboardKeys } from './model/query-keys'
+
+// Constants
+export {
+  KPI_CONFIG,
+  KPI_LABELS,
+  CURRENCY_METRICS,
+  WIDGET_CONFIG,
+  WIDGET_CATEGORY_LABELS,
+  CHART_TYPE_OPTIONS,
+  DEMO_CHART_DATA,
+  DEMO_RADAR_DATA,
+  DEMO_PIE_DATA,
+  PRIMARY_COLOR,
+  getWidgetsByCategory,
+} from './model/constants'
+
+export type {
+  IKpiConfig,
+  IWidgetConfig,
+  WidgetPreviewType,
+  WidgetCategory,
+  IChartTypeOption,
+} from './model/constants'

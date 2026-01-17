@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { IconAdjustments, IconSortAscending, IconSortDescending } from '@tabler/icons-react'
 
-import { SortDirection } from '@/shared/api/graphql'
+import { SortBy, SortDirection } from '@/shared/api/graphql'
 import { Button } from '@/shared/ui/base/button'
 import { Checkbox } from '@/shared/ui/base/checkbox'
 import { Label } from '@/shared/ui/base/label'
@@ -22,7 +22,17 @@ import {
 } from '@/shared/ui/base/select'
 import { Separator } from '@/shared/ui/base/separator'
 
-import { GROUP_BY_OPTIONS, SORT_DIRECTION_OPTIONS } from '../model/constants'
+import { GROUP_BY_OPTIONS } from '../model/constants'
+
+const SORT_BY_LABELS: Record<SortBy, string> = {
+  [SortBy.REVENUE]: 'Выручка',
+  [SortBy.ORDERS]: 'Заказы',
+  [SortBy.QUANTITY]: 'Количество',
+  [SortBy.PERCENTAGE]: 'Доля',
+  [SortBy.AVG_CHECK]: 'Средний чек',
+  [SortBy.CUSTOMERS]: 'Клиенты',
+  [SortBy.GROWTH]: 'Рост',
+}
 import {
   selectAvailableColumns,
   selectDatasetConfig,
@@ -36,11 +46,11 @@ export function DisplaySettings() {
   const availableColumns = useViewBuilderStore(selectAvailableColumns)
   const datasetConfig = useViewBuilderStore(selectDatasetConfig)
 
-  const sortableColumns = availableColumns.filter((col) => col.sortable)
+  const availableSortOptions = datasetConfig?.sortOptions || []
   const availableGroupBy = datasetConfig?.groupByOptions || []
 
-  const handleSortFieldChange = (field: string) => {
-    setSorting(field, workingConfig.sorting.direction)
+  const handleSortFieldChange = (value: SortBy) => {
+    setSorting(value, workingConfig.sorting.direction)
   }
 
   const handleSortDirectionToggle = () => {
@@ -78,15 +88,15 @@ export function DisplaySettings() {
             <div className="flex items-center gap-2">
               <Select
                 value={workingConfig.sorting.field}
-                onValueChange={handleSortFieldChange}
+                onValueChange={(v) => handleSortFieldChange(v as SortBy)}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Выберите поле" />
                 </SelectTrigger>
                 <SelectContent>
-                  {sortableColumns.map((col) => (
-                    <SelectItem key={col.key} value={col.key}>
-                      {col.label}
+                  {availableSortOptions.map((sortOption) => (
+                    <SelectItem key={sortOption} value={sortOption}>
+                      {SORT_BY_LABELS[sortOption]}
                     </SelectItem>
                   ))}
                 </SelectContent>

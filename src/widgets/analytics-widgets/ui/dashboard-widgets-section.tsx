@@ -1,58 +1,75 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, type ComponentType } from 'react'
+
+import { KpiType } from '@/shared/api/graphql'
 
 import {
   useRankedList,
   useProportions,
+  useTimeSeries,
+  WIDGET_CONFIG,
   type IDashboardWidget,
   type IPeriodInput,
+  type WidgetType,
 } from '@/entities/dashboard'
 
+import { AnomalyDetectionWidget } from './anomaly-detection-widget'
 import { ChannelSplitWidget } from './channel-split-widget'
+import { ConversionFunnelWidget } from './conversion-funnel-widget'
+import { CustomerRatingsWidget } from './customer-ratings-widget'
+import { DailyComparisonWidget } from './daily-comparison-widget'
+import { GoalRadialWidget } from './goal-radial-widget'
+import { IncomeExpenseWidget } from './income-expense-widget'
+import { OrdersByCategoryWidget } from './orders-by-category-widget'
 import { PaymentMethodsWidget } from './payment-methods-widget'
+import { PerformanceRadarWidget } from './performance-radar-widget'
+import { RevenueOverviewWidget } from './revenue-overview-widget'
+import { SalesMetricsWidget } from './sales-metrics-widget'
 import { StaffRankingWidget } from './staff-ranking-widget'
 import { TopProductsWidget } from './top-products-widget'
+import { TransactionsSummaryWidget } from './transactions-summary-widget'
+import { VisitorsTrafficWidget } from './visitors-traffic-widget'
 import { WidgetCard } from './widget-card'
 
-interface DashboardWidgetsSectionProps {
+interface IDashboardWidgetsSectionProps {
   widgets: IDashboardWidget[]
   period: IPeriodInput
   branchId?: number
   className?: string
 }
 
-// Widget type configurations
-const WIDGET_CONFIG: Record<IDashboardWidget['type'], { title: string }> = {
-  // Data widgets
-  TOP_PRODUCTS: { title: 'Топ продукты' },
-  PAYMENT_METHODS: { title: 'Способы оплаты' },
-  CHANNEL_SPLIT: { title: 'Каналы продаж' },
-  STAFF_RANKING: { title: 'Рейтинг сотрудников' },
-  CUSTOMER_SEGMENTS: { title: 'Сегменты клиентов' },
-  BRANCH_COMPARISON: { title: 'Сравнение филиалов' },
-  ORDERS_BY_CATEGORY: { title: 'Заказы по категориям' },
-  VISITORS_TRAFFIC: { title: 'Трафик посетителей' },
+interface IWidgetContainerProps {
+  period: IPeriodInput
+  branchId?: number
+}
 
-  // Chart widgets
-  REVENUE_OVERVIEW: { title: 'Обзор дохода' },
-  ORDERS_CHART: { title: 'График заказов' },
-  TRANSACTIONS_SUMMARY: { title: 'Сводка транзакций' },
-  INCOME_EXPENSE: { title: 'Доходы и расходы' },
-  DAILY_COMPARISON: { title: 'Дневное сравнение' },
-  CUSTOMER_RATINGS: { title: 'Рейтинг клиентов' },
+// ============================================
+// WIDGET COMPONENT MAP (replaces switch)
+// ============================================
 
-  // Analytics widgets
-  PERFORMANCE_RADAR: { title: 'Эффективность' },
-  CONVERSION_FUNNEL: { title: 'Воронка конверсии' },
-  HOURLY_BREAKDOWN: { title: 'По часам' },
-  GOAL_PROGRESS: { title: 'Цели' },
-  GOAL_RADIAL: { title: 'Прогресс целей' },
-  ANOMALY_DETECTION: { title: 'Обнаружение аномалий' },
-  SALES_METRICS: { title: 'Метрики продаж' },
+// Static widgets (no data fetching needed)
+const STATIC_WIDGETS: Partial<Record<WidgetType, ComponentType>> = {
+  PERFORMANCE_RADAR: PerformanceRadarWidget,
+  DAILY_COMPARISON: DailyComparisonWidget,
+  INCOME_EXPENSE: IncomeExpenseWidget,
+  CUSTOMER_RATINGS: CustomerRatingsWidget,
+  CONVERSION_FUNNEL: ConversionFunnelWidget,
+  ORDERS_BY_CATEGORY: OrdersByCategoryWidget,
+  ANOMALY_DETECTION: AnomalyDetectionWidget,
+  VISITORS_TRAFFIC: VisitorsTrafficWidget,
+  SALES_METRICS: SalesMetricsWidget,
+  GOAL_RADIAL: GoalRadialWidget,
+}
 
-  // System widgets
-  ALERTS: { title: 'Уведомления' },
+// Dynamic widgets (need data fetching containers)
+const CONTAINER_WIDGETS: Record<string, ComponentType<IWidgetContainerProps>> = {
+  TOP_PRODUCTS: TopProductsContainer,
+  PAYMENT_METHODS: PaymentMethodsContainer,
+  CHANNEL_SPLIT: ChannelSplitContainer,
+  STAFF_RANKING: StaffRankingContainer,
+  REVENUE_OVERVIEW: RevenueOverviewContainer,
+  TRANSACTIONS_SUMMARY: TransactionsSummaryContainer,
 }
 
 export function DashboardWidgetsSection({
@@ -60,17 +77,19 @@ export function DashboardWidgetsSection({
   period,
   branchId,
   className,
-}: DashboardWidgetsSectionProps) {
-  // Sort widgets by position
+}: IDashboardWidgetsSectionProps) {
   const sortedWidgets = useMemo(
     () => [...widgets].sort((a, b) => a.position - b.position),
     [widgets]
   )
 
+  const wideWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size === 'wide')
+  const normalWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size !== 'wide')
+
   return (
     <div className={className}>
-      <div className="grid gap-4 md:grid-cols-2">
-        {sortedWidgets.map((widget) => (
+      <div className="space-y-4">
+        {wideWidgets.map((widget) => (
           <WidgetRenderer
             key={widget.id}
             widget={widget}
@@ -78,73 +97,54 @@ export function DashboardWidgetsSection({
             branchId={branchId}
           />
         ))}
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {normalWidgets.map((widget) => (
+            <WidgetRenderer
+              key={widget.id}
+              widget={widget}
+              period={period}
+              branchId={branchId}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
 }
 
-// Individual widget renderer
-interface WidgetRendererProps {
+interface IWidgetRendererProps {
   widget: IDashboardWidget
   period: IPeriodInput
   branchId?: number
 }
 
-function WidgetRenderer({ widget, period, branchId }: WidgetRendererProps) {
+function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
   const config = WIDGET_CONFIG[widget.type]
 
-  switch (widget.type) {
-    case 'TOP_PRODUCTS':
-      return (
-        <TopProductsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'PAYMENT_METHODS':
-      return (
-        <PaymentMethodsWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'CHANNEL_SPLIT':
-      return (
-        <ChannelSplitWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    case 'STAFF_RANKING':
-      return (
-        <StaffRankingWidgetContainer
-          title={config.title}
-          period={period}
-          branchId={branchId}
-        />
-      )
-    default:
-      return (
-        <WidgetCard title={config.title}>
-          <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-            Скоро
-          </div>
-        </WidgetCard>
-      )
+  // Check static widgets first
+  const StaticComponent = STATIC_WIDGETS[widget.type]
+  if (StaticComponent) {
+    return <StaticComponent />
   }
+
+  // Check container widgets
+  const ContainerComponent = CONTAINER_WIDGETS[widget.type]
+  if (ContainerComponent) {
+    return <ContainerComponent period={period} branchId={branchId} />
+  }
+
+  // Fallback for unimplemented widgets
+  return (
+    <WidgetCard title={config?.title ?? widget.type}>
+      <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+        Скоро
+      </div>
+    </WidgetCard>
+  )
 }
 
-// Container components that fetch data
-interface WidgetContainerProps {
-  title: string
-  period: IPeriodInput
-  branchId?: number
-}
-
-function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'PRODUCTS',
     period,
@@ -155,7 +155,7 @@ function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainer
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.TOP_PRODUCTS.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -166,7 +166,7 @@ function TopProductsWidgetContainer({ title, period, branchId }: WidgetContainer
   )
 }
 
-function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function PaymentMethodsContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'PAYMENT_METHOD',
     period,
@@ -175,7 +175,7 @@ function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContai
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.PAYMENT_METHODS.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -186,7 +186,7 @@ function PaymentMethodsWidgetContainer({ title, period, branchId }: WidgetContai
   )
 }
 
-function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function ChannelSplitContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'CHANNEL',
     period,
@@ -195,7 +195,7 @@ function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContaine
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.CHANNEL_SPLIT.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -206,7 +206,7 @@ function ChannelSplitWidgetContainer({ title, period, branchId }: WidgetContaine
   )
 }
 
-function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContainerProps) {
+function StaffRankingContainer({ period, branchId }: IWidgetContainerProps) {
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'STAFF',
     period,
@@ -217,7 +217,7 @@ function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContaine
 
   return (
     <WidgetCard
-      title={title}
+      title={WIDGET_CONFIG.STAFF_RANKING.title}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -226,4 +226,24 @@ function StaffRankingWidgetContainer({ title, period, branchId }: WidgetContaine
       <StaffRankingWidget data={data ?? []} isLoading={isLoading} />
     </WidgetCard>
   )
+}
+
+function RevenueOverviewContainer({ period, branchId }: IWidgetContainerProps) {
+  const { data, isLoading } = useTimeSeries({
+    metric: KpiType.REVENUE,
+    period,
+    branchId,
+  })
+
+  return <RevenueOverviewWidget data={data ?? null} isLoading={isLoading} />
+}
+
+function TransactionsSummaryContainer({ period, branchId }: IWidgetContainerProps) {
+  const { data, isLoading } = useTimeSeries({
+    metric: KpiType.ORDERS,
+    period,
+    branchId,
+  })
+
+  return <TransactionsSummaryWidget data={data ?? null} isLoading={isLoading} />
 }
