@@ -47,15 +47,15 @@ import {
   useSubmitStaffInvite,
   useSkipStep,
   useStepValidation,
-} from '@/entities/onboarding'
-import { useGetAllPermissions } from '@/entities/role'
+} from '@/entities/onboarding/onboarding'
+import { useGetAllPermissions } from '@/entities/auth/role'
 import {
   staffInviteSchema,
   type StaffInviteFormValues,
-} from '@/features/onboarding/model'
-import { PermissionsSelectorModal } from '@/features/onboarding/ui/permissions-selector-modal'
+} from '@/features/onboarding/onboarding/model'
+import { PermissionsSelectorModal } from '@/features/onboarding/onboarding/ui/permissions-selector-modal'
 
-import type { IPermission } from '@/entities/employee'
+import type { IPermission } from '@/entities/organization/employee'
 
 interface InvitationPermissions {
   permissionIds: number[]

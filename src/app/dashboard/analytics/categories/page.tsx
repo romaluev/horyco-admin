@@ -33,9 +33,9 @@ import {
   useCategoryAnalytics,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { ICategoryAnalyticsItem } from '@/features/analytics'
+import type { ICategoryAnalyticsItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // TYPES

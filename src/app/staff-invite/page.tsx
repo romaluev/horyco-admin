@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react'
 
 import logo from '@/shared/assets/logo.png'
 
-import StaffInviteForm from '@/entities/auth/ui/staff-invite-form'
+import StaffInviteForm from '@/entities/auth/auth/ui/staff-invite-form'
 
 import type { Metadata } from 'next'
 

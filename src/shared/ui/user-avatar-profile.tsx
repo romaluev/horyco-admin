@@ -7,9 +7,9 @@ import { UserIcon } from 'lucide-react'
 import { getNameInitials } from '@/shared/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 
-import { getFileById } from '@/entities/file/model/api'
+import { getFileById } from '@/shared/file/model/api'
 
-import type { IUser } from '@/entities/auth/model'
+import type { IUser } from '@/entities/auth/auth/model'
 
 interface UserAvatarProfileProps {
   className?: string

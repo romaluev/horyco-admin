@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import logo from '@/shared/assets/logo.png'
 
-import ForgotPasswordForm from '@/entities/auth/ui/forgot-password-form'
+import ForgotPasswordForm from '@/entities/auth/auth/ui/forgot-password-form'
 
 import type { Metadata } from 'next'
 

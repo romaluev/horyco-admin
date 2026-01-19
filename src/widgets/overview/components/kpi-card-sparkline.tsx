@@ -25,7 +25,7 @@ import { KpiType, Trend } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import { Card, CardContent } from '@/shared/ui/base/card'
 
-import type { IKpiMetricValue } from '@/entities/dashboard'
+import type { IKpiMetricValue } from '@/entities/dashboard/dashboard'
 
 // Hardcoded colors for proper rendering (CSS variables use oklch, not hsl)
 const CHART_SUCCESS = '#22c55e'

@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 
 import { getAccessToken } from '@/shared/lib/token-manager'
-import { useAuthStore } from '@/entities/auth'
+import { useAuthStore } from '@/entities/auth/auth'
 
 import type { ReactNode } from 'react'
 

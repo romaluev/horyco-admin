@@ -47,11 +47,11 @@ import {
   useGetItemConversions,
   useDeleteInventoryItem,
   useRemoveUnitConversion,
-} from '@/entities/inventory-item'
+} from '@/entities/inventory/inventory-item'
 import {
   EditItemDialog,
   AddUnitConversionDialog,
-} from '@/features/inventory-item-workflow'
+} from '@/features/inventory/inventory-item-workflow'
 
 export default function InventoryItemDetailPage() {
   const params = useParams()

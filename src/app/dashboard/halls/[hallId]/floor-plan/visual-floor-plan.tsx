@@ -6,7 +6,7 @@ import { IconArmchair } from '@tabler/icons-react'
 
 import { cn } from '@/shared/lib/utils'
 
-import type { ITable } from '@/entities/table'
+import type { ITable } from '@/entities/organization/table'
 
 interface IVisualFloorPlanProps {
   tables: ITable[]

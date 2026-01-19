@@ -2,7 +2,7 @@
 
 import { KpiType } from '@/shared/api/graphql'
 
-import type { IKpiMetricValue } from '@/entities/dashboard'
+import type { IKpiMetricValue } from '@/entities/dashboard/dashboard'
 
 import { KpiCardSparkline, KpiCardSparklineSkeleton } from './kpi-card-sparkline'
 

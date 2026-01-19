@@ -12,7 +12,7 @@ import {
   type IDashboardWidget,
   type IPeriodInput,
   type WidgetType,
-} from '@/entities/dashboard'
+} from '@/entities/dashboard/dashboard'
 
 import { AnomalyDetectionWidget } from './anomaly-detection-widget'
 import { ChannelSplitWidget } from './channel-split-widget'

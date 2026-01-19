@@ -1,4 +1,4 @@
-import SignInViewPage from '@/entities/auth/ui/sign-in-view'
+import SignInViewPage from '@/entities/auth/auth/ui/sign-in-view'
 
 import type { Metadata } from 'next'
 

@@ -14,12 +14,12 @@ import {
   ActivateEmployeeButton,
   DeactivateEmployeeButton,
   DeleteEmployeeButton,
-} from '@/features/employee-actions'
-import { UpdateEmployeeDialog } from '@/features/employee-form'
-import { GeneratePinButton } from '@/features/pin-actions'
-import { GenerateInviteLinkButton } from '@/features/staff-invite'
+} from '@/features/organization/employee-actions'
+import { UpdateEmployeeDialog } from '@/features/organization/employee-form'
+import { GeneratePinButton } from '@/features/menu/pin-actions'
+import { GenerateInviteLinkButton } from '@/features/auth/staff-invite'
 
-import type { IEmployee } from '@/entities/employee'
+import type { IEmployee } from '@/entities/organization/employee'
 import type { JSX } from 'react'
 
 interface EmployeeTableActionsProps {

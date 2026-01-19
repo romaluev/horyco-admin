@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { Badge } from '@/shared/ui/base/badge'
 
-import type { SettingScope } from '@/entities/settings'
+import type { SettingScope } from '@/entities/organization/settings'
 
 interface OverrideBadgeProps {
   scope: SettingScope

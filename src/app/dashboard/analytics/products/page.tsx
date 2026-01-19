@@ -44,9 +44,9 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   ABC_CLASS_COLORS,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IProductAnalyticsItem } from '@/features/analytics'
+import type { IProductAnalyticsItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // TYPES

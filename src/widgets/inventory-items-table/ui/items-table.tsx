@@ -14,9 +14,9 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 
-import { DeleteItemButton } from '@/features/inventory-item-form'
+import { DeleteItemButton } from '@/features/inventory/inventory-item-form'
 
-import type { IInventoryItem } from '@/entities/inventory-item'
+import type { IInventoryItem } from '@/entities/inventory/inventory-item'
 
 interface IItemsTableProps {
   items: IInventoryItem[]

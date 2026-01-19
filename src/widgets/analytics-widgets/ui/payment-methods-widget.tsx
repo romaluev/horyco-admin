@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { IProportionsData } from '@/entities/dashboard'
+import type { IProportionsData } from '@/entities/dashboard/dashboard'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface PaymentMethodsWidgetProps {

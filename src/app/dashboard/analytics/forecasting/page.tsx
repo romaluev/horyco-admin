@@ -23,7 +23,7 @@ import {
   useCashFlow,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 // ============================================
 // MAIN COMPONENT

@@ -45,7 +45,7 @@ import {
   type ITimeSeriesData,
   type ChartType,
   type ChartVariant,
-} from '@/entities/dashboard'
+} from '@/entities/dashboard/dashboard'
 
 import type { ChartConfig } from '@/shared/ui/base/chart'
 

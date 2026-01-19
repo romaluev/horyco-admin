@@ -18,7 +18,7 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { ITimeSeriesData } from '@/entities/dashboard'
+import type { ITimeSeriesData } from '@/entities/dashboard/dashboard'
 
 interface IRevenueOverviewWidgetProps {
   data: ITimeSeriesData | null

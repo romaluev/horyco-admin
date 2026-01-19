@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { getFileById } from '@/entities/file/model/api'
+import { getFileById } from '@/shared/file/model/api'
 
 /**
  * Hook to resolve image URL from either imageUrls variants or file ID

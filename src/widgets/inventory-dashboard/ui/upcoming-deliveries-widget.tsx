@@ -16,7 +16,7 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/purchase-order'
+import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/inventory/purchase-order'
 
 interface IUpcomingDeliveriesWidgetProps {
   warehouseId?: number

@@ -30,11 +30,11 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetSuppliers } from '@/entities/supplier'
+import { useGetSuppliers } from '@/entities/inventory/supplier'
 import {
   CreateSupplierDialog,
   DeleteSupplierButton,
-} from '@/features/supplier-form'
+} from '@/features/inventory/supplier-form'
 
 type StatusFilter = 'all' | 'active' | 'inactive'
 

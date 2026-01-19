@@ -4,20 +4,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
-import { useDashboardWidgetStore } from '@/entities/dashboard-widget'
+import { useDashboardWidgetStore } from '@/entities/dashboard/dashboard-widget'
 import {
   AddWidgetButton,
   AddWidgetModal,
   EditModeToggle,
   useWidgetData,
   WidgetConfigModal,
-} from '@/features/dashboard-builder'
+} from '@/features/dashboard/dashboard-builder'
 
 import { DashboardGrid } from './dashboard-grid'
 import { WidgetRenderer } from './widget-renderer'
 
-import type { IDashboardAnalyticsResponse } from '@/entities/analytics'
-import type { WidgetLayoutItem } from '@/entities/dashboard-widget'
+import type { IDashboardAnalyticsResponse } from '@/entities/dashboard/analytics'
+import type { WidgetLayoutItem } from '@/entities/dashboard/dashboard-widget'
 
 interface CustomizableDashboardProps {
   analyticsData?: IDashboardAnalyticsResponse | null

@@ -12,7 +12,7 @@ import { ArrowLeft } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
 
-import { CreateProductForm } from '@/features/product-form'
+import { CreateProductForm } from '@/features/menu/product-form'
 
 import type { JSX } from 'react'
 

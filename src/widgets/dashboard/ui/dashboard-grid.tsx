@@ -13,9 +13,9 @@ import {
   GRID_COLS,
   GRID_MARGIN,
   GRID_ROW_HEIGHT,
-} from '@/entities/dashboard-widget'
+} from '@/entities/dashboard/dashboard-widget'
 
-import type { WidgetLayoutItem } from '@/entities/dashboard-widget'
+import type { WidgetLayoutItem } from '@/entities/dashboard/dashboard-widget'
 import type { ReactElement } from 'react'
 
 interface DashboardGridProps {

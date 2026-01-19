@@ -30,14 +30,14 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetWarehouses, useWarehouseStockSummary } from '@/entities/warehouse'
+import { useGetWarehouses, useWarehouseStockSummary } from '@/entities/inventory/warehouse'
 import {
   CreateWarehouseDialog,
   DeleteWarehouseButton,
   UpdateWarehouseDialog,
-} from '@/features/warehouse-form'
+} from '@/features/inventory/warehouse-form'
 
-import type { IWarehouse } from '@/entities/warehouse'
+import type { IWarehouse } from '@/entities/inventory/warehouse'
 
 function WarehouseItemsCell({ warehouseId }: { warehouseId: number }) {
   const { data: summary, isLoading } = useWarehouseStockSummary(warehouseId)

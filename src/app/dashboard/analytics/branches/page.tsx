@@ -31,7 +31,7 @@ import {
   useBranchBenchmark,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 
 // ============================================

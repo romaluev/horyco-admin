@@ -8,9 +8,9 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { useGetAllBranches } from '@/entities/branch'
+import { useGetAllBranches } from '@/entities/organization/branch'
 
-import type { AnalyticsScopeType } from '@/entities/analytics'
+import type { AnalyticsScopeType } from '@/entities/dashboard/analytics'
 
 interface IBranchSelectorProps {
   scope: AnalyticsScopeType

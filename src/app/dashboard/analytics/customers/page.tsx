@@ -31,13 +31,13 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   COHORT_RETENTION_COLORS,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 import type {
   ICustomerOverviewData,
   IRfmAnalysisData,
   ICohortAnalysisData,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 // ============================================
 // MAIN COMPONENT

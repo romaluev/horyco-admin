@@ -43,11 +43,11 @@ import { OnboardingLayout } from '@/shared/ui/onboarding'
 import {
   useSubmitBranchSetup,
   useStepValidation,
-} from '@/entities/onboarding'
+} from '@/entities/onboarding/onboarding'
 import {
   type BranchSetupFormValues,
   branchSetupSchema,
-} from '@/features/onboarding/model'
+} from '@/features/onboarding/onboarding/model'
 
 const DAYS_OF_WEEK = [
   { key: 'monday', label: 'Понедельник' },

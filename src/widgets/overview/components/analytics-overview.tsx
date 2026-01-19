@@ -18,9 +18,9 @@ import {
   useCanCustomizeDashboard,
   type IDashboardConfig,
   type IPeriodInput,
-} from '@/entities/dashboard'
+} from '@/entities/dashboard/dashboard'
 
-import { DashboardEditMode } from '@/features/dashboard-builder'
+import { DashboardEditMode } from '@/features/dashboard/dashboard-builder'
 import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
 import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'

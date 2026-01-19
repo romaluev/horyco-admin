@@ -29,9 +29,9 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   ALERT_SEVERITY_COLORS,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IAlertItem } from '@/features/analytics'
+import type { IAlertItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // MAIN COMPONENT

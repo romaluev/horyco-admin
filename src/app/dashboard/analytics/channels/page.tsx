@@ -37,9 +37,9 @@ import {
   useChannelsAnalytics,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IChannelItem } from '@/features/analytics'
+import type { IChannelItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // CONSTANTS

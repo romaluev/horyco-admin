@@ -27,7 +27,7 @@ import {
   useSkipStep,
   useStepValidation,
   type MenuSetupRequest,
-} from '@/entities/onboarding'
+} from '@/entities/onboarding/onboarding'
 
 // Local types for frontend menu management
 interface MenuProduct {

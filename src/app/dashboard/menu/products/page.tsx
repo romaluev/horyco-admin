@@ -12,13 +12,13 @@ import { useRouter } from 'next/navigation'
 
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetCategories } from '@/entities/category'
-import { useGetProducts } from '@/entities/product'
+import { useGetCategories } from '@/entities/menu/category'
+import { useGetProducts } from '@/entities/menu/product'
 
 import { ProductsContent } from './products-content'
 
 import type { ProductsPageState } from './products-content'
-import type { IProduct } from '@/entities/product'
+import type { IProduct } from '@/entities/menu/product'
 import type { JSX } from 'react'
 
 export default function ProductsPage(): JSX.Element {

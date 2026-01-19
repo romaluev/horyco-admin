@@ -24,9 +24,9 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 
-import { StockLevelIndicator } from '@/entities/stock'
+import { StockLevelIndicator } from '@/entities/inventory/stock'
 
-import type { IStock } from '@/entities/stock'
+import type { IStock } from '@/entities/inventory/stock'
 
 interface IStockTableProps {
   items: IStock[]

@@ -58,9 +58,9 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 
-import { useAuthStore } from '@/entities/auth/model/store'
-import { useGetAllBranches, useBranchStore } from '@/entities/branch'
-import { AnalyticsSidebarSection } from '@/features/analytics'
+import { useAuthStore } from '@/entities/auth/auth/model/store'
+import { useGetAllBranches, useBranchStore } from '@/entities/organization/branch'
+import { AnalyticsSidebarSection } from '@/features/dashboard/analytics'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'

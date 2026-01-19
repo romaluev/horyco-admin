@@ -5,7 +5,7 @@ import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
 
-import type { ITable } from '@/entities/table'
+import type { ITable } from '@/entities/organization/table'
 
 interface ITableListItemProps {
   table: ITable

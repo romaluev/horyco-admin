@@ -12,7 +12,7 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard-widget'
+import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface PieChartWidgetProps {

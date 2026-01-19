@@ -13,7 +13,7 @@ import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
 
-import type { ITimeSeriesData } from '@/entities/dashboard'
+import type { ITimeSeriesData } from '@/entities/dashboard/dashboard'
 
 interface ITransactionsSummaryWidgetProps {
   data: ITimeSeriesData | null

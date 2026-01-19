@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
-import type { IHeatmapData } from '@/entities/dashboard'
+import type { IHeatmapData } from '@/entities/dashboard/dashboard'
 
 interface HourlyBreakdownWidgetProps {
   data: IHeatmapData | null

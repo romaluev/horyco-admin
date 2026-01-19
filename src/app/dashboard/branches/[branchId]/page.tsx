@@ -13,9 +13,9 @@ import { Separator } from '@/shared/ui/base/separator'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetBranchById, BranchInfoDisplay } from '@/entities/branch'
-import { DeleteBranchDialog } from '@/features/branch-delete'
-import { UpdateBranchDialog } from '@/features/branch-form'
+import { useGetBranchById, BranchInfoDisplay } from '@/entities/organization/branch'
+import { DeleteBranchDialog } from '@/features/organization/branch-delete'
+import { UpdateBranchDialog } from '@/features/organization/branch-form'
 import { BranchStatisticsWidget } from '@/widgets/branch-statistics'
 
 export default function BranchDetailPage({

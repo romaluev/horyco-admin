@@ -7,7 +7,7 @@ import { AlertTriangle, Package, TrendingUp, XCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useStockSummary } from '@/entities/stock'
+import { useStockSummary } from '@/entities/inventory/stock'
 
 interface IInventoryStatsCardsProps {
   warehouseId?: number

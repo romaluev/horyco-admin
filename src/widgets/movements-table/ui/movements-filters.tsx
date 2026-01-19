@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { ItemSelector } from '@/entities/inventory-item'
+import { ItemSelector } from '@/entities/inventory/inventory-item'
 
 import type { DateRange } from 'react-day-picker'
 

@@ -22,8 +22,8 @@ import { Separator } from '@/shared/ui/base/separator'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useStockAlerts, useAcknowledgeAlert, useAcknowledgeAllAlerts } from '@/entities/stock'
-import { WarehouseSelector } from '@/entities/warehouse'
+import { useStockAlerts, useAcknowledgeAlert, useAcknowledgeAllAlerts } from '@/entities/inventory/stock'
+import { WarehouseSelector } from '@/entities/inventory/warehouse'
 
 const alertTypeOptions = [
   { value: 'all', label: 'Все типы' },

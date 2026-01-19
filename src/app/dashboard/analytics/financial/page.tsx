@@ -33,7 +33,7 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   MARGIN_CLASS_COLORS,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 
 // ============================================

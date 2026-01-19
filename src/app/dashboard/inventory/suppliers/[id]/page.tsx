@@ -62,12 +62,12 @@ import {
   useRemoveSupplierItem,
   useActivateSupplier,
   useDeactivateSupplier,
-} from '@/entities/supplier'
+} from '@/entities/inventory/supplier'
 import {
   EditSupplierDialog,
   AddSupplierItemDialog,
   EditSupplierItemDialog,
-} from '@/features/supplier-workflow'
+} from '@/features/inventory/supplier-workflow'
 
 export default function SupplierDetailPage() {
   const params = useParams()

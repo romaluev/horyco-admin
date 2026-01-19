@@ -50,13 +50,13 @@ import {
   WRITEOFF_REASON_LABELS,
   useDeleteWriteoff,
   useRemoveWriteoffItem,
-} from '@/entities/writeoff'
+} from '@/entities/inventory/writeoff'
 import {
   SubmitWriteoffDialog,
   ApproveWriteoffDialog,
   RejectWriteoffDialog,
   AddWriteoffItemDialog,
-} from '@/features/writeoff-workflow'
+} from '@/features/inventory/writeoff-workflow'
 
 export default function WriteoffDetailPage() {
   const params = useParams()

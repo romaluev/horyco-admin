@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { ITopProduct } from '@/entities/branch'
+import type { ITopProduct } from '@/entities/organization/branch'
 
 interface TopProductsListProps {
   products: ITopProduct[]

@@ -17,10 +17,10 @@ import {
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetStock } from '@/entities/stock'
-import { useGetWarehouses } from '@/entities/warehouse'
-import { categoryOptions } from '@/features/inventory-item-form'
-import { AdjustStockDialog } from '@/features/stock-adjustment'
+import { useGetStock } from '@/entities/inventory/stock'
+import { useGetWarehouses } from '@/entities/inventory/warehouse'
+import { categoryOptions } from '@/features/inventory/inventory-item-form'
+import { AdjustStockDialog } from '@/features/inventory/stock-adjustment'
 import {
   EmptyStockState,
   StockSummary,

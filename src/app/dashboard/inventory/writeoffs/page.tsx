@@ -41,8 +41,8 @@ import {
   WRITEOFF_REASON_LABELS,
   type WriteoffStatus,
   type WriteoffReason,
-} from '@/entities/writeoff'
-import { CreateWriteoffDialog } from '@/features/writeoff-form'
+} from '@/entities/inventory/writeoff'
+import { CreateWriteoffDialog } from '@/features/inventory/writeoff-form'
 
 import type { DateRange } from 'react-day-picker'
 

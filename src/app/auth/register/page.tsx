@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import logo from '@/shared/assets/logo.png'
 
-import { RegistrationFlow } from '@/features/auth'
+import { RegistrationFlow } from '@/features/auth/auth'
 
 import type { Metadata } from 'next'
 

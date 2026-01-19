@@ -34,14 +34,14 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetAllBranches } from '@/entities/branch'
-import { useGetProductBranchOverrides } from '@/entities/branch-override'
-import { useGetProducts } from '@/entities/product'
+import { useGetAllBranches } from '@/entities/organization/branch'
+import { useGetProductBranchOverrides } from '@/entities/menu/branch-override'
+import { useGetProducts } from '@/entities/menu/product'
 import {
   CreateBranchOverrideDialog,
   EditBranchOverrideDialog,
   DeleteBranchOverrideButton,
-} from '@/features/branch-override-form'
+} from '@/features/menu/branch-override-form'
 
 import type { JSX } from 'react'
 

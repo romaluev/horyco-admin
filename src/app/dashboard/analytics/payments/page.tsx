@@ -36,9 +36,9 @@ import {
   usePaymentMethodsAnalytics,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IPaymentMethodItem } from '@/features/analytics'
+import type { IPaymentMethodItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // CONSTANTS

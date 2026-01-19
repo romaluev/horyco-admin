@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/shared/ui/base/card'
 
-import { useGetOnboardingProgress } from '@/entities/onboarding'
+import { useGetOnboardingProgress } from '@/entities/onboarding/onboarding'
 
 import type { JSX } from 'react'
 

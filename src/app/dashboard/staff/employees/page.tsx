@@ -8,8 +8,8 @@ import {
   useGetEmployees,
   EmployeeTable,
   createEmployeeColumns,
-} from '@/entities/employee'
-import { CreateEmployeeDialog } from '@/features/employee-form'
+} from '@/entities/organization/employee'
+import { CreateEmployeeDialog } from '@/features/organization/employee-form'
 
 import { EmployeeTableActions } from '../components/employee-table-actions'
 

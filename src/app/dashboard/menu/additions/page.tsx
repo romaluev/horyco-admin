@@ -32,13 +32,13 @@ import {
   AdditionList,
   type IAddition,
   useGetAdditions,
-} from '@/entities/addition'
-import { useGetProducts } from '@/entities/product'
+} from '@/entities/menu/addition'
+import { useGetProducts } from '@/entities/menu/product'
 import {
   CreateAdditionDialog,
   DeleteAdditionButton,
   UpdateAdditionDialog,
-} from '@/features/addition-form'
+} from '@/features/menu/addition-form'
 
 import type { JSX } from 'react'
 

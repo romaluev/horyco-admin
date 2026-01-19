@@ -22,8 +22,8 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
-import { useViews } from '@/entities/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/view-builder'
+import { useViews } from '@/entities/dashboard/view'
+import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
 
 export function ViewsSidebarSection() {
   const pathname = usePathname()

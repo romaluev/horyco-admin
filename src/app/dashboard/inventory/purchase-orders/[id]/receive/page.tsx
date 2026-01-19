@@ -48,8 +48,8 @@ import { Textarea } from '@/shared/ui/base/textarea'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { usePurchaseOrderById, POStatusBadge } from '@/entities/purchase-order'
-import { useReceivePurchaseOrder } from '@/entities/purchase-order/model/mutations'
+import { usePurchaseOrderById, POStatusBadge } from '@/entities/inventory/purchase-order'
+import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
 
 const receiveSchema = z.object({
   receiveDate: z.date({ required_error: 'Укажите дату приёмки' }),

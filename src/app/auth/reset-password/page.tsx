@@ -5,7 +5,7 @@ import Image from 'next/image'
 import logo from '@/shared/assets/logo.png'
 import { BaseLoading } from '@/shared/ui'
 
-import ResetPasswordForm from '@/entities/auth/ui/reset-password-form'
+import ResetPasswordForm from '@/entities/auth/auth/ui/reset-password-form'
 
 import type { Metadata } from 'next'
 

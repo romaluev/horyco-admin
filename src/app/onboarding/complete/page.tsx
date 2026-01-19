@@ -28,7 +28,7 @@ import { OnboardingLayout } from '@/shared/ui/onboarding'
 import {
   useCompleteOnboarding,
   useStepValidation,
-} from '@/entities/onboarding'
+} from '@/entities/onboarding/onboarding'
 
 export default function CompletePage() {
   const router = useRouter()

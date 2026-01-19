@@ -29,7 +29,7 @@ import {
   useSalesOverview,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 export default function SalesOverviewPage() {
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.TODAY)

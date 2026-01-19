@@ -16,11 +16,11 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/writeoff'
+import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/inventory/writeoff'
 import {
   useGetInventoryCounts,
   COUNT_TYPE_LABELS,
-} from '@/entities/inventory-count'
+} from '@/entities/inventory/inventory-count'
 
 interface IPendingApprovalsWidgetProps {
   warehouseId?: number

@@ -16,7 +16,7 @@ import {
 } from '@/shared/ui/base/collapsible'
 import { TableCell, TableRow } from '@/shared/ui/base/table'
 
-import { MovementTypeBadge, type IStockMovement } from '@/entities/stock-movement'
+import { MovementTypeBadge, type IStockMovement } from '@/entities/inventory/stock-movement'
 
 interface MovementRowProps {
   movement: IStockMovement

@@ -7,12 +7,12 @@ import { Separator } from '@/shared/ui/base/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { BrandingSettingsForm } from '@/features/branding-settings-form'
-import { FeatureFlagsManager } from '@/features/feature-flags-manager'
-import { PaymentSettingsForm } from '@/features/payment-settings-form'
-import { SmsSettingsForm } from '@/features/sms-settings-form'
-import { SubscriptionPage } from '@/features/subscription-management'
+import { useBranchStore } from '@/entities/organization/branch'
+import { BrandingSettingsForm } from '@/features/organization/branding-settings-form'
+import { FeatureFlagsManager } from '@/features/organization/feature-flags-manager'
+import { PaymentSettingsForm } from '@/features/organization/payment-settings-form'
+import { SmsSettingsForm } from '@/features/organization/sms-settings-form'
+import { SubscriptionPage } from '@/features/organization/subscription-management'
 
 export default function SettingsPage() {
   const { selectedBranchId } = useBranchStore()

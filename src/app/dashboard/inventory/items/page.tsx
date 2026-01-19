@@ -17,8 +17,8 @@ import {
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetInventoryItems } from '@/entities/inventory-item'
-import { CreateItemDialog, categoryOptions } from '@/features/inventory-item-form'
+import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
+import { CreateItemDialog, categoryOptions } from '@/features/inventory/inventory-item-form'
 import {
   EmptyItemsState,
   ItemsTable,

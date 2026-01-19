@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
+import { useGetMovements, MovementTypeBadge } from '@/entities/inventory/stock-movement'
 
 interface IRecentMovementsWidgetProps {
   warehouseId?: number

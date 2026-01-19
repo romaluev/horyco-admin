@@ -41,17 +41,17 @@ import {
   useCountVarianceSummary,
   CountStatusBadge,
   CountTypeBadge,
-} from '@/entities/inventory-count'
+} from '@/entities/inventory/inventory-count'
 import {
   useUpdateCountItem,
   useCancelCount,
-} from '@/entities/inventory-count/model/mutations'
+} from '@/entities/inventory/inventory-count/model/mutations'
 import {
   CompleteCountDialog,
   ApproveCountDialog,
   RejectCountDialog,
   AddCountItemDialog,
-} from '@/features/inventory-count-workflow'
+} from '@/features/inventory/inventory-count-workflow'
 
 interface PageProps {
   params: Promise<{ id: string }>

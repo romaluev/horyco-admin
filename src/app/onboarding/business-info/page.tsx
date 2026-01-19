@@ -44,11 +44,11 @@ import { OnboardingLayout } from '@/shared/ui/onboarding'
 import {
   useSubmitBusinessInfo,
   useStepValidation,
-} from '@/entities/onboarding'
+} from '@/entities/onboarding/onboarding'
 import {
   type BusinessInfoFormValues,
   businessInfoSchema,
-} from '@/features/onboarding/model'
+} from '@/features/onboarding/onboarding/model'
 
 const uploadBusinessLogo = async (file: File): Promise<string> => {
   const response = await uploadFile({

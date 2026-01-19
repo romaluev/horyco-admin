@@ -27,9 +27,9 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useVisiblePages, PAGE_ACCESS_CONFIG } from '@/features/analytics'
+import { useVisiblePages, PAGE_ACCESS_CONFIG } from '@/features/dashboard/analytics'
 
-import type { AnalyticsPageCode } from '@/features/analytics'
+import type { AnalyticsPageCode } from '@/features/dashboard/analytics'
 
 // Page icons mapping
 const PAGE_ICONS: Record<AnalyticsPageCode, React.ComponentType<{ className?: string }>> = {

@@ -36,10 +36,10 @@ import {
   POStatusBadge,
   PO_STATUS_LABELS,
   type POStatus,
-} from '@/entities/purchase-order'
-import { SupplierSelector } from '@/entities/supplier'
-import { WarehouseSelector } from '@/entities/warehouse'
-import { CreatePODialog } from '@/features/purchase-order-form'
+} from '@/entities/inventory/purchase-order'
+import { SupplierSelector } from '@/entities/inventory/supplier'
+import { WarehouseSelector } from '@/entities/inventory/warehouse'
+import { CreatePODialog } from '@/features/inventory/purchase-order-form'
 
 export default function PurchaseOrdersPage() {
   const [search, setSearch] = useState('')

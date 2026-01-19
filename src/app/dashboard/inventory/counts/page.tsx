@@ -39,9 +39,9 @@ import {
   COUNT_TYPE_LABELS,
   type CountStatus,
   type CountType,
-} from '@/entities/inventory-count'
-import { WarehouseSelector } from '@/entities/warehouse'
-import { CreateCountDialog } from '@/features/inventory-count-form'
+} from '@/entities/inventory/inventory-count'
+import { WarehouseSelector } from '@/entities/inventory/warehouse'
+import { CreateCountDialog } from '@/features/inventory/inventory-count-form'
 
 export default function InventoryCountsPage() {
   const [search, setSearch] = useState('')

@@ -15,8 +15,8 @@ import {
   useReorderCategories,
   CategoryTree,
   CategoryList,
-} from '@/entities/category'
-import { CreateCategoryDialog } from '@/features/category-form'
+} from '@/entities/menu/category'
+import { CreateCategoryDialog } from '@/features/menu/category-form'
 
 import type { JSX } from 'react'
 

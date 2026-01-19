@@ -20,8 +20,8 @@ import {
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useStockSummary } from '@/entities/stock'
-import { useGetWarehouses } from '@/entities/warehouse'
+import { useStockSummary } from '@/entities/inventory/stock'
+import { useGetWarehouses } from '@/entities/inventory/warehouse'
 import {
   EmptyInventoryState,
   InventoryStatsCards,

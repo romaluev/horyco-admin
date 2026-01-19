@@ -37,9 +37,9 @@ import {
   ProductionStatusBadge,
   PRODUCTION_STATUS_LABELS,
   type ProductionStatus,
-} from '@/entities/production-order'
-import { WarehouseSelector } from '@/entities/warehouse'
-import { CreateProductionDialog } from '@/features/production-order-form'
+} from '@/entities/inventory/production-order'
+import { WarehouseSelector } from '@/entities/inventory/warehouse'
+import { CreateProductionDialog } from '@/features/inventory/production-order-form'
 
 export default function ProductionPage() {
   const [search, setSearch] = useState('')

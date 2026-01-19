@@ -50,13 +50,13 @@ import {
   useDeleteRecipe,
   useRemoveRecipeIngredient,
   useRecalculateRecipeCost,
-} from '@/entities/recipe'
+} from '@/entities/inventory/recipe'
 import {
   EditRecipeDialog,
   DuplicateRecipeDialog,
   AddIngredientDialog,
   EditIngredientDialog,
-} from '@/features/recipe-workflow'
+} from '@/features/inventory/recipe-workflow'
 
 export default function RecipeDetailPage() {
   const params = useParams()

@@ -17,8 +17,8 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
-import { useDeleteView, useViews } from '@/entities/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/view-builder'
+import { useDeleteView, useViews } from '@/entities/dashboard/view'
+import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
 
 export default function ViewsPage() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)

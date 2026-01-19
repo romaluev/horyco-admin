@@ -19,7 +19,7 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   HEATMAP_LEVEL_CONFIG,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 // ============================================
 // CONSTANTS

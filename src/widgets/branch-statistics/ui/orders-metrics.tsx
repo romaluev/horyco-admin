@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { IOrderStats } from '@/entities/branch'
+import type { IOrderStats } from '@/entities/organization/branch'
 
 interface OrdersMetricsProps {
   orders: IOrderStats

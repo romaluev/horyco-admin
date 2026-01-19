@@ -19,8 +19,8 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/base/dropdown-menu'
 
-import { useAuthStore } from '@/entities/auth/model/store'
-import { getFileById } from '@/entities/file/model/api'
+import { useAuthStore } from '@/entities/auth/auth/model/store'
+import { getFileById } from '@/shared/file/model/api'
 
 export function UserNav() {
   const { user, logout } = useAuthStore()

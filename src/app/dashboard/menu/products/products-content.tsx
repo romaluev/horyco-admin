@@ -1,15 +1,15 @@
 'use client'
 
-import { ProductsDataTable } from '@/entities/product/ui/products-data-table'
-import { ProductsGridView } from '@/entities/product/ui/products-grid-view'
-import { ProductsListSkeleton } from '@/entities/product/ui/products-list-skeleton'
+import { ProductsDataTable } from '@/entities/menu/product/ui/products-data-table'
+import { ProductsGridView } from '@/entities/menu/product/ui/products-grid-view'
+import { ProductsListSkeleton } from '@/entities/menu/product/ui/products-list-skeleton'
 
 import { ProductsFilters } from './products-filters'
 import { ProductsHeader } from './products-header'
 import { ProductsStats } from './products-stats'
 
 import type { Category } from './products-filters'
-import type { IProduct } from '@/entities/product'
+import type { IProduct } from '@/entities/menu/product'
 import type { JSX } from 'react'
 
 export type { Category } from './products-filters'

@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { useGetAllBranches, type IBranch } from '@/entities/branch'
+import { useGetAllBranches, type IBranch } from '@/entities/organization/branch'
 
 interface BranchSelectorProps {
   value?: number

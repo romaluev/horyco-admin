@@ -47,12 +47,12 @@ import {
   useProductionOrderById,
   ProductionStatusBadge,
   useDeleteProductionOrder,
-} from '@/entities/production-order'
+} from '@/entities/inventory/production-order'
 import {
   StartProductionDialog,
   CompleteProductionDialog,
   CancelProductionDialog,
-} from '@/features/production-workflow'
+} from '@/features/inventory/production-workflow'
 
 export default function ProductionDetailPage() {
   const params = useParams()

@@ -26,10 +26,10 @@ import {
   CardTitle,
 } from '@/shared/ui/base/card'
 
-import { useGetAdditions } from '@/entities/addition'
-import { useGetCategories } from '@/entities/category'
-import { useGetModifiers } from '@/entities/modifier'
-import { useGetProducts } from '@/entities/product'
+import { useGetAdditions } from '@/entities/menu/addition'
+import { useGetCategories } from '@/entities/menu/category'
+import { useGetModifiers } from '@/entities/menu/modifier'
+import { useGetProducts } from '@/entities/menu/product'
 
 import type { JSX } from 'react'
 

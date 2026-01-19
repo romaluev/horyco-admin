@@ -31,8 +31,8 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetRecipes, RecipeTypeBadge, type RecipeType, type IRecipe } from '@/entities/recipe'
-import { CreateRecipeDialog } from '@/features/recipe-form'
+import { useGetRecipes, RecipeTypeBadge, type RecipeType, type IRecipe } from '@/entities/inventory/recipe'
+import { CreateRecipeDialog } from '@/features/inventory/recipe-form'
 
 type StatusFilter = 'all' | 'active' | 'inactive'
 type LinkedFilter = 'all' | 'product' | 'modifier' | 'semi-finished' | 'unlinked'

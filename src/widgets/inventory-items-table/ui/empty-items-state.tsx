@@ -4,7 +4,7 @@ import { IconPackage, IconUpload } from '@tabler/icons-react'
 
 import { Button } from '@/shared/ui/base/button'
 
-import { CreateItemDialog } from '@/features/inventory-item-form'
+import { CreateItemDialog } from '@/features/inventory/inventory-item-form'
 
 interface IEmptyItemsStateProps {
   onImportCSV: () => void

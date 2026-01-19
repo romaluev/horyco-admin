@@ -9,7 +9,7 @@ import { Button } from '@/shared/ui/base/button'
 import { Progress } from '@/shared/ui/base/progress'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useLowStock } from '@/entities/stock'
+import { useLowStock } from '@/entities/inventory/stock'
 
 interface ILowStockItemsListProps {
   warehouseId?: number

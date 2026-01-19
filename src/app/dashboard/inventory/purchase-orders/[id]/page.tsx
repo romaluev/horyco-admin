@@ -33,12 +33,12 @@ import {
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { usePurchaseOrderById, POStatusBadge } from '@/entities/purchase-order'
+import { usePurchaseOrderById, POStatusBadge } from '@/entities/inventory/purchase-order'
 import {
   useSendPurchaseOrder,
   useDeletePurchaseOrder,
-} from '@/entities/purchase-order/model/mutations'
-import { SendPODialog , ReceivePODialog , CancelPODialog , AddPOItemDialog } from '@/features/purchase-order-workflow'
+} from '@/entities/inventory/purchase-order/model/mutations'
+import { SendPODialog , ReceivePODialog , CancelPODialog , AddPOItemDialog } from '@/features/inventory/purchase-order-workflow'
 
 interface PageProps {
   params: Promise<{ id: string }>

@@ -13,8 +13,8 @@ import { Separator } from '@/shared/ui/base/separator'
 import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import BranchListingPage from '@/entities/branch/ui/branch-listing'
-import { CreateBranchDialog } from '@/features/branch-form'
+import BranchListingPage from '@/entities/organization/branch/ui/branch-listing'
+import { CreateBranchDialog } from '@/features/organization/branch-form'
 
 export default function Page() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)

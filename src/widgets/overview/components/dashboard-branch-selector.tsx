@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { useGetAllBranches } from '@/entities/branch'
+import { useGetAllBranches } from '@/entities/organization/branch'
 
 interface IDashboardBranchSelectorProps {
   selectedBranchId: number | undefined

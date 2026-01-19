@@ -42,9 +42,9 @@ import {
   useStaffAnalytics,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IStaffAnalyticsItem } from '@/features/analytics'
+import type { IStaffAnalyticsItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // TYPES

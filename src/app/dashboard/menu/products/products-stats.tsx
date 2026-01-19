@@ -1,4 +1,4 @@
-import type { IProduct } from '@/entities/product'
+import type { IProduct } from '@/entities/menu/product'
 
 interface ProductsStatsProps {
   total: number

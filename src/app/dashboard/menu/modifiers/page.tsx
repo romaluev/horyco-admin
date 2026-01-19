@@ -42,13 +42,13 @@ import {
   useDeleteModifier,
   type IModifierGroup,
   type IModifier,
-} from '@/entities/modifier-group'
+} from '@/entities/menu/modifier-group'
 import {
   CreateModifierGroupDialog,
   CreateModifierDialog,
   UpdateModifierGroupDialog,
   UpdateModifierDialog,
-} from '@/features/modifier-group-form'
+} from '@/features/menu/modifier-group-form'
 
 import type { JSX } from 'react'
 

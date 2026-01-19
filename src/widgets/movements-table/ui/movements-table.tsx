@@ -13,7 +13,7 @@ import { EmptyMovementsState } from './empty-movements-state'
 import { MovementRow } from './movement-row'
 import { MovementsTableSkeleton } from './movements-table-skeleton'
 
-import type { IStockMovement } from '@/entities/stock-movement'
+import type { IStockMovement } from '@/entities/inventory/stock-movement'
 
 interface IMovementsTableProps {
   isLoading: boolean

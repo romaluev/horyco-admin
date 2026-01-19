@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { usePathname } from 'next/navigation'
 
-import { useViewBuilderStore } from '@/features/view-builder'
+import { useViewBuilderStore } from '@/features/dashboard/view-builder'
 
 interface BreadcrumbItem {
   title: string

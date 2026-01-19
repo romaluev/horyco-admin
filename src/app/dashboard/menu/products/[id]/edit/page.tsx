@@ -15,8 +15,8 @@ import { ArrowLeft } from 'lucide-react'
 import { BaseLoading } from '@/shared/ui'
 import { Button } from '@/shared/ui/base/button'
 
-import { useGetProductById } from '@/entities/product'
-import { UpdateProductForm } from '@/features/product-form'
+import { useGetProductById } from '@/entities/menu/product'
+import { UpdateProductForm } from '@/features/menu/product-form'
 
 import type { JSX } from 'react'
 

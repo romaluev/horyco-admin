@@ -11,8 +11,8 @@ import { Heading } from '@/shared/ui/base/heading'
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetMovements } from '@/entities/stock-movement'
-import { useGetWarehouses } from '@/entities/warehouse'
+import { useGetMovements } from '@/entities/inventory/stock-movement'
+import { useGetWarehouses } from '@/entities/inventory/warehouse'
 import {
   MovementsFilters,
   MovementsSummary,
