@@ -18,6 +18,9 @@ const META_THEME_COLORS = {
 export const metadata: Metadata = {
   title: 'Horyco Admin',
   description: 'Horyco Admin - Панель для управление ресторанами',
+  icons: {
+    icon: '/favicon.png'
+  }
 }
 
 export const viewport: Viewport = {

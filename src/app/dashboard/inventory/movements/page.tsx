@@ -1,162 +1,119 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { format, subDays } from 'date-fns'
+import { Download } from 'lucide-react'
 
+
+import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
 import { Separator } from '@/shared/ui/base/separator'
-import { Skeleton } from '@/shared/ui/base/skeleton'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/base/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
-import { MOVEMENT_TYPE_LABELS, type MovementType } from '@/shared/types/inventory'
 
-import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
+import { useGetMovements } from '@/entities/stock-movement'
 import { useGetWarehouses } from '@/entities/warehouse'
+import {
+  MovementsFilters,
+  MovementsSummary,
+  MovementsTable,
+} from '@/widgets/movements-table'
+
+import type { MovementType } from '@/shared/types/inventory'
+import type { DateRange } from 'react-day-picker'
+
+const DEFAULT_DAYS_BACK = 30
 
 export default function MovementsPage() {
   const [warehouseId, setWarehouseId] = useState<number | undefined>()
+  const [itemId, setItemId] = useState<number | undefined>()
   const [movementType, setMovementType] = useState<MovementType | ''>('')
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), DEFAULT_DAYS_BACK),
+    to: new Date(),
+  })
+  const [expandedId, setExpandedId] = useState<number | null>(null)
 
   const { data: warehouses } = useGetWarehouses()
   const { data: movementsData, isLoading } = useGetMovements({
     warehouseId,
+    itemId,
     type: movementType || undefined,
+    dateFrom: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+    dateTo: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
   })
 
   const movements = movementsData?.data ?? []
+
+  const summary = useMemo(() => {
+    const result = { purchases: 0, sales: 0, writeoffs: 0, adjustments: 0 }
+    movements.forEach((m) => {
+      const cost = Math.abs(m.totalCost)
+      if (m.type === 'PURCHASE_RECEIVE') result.purchases += cost
+      else if (m.type === 'SALE_DEDUCTION') result.sales += cost
+      else if (m.type === 'WRITEOFF') result.writeoffs += cost
+      else if (m.type === 'MANUAL_ADJUSTMENT' || m.type === 'COUNT_ADJUSTMENT') {
+        result.adjustments += cost
+      }
+    })
+    return result
+  }, [movements])
+
+  const handleClearFilters = () => {
+    setItemId(undefined)
+    setMovementType('')
+    setDateRange({ from: subDays(new Date(), DEFAULT_DAYS_BACK), to: new Date() })
+  }
+
+  const hasActiveFilters = Boolean(itemId || movementType)
 
   return (
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
-          <Heading
-            title="Движения товаров"
-            description="История всех операций с товарами на складах"
-          />
+          <Heading title="История движений" description="Просмотр истории всех движений склада" />
+          <Button variant="outline" size="sm" disabled>
+            <Download className="mr-2 h-4 w-4" />
+            Экспорт
+          </Button>
         </div>
         <Separator />
 
-        <div className="flex flex-wrap gap-4">
-          <Select
-            value={warehouseId ? String(warehouseId) : 'all'}
-            onValueChange={(value) =>
-              setWarehouseId(value === 'all' ? undefined : Number(value))
-            }
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все склады" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Все склады</SelectItem>
-              {warehouses?.map((warehouse) => (
-                <SelectItem key={warehouse.id} value={String(warehouse.id)}>
-                  {warehouse.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={movementType} onValueChange={(val) => setMovementType(val === 'all' ? '' : val as MovementType)}>
-            <SelectTrigger className="w-[220px]">
-              <SelectValue placeholder="Все типы операций" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Все типы операций</SelectItem>
-              {Object.entries(MOVEMENT_TYPE_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <MovementsFilters
+          warehouseId={warehouseId}
+          onWarehouseChange={setWarehouseId}
+          warehouses={warehouses ?? []}
+          itemId={itemId}
+          onItemChange={setItemId}
+          movementType={movementType}
+          onMovementTypeChange={setMovementType}
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+        />
 
-        {isLoading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Дата</TableHead>
-                  <TableHead>Товар</TableHead>
-                  <TableHead>Склад</TableHead>
-                  <TableHead>Тип операции</TableHead>
-                  <TableHead className="text-right">Количество</TableHead>
-                  <TableHead className="text-right">До</TableHead>
-                  <TableHead className="text-right">После</TableHead>
-                  <TableHead>Документ</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {!warehouseId ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      Выберите склад для просмотра движений
-                    </TableCell>
-                  </TableRow>
-                ) : movements.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
-                      Движения не найдены
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  movements.map((movement) => (
-                    <TableRow key={movement.id}>
-                      <TableCell className="text-muted-foreground">
-                        {format(new Date(movement.createdAt), 'dd MMM yyyy HH:mm', {
-                          locale: ru,
-                        })}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {movement.item?.name}
-                      </TableCell>
-                      <TableCell>{movement.warehouse?.name}</TableCell>
-                      <TableCell>
-                        <MovementTypeBadge type={movement.type} />
-                      </TableCell>
-                      <TableCell
-                        className={`text-right font-medium ${
-                          movement.quantity > 0 ? 'text-emerald-600 dark:text-emerald-500' : 'text-destructive'
-                        }`}
-                      >
-                        {movement.quantity > 0 ? '+' : ''}
-                        {movement.quantity} {movement.item?.unit}
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground">
-                        {movement.previousQuantity}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {movement.newQuantity}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {movement.referenceNumber || '—'}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+        {warehouseId && movements.length > 0 && (
+          <MovementsSummary
+            totalPurchases={summary.purchases}
+            totalSales={summary.sales}
+            totalWriteoffs={summary.writeoffs}
+            totalAdjustments={summary.adjustments}
+          />
+        )}
+
+        <MovementsTable
+          isLoading={isLoading}
+          warehouseId={warehouseId}
+          movements={movements}
+          expandedId={expandedId}
+          onToggleExpanded={setExpandedId}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={handleClearFilters}
+        />
+
+        {warehouseId && movements.length > 0 && movementsData?.meta && (
+          <div className="text-right text-sm text-muted-foreground">
+            Страница {movementsData.meta.page} из {movementsData.meta.totalPages} (всего{' '}
+            {movementsData.meta.total} записей)
           </div>
         )}
       </div>

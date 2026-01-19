@@ -1,13 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IconPlus } from '@tabler/icons-react'
+import { IconPlus, IconAlertTriangle, IconCheck } from '@tabler/icons-react'
 import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
+import { formatCurrency } from '@/shared/lib/format'
+import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import {
   Dialog,
   DialogContent,
@@ -34,7 +37,8 @@ import {
 import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useCreateProductionOrder } from '@/entities/production-order'
-import { useGetRecipes } from '@/entities/recipe'
+import { useGetRecipes, useRecipeById } from '@/entities/recipe'
+import { useGetStock } from '@/entities/stock'
 import { WarehouseSelector } from '@/entities/warehouse'
 
 import { productionOrderFormSchema } from '../model/schema'
@@ -56,6 +60,42 @@ export function CreateProductionDialog() {
       notes: '',
     },
   })
+
+  // Watch form values for ingredients preview
+  const watchedRecipeId = useWatch({ control: form.control, name: 'recipeId' })
+  const watchedWarehouseId = useWatch({ control: form.control, name: 'warehouseId' })
+  const watchedQuantity = useWatch({ control: form.control, name: 'quantityPlanned' })
+
+  // Fetch recipe details when selected
+  const { data: selectedRecipe } = useRecipeById(watchedRecipeId ?? 0)
+
+  // Fetch stock for the selected warehouse
+  const { data: stockData } = useGetStock({ warehouseId: watchedWarehouseId })
+
+  // Calculate required ingredients with availability
+  const ingredientsWithAvailability = useMemo(() => {
+    if (!selectedRecipe?.ingredients || !watchedQuantity) return []
+
+    const outputQty = selectedRecipe.outputQuantity || 1
+    const multiplier = watchedQuantity / outputQty
+    const stockItems = stockData?.data ?? []
+
+    return selectedRecipe.ingredients.map((ing) => {
+      const requiredQty = ing.quantity * ing.wasteFactor * multiplier
+      const stockItem = stockItems.find((s) => s.itemId === ing.itemId)
+      const availableQty = stockItem?.quantity ?? 0
+      const isSufficient = availableQty >= requiredQty
+
+      return {
+        ...ing,
+        requiredQty,
+        availableQty,
+        isSufficient,
+      }
+    })
+  }, [selectedRecipe, watchedQuantity, stockData])
+
+  const hasInsufficientIngredients = ingredientsWithAvailability.some((i) => !i.isSufficient)
 
   const onSubmit = (data: ProductionOrderFormValues) => {
     const cleanData = Object.fromEntries(
@@ -184,6 +224,68 @@ export function CreateProductionDialog() {
                 </FormItem>
               )}
             />
+
+            {/* Required Ingredients Preview */}
+            {selectedRecipe && watchedWarehouseId && ingredientsWithAvailability.length > 0 && (
+              <Card>
+                <CardHeader className="py-3">
+                  <CardTitle className="text-sm font-medium">
+                    Необходимые ингредиенты (для {watchedQuantity} {selectedRecipe.outputUnit || 'шт'})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="py-0 pb-3">
+                  {hasInsufficientIngredients && (
+                    <Alert variant="destructive" className="mb-3">
+                      <IconAlertTriangle className="h-4 w-4" />
+                      <AlertDescription>
+                        Недостаточно ингредиентов на складе для производства
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <div className="space-y-2">
+                    {ingredientsWithAvailability.map((ing) => (
+                      <div
+                        key={ing.itemId}
+                        className="flex items-center justify-between text-sm border-b last:border-0 pb-2 last:pb-0"
+                      >
+                        <div className="flex-1">
+                          <span className="font-medium">{ing.itemName}</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-right">
+                          <div className="w-24">
+                            <span className="text-muted-foreground">Нужно: </span>
+                            <span>{ing.requiredQty.toFixed(2)}</span>
+                          </div>
+                          <div className="w-24">
+                            <span className="text-muted-foreground">Есть: </span>
+                            <span className={!ing.isSufficient ? 'text-destructive font-medium' : ''}>
+                              {ing.availableQty.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="w-6">
+                            {ing.isSufficient ? (
+                              <IconCheck className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <IconAlertTriangle className="h-4 w-4 text-destructive" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {selectedRecipe.calculatedCost > 0 && (
+                    <div className="mt-3 pt-3 border-t text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Расч. себестоимость:</span>
+                        <span className="font-medium">
+                          {formatCurrency((selectedRecipe.calculatedCost / selectedRecipe.outputQuantity) * watchedQuantity)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             <div className="flex gap-2 pt-4">
               <Button

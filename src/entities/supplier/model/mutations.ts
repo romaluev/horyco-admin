@@ -11,6 +11,31 @@ import type {
   IUpdateSupplierItemDto,
 } from './types'
 
+interface ApiError {
+  message?: string
+  response?: {
+    data?: {
+      error?: {
+        message?: string
+        details?: {
+          originalError?: string
+        }
+      }
+    }
+  }
+}
+
+const getDeleteErrorMessage = (error: ApiError): string => {
+  const apiMessage = error.response?.data?.error?.message
+  const originalError = error.response?.data?.error?.details?.originalError
+
+  if (originalError?.includes('Cannot delete supplier with existing purchase orders') ||
+      apiMessage?.includes('Cannot delete supplier')) {
+    return 'Нельзя удалить поставщика с заказами. Деактивируйте его вместо удаления.'
+  }
+  return apiMessage || error.message || 'Ошибка при удалении поставщика'
+}
+
 /**
  * Create supplier mutation
  */
@@ -61,8 +86,8 @@ export const useDeleteSupplier = () => {
       queryClient.invalidateQueries({ queryKey: supplierKeys.lists() })
       toast.success('Поставщик удален')
     },
-    onError: () => {
-      toast.error('Ошибка при удалении поставщика')
+    onError: (error: ApiError) => {
+      toast.error(getDeleteErrorMessage(error))
     },
   })
 }

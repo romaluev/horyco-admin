@@ -98,4 +98,15 @@ export const stockApi = {
     )
     return response.data.data
   },
+
+  /**
+   * POST /admin/inventory/alerts/:warehouseId/acknowledge-all
+   * Acknowledge all alerts for a warehouse
+   */
+  async acknowledgeAllAlerts(warehouseId: number): Promise<{ acknowledged: number }> {
+    const response = await api.post<{ success: boolean; data: { acknowledged: number } }>(
+      `/admin/inventory/alerts/${warehouseId}/acknowledge-all`
+    )
+    return response.data.data
+  },
 }

@@ -1,10 +1,40 @@
 'use client'
 
 import { use, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ArrowLeft, CheckCircle, XCircle, Loader2, Plus } from 'lucide-react'
+
+
+import { formatCurrency } from '@/shared/lib/format'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Input } from '@/shared/ui/base/input'
+import { Progress } from '@/shared/ui/base/progress'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
+import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useInventoryCountById,
@@ -16,34 +46,6 @@ import {
   useUpdateCountItem,
   useCancelCount,
 } from '@/entities/inventory-count/model/mutations'
-
-import { formatCurrency } from '@/shared/lib/format'
-import { Button } from '@/shared/ui/base/button'
-import { Separator } from '@/shared/ui/base/separator'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Input } from '@/shared/ui/base/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/shared/ui/base/alert-dialog'
-import { Progress } from '@/shared/ui/base/progress'
-import PageContainer from '@/shared/ui/layout/page-container'
-import BaseLoading from '@/shared/ui/base-loading'
-
 import {
   CompleteCountDialog,
   ApproveCountDialog,

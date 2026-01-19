@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+
 import {
   IconArrowLeft,
   IconPlus,
@@ -14,21 +13,10 @@ import {
   IconTrash,
   IconEdit,
 } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { Heading } from '@/shared/ui/base/heading'
-import { Separator } from '@/shared/ui/base/separator'
-import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,8 +28,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useRecipeById,
@@ -50,7 +51,6 @@ import {
   useRemoveRecipeIngredient,
   useRecalculateRecipeCost,
 } from '@/entities/recipe'
-
 import {
   EditRecipeDialog,
   DuplicateRecipeDialog,
@@ -292,6 +292,60 @@ export default function RecipeDetailPage() {
           </CardContent>
         </Card>
 
+        {/* Product Comparison (if linked to product) */}
+        {recipe.productId && recipe.productPrice && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Сравнение с ценой продажи</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Цена продажи</span>
+                <span className="font-medium">{formatCurrency(recipe.productPrice)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Себестоимость</span>
+                <span className="font-medium">
+                  {formatCurrency(costPerUnit)}{' '}
+                  <span className="text-muted-foreground">
+                    ({((costPerUnit / recipe.productPrice) * 100).toFixed(1)}%)
+                  </span>
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Маржа</span>
+                <span
+                  className={`font-bold ${
+                    recipe.marginPercent && recipe.marginPercent >= 30
+                      ? 'text-emerald-600 dark:text-emerald-500'
+                      : recipe.marginPercent && recipe.marginPercent >= 20
+                        ? 'text-yellow-600 dark:text-yellow-500'
+                        : 'text-destructive'
+                  }`}
+                >
+                  {formatCurrency(recipe.productPrice - costPerUnit)} (
+                  {recipe.marginPercent?.toFixed(1) ?? '—'}%)
+                </span>
+              </div>
+              {recipe.marginPercent !== undefined &&
+                recipe.marginPercent !== null &&
+                recipe.marginPercent < 30 && (
+                  <div
+                    className={`rounded-md p-3 text-sm ${
+                      recipe.marginPercent < 20
+                        ? 'bg-destructive/10 text-destructive'
+                        : 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-500'
+                    }`}
+                  >
+                    {recipe.marginPercent < 20
+                      ? 'Критически низкая маржа (< 20%)'
+                      : 'Низкая маржа (< 30%)'}
+                  </div>
+                )}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Ingredients Table */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -347,7 +401,7 @@ export default function RecipeDetailPage() {
                         {ingredient.quantity} {ingredient.unit}
                       </TableCell>
                       <TableCell className="text-right">
-                        {((ingredient.wasteFactor - 1) * 100).toFixed(0)}%
+                        {(ingredient.wasteFactor * 100).toFixed(0)}%
                       </TableCell>
                       <TableCell className="text-right">
                         {formatCurrency(ingredient.unitCost)}

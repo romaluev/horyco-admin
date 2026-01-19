@@ -110,6 +110,12 @@ export const getNavItems = (): NavItem[] => [
         permission: PERMISSIONS.INVENTORY_VIEW,
       },
       {
+        title: 'Склады',
+        url: '/dashboard/inventory/warehouses',
+        icon: 'warehouse',
+        permission: PERMISSIONS.INVENTORY_VIEW,
+      },
+      {
         title: 'Товары',
         url: '/dashboard/inventory/items',
         icon: 'package',
@@ -161,6 +167,12 @@ export const getNavItems = (): NavItem[] => [
         title: 'Производство',
         url: '/dashboard/inventory/production',
         icon: 'buildingFactory',
+        permission: PERMISSIONS.INVENTORY_VIEW,
+      },
+      {
+        title: 'Уведомления',
+        url: '/dashboard/inventory/alerts',
+        icon: 'bell',
         permission: PERMISSIONS.INVENTORY_VIEW,
       },
     ],

@@ -159,7 +159,7 @@ function NavItemWithSub({
                     key={subItem.title}
                     href={subItem.url}
                     className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
-                      pathname === subItem.url
+                      pathname === subItem.url || pathname.startsWith(subItem.url + '/')
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                         : ''
                     }`}
@@ -197,7 +197,7 @@ function NavItemWithSub({
                   <SidebarMenuSubButton
                     className="!p-3"
                     asChild
-                    isActive={pathname === subItem.url}
+                    isActive={pathname === subItem.url || pathname.startsWith(subItem.url + '/')}
                   >
                     <Link
                       href={subItem.url}

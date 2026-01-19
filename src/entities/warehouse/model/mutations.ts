@@ -6,6 +6,29 @@ import { warehouseKeys } from './query-keys'
 
 import type { ICreateWarehouseDto, IUpdateWarehouseDto } from './types'
 
+interface ApiError {
+  message?: string
+  response?: {
+    data?: {
+      error?: {
+        message?: string
+        code?: string
+      }
+    }
+  }
+}
+
+const getErrorMessage = (error: ApiError, defaultMsg: string): string => {
+  const apiMessage = error.response?.data?.error?.message || error.message
+  if (apiMessage?.includes('already exists for branch')) {
+    return 'Склад для этого филиала уже существует'
+  }
+  if (apiMessage?.includes('Cannot delete warehouse with existing stock')) {
+    return 'Нельзя удалить склад с остатками. Сначала перенесите или спишите товары.'
+  }
+  return apiMessage || defaultMsg
+}
+
 /**
  * Create a new warehouse
  */
@@ -19,8 +42,8 @@ export const useCreateWarehouse = () => {
       queryClient.invalidateQueries({ queryKey: warehouseKeys.lists() })
       toast.success('Склад успешно создан')
     },
-    onError: (error: Error) => {
-      toast.error(`Ошибка при создании склада: ${error.message}`)
+    onError: (error: ApiError) => {
+      toast.error(getErrorMessage(error, 'Ошибка при создании склада'))
     },
   })
 }
@@ -57,8 +80,8 @@ export const useDeleteWarehouse = () => {
       queryClient.invalidateQueries({ queryKey: warehouseKeys.lists() })
       toast.success('Склад успешно удален')
     },
-    onError: (error: Error) => {
-      toast.error(`Ошибка при удалении склада: ${error.message}`)
+    onError: (error: ApiError) => {
+      toast.error(getErrorMessage(error, 'Ошибка при удалении склада'))
     },
   })
 }

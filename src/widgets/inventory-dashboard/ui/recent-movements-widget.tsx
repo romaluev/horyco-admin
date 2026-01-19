@@ -39,7 +39,7 @@ export function RecentMovementsWidget({
           <Link href="/dashboard/inventory/movements">Все</Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {!warehouseId ? (
           <p className="text-center text-sm text-muted-foreground py-4">
             Выберите склад для просмотра

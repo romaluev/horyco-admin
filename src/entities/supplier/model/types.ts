@@ -19,7 +19,9 @@ export interface ISupplier {
   leadTimeDays: number
   minimumOrder: number | null
   isActive: boolean
+  isPreferred?: boolean
   notes: string | null
+  itemCount: number
   totalOrders: number
   totalAmount: number
   lastOrderAt: string | null

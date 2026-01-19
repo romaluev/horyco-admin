@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+
 import {
   IconArrowLeft,
   IconPlus,
@@ -18,21 +17,10 @@ import {
   IconMapPin,
   IconBuilding,
 } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { Heading } from '@/shared/ui/base/heading'
-import { Separator } from '@/shared/ui/base/separator'
-import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,14 +32,27 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/shared/ui/base/tabs'
-import PageContainer from '@/shared/ui/layout/page-container'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useSupplierById,
@@ -62,7 +63,6 @@ import {
   useActivateSupplier,
   useDeactivateSupplier,
 } from '@/entities/supplier'
-
 import {
   EditSupplierDialog,
   AddSupplierItemDialog,

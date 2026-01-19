@@ -25,8 +25,10 @@ export interface IStock {
     name: string
     sku: string
     unit: string
+    category?: string
     minStockLevel?: number
     maxStockLevel?: number
+    reorderPoint?: number
   }
 }
 
@@ -85,6 +87,8 @@ export interface IAdjustStockDto {
 export interface IGetStockParams {
   warehouseId?: number
   itemId?: number
+  category?: string
+  status?: 'all' | 'low' | 'out'
   search?: string
   page?: number
   size?: number
@@ -109,6 +113,12 @@ export interface IStockListResponse {
     page: number
     size: number
     totalPages: number
+  }
+  summary?: {
+    totalItems: number
+    lowStockCount: number
+    outOfStockCount: number
+    totalValue: number
   }
 }
 

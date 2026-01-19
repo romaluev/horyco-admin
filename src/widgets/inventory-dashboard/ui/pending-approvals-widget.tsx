@@ -89,7 +89,7 @@ export function PendingApprovalsWidget({
           <CardDescription>Списания и инвентаризации</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -131,10 +131,10 @@ export function PendingApprovalsWidget({
                 </div>
                 <div className="text-right">
                   <Badge
-                    variant={item.value >= 0 ? 'outline' : 'destructive'}
+                    variant={(item.value ?? 0) >= 0 ? 'outline' : 'destructive'}
                     className="mb-1"
                   >
-                    {item.value.toLocaleString('ru-RU')} сум
+                    {(item.value ?? 0).toLocaleString('ru-RU')} сум
                   </Badge>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
                     <Clock className="h-3 w-3" />

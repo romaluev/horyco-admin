@@ -92,16 +92,6 @@ Every completed task must have:
 - ❌ Any MCP-based browser automation
 
 **ONLY USE** `agent-browser` CLI via Bash tool:
-```bash
-# This is the ONLY way to do browser testing
-agent-browser open "http://localhost:3000"
-agent-browser snapshot -i
-agent-browser click @e1
-agent-browser fill @e2 "text"
-agent-browser console
-agent-browser network
-agent-browser screenshot
-```
 
 **browser-tester agent**: Uses `agent-browser` CLI commands via Bash. Read `.claude/agents/browser-tester.md` for full command reference.
 
@@ -109,6 +99,7 @@ agent-browser screenshot
 
 ### Important rules:
 
+- The system should be in russian
 - When user request completely violates the docs ask clarifying questions. It's always better to clarify rather then messing up code.
 - Keep your summaries on finish very short, clear, informative and important notes highlight in the end.
 

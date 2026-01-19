@@ -7,8 +7,12 @@ export interface IRecipe {
   id: number
   name: string
   productId: number | null
+  productName?: string | null
+  productPrice?: number | null
   modifierId: number | null
+  modifierName?: string | null
   itemId: number | null
+  itemName?: string | null
   outputQuantity: number
   outputUnit: string | null
   prepTimeMinutes: number | null
@@ -16,9 +20,13 @@ export interface IRecipe {
   version: number
   calculatedCost: number
   costUpdatedAt: string | null
+  marginPercent?: number | null
+  marginAmount?: number | null
   notes: string | null
   createdAt: string
   updatedAt: string
+  autoUpdateCost?: boolean
+  recipeType?: 'product' | 'modifier' | 'semi-finished' | 'unlinked'
   ingredients?: IRecipeIngredient[]
 }
 
@@ -82,11 +90,15 @@ export interface IUpdateRecipeIngredientDto {
   notes?: string
 }
 
+export type RecipeType = 'product' | 'modifier' | 'semi-finished' | 'unlinked'
+
 export interface IGetRecipesParams {
+  search?: string
   productId?: number
   modifierId?: number
   itemId?: number
   isActive?: boolean
+  type?: RecipeType
 }
 
 export interface IDuplicateRecipeDto {

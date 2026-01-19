@@ -89,7 +89,7 @@ export function UpcomingDeliveriesWidget({
           </Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (

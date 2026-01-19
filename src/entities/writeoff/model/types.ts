@@ -23,6 +23,7 @@ export interface IWriteoff {
   reason: WriteoffReason
   status: WriteoffStatus
   totalValue: number
+  itemCount?: number
   notes: string | null
   submittedAt: string | null
   submittedBy: number | null

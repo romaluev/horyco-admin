@@ -21,8 +21,13 @@ interface IFormatPriceOptions {
   currency?: boolean
 }
 
-export function formatPrice(amount: number, options?: IFormatPriceOptions): string {
+export function formatPrice(amount: number | undefined | null, options?: IFormatPriceOptions): string {
   const { short = false, currency = true } = options ?? {}
+
+  // Handle undefined, null, or NaN
+  if (amount === undefined || amount === null || Number.isNaN(amount)) {
+    return currency ? '0 UZS' : '0'
+  }
 
   if (short) {
     if (amount >= 1_000_000_000) {
@@ -55,7 +60,11 @@ const currencyFormatter = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 })
 
-export function formatCurrency(value: number): string {
+export function formatCurrency(value: number | undefined | null): string {
+  // Handle undefined, null, or NaN
+  if (value === undefined || value === null || Number.isNaN(value)) {
+    return currencyFormatter.format(0)
+  }
   return currencyFormatter.format(value)
 }
 

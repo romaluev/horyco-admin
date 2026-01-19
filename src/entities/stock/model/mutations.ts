@@ -42,3 +42,21 @@ export const useAcknowledgeAlert = () => {
     },
   })
 }
+
+/**
+ * Acknowledge all alerts for a warehouse
+ */
+export const useAcknowledgeAllAlerts = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (warehouseId: number) => stockApi.acknowledgeAllAlerts(warehouseId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: stockKeys.alerts() })
+      toast.success(`Подтверждено ${data.acknowledged} уведомлений`)
+    },
+    onError: (error: Error) => {
+      toast.error(`Ошибка: ${error.message}`)
+    },
+  })
+}

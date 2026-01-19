@@ -1,21 +1,14 @@
 'use client'
 
-import { use } from 'react'
+import { use , useState } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ArrowLeft, Send, Package, XCircle, Trash2, Loader2, Plus } from 'lucide-react'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { usePurchaseOrderById, POStatusBadge } from '@/entities/purchase-order'
-import {
-  useSendPurchaseOrder,
-  useDeletePurchaseOrder,
-} from '@/entities/purchase-order/model/mutations'
-
-import { Button } from '@/shared/ui/base/button'
-import { Separator } from '@/shared/ui/base/separator'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +19,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Separator } from '@/shared/ui/base/separator'
 import {
   Table,
   TableBody,
@@ -34,14 +30,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import PageContainer from '@/shared/ui/layout/page-container'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
-import { SendPODialog } from '@/features/purchase-order-workflow'
-import { ReceivePODialog } from '@/features/purchase-order-workflow'
-import { CancelPODialog } from '@/features/purchase-order-workflow'
-import { AddPOItemDialog } from '@/features/purchase-order-workflow'
-import { useState } from 'react'
+import { usePurchaseOrderById, POStatusBadge } from '@/entities/purchase-order'
+import {
+  useSendPurchaseOrder,
+  useDeletePurchaseOrder,
+} from '@/entities/purchase-order/model/mutations'
+import { SendPODialog , ReceivePODialog , CancelPODialog , AddPOItemDialog } from '@/features/purchase-order-workflow'
 
 interface PageProps {
   params: Promise<{ id: string }>

@@ -10,6 +10,7 @@ export interface IInventoryItem {
   barcode: string | null
   category: string | null
   unit: string
+  description: string | null
   minStockLevel: number
   maxStockLevel: number | null
   reorderPoint: number | null
@@ -19,8 +20,11 @@ export interface IInventoryItem {
   isTrackable: boolean
   shelfLifeDays: number | null
   defaultSupplierId: number | null
+  defaultSupplierName: string | null
   taxRate: number
   notes: string | null
+  totalStock: number | null
+  avgCost: number | null
   createdAt: string
   updatedAt: string
 }
