@@ -8,6 +8,7 @@
 import * as React from 'react'
 
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconChartBar,
@@ -64,6 +65,7 @@ const ALL_PAGES: AnalyticsPageCode[] = [
 ]
 
 export default function AnalyticsPage() {
+  const { t } = useTranslation('dashboard')
   const { visiblePages, isLoading } = useVisiblePages()
 
   if (isLoading) {
@@ -86,9 +88,9 @@ export default function AnalyticsPage() {
     <div className="p-4 md:p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Аналитика</h1>
+        <h1 className="text-2xl font-semibold">{t('analytics.title')}</h1>
         <p className="text-sm text-muted-foreground">
-          Исследуйте данные вашего бизнеса
+          {t('analytics.description')}
         </p>
       </div>
 

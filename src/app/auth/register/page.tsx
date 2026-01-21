@@ -1,10 +1,15 @@
+'use client'
+
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import logo from '@/shared/assets/logo.png'
 
 import { RegistrationFlow } from '@/features/auth/auth'
 
 export default function RegisterPage() {
+  const { t } = useTranslation('auth')
+
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
@@ -19,18 +24,18 @@ export default function RegisterPage() {
           <RegistrationFlow />
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Уже есть аккаунт?{' '}
+            {t('register.initial.title')} {' '}
             <Link
               to="/auth/sign-in"
               search={{ redirect: undefined }}
               className="hover:text-primary underline underline-offset-4"
             >
-              Войти
+              {t('signIn.title')}
             </Link>
           </p>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Регистрируясь, вы соглашаетесь с{' '}
+            {t('register.otp.successMessage')} {' '}
             <a
               href="#"
               className="hover:text-primary underline underline-offset-4"

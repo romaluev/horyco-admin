@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Input } from '@/shared/ui/base/input'
 import {
   Select,
@@ -38,11 +39,13 @@ export function ProductsFilters({
   viewMode,
   onViewModeChange,
 }: ProductsFiltersProps) {
+  const { t } = useTranslation('menu')
+
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center">
       <div className="flex-1">
         <Input
-          placeholder="Поиск по названию..."
+          placeholder={t('pages.products.filters.searchPlaceholder')}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           className="max-w-sm"
@@ -51,10 +54,14 @@ export function ProductsFilters({
 
       <Select value={categoryFilter} onValueChange={onCategoryChange}>
         <SelectTrigger className="w-[200px]">
-          <SelectValue placeholder="Все категории" />
+          <SelectValue
+            placeholder={t('pages.products.filters.allCategories')}
+          />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Все категории</SelectItem>
+          <SelectItem value="all">
+            {t('pages.products.filters.allCategories')}
+          </SelectItem>
           {categories.map((category) => (
             <SelectItem key={category.id} value={category.id.toString()}>
               {category.name}
@@ -65,12 +72,18 @@ export function ProductsFilters({
 
       <Select value={availabilityFilter} onValueChange={onAvailabilityChange}>
         <SelectTrigger className="w-[200px]">
-          <SelectValue placeholder="Все статусы" />
+          <SelectValue placeholder={t('pages.products.filters.allStatuses')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Все статусы</SelectItem>
-          <SelectItem value="available">Доступные</SelectItem>
-          <SelectItem value="unavailable">Недоступные</SelectItem>
+          <SelectItem value="all">
+            {t('pages.products.filters.allStatuses')}
+          </SelectItem>
+          <SelectItem value="available">
+            {t('pages.products.filters.available')}
+          </SelectItem>
+          <SelectItem value="unavailable">
+            {t('pages.products.filters.unavailable')}
+          </SelectItem>
         </SelectContent>
       </Select>
       <ViewModeToggler value={viewMode} onChange={onViewModeChange} />

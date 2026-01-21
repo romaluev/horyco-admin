@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 
 import { useRouter } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
@@ -38,46 +39,25 @@ import { PhoneInput } from '@/shared/ui/base/phone-input'
 
 import { authApi } from '@/entities/auth/auth/model/api'
 
-// Step 1: Initial registration form
 const initialFormSchema = z.object({
-  phone: z
-    .string()
-    .min(4, { message: 'Введите корректный номер телефона' })
-    .max(13, { message: 'Номер телефона слишком длинный' }),
-  businessName: z
-    .string()
-    .min(3, { message: 'Название должно содержать минимум 3 символа' })
-    .max(100, { message: 'Название слишком длинное' }),
-  email: z
-    .string()
-    .email({ message: 'Некорректный email' })
-    .optional()
-    .or(z.literal('')),
+  phone: z.string().min(4).max(13),
+  businessName: z.string().min(3).max(100),
+  email: z.string().email().optional().or(z.literal('')),
 })
 
-// Step 2: OTP verification form
 const otpFormSchema = z
   .object({
-    otp: z.string().length(6, { message: 'Код должен содержать 6 цифр' }),
-    ownerName: z
-      .string()
-      .min(2, { message: 'Введите ваше имя' })
-      .max(100, { message: 'Имя слишком длинное' }),
+    otp: z.string().length(6),
+    ownerName: z.string().min(2).max(100),
     password: z
       .string()
-      .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
-      .max(100, { message: 'Пароль слишком длинный' })
-      .regex(/[A-Z]/, {
-        message: 'Пароль должен содержать минимум 1 заглавную букву',
-      })
-      .regex(/[0-9]/, { message: 'Пароль должен содержать минимум 1 цифру' })
-      .regex(/[^A-Za-z0-9]/, {
-        message: 'Пароль должен содержать минимум 1 специальный символ',
-      }),
+      .min(8)
+      .regex(/[A-Z]/, {})
+      .regex(/[0-9]/, {})
+      .regex(/[^A-Za-z0-9]/, {}),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Пароли не совпадают',
     path: ['confirmPassword'],
   })
 
@@ -86,11 +66,12 @@ type OTPFormValues = z.infer<typeof otpFormSchema>
 
 const RegisterForm = () => {
   const router = useRouter()
+  const { t } = useTranslation('auth')
   const [step, setStep] = useState<'initial' | 'otp'>('initial')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [maskedPhone, setMaskedPhone] = useState('')
-  const [otpExpiry, setOtpExpiry] = useState(180) // 3 minutes in seconds
+  const [otpExpiry, setOtpExpiry] = useState(180)
   const [canResend, setCanResend] = useState(false)
   const [registrationData, setRegistrationData] = useState<{
     phone: string
@@ -98,7 +79,6 @@ const RegisterForm = () => {
     email?: string
   } | null>(null)
 
-  // Initial form
   const initialForm = useForm<InitialFormValues>({
     resolver: zodResolver(initialFormSchema),
     defaultValues: {
@@ -108,7 +88,6 @@ const RegisterForm = () => {
     },
   })
 
-  // OTP form
   const otpForm = useForm<OTPFormValues>({
     resolver: zodResolver(otpFormSchema),
     defaultValues: {
@@ -119,7 +98,6 @@ const RegisterForm = () => {
     },
   })
 
-  // Countdown timer for OTP expiry
   React.useEffect(() => {
     if (step === 'otp' && otpExpiry > 0) {
       const timer = setTimeout(() => {
@@ -132,7 +110,6 @@ const RegisterForm = () => {
     return undefined
   }, [step, otpExpiry])
 
-  // Handle initial form submission (send OTP)
   const onSendOTP = async (data: InitialFormValues) => {
     try {
       setIsLoading(true)
@@ -151,7 +128,7 @@ const RegisterForm = () => {
       setStep('otp')
       toast.success(response.message)
     } catch (err: unknown) {
-      let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
+      let errorMessage = t('register.initial.sendFailed')
       if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
@@ -172,7 +149,6 @@ const RegisterForm = () => {
     }
   }
 
-  // Handle OTP verification and complete registration
   const onVerifyOTP = async (data: OTPFormValues) => {
     if (!registrationData) return
 
@@ -188,17 +164,15 @@ const RegisterForm = () => {
         password: data.password,
       })
 
-      toast.success('Регистрация успешно завершена!')
+      toast.success(t('register.otp.successMessage'))
 
-      // Redirect to onboarding
       if (response.onboardingProgress.isCompleted) {
         router.push('/dashboard')
       } else {
         router.push('/onboarding/business-info')
       }
     } catch (err: unknown) {
-      let errorMessage =
-        'Неверный код или истёк срок действия. Попробуйте снова.'
+      let errorMessage = t('register.otp.verifyFailed')
       if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
@@ -219,7 +193,6 @@ const RegisterForm = () => {
     }
   }
 
-  // Resend OTP
   const handleResendOTP = async () => {
     if (!registrationData || !canResend) return
 
@@ -231,9 +204,9 @@ const RegisterForm = () => {
 
       setOtpExpiry(response.expiresIn)
       setCanResend(false)
-      toast.success('Код повторно отправлен')
+      toast.success(t('errors.resendOTPSuccess'))
     } catch (err: unknown) {
-      let errorMessage = 'Не удалось отправить код. Попробуйте снова.'
+      let errorMessage = t('register.initial.sendFailed')
       if (typeof err === 'object' && err !== null && 'response' in err) {
         const errObj = err as Record<string, unknown>
         const response = errObj.response
@@ -254,7 +227,6 @@ const RegisterForm = () => {
     }
   }
 
-  // Format seconds to MM:SS
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -265,12 +237,12 @@ const RegisterForm = () => {
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          {step === 'initial' ? 'Регистрация' : 'Подтверждение'}
+          {step === 'initial' ? t('register.initial.title') : t('register.otp.title')}
         </CardTitle>
         <CardDescription>
           {step === 'initial'
-            ? 'Создайте аккаунт для вашего ресторана'
-            : `Введите код из SMS, отправленный на ${maskedPhone}`}
+            ? t('register.initial.description')
+            : t('register.otp.description', { phone: maskedPhone })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -292,11 +264,11 @@ const RegisterForm = () => {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Номер телефона</FormLabel>
+                    <FormLabel>{t('register.initial.phone')}</FormLabel>
                     <FormControl>
                       <PhoneInput
                         defaultCountry={'UZ'}
-                        placeholder={'90 123 45 67'}
+                        placeholder={t('register.initial.phonePlaceholder')}
                         limitMaxLength
                         countries={['UZ']}
                         {...field}
@@ -313,10 +285,10 @@ const RegisterForm = () => {
                 name="businessName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Название вашего бизнеса</FormLabel>
+                    <FormLabel>{t('register.initial.businessName')}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Например: Пицца Хаус"
+                        placeholder={t('register.initial.businessNamePlaceholder')}
                         {...field}
                         disabled={isLoading}
                       />
@@ -331,11 +303,11 @@ const RegisterForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email (необязательно)</FormLabel>
+                    <FormLabel>{t('register.initial.email')}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="example@email.com"
+                        placeholder={t('register.initial.emailPlaceholder')}
                         {...field}
                         disabled={isLoading}
                       />
@@ -349,10 +321,10 @@ const RegisterForm = () => {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Отправка...
+                    {t('register.initial.sending')}
                   </>
                 ) : (
-                  'Получить код по SMS'
+                  t('register.initial.getSMSCode')
                 )}
               </Button>
             </form>
@@ -368,7 +340,7 @@ const RegisterForm = () => {
                 name="otp"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Код подтверждения</FormLabel>
+                    <FormLabel>{t('register.otp.code')}</FormLabel>
                     <FormControl>
                       <InputOTP
                         maxLength={6}
@@ -387,7 +359,7 @@ const RegisterForm = () => {
                       </InputOTP>
                     </FormControl>
                     <div className="text-muted-foreground mt-2 text-center text-sm">
-                      Код действителен: {formatTime(otpExpiry)}
+                      {t('register.otp.codeValidUntil')} {formatTime(otpExpiry)}
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -399,10 +371,10 @@ const RegisterForm = () => {
                 name="ownerName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ваше имя</FormLabel>
+                    <FormLabel>{t('register.otp.ownerName')}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Иван Иванов"
+                        placeholder={t('register.otp.ownerNamePlaceholder')}
                         {...field}
                         disabled={isLoading}
                       />
@@ -417,10 +389,10 @@ const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Пароль</FormLabel>
+                    <FormLabel>{t('register.otp.password')}</FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder="Создайте надежный пароль"
+                        placeholder={t('register.otp.passwordPlaceholder')}
                         {...field}
                         disabled={isLoading}
                       />
@@ -435,10 +407,10 @@ const RegisterForm = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Подтвердите пароль</FormLabel>
+                    <FormLabel>{t('register.otp.confirmPassword')}</FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder="Повторите пароль"
+                        placeholder={t('register.otp.confirmPasswordPlaceholder')}
                         {...field}
                         disabled={isLoading}
                       />
@@ -456,16 +428,16 @@ const RegisterForm = () => {
                   onClick={handleResendOTP}
                   disabled={!canResend || isLoading}
                 >
-                  {canResend ? 'Отправить повторно' : 'Ожидание...'}
+                  {canResend ? t('register.otp.resend') : t('register.otp.waiting')}
                 </Button>
                 <Button type="submit" className="flex-1" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Проверка...
+                      {t('register.otp.checking')}
                     </>
                   ) : (
-                    'Подтвердить'
+                    t('register.otp.submit')
                   )}
                 </Button>
               </div>

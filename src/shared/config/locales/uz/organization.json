@@ -1,0 +1,130 @@
+{
+  "branches": {
+    "title": "Filiallar",
+    "description": "Tashkilot filiallarini boshqarish",
+    "addNew": "Filial qo'shish",
+    "actions": {
+      "import": "Import",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish"
+    },
+    "detail": {
+      "description": "Filial haqida ma'lumot",
+      "statistics": "Statistika",
+      "statisticsDescription": "Filial samaradorlik ko'rsatgichlari"
+    },
+    "form": {
+      "title": {
+        "create": "Yangi filial yaratish",
+        "edit": "Filialni tahrirlash: {{name}}"
+      },
+      "fields": {
+        "name": {
+          "label": "Filial nomi",
+          "placeholder": "Filial nomini kiriting",
+          "validation": "Filial nomi kamida 2 ta belgiga ega bo'lishi kerak"
+        },
+        "address": {
+          "label": "Manzil",
+          "placeholder": "Filial manzilini kiriting",
+          "validation": "Manzil kamida 5 ta belgiga ega bo'lishi kerak"
+        }
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Nomi",
+        "address": "Manzil",
+        "createdAt": "Yaratilgan",
+        "actions": "Harakatlari"
+      },
+      "search": {
+        "name": "Nomi bo'yicha qidirish...",
+        "address": "Manzil bo'yicha qidirish..."
+      }
+    },
+    "delete": {
+      "title": "Filialni o'chirish?",
+      "description": "Siz filial \"{{name}}\" ni o'chirishga ishonchingiz komilmi? Bu amalni qaytarib bo'lmaydi."
+    },
+    "errors": {
+      "notFound": "Filial topilmadi",
+      "loadError": "Xato: {{message}}"
+    }
+  },
+  "staff": {
+    "title": "Xodimlar",
+    "description": "Xodimlar va ularning ma'lumotlarini boshqarish",
+    "addNew": "Xodim qo'shish",
+    "actions": {
+      "openMenu": "Menyuni ochish",
+      "menuLabel": "Harakatlari"
+    },
+    "states": {
+      "empty": "Xodimlar hali mavjud emas",
+      "loadError": "Xodimlarni yuklab olishda xato"
+    },
+    "form": {
+      "title": {
+        "create": "Yangi xodim yaratish",
+        "edit": "Xodimni tahrirlash: {{name}}"
+      },
+      "fields": {
+        "fullName": {
+          "label": "To'liq ism",
+          "placeholder": "To'liq ismni kiriting",
+          "validation": "Ism kamida 2 ta belgiga ega bo'lishi kerak"
+        },
+        "phone": {
+          "label": "Telefon",
+          "placeholder": "90 123 45 67"
+        },
+        "password": {
+          "label": "Parol",
+          "placeholder": "Parolni kiriting",
+          "validation": "Parol kamida 4 ta belgiga ega bo'lishi kerak"
+        },
+        "confirmPassword": {
+          "label": "Parolni tasdiqlang",
+          "placeholder": "Parolni tasdiqlang"
+        },
+        "branch": {
+          "label": "Filial",
+          "placeholder": "Filialni tanlang"
+        },
+        "photo": {
+          "label": "Profil rasmi"
+        }
+      },
+      "submit": {
+        "create": "Xodim yaratish",
+        "update": "Ma'lumotni yangilash"
+      }
+    },
+    "table": {
+      "columns": {
+        "fullName": "To'liq ism",
+        "phone": "Telefon",
+        "branch": "Filial",
+        "createdAt": "Yaratilgan",
+        "actions": "Harakatlari"
+      },
+      "search": {
+        "fullName": "Ism bo'yicha qidirish...",
+        "phone": "Telefon bo'yicha qidirish..."
+      }
+    },
+    "delete": {
+      "title": "Xodimni o'chirish?",
+      "description": "Siz xodim \"{{name}}\" ni o'chirishga ishonchingiz komilmi? Bu amalni qaytarib bo'lmaydi."
+    },
+    "errors": {
+      "notFound": "Xodim topilmadi",
+      "loadError": "Xato: {{message}}"
+    }
+  },
+  "halls": {
+    "title": "Zallar",
+    "description": "Tashkilot zallarini boshqarish"
+  }
+}

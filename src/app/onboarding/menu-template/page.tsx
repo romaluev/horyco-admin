@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from '@/shared/lib/navigation'
 
 import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { Button } from '@/shared/ui/base/button'
@@ -53,6 +54,7 @@ interface MenuCategory {
 
 export default function MenuTemplatePage() {
   const router = useRouter()
+  const { t } = useTranslation('onboarding')
   const [categories, setCategories] = useState<MenuCategory[]>([])
   const [editingProduct, setEditingProduct] = useState<MenuProduct | null>(null)
   const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(
@@ -357,17 +359,17 @@ export default function MenuTemplatePage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-500">
-            Ошибка загрузки меню
+            {t('pages.menuTemplate.errors.loadError')}
           </h2>
           <p className="text-muted-foreground mt-2">
-            Не удалось загрузить шаблоны меню. Попробуйте обновить страницу.
+            {t('pages.menuTemplate.errors.loadErrorMessage')}
           </p>
           <Button
             onClick={() => window.location.reload()}
             className="mt-4"
             variant="outline"
           >
-            Обновить
+            {t('pages.menuTemplate.errors.refresh')}
           </Button>
         </div>
       </div>
@@ -381,45 +383,45 @@ export default function MenuTemplatePage() {
         progress?.completedSteps || ['business_identity', 'branch_setup']
       }
       skippedSteps={progress?.skippedSteps || []}
-      title="Настройка меню"
-      description="Организуйте блюда по категориям"
+      title={t('pages.menuTemplate.title')}
+      description={t('pages.menuTemplate.description')}
     >
       {/* Create Category Button at Top */}
       <div className="mb-6 flex items-center justify-between">
         <div>
           {selectedProductsCount > 0 && (
             <p className="text-sm text-muted-foreground">
-              Выбрано: {selectedCategoriesCount}{' '}
+              {t('pages.menuTemplate.selected')} {selectedCategoriesCount}{' '}
               {selectedCategoriesCount === 1
-                ? 'категория'
+                ? t('pages.menuTemplate.category')
                 : selectedCategoriesCount > 4
-                  ? 'категорий'
-                  : 'категории'}
+                  ? t('pages.menuTemplate.categories_4plus')
+                  : t('pages.menuTemplate.categories')}
               , {selectedProductsCount}{' '}
               {selectedProductsCount === 1
-                ? 'блюдо'
+                ? t('pages.menuTemplate.dish')
                 : selectedProductsCount > 4
-                  ? 'блюд'
-                  : 'блюда'}
+                  ? t('pages.menuTemplate.dishes_4plus')
+                  : t('pages.menuTemplate.dishes')}
             </p>
           )}
         </div>
         <Button onClick={handleAddCategory} variant="outline">
           <Plus className="mr-2 h-4 w-4" />
-          Создать категорию
+          {t('pages.menuTemplate.createCategory')}
         </Button>
       </div>
 
       {/* Empty state with option to create */}
       {categories.length === 0 && !isProductsLoading && (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-          <h3 className="mb-2 text-xl font-semibold">Меню пусто</h3>
+          <h3 className="mb-2 text-xl font-semibold">{t('pages.menuTemplate.emptyState.title')}</h3>
           <p className="text-muted-foreground mb-6 max-w-md">
-            Начните с создания категории, затем добавляйте блюда.
+            {t('pages.menuTemplate.emptyState.description')}
           </p>
           <Button onClick={handleAddCategory}>
             <Plus className="mr-2 h-4 w-4" />
-            Создать категорию
+            {t('pages.menuTemplate.createCategory')}
           </Button>
         </div>
       )}
@@ -457,7 +459,7 @@ export default function MenuTemplatePage() {
                       <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                         <span>
                           {category.products.filter((p) => p.isSelected).length}{' '}
-                          из {category.products.length} выбрано
+                          {t('pages.menuTemplate.categoryCard.selected')} {category.products.length}
                         </span>
                       </div>
                     </div>
@@ -565,7 +567,7 @@ export default function MenuTemplatePage() {
                     className="w-full"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Добавить блюдо в категорию
+                    {t('pages.menuTemplate.addDishButton')}
                   </Button>
                 </div>
               )}
@@ -582,7 +584,7 @@ export default function MenuTemplatePage() {
           onClick={handleBack}
           disabled={isSubmitting || isSkipping}
         >
-          Назад
+          {t('pages.menuTemplate.buttons.back')}
         </Button>
         <div className="flex gap-4">
           <Button
@@ -594,10 +596,10 @@ export default function MenuTemplatePage() {
             {isSkipping ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Пропуск...
+                {t('pages.menuTemplate.buttons.skip_loading')}
               </>
             ) : (
-              'Пропустить'
+              t('pages.menuTemplate.buttons.skip')
             )}
           </Button>
           <Button
@@ -607,10 +609,10 @@ export default function MenuTemplatePage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Сохранение...
+                {t('pages.menuTemplate.buttons.saving')}
               </>
             ) : (
-              `Продолжить (${selectedProductsCount})`
+              `${t('pages.menuTemplate.buttons.continue')} (${selectedProductsCount})`
             )}
           </Button>
         </div>
@@ -621,12 +623,12 @@ export default function MenuTemplatePage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {isNewProduct ? 'Добавить блюдо' : 'Редактировать блюдо'}
+              {isNewProduct ? t('pages.menuTemplate.productDialog.add') : t('pages.menuTemplate.productDialog.edit')}
             </DialogTitle>
             <DialogDescription>
               {isNewProduct
-                ? 'Добавьте новое блюдо в категорию'
-                : 'Измените название, цену или описание блюда'}
+                ? t('pages.menuTemplate.productDialog.addDescription')
+                : t('pages.menuTemplate.productDialog.editDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -635,13 +637,13 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-product-name"
                 className="mb-2 block text-sm font-medium"
               >
-                Название *
+                {t('pages.menuTemplate.productDialog.name')}
               </label>
               <Input
                 id="edit-product-name"
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                placeholder="Название блюда"
+                placeholder={t('pages.menuTemplate.productDialog.namePlaceholder')}
               />
             </div>
             <div>
@@ -649,14 +651,14 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-product-price"
                 className="mb-2 block text-sm font-medium"
               >
-                Цена (сум) *
+                {t('pages.menuTemplate.productDialog.price')}
               </label>
               <Input
                 id="edit-product-price"
                 type="number"
                 value={editedPrice}
                 onChange={(e) => setEditedPrice(e.target.value)}
-                placeholder="25000"
+                placeholder={t('pages.menuTemplate.productDialog.pricePlaceholder')}
               />
             </div>
             <div>
@@ -664,13 +666,13 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-product-description"
                 className="mb-2 block text-sm font-medium"
               >
-                Описание
+                {t('pages.menuTemplate.productDialog.description')}
               </label>
               <Textarea
                 id="edit-product-description"
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
-                placeholder="Описание блюда"
+                placeholder={t('pages.menuTemplate.productDialog.descriptionPlaceholder')}
                 rows={3}
               />
             </div>
@@ -680,13 +682,13 @@ export default function MenuTemplatePage() {
               variant="outline"
               onClick={() => setIsEditDialogOpen(false)}
             >
-              Отмена
+              {t('pages.menuTemplate.productDialog.cancel')}
             </Button>
             <Button
               onClick={handleSaveEdit}
               disabled={!editedName.trim() || !editedPrice.trim()}
             >
-              {isNewProduct ? 'Добавить' : 'Сохранить'}
+              {isNewProduct ? t('pages.menuTemplate.productDialog.add_button') : t('pages.menuTemplate.productDialog.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -697,12 +699,12 @@ export default function MenuTemplatePage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {isNewCategory ? 'Добавить категорию' : 'Редактировать категорию'}
+              {isNewCategory ? t('pages.menuTemplate.categoryDialog.add') : t('pages.menuTemplate.categoryDialog.edit')}
             </DialogTitle>
             <DialogDescription>
               {isNewCategory
-                ? 'Создайте новую категорию для блюд'
-                : 'Измените название или описание категории'}
+                ? t('pages.menuTemplate.categoryDialog.addDescription')
+                : t('pages.menuTemplate.categoryDialog.editDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -711,13 +713,13 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-category-name"
                 className="mb-2 block text-sm font-medium"
               >
-                Название категории *
+                {t('pages.menuTemplate.categoryDialog.name')}
               </label>
               <Input
                 id="edit-category-name"
                 value={editedCategoryName}
                 onChange={(e) => setEditedCategoryName(e.target.value)}
-                placeholder="Например: Закуски"
+                placeholder={t('pages.menuTemplate.categoryDialog.namePlaceholder')}
               />
             </div>
             <div>
@@ -725,13 +727,13 @@ export default function MenuTemplatePage() {
                 htmlFor="edit-category-desc"
                 className="mb-2 block text-sm font-medium"
               >
-                Описание
+                {t('pages.menuTemplate.categoryDialog.description')}
               </label>
               <Textarea
                 id="edit-category-desc"
                 value={editedCategoryDesc}
                 onChange={(e) => setEditedCategoryDesc(e.target.value)}
-                placeholder="Описание категории"
+                placeholder={t('pages.menuTemplate.categoryDialog.descriptionPlaceholder')}
                 rows={3}
               />
             </div>
@@ -741,13 +743,13 @@ export default function MenuTemplatePage() {
               variant="outline"
               onClick={() => setIsCategoryDialogOpen(false)}
             >
-              Отмена
+              {t('pages.menuTemplate.categoryDialog.cancel')}
             </Button>
             <Button
               onClick={handleSaveCategoryEdit}
               disabled={!editedCategoryName.trim()}
             >
-              {isNewCategory ? 'Создать' : 'Сохранить'}
+              {isNewCategory ? t('pages.menuTemplate.categoryDialog.create') : t('pages.menuTemplate.categoryDialog.save')}
             </Button>
           </DialogFooter>
         </DialogContent>

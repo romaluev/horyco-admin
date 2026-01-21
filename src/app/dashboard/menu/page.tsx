@@ -17,6 +17,7 @@ import {
   Settings,
 } from 'lucide-react'
 
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -33,73 +34,76 @@ import { useGetProducts } from '@/entities/menu/product'
 
 import type { JSX } from 'react'
 
-const menuSections = [
-  {
-    title: 'Категории',
-    description: 'Управление иерархической структурой категорий меню',
-    icon: FolderTree,
-    href: '/dashboard/menu/categories',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50',
-  },
-  {
-    title: 'Продукты',
-    description: 'Управление продуктами, ценами и доступностью',
-    icon: Package,
-    href: '/dashboard/menu/products',
-    color: 'text-green-500',
-    bgColor: 'bg-green-50',
-  },
-  {
-    title: 'Модификаторы',
-    description: 'Настройка модификаторов для продуктов',
-    icon: Settings,
-    href: '/dashboard/menu/modifiers',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-50',
-  },
-  {
-    title: 'Дополнения',
-    description: 'Управление дополнениями к продуктам',
-    icon: Plus,
-    href: '/dashboard/menu/additions',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-50',
-  },
-  {
-    title: 'Переопределения филиалов',
-    description: 'Индивидуальные настройки для каждого филиала',
-    icon: Building2,
-    href: '/dashboard/menu/branch-overrides',
-    color: 'text-cyan-500',
-    bgColor: 'bg-cyan-50',
-  },
-]
+// Menu sections config is created inside the component to access translations
 
 export default function MenuPage(): JSX.Element {
+  const { t } = useTranslation('menu')
   const { data: categories = [] } = useGetCategories()
   const { data: productsData } = useGetProducts()
   const { data: modifiers = [] } = useGetModifiers()
   const { data: additions = [] } = useGetAdditions()
 
+  const menuSections = [
+    {
+      title: t('pages.menu.sections.categories.title'),
+      description: t('pages.menu.sections.categories.description'),
+      icon: FolderTree,
+      href: '/dashboard/menu/categories',
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      title: t('pages.menu.sections.products.title'),
+      description: t('pages.menu.sections.products.description'),
+      icon: Package,
+      href: '/dashboard/menu/products',
+      color: 'text-green-500',
+      bgColor: 'bg-green-50',
+    },
+    {
+      title: t('pages.menu.sections.modifiers.title'),
+      description: t('pages.menu.sections.modifiers.description'),
+      icon: Settings,
+      href: '/dashboard/menu/modifiers',
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-50',
+    },
+    {
+      title: t('pages.menu.sections.additions.title'),
+      description: t('pages.menu.sections.additions.description'),
+      icon: Plus,
+      href: '/dashboard/menu/additions',
+      color: 'text-orange-500',
+      bgColor: 'bg-orange-50',
+    },
+    {
+      title: t('pages.menu.sections.branchOverrides.title'),
+      description: t('pages.menu.sections.branchOverrides.description'),
+      icon: Building2,
+      href: '/dashboard/menu/branch-overrides',
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-50',
+    },
+  ]
+
   const stats = [
     {
-      label: 'Категории',
+      label: t('pages.menu.stats.categories'),
       value: categories.length,
       href: '/dashboard/menu/categories',
     },
     {
-      label: 'Продукты',
+      label: t('pages.menu.stats.products'),
       value: productsData?.total || 0,
       href: '/dashboard/menu/products',
     },
     {
-      label: 'Модификаторы',
+      label: t('pages.menu.stats.modifiers'),
       value: modifiers.length,
       href: '/dashboard/menu/modifiers',
     },
     {
-      label: 'Дополнения',
+      label: t('pages.menu.stats.additions'),
       value: additions.length,
       href: '/dashboard/menu/additions',
     },
@@ -108,9 +112,11 @@ export default function MenuPage(): JSX.Element {
   return (
     <div className="flex flex-col gap-6 px-6 py-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Управление меню</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          {t('pages.menu.title')}
+        </h1>
         <p className="text-muted-foreground">
-          Полное управление структурой меню, продуктами и настройками
+          {t('pages.menu.description')}
         </p>
       </div>
 
@@ -153,7 +159,7 @@ export default function MenuPage(): JSX.Element {
               <CardContent>
                 <Link to={section.href}>
                   <Button className="w-full" variant="outline">
-                    Перейти
+                    {t('pages.menu.actions.navigate')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -165,23 +171,22 @@ export default function MenuPage(): JSX.Element {
 
       <Card>
         <CardHeader>
-          <CardTitle>Быстрый старт</CardTitle>
+          <CardTitle>{t('pages.menu.quickStart.title')}</CardTitle>
           <CardDescription>
-            Советы по организации структуры меню
+            {t('pages.menu.quickStart.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold">Рекомендуемый порядок настройки:</h3>
+            <h3 className="font-semibold">
+              {t('pages.menu.quickStart.recommendedOrder')}
+            </h3>
             <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
-              <li>Создайте структуру категорий (иерархию)</li>
-              <li>Добавьте продукты и привяжите их к категориям</li>
-              <li>Настройте модификаторы для продуктов (опционально)</li>
-              <li>Добавьте дополнения к продуктам (опционально)</li>
-              <li>
-                Создайте переопределения для филиалов (если требуется разная
-                цена/доступность)
-              </li>
+              <li>{t('pages.menu.quickStart.steps.categories')}</li>
+              <li>{t('pages.menu.quickStart.steps.products')}</li>
+              <li>{t('pages.menu.quickStart.steps.modifiers')}</li>
+              <li>{t('pages.menu.quickStart.steps.additions')}</li>
+              <li>{t('pages.menu.quickStart.steps.branchOverrides')}</li>
             </ol>
           </div>
         </CardContent>

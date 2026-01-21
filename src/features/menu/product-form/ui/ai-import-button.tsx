@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useRouter } from '@/shared/lib/navigation'
 
 import { StarsIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Input, Textarea } from '@/shared/ui'
@@ -31,6 +32,7 @@ const MAX_USAGE = 3
 const IMPORT_USAGE_KEY = 'ai_import_usage'
 
 export const AiImportButton = () => {
+  const { t } = useTranslation('menu')
   const [files, setFiles] = useState<File[]>([])
   const [usageCount, setUsageCount] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -54,7 +56,7 @@ export const AiImportButton = () => {
 
   const extractProducts = async () => {
     if (files.length === 0) {
-      toast.error('Добавьте хотя бы одно изображение')
+      toast.error(t('products.aiImport.messages.noImage'))
       return
     }
 
@@ -64,7 +66,7 @@ export const AiImportButton = () => {
     try {
       const usageCount = parseInt(localStorage.getItem(IMPORT_USAGE_KEY) || '0')
       if (usageCount >= MAX_USAGE) {
-        toast.error('Достигнут лимит использования AI импорта')
+        toast.error(t('products.aiImport.messages.limitReached'))
         return
       }
 
@@ -80,14 +82,14 @@ export const AiImportButton = () => {
       incrementUsage()
 
       if (!response.ok) {
-        throw new Error('Ошибка при извлечении данных')
+        throw new Error(t('products.aiImport.messages.extractError'))
       }
 
       const data = await response.json()
       setProducts(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка')
-      toast.error('Ошибка при извлечении данных')
+      setError(err instanceof Error ? err.message : t('products.aiImport.messages.unknownError'))
+      toast.error(t('products.aiImport.messages.extractError'))
     } finally {
       setLoading(false)
     }
@@ -107,10 +109,10 @@ export const AiImportButton = () => {
         })
       }
 
-      toast.success('Товары успешно созданы')
+      toast.success(t('products.aiImport.messages.successCreate'))
       router.push('/dashboard/products')
     } catch (err) {
-      toast.error('Ошибка при создании товаров')
+      toast.error(t('products.aiImport.messages.errorCreate'))
     } finally {
       setCreating(false)
     }
@@ -124,17 +126,16 @@ export const AiImportButton = () => {
             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
             <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl">
               <StarsIcon size={16} />
-              Добавить с AI
+              {t('products.aiImport.button')}
             </span>
           </Button>
         </DialogTrigger>
       ) : null}
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Импортируйте меню прямо из фото</DialogTitle>
+          <DialogTitle>{t('products.aiImport.dialog.title')}</DialogTitle>
           <DialogDescription>
-            Загрузите до 4 изображений меню или товаров для автоматического
-            извлечения данных с помощью AI
+            {t('products.aiImport.dialog.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -157,14 +158,14 @@ export const AiImportButton = () => {
           <ScrollArea className="max-h-[50vh] overflow-y-auto">
             {products.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Извлеченные товары</h3>
+                <h3 className="text-lg font-semibold">{t('products.aiImport.extractedSection')}</h3>
                 <div className="space-y-4">
                   {products.map((product, index) => (
                     <div key={index} className="rounded-lg border p-4">
                       <div className="grid gap-2">
                         <div>
                           <label className="text-sm font-medium">
-                            Название
+                            {t('products.aiImport.fields.name')}
                           </label>
                           <Input
                             type="text"
@@ -180,7 +181,7 @@ export const AiImportButton = () => {
                           />
                         </div>
                         <div>
-                          <label className="text-sm font-medium">Цена</label>
+                          <label className="text-sm font-medium">{t('products.aiImport.fields.price')}</label>
                           <Input
                             type="number"
                             value={product.price}
@@ -198,7 +199,7 @@ export const AiImportButton = () => {
                         </div>
                         <div>
                           <label className="text-sm font-medium">
-                            Описание
+                            {t('products.aiImport.fields.description')}
                           </label>
                           <Textarea
                             maxLength={5}
@@ -225,7 +226,7 @@ export const AiImportButton = () => {
         <DialogFooter className="gap-2">
           <DialogClose asChild>
             <Button type="button" variant="secondary">
-              Отмена
+              {t('products.aiImport.buttons.cancel')}
             </Button>
           </DialogClose>
           {products.length > 0 ? (
@@ -234,7 +235,7 @@ export const AiImportButton = () => {
               onClick={handleCreateProduct}
               disabled={creating}
             >
-              {creating ? 'Сохранение...' : 'Сохранить товары'}
+              {creating ? t('products.aiImport.buttons.saving') : t('products.aiImport.buttons.saveProducts')}
             </Button>
           ) : (
             <Button
@@ -246,7 +247,7 @@ export const AiImportButton = () => {
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
               <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl">
                 <StarsIcon size={16} />
-                {loading ? 'Обработка...' : 'Начать обработку'}
+                {loading ? t('products.aiImport.buttons.processing') : t('products.aiImport.buttons.startProcessing')}
               </span>
             </Button>
           )}

@@ -6,12 +6,25 @@ import { Link } from '@tanstack/react-router'
 import { usePathname, useRouter } from '@/shared/lib/navigation'
 
 import {
+  IconCheck,
   IconChevronRight,
   IconChevronsDown,
+  IconLanguage,
   IconLogout,
+  IconMoon,
   IconSettings,
+  IconSun,
+  IconSunMoon,
   IconUserCircle,
 } from '@tabler/icons-react'
+import { useTheme } from 'next-themes'
+import { useTranslation } from 'react-i18next'
+
+import {
+  Language,
+  LANGUAGE_NAMES,
+  SUPPORTED_LANGUAGES,
+} from '@/shared/config/i18n'
 
 import logo from '@/shared/assets/logo.png'
 import { getNavItems, getSettingsNavItem } from '@/shared/config/data'
@@ -31,7 +44,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/shared/ui/base/dropdown-menu'
 import {
@@ -60,6 +77,7 @@ import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 import { useAuthStore } from '@/entities/auth/auth/model/store'
 import { useGetAllBranches, useBranchStore } from '@/entities/organization/branch'
 import { AnalyticsSidebarSection } from '@/features/dashboard/analytics'
+import { useNavItems } from '@/shared/hooks/use-nav-items'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
@@ -223,8 +241,13 @@ export default function AppSidebar() {
   const authStore = useAuthStore()
   const { user } = useAuthStore()
   const router = useRouter()
-  const allNavItems = getNavItems()
-  const settingsNavItem = getSettingsNavItem()
+  const { i18n } = useTranslation()
+  const { theme, setTheme } = useTheme()
+  const { navItems: allNavItems, settingsNavItem } = useNavItems()
+
+  const handleChangeLanguage = (lng: Language) => {
+    i18n.changeLanguage(lng)
+  }
 
   const navItems = filterNavItemsByPermission(
     allNavItems,
@@ -375,13 +398,61 @@ export default function AppSidebar() {
                   <DropdownMenuItem
                     onClick={() => router.push('/dashboard/profile')}
                   >
-                    <IconUserCircle className="mr-2 h-4 w-4" />
+                    <IconUserCircle />
                     Профиль
                   </DropdownMenuItem>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <IconLanguage />
+                      Язык
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        {SUPPORTED_LANGUAGES.map((lng) => (
+                          <DropdownMenuItem
+                            key={lng}
+                            onClick={() => handleChangeLanguage(lng)}
+                          >
+                            {LANGUAGE_NAMES[lng]}
+                            {i18n.language === lng && (
+                              <IconCheck className="ml-auto" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <IconSunMoon />
+                      Тема
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem onClick={() => setTheme('light')}>
+                          <IconSun />
+                          Светлая
+                          {theme === 'light' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('dark')}>
+                          <IconMoon />
+                          Тёмная
+                          {theme === 'dark' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('system')}>
+                          <IconSunMoon />
+                          Системная
+                          {theme === 'system' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <IconLogout className="mr-2 h-4 w-4" />
+                  <IconLogout />
                   Выход из системы
                 </DropdownMenuItem>
               </DropdownMenuContent>

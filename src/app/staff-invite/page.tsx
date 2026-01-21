@@ -1,8 +1,11 @@
+'use client'
+
 import { Suspense } from 'react'
 
 import { Link } from '@tanstack/react-router'
 
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import logo from '@/shared/assets/logo.png'
 
@@ -17,6 +20,8 @@ function StaffInviteFormFallback() {
 }
 
 export default function StaffInvitePage() {
+  const { t } = useTranslation('onboarding')
+
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
@@ -33,17 +38,17 @@ export default function StaffInvitePage() {
           </Suspense>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Уже есть аккаунт?{' '}
+            {t('pages.staffInvite.title')} {' '}
             <Link
               to="/auth/sign-in" search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
-              Войти
+              {t('pages.staffInvite.description')}
             </Link>
           </p>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Активируя аккаунт, вы соглашаетесь с{' '}
+            {t('pages.staffInvite.title')} {' '}
             <a
               href="#"
               className="hover:text-primary underline underline-offset-4"

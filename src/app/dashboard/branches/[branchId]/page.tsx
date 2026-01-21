@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { useRouter } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { IconEdit, IconTrash, IconArrowLeft } from '@tabler/icons-react'
 
@@ -21,6 +22,7 @@ export default function BranchDetailPage({
 }: {
   branchId: string
 }) {
+  const { t } = useTranslation('organization')
   const router = useRouter()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
@@ -43,7 +45,7 @@ export default function BranchDetailPage({
     return (
       <PageContainer>
         <Alert variant="destructive">
-          <AlertDescription>Филиал не найден</AlertDescription>
+          <AlertDescription>{t('branches.errors.notFound')}</AlertDescription>
         </Alert>
       </PageContainer>
     )
@@ -67,20 +69,20 @@ export default function BranchDetailPage({
                 >
                   <IconArrowLeft className="h-4 w-4" />
                 </Button>
-                <Heading title={branch.name} description="Информация о филиале" />
+                <Heading title={branch.name} description={t('branches.detail.description')} />
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setIsEditOpen(true)}>
                 <IconEdit className="mr-2 h-4 w-4" />
-                Редактировать
+                {t('branches.actions.edit')}
               </Button>
               <Button
                 variant="destructive"
                 onClick={() => setIsDeleteOpen(true)}
               >
                 <IconTrash className="mr-2 h-4 w-4" />
-                Удалить
+                {t('branches.actions.delete')}
               </Button>
             </div>
           </div>
@@ -89,7 +91,7 @@ export default function BranchDetailPage({
           <BranchInfoDisplay branch={branch} />
 
           <div className="space-y-4">
-            <Heading title="Статистика" description="Показатели эффективности филиала" />
+            <Heading title={t('branches.detail.statistics')} description={t('branches.detail.statisticsDescription')} />
             <BranchStatisticsWidget branchId={parseInt(branchId)} />
           </div>
         </div>

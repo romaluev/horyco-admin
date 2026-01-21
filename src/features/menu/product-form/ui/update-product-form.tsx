@@ -6,6 +6,7 @@ import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import {
   Button,
@@ -36,6 +37,7 @@ export const UpdateProductForm = ({
   productId,
   onSuccess,
 }: UpdateProductFormProps) => {
+  const { t } = useTranslation('menu')
   const { mutateAsync: updateProductMutation } = useUpdateProduct()
   const [imageFile, setImageFile] = useState<File | null>(null)
   const router = useRouter()
@@ -109,9 +111,9 @@ export const UpdateProductForm = ({
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-3">
-                <FormLabel>Название</FormLabel>
+                <FormLabel>{t('products.form.name.label')}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Введите название продукта" {...field} />
+                  <Input placeholder={t('products.form.name.placeholder')} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,11 +127,11 @@ export const UpdateProductForm = ({
             name="price"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Цена (обязательно)</FormLabel>
+                <FormLabel>{t('products.form.price.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Введите цену"
+                    placeholder={t('products.form.price.placeholder')}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -144,11 +146,11 @@ export const UpdateProductForm = ({
             name="preparationTime"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Время приготовления (мин)</FormLabel>
+                <FormLabel>{t('products.form.preparationTime.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Например: 15"
+                    placeholder={t('products.form.preparationTime.placeholder')}
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -167,11 +169,11 @@ export const UpdateProductForm = ({
             name="calories"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Калории</FormLabel>
+                <FormLabel>{t('products.form.calories.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Например: 350"
+                    placeholder={t('products.form.calories.placeholder')}
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -190,10 +192,10 @@ export const UpdateProductForm = ({
             name="description"
             render={({ field }) => (
               <FormItem className="md:col-span-6">
-                <FormLabel>Описание</FormLabel>
+                <FormLabel>{t('products.form.description.label')}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Введите описание продукта"
+                    placeholder={t('products.form.description.placeholder')}
                     className="resize-none"
                     {...field}
                   />
@@ -208,10 +210,10 @@ export const UpdateProductForm = ({
             name="allergens"
             render={({ field }) => (
               <FormItem className="md:col-span-6">
-                <FormLabel>Аллергены (через запятую)</FormLabel>
+                <FormLabel>{t('products.form.allergens.label')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Например: молоко, яйца, орехи"
+                    placeholder={t('products.form.allergens.placeholder')}
                     {...field}
                     value={field.value?.join(', ') || ''}
                     onChange={(e) => {
@@ -240,7 +242,7 @@ export const UpdateProductForm = ({
                   <Switch checked={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormLabel className="!mt-0">
-                  Продукт доступен для заказа
+                  {t('products.form.available.label')}
                 </FormLabel>
                 <FormMessage />
               </FormItem>
@@ -248,7 +250,7 @@ export const UpdateProductForm = ({
           />
 
           <Button type="submit" className="w-full px-4 md:w-auto">
-            Обновить продукт
+            {t('products.actions.update')}
           </Button>
         </div>
       </form>

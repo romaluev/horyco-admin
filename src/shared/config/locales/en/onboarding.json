@@ -1,0 +1,169 @@
+{
+  "pages": {
+    "businessInfo": {
+      "title": "Tell us about your business",
+      "description": "This information will help us configure the system for your needs",
+      "cardTitle": "Business Information",
+      "cardDescription": "Fill in the basic information about your restaurant",
+      "businessName": "Business name *",
+      "businessNamePlaceholder": "Golden Dragon Restaurant",
+      "businessNameDescription": "Official name of your restaurant",
+      "businessType": "Business type *",
+      "businessTypeDescription": "This will help select an appropriate menu template",
+      "businessTypeSelect": "Select type",
+      "slug": "URL slug *",
+      "slugPlaceholder": "golden-dragon",
+      "slugDescription": "To create a unique link (e.g. Horyco.uz/golden-dragon). Only lowercase letters, numbers and hyphens.",
+      "logo": "Business logo",
+      "logoDescription": "Optional. Upload your business logo (up to 5 MB)",
+      "currentLogo": "Current logo:",
+      "buttons": {
+        "back": "Back",
+        "next": "Next",
+        "uploading": "Uploading...",
+        "saving": "Saving..."
+      }
+    },
+    "branchSetup": {
+      "title": "Branch Setup",
+      "description": "Provide information about your first branch",
+      "cardTitle": "Branch Setup",
+      "cardDescription": "Provide information about your first branch",
+      "branchName": "Branch name *",
+      "branchNamePlaceholder": "Main Branch",
+      "city": "City *",
+      "citySelect": "Select city",
+      "region": "Region *",
+      "regionSelect": "Select region",
+      "address": "Full address *",
+      "addressPlaceholder": "Str. Mustaqillik, 45",
+      "businessHours": {
+        "title": "Business Hours",
+        "description": "Set up working hours for each day of the week"
+      },
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "serviceTypes": {
+        "title": "Service Types",
+        "description": "Select available customer service methods",
+        "dineIn": "Dine In",
+        "dineInDescription": "Can order to dine in",
+        "takeaway": "Takeaway",
+        "takeawayDescription": "Can take away",
+        "delivery": "Delivery",
+        "deliveryDescription": "Can order delivery"
+      },
+      "buttons": {
+        "back": "Back",
+        "continue": "Continue"
+      }
+    },
+    "menuTemplate": {
+      "title": "Menu Setup",
+      "description": "Organize dishes by categories",
+      "selected": "Selected:",
+      "category": "category",
+      "categories": "categories",
+      "categories_4plus": "categories",
+      "dish": "dish",
+      "dishes": "dishes",
+      "dishes_4plus": "dishes",
+      "createCategory": "Create category",
+      "emptyState": {
+        "title": "Menu is empty",
+        "description": "Start by creating a category, then add dishes."
+      },
+      "categoryCard": {
+        "selected": "selected"
+      },
+      "productDialog": {
+        "add": "Add Dish",
+        "addDescription": "Add a new dish to the category",
+        "edit": "Edit Dish",
+        "editDescription": "Edit the name, price or description of the dish",
+        "name": "Name *",
+        "namePlaceholder": "Dish name",
+        "price": "Price (sum) *",
+        "pricePlaceholder": "25000",
+        "description": "Description",
+        "descriptionPlaceholder": "Dish description",
+        "cancel": "Cancel",
+        "add_button": "Add",
+        "save": "Save"
+      },
+      "categoryDialog": {
+        "add": "Add Category",
+        "addDescription": "Create a new category for dishes",
+        "edit": "Edit Category",
+        "editDescription": "Edit the name or description of the category",
+        "name": "Category name *",
+        "namePlaceholder": "E.g.: Appetizers",
+        "description": "Description",
+        "descriptionPlaceholder": "Category description",
+        "cancel": "Cancel",
+        "create": "Create",
+        "save": "Save"
+      },
+      "addDishButton": "Add dish to category",
+      "buttons": {
+        "back": "Back",
+        "skip": "Skip",
+        "skip_loading": "Skipping...",
+        "continue": "Continue",
+        "saving": "Saving..."
+      },
+      "errors": {
+        "loadError": "Menu loading error",
+        "loadErrorMessage": "Failed to load menu templates. Please try refreshing the page.",
+        "refresh": "Refresh"
+      }
+    },
+    "complete": {
+      "title": "Tell us about your business",
+      "titleSuccess": "Congratulations!",
+      "titleError": "Completion Error",
+      "description": "This information will help us configure the system for your needs",
+      "descriptionSuccess": "Your restaurant is ready to launch",
+      "descriptionError": "An error occurred while completing the setup",
+      "descriptionLoading": "Wait, the system is being activated...",
+      "successBanner": {
+        "title": "All set!",
+        "description": "The system is activated and ready to accept orders"
+      },
+      "completionSummary": "What was configured",
+      "steps": {
+        "registration_complete": "Registration",
+        "business_identity": "Business Information",
+        "branch_setup": "Branch Setup",
+        "menu_template": "Menu Template",
+        "staff_invited": "Staff Invited",
+        "go_live": "System Launch"
+      },
+      "skippedSteps": "Skipped steps:",
+      "nextSteps": "Next Steps",
+      "nextStepsDescription": "We recommend completing these actions for full functionality",
+      "priority": {
+        "high": "Important",
+        "recommended": "Recommended"
+      },
+      "goToNextStep": "Go to",
+      "buttons": {
+        "back": "Back",
+        "retry": "Try again",
+        "start": "Start Working",
+        "error": "An error occurred while completing the setup. Please try again."
+      }
+    },
+    "staffInvite": {
+      "title": "Staff Invitation",
+      "description": "Staff Invitation"
+    }
+  }
+}

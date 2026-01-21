@@ -1,0 +1,320 @@
+{
+  "title": "Dashboard",
+  "overview": {
+    "title": "Overview",
+    "description": "General business information"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "description": "Explore your business data"
+  },
+  "sales": {
+    "title": "Sales Overview",
+    "description": "Sales analysis",
+    "table": {
+      "metric": "Metric",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "change": "Change",
+      "grossSales": "Gross Sales",
+      "refunds": "Refunds",
+      "discounts": "Discounts",
+      "netRevenue": "Net Revenue",
+      "orders": "Orders",
+      "avgCheck": "Average Check",
+      "tips": "Tips"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "description": "Product performance analysis",
+    "filters": {
+      "searchPlaceholder": "Search product...",
+      "allCategories": "All categories"
+    },
+    "table": {
+      "index": "#",
+      "product": "Product",
+      "quantity": "Qty",
+      "revenue": "Revenue",
+      "share": "Share",
+      "abc": "ABC",
+      "trend": "Trend",
+      "noData": "No data to display"
+    },
+    "pagination": "Showing {count} of {total} products"
+  },
+  "customers": {
+    "title": "Customers",
+    "description": "Customer analysis",
+    "tabs": {
+      "overview": "Overview",
+      "rfm": "RFM Analysis",
+      "cohorts": "Cohorts"
+    },
+    "overview": {
+      "totalCustomers": "Total Customers",
+      "active": "Active",
+      "new": "New",
+      "returning": "Returning",
+      "churned": "Churned",
+      "activityRate": "Activity Rate",
+      "retentionRate": "Retention Rate",
+      "churnRate": "Churn Rate",
+      "avgRevenuePerCustomer": "Avg Revenue/Customer",
+      "segments": "Customer Segments",
+      "noSegmentData": "No segment data available"
+    },
+    "rfm": {
+      "segments": "RFM Segments",
+      "distribution": "RFM Distribution",
+      "noData": "No data for RFM analysis"
+    },
+    "cohorts": {
+      "retention": "Cohort Retention",
+      "avgRetention": "Average Retention",
+      "period1": "1 Month",
+      "period3": "3 Months",
+      "period6": "6 Months",
+      "noData": "No data for cohort analysis"
+    },
+    "table": {
+      "segment": "Segment",
+      "count": "Count",
+      "share": "Share",
+      "revenue": "Revenue",
+      "rfmSegment": "Segment",
+      "recency": "Recency",
+      "frequency": "Frequency",
+      "monetary": "Monetary"
+    }
+  },
+  "payments": {
+    "title": "Payment Methods",
+    "description": "Payment method analysis",
+    "table": {
+      "method": "Payment Method",
+      "transactions": "Transactions",
+      "amount": "Amount",
+      "share": "Share",
+      "avgAmount": "Avg Amount",
+      "noData": "No data to display"
+    },
+    "summary": {
+      "total": "Total",
+      "transactions": "transactions",
+      "cash": "Cash",
+      "card": "Cards",
+      "online": "Online"
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "description": "Staff performance analysis",
+    "filters": {
+      "searchPlaceholder": "Search employee...",
+      "allRoles": "All roles"
+    },
+    "table": {
+      "index": "#",
+      "employee": "Employee",
+      "role": "Role",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "tips": "Tips",
+      "change": "Change",
+      "noData": "No data to display"
+    },
+    "summary": "Showing {count} employees"
+  },
+  "financial": {
+    "title": "Financial",
+    "description": "Financial analytics",
+    "tabs": {
+      "pnl": "P&L",
+      "margins": "Margins"
+    },
+    "pnl": {
+      "title": "Profit & Loss Statement",
+      "netRevenue": "Net Revenue",
+      "grossProfit": "Gross Profit",
+      "operatingProfit": "Operating Profit",
+      "avgCheck": "Average Check",
+      "section": {
+        "revenue": "Revenue",
+        "expenses": "Operating Expenses"
+      },
+      "item": {
+        "grossRevenue": "Gross Revenue",
+        "discounts": "Discounts",
+        "refunds": "Refunds",
+        "cogs": "Cost of Goods Sold",
+        "operatingExpenses": "Total Operating Expenses"
+      },
+      "margin": "Operating Margin"
+    },
+    "margins": {
+      "avgMargin": "Average Margin",
+      "highMargin": "High Margin",
+      "lowMargin": "Low Margin",
+      "negative": "Negative",
+      "products": "Products by Margin",
+      "noData": "No product margin data available",
+      "table": {
+        "product": "Product",
+        "cost": "Cost",
+        "price": "Price",
+        "margin": "Margin",
+        "class": "Class"
+      }
+    }
+  },
+  "heatmap": {
+    "title": "Heatmap",
+    "description": "Activity analysis by time",
+    "grid": {
+      "orders": "Orders by Day and Hour",
+      "hour": "Hour"
+    },
+    "legend": {
+      "label": "Legend",
+      "low": "Low (0-5)",
+      "medium": "Medium (6-15)",
+      "high": "High (16-30)",
+      "peak": "Peak (31+)"
+    },
+    "peakTime": "Peak Time",
+    "peakDay": "Day",
+    "peakHour": "Hour"
+  },
+  "forecasting": {
+    "title": "Forecasting",
+    "description": "Cash flow forecast",
+    "cashFlow": {
+      "totalInflow": "Total Inflow",
+      "totalOutflow": "Total Outflow",
+      "netCashFlow": "Net Cash Flow",
+      "avgDailyFlow": "Average Daily Flow"
+    },
+    "balance": {
+      "title": "Balance Projection",
+      "opening": "Opening Balance",
+      "closing": "Closing Balance"
+    },
+    "peakDay": "Peak Day",
+    "dailyFlow": "Daily Cash Flow (Last 7 Days)",
+    "allDays": "Show all days ({count} records)",
+    "noFlowData": "No daily flow data available",
+    "note": "Forecast is based on current cash flow data for the selected period. Use a longer period for more accurate forecasts."
+  },
+  "branches": {
+    "title": "Branches",
+    "description": "Branch analysis",
+    "tabs": {
+      "comparison": "Comparison",
+      "benchmark": "Benchmark"
+    },
+    "comparison": {
+      "avgRevenue": "Average Revenue",
+      "avgOrders": "Average Orders",
+      "avgCheck": "Average Check",
+      "table": {
+        "branch": "Branch",
+        "revenue": "Revenue",
+        "orders": "Orders",
+        "avgCheck": "Avg Check",
+        "vsAverage": "vs Average"
+      }
+    },
+    "benchmark": {
+      "metric": "Metric",
+      "noData": "No data for branch comparison",
+      "metrics": {
+        "revenue": "Revenue",
+        "orders": "Orders",
+        "avgCheck": "Avg Check",
+        "customerCount": "Customers",
+        "retentionRate": "Retention Rate"
+      }
+    }
+  },
+  "alerts": {
+    "title": "Alerts",
+    "description": "Monitoring and alerts",
+    "tabs": {
+      "active": "Active",
+      "history": "History"
+    },
+    "severity": {
+      "critical": "CRITICAL",
+      "warning": "WARNING",
+      "info": "INFO"
+    },
+    "card": {
+      "detected": "Detected",
+      "branch": "Branch"
+    },
+    "empty": {
+      "title": "No Alerts",
+      "description": "All metrics are normal. We'll notify you if we detect any anomalies."
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Category analysis",
+    "table": {
+      "index": "#",
+      "category": "Category",
+      "productCount": "Products",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "share": "Share",
+      "change": "Change",
+      "noData": "No data to display"
+    },
+    "summary": "Total {count} categories, revenue: {revenue}"
+  },
+  "channels": {
+    "title": "Sales Channels",
+    "description": "Sales channel analysis",
+    "table": {
+      "channel": "Channel",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "share": "Share",
+      "avgCheck": "Avg Check",
+      "change": "Change",
+      "noData": "No data to display"
+    },
+    "summary": "Total: {revenue} ({orders} orders)"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "User profile"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your business settings",
+    "tabs": {
+      "branding": "Branding",
+      "features": "Features",
+      "payment": "Payment",
+      "sms": "SMS",
+      "subscription": "Subscription",
+      "appearance": "Appearance"
+    },
+    "warnings": {
+      "paymentOrgLevel": "Payment settings are available at organization level only. Select \"All branches (Default)\" to edit.",
+      "smsOrgLevel": "SMS settings are available at organization level only. Select \"All branches (Default)\" to edit."
+    }
+  },
+  "common": {
+    "noData": "No data to display",
+    "loading": "Loading...",
+    "error": "Error loading data",
+    "retry": "Retry",
+    "export": "Export",
+    "period": "Period",
+    "search": "Search"
+  }
+}

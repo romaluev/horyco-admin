@@ -1,0 +1,320 @@
+{
+  "title": "Панель управления",
+  "overview": {
+    "title": "Обзор",
+    "description": "Общая информация о вашем бизнесе"
+  },
+  "analytics": {
+    "title": "Аналитика",
+    "description": "Исследуйте данные вашего бизнеса"
+  },
+  "sales": {
+    "title": "Обзор продаж",
+    "description": "Анализ продаж",
+    "table": {
+      "metric": "Метрика",
+      "today": "Сегодня",
+      "yesterday": "Вчера",
+      "change": "Изменение",
+      "grossSales": "Валовые продажи",
+      "refunds": "Возвраты",
+      "discounts": "Скидки",
+      "netRevenue": "Чистая выручка",
+      "orders": "Заказов",
+      "avgCheck": "Средний чек",
+      "tips": "Чаевые"
+    }
+  },
+  "products": {
+    "title": "Продукты",
+    "description": "Анализ производительности продуктов",
+    "filters": {
+      "searchPlaceholder": "Поиск продукта...",
+      "allCategories": "Все категории"
+    },
+    "table": {
+      "index": "#",
+      "product": "Продукт",
+      "quantity": "Кол-во",
+      "revenue": "Выручка",
+      "share": "Доля",
+      "abc": "ABC",
+      "trend": "Тренд",
+      "noData": "Нет данных для отображения"
+    },
+    "pagination": "Показано {count} из {total} продуктов"
+  },
+  "customers": {
+    "title": "Клиенты",
+    "description": "Анализ клиентов",
+    "tabs": {
+      "overview": "Обзор",
+      "rfm": "RFM анализ",
+      "cohorts": "Когорты"
+    },
+    "overview": {
+      "totalCustomers": "Всего клиентов",
+      "active": "Активные",
+      "new": "Новые",
+      "returning": "Возвратные",
+      "churned": "Отток",
+      "activityRate": "Активность",
+      "retentionRate": "Удержание",
+      "churnRate": "Отток",
+      "avgRevenuePerCustomer": "Ср. выручка/клиент",
+      "segments": "Сегменты клиентов",
+      "noSegmentData": "Нет данных о сегментах"
+    },
+    "rfm": {
+      "segments": "RFM сегменты",
+      "distribution": "Распределение RFM",
+      "noData": "Нет данных для RFM анализа"
+    },
+    "cohorts": {
+      "retention": "Удержание по когортам",
+      "avgRetention": "Среднее удержание",
+      "period1": "1 месяц",
+      "period3": "3 месяца",
+      "period6": "6 месяцев",
+      "noData": "Нет данных для когортного анализа"
+    },
+    "table": {
+      "segment": "Сегмент",
+      "count": "Количество",
+      "share": "Доля",
+      "revenue": "Выручка",
+      "rfmSegment": "Сегмент",
+      "recency": "Recency",
+      "frequency": "Frequency",
+      "monetary": "Monetary"
+    }
+  },
+  "payments": {
+    "title": "Способы оплаты",
+    "description": "Анализ способов оплаты",
+    "table": {
+      "method": "Способ оплаты",
+      "transactions": "Транзакций",
+      "amount": "Сумма",
+      "share": "Доля",
+      "avgAmount": "Средняя сумма",
+      "noData": "Нет данных для отображения"
+    },
+    "summary": {
+      "total": "Всего",
+      "transactions": "транзакций",
+      "cash": "Наличные",
+      "card": "Карты",
+      "online": "Онлайн"
+    }
+  },
+  "staff": {
+    "title": "Персонал",
+    "description": "Анализ производительности персонала",
+    "filters": {
+      "searchPlaceholder": "Поиск сотрудника...",
+      "allRoles": "Все должности"
+    },
+    "table": {
+      "index": "#",
+      "employee": "Сотрудник",
+      "role": "Должность",
+      "orders": "Заказов",
+      "revenue": "Выручка",
+      "tips": "Чаевые",
+      "change": "Изм.",
+      "noData": "Нет данных для отображения"
+    },
+    "summary": "Показано {count} сотрудников"
+  },
+  "financial": {
+    "title": "Финансы",
+    "description": "Финансовая аналитика",
+    "tabs": {
+      "pnl": "P&L",
+      "margins": "Маржинальность"
+    },
+    "pnl": {
+      "title": "Отчет о прибылях и убытках",
+      "netRevenue": "Чистая выручка",
+      "grossProfit": "Валовая прибыль",
+      "operatingProfit": "Операционная прибыль",
+      "avgCheck": "Средний чек",
+      "section": {
+        "revenue": "Выручка",
+        "expenses": "Операционные расходы"
+      },
+      "item": {
+        "grossRevenue": "Валовая выручка",
+        "discounts": "Скидки",
+        "refunds": "Возвраты",
+        "cogs": "Себестоимость",
+        "operatingExpenses": "Итого операционные расходы"
+      },
+      "margin": "Операционная рентабельность"
+    },
+    "margins": {
+      "avgMargin": "Средняя маржа",
+      "highMargin": "Высокая маржа",
+      "lowMargin": "Низкая маржа",
+      "negative": "Отрицательная",
+      "products": "Продукты по маржинальности",
+      "noData": "Нет данных о маржинальности продуктов",
+      "table": {
+        "product": "Продукт",
+        "cost": "Себестоимость",
+        "price": "Цена",
+        "margin": "Маржа",
+        "class": "Класс"
+      }
+    }
+  },
+  "heatmap": {
+    "title": "Тепловая карта",
+    "description": "Анализ активности по времени",
+    "grid": {
+      "orders": "Заказов по дням и часам",
+      "hour": "Час"
+    },
+    "legend": {
+      "label": "Легенда",
+      "low": "Низкий (0-5)",
+      "medium": "Средний (6-15)",
+      "high": "Высокий (16-30)",
+      "peak": "Пик (31+)"
+    },
+    "peakTime": "Пиковое время",
+    "peakDay": "День",
+    "peakHour": "Час"
+  },
+  "forecasting": {
+    "title": "Прогнозирование",
+    "description": "Прогноз денежных потоков",
+    "cashFlow": {
+      "totalInflow": "Общий приток",
+      "totalOutflow": "Общий отток",
+      "netCashFlow": "Чистый денежный поток",
+      "avgDailyFlow": "Средний дневной поток"
+    },
+    "balance": {
+      "title": "Проекция баланса",
+      "opening": "Начальный баланс",
+      "closing": "Конечный баланс"
+    },
+    "peakDay": "Пиковый день",
+    "dailyFlow": "Дневной денежный поток (последние 7 дней)",
+    "allDays": "Показать все дни ({count} записей)",
+    "noFlowData": "Нет данных о дневных потоках",
+    "note": "Прогноз основан на текущих данных денежного потока за выбранный период. Для более точных прогнозов используйте данные за более длительный период."
+  },
+  "branches": {
+    "title": "Филиалы",
+    "description": "Анализ филиалов",
+    "tabs": {
+      "comparison": "Сравнение",
+      "benchmark": "Бенчмарк"
+    },
+    "comparison": {
+      "avgRevenue": "Средняя выручка",
+      "avgOrders": "Средние заказы",
+      "avgCheck": "Средний чек",
+      "table": {
+        "branch": "Филиал",
+        "revenue": "Выручка",
+        "orders": "Заказов",
+        "avgCheck": "Ср. чек",
+        "vsAverage": "vs Среднее"
+      }
+    },
+    "benchmark": {
+      "metric": "Метрика",
+      "noData": "Нет данных для сравнения филиалов",
+      "metrics": {
+        "revenue": "Выручка",
+        "orders": "Заказы",
+        "avgCheck": "Ср. чек",
+        "customerCount": "Клиенты",
+        "retentionRate": "Удержание"
+      }
+    }
+  },
+  "alerts": {
+    "title": "Оповещения",
+    "description": "Мониторинг и оповещения",
+    "tabs": {
+      "active": "Активные",
+      "history": "История"
+    },
+    "severity": {
+      "critical": "КРИТИЧНО",
+      "warning": "ВНИМАНИЕ",
+      "info": "ИНФО"
+    },
+    "card": {
+      "detected": "Обнаружено",
+      "branch": "Филиал"
+    },
+    "empty": {
+      "title": "Нет оповещений",
+      "description": "Все показатели в норме. Мы уведомим вас, если обнаружим аномалии."
+    }
+  },
+  "categories": {
+    "title": "Категории",
+    "description": "Анализ категорий",
+    "table": {
+      "index": "#",
+      "category": "Категория",
+      "productCount": "Продуктов",
+      "orders": "Заказов",
+      "revenue": "Выручка",
+      "share": "Доля",
+      "change": "Изм.",
+      "noData": "Нет данных для отображения"
+    },
+    "summary": "Всего {count} категорий, общая выручка: {revenue}"
+  },
+  "channels": {
+    "title": "Каналы продаж",
+    "description": "Анализ каналов продаж",
+    "table": {
+      "channel": "Канал",
+      "orders": "Заказов",
+      "revenue": "Выручка",
+      "share": "Доля",
+      "avgCheck": "Ср. чек",
+      "change": "Изм.",
+      "noData": "Нет данных для отображения"
+    },
+    "summary": "Всего: {revenue} ({orders} заказов)"
+  },
+  "profile": {
+    "title": "Профиль",
+    "description": "Профиль пользователя"
+  },
+  "settings": {
+    "title": "Настройки",
+    "description": "Управление настройками вашего бизнеса",
+    "tabs": {
+      "branding": "Брендинг",
+      "features": "Функции",
+      "payment": "Оплата",
+      "sms": "SMS",
+      "subscription": "Подписка",
+      "appearance": "Внешний вид"
+    },
+    "warnings": {
+      "paymentOrgLevel": "Настройки оплаты доступны только на уровне организации. Выберите \"Все филиалы (По умолчанию)\" для редактирования.",
+      "smsOrgLevel": "Настройки SMS доступны только на уровне организации. Выберите \"Все филиалы (По умолчанию)\" для редактирования."
+    }
+  },
+  "common": {
+    "noData": "Нет данных для отображения",
+    "loading": "Загрузка...",
+    "error": "Ошибка при загрузке данных",
+    "retry": "Повторить",
+    "export": "Экспорт",
+    "period": "Период",
+    "search": "Поиск"
+  }
+}

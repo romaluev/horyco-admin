@@ -1,0 +1,170 @@
+{
+  "pages": {
+    "businessInfo": {
+      "title": "Расскажите о вашем бизнесе",
+      "description": "Эта информация поможет нам настроить систему под ваши потребности",
+      "cardTitle": "Информация о заведении",
+      "cardDescription": "Заполните основные данные о вашем ресторане",
+      "businessName": "Название заведения *",
+      "businessNamePlaceholder": "Golden Dragon Restaurant",
+      "businessNameDescription": "Официальное название вашего ресторана",
+      "businessType": "Тип заведения *",
+      "businessTypeDescription": "Это поможет подобрать подходящий шаблон меню",
+      "businessTypeSelect": "Выберите тип",
+      "slug": "URL-адрес (slug) *",
+      "slugPlaceholder": "golden-dragon",
+      "slugDescription": "Для создания уникальной ссылки (например: Horyco.uz/golden-dragon). Только строчные буквы, цифры и дефисы.",
+      "logo": "Логотип заведения",
+      "logoDescription": "Необязательно. Загрузите логотип вашего заведения (до 5 МБ)",
+      "currentLogo": "Текущий логотип:",
+      "buttons": {
+        "back": "Назад",
+        "next": "Далее",
+        "uploading": "Загрузка...",
+        "saving": "Сохранение..."
+      }
+    },
+    "branchSetup": {
+      "title": "Настройка филиала",
+      "description": "Укажите информацию о вашем первом филиале",
+      "cardTitle": "Настройка филиала",
+      "cardDescription": "Укажите информацию о вашем первом филиале",
+      "branchName": "Название филиала *",
+      "branchNamePlaceholder": "Главный филиал",
+      "city": "Город *",
+      "citySelect": "Выберите город",
+      "region": "Район *",
+      "regionSelect": "Выберите район",
+      "address": "Полный адрес *",
+      "addressPlaceholder": "ул. Мустакиллик, д. 45",
+      "businessHours": {
+        "title": "Часы работы",
+        "description": "Настройте график работы для каждого дня недели",
+        "closed": "Выходной"
+      },
+      "days": {
+        "monday": "Понедельник",
+        "tuesday": "Вторник",
+        "wednesday": "Среда",
+        "thursday": "Четверг",
+        "friday": "Пятница",
+        "saturday": "Суббота",
+        "sunday": "Воскресенье"
+      },
+      "serviceTypes": {
+        "title": "Типы обслуживания",
+        "description": "Выберите доступные способы обслуживания клиентов",
+        "dineIn": "В зале",
+        "dineInDescription": "Можно заказать в зал",
+        "takeaway": "Собой",
+        "takeawayDescription": "Можно забрать с собой",
+        "delivery": "Доставка",
+        "deliveryDescription": "Можно заказать доставку"
+      },
+      "buttons": {
+        "back": "Назад",
+        "continue": "Продолжить"
+      }
+    },
+    "menuTemplate": {
+      "title": "Настройка меню",
+      "description": "Организуйте блюда по категориям",
+      "selected": "Выбрано:",
+      "category": "категория",
+      "categories": "категории",
+      "categories_4plus": "категорий",
+      "dish": "блюдо",
+      "dishes": "блюда",
+      "dishes_4plus": "блюд",
+      "createCategory": "Создать категорию",
+      "emptyState": {
+        "title": "Меню пусто",
+        "description": "Начните с создания категории, затем добавляйте блюда."
+      },
+      "categoryCard": {
+        "selected": "выбрано"
+      },
+      "productDialog": {
+        "add": "Добавить блюдо",
+        "addDescription": "Добавьте новое блюдо в категорию",
+        "edit": "Редактировать блюдо",
+        "editDescription": "Измените название, цену или описание блюда",
+        "name": "Название *",
+        "namePlaceholder": "Название блюда",
+        "price": "Цена (сум) *",
+        "pricePlaceholder": "25000",
+        "description": "Описание",
+        "descriptionPlaceholder": "Описание блюда",
+        "cancel": "Отмена",
+        "add_button": "Добавить",
+        "save": "Сохранить"
+      },
+      "categoryDialog": {
+        "add": "Добавить категорию",
+        "addDescription": "Создайте новую категорию для блюд",
+        "edit": "Редактировать категорию",
+        "editDescription": "Измените название или описание категории",
+        "name": "Название категории *",
+        "namePlaceholder": "Например: Закуски",
+        "description": "Описание",
+        "descriptionPlaceholder": "Описание категории",
+        "cancel": "Отмена",
+        "create": "Создать",
+        "save": "Сохранить"
+      },
+      "addDishButton": "Добавить блюдо в категорию",
+      "buttons": {
+        "back": "Назад",
+        "skip": "Пропустить",
+        "skip_loading": "Пропуск...",
+        "continue": "Продолжить",
+        "saving": "Сохранение..."
+      },
+      "errors": {
+        "loadError": "Ошибка загрузки меню",
+        "loadErrorMessage": "Не удалось загрузить шаблоны меню. Попробуйте обновить страницу.",
+        "refresh": "Обновить"
+      }
+    },
+    "complete": {
+      "title": "Расскажите о вашем бизнесе",
+      "titleSuccess": "Поздравляем!",
+      "titleError": "Ошибка завершения",
+      "description": "Эта информация поможет нам настроить систему под ваши потребности",
+      "descriptionSuccess": "Ваш ресторан готов к запуску",
+      "descriptionError": "Произошла ошибка при завершении настройки",
+      "descriptionLoading": "Подождите, система активируется...",
+      "successBanner": {
+        "title": "Все готово!",
+        "description": "Система активирована и готова к приёму заказов"
+      },
+      "completionSummary": "Что было настроено",
+      "steps": {
+        "registration_complete": "Регистрация",
+        "business_identity": "Информация о бизнесе",
+        "branch_setup": "Настройка филиала",
+        "menu_template": "Шаблон меню",
+        "staff_invited": "Приглашение персонала",
+        "go_live": "Запуск системы"
+      },
+      "skippedSteps": "Пропущенные шаги:",
+      "nextSteps": "Следующие шаги",
+      "nextStepsDescription": "Рекомендуем выполнить эти действия для полноценной работы",
+      "priority": {
+        "high": "Важно",
+        "recommended": "Рекомендуется"
+      },
+      "goToNextStep": "Перейти",
+      "buttons": {
+        "back": "Назад",
+        "retry": "Попробовать снова",
+        "start": "Начать работу",
+        "error": "Произошла ошибка при завершении настройки. Попробуйте снова."
+      }
+    },
+    "staffInvite": {
+      "title": "Приглашение персонала",
+      "description": "Приглашение персонала"
+    }
+  }
+}

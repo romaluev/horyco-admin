@@ -6,6 +6,7 @@
 'use client'
 
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import {
   AlertDialog,
@@ -35,6 +36,7 @@ export const DeleteBranchOverrideButton = ({
   productName,
   branchName,
 }: DeleteBranchOverrideButtonProps) => {
+  const { t } = useTranslation('menu')
   const { mutate: deleteOverride, isPending } = useDeleteBranchOverride()
 
   const handleDelete = (): void => {
@@ -50,23 +52,19 @@ export const DeleteBranchOverrideButton = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Удалить переопределение?</AlertDialogTitle>
+          <AlertDialogTitle>{t('branchOverrides.delete.title')}</AlertDialogTitle>
           <AlertDialogDescription>
             {productName && branchName ? (
-              <>
-                Переопределение для &quot;{productName}&quot; в филиале &quot;
-                {branchName}&quot; будет удалено. После этого будут
-                использоваться базовые настройки продукта.
-              </>
+              t('branchOverrides.delete.withNames', { productName, branchName })
             ) : (
-              'Переопределение будет удалено. Это действие нельзя отменить.'
+              t('branchOverrides.delete.withoutNames')
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Отмена</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{t('common.cancel')}</AlertDialogCancel>
           <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-            {isPending ? 'Удаление...' : 'Удалить'}
+            {isPending ? t('common.loading') : t('common.delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

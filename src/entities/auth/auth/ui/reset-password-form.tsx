@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import { Link } from '@tanstack/react-router'
 import { useRouter, useSearchParams } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Check, Loader2, X } from 'lucide-react'
@@ -46,28 +47,16 @@ const PASSWORD_REGEX = {
 
 const resetPasswordSchema = z
   .object({
-    code: z
-      .string()
-      .length(OTP_LENGTH, { message: 'Код должен содержать 6 цифр' })
-      .regex(/^\d+$/, { message: 'Код должен содержать только цифры' }),
+    code: z.string().length(OTP_LENGTH).regex(/^\d+$/),
     newPassword: z
       .string()
-      .min(PASSWORD_MIN_LENGTH, {
-        message: `Пароль должен содержать минимум ${PASSWORD_MIN_LENGTH} символов`,
-      })
-      .regex(PASSWORD_REGEX.HAS_UPPERCASE, {
-        message: 'Пароль должен содержать минимум 1 заглавную букву',
-      })
-      .regex(PASSWORD_REGEX.HAS_LOWERCASE, {
-        message: 'Пароль должен содержать минимум 1 строчную букву',
-      })
-      .regex(PASSWORD_REGEX.HAS_NUMBER, {
-        message: 'Пароль должен содержать минимум 1 цифру',
-      }),
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX.HAS_UPPERCASE)
+      .regex(PASSWORD_REGEX.HAS_LOWERCASE)
+      .regex(PASSWORD_REGEX.HAS_NUMBER),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Пароли не совпадают',
     path: ['confirmPassword'],
   })
 
@@ -96,13 +85,13 @@ const checkPasswordStrength = (password: string): PasswordStrength => {
   const score = Object.values(requirements).filter(Boolean).length
 
   const strengthMap: Record<number, { label: string; color: string }> = {
-    4: { label: 'Отличный', color: 'text-green-600' },
-    3: { label: 'Хороший', color: 'text-blue-600' },
-    2: { label: 'Средний', color: 'text-yellow-600' },
+    4: { label: 'excellent', color: 'text-green-600' },
+    3: { label: 'good', color: 'text-blue-600' },
+    2: { label: 'medium', color: 'text-yellow-600' },
   }
 
   const { label, color } = strengthMap[score] ?? {
-    label: 'Очень слабый',
+    label: 'veryWeak',
     color: 'text-destructive',
   }
 
@@ -110,23 +99,21 @@ const checkPasswordStrength = (password: string): PasswordStrength => {
 }
 
 const extractErrorMessage = (err: unknown): string => {
-  const defaultMessage = 'Не удалось сбросить пароль. Попробуйте снова.'
-
   if (typeof err !== 'object' || err === null || !('response' in err)) {
-    return defaultMessage
+    return ''
   }
 
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
 
   if (typeof response !== 'object' || response === null || !('data' in response)) {
-    return defaultMessage
+    return ''
   }
 
   const responseData = response as Record<string, unknown>
   const data = responseData.data as Record<string, unknown> | undefined
 
-  if (!data) return defaultMessage
+  if (!data) return ''
 
   if ('error' in data && typeof data.error === 'object' && data.error !== null) {
     const errorData = data.error as Record<string, unknown>
@@ -139,7 +126,7 @@ const extractErrorMessage = (err: unknown): string => {
     return data.message
   }
 
-  return defaultMessage
+  return ''
 }
 
 interface PasswordRequirementProps {
@@ -235,33 +222,34 @@ const OtpInput = ({ value, onChange, disabled }: OtpInputProps) => {
 
 interface PasswordStrengthIndicatorProps {
   strength: PasswordStrength
+  t: (key: string) => string
 }
 
-const PasswordStrengthIndicator = ({ strength }: PasswordStrengthIndicatorProps) => (
+const PasswordStrengthIndicator = ({ strength, t }: PasswordStrengthIndicatorProps) => (
   <div className="mt-2 space-y-2">
     <div className="flex items-center justify-between">
-      <span className="text-sm">Надёжность:</span>
+      <span className="text-sm">{t('resetPassword.strength')}</span>
       <span className={`text-sm font-medium ${strength.color}`}>
-        {strength.label}
+        {t(`resetPassword.${strength.label}`)}
       </span>
     </div>
     <Progress value={strength.score * PROGRESS_MULTIPLIER} />
     <div className="space-y-1 text-xs">
       <PasswordRequirement
         met={strength.requirements.minLength}
-        text="Минимум 8 символов"
+        text={t('resetPassword.minLength')}
       />
       <PasswordRequirement
         met={strength.requirements.hasUppercase}
-        text="Заглавная буква"
+        text={t('resetPassword.uppercase')}
       />
       <PasswordRequirement
         met={strength.requirements.hasLowercase}
-        text="Строчная буква"
+        text={t('resetPassword.lowercase')}
       />
       <PasswordRequirement
         met={strength.requirements.hasNumber}
-        text="Цифра"
+        text={t('resetPassword.digit')}
       />
     </div>
   </div>
@@ -269,6 +257,7 @@ const PasswordStrengthIndicator = ({ strength }: PasswordStrengthIndicatorProps)
 
 const ResetPasswordForm = () => {
   const router = useRouter()
+  const { t } = useTranslation('auth')
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
 
@@ -315,7 +304,8 @@ const ResetPasswordForm = () => {
         router.push('/auth/sign-in')
       }
     } catch (err: unknown) {
-      setError(extractErrorMessage(err))
+      const apiError = extractErrorMessage(err)
+      setError(apiError || t('resetPassword.failed'))
     } finally {
       setIsLoading(false)
     }
@@ -328,9 +318,9 @@ const ResetPasswordForm = () => {
   return (
     <Card className="w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Сброс пароля</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t('resetPassword.title')}</CardTitle>
         <CardDescription>
-          Введите код, отправленный на {email}
+          {t('resetPassword.description', { email })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -348,7 +338,7 @@ const ResetPasswordForm = () => {
               name="code"
               render={() => (
                 <FormItem>
-                  <FormLabel>Код подтверждения</FormLabel>
+                  <FormLabel>{t('resetPassword.code')}</FormLabel>
                   <FormControl>
                     <OtpInput
                       value={otpValue}
@@ -366,17 +356,17 @@ const ResetPasswordForm = () => {
               name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Новый пароль</FormLabel>
+                  <FormLabel>{t('resetPassword.newPassword')}</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder="Введите новый пароль"
+                      placeholder={t('resetPassword.newPasswordPlaceholder')}
                       autoComplete="new-password"
                       {...field}
                       disabled={isLoading}
                     />
                   </FormControl>
                   {passwordStrength && (
-                    <PasswordStrengthIndicator strength={passwordStrength} />
+                    <PasswordStrengthIndicator strength={passwordStrength} t={t} />
                   )}
                   <FormMessage />
                 </FormItem>
@@ -388,10 +378,10 @@ const ResetPasswordForm = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Повторите пароль</FormLabel>
+                  <FormLabel>{t('resetPassword.confirmPassword')}</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder="Повторите новый пароль"
+                      placeholder={t('resetPassword.confirmPasswordPlaceholder')}
                       autoComplete="new-password"
                       {...field}
                       disabled={isLoading}
@@ -410,10 +400,10 @@ const ResetPasswordForm = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Сохранение...
+                  {t('resetPassword.saving')}
                 </>
               ) : (
-                'Сбросить пароль'
+                t('resetPassword.resetButton')
               )}
             </Button>
 
@@ -422,7 +412,7 @@ const ResetPasswordForm = () => {
               className="text-muted-foreground hover:text-primary flex items-center justify-center gap-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
-              Отправить код повторно
+              {t('resetPassword.sendCodeAgain')}
             </Link>
           </form>
         </Form>

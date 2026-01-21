@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
 import { useRouter } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
@@ -33,22 +34,16 @@ import { PhoneInput } from '@/shared/ui/base/phone-input'
 
 import { useAuthStore } from '@/entities/auth/auth/model/store'
 
-// Define the form schema with Zod
 const loginFormSchema = z.object({
-  phone: z
-    .string()
-    .min(4, { message: 'Password must be at least 6 characters' })
-    .max(13, { message: 'Password must be less than 13 characters' }),
-  password: z
-    .string()
-    .min(4, { message: 'Password must be at least 6 characters' })
-    .max(100, { message: 'Password must be less than 100 characters' }),
+  phone: z.string().min(4).max(13),
+  password: z.string().min(4).max(100),
 })
 
 type LoginFormValues = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
   const router = useRouter()
+  const { t } = useTranslation('auth')
   const { login, isLoading, error, clearError, me, loadFullProfile } = useAuthStore()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -61,73 +56,25 @@ const LoginForm = () => {
     },
   })
 
-  // Handle form submission
   const onSubmit = async (data: LoginFormValues): Promise<void> => {
     try {
       setGeneralError(null)
       clearError()
 
-      // Get tenantSlug from stored context or URL
       const tenantSlug = typeof window !== 'undefined'
         ? localStorage.getItem('tenantSlug') || undefined
         : undefined
 
-      // Step 1: Login and save tokens
       await login(data.phone, data.password, tenantSlug)
 
-      // Step 2: Show loading immediately and fetch user data
       setIsRedirecting(true)
       await me()
-      // Load full profile with avatar on background
       void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
 
-      // TODO: Uncomment when API is ready
-      // Check onboarding status
-      // try {
-      //   const onboardingProgress = await onboardingApi.getProgress();
-      //
-      //   // If onboarding is not completed, redirect to appropriate step
-      //   if (!onboardingProgress.isCompleted) {
-      //     const currentStep = onboardingProgress.currentStep;
-      //
-      //     // Map backend step names to routes
-      //     const stepRoutes: Record<string, string> = {
-      //       'REGISTRATION_COMPLETE': '/onboarding/business-info',
-      //       'BUSINESS_INFO_VERIFIED': '/onboarding/branch-setup',
-      //       'BRANCH_SETUP': '/onboarding/menu-template',
-      //       'MENU_TEMPLATE': '/onboarding/payment-setup',
-      //       'PAYMENT_SETUP': '/onboarding/staff-invite',
-      //       'STAFF_INVITED': '/onboarding/complete',
-      //       'GO_LIVE': '/dashboard'
-      //     };
-      //
-      //     const nextRoute = stepRoutes[currentStep] || '/onboarding/business-info';
-      //     router.push(nextRoute);
-      //     return;
-      //   }
-      // } catch (err) {
-      //   // If onboarding check fails, proceed to normal redirect
-      //   console.log('Could not check onboarding status:', err);
-      // }
-
-      // Step 3: Redirect after user data is loaded
       router.push('/')
-
-      // Normal redirect logic for completed onboarding (currently unreachable)
-      // const redirectPath = searchParams?.get('redirect');
-      // if (
-      //   redirectPath &&
-      //   redirectPath.startsWith('/') &&
-      //   !redirectPath.startsWith('//') &&
-      //   !redirectPath.includes(':')
-      // ) {
-      //   router.push(redirectPath);
-      // } else {
-      //   router.push('/dashboard');
-      // }
     } catch (error: unknown) {
       setIsRedirecting(false)
-      let errorMessage = 'Failed to login. Please try again.'
+      let errorMessage = t('signIn.loginFailed')
       if (typeof error === 'object' && error !== null && 'response' in error) {
         const errorObj = error as Record<string, unknown>
         const response = errorObj.response
@@ -146,7 +93,6 @@ const LoginForm = () => {
     }
   }
 
-  // Show full-screen loading overlay while fetching user data
   if (isRedirecting) {
     return (
       <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
@@ -160,8 +106,8 @@ const LoginForm = () => {
   return (
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
-        <CardDescription>Введите свои данные, чтобы войти</CardDescription>
+        <CardTitle className="text-2xl font-bold">{t('signIn.title')}</CardTitle>
+        <CardDescription>{t('signIn.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -178,11 +124,11 @@ const LoginForm = () => {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Телефон номер</FormLabel>
+                  <FormLabel>{t('signIn.phone')}</FormLabel>
                   <FormControl>
                     <PhoneInput
                       defaultCountry={'UZ'}
-                      placeholder={'90 123 45 67'}
+                      placeholder={t('signIn.phonePlaceholder')}
                       limitMaxLength
                       countries={['UZ']}
                       {...field}
@@ -200,18 +146,18 @@ const LoginForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Пароль</FormLabel>
+                    <FormLabel>{t('signIn.password')}</FormLabel>
                     <Link
                       to="/auth/forgot-password"
                       className="text-muted-foreground hover:text-primary text-sm underline-offset-4 hover:underline"
                     >
-                      Забыли пароль?
+                      {t('signIn.forgotPassword')}
                     </Link>
                   </div>
                   <FormControl>
                     <PasswordInput
                       type="password"
-                      placeholder="Введите свой пароль"
+                      placeholder={t('signIn.passwordPlaceholder')}
                       {...field}
                       autoComplete="current-password"
                       disabled={isLoading || isRedirecting}
@@ -230,10 +176,10 @@ const LoginForm = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Вход...
+                  {t('signIn.signingIn')}
                 </>
               ) : (
-                'Войти'
+                t('signIn.signInButton')
               )}
             </Button>
           </form>

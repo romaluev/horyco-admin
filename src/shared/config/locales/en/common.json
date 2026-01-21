@@ -1,0 +1,89 @@
+{
+  "error": "Error",
+  "loading": "Loading...",
+  "notFound": "Not found",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "save": "Save",
+  "close": "Close",
+  "back": "Back",
+  "profile": "Profile",
+  "logout": "Logout",
+  "settings": "Settings",
+  "theme": "Theme",
+  "language": "Language",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "actions": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "update": "Update",
+    "new": "New",
+    "saving": "Saving...",
+    "add": "Add",
+    "addNew": "Add new",
+    "clearAll": "Clear all",
+    "submit": "Submit",
+    "apply": "Apply",
+    "remove": "Remove",
+    "copy": "Copy",
+    "download": "Download"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Not found",
+    "active": "Active",
+    "archived": "Archived",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "success": "Success"
+  },
+  "filters": {
+    "title": "Filters",
+    "noFilters": "No filters. Click \"Add filter\" to start.",
+    "addFilter": "Add filter",
+    "property": "Property",
+    "rule": "Rule",
+    "value": "Value",
+    "rules": {
+      "eq": "Equals",
+      "neq": "Not equals",
+      "gt": "Greater than",
+      "gte": "Greater or equals",
+      "lt": "Less than",
+      "lte": "Less or equals",
+      "like": "Contains",
+      "nlike": "Does not contain",
+      "in": "In list",
+      "nin": "Not in list",
+      "isnull": "Empty",
+      "isnotnull": "Not empty"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "of": "of",
+    "showing": "Showing {{from}} to {{to}} of {{total}}"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "noResults": "No results found",
+    "searching": "Searching..."
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "pattern": "Invalid format",
+    "invalid": "Invalid value"
+  }
+}

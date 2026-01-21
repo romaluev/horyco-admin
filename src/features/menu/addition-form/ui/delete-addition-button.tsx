@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import {
   AlertDialog,
@@ -35,6 +36,7 @@ export const DeleteAdditionButton = ({
   variant = 'outline',
   size = 'sm',
 }: DeleteAdditionButtonProps) => {
+  const { t } = useTranslation('menu')
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: deleteAddition, isPending } = useDeleteAddition()
 
@@ -61,28 +63,29 @@ export const DeleteAdditionButton = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Подтвердите удаление</AlertDialogTitle>
+          <AlertDialogTitle>{t('additions.delete.title')}</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
             <p>
-              Вы уверены, что хотите удалить дополнение{' '}
-              <strong>{addition.name}</strong>?
+              {t('additions.delete.confirmMessage', { name: addition.name })}
             </p>
             {hasItems && (
               <p className="text-warning">
-                ⚠️ Это дополнение содержит {addition.itemsCount} позиций.
+                {t('additions.delete.warningItems', { count: addition.itemsCount })}
               </p>
             )}
-            <p>Это действие нельзя отменить.</p>
+            <p>{t('additions.delete.irreversible')}</p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Отмена</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {t('common.cancel')}
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending}
             className="bg-destructive hover:bg-destructive/90"
           >
-            {isPending ? 'Удаление...' : 'Удалить'}
+            {isPending ? t('common.loading') : t('additions.actions.delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

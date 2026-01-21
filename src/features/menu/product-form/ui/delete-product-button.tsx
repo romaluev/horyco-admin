@@ -1,4 +1,5 @@
 import { Trash } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Button } from '@/shared/ui/base/button'
@@ -16,14 +17,15 @@ import {
 import { useDeleteProduct } from '@/entities/menu/product/model'
 
 export const DeleteProductButton = ({ id }: { id: number }) => {
+  const { t } = useTranslation('menu')
   const { mutateAsync: deleteProduct } = useDeleteProduct()
 
   const handleDelete = async () => {
     try {
       await deleteProduct(id)
-      toast.error('Продукт успешно удален')
+      toast.success(t('products.delete.successMessage'))
     } catch {
-      toast.error('Ошибка при удалении продукта')
+      toast.error(t('products.delete.errorMessage'))
     }
   }
 
@@ -36,18 +38,18 @@ export const DeleteProductButton = ({ id }: { id: number }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Вы уверены что хотите удалить продукт?</DialogTitle>
-          <DialogDescription>Продукт будет полностью удален</DialogDescription>
+          <DialogTitle>{t('products.delete.confirmTitle')}</DialogTitle>
+          <DialogDescription>{t('products.delete.confirmDescription')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button type="button" variant="secondary">
-              Отменить
+              {t('common.cancel')}
             </Button>
           </DialogClose>
           <DialogClose asChild>
             <Button type="button" onClick={handleDelete} variant="destructive">
-              Удалить
+              {t('common.delete')}
             </Button>
           </DialogClose>
         </DialogFooter>

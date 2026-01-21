@@ -6,6 +6,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { HelmetProvider } from 'react-helmet-async'
 import NProgress from 'nprogress'
 
+import '@/shared/config/i18n'
 import { BaseLoading } from '@/shared/ui'
 import { ActiveThemeProvider } from '@/shared/ui/active-theme'
 import { Toaster } from '@/shared/ui/base/sonner'

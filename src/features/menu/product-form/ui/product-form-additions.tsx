@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import { Card, CardContent } from '@/shared/ui/base/card'
@@ -19,6 +20,7 @@ import { Label } from '@/shared/ui/base/label'
 import { Switch } from '@/shared/ui/base/switch'
 
 export function ProductFormAdditions() {
+  const { t } = useTranslation('menu')
   const form = useFormContext()
   const [expandedAddition, setExpandedAddition] = useState<number | null>(null)
 
@@ -60,7 +62,7 @@ export function ProductFormAdditions() {
   return (
     <div className="space-y-4 md:col-span-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Дополнения</h3>
+        <h3 className="text-lg font-medium">{t('products.form.additions.title')}</h3>
         <Button
           type="button"
           variant="outline"
@@ -68,7 +70,7 @@ export function ProductFormAdditions() {
           size="sm"
         >
           <Plus className="mr-1 h-4 w-4" />
-          Добавить опцию
+          {t('products.form.additions.addNew')}
         </Button>
       </div>
 
@@ -88,7 +90,7 @@ export function ProductFormAdditions() {
                 <ChevronDown className="mr-1 h-4 w-4" />
               )}
               {form.watch(`additions.${index}.name`) ||
-                `Название дополнения ${index + 1}`}
+                `${t('products.form.additions.name.label')} ${index + 1}`}
             </span>
             <Button
               variant="secondary"
@@ -111,9 +113,9 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.name`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Название дополнения</FormLabel>
+                      <FormLabel>{t('products.form.additions.name.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Например: Выбор мяса" {...field} />
+                        <Input placeholder={t('products.form.additions.name.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -124,12 +126,12 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.limit`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Лимит выбора</FormLabel>
+                      <FormLabel>{t('products.form.additions.limit.label')}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           min="1"
-                          placeholder="Максимальное количество"
+                          placeholder={t('products.form.additions.limit.placeholder')}
                           {...field}
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value) || 1)
@@ -154,7 +156,7 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>Обязательный выбор</FormLabel>
+                      <FormLabel>{t('products.form.additions.required.label')}</FormLabel>
                     </FormItem>
                   )}
                 />
@@ -170,7 +172,7 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>Множественный выбор</FormLabel>
+                      <FormLabel>{t('products.form.additions.multiple.label')}</FormLabel>
                     </FormItem>
                   )}
                 />
@@ -184,8 +186,7 @@ export function ProductFormAdditions() {
 
       {fields.length === 0 && (
         <div className="rounded-md border border-dashed p-4 text-center text-gray-500">
-          Нет дополнений. Нажмите «Добавить опцию» для создания вариаций
-          продукта.
+          {t('products.form.additions.noAdditions')}
         </div>
       )}
     </div>
@@ -193,6 +194,7 @@ export function ProductFormAdditions() {
 }
 
 function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
+  const { t } = useTranslation('menu')
   const form = useFormContext()
   const { fields, remove, append } = useFieldArray({
     control: form.control,
@@ -209,18 +211,17 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
   return (
     <div className="mt-4 mb-2">
       <div className="mb-3 flex items-center justify-between">
-        <Label>Элементы дополнения</Label>
+        <Label>{t('products.form.additions.items.title')}</Label>
         <Button type="button" variant="outline" onClick={addItem} size="sm">
           <Plus className="mr-1 h-4 w-4" />
-          Добавить элемент
+          {t('products.form.additions.items.addNew')}
         </Button>
       </div>
 
       <div className="space-y-3">
         {!fields.length ? (
           <div className="rounded-md border border-dashed p-3 text-center text-gray-500">
-            Элементы не добавлены. Добавьте элементы, которые клиенты смогут
-            выбрать.
+            {t('products.form.additions.items.noItems')}
           </div>
         ) : (
           fields.map((field, productIndex) => (
@@ -231,7 +232,7 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="Название элемента" {...field} />
+                      <Input placeholder={t('products.form.additions.items.name.placeholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -245,7 +246,7 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="Цена"
+                        placeholder={t('products.form.additions.items.price.placeholder')}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />

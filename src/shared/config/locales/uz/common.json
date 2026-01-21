@@ -1,0 +1,89 @@
+{
+  "error": "Xato",
+  "loading": "Yuklanmoqda...",
+  "notFound": "Topilmadi",
+  "confirm": "Tasdiqlash",
+  "cancel": "Bekor qilish",
+  "delete": "O'chirish",
+  "edit": "Tahrirlash",
+  "save": "Saqlash",
+  "close": "Yopish",
+  "back": "Orqaga",
+  "profile": "Profil",
+  "logout": "Chiqish",
+  "settings": "Sozlamalar",
+  "theme": "Tema",
+  "language": "Til",
+  "light": "Yengil",
+  "dark": "To'q",
+  "system": "Tizim",
+  "actions": {
+    "create": "Yaratish",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "update": "Yangilash",
+    "new": "Yangi",
+    "saving": "Saqlanmoqda...",
+    "add": "Qo'shish",
+    "addNew": "Yangi qo'shish",
+    "clearAll": "Barchani o'chirish",
+    "submit": "Yuborish",
+    "apply": "Qo'llash",
+    "remove": "Olib tashlash",
+    "copy": "Nusxa olish",
+    "download": "Yuklab olish"
+  },
+  "status": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xato",
+    "notFound": "Topilmadi",
+    "active": "Faol",
+    "archived": "Arxivlangan",
+    "inactive": "Faol emas",
+    "pending": "Kutilmoqda",
+    "success": "Muvaffaqiyatli"
+  },
+  "filters": {
+    "title": "Filterlar",
+    "noFilters": "Filterlar yo'q. Boshlash uchun \"Filter qo'shish\" tugmasini bosing.",
+    "addFilter": "Filter qo'shish",
+    "property": "Xususiyat",
+    "rule": "Qoida",
+    "value": "Qiymat",
+    "rules": {
+      "eq": "Teng",
+      "neq": "Teng emas",
+      "gt": "Kattaroq",
+      "gte": "Kattaroq yoki teng",
+      "lt": "Kichikroq",
+      "lte": "Kichikroq yoki teng",
+      "like": "O'z ichiga oladi",
+      "nlike": "O'z ichiga olmadi",
+      "in": "Ro'yxatda",
+      "nin": "Ro'yxatda emas",
+      "isnull": "Bo'sh",
+      "isnotnull": "Bo'sh emas"
+    }
+  },
+  "pagination": {
+    "previous": "Oldingi",
+    "next": "Keyingi",
+    "of": "dan",
+    "showing": "Ko'rsatilmoqda {{from}} dan {{to}} gacha {{total}} ning"
+  },
+  "search": {
+    "placeholder": "Qidirish...",
+    "noResults": "Natijalar topilmadi",
+    "searching": "Qidirilmoqda..."
+  },
+  "validation": {
+    "required": "Bu maydon talab qilinadi",
+    "email": "To'g'ri email kiriting",
+    "minLength": "Minimal {{min}} ta belgi",
+    "maxLength": "Maksimal {{max}} ta belgi",
+    "pattern": "Noto'g'ri format",
+    "invalid": "Noto'g'ri qiymat"
+  }
+}

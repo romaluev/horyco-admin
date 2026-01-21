@@ -1,0 +1,130 @@
+{
+  "branches": {
+    "title": "Branches",
+    "description": "Manage organization branches",
+    "addNew": "Add branch",
+    "actions": {
+      "import": "Import",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "description": "Branch information",
+      "statistics": "Statistics",
+      "statisticsDescription": "Branch performance metrics"
+    },
+    "form": {
+      "title": {
+        "create": "Create new branch",
+        "edit": "Edit branch: {{name}}"
+      },
+      "fields": {
+        "name": {
+          "label": "Branch name",
+          "placeholder": "Enter branch name",
+          "validation": "Branch name must contain at least 2 characters"
+        },
+        "address": {
+          "label": "Address",
+          "placeholder": "Enter branch address",
+          "validation": "Address must contain at least 5 characters"
+        }
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Name",
+        "address": "Address",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "search": {
+        "name": "Search by name...",
+        "address": "Search by address..."
+      }
+    },
+    "delete": {
+      "title": "Delete branch?",
+      "description": "Are you sure you want to delete branch \"{{name}}\"? This action cannot be undone."
+    },
+    "errors": {
+      "notFound": "Branch not found",
+      "loadError": "Error: {{message}}"
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "description": "Manage staff and their data",
+    "addNew": "Add employee",
+    "actions": {
+      "openMenu": "Open menu",
+      "menuLabel": "Actions"
+    },
+    "states": {
+      "empty": "No employees yet",
+      "loadError": "Error loading employees"
+    },
+    "form": {
+      "title": {
+        "create": "Create new employee",
+        "edit": "Edit employee: {{name}}"
+      },
+      "fields": {
+        "fullName": {
+          "label": "Full name",
+          "placeholder": "Enter full name",
+          "validation": "Name must contain at least 2 characters"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "90 123 45 67"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter password",
+          "validation": "Password must contain at least 4 characters"
+        },
+        "confirmPassword": {
+          "label": "Confirm password",
+          "placeholder": "Confirm password"
+        },
+        "branch": {
+          "label": "Branch",
+          "placeholder": "Select branch"
+        },
+        "photo": {
+          "label": "Profile photo"
+        }
+      },
+      "submit": {
+        "create": "Create employee",
+        "update": "Update information"
+      }
+    },
+    "table": {
+      "columns": {
+        "fullName": "Full name",
+        "phone": "Phone",
+        "branch": "Branch",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "search": {
+        "fullName": "Search by name...",
+        "phone": "Search by phone..."
+      }
+    },
+    "delete": {
+      "title": "Delete employee?",
+      "description": "Are you sure you want to delete employee \"{{name}}\"? This action cannot be undone."
+    },
+    "errors": {
+      "notFound": "Employee not found",
+      "loadError": "Error: {{message}}"
+    }
+  },
+  "halls": {
+    "title": "Halls",
+    "description": "Manage organization halls"
+  }
+}
