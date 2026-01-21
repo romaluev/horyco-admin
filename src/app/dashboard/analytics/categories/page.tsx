@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -49,6 +50,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function CategoriesAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
   const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
@@ -100,7 +102,7 @@ export default function CategoriesAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="categories"
-      title="Категории"
+      title={t('categories.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -122,8 +124,10 @@ export default function CategoriesAnalyticsPage() {
       {/* Summary */}
       {data && (
         <div className="mt-4 text-sm text-muted-foreground">
-          Всего {data.summary?.totalCategories ?? categories.length} категорий, общая выручка:{' '}
-          {formatPrice(data.summary?.totalRevenue ?? 0)}
+          {t('categories.summary', {
+            count: data.summary?.totalCategories ?? categories.length,
+            revenue: formatPrice(data.summary?.totalRevenue ?? 0),
+          })}
         </div>
       )}
     </AnalyticsPageLayout>
@@ -147,6 +151,8 @@ function CategoriesTable({
   sortDirection,
   onSort,
 }: ICategoriesTableProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
@@ -155,14 +161,14 @@ function CategoriesTable({
             <TableHead className="w-[60px]">#</TableHead>
             <SortableHeader
               column="name"
-              label="Категория"
+              label={t('categories.table.category')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="productCount"
-              label="Продуктов"
+              label={t('categories.table.productCount')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -170,7 +176,7 @@ function CategoriesTable({
             />
             <SortableHeader
               column="orders"
-              label="Заказов"
+              label={t('categories.table.orders')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -178,7 +184,7 @@ function CategoriesTable({
             />
             <SortableHeader
               column="revenue"
-              label="Выручка"
+              label={t('categories.table.revenue')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -186,20 +192,20 @@ function CategoriesTable({
             />
             <SortableHeader
               column="revenueShare"
-              label="Доля"
+              label={t('categories.table.share')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead className="text-right">{t('categories.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {categories.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                Нет данных для отображения
+                {t('categories.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
@@ -308,18 +314,20 @@ function ChangeIndicator({ value }: IChangeIndicatorProps) {
 // ============================================
 
 function CategoriesTableSkeleton() {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]">#</TableHead>
-            <TableHead>Категория</TableHead>
-            <TableHead className="text-right">Продуктов</TableHead>
-            <TableHead className="text-right">Заказов</TableHead>
-            <TableHead className="text-right">Выручка</TableHead>
-            <TableHead className="text-right">Доля</TableHead>
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead>{t('categories.table.category')}</TableHead>
+            <TableHead className="text-right">{t('categories.table.productCount')}</TableHead>
+            <TableHead className="text-right">{t('categories.table.orders')}</TableHead>
+            <TableHead className="text-right">{t('categories.table.revenue')}</TableHead>
+            <TableHead className="text-right">{t('categories.table.share')}</TableHead>
+            <TableHead className="text-right">{t('categories.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
