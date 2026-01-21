@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -58,6 +59,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function StaffAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [search, setSearch] = React.useState('')
   const [roleFilter, setRoleFilter] = React.useState<string>('all')
@@ -130,7 +132,7 @@ export default function StaffAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="staff"
-      title="Персонал"
+      title={t('staff.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -140,7 +142,7 @@ export default function StaffAnalyticsPage() {
         <div className="relative flex-1 min-w-[200px] max-w-[300px]">
           <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Поиск сотрудника..."
+            placeholder={t('staff.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -148,10 +150,10 @@ export default function StaffAnalyticsPage() {
         </div>
         <Select value={roleFilter} onValueChange={setRoleFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Все должности" />
+            <SelectValue placeholder={t('staff.allRoles')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Все должности</SelectItem>
+            <SelectItem value="all">{t('staff.allRoles')}</SelectItem>
             {roles.map((role) => (
               <SelectItem key={role} value={role}>
                 {role}
@@ -178,7 +180,7 @@ export default function StaffAnalyticsPage() {
       {/* Summary */}
       {data && (
         <div className="mt-4 text-sm text-muted-foreground">
-          Показано {filteredStaff.length} сотрудников
+          {t('staff.summary', { count: filteredStaff.length })}
         </div>
       )}
     </AnalyticsPageLayout>
@@ -210,21 +212,21 @@ function StaffTable({
             <TableHead className="w-[60px]">#</TableHead>
             <SortableHeader
               column="name"
-              label="Сотрудник"
+              label={t('staff.table.employee')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="roleCode"
-              label="Должность"
+              label={t('staff.table.role')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="orders"
-              label="Заказов"
+              label={t('staff.table.orders')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}

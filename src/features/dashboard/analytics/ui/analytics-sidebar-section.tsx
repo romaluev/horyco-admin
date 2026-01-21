@@ -7,6 +7,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
 import { usePathname } from '@/shared/lib/navigation'
@@ -59,6 +60,7 @@ const ANALYTICS_PAGE_URLS: Record<AnalyticsPageCode, string> = {
 }
 
 export function AnalyticsSidebarSection() {
+  const { t } = useTranslation('analytics')
   const pathname = usePathname()
   const { state, isMobile } = useSidebar()
   // On mobile, always show expanded view (never show HoverCard tooltips)
@@ -96,9 +98,9 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <HoverCard openDelay={0} closeDelay={100}>
             <HoverCardTrigger asChild>
-              <SidebarMenuButton tooltip="Аналитика">
+              <SidebarMenuButton tooltip={t('title')}>
                 <FirstIcon className="!size-6" />
-                <span className="text-[17px]">Аналитика</span>
+                <span className="text-[17px]">{t('title')}</span>
               </SidebarMenuButton>
             </HoverCardTrigger>
             <HoverCardContent
@@ -109,7 +111,7 @@ export function AnalyticsSidebarSection() {
             >
               <div className="flex flex-col gap-0.5">
                 <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Аналитика
+                  {t('title')}
                 </div>
 
                 {/* Loading State */}
@@ -175,7 +177,7 @@ export function AnalyticsSidebarSection() {
                     className="flex items-center rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
                   >
                     <IconPlus className="mr-1 size-4" />
-                    Создать
+                    {t('dashboard.views.create')}
                   </button>
                 )}
               </div>
@@ -197,8 +199,8 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             {/* Group header - small, without icon */}
-            <SidebarMenuButton tooltip="Аналитика" size="sm">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Аналитика</span>
+            <SidebarMenuButton tooltip={t('title')} size="sm">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('title')}</span>
               <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
@@ -275,7 +277,7 @@ export function AnalyticsSidebarSection() {
                     onClick={() => setIsModalOpen(true)}
                   >
                     <IconPlus className="mr-1 size-4" />
-                    <span className="text-[17px]">Создать</span>
+                    <span className="text-[17px]">{t('dashboard.views.create')}</span>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               )}
