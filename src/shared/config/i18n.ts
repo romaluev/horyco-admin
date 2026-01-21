@@ -12,6 +12,7 @@ import ruInventory from './locales/ru/inventory.json'
 import ruDashboard from './locales/ru/dashboard.json'
 import ruOnboarding from './locales/ru/onboarding.json'
 import ruViews from './locales/ru/views.json'
+import ruAnalytics from './locales/ru/analytics.json'
 
 // English
 import enCommon from './locales/en/common.json'
@@ -23,6 +24,7 @@ import enInventory from './locales/en/inventory.json'
 import enDashboard from './locales/en/dashboard.json'
 import enOnboarding from './locales/en/onboarding.json'
 import enViews from './locales/en/views.json'
+import enAnalytics from './locales/en/analytics.json'
 
 // Uzbek
 import uzCommon from './locales/uz/common.json'
@@ -34,6 +36,7 @@ import uzInventory from './locales/uz/inventory.json'
 import uzDashboard from './locales/uz/dashboard.json'
 import uzOnboarding from './locales/uz/onboarding.json'
 import uzViews from './locales/uz/views.json'
+import uzAnalytics from './locales/uz/analytics.json'
 
 export const SUPPORTED_LANGUAGES = ['ru', 'en', 'uz'] as const
 export type Language = (typeof SUPPORTED_LANGUAGES)[number]
@@ -55,6 +58,7 @@ export const resources = {
     dashboard: ruDashboard,
     onboarding: ruOnboarding,
     views: ruViews,
+    analytics: ruAnalytics,
   },
   en: {
     common: enCommon,
@@ -66,6 +70,7 @@ export const resources = {
     dashboard: enDashboard,
     onboarding: enOnboarding,
     views: enViews,
+    analytics: enAnalytics,
   },
   uz: {
     common: uzCommon,
@@ -77,6 +82,7 @@ export const resources = {
     dashboard: uzDashboard,
     onboarding: uzOnboarding,
     views: uzViews,
+    analytics: uzAnalytics,
   },
 } as const
 
