@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import {
   Table,
@@ -30,17 +32,19 @@ const formatCurrency = (amount: number): string => {
 }
 
 export const TopProducts = ({ products }: ITopProductsProps) => {
+  const { t } = useTranslation('dashboard')
+
   if (!products || products.length === 0) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Топ продукты</CardTitle>
+          <CardTitle>{t('dashboard.widgets.topProducts.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex h-48 items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground text-sm">Нет данных</p>
-              <p className="text-muted-foreground text-xs">за этот период</p>
+              <p className="text-muted-foreground text-sm">{t('dashboard.widgets.topProducts.noData')}</p>
+              <p className="text-muted-foreground text-xs">{t('dashboard.widgets.topProducts.period')}</p>
             </div>
           </div>
         </CardContent>
@@ -53,17 +57,17 @@ export const TopProducts = ({ products }: ITopProductsProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Топ продукты</CardTitle>
+        <CardTitle>{t('dashboard.widgets.topProducts.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">#</TableHead>
-              <TableHead>Продукт</TableHead>
-              <TableHead className="text-right">Заказы</TableHead>
-              <TableHead className="text-right">Выручка</TableHead>
-              <TableHead className="w-32">Доля</TableHead>
+              <TableHead className="w-12">{t('dashboard.widgets.topProducts.table.index')}</TableHead>
+              <TableHead>{t('dashboard.widgets.topProducts.table.product')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.widgets.topProducts.table.orders')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.widgets.topProducts.table.revenue')}</TableHead>
+              <TableHead className="w-32">{t('dashboard.widgets.topProducts.table.share')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

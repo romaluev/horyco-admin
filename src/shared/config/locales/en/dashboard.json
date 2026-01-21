@@ -404,6 +404,72 @@
       }
     }
   },
+  "kpiLabels": {
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "avgCheck": "Average Check",
+    "customers": "Customers",
+    "newCustomers": "New Customers",
+    "returningCustomers": "Returning",
+    "tips": "Tips",
+    "refunds": "Refunds",
+    "cancellations": "Cancellations",
+    "margin": "Margin",
+    "retentionRate": "Retention",
+    "staffProductivity": "Productivity"
+  },
+  "widgets": {
+    "topProducts": {
+      "title": "Top Products",
+      "noData": "No data",
+      "period": "for this period",
+      "table": {
+        "index": "#",
+        "product": "Product",
+        "orders": "Orders",
+        "revenue": "Revenue",
+        "share": "Share"
+      }
+    },
+    "recentOrders": {
+      "title": "Recent Orders",
+      "subtitle": "Last 10 orders",
+      "allBranches": "Last 10 orders (all branches)",
+      "noOrders": "No orders",
+      "period": "in this period",
+      "table": {
+        "time": "Time",
+        "order": "Order",
+        "branch": "Branch",
+        "amount": "Amount",
+        "payment": "Payment",
+        "status": "Status"
+      },
+      "paymentMethods": {
+        "CASH": "Cash",
+        "CARD": "Card",
+        "CREDIT": "Credit",
+        "PAYME": "Payme",
+        "CLICK": "Click",
+        "UZUM": "Uzum",
+        "BANK_TRANSFER": "Transfer",
+        "MIXED": "Mixed"
+      },
+      "statuses": {
+        "PAID": "Paid",
+        "PARTIALLY_PAID": "Partially",
+        "NOT_PAID": "Not Paid"
+      }
+    },
+    "widgetsTab": {
+      "activeWidgets": "Active Widgets",
+      "reorderHint": "Drag to reorder",
+      "noActiveWidgets": "No active widgets. Add from the gallery below.",
+      "widgetGallery": "Widget Gallery",
+      "selectWidgets": "Select widgets with visual preview",
+      "added": "Added"
+    }
+  },
   "common": {
     "noData": "No data to display",
     "loading": "Loading...",

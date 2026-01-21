@@ -404,6 +404,72 @@
       }
     }
   },
+  "kpiLabels": {
+    "revenue": "Daromad",
+    "orders": "Buyurtmalar",
+    "avgCheck": "O'rtacha tekshiruv",
+    "customers": "Mijozlar",
+    "newCustomers": "Yangi mijozlar",
+    "returningCustomers": "Qaytaydigan",
+    "tips": "Bahshish",
+    "refunds": "Qaytarilar",
+    "cancellations": "Bekor qilishlar",
+    "margin": "Maržina",
+    "retentionRate": "Saqlab qolish",
+    "staffProductivity": "Samaradorlik"
+  },
+  "widgets": {
+    "topProducts": {
+      "title": "Yuqori mahsulotlar",
+      "noData": "Ma'lumot yo'q",
+      "period": "bu davr uchun",
+      "table": {
+        "index": "#",
+        "product": "Mahsulot",
+        "orders": "Buyurtmalar",
+        "revenue": "Daromad",
+        "share": "Ulush"
+      }
+    },
+    "recentOrders": {
+      "title": "Yaqinda buyurtmalar",
+      "subtitle": "Oxirgi 10 buyurtmalar",
+      "allBranches": "Oxirgi 10 buyurtmalar (barcha filiallar)",
+      "noOrders": "Buyurtmalar yo'q",
+      "period": "bu davrda",
+      "table": {
+        "time": "Vaqt",
+        "order": "Buyurtma",
+        "branch": "Filial",
+        "amount": "Summa",
+        "payment": "To'lov",
+        "status": "Holati"
+      },
+      "paymentMethods": {
+        "CASH": "Naqd pul",
+        "CARD": "Karta",
+        "CREDIT": "Kredit",
+        "PAYME": "Payme",
+        "CLICK": "Click",
+        "UZUM": "Uzum",
+        "BANK_TRANSFER": "Translfer",
+        "MIXED": "Aralash"
+      },
+      "statuses": {
+        "PAID": "To'langan",
+        "PARTIALLY_PAID": "Qisman",
+        "NOT_PAID": "To'lanmagan"
+      }
+    },
+    "widgetsTab": {
+      "activeWidgets": "Faol vijetlar",
+      "reorderHint": "Tartibni o'zgartirish uchun suring",
+      "noActiveWidgets": "Faol vijetlar yo'q. Quyidagi galereyadon qo'shing.",
+      "widgetGallery": "Vijet galereyasi",
+      "selectWidgets": "Vizual ko'rinish bilan vijetlarni tanlang",
+      "added": "Qo'shilgan"
+    }
+  },
   "common": {
     "noData": "Ko'rsatish uchun ma'lumot yo'q",
     "loading": "Yuklanmoqda...",

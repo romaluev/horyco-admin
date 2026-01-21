@@ -404,6 +404,72 @@
       }
     }
   },
+  "kpiLabels": {
+    "revenue": "Выручка",
+    "orders": "Заказы",
+    "avgCheck": "Средний чек",
+    "customers": "Клиенты",
+    "newCustomers": "Новые клиенты",
+    "returningCustomers": "Постоянные",
+    "tips": "Чаевые",
+    "refunds": "Возвраты",
+    "cancellations": "Отмены",
+    "margin": "Маржа",
+    "retentionRate": "Удержание",
+    "staffProductivity": "Продуктивность"
+  },
+  "widgets": {
+    "topProducts": {
+      "title": "Топ продукты",
+      "noData": "Нет данных",
+      "period": "за этот период",
+      "table": {
+        "index": "#",
+        "product": "Продукт",
+        "orders": "Заказы",
+        "revenue": "Выручка",
+        "share": "Доля"
+      }
+    },
+    "recentOrders": {
+      "title": "Последние заказы",
+      "subtitle": "Последние 10 заказов",
+      "allBranches": "Последние 10 заказов (все филиалы)",
+      "noOrders": "Нет заказов",
+      "period": "в этом периоде",
+      "table": {
+        "time": "Время",
+        "order": "Заказ",
+        "branch": "Филиал",
+        "amount": "Сумма",
+        "payment": "Оплата",
+        "status": "Статус"
+      },
+      "paymentMethods": {
+        "CASH": "Наличные",
+        "CARD": "Карта",
+        "CREDIT": "Кредит",
+        "PAYME": "Payme",
+        "CLICK": "Click",
+        "UZUM": "Uzum",
+        "BANK_TRANSFER": "Перевод",
+        "MIXED": "Смешанный"
+      },
+      "statuses": {
+        "PAID": "Оплачен",
+        "PARTIALLY_PAID": "Частично",
+        "NOT_PAID": "Не оплачен"
+      }
+    },
+    "widgetsTab": {
+      "activeWidgets": "Активные виджеты",
+      "reorderHint": "Перетащите для изменения порядка",
+      "noActiveWidgets": "Нет активных виджетов. Добавьте из галереи ниже.",
+      "widgetGallery": "Галерея виджетов",
+      "selectWidgets": "Выберите виджеты с визуальным превью",
+      "added": "Добавлен"
+    }
+  },
   "common": {
     "noData": "Нет данных для отображения",
     "loading": "Загрузка...",

@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   DndContext,
@@ -60,6 +61,8 @@ export function WidgetsTab({
   activeWidgetId,
   onActiveWidgetIdChange,
 }: IWidgetsTabProps) {
+  const { t } = useTranslation('dashboard')
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -112,8 +115,8 @@ export function WidgetsTab({
       {/* Active Widgets */}
       <Card>
         <CardHeader>
-          <CardTitle>Активные виджеты</CardTitle>
-          <CardDescription>Перетащите для изменения порядка</CardDescription>
+          <CardTitle>{t('dashboard.widgets.widgetsTab.activeWidgets')}</CardTitle>
+          <CardDescription>{t('dashboard.widgets.widgetsTab.reorderHint')}</CardDescription>
         </CardHeader>
         <CardContent>
           <DndContext
@@ -126,7 +129,7 @@ export function WidgetsTab({
               {widgets.length === 0 ? (
                 <div className="rounded-xl border border-dashed p-12 text-center">
                   <p className="text-muted-foreground">
-                    Нет активных виджетов. Добавьте из галереи ниже.
+                    {t('dashboard.widgets.widgetsTab.noActiveWidgets')}
                   </p>
                 </div>
               ) : (
@@ -149,8 +152,8 @@ export function WidgetsTab({
       {/* Widget Gallery */}
       <Card>
         <CardHeader>
-          <CardTitle>Галерея виджетов</CardTitle>
-          <CardDescription>Выберите виджеты с визуальным превью</CardDescription>
+          <CardTitle>{t('dashboard.widgets.widgetsTab.widgetGallery')}</CardTitle>
+          <CardDescription>{t('dashboard.widgets.widgetsTab.selectWidgets')}</CardDescription>
         </CardHeader>
         <CardContent>
           {WIDGET_CATEGORIES.map((category) => {
@@ -186,7 +189,7 @@ export function WidgetsTab({
                             <span className="font-medium">{opt.title}</span>
                             {isUsed && (
                               <span className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                                Добавлен
+                                {t('dashboard.widgets.widgetsTab.added')}
                               </span>
                             )}
                           </div>

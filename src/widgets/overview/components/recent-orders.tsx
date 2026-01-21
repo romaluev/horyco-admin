@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { format } from 'date-fns'
 
@@ -53,29 +54,29 @@ interface RecentOrdersProps {
 
 const PAYMENT_METHOD_CONFIG: Record<
   PaymentMethod,
-  { icon: string; label: string }
+  { icon: string; labelKey: string }
 > = {
-  CASH: { icon: '💵', label: 'Наличные' },
-  CARD: { icon: '💳', label: 'Карта' },
-  CREDIT: { icon: '💳', label: 'Кредит' },
-  PAYME: { icon: '📱', label: 'Payme' },
-  CLICK: { icon: '📱', label: 'Click' },
-  UZUM: { icon: '💳', label: 'Uzum' },
-  BANK_TRANSFER: { icon: '🏦', label: 'Перевод' },
-  MIXED: { icon: '🔀', label: 'Смешанный' },
+  CASH: { icon: '💵', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CASH' },
+  CARD: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CARD' },
+  CREDIT: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CREDIT' },
+  PAYME: { icon: '📱', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.PAYME' },
+  CLICK: { icon: '📱', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CLICK' },
+  UZUM: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.UZUM' },
+  BANK_TRANSFER: { icon: '🏦', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.BANK_TRANSFER' },
+  MIXED: { icon: '🔀', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.MIXED' },
 }
 
 const STATUS_CONFIG: Record<
   OrderStatus,
-  { icon: string; label: string; className: string }
+  { icon: string; labelKey: string; className: string }
 > = {
-  PAID: { icon: '✓', label: 'Оплачен', className: 'text-green-600' },
+  PAID: { icon: '✓', labelKey: 'dashboard.widgets.recentOrders.statuses.PAID', className: 'text-green-600' },
   PARTIALLY_PAID: {
     icon: '⏳',
-    label: 'Частично',
+    labelKey: 'dashboard.widgets.recentOrders.statuses.PARTIALLY_PAID',
     className: 'text-orange-600',
   },
-  NOT_PAID: { icon: '⏸️', label: 'Не оплачен', className: 'text-gray-600' },
+  NOT_PAID: { icon: '⏸️', labelKey: 'dashboard.widgets.recentOrders.statuses.NOT_PAID', className: 'text-gray-600' },
 }
 
 export function RecentOrders({
@@ -84,6 +85,8 @@ export function RecentOrders({
   compact = false,
   showBranch = false,
 }: RecentOrdersProps) {
+  const { t } = useTranslation('dashboard')
+
   const formatCurrency = (amount: number) => {
     const formatted = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
     return `${formatted} UZS`
@@ -125,14 +128,14 @@ export function RecentOrders({
     return (
       <Card className="h-full">
         <CardHeader>
-          <CardTitle>Последние заказы</CardTitle>
-          {!compact && <CardDescription>Последние 10 заказов</CardDescription>}
+          <CardTitle>{t('dashboard.widgets.recentOrders.title')}</CardTitle>
+          {!compact && <CardDescription>{t('dashboard.widgets.recentOrders.subtitle')}</CardDescription>}
         </CardHeader>
         <CardContent>
           <div className="flex h-[400px] items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground">Нет заказов</p>
-              <p className="text-muted-foreground text-sm">в этом периоде</p>
+              <p className="text-muted-foreground">{t('dashboard.widgets.recentOrders.noOrders')}</p>
+              <p className="text-muted-foreground text-sm">{t('dashboard.widgets.recentOrders.period')}</p>
             </div>
           </div>
         </CardContent>
@@ -143,12 +146,12 @@ export function RecentOrders({
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Последние заказы</CardTitle>
+        <CardTitle>{t('dashboard.widgets.recentOrders.title')}</CardTitle>
         {!compact && (
           <CardDescription>
             {showBranch
-              ? 'Последние 10 заказов (все филиалы)'
-              : 'Последние 10 заказов'}
+              ? t('dashboard.widgets.recentOrders.allBranches')
+              : t('dashboard.widgets.recentOrders.subtitle')}
           </CardDescription>
         )}
       </CardHeader>
@@ -157,27 +160,26 @@ export function RecentOrders({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-16">Время</TableHead>
-                <TableHead>Заказ</TableHead>
-                {showBranch && <TableHead>Филиал</TableHead>}
-                <TableHead className="text-right">Сумма</TableHead>
-                <TableHead>Оплата</TableHead>
-                <TableHead>Статус</TableHead>
+                <TableHead className="w-16">{t('dashboard.widgets.recentOrders.table.time')}</TableHead>
+                <TableHead>{t('dashboard.widgets.recentOrders.table.order')}</TableHead>
+                {showBranch && <TableHead>{t('dashboard.widgets.recentOrders.table.branch')}</TableHead>}
+                <TableHead className="text-right">{t('dashboard.widgets.recentOrders.table.amount')}</TableHead>
+                <TableHead>{t('dashboard.widgets.recentOrders.table.payment')}</TableHead>
+                <TableHead>{t('dashboard.widgets.recentOrders.table.status')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {orders.map((order) => {
                 const paymentConfig = PAYMENT_METHOD_CONFIG[
                   order.paymentMethod
-                ] || {
-                  icon: '❓',
-                  label: order.paymentMethod || 'Unknown',
-                }
-                const statusConfig = STATUS_CONFIG[order.status] || {
-                  icon: '❓',
-                  label: order.status || 'Unknown',
-                  className: 'text-gray-600',
-                }
+                ]
+                const statusConfig = STATUS_CONFIG[order.status]
+
+                const paymentLabel = paymentConfig ? t(paymentConfig.labelKey) : order.paymentMethod || 'Unknown'
+                const paymentIcon = paymentConfig?.icon || '❓'
+                const statusLabel = statusConfig ? t(statusConfig.labelKey) : order.status || 'Unknown'
+                const statusIcon = statusConfig?.icon || '❓'
+                const statusClassName = statusConfig?.className || 'text-gray-600'
 
                 return (
                   <TableRow key={order.id}>
@@ -197,16 +199,16 @@ export function RecentOrders({
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <span>{paymentConfig.icon}</span>
-                        <span className="text-sm">{paymentConfig.label}</span>
+                        <span>{paymentIcon}</span>
+                        <span className="text-sm">{paymentLabel}</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div
-                        className={`flex items-center gap-1 ${statusConfig.className}`}
+                        className={`flex items-center gap-1 ${statusClassName}`}
                       >
-                        <span>{statusConfig.icon}</span>
-                        <span className="text-sm">{statusConfig.label}</span>
+                        <span>{statusIcon}</span>
+                        <span className="text-sm">{statusLabel}</span>
                       </div>
                     </TableCell>
                   </TableRow>

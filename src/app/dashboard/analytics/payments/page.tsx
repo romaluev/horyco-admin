@@ -142,7 +142,7 @@ export default function PaymentsAnalyticsPage() {
             <span>
               {t('payments.summary', {
                 amount: formatPrice(data.summary?.totalAmount ?? 0),
-                count: (data.summary?.totalTransactions ?? 0).toLocaleString('ru-RU'),
+                count: data.summary?.totalTransactions ?? 0,
               })}
             </span>
             {data.summary?.changes && <ChangeSummary changes={data.summary.changes} />}
