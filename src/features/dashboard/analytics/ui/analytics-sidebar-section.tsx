@@ -98,9 +98,9 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <HoverCard openDelay={0} closeDelay={100}>
             <HoverCardTrigger asChild>
-              <SidebarMenuButton tooltip={t('title')}>
+              <SidebarMenuButton tooltip={t('analytics.title')}>
                 <FirstIcon className="!size-6" />
-                <span className="text-[17px]">{t('title')}</span>
+                <span className="text-[17px]">{t('analytics.title')}</span>
               </SidebarMenuButton>
             </HoverCardTrigger>
             <HoverCardContent
@@ -111,7 +111,7 @@ export function AnalyticsSidebarSection() {
             >
               <div className="flex flex-col gap-0.5">
                 <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t('title')}
+                  {t('analytics.title')}
                 </div>
 
                 {/* Loading State */}
@@ -141,7 +141,7 @@ export function AnalyticsSidebarSection() {
                         }`}
                       >
                         <PageIcon className="h-6 w-6" />
-                        {config.title}
+                        {t(`${pageCode}.title`)}
                       </Link>
                     )
                   })}
@@ -199,8 +199,8 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             {/* Group header - small, without icon */}
-            <SidebarMenuButton tooltip={t('title')} size="sm">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('title')}</span>
+            <SidebarMenuButton tooltip={t('analytics.title')} size="sm">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('analytics.title')}</span>
               <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
@@ -233,7 +233,7 @@ export function AnalyticsSidebarSection() {
                       >
                         <Link to={url} className="flex items-center gap-2">
                           <PageIcon className="!h-[1.25rem] !w-[1.25rem]" />
-                          <span className="text-[17px]">{config.title}</span>
+                          <span className="text-[17px]">{t(`${pageCode}.title`)}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

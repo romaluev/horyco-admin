@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useRouter } from '@/shared/lib/navigation'
 
@@ -23,6 +24,7 @@ import { useAuthStore } from '@/entities/auth/auth/model/store'
 import { getFileById } from '@/shared/file/model/api'
 
 export function UserNav() {
+  const { t } = useTranslation('common')
   const { user, logout } = useAuthStore()
   const router = useRouter()
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
@@ -95,13 +97,13 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
             <UserIcon className="mr-2 h-4 w-4" />
-            <span>Профиль</span>
+            <span>{t('profile')}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Выход из системы</span>
+          <span>{t('logout')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
