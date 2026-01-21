@@ -204,6 +204,8 @@ function StaffTable({
   sortDirection,
   onSort,
 }: IStaffTableProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
@@ -234,7 +236,7 @@ function StaffTable({
             />
             <SortableHeader
               column="revenue"
-              label="Выручка"
+              label={t('staff.table.revenue')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -242,20 +244,20 @@ function StaffTable({
             />
             <SortableHeader
               column="tips"
-              label="Чаевые"
+              label={t('staff.table.tips')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {staff.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                Нет данных для отображения
+                {t('staff.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
@@ -364,18 +366,20 @@ function ChangeIndicator({ value }: IChangeIndicatorProps) {
 // ============================================
 
 function StaffTableSkeleton() {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]">#</TableHead>
-            <TableHead>Сотрудник</TableHead>
-            <TableHead>Должность</TableHead>
-            <TableHead className="text-right">Заказов</TableHead>
-            <TableHead className="text-right">Выручка</TableHead>
-            <TableHead className="text-right">Чаевые</TableHead>
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead>{t('staff.table.employee')}</TableHead>
+            <TableHead>{t('staff.table.role')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.orders')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.revenue')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.tips')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
