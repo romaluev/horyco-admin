@@ -33,7 +33,7 @@ import {
 } from '@/features/dashboard/analytics'
 
 export default function SalesOverviewPage() {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.TODAY)
 
   const { data, isLoading, error, refetch } = useSalesOverview({
@@ -89,7 +89,7 @@ interface ISalesOverviewContentProps {
 }
 
 function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   const summary = data.summary ?? {}
   const changes = data.changes ?? {}
 
@@ -247,7 +247,7 @@ function ChangeIndicator({ value, inverted = false }: IChangeIndicatorProps) {
 // ============================================
 
 function SalesOverviewSkeleton() {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border">
       <Table>

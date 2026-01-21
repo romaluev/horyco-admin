@@ -61,7 +61,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function ProductsAnalyticsPage() {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [search, setSearch] = React.useState('')
   const [categoryFilter, setCategoryFilter] = React.useState<string>('all')
@@ -207,7 +207,7 @@ function ProductsTable({
   sortDirection,
   onSort,
 }: IProductsTableProps) {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border h-[calc(100vh-350px)] overflow-auto [&_[data-slot=table-container]]:overflow-visible">
       <Table>
@@ -390,7 +390,7 @@ function TrendIndicator({ trend }: ITrendIndicatorProps) {
 // ============================================
 
 function ProductsTableSkeleton() {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border">
       <Table>
