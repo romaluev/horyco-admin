@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
 import { IconTrendingUp } from '@tabler/icons-react'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
@@ -43,11 +44,13 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function AreaGraph() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Количество посещении</CardTitle>
-        <CardDescription>Количество посещении за 6 месяцев</CardDescription>
+        <CardTitle>{t('widgets.areaGraph.title')}</CardTitle>
+        <CardDescription>{t('widgets.areaGraph.description')}</CardDescription>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
@@ -121,10 +124,10 @@ export function AreaGraph() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 leading-none font-medium">
-              Рост в 5.2% в этом месяце <IconTrendingUp className="h-4 w-4" />
+              {t('widgets.areaGraph.growth')} <IconTrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
+              {t('widgets.areaGraph.period')}
             </div>
           </div>
         </div>

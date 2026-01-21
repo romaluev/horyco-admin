@@ -308,6 +308,68 @@
       "smsOrgLevel": "SMS sozlamalari faqat tashkilot darajasida mavjud. Tahrirlash uchun \"Barcha filiallar (Sukut bo'yicha)\" ni tanlang."
     }
   },
+  "widgets": {
+    "overview": {
+      "greeting": "Salom, qaytib kelganingizdan xursand! 👋",
+      "download": "Yuklab olish",
+      "tabs": {
+        "overview": "Umumiy ko'rinish",
+        "analytics": "Tahlillar"
+      },
+      "kpiCards": {
+        "totalRevenue": {
+          "title": "Umumiy daromad",
+          "value": "$1,250.00",
+          "trend": "+12.5%",
+          "description": "Bu oyda o'sish",
+          "subdescription": "Oxirgi 6 oy uchun tashrif etuvchilar"
+        },
+        "newCustomers": {
+          "title": "Yangi mijozlar",
+          "value": "1,234",
+          "trend": "-20%",
+          "description": "Bu davrda 20% qulashi",
+          "subdescription": "Jalb qilish e'tiborni talab qiladi"
+        },
+        "activeAccounts": {
+          "title": "Faol hisoblar",
+          "value": "45,678",
+          "trend": "+12.5%",
+          "description": "Kuchli foydalanuvchi saqlanishi",
+          "subdescription": "Jalb qilish maqsadlarni oshqadi"
+        },
+        "growthRate": {
+          "title": "O'sish tezligi",
+          "value": "4.5%",
+          "trend": "+4.5%",
+          "description": "Barqaror unumdorlik o'sishi",
+          "subdescription": "O'sish prognozlariga javob beradi"
+        }
+      }
+    },
+    "recentSales": {
+      "title": "Yangi sotuvlar",
+      "description": "Bu oyda 200 ta buyurtma qildingiz."
+    },
+    "barGraph": {
+      "title": "Sistema faoliyati",
+      "description": "3 oy jami",
+      "descriptionShort": "Oxirgi 3 oy"
+    },
+    "areaGraph": {
+      "title": "Tashrif etishlar soni",
+      "description": "6 oy uchun tashrif etishlar soni",
+      "growth": "Bu oyda 5.2% o'sish",
+      "period": "Yanvar - Iyun 2024"
+    },
+    "pieGraph": {
+      "title": "Veb-sayt tashrif etuvchilari",
+      "description": "Oxirgi 6 oy ichida",
+      "descriptionShort": "Brauzer taqsimoti",
+      "centerLabel": "Tashrif etishlar soni",
+      "footer": "Ma'lumotlar asosida Yanvar - Iyun 2024"
+    }
+  },
   "common": {
     "noData": "Ko'rsatish uchun ma'lumot yo'q",
     "loading": "Yuklanmoqda...",

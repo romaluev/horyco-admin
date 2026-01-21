@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
@@ -134,6 +135,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function BarGraph() {
+  const { t } = useTranslation('dashboard')
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>('desktop')
 
@@ -165,12 +167,12 @@ export function BarGraph() {
     <Card className="@container/card !pt-3">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 !py-0">
-          <CardTitle>Активность в системе</CardTitle>
+          <CardTitle>{t('widgets.barGraph.title')}</CardTitle>
           <CardDescription>
             <span className="hidden @[540px]/card:block">
-              Всего за 3 месяца
+              {t('widgets.barGraph.description')}
             </span>
-            <span className="@[540px]/card:hidden">Last 3 months</span>
+            <span className="@[540px]/card:hidden">{t('widgets.barGraph.descriptionShort')}</span>
           </CardDescription>
         </div>
         <div className="flex">

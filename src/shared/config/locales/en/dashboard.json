@@ -308,6 +308,68 @@
       "smsOrgLevel": "SMS settings are available at organization level only. Select \"All branches (Default)\" to edit."
     }
   },
+  "widgets": {
+    "overview": {
+      "greeting": "Hi, Welcome back 👋",
+      "download": "Download",
+      "tabs": {
+        "overview": "Overview",
+        "analytics": "Analytics"
+      },
+      "kpiCards": {
+        "totalRevenue": {
+          "title": "Total Revenue",
+          "value": "$1,250.00",
+          "trend": "+12.5%",
+          "description": "Trending up this month",
+          "subdescription": "Visitors for the last 6 months"
+        },
+        "newCustomers": {
+          "title": "New Customers",
+          "value": "1,234",
+          "trend": "-20%",
+          "description": "Down 20% this period",
+          "subdescription": "Acquisition needs attention"
+        },
+        "activeAccounts": {
+          "title": "Active Accounts",
+          "value": "45,678",
+          "trend": "+12.5%",
+          "description": "Strong user retention",
+          "subdescription": "Engagement exceed targets"
+        },
+        "growthRate": {
+          "title": "Growth Rate",
+          "value": "4.5%",
+          "trend": "+4.5%",
+          "description": "Steady performance increase",
+          "subdescription": "Meets growth projections"
+        }
+      }
+    },
+    "recentSales": {
+      "title": "Recent Sales",
+      "description": "You made 200 orders this month."
+    },
+    "barGraph": {
+      "title": "System Activity",
+      "description": "Total for 3 months",
+      "descriptionShort": "Last 3 months"
+    },
+    "areaGraph": {
+      "title": "Number of Visits",
+      "description": "Number of visits for 6 months",
+      "growth": "Growth of 5.2% this month",
+      "period": "January - June 2024"
+    },
+    "pieGraph": {
+      "title": "Website Visitors",
+      "description": "Over the last 6 months",
+      "descriptionShort": "Browser distribution",
+      "centerLabel": "Number of visits",
+      "footer": "Based on data January - June 2024"
+    }
+  },
   "common": {
     "noData": "No data to display",
     "loading": "Loading...",

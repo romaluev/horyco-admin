@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { createFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet-async'
 
@@ -10,11 +11,13 @@ export const Route = createFileRoute('/dashboard/_layout/overview/')({
 })
 
 function OverviewPage() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <>
       <Helmet>
-        <title>Панель управления | Horyco Admin</title>
-        <meta name="description" content="Обзор ключевых показателей ресторана" />
+        <title>{t('title')} | Horyco Admin</title>
+        <meta name="description" content={t('overview.description')} />
       </Helmet>
       <PageContainer>
         <AnalyticsOverview />
