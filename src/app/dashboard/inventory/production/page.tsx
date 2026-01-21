@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
 
@@ -42,6 +43,7 @@ import { WarehouseSelector } from '@/entities/inventory/warehouse'
 import { CreateProductionDialog } from '@/features/inventory/production-order-form'
 
 export default function ProductionPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<ProductionStatus | ''>('')
   const [warehouseId, setWarehouseId] = useState<number | undefined>()
@@ -81,8 +83,8 @@ export default function ProductionPage() {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Производство"
-            description="Заказы на производство полуфабрикатов"
+            title={t('pages.production.title')}
+            description={t('pages.production.description')}
           />
           <CreateProductionDialog />
         </div>
@@ -93,7 +95,7 @@ export default function ProductionPage() {
           <div className="relative min-w-[200px] flex-1">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск по номеру или продукту..."
+              placeholder={t('pages.production.searchOrder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -105,7 +107,7 @@ export default function ProductionPage() {
             onValueChange={(val) => setStatus(val === 'all' ? '' : (val as ProductionStatus))}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все статусы" />
+              <SelectValue placeholder={t('pages.production.allStatuses')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все статусы</SelectItem>
@@ -122,7 +124,7 @@ export default function ProductionPage() {
               value={warehouseId}
               onChange={setWarehouseId}
               showAll
-              placeholder="Все склады"
+              placeholder={t('pages.production.allWarehouses')}
             />
           </div>
 
@@ -130,7 +132,7 @@ export default function ProductionPage() {
             <DatePicker
               value={selectedDate}
               onChange={(dateStr) => setSelectedDate(dateStr ? new Date(dateStr) : undefined)}
-              placeholder="Выберите дату"
+              placeholder={t('pages.production.selectDate')}
             />
           </div>
         </div>
@@ -141,15 +143,15 @@ export default function ProductionPage() {
             <CardContent className="py-4">
               <div className="flex flex-wrap gap-6">
                 <div>
-                  <p className="text-sm text-muted-foreground">Запланировано</p>
+                  <p className="text-sm text-muted-foreground">{t('pages.production.planned')}</p>
                   <p className="text-xl font-bold">{summary.planned}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">В процессе</p>
+                  <p className="text-sm text-muted-foreground">{t('pages.production.inProgress')}</p>
                   <p className="text-xl font-bold text-yellow-600">{summary.inProgress}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Завершено</p>
+                  <p className="text-sm text-muted-foreground">{t('pages.production.completed')}</p>
                   <p className="text-xl font-bold text-emerald-600">{summary.completed}</p>
                 </div>
               </div>
@@ -171,11 +173,11 @@ export default function ProductionPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Номер</TableHead>
-                  <TableHead>Продукт</TableHead>
-                  <TableHead>Количество</TableHead>
-                  <TableHead>Статус</TableHead>
-                  <TableHead>План. дата</TableHead>
+                  <TableHead>{t('pages.production.columnNumber')}</TableHead>
+                  <TableHead>{t('pages.production.columnProduct')}</TableHead>
+                  <TableHead>{t('pages.production.columnQuantity')}</TableHead>
+                  <TableHead>{t('pages.production.columnStatus')}</TableHead>
+                  <TableHead>{t('pages.production.columnDate')}</TableHead>
                   <TableHead className="w-[100px]" />
                 </TableRow>
               </TableHeader>
@@ -196,7 +198,7 @@ export default function ProductionPage() {
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
                         <Link to={`/dashboard/inventory/production/${order.id}` as any}>
-                          Открыть
+                          {t('pages.production.open')}
                         </Link>
                       </Button>
                     </TableCell>
@@ -211,21 +213,24 @@ export default function ProductionPage() {
   )
 }
 
-const EmptyProductionState = ({ hasFilters }: { hasFilters: boolean }) => (
-  <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconBoxMultiple className="h-12 w-12 text-muted-foreground/50" />
-    <h3 className="mt-4 text-lg font-semibold">
-      {hasFilters ? 'Заказы не найдены' : 'Нет заказов на производство'}
-    </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
-      {hasFilters
-        ? 'Попробуйте изменить параметры поиска или фильтры.'
-        : 'Создайте заказ на производство полуфабрикатов по техкартам.'}
-    </p>
-    {!hasFilters && (
-      <div className="mt-6">
-        <CreateProductionDialog />
-      </div>
-    )}
-  </div>
-)
+const EmptyProductionState = ({ hasFilters }: { hasFilters: boolean }) => {
+  const { t } = useTranslation('inventory')
+  return (
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
+      <IconBoxMultiple className="h-12 w-12 text-muted-foreground/50" />
+      <h3 className="mt-4 text-lg font-semibold">
+        {hasFilters ? t('pages.production.notFound') : t('pages.production.noOrders')}
+      </h3>
+      <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+        {hasFilters
+          ? t('pages.production.tryChanging')
+          : t('pages.production.createOrder')}
+      </p>
+      {!hasFilters && (
+        <div className="mt-6">
+          <CreateProductionDialog />
+        </div>
+      )}
+    </div>
+  )
+}

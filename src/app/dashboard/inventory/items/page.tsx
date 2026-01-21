@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconSearch, IconUpload } from '@tabler/icons-react'
 
@@ -28,6 +29,7 @@ import {
 type ItemType = 'all' | 'raw' | 'semi-finished'
 
 export default function InventoryItemsPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<string>('')
   const [isActive, setIsActive] = useState<boolean | undefined>()
@@ -59,13 +61,13 @@ export default function InventoryItemsPage() {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Номенклатура товаров"
-            description="Управление номенклатурой сырья и полуфабрикатов"
+            title={t('pages.items.title')}
+            description={t('pages.items.description')}
           />
           <div className="flex gap-2">
             <Button variant="outline" onClick={handleImportCSV}>
               <IconUpload className="mr-2 h-4 w-4" />
-              Импорт CSV
+              {t('pages.items.import')}
             </Button>
             <CreateItemDialog />
           </div>
@@ -76,7 +78,7 @@ export default function InventoryItemsPage() {
           <div className="relative flex-1 min-w-[200px]">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск по названию, SKU, штрихкоду..."
+              placeholder={t('pages.items.searchItems')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -87,10 +89,10 @@ export default function InventoryItemsPage() {
             onValueChange={(val) => setCategory(val === 'all' ? '' : val)}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все категории" />
+              <SelectValue placeholder={t('pages.items.allCategories')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все категории</SelectItem>
+              <SelectItem value="all">{t('pages.items.allCategories')}</SelectItem>
               {categoryOptions.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
@@ -106,9 +108,9 @@ export default function InventoryItemsPage() {
               <SelectValue placeholder="Статус" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все</SelectItem>
-              <SelectItem value="active">Активные</SelectItem>
-              <SelectItem value="inactive">Неактивные</SelectItem>
+              <SelectItem value="all">{t('pages.items.all')}</SelectItem>
+              <SelectItem value="active">{t('pages.items.active')}</SelectItem>
+              <SelectItem value="inactive">{t('pages.items.inactive')}</SelectItem>
             </SelectContent>
           </Select>
           <Select
@@ -119,9 +121,9 @@ export default function InventoryItemsPage() {
               <SelectValue placeholder="Тип товара" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все типы</SelectItem>
-              <SelectItem value="raw">Сырьё</SelectItem>
-              <SelectItem value="semi-finished">Полуфабрикаты</SelectItem>
+              <SelectItem value="all">{t('pages.items.allTypes')}</SelectItem>
+              <SelectItem value="raw">{t('pages.items.raw')}</SelectItem>
+              <SelectItem value="semi-finished">{t('pages.items.semiFinished')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
