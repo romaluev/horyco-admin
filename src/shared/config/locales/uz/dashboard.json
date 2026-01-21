@@ -391,6 +391,17 @@
         "saveFailed": "Saqlash amalga oshmadi",
         "loadFailed": "Ma'lumotni yuklashda xato. Internet ulanishingizni tekshiring."
       }
+    },
+    "editMode": {
+      "title": "Deshbordni sozlash",
+      "description": "Koʻrish bilan vizual editor",
+      "save": "Saqlash",
+      "saving": "Saqlanmoqda...",
+      "tabs": {
+        "kpi": "KPI kartalar",
+        "chart": "Asosiy grafikoni",
+        "widgets": "Vijetlari"
+      }
     }
   },
   "common": {

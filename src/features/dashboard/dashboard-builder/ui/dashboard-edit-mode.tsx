@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconLayoutDashboard,
@@ -31,6 +32,7 @@ export function DashboardEditMode({
   onCancel,
   isSaving = false,
 }: IDashboardEditModeProps) {
+  const { t } = useTranslation('dashboard')
   // State
   const [kpiSlots, setKpiSlots] = useState<IKpiSlot[]>(initialConfig.kpiSlots)
   const [chartMetric, setChartMetric] = useState<KpiType>(initialConfig.chartMetric)
@@ -61,16 +63,16 @@ export function DashboardEditMode({
             <IconLayoutDashboard className="size-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Настройка дашборда</h2>
-            <p className="text-sm text-muted-foreground">Визуальный редактор с превью</p>
+            <h2 className="text-lg font-semibold">{t('dashboard.editMode.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('dashboard.editMode.description')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={onCancel} disabled={isSaving}>
-            Отмена
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'Сохранение...' : 'Сохранить'}
+            {isSaving ? t('dashboard.editMode.saving') : t('dashboard.editMode.save')}
             {!isSaving && <IconCheck className="ml-1 size-4" />}
           </Button>
         </div>
@@ -81,15 +83,15 @@ export function DashboardEditMode({
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="kpi" className="gap-2">
             <IconSparkles className="size-4" />
-            KPI карточки
+            {t('dashboard.editMode.tabs.kpi')}
           </TabsTrigger>
           <TabsTrigger value="chart" className="gap-2">
             <IconChartArea className="size-4" />
-            Основной график
+            {t('dashboard.editMode.tabs.chart')}
           </TabsTrigger>
           <TabsTrigger value="widgets" className="gap-2">
             <IconSettings className="size-4" />
-            Виджеты
+            {t('dashboard.editMode.tabs.widgets')}
           </TabsTrigger>
         </TabsList>
 

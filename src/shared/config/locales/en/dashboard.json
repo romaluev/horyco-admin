@@ -391,6 +391,17 @@
         "saveFailed": "Failed to save",
         "loadFailed": "Failed to load data. Check your internet connection."
       }
+    },
+    "editMode": {
+      "title": "Dashboard Customization",
+      "description": "Visual editor with preview",
+      "save": "Save",
+      "saving": "Saving...",
+      "tabs": {
+        "kpi": "KPI Cards",
+        "chart": "Main Chart",
+        "widgets": "Widgets"
+      }
     }
   },
   "common": {
