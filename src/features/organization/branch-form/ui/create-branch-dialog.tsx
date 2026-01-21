@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -30,6 +31,7 @@ export const CreateBranchDialog = ({
   onClose,
   onSuccess,
 }: CreateBranchDialogProps) => {
+  const { t } = useTranslation('organization')
   const { mutate: createBranch, isPending } = useCreateBranch()
 
   const form = useForm<BranchFormData>({
@@ -62,9 +64,9 @@ export const CreateBranchDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Создать филиал</DialogTitle>
+          <DialogTitle>{t('branchForm.title.create')}</DialogTitle>
           <DialogDescription>
-            Заполните информацию о новом филиале
+            {t('branchForm.description.create')}
           </DialogDescription>
         </DialogHeader>
 
@@ -79,10 +81,10 @@ export const CreateBranchDialog = ({
                 onClick={onClose}
                 disabled={isPending}
               >
-                Отмена
+                {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('branchForm.actions.creating') : t('branchForm.actions.create')}
               </Button>
             </DialogFooter>
           </form>

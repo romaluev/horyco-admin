@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import {
   Button,
@@ -37,6 +38,7 @@ interface UpdateEmployeeDialogProps {
 export const UpdateEmployeeDialog = ({
   employee,
 }: UpdateEmployeeDialogProps) => {
+  const { t } = useTranslation('organization')
   const [isOpen, setIsOpen] = useState(false)
   // Get branch IDs from branchPermissions (which includes all assigned branches)
   const getInitialBranchIds = (): number[] => {
@@ -119,22 +121,22 @@ export const UpdateEmployeeDialog = ({
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
           <Pencil className="h-4 w-4" />
-          Редактировать
+          {t('common.edit')}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Редактировать сотрудника</DialogTitle>
+          <DialogTitle>{t('staff.form.title.edit', { name: employee.fullName })}</DialogTitle>
           <DialogDescription>
-            Обновите информацию о сотруднике {employee.fullName}
+            {t('staff.form.description.update', { name: employee.fullName })}
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="info">Информация</TabsTrigger>
-            <TabsTrigger value="branches-permissions">Филиалы</TabsTrigger>
+            <TabsTrigger value="info">{t('staff.form.tabs.info')}</TabsTrigger>
+            <TabsTrigger value="branches-permissions">{t('staff.form.tabs.branches')}</TabsTrigger>
             <TabsTrigger value="pin">PIN</TabsTrigger>
           </TabsList>
 
@@ -151,11 +153,11 @@ export const UpdateEmployeeDialog = ({
                   variant="outline"
                   onClick={() => setIsOpen(false)}
                 >
-                  Отмена
+                  {t('common.cancel')}
                 </Button>
                 <Button type="submit" disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+                  {isPending ? t('common.actions.saving') : t('staff.form.saveChanges')}
                 </Button>
               </DialogFooter>
             </form>
@@ -178,7 +180,7 @@ export const UpdateEmployeeDialog = ({
                   variant="outline"
                   onClick={() => setIsOpen(false)}
                 >
-                  Отмена
+                  {t('common.cancel')}
                 </Button>
                 <Button type="submit" disabled={isPending || !isBranchesChanged}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

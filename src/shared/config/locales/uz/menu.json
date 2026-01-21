@@ -657,6 +657,85 @@
       "modifierCount": "{{count}} o'zgartirgich"
     }
   },
+  "components": {
+    "pinButton": {
+      "title": "PIN yaratish"
+    },
+    "categoryParentSelector": {
+      "placeholder": "Ota kategoriya yo'q",
+      "noParent": "Ota kategoriya yo'q"
+    },
+    "branchOverride": {
+      "create": {
+        "trigger": "O'zgartirishni qo'shish",
+        "title": "Filial uchun yangi o'zgartirish",
+        "description": "Bu filial uchun mahsulotning alohida sozlamalarini o'rnating",
+        "productLabel": "Mahsulot",
+        "productPlaceholder": "Mahsulotni tanlang",
+        "branchLabel": "Filial",
+        "branchPlaceholder": "Filialni tanlang",
+        "priceLabel": "Filial uchun narx",
+        "priceDescription": "Asosiy narxni ishlatish uchun bo'shda qoldiring",
+        "availabilityLabel": "Mavjudlik",
+        "availabilityDescription": "Bu filial uchun mavjudlikni o'zgartiring",
+        "basePricePrefix": "Asosiy:",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      },
+      "edit": {
+        "title": "O'zgartirishni tahrirlash",
+        "description": "Bu filial uchun sozlamalarni o'zgartiring",
+        "priceLabel": "Filial uchun narx",
+        "priceDescription": "Asosiy narxni ishlatish uchun bo'shda qoldiring",
+        "availabilityLabel": "Mavjudlik",
+        "availabilityDescription": "Bu filial uchun mavjudlikni o'zgartiring",
+        "basePricePrefix": "Asosiy:",
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "submitting": "Saqlanmoqda..."
+      }
+    },
+    "modifierGroup": {
+      "create": {
+        "trigger": "Guruhni qo'shish",
+        "title": "O'zgartirgich guruhini yaratish",
+        "description": "Bog'liq variantlarni bir-biriga birlashtirib guruhlang (masalan, o'lcham yoki toppinglar)",
+        "nameLabel": "Guruh nomi *",
+        "namePlaceholder": "Pizza o'lchami",
+        "minLabel": "Minimal tanlov",
+        "minDescription": "Tanlash uchun minimal variantlar soni",
+        "maxLabel": "Maksimal tanlov",
+        "maxDescription": "Tanlash uchun maksimal variantlar soni",
+        "requiredLabel": "Majburiy tanlov",
+        "requiredDescription": "Mijoz kamida bitta variantni tanlashi kerak",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      }
+    },
+    "modifier": {
+      "create": {
+        "trigger": "O'zgartirgich qo'shish",
+        "title": "O'zgartirgichni qo'shish",
+        "description": "Guruhda yangi o'zgartirgich yarating",
+        "nameLabel": "Nomi",
+        "namePlaceholder": "Ketchup",
+        "descriptionLabel": "Tavsifi",
+        "descriptionPlaceholder": "Klassik pomidor ketchupi",
+        "priceLabel": "Narx (UZS)",
+        "pricePlaceholder": "20",
+        "priceDescription": "O'zgartirgichning qo'shimcha xaraji",
+        "sortOrderLabel": "Saralash tartibi",
+        "sortOrderDescription": "O'zgartirgichning ro'yxatda ko'rsatilish tartibi",
+        "activeLabel": "Faol",
+        "activeDescription": "O'zgartirgich tanlash uchun mavjud",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      }
+    }
+  },
   "common": {
     "save": "Saqlash",
     "cancel": "Bekor qilish",

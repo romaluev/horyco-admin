@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -77,6 +78,7 @@ const convertToFormData = (
 }
 
 export const PaymentSettingsForm = () => {
+  const { t } = useTranslation('organization')
   const { data: paymentSettings, isLoading } = usePaymentSettings()
   const { mutate: updateSettings, isPending } = useUpdatePaymentSettings()
   const { mutate: testIntegration, isPending: isTesting } = useTestIntegration()
@@ -127,7 +129,7 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>PayMe</CardTitle>
-                <CardDescription>Платежный шлюз PayMe</CardDescription>
+                <CardDescription>{t('paymentSettings.providers.payme.description')}</CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -186,7 +188,7 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('payme')}
               disabled={isTesting || !form.watch('paymeEnabled')}
             >
-              {testingProvider === 'payme' ? 'Тестирование...' : 'Тестировать'}
+              {testingProvider === 'payme' ? t('paymentSettings.testing') : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
@@ -197,7 +199,7 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Click</CardTitle>
-                <CardDescription>Платежный шлюз Click</CardDescription>
+                <CardDescription>{t('paymentSettings.providers.click.description')}</CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -256,7 +258,7 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('click')}
               disabled={isTesting || !form.watch('clickEnabled')}
             >
-              {testingProvider === 'click' ? 'Тестирование...' : 'Тестировать'}
+              {testingProvider === 'click' ? t('paymentSettings.testing') : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
@@ -267,7 +269,7 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Uzum</CardTitle>
-                <CardDescription>Платежный шлюз Uzum</CardDescription>
+                <CardDescription>{t('paymentSettings.providers.uzum.description')}</CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -326,14 +328,14 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('uzum')}
               disabled={isTesting || !form.watch('uzumEnabled')}
             >
-              {testingProvider === 'uzum' ? 'Тестирование...' : 'Тестировать'}
+              {testingProvider === 'uzum' ? t('paymentSettings.testing') : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+            {isPending ? t('common.actions.saving') : t('paymentSettings.saveChanges')}
           </Button>
         </div>
       </form>

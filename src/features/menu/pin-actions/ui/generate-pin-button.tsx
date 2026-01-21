@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { KeyRound } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
@@ -20,6 +21,7 @@ interface GeneratePinButtonProps {
 }
 
 export const GeneratePinButton = ({ employee }: GeneratePinButtonProps) => {
+  const { t } = useTranslation('menu')
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -31,7 +33,7 @@ export const GeneratePinButton = ({ employee }: GeneratePinButtonProps) => {
         className="w-full justify-start"
       >
         <KeyRound className="mr-2 h-4 w-4" />
-        Генерировать PIN
+        {t('components.pinButton.title')}
       </Button>
       <GeneratePinDialog
         employee={employee}

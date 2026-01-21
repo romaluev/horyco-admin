@@ -5,6 +5,8 @@
 
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import {
   Select,
   SelectContent,
@@ -26,6 +28,7 @@ export const CategoryParentSelector = ({
   onChange,
   excludeId,
 }: CategoryParentSelectorProps) => {
+  const { t } = useTranslation('menu')
   const { data: categories, isLoading } = useGetCategories({
     includeProducts: false,
   })
@@ -40,10 +43,10 @@ export const CategoryParentSelector = ({
       disabled={isLoading}
     >
       <SelectTrigger>
-        <SelectValue placeholder="Без родительской категории" />
+        <SelectValue placeholder={t('components.categoryParentSelector.placeholder')} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="null">Без родительской категории</SelectItem>
+        <SelectItem value="null">{t('components.categoryParentSelector.noParent')}</SelectItem>
         {availableCategories.map((category) => (
           <SelectItem key={category.id} value={category.id.toString()}>
             {category.name}

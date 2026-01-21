@@ -382,5 +382,178 @@
       "tryChanging": "Qidiruv parametrlarini yoki filtrlarni o'zgartirib ko'ring.",
       "conductCount": "Faktik qoldiqlarni taqqoslash uchun inventarizatsiya o'tkazishda."
     }
+  },
+  "components": {
+    "warehouseForm": {
+      "create": {
+        "trigger": "Omborni qo'shish",
+        "title": "Omborni qo'shish",
+        "nameLabel": "Nomi *",
+        "namePlaceholder": "Asosiy ombor",
+        "codeLabel": "Kod",
+        "codePlaceholder": "WH-001",
+        "branchLabel": "Filial *",
+        "branchPlaceholder": "Filialni tanlang",
+        "activeLabel": "Faol",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      }
+    },
+    "inventoryItemForm": {
+      "create": {
+        "title": "Mahsulot qo'shish",
+        "trigger": "Mahsulot qo'shish"
+      },
+      "delete": {
+        "title": "Mahsulotni o'chirasizmi?",
+        "description": "Bu harakatni bekor qilib bo'lmaydi. Mahsulot doimiy o'chiriladi. Bu mahsulot uchun faol qoldiqlar yo'qligiga ishonch hosil qiling.",
+        "cancel": "Bekor qilish",
+        "submit": "O'chirish"
+      }
+    },
+    "inventoryItemWorkflow": {
+      "edit": {
+        "title": "Mahsulotni tahrirlash"
+      },
+      "unitConversion": {
+        "title": "Konversiya qo'shish",
+        "fromLabel": "Birlikdan",
+        "toLabel": "Birlikka",
+        "factorLabel": "Koeffitsient",
+        "noteLabel": "Izoh",
+        "cancel": "Bekor qilish",
+        "submit": "Qo'shish"
+      }
+    },
+    "supplierForm": {
+      "create": {
+        "trigger": "Yetkazuvchi qo'shish",
+        "title": "Yetkazuvchi qo'shish"
+      },
+      "update": {
+        "title": "Yetkazuvchini tahrirlash"
+      },
+      "delete": {
+        "title": "Yetkazuvchini o'chirasizmi?",
+        "cancel": "Bekor qilish",
+        "submit": "O'chirish"
+      }
+    },
+    "purchaseOrderForm": {
+      "create": {
+        "trigger": "Buyurtma yaratish",
+        "title": "Xarid buyurtmasi yaratish"
+      }
+    },
+    "purchaseOrderWorkflow": {
+      "send": {
+        "title": "Buyurtmani yuborish",
+        "submit": "Yuborish"
+      },
+      "receive": {
+        "title": "Tovarni qabul qilish",
+        "submit": "Qabul qilishni tasdiqlash"
+      },
+      "addItem": {
+        "title": "Mahsulot qo'shish"
+      },
+      "cancel": {
+        "title": "Buyurtmani bekor qilish",
+        "submit": "Bekor qilish"
+      }
+    },
+    "recipeForm": {
+      "create": {
+        "trigger": "Retsept yaratish",
+        "title": "Retsept yaratish"
+      }
+    },
+    "recipeWorkflow": {
+      "edit": {
+        "title": "Retseptni tahrirlash"
+      },
+      "addIngredient": {
+        "title": "Ingrediyent qo'shish"
+      },
+      "editIngredient": {
+        "title": "Ingrediyentni tahrirlash"
+      },
+      "duplicate": {
+        "title": "Retseptni ko'chirish"
+      }
+    },
+    "productionForm": {
+      "create": {
+        "trigger": "Buyurtma yaratish",
+        "title": "Ishlab chiqarish buyurtmasi yaratish"
+      }
+    },
+    "productionWorkflow": {
+      "start": {
+        "title": "Ishlab chiqarishni boshlash",
+        "submit": "Boshlash"
+      },
+      "complete": {
+        "title": "Ishlab chiqarishni yakunlash",
+        "submit": "Yakunlash"
+      },
+      "cancel": {
+        "title": "Ishlab chiqarishni bekor qilish",
+        "submit": "Bekor qilish"
+      }
+    },
+    "writeoffForm": {
+      "create": {
+        "trigger": "Yozib tashlash yaratish",
+        "title": "Yozib tashlash yaratish"
+      }
+    },
+    "writeoffWorkflow": {
+      "submit": {
+        "title": "Yozib tashlanganlarni yuborish",
+        "submit": "Yuborish"
+      },
+      "approve": {
+        "title": "Yozib tashlashni tasdiqlash",
+        "submit": "Tasdiqlash"
+      },
+      "reject": {
+        "title": "Yozib tashlashni rad etish",
+        "submit": "Rad etish"
+      },
+      "addItem": {
+        "title": "Mahsulot qo'shish"
+      }
+    },
+    "inventoryCountForm": {
+      "create": {
+        "trigger": "Hisob yaratish",
+        "title": "Inventarizatsiya yaratish"
+      }
+    },
+    "inventoryCountWorkflow": {
+      "addItem": {
+        "title": "Mahsulot qo'shish"
+      },
+      "complete": {
+        "title": "Hisobni yakunlash",
+        "submit": "Yakunlash"
+      },
+      "approve": {
+        "title": "Natijalarni tasdiqlash",
+        "submit": "Tasdiqlash"
+      },
+      "reject": {
+        "title": "Natijalarni rad etish",
+        "submit": "Rad etish"
+      }
+    },
+    "stockAdjustment": {
+      "adjust": {
+        "title": "Stokni sozlash",
+        "submit": "Saqlash"
+      }
+    }
   }
 }

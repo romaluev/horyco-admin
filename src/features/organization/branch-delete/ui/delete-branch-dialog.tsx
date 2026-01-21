@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import {
   AlertDialog,
@@ -31,6 +33,7 @@ export const DeleteBranchDialog = ({
   branch,
   onSuccess,
 }: DeleteBranchDialogProps) => {
+  const { t } = useTranslation('organization')
   const { data: canDeleteData, isLoading: isCheckingDelete } =
     useCanDeleteBranch(branch.id, isOpen)
   const { mutate: deleteBranch, isPending } = useDeleteBranch()
@@ -54,20 +57,19 @@ export const DeleteBranchDialog = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {canDelete ? 'Удалить филиал?' : 'Невозможно удалить филиал'}
+            {canDelete ? t('branches.delete.title') : t('branches.delete.cannotDelete')}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {canDelete ? (
               <>
-                Вы уверены, что хотите удалить филиал{' '}
-                <strong>{branch.name}</strong>?
+                {t('branches.delete.confirmMessage', { name: branch.name })}
                 <br />
                 <span className="text-destructive">
-                  Это действие нельзя отменить.
+                  {t('branches.delete.irreversible')}
                 </span>
               </>
             ) : (
-              'Этот филиал невозможно удалить по следующим причинам:'
+              t('branches.delete.reasonsMessage')
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -93,14 +95,14 @@ export const DeleteBranchDialog = ({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Отмена</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{t('common.cancel')}</AlertDialogCancel>
           {canDelete && (
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isPending || isCheckingDelete}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {isPending ? 'Удаление...' : 'Удалить'}
+              {isPending ? t('branches.delete.deleting') : t('branches.delete.delete')}
             </AlertDialogAction>
           )}
         </AlertDialogFooter>

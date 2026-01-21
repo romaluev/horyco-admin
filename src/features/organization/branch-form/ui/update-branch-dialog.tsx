@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -35,6 +36,7 @@ export const UpdateBranchDialog = ({
   branch,
   onSuccess,
 }: UpdateBranchDialogProps) => {
+  const { t } = useTranslation('organization')
   const { mutate: updateBranch, isPending } = useUpdateBranch()
 
   const form = useForm<BranchFormData>({
@@ -68,8 +70,8 @@ export const UpdateBranchDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Редактировать филиал</DialogTitle>
-          <DialogDescription>Обновите информацию о филиале</DialogDescription>
+          <DialogTitle>{t('branchForm.title.edit')}</DialogTitle>
+          <DialogDescription>{t('branchForm.description.edit')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -83,10 +85,10 @@ export const UpdateBranchDialog = ({
                 onClick={onClose}
                 disabled={isPending}
               >
-                Отмена
+                {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Сохранение...' : 'Сохранить'}
+                {isPending ? t('common.actions.saving') : t('branchForm.actions.save')}
               </Button>
             </DialogFooter>
           </form>

@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
@@ -59,6 +60,7 @@ export const CreateBranchOverrideDialog = ({
   products = [],
   branches = [],
 }: CreateBranchOverrideDialogProps) => {
+  const { t } = useTranslation('menu')
   const [open, setOpen] = useState(false)
   const { mutate: upsertOverride, isPending } = useUpsertBranchOverride()
 
@@ -104,14 +106,14 @@ export const CreateBranchOverrideDialog = ({
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          Добавить переопределение
+          {t('components.branchOverride.create.trigger')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Новое переопределение для филиала</DialogTitle>
+          <DialogTitle>{t('components.branchOverride.create.title')}</DialogTitle>
           <DialogDescription>
-            Задайте индивидуальные настройки продукта для филиала
+            {t('components.branchOverride.create.description')}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -122,14 +124,14 @@ export const CreateBranchOverrideDialog = ({
                 name="productId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Продукт</FormLabel>
+                    <FormLabel>{t('components.branchOverride.create.productLabel')}</FormLabel>
                     <Select
                       value={field.value?.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите продукт" />
+                          <SelectValue placeholder={t('components.branchOverride.create.productPlaceholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -138,7 +140,7 @@ export const CreateBranchOverrideDialog = ({
                             key={product.id}
                             value={product.id.toString()}
                           >
-                            {product.name} (базовая цена: {product.price} сум)
+                            {product.name} ({t('components.branchOverride.create.basePricePrefix')} {product.price} сум)
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -155,14 +157,14 @@ export const CreateBranchOverrideDialog = ({
                 name="branchId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Филиал</FormLabel>
+                    <FormLabel>{t('components.branchOverride.create.branchLabel')}</FormLabel>
                     <Select
                       value={field.value?.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите филиал" />
+                          <SelectValue placeholder={t('components.branchOverride.create.branchPlaceholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -187,13 +189,13 @@ export const CreateBranchOverrideDialog = ({
               name="overridePrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена для филиала</FormLabel>
+                  <FormLabel>{t('components.branchOverride.create.priceLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder={
                         selectedProduct
-                          ? `Базовая: ${selectedProduct.price}`
+                          ? `${t('components.branchOverride.create.basePricePrefix')} ${selectedProduct.price}`
                           : 'Введите цену'
                       }
                       {...field}
@@ -205,7 +207,7 @@ export const CreateBranchOverrideDialog = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Оставьте пустым, чтобы использовать базовую цену
+                    {t('components.branchOverride.create.priceDescription')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -218,9 +220,9 @@ export const CreateBranchOverrideDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Доступность</FormLabel>
+                    <FormLabel className="text-base">{t('components.branchOverride.create.availabilityLabel')}</FormLabel>
                     <FormDescription>
-                      Переопределить доступность для этого филиала
+                      {t('components.branchOverride.create.availabilityDescription')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -240,10 +242,10 @@ export const CreateBranchOverrideDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Отмена
+                {t('components.branchOverride.create.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('components.branchOverride.create.submitting') : t('components.branchOverride.create.submit')}
               </Button>
             </div>
           </form>

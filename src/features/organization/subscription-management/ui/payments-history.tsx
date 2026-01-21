@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import { formatPrice } from '@/shared/lib/format'
 import { BaseError, BaseLoading } from '@/shared/ui'
 import { Badge } from '@/shared/ui/base/badge'
@@ -16,17 +18,18 @@ import {
 import { useGetPaymentHistory } from '@/entities/organization/subscription'
 
 export const PaymentsHistory = () => {
+  const { t } = useTranslation('organization')
   const { data: paymentHistory, isLoading, error } = useGetPaymentHistory()
 
   if (isLoading) return <BaseLoading className="py-10" />
   if (error)
-    return <BaseError className="py-10" message="Ошибка загрузки истории платежей" />
+    return <BaseError className="py-10" message={t('paymentsHistory.loadError')} />
   if (!paymentHistory) return null
 
   const paymentTypeLabel: Record<string, string> = {
-    cash: 'Наличные',
-    bank_transfer: 'Банковский перевод',
-    card: 'Карта',
+    cash: t('paymentsHistory.table.cash'),
+    bank_transfer: t('paymentsHistory.table.bankTransfer'),
+    card: t('paymentsHistory.table.card'),
   }
 
   return (
@@ -34,24 +37,24 @@ export const PaymentsHistory = () => {
       {/* Summary Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Сводка платежей</CardTitle>
+          <CardTitle className="text-base">{t('paymentsHistory.summary.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
-              <p className="text-sm text-muted-foreground">Всего оплачено</p>
+              <p className="text-sm text-muted-foreground">{t('paymentsHistory.summary.totalPaid')}</p>
               <p className="mt-1 text-lg font-semibold">
                 {formatPrice(paymentHistory.summary.totalPaid)}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Количество платежей</p>
+              <p className="text-sm text-muted-foreground">{t('paymentsHistory.summary.paymentsCount')}</p>
               <p className="mt-1 text-lg font-semibold">
                 {paymentHistory.summary.paymentsCount}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Последний платеж</p>
+              <p className="text-sm text-muted-foreground">{t('paymentsHistory.summary.lastPayment')}</p>
               <p className="mt-1 text-sm font-medium">
                 {new Date(paymentHistory.summary.lastPaymentAt).toLocaleDateString(
                   'ru-RU'
@@ -68,11 +71,11 @@ export const PaymentsHistory = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Номер квитанции</TableHead>
-                <TableHead>Тип платежа</TableHead>
-                <TableHead>Сумма</TableHead>
-                <TableHead>Дата</TableHead>
-                <TableHead>Статус</TableHead>
+                <TableHead>{t('paymentsHistory.table.receiptNumber')}</TableHead>
+                <TableHead>{t('paymentsHistory.table.paymentType')}</TableHead>
+                <TableHead>{t('paymentsHistory.table.amount')}</TableHead>
+                <TableHead>{t('paymentsHistory.table.date')}</TableHead>
+                <TableHead>{t('paymentsHistory.table.status')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -92,7 +95,7 @@ export const PaymentsHistory = () => {
                   </TableCell>
                   <TableCell>
                     <Badge variant={payment.isVerified ? 'default' : 'outline'}>
-                      {payment.isVerified ? 'Проверено' : 'На ожидании'}
+                      {payment.isVerified ? t('paymentsHistory.table.verified') : t('paymentsHistory.table.pending')}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -102,7 +105,7 @@ export const PaymentsHistory = () => {
         </div>
       ) : (
         <div className="rounded-lg border p-8 text-center">
-          <p className="text-sm text-muted-foreground">Платежи не найдены</p>
+          <p className="text-sm text-muted-foreground">{t('paymentsHistory.table.noPayments')}</p>
         </div>
       )}
     </div>

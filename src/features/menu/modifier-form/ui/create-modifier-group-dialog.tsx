@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
@@ -48,6 +49,7 @@ export const CreateModifierGroupDialog = ({
   productId,
   onSuccess,
 }: CreateModifierGroupDialogProps) => {
+  const { t } = useTranslation('menu')
   const [open, setOpen] = useState(false)
   const { mutate: createGroup, isPending } = useCreateModifierGroup()
 
@@ -77,14 +79,14 @@ export const CreateModifierGroupDialog = ({
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
-          Добавить группу
+          {t('components.modifierGroup.create.trigger')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Создать группу модификаторов</DialogTitle>
+          <DialogTitle>{t('components.modifierGroup.create.title')}</DialogTitle>
           <DialogDescription>
-            Группа объединяет связанные опции (например, размер или топпинги)
+            {t('components.modifierGroup.create.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,9 +97,9 @@ export const CreateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название группы *</FormLabel>
+                  <FormLabel>{t('components.modifierGroup.create.nameLabel')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Размер пиццы" {...field} />
+                    <Input placeholder={t('components.modifierGroup.create.namePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,7 +112,7 @@ export const CreateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Минимум выбора</FormLabel>
+                    <FormLabel>{t('components.modifierGroup.create.minLabel')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -121,7 +123,7 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Минимальное количество опций для выбора
+                      {t('components.modifierGroup.create.minDescription')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -133,7 +135,7 @@ export const CreateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Максимум выбора</FormLabel>
+                    <FormLabel>{t('components.modifierGroup.create.maxLabel')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -144,7 +146,7 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Максимальное количество опций для выбора
+                      {t('components.modifierGroup.create.maxDescription')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -158,9 +160,9 @@ export const CreateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <FormLabel>Обязательный выбор</FormLabel>
+                    <FormLabel>{t('components.modifierGroup.create.requiredLabel')}</FormLabel>
                     <FormDescription>
-                      Клиент должен выбрать хотя бы одну опцию
+                      {t('components.modifierGroup.create.requiredDescription')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -180,10 +182,10 @@ export const CreateModifierGroupDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Отмена
+                {t('components.modifierGroup.create.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('components.modifierGroup.create.submitting') : t('components.modifierGroup.create.submit')}
               </Button>
             </div>
           </form>

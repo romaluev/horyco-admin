@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 import { uploadFile } from '@/shared/lib/file-upload'
 import { Button } from '@/shared/ui/base/button'
@@ -96,6 +97,7 @@ const convertToFormData = (
 export const BrandingSettingsForm = ({
   branchId,
 }: BrandingSettingsFormProps) => {
+  const { t } = useTranslation('organization')
   const { data: brandingSettings, isLoading } = useBrandingSettings(branchId)
   const { mutate: updateBranding, isPending } = useUpdateBranding(branchId)
 
@@ -140,7 +142,7 @@ export const BrandingSettingsForm = ({
 
       updateBranding(data)
     } catch (error) {
-      toast.error('Ошибка загрузки файлов')
+      toast.error(t('branding.uploadError'))
     } finally {
       setIsUploading(false)
     }
@@ -155,16 +157,16 @@ export const BrandingSettingsForm = ({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         {/* Brand Identity */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Идентичность бренда</h3>
+          <h3 className="text-lg font-medium">{t('branding.identity')}</h3>
 
           <FormField
             control={form.control}
             name="brandName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Название бренда *</FormLabel>
+                <FormLabel>{t('branding.fields.brandNameRequired')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Мой ресторан" />
+                  <Input {...field} placeholder={t('branding.placeholders.brandName')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,11 +178,11 @@ export const BrandingSettingsForm = ({
             name="brandDescription"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Описание</FormLabel>
+                <FormLabel>{t('branding.fields.description')}</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Описание вашего бизнеса"
+                    placeholder={t('branding.placeholders.description')}
                     rows={3}
                   />
                 </FormControl>
@@ -194,7 +196,7 @@ export const BrandingSettingsForm = ({
             name="logoUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Логотип</FormLabel>
+                <FormLabel>{t('branding.fields.logo')}</FormLabel>
                 <FormControl>
                   <FileUploader
                     value={logoFiles}
@@ -207,7 +209,7 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    Текущий: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -220,7 +222,7 @@ export const BrandingSettingsForm = ({
             name="logoDarkUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Логотип (темная тема)</FormLabel>
+                <FormLabel>{t('branding.fields.logoDark')}</FormLabel>
                 <FormControl>
                   <FileUploader
                     value={logoDarkFiles}
@@ -233,7 +235,7 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    Текущий: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -246,7 +248,7 @@ export const BrandingSettingsForm = ({
             name="faviconUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Фавикон</FormLabel>
+                <FormLabel>{t('branding.fields.favicon')}</FormLabel>
                 <FormControl>
                   <FileUploader
                     value={faviconFiles}
@@ -259,7 +261,7 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    Текущий: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -270,7 +272,7 @@ export const BrandingSettingsForm = ({
 
         {/* Colors */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Цвета</h3>
+          <h3 className="text-lg font-medium">{t('branding.colors')}</h3>
 
           <FormField
             control={form.control}
@@ -279,7 +281,7 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormControl>
                   <ColorPickerInput
-                    label="Основной цвет"
+                    label={t('branding.fields.primaryColor')}
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -296,7 +298,7 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormControl>
                   <ColorPickerInput
-                    label="Вторичный цвет"
+                    label={t('branding.fields.secondaryColor')}
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -309,18 +311,18 @@ export const BrandingSettingsForm = ({
 
         {/* Social Media */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Социальные сети</h3>
+          <h3 className="text-lg font-medium">{t('branding.socialMedia')}</h3>
 
           <FormField
             control={form.control}
             name="facebookUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Facebook</FormLabel>
+                <FormLabel>{t('branding.fields.facebook')}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="https://facebook.com/myrestaurant"
+                    placeholder={t('branding.placeholders.facebook')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -333,9 +335,9 @@ export const BrandingSettingsForm = ({
             name="instagramUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Instagram</FormLabel>
+                <FormLabel>{t('branding.fields.instagram')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="@myrestaurant" />
+                  <Input {...field} placeholder={t('branding.placeholders.instagram')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -347,9 +349,9 @@ export const BrandingSettingsForm = ({
             name="telegramUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telegram</FormLabel>
+                <FormLabel>{t('branding.fields.telegram')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="@myrestaurant" />
+                  <Input {...field} placeholder={t('branding.placeholders.telegram')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -361,9 +363,9 @@ export const BrandingSettingsForm = ({
             name="websiteUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Веб-сайт</FormLabel>
+                <FormLabel>{t('branding.fields.website')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="https://myrestaurant.com" />
+                  <Input {...field} placeholder={t('branding.placeholders.website')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -373,19 +375,19 @@ export const BrandingSettingsForm = ({
 
         {/* Contact Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Контактная информация</h3>
+          <h3 className="text-lg font-medium">{t('branding.contact')}</h3>
 
           <FormField
             control={form.control}
             name="contactPhone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Телефон</FormLabel>
+                <FormLabel>{t('branding.fields.phone')}</FormLabel>
                 <FormControl>
                   <PhoneInput
                     {...field}
                     defaultCountry="UZ"
-                    placeholder="+998 90 123 45 67"
+                    placeholder={t('branding.placeholders.phone')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -398,9 +400,9 @@ export const BrandingSettingsForm = ({
             name="contactEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t('branding.fields.email')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="info@myrestaurant.com" />
+                  <Input {...field} placeholder={t('branding.placeholders.email')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -412,11 +414,11 @@ export const BrandingSettingsForm = ({
             name="contactAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Адрес</FormLabel>
+                <FormLabel>{t('branding.fields.address')}</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Физический адрес"
+                    placeholder={t('branding.placeholders.address')}
                     rows={2}
                   />
                 </FormControl>
@@ -428,7 +430,7 @@ export const BrandingSettingsForm = ({
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending || isUploading}>
-            {isPending || isUploading ? 'Сохранение...' : 'Сохранить изменения'}
+            {isPending || isUploading ? t('branding.saving') : t('branding.saveChanges')}
           </Button>
         </div>
       </form>

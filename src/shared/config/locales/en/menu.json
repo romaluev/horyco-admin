@@ -657,6 +657,85 @@
       "modifierCount": "{{count}} modifiers"
     }
   },
+  "components": {
+    "pinButton": {
+      "title": "Generate PIN"
+    },
+    "categoryParentSelector": {
+      "placeholder": "No parent category",
+      "noParent": "No parent category"
+    },
+    "branchOverride": {
+      "create": {
+        "trigger": "Add override",
+        "title": "New branch override",
+        "description": "Set custom product settings for this branch",
+        "productLabel": "Product",
+        "productPlaceholder": "Select product",
+        "branchLabel": "Branch",
+        "branchPlaceholder": "Select branch",
+        "priceLabel": "Price for branch",
+        "priceDescription": "Leave empty to use base price",
+        "availabilityLabel": "Availability",
+        "availabilityDescription": "Override availability for this branch",
+        "basePricePrefix": "Base:",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      },
+      "edit": {
+        "title": "Edit override",
+        "description": "Change settings for this branch",
+        "priceLabel": "Price for branch",
+        "priceDescription": "Leave empty to use base price",
+        "availabilityLabel": "Availability",
+        "availabilityDescription": "Override availability for this branch",
+        "basePricePrefix": "Base:",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "submitting": "Saving..."
+      }
+    },
+    "modifierGroup": {
+      "create": {
+        "trigger": "Add group",
+        "title": "Create modifier group",
+        "description": "Group related options together (e.g., size or toppings)",
+        "nameLabel": "Group name *",
+        "namePlaceholder": "Pizza size",
+        "minLabel": "Minimum selection",
+        "minDescription": "Minimum number of options to select",
+        "maxLabel": "Maximum selection",
+        "maxDescription": "Maximum number of options to select",
+        "requiredLabel": "Required selection",
+        "requiredDescription": "Customer must select at least one option",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    },
+    "modifier": {
+      "create": {
+        "trigger": "Add modifier",
+        "title": "Add modifier",
+        "description": "Create a new modifier in the group",
+        "nameLabel": "Name",
+        "namePlaceholder": "Ketchup",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Classic tomato ketchup",
+        "priceLabel": "Price (UZS)",
+        "pricePlaceholder": "20",
+        "priceDescription": "Additional cost of the modifier",
+        "sortOrderLabel": "Sort order",
+        "sortOrderDescription": "Display order of the modifier in the list",
+        "activeLabel": "Active",
+        "activeDescription": "Modifier is available for selection",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    }
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",

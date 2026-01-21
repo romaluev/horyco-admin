@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -62,6 +63,7 @@ export const EditBranchOverrideDialog = ({
   override,
   basePrice,
 }: EditBranchOverrideDialogProps) => {
+  const { t } = useTranslation('menu')
   const [open, setOpen] = useState(false)
   const { mutate: upsertOverride, isPending } = useUpsertBranchOverride()
 
@@ -113,11 +115,11 @@ export const EditBranchOverrideDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Редактировать переопределение</DialogTitle>
+          <DialogTitle>{t('components.branchOverride.edit.title')}</DialogTitle>
           <DialogDescription>
             {override.productName && override.branchName
               ? `${override.productName} в ${override.branchName}`
-              : 'Изменить настройки для филиала'}
+              : t('components.branchOverride.edit.description')}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -127,12 +129,12 @@ export const EditBranchOverrideDialog = ({
               name="overridePrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена для филиала</FormLabel>
+                  <FormLabel>{t('components.branchOverride.edit.priceLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder={
-                        basePrice ? `Базовая: ${basePrice}` : 'Введите цену'
+                        basePrice ? `${t('components.branchOverride.edit.basePricePrefix')} ${basePrice}` : 'Введите цену'
                       }
                       {...field}
                       value={field.value ?? ''}
@@ -143,7 +145,7 @@ export const EditBranchOverrideDialog = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Оставьте пустым, чтобы использовать базовую цену
+                    {t('components.branchOverride.edit.priceDescription')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -156,9 +158,9 @@ export const EditBranchOverrideDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Доступность</FormLabel>
+                    <FormLabel className="text-base">{t('components.branchOverride.edit.availabilityLabel')}</FormLabel>
                     <FormDescription>
-                      Переопределить доступность для этого филиала
+                      {t('components.branchOverride.edit.availabilityDescription')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -178,10 +180,10 @@ export const EditBranchOverrideDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Отмена
+                {t('components.branchOverride.edit.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Сохранение...' : 'Сохранить'}
+                {isPending ? t('components.branchOverride.edit.submitting') : t('components.branchOverride.edit.submit')}
               </Button>
             </div>
           </form>

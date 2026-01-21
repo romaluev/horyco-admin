@@ -370,13 +370,38 @@
       "footer": "Based on data January - June 2024"
     }
   },
+  "dashboard": {
+    "overview": {
+      "title": "Analytics",
+      "description": "Track your key business metrics",
+      "edit": "Customize",
+      "branch": "Branch:",
+      "allBranches": "All branches",
+      "selectPeriod": "Select period",
+      "periods": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "week": "Week",
+        "month": "Month",
+        "custom": "Custom"
+      },
+      "messages": {
+        "saved": "Dashboard saved",
+        "proOnly": "Customization is available only on PRO plan",
+        "saveFailed": "Failed to save",
+        "loadFailed": "Failed to load data. Check your internet connection."
+      }
+    }
+  },
   "common": {
     "noData": "No data to display",
     "loading": "Loading...",
-    "error": "Error loading data",
+    "error": "Error",
     "retry": "Retry",
     "export": "Export",
     "period": "Period",
-    "search": "Search"
+    "search": "Search",
+    "cancel": "Cancel",
+    "apply": "Apply"
   }
 }

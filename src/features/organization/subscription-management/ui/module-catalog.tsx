@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 import { formatPrice } from '@/shared/lib/format'
 import { BaseError, BaseLoading } from '@/shared/ui'
 import { Badge } from '@/shared/ui/base/badge'
@@ -12,12 +14,13 @@ import { Separator } from '@/shared/ui/base/separator'
 import { type IModuleCatalogItem, useAddModule, useGetModuleCatalog } from '@/entities/organization/subscription'
 
 export const ModuleCatalog = () => {
+  const { t } = useTranslation('organization')
   const { data: catalog, isLoading, error } = useGetModuleCatalog()
   const { mutate: handleAddModule, isPending } = useAddModule()
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
 
   if (isLoading) return <BaseLoading className="py-10" />
-  if (error) return <BaseError className="py-10" message="Ошибка загрузки каталога модулей" />
+  if (error) return <BaseError className="py-10" message={t('moduleCatalog.loadError')} />
   if (!catalog) return null
 
   const renderModuleItem = (item: IModuleCatalogItem) => (
@@ -30,16 +33,16 @@ export const ModuleCatalog = () => {
               <p className="text-sm text-muted-foreground">{item.description}</p>
             )}
           </div>
-          {item.isSubscribed && <Badge>Активен</Badge>}
+          {item.isSubscribed && <Badge>{t('moduleCatalog.active')}</Badge>}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold">
-            {item.priceMonthly === 0 ? 'Бесплатно' : formatPrice(item.priceMonthly)}
+            {item.priceMonthly === 0 ? t('moduleCatalog.free') : formatPrice(item.priceMonthly)}
           </span>
           {item.trialDays && (
-            <Badge variant="secondary">{item.trialDays} дн. пробный</Badge>
+            <Badge variant="secondary">{item.trialDays} {t('moduleCatalog.trial')}</Badge>
           )}
         </div>
 
@@ -47,7 +50,7 @@ export const ModuleCatalog = () => {
           <>
             <Separator />
             <div>
-              <p className="mb-2 text-xs font-medium text-muted-foreground">ВОЗМОЖНОСТИ</p>
+              <p className="mb-2 text-xs font-medium text-muted-foreground">{t('moduleCatalog.features')}</p>
               <ul className="space-y-1">
                 {item.features.map((feature) => (
                   <li key={feature} className="text-sm text-foreground">
@@ -64,7 +67,7 @@ export const ModuleCatalog = () => {
             <Separator />
             <div className="rounded-lg border border-orange-200 bg-orange-50 p-3 dark:border-orange-900/50 dark:bg-orange-950/20">
               <p className="text-xs font-medium text-orange-900 dark:text-orange-200">
-                Требуемые модули:
+                {t('moduleCatalog.dependencies')}:
               </p>
               <p className="mt-1 text-sm text-orange-800 dark:text-orange-300">
                 {item.dependencies.join(', ')}
@@ -93,10 +96,10 @@ export const ModuleCatalog = () => {
           className="w-full"
         >
           {item.isSubscribed
-            ? 'Уже активирован'
+            ? t('moduleCatalog.actions.alreadyActivated')
             : item.canActivate
-              ? 'Добавить'
-              : 'Недоступно'}
+              ? t('moduleCatalog.actions.add')
+              : t('moduleCatalog.actions.unavailable')}
         </Button>
       </CardContent>
     </Card>
@@ -107,7 +110,7 @@ export const ModuleCatalog = () => {
       {/* Plans Section */}
       {catalog.plans.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">Планы</h3>
+          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.plans')}</h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.plans.map(renderModuleItem)}
           </div>
@@ -117,7 +120,7 @@ export const ModuleCatalog = () => {
       {/* Core Modules Section */}
       {catalog.core.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">Основные модули</h3>
+          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.coreModules')}</h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.core.map(renderModuleItem)}
           </div>
@@ -127,7 +130,7 @@ export const ModuleCatalog = () => {
       {/* Add-ons Section */}
       {catalog.addons.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">Дополнительные модули</h3>
+          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.addons')}</h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.addons.map(renderModuleItem)}
           </div>

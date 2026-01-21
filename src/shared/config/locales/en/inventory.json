@@ -382,5 +382,178 @@
       "tryChanging": "Try changing search parameters or filters.",
       "conductCount": "Conduct an inventory count to reconcile actual balances."
     }
+  },
+  "components": {
+    "warehouseForm": {
+      "create": {
+        "trigger": "Add warehouse",
+        "title": "Add warehouse",
+        "nameLabel": "Name *",
+        "namePlaceholder": "Main warehouse",
+        "codeLabel": "Code",
+        "codePlaceholder": "WH-001",
+        "branchLabel": "Branch *",
+        "branchPlaceholder": "Select branch",
+        "activeLabel": "Active",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    },
+    "inventoryItemForm": {
+      "create": {
+        "title": "Add item",
+        "trigger": "Add item"
+      },
+      "delete": {
+        "title": "Delete item?",
+        "description": "This action cannot be undone. The item will be deleted permanently. Make sure there are no active balances for this item.",
+        "cancel": "Cancel",
+        "submit": "Delete"
+      }
+    },
+    "inventoryItemWorkflow": {
+      "edit": {
+        "title": "Edit item"
+      },
+      "unitConversion": {
+        "title": "Add conversion",
+        "fromLabel": "From unit",
+        "toLabel": "To unit",
+        "factorLabel": "Factor",
+        "noteLabel": "Note",
+        "cancel": "Cancel",
+        "submit": "Add"
+      }
+    },
+    "supplierForm": {
+      "create": {
+        "trigger": "Add supplier",
+        "title": "Add supplier"
+      },
+      "update": {
+        "title": "Edit supplier"
+      },
+      "delete": {
+        "title": "Delete supplier?",
+        "cancel": "Cancel",
+        "submit": "Delete"
+      }
+    },
+    "purchaseOrderForm": {
+      "create": {
+        "trigger": "Create order",
+        "title": "Create purchase order"
+      }
+    },
+    "purchaseOrderWorkflow": {
+      "send": {
+        "title": "Send order",
+        "submit": "Send"
+      },
+      "receive": {
+        "title": "Receive goods",
+        "submit": "Confirm receipt"
+      },
+      "addItem": {
+        "title": "Add item"
+      },
+      "cancel": {
+        "title": "Cancel order",
+        "submit": "Cancel"
+      }
+    },
+    "recipeForm": {
+      "create": {
+        "trigger": "Create recipe",
+        "title": "Create recipe"
+      }
+    },
+    "recipeWorkflow": {
+      "edit": {
+        "title": "Edit recipe"
+      },
+      "addIngredient": {
+        "title": "Add ingredient"
+      },
+      "editIngredient": {
+        "title": "Edit ingredient"
+      },
+      "duplicate": {
+        "title": "Duplicate recipe"
+      }
+    },
+    "productionForm": {
+      "create": {
+        "trigger": "Create order",
+        "title": "Create production order"
+      }
+    },
+    "productionWorkflow": {
+      "start": {
+        "title": "Start production",
+        "submit": "Start"
+      },
+      "complete": {
+        "title": "Complete production",
+        "submit": "Complete"
+      },
+      "cancel": {
+        "title": "Cancel production",
+        "submit": "Cancel"
+      }
+    },
+    "writeoffForm": {
+      "create": {
+        "trigger": "Create writeoff",
+        "title": "Create writeoff"
+      }
+    },
+    "writeoffWorkflow": {
+      "submit": {
+        "title": "Submit writeoff",
+        "submit": "Submit"
+      },
+      "approve": {
+        "title": "Approve writeoff",
+        "submit": "Approve"
+      },
+      "reject": {
+        "title": "Reject writeoff",
+        "submit": "Reject"
+      },
+      "addItem": {
+        "title": "Add item"
+      }
+    },
+    "inventoryCountForm": {
+      "create": {
+        "trigger": "Create count",
+        "title": "Create inventory count"
+      }
+    },
+    "inventoryCountWorkflow": {
+      "addItem": {
+        "title": "Add item"
+      },
+      "complete": {
+        "title": "Complete count",
+        "submit": "Complete"
+      },
+      "approve": {
+        "title": "Approve results",
+        "submit": "Approve"
+      },
+      "reject": {
+        "title": "Reject results",
+        "submit": "Reject"
+      }
+    },
+    "stockAdjustment": {
+      "adjust": {
+        "title": "Adjust stock",
+        "submit": "Save"
+      }
+    }
   }
 }

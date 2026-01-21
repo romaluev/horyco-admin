@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { DatePicker, Input, Label, Textarea } from '@/shared/ui'
 import { PhoneInput } from '@/shared/ui/base/phone-input'
@@ -11,6 +12,7 @@ interface EmployeeFormBasicProps {
 }
 
 export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
+  const { t } = useTranslation('organization')
   const {
     register,
     control,
@@ -21,12 +23,12 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
     <div className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="fullName">
-          Полное имя <span className="text-destructive">*</span>
+          {t('employee.form.basicInfo.fullNameRequired')} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="fullName"
           {...register('fullName')}
-          placeholder="Введите полное имя"
+          placeholder={t('employee.form.placeholders.fullName')}
           className="text-base md:text-sm"
         />
         {errors.fullName && (
@@ -37,7 +39,7 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="phone">
-            Телефон <span className="text-destructive">*</span>
+            {t('employee.form.basicInfo.phoneRequired')} <span className="text-destructive">*</span>
           </Label>
           <Controller
             name="phone"
@@ -61,12 +63,12 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t('employee.form.basicInfo.email')}</Label>
           <Input
             id="email"
             type="email"
             {...register('email')}
-            placeholder="example@example.com"
+            placeholder={t('employee.form.placeholders.email')}
             className="text-base md:text-sm"
           />
           {errors.email && (
@@ -77,13 +79,13 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="password">
-          Пароль <span className="text-destructive">*</span>
+          {t('employee.form.basicInfo.passwordRequired')} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="password"
           type="password"
           {...register('password')}
-          placeholder="Минимум 6 символов"
+          placeholder={t('employee.form.basicInfo.passwordPlaceholder')}
           className="text-base md:text-sm"
         />
         {errors.password && (
@@ -93,7 +95,7 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="birthDate">Дата рождения</Label>
+          <Label htmlFor="birthDate">{t('employee.form.basicInfo.birthDate')}</Label>
           <Controller
             name="birthDate"
             control={control}

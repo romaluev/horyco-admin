@@ -382,5 +382,178 @@
       "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
       "conductCount": "Проведите инвентаризацию для сверки фактических остатков."
     }
+  },
+  "components": {
+    "warehouseForm": {
+      "create": {
+        "trigger": "Добавить склад",
+        "title": "Добавить склад",
+        "nameLabel": "Название *",
+        "namePlaceholder": "Основной склад",
+        "codeLabel": "Код",
+        "codePlaceholder": "WH-001",
+        "branchLabel": "Филиал *",
+        "branchPlaceholder": "Выберите филиал",
+        "activeLabel": "Активен",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "submitting": "Создание..."
+      }
+    },
+    "inventoryItemForm": {
+      "create": {
+        "title": "Добавить товар",
+        "trigger": "Добавить товар"
+      },
+      "delete": {
+        "title": "Удалить товар?",
+        "description": "Это действие нельзя отменить. Товар будет удалён навсегда. Убедитесь, что нет активных остатков данного товара.",
+        "cancel": "Отмена",
+        "submit": "Удалить"
+      }
+    },
+    "inventoryItemWorkflow": {
+      "edit": {
+        "title": "Редактировать товар"
+      },
+      "unitConversion": {
+        "title": "Добавить конверсию",
+        "fromLabel": "Из единицы",
+        "toLabel": "В единицу",
+        "factorLabel": "Коэффициент",
+        "noteLabel": "Примечание",
+        "cancel": "Отмена",
+        "submit": "Добавить"
+      }
+    },
+    "supplierForm": {
+      "create": {
+        "trigger": "Добавить поставщика",
+        "title": "Добавить поставщика"
+      },
+      "update": {
+        "title": "Редактировать поставщика"
+      },
+      "delete": {
+        "title": "Удалить поставщика?",
+        "cancel": "Отмена",
+        "submit": "Удалить"
+      }
+    },
+    "purchaseOrderForm": {
+      "create": {
+        "trigger": "Создать заказ",
+        "title": "Создать заказ поставщику"
+      }
+    },
+    "purchaseOrderWorkflow": {
+      "send": {
+        "title": "Отправить заказ",
+        "submit": "Отправить"
+      },
+      "receive": {
+        "title": "Приёмка товаров",
+        "submit": "Подтвердить приёмку"
+      },
+      "addItem": {
+        "title": "Добавить товар"
+      },
+      "cancel": {
+        "title": "Отменить заказ",
+        "submit": "Отменить"
+      }
+    },
+    "recipeForm": {
+      "create": {
+        "trigger": "Создать техкарту",
+        "title": "Создать техкарту"
+      }
+    },
+    "recipeWorkflow": {
+      "edit": {
+        "title": "Редактировать техкарту"
+      },
+      "addIngredient": {
+        "title": "Добавить ингредиент"
+      },
+      "editIngredient": {
+        "title": "Редактировать ингредиент"
+      },
+      "duplicate": {
+        "title": "Дублировать техкарту"
+      }
+    },
+    "productionForm": {
+      "create": {
+        "trigger": "Создать заказ",
+        "title": "Создать заказ на производство"
+      }
+    },
+    "productionWorkflow": {
+      "start": {
+        "title": "Начать производство",
+        "submit": "Начать"
+      },
+      "complete": {
+        "title": "Завершить производство",
+        "submit": "Завершить"
+      },
+      "cancel": {
+        "title": "Отменить производство",
+        "submit": "Отменить"
+      }
+    },
+    "writeoffForm": {
+      "create": {
+        "trigger": "Создать списание",
+        "title": "Создать списание"
+      }
+    },
+    "writeoffWorkflow": {
+      "submit": {
+        "title": "Отправить списание",
+        "submit": "Отправить"
+      },
+      "approve": {
+        "title": "Утвердить списание",
+        "submit": "Утвердить"
+      },
+      "reject": {
+        "title": "Отклонить списание",
+        "submit": "Отклонить"
+      },
+      "addItem": {
+        "title": "Добавить товар"
+      }
+    },
+    "inventoryCountForm": {
+      "create": {
+        "trigger": "Создать инвентаризацию",
+        "title": "Создать инвентаризацию"
+      }
+    },
+    "inventoryCountWorkflow": {
+      "addItem": {
+        "title": "Добавить товар"
+      },
+      "complete": {
+        "title": "Завершить инвентаризацию",
+        "submit": "Завершить"
+      },
+      "approve": {
+        "title": "Утвердить результаты",
+        "submit": "Утвердить"
+      },
+      "reject": {
+        "title": "Отклонить результаты",
+        "submit": "Отклонить"
+      }
+    },
+    "stockAdjustment": {
+      "adjust": {
+        "title": "Отрегулировать остаток",
+        "submit": "Сохранить"
+      }
+    }
   }
 }

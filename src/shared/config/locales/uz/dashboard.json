@@ -370,13 +370,38 @@
       "footer": "Ma'lumotlar asosida Yanvar - Iyun 2024"
     }
   },
+  "dashboard": {
+    "overview": {
+      "title": "Tahlillar",
+      "description": "Biznesingizning asosiy ko'rsatichlarini kuzatib boring",
+      "edit": "Sozlash",
+      "branch": "Filial:",
+      "allBranches": "Barcha filiallar",
+      "selectPeriod": "Davr tanglang",
+      "periods": {
+        "today": "Bugun",
+        "yesterday": "Kecha",
+        "week": "Hafta",
+        "month": "Oy",
+        "custom": "Boshqa"
+      },
+      "messages": {
+        "saved": "Deshbord saqlandi",
+        "proOnly": "Moslash faqat PRO rejasida mavjud",
+        "saveFailed": "Saqlash amalga oshmadi",
+        "loadFailed": "Ma'lumotni yuklashda xato. Internet ulanishingizni tekshiring."
+      }
+    }
+  },
   "common": {
     "noData": "Ko'rsatish uchun ma'lumot yo'q",
     "loading": "Yuklanmoqda...",
-    "error": "Ma'lumotni yuklashda xato",
+    "error": "Xato",
     "retry": "Qayta urinib ko'ring",
     "export": "Eksport",
     "period": "Davr",
-    "search": "Qidirish"
+    "search": "Qidirish",
+    "cancel": "Bekor qilish",
+    "apply": "Qo'llash"
   }
 }

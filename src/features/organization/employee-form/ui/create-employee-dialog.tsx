@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 import {
@@ -27,13 +28,15 @@ import { createEmployeeSchema } from '../model/contract'
 import type { CreateEmployeeFormData } from '../model/contract'
 import type { IEmployee } from '@/entities/organization/employee'
 
-const STEPS = [
-  { number: 1, title: 'Основная информация', description: 'Шаг 1 из 2' },
-  { number: 2, title: 'Филиалы и разрешения', description: 'Шаг 2 из 2' },
+// Steps will be defined in the component to use translations
+const getSteps = (t: any) => [
+  { number: 1, title: t('staff.form.steps.basicInfo'), description: t('staff.form.steps.step1') },
+  { number: 2, title: t('staff.form.steps.branchesPermissions'), description: t('staff.form.steps.step2') },
 ] as const
 
 // eslint-disable-next-line max-lines-per-function
 export const CreateEmployeeDialog = () => {
+  const { t } = useTranslation('organization')
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [createdEmployee, setCreatedEmployee] = useState<IEmployee | null>(null)
@@ -41,6 +44,8 @@ export const CreateEmployeeDialog = () => {
   const [branchPermissions, setBranchPermissions] = useState<
     Record<number, number[]>
   >({})
+
+  const STEPS = getSteps(t)
 
   const form = useForm<CreateEmployeeFormData>({
     resolver: zodResolver(createEmployeeSchema),
@@ -126,7 +131,7 @@ export const CreateEmployeeDialog = () => {
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
-          Добавить сотрудника
+          {t('staff.addNew')}
         </Button>
       </DialogTrigger>
 
@@ -173,18 +178,18 @@ export const CreateEmployeeDialog = () => {
                 onClick={handleBack}
                 disabled={isPending}
               >
-                Назад
+                {t('common.back')}
               </Button>
             )}
 
             {currentStep < 2 ? (
               <Button type="button" onClick={handleNext}>
-                Далее
+                {t('staff.form.steps.next')}
               </Button>
             ) : (
               <Button type="submit" disabled={isPending}>
                 {isPending && <BaseLoading />}
-                {isPending ? 'Сохранение...' : 'Создать сотрудника'}
+                {isPending ? t('common.actions.saving') : t('staff.form.submit.create')}
               </Button>
             )}
           </DialogFooter>

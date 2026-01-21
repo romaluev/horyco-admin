@@ -657,6 +657,85 @@
       "modifierCount": "{{count}} модификаторов"
     }
   },
+  "components": {
+    "pinButton": {
+      "title": "Генерировать PIN"
+    },
+    "categoryParentSelector": {
+      "placeholder": "Без родительской категории",
+      "noParent": "Без родительской категории"
+    },
+    "branchOverride": {
+      "create": {
+        "trigger": "Добавить переопределение",
+        "title": "Новое переопределение для филиала",
+        "description": "Задайте индивидуальные настройки продукта для филиала",
+        "productLabel": "Продукт",
+        "productPlaceholder": "Выберите продукт",
+        "branchLabel": "Филиал",
+        "branchPlaceholder": "Выберите филиал",
+        "priceLabel": "Цена для филиала",
+        "priceDescription": "Оставьте пустым, чтобы использовать базовую цену",
+        "availabilityLabel": "Доступность",
+        "availabilityDescription": "Переопределить доступность для этого филиала",
+        "basePricePrefix": "Базовая:",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "submitting": "Создание..."
+      },
+      "edit": {
+        "title": "Редактировать переопределение",
+        "description": "Изменить настройки для филиала",
+        "priceLabel": "Цена для филиала",
+        "priceDescription": "Оставьте пустым, чтобы использовать базовую цену",
+        "availabilityLabel": "Доступность",
+        "availabilityDescription": "Переопределить доступность для этого филиала",
+        "basePricePrefix": "Базовая:",
+        "cancel": "Отмена",
+        "submit": "Сохранить",
+        "submitting": "Сохранение..."
+      }
+    },
+    "modifierGroup": {
+      "create": {
+        "trigger": "Добавить группу",
+        "title": "Создать группу модификаторов",
+        "description": "Группа объединяет связанные опции (например, размер или топпинги)",
+        "nameLabel": "Название группы *",
+        "namePlaceholder": "Размер пиццы",
+        "minLabel": "Минимум выбора",
+        "minDescription": "Минимальное количество опций для выбора",
+        "maxLabel": "Максимум выбора",
+        "maxDescription": "Максимальное количество опций для выбора",
+        "requiredLabel": "Обязательный выбор",
+        "requiredDescription": "Клиент должен выбрать хотя бы одну опцию",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "submitting": "Создание..."
+      }
+    },
+    "modifier": {
+      "create": {
+        "trigger": "Добавить модификатор",
+        "title": "Добавить модификатор",
+        "description": "Создайте новый модификатор в группе",
+        "nameLabel": "Название",
+        "namePlaceholder": "Кетчуп",
+        "descriptionLabel": "Описание",
+        "descriptionPlaceholder": "Классический томатный кетчуп",
+        "priceLabel": "Цена (UZS)",
+        "pricePlaceholder": "20",
+        "priceDescription": "Дополнительная стоимость модификатора",
+        "sortOrderLabel": "Порядок сортировки",
+        "sortOrderDescription": "Порядок отображения модификатора в списке",
+        "activeLabel": "Активен",
+        "activeDescription": "Модификатор доступен для выбора",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "submitting": "Создание..."
+      }
+    }
+  },
   "common": {
     "save": "Сохранить",
     "cancel": "Отмена",
