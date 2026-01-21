@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -106,12 +104,11 @@ export function EditProductModal({
                 <FormLabel>Изображение</FormLabel>
                 <div className="bg-muted relative mt-2 h-48 w-full overflow-hidden rounded-lg border">
                   {imageUrl ? (
-                    <Image
+                    <img
                       src={imageUrl}
                       alt="Product preview"
-                      fill
-                      className="object-cover"
-                      sizes="400px"
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="text-muted-foreground flex h-full items-center justify-center text-sm">

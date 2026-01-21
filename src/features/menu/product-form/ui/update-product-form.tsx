@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'

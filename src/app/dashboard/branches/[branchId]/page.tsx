@@ -1,8 +1,6 @@
-'use client'
+import { useState } from 'react'
 
-import { use, useState } from 'react'
-
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { IconEdit, IconTrash, IconArrowLeft } from '@tabler/icons-react'
 
@@ -19,11 +17,10 @@ import { UpdateBranchDialog } from '@/features/organization/branch-form'
 import { BranchStatisticsWidget } from '@/widgets/branch-statistics'
 
 export default function BranchDetailPage({
-  params,
+  branchId,
 }: {
-  params: Promise<{ branchId: string }>
+  branchId: string
 }) {
-  const { branchId } = use(params)
   const router = useRouter()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)

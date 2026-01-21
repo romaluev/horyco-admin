@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconTruck } from '@tabler/icons-react'
 import { format } from 'date-fns'
@@ -138,7 +138,7 @@ export default function SuppliersPage() {
                     <TableCell>
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/dashboard/inventory/suppliers/${supplier.id}`}>
+                          <Link to={`/dashboard/inventory/suppliers/${supplier.id}` as any}>
                             Открыть
                           </Link>
                         </Button>

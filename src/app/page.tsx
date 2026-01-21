@@ -1,5 +1,13 @@
-import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 
-export default async function Page() {
-  redirect('/dashboard/overview')
+import { useRouter } from '@/shared/lib/navigation'
+
+export default function Page() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace('/dashboard/overview')
+  }, [router])
+
+  return null
 }

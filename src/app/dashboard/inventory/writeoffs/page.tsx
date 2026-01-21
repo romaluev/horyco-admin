@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconTrash } from '@tabler/icons-react'
 import { format, subDays } from 'date-fns'
@@ -207,7 +207,7 @@ export default function WriteoffsPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/writeoffs/${writeoff.id}`}>
+                        <Link to={`/dashboard/inventory/writeoffs/${writeoff.id}` as any}>
                           Открыть
                         </Link>
                       </Button>

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Plus } from 'lucide-react'
 
@@ -14,7 +14,7 @@ export function ProductsHeader() {
         </p>
       </div>
 
-      <Link href="/dashboard/menu/products/create">
+      <Link to="/dashboard/menu/products/create">
         <Button>
           <Plus className="h-4 w-4" />
           <span className="hidden md:inline ml-2">Создать</span>

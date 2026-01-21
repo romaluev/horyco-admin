@@ -1,14 +1,23 @@
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 
-export default async function Dashboard() {
-  // Check if user is authenticated by looking for the access_token cookie
-  const cookieStore = await cookies()
-  const token = cookieStore.get('access_token')?.value
-  const isAuthenticated = !!token
+import Cookies from 'js-cookie'
 
-  if (!isAuthenticated) {
-    return redirect('/auth/sign-in')
-  }
-  redirect('/dashboard/overview')
+import { useRouter } from '@/shared/lib/navigation'
+
+export default function Dashboard() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is authenticated by looking for the access_token cookie
+    const token = Cookies.get('access_token')
+    const isAuthenticated = !!token
+
+    if (!isAuthenticated) {
+      router.replace('/auth/sign-in')
+    } else {
+      router.replace('/dashboard/overview')
+    }
+  }, [router])
+
+  return null
 }

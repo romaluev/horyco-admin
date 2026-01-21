@@ -6,7 +6,7 @@
 'use client'
 
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import {
   ArrowRight,
@@ -116,7 +116,7 @@ export default function MenuPage(): JSX.Element {
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat) => (
-          <Link key={stat.label} href={stat.href}>
+          <Link key={stat.label} to={stat.href}>
             <Card className="hover:bg-accent cursor-pointer transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -151,7 +151,7 @@ export default function MenuPage(): JSX.Element {
                 <CardDescription>{section.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href={section.href}>
+                <Link to={section.href}>
                   <Button className="w-full" variant="outline">
                     Перейти
                     <ArrowRight className="ml-2 h-4 w-4" />

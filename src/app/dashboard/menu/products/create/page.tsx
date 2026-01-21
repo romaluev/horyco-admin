@@ -6,7 +6,7 @@
 'use client'
 
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { ArrowLeft } from 'lucide-react'
 
@@ -21,7 +21,7 @@ export default function CreateProductPage(): JSX.Element {
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/menu/products">
+          <Link to="/dashboard/menu/products">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>

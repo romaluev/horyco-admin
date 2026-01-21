@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'

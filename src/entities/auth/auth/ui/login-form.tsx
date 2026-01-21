@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
@@ -202,7 +202,7 @@ const LoginForm = () => {
                   <div className="flex items-center justify-between">
                     <FormLabel>Пароль</FormLabel>
                     <Link
-                      href="/auth/forgot-password"
+                      to="/auth/forgot-password"
                       className="text-muted-foreground hover:text-primary text-sm underline-offset-4 hover:underline"
                     >
                       Забыли пароль?

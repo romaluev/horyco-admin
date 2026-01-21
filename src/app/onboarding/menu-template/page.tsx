@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 

@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconPlus, IconUpload } from '@tabler/icons-react'
 
@@ -30,7 +30,7 @@ export default function Page() {
             />
             <div className="flex gap-2">
               <Link
-                href="/dashboard/branches/bulk-import"
+                to="/dashboard/branches/bulk-import"
                 className={cn(
                   buttonVariants({ variant: 'outline' }),
                   'text-xs md:text-sm'

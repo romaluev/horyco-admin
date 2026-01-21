@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowLeftRight } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Button } from '@/shared/ui/base/button'
@@ -36,7 +36,7 @@ export function RecentMovementsWidget({
           <CardDescription>История операций с товарами</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/inventory/movements">Все</Link>
+          <Link to="/dashboard/inventory/movements">Все</Link>
         </Button>
       </CardHeader>
       <CardContent className="max-h-[320px] overflow-auto">

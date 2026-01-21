@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useParams, useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -93,7 +93,7 @@ export default function InventoryItemDetailPage() {
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Товар не найден</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/items">Назад к списку</Link>
+            <Link to="/dashboard/inventory/items">Назад к списку</Link>
           </Button>
         </div>
       </PageContainer>
@@ -107,7 +107,7 @@ export default function InventoryItemDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/items">
+              <Link to="/dashboard/inventory/items">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>

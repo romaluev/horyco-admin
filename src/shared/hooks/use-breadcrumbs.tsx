@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 
-import { usePathname } from 'next/navigation'
+import { usePathname } from '@/shared/lib/navigation'
 
 import { useViewBuilderStore } from '@/features/dashboard/view-builder'
 

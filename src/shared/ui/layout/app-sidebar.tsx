@@ -2,9 +2,8 @@
 
 import * as React from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname, useRouter } from '@/shared/lib/navigation'
 
 import {
   IconChevronRight,
@@ -157,7 +156,7 @@ function NavItemWithSub({
                 return (
                   <Link
                     key={subItem.title}
-                    href={subItem.url}
+                    to={subItem.url}
                     className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
                       pathname === subItem.url || pathname.startsWith(subItem.url + '/')
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
@@ -200,7 +199,7 @@ function NavItemWithSub({
                     isActive={pathname === subItem.url || pathname.startsWith(subItem.url + '/')}
                   >
                     <Link
-                      href={subItem.url}
+                      to={subItem.url}
                       className="flex items-center gap-2"
                     >
                       {SubIcon && (
@@ -263,7 +262,7 @@ export default function AppSidebar() {
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
-            <Image
+            <img
               className="w-40 overflow-hidden"
               src={logo}
               alt=""
@@ -301,7 +300,7 @@ export default function AppSidebar() {
                         tooltip={item.title}
                         isActive={pathname === item.url}
                       >
-                        <Link href={item.url}>
+                        <Link to={item.url}>
                           <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`} />
                           <span className="text-[17px]">{item.title}</span>
                         </Link>
@@ -327,7 +326,7 @@ export default function AppSidebar() {
                 tooltip="Настройки"
                 isActive={pathname === settingsNavItem.url}
               >
-                <Link href={settingsNavItem.url}>
+                <Link to={settingsNavItem.url}>
                   <IconSettings className="!h-6 !w-6" />
                   <span className="text-[17px]">Настройки</span>
                 </Link>

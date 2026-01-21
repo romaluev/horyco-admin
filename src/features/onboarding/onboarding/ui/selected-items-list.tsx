@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { Edit, Trash2 } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/base/badge'
@@ -106,12 +104,11 @@ export function SelectedItemsList({
                 <CardContent className="p-4">
                   <div className="flex gap-3">
                     <div className="bg-muted relative h-16 w-16 shrink-0 overflow-hidden rounded-md">
-                      <Image
+                      <img
                         src={product.image ?? '/placeholder.png'}
                         alt={product.name}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
                       />
                     </div>
                     <div className="min-w-0 flex-1">

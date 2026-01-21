@@ -14,7 +14,7 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconArrowLeft, IconDownload } from '@tabler/icons-react'
 
@@ -120,7 +120,7 @@ export function AnalyticsPageLayout({
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <Link href={backHref}>
+          <Link to={backHref}>
             <Button variant="ghost" size="icon" className="size-8">
               <IconArrowLeft className="size-4" />
             </Button>
@@ -228,7 +228,7 @@ export function AnalyticsPageHeader({
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
-        <Link href={backHref}>
+        <Link to={backHref}>
           <Button variant="ghost" size="icon" className="size-8">
             <IconArrowLeft className="size-4" />
           </Button>

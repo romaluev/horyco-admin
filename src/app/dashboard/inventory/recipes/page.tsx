@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconChefHat } from '@tabler/icons-react'
 
@@ -172,7 +172,7 @@ export default function RecipesPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/recipes/${recipe.id}`}>Открыть</Link>
+                        <Link to={`/dashboard/inventory/recipes/${recipe.id}` as any}>Открыть</Link>
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
@@ -71,7 +71,7 @@ export default function ViewsPage() {
               Icons[datasetConfig?.icon as keyof typeof Icons] || Icons.table
 
             return (
-              <Link key={view.id} href={`/dashboard/views/${view.id}`}>
+              <Link key={view.id} to={`/dashboard/views/${view.id}` as any}>
                 <Card className="transition-colors hover:bg-muted/50">
                   <CardHeader>
                     <div className="flex items-start justify-between">

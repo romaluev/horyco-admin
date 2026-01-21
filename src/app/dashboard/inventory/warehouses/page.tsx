@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconBuildingWarehouse } from '@tabler/icons-react'
 
@@ -176,7 +176,7 @@ export default function WarehousesPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" asChild>
                           <Link
-                            href={`/dashboard/inventory/stock?warehouseId=${warehouse.id}`}
+                            to={`/dashboard/inventory/stock?warehouseId=${warehouse.id}` as any}
                           >
                             Остатки
                           </Link>

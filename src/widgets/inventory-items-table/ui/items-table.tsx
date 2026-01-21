@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { formatPrice } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/base/badge'
@@ -44,7 +44,7 @@ export const ItemsTable = ({ items }: IItemsTableProps) => {
               <TableCell className="text-muted-foreground">{index + 1}</TableCell>
               <TableCell className="font-medium">
                 <Link
-                  href={`/dashboard/inventory/items/${item.id}`}
+                  to={`/dashboard/inventory/items/${item.id}` as any}
                   className="hover:underline"
                 >
                   {item.name}
@@ -79,7 +79,7 @@ export const ItemsTable = ({ items }: IItemsTableProps) => {
               <TableCell>
                 <div className="flex items-center gap-1">
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/dashboard/inventory/items/${item.id}`}>
+                    <Link to={`/dashboard/inventory/items/${item.id}` as any}>
                       Открыть
                     </Link>
                   </Button>

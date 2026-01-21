@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconBoxMultiple } from '@tabler/icons-react'
 import { format, startOfDay, endOfDay } from 'date-fns'
@@ -195,7 +195,7 @@ export default function ProductionPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/production/${order.id}`}>
+                        <Link to={`/dashboard/inventory/production/${order.id}` as any}>
                           Открыть
                         </Link>
                       </Button>

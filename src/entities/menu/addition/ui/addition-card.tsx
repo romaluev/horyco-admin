@@ -5,8 +5,6 @@
 
 'use client'
 
-import Image from 'next/image'
-
 import { CheckCircle2, ImageIcon, XCircle } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/base/badge'
@@ -28,12 +26,11 @@ export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
       {/* Image Section */}
       {addition.image ? (
         <div className="relative aspect-video w-full">
-          <Image
+          <img
             src={addition.image}
             alt={addition.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
           />
         </div>
       ) : (

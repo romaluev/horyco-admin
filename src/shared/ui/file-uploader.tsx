@@ -2,8 +2,6 @@
 
 import * as React from 'react'
 
-import Image from 'next/image'
-
 import { IconUpload, IconX } from '@tabler/icons-react'
 import Dropzone, {
   type DropzoneProps,
@@ -313,7 +311,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
     <div className="relative flex items-center space-x-4">
       <div className="flex flex-1 space-x-4">
         {isFileWithPreview(file) ? (
-          <Image
+          <img
             src={file.preview}
             alt={file.name}
             width={48}
@@ -355,7 +353,7 @@ function ImageCard({ file, progress, onRemove }: FileCardProps) {
   return (
     <div className="relative w-max">
       {isFileWithPreview(file) ? (
-        <Image
+        <img
           src={file.preview}
           alt={file.name}
           width={120}
@@ -396,12 +394,12 @@ const UploadedFileCard = ({
 
   return (
     <div className="relative w-max">
-      <Image
+      <img
         src={imageUrl}
         alt={file.metadata?.altText || file.originalName}
         width={120}
-        unoptimized
         height={120}
+        className="rounded-md object-cover"
       />
       <Button
         type="button"

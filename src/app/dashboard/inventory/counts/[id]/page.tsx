@@ -1,8 +1,6 @@
-'use client'
+import { useState } from 'react'
 
-import { use, useState } from 'react'
-
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -54,13 +52,12 @@ import {
 } from '@/features/inventory/inventory-count-workflow'
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
-export default function InventoryCountDetailPage({ params }: PageProps) {
-  const resolvedParams = use(params)
+export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const id = parseInt(resolvedParams.id)
+  const id = parseInt(paramId)
 
   const { data: count, isLoading, error } = useInventoryCountById(id)
   const { data: variance } = useCountVarianceSummary(id)

@@ -1,5 +1,13 @@
-import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 
-export default function StaffPage(): never {
-  redirect('/dashboard/staff/employees')
+import { useRouter } from '@/shared/lib/navigation'
+
+export default function StaffPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace('/dashboard/staff/employees')
+  }, [router])
+
+  return null
 }

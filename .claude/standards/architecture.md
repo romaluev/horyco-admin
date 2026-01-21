@@ -7,16 +7,17 @@
 
 ## LAYERS (5 total)
 
-### 1. APP (Pages + Routing)
+### 1. ROUTES (Pages + Routing)
 
-- **Purpose**: Next.js pages, layouts, routing logic
-- **Contains**: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, API routes
+- **Purpose**: TanStack Router pages, layouts, routing logic
+- **Location**: `/src/routes/` - file-based routing
+- **Contains**: Route files (`index.tsx`, `$param.tsx`, `_layout/route.tsx`)
 - **Can import**: All lower layers (widgets, features, entities, shared)
 - **Rules**:
   - Thin composition layer - no business logic
-  - Metadata defined here
-  - Middleware for auth
-  - Providers wrap here
+  - Route guards in `beforeLoad`
+  - Providers in `__root.tsx`
+  - Use `Route.useParams()` and `Route.useSearch()` for route data
 
 ### 2. WIDGETS (Complex UI Sections)
 

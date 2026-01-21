@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import {
   IconChartBar,
@@ -101,7 +101,7 @@ export default function AnalyticsPage() {
 
           if (isVisible) {
             return (
-              <Link key={pageCode} href={`/dashboard/analytics/${pageCode}`}>
+              <Link key={pageCode} to={`/dashboard/analytics/${pageCode}`}>
                 <AnalyticsPageCard
                   title={config.title}
                   description={config.description}

@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react'
@@ -156,7 +156,7 @@ const ForgotPasswordForm = () => {
             </Button>
 
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in" search={{ redirect: undefined }}
               className="text-muted-foreground hover:text-primary flex items-center justify-center gap-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />

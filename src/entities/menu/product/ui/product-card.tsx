@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { Pen } from 'lucide-react'
 

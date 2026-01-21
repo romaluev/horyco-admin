@@ -9,7 +9,7 @@
 
 import * as React from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { IconLock } from '@tabler/icons-react'
 

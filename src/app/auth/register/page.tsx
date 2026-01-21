@@ -1,22 +1,14 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import logo from '@/shared/assets/logo.png'
 
 import { RegistrationFlow } from '@/features/auth/auth'
 
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Регистрация',
-  description: 'Создайте аккаунт для вашего ресторана',
-}
-
 export default function RegisterPage() {
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden"
           src={logo}
           alt="Horyco Admin"
@@ -29,7 +21,8 @@ export default function RegisterPage() {
           <p className="text-muted-foreground px-8 text-center text-sm">
             Уже есть аккаунт?{' '}
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in"
+              search={{ redirect: undefined }}
               className="hover:text-primary underline underline-offset-4"
             >
               Войти
@@ -38,19 +31,19 @@ export default function RegisterPage() {
 
           <p className="text-muted-foreground px-8 text-center text-sm">
             Регистрируясь, вы соглашаетесь с{' '}
-            <Link
-              href="/terms"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Условиями использования
-            </Link>{' '}
+            </a>{' '}
             и{' '}
-            <Link
-              href="/privacy"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Политикой конфиденциальности
-            </Link>
+            </a>
             .
           </p>
         </div>

@@ -1,7 +1,7 @@
 'use client'
 import { Fragment } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSlash } from '@tabler/icons-react'
 
@@ -26,8 +26,8 @@ export function Breadcrumbs() {
           <Fragment key={item.title}>
             {index !== items.length - 1 && (
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink asChild href={item.link}>
-                  <Link href={item.link}>{item.title}</Link>
+                <BreadcrumbLink asChild>
+                  <Link to={item.link as '/dashboard'}>{item.title}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             )}

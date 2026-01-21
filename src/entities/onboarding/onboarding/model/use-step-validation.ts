@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { ONBOARDING_STEPS, getStepRoute } from '@/shared/config/onboarding'
 

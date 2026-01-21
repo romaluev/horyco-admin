@@ -1,7 +1,7 @@
 'use client'
 
 import { AlertTriangle } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Badge } from '@/shared/ui/base/badge'
@@ -33,7 +33,7 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
           <CardDescription>Товары требующие пополнения</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/inventory/stock?filter=low">Все</Link>
+          <Link to={"/dashboard/inventory/stock?filter=low" as any}>Все</Link>
         </Button>
       </CardHeader>
       <CardContent className="max-h-[320px] overflow-auto">

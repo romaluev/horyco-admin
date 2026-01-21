@@ -8,8 +8,8 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus } from '@tabler/icons-react'
 
@@ -131,7 +131,7 @@ export function AnalyticsSidebarSection() {
                     return (
                       <Link
                         key={pageCode}
-                        href={url}
+                        to={url}
                         className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                           pathname === url
                             ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
@@ -154,7 +154,7 @@ export function AnalyticsSidebarSection() {
                   views?.map((view) => (
                     <Link
                       key={view.id}
-                      href={`/dashboard/views/${view.id}`}
+                      to={`/dashboard/views/${view.id}` as any}
                       className={`flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                         pathname === `/dashboard/views/${view.id}`
                           ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
@@ -229,7 +229,7 @@ export function AnalyticsSidebarSection() {
                         asChild
                         isActive={pathname === url}
                       >
-                        <Link href={url} className="flex items-center gap-2">
+                        <Link to={url} className="flex items-center gap-2">
                           <PageIcon className="!h-[1.25rem] !w-[1.25rem]" />
                           <span className="text-[17px]">{config.title}</span>
                         </Link>
@@ -254,7 +254,7 @@ export function AnalyticsSidebarSection() {
                       asChild
                       isActive={pathname === `/dashboard/views/${view.id}`}
                     >
-                      <Link href={`/dashboard/views/${view.id}`} className="flex items-center gap-2">
+                      <Link to={`/dashboard/views/${view.id}` as any} className="flex items-center gap-2">
                         <Icons.chartPie className="h-6 w-6" />
                         <span className="text-[17px]">{view.name}</span>
                         {view.isPinned && (

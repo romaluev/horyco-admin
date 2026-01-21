@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Check, Loader2, X } from 'lucide-react'
@@ -418,7 +418,7 @@ const ResetPasswordForm = () => {
             </Button>
 
             <Link
-              href="/auth/forgot-password"
+              to="/auth/forgot-password"
               className="text-muted-foreground hover:text-primary flex items-center justify-center gap-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />

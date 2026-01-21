@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconBell, IconCheck, IconAlertTriangle, IconPackageOff, IconChecks } from '@tabler/icons-react'
 
@@ -254,7 +254,7 @@ export default function AlertsPage() {
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
                                 <Link
-                                  href={`/dashboard/inventory/purchase-orders?itemId=${alert.itemId}`}
+                                  to={`/dashboard/inventory/purchase-orders?itemId=${alert.itemId}` as any}
                                 >
                                   Заказать
                                 </Link>
@@ -334,7 +334,7 @@ export default function AlertsPage() {
                             </div>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
-                                <Link href={`/dashboard/inventory/stock?itemId=${alert.itemId}`}>
+                                <Link to={`/dashboard/inventory/stock?itemId=${alert.itemId}` as any}>
                                   Остатки
                                 </Link>
                               </Button>

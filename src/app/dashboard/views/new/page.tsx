@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { Dataset } from '@/shared/api/graphql'
 

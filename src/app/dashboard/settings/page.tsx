@@ -13,6 +13,7 @@ import { FeatureFlagsManager } from '@/features/organization/feature-flags-manag
 import { PaymentSettingsForm } from '@/features/organization/payment-settings-form'
 import { SmsSettingsForm } from '@/features/organization/sms-settings-form'
 import { SubscriptionPage } from '@/features/organization/subscription-management'
+import { ThemeSettings } from '@/features/organization/theme-settings'
 
 export default function SettingsPage() {
   const { selectedBranchId } = useBranchStore()
@@ -30,12 +31,13 @@ export default function SettingsPage() {
         <Separator />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="branding" className="w-full">Брендинг</TabsTrigger>
             <TabsTrigger value="features" className="w-full">Функции</TabsTrigger>
             <TabsTrigger value="payment" className="w-full">Оплата</TabsTrigger>
             <TabsTrigger value="sms" className="w-full">SMS</TabsTrigger>
             <TabsTrigger value="subscription" className="w-full">Подписка</TabsTrigger>
+            <TabsTrigger value="appearance" className="w-full">Внешний вид</TabsTrigger>
           </TabsList>
 
           <TabsContent value="branding" className="space-y-4 w-full">
@@ -82,6 +84,12 @@ export default function SettingsPage() {
 
           <TabsContent value="subscription" className="w-full">
             <SubscriptionPage />
+          </TabsContent>
+
+          <TabsContent value="appearance" className="space-y-4 w-full">
+            <div className="rounded-lg border p-6">
+              <ThemeSettings />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

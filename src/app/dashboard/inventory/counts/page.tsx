@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconClipboardCheck } from '@tabler/icons-react'
 import { format } from 'date-fns'
@@ -195,7 +195,7 @@ export default function InventoryCountsPage() {
                       </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/dashboard/inventory/counts/${count.id}`}>
+                          <Link to={`/dashboard/inventory/counts/${count.id}` as any}>
                             Открыть
                           </Link>
                         </Button>
