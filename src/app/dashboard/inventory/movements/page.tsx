@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { format, subDays } from 'date-fns'
 import { Download } from 'lucide-react'
@@ -25,6 +26,7 @@ import type { DateRange } from 'react-day-picker'
 const DEFAULT_DAYS_BACK = 30
 
 export default function MovementsPage() {
+  const { t } = useTranslation('inventory')
   const [warehouseId, setWarehouseId] = useState<number | undefined>()
   const [itemId, setItemId] = useState<number | undefined>()
   const [movementType, setMovementType] = useState<MovementType | ''>('')
@@ -71,10 +73,10 @@ export default function MovementsPage() {
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
-          <Heading title="История движений" description="Просмотр истории всех движений склада" />
+          <Heading title={t('pages.movements.title')} description={t('pages.movements.description')} />
           <Button variant="outline" size="sm" disabled>
             <Download className="mr-2 h-4 w-4" />
-            Экспорт
+            {t('pages.movements.export')}
           </Button>
         </div>
         <Separator />
@@ -112,8 +114,8 @@ export default function MovementsPage() {
 
         {warehouseId && movements.length > 0 && movementsData?.meta && (
           <div className="text-right text-sm text-muted-foreground">
-            Страница {movementsData.meta.page} из {movementsData.meta.totalPages} (всего{' '}
-            {movementsData.meta.total} записей)
+            {t('pages.movements.page')} {movementsData.meta.page} {t('pages.movements.of')} {movementsData.meta.totalPages} (всего{' '}
+            {movementsData.meta.total} {t('pages.movements.records')})
           </div>
         )}
       </div>

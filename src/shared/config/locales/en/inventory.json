@@ -1,4 +1,10 @@
 {
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "actions": "Actions"
+  },
   "empty": {
     "title": "Get started with inventory",
     "description": "Add items to warehouse to get started",
@@ -170,7 +176,8 @@
       "notFound": "Orders not found",
       "noOrders": "No production orders",
       "tryChanging": "Try changing search parameters or filters.",
-      "createOrder": "Create a production order from recipes."
+      "createOrder": "Create a production order from recipes.",
+      "delete": "Delete"
     },
     "recipes": {
       "title": "Recipes",

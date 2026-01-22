@@ -1,4 +1,10 @@
 {
+  "common": {
+    "back": "Orqaga",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "actions": "Harakatlar"
+  },
   "empty": {
     "title": "Omborxona bilan ishlashni boshlang",
     "description": "Boshlash uchun omborga mahsulotlar qo'shing",
@@ -170,7 +176,8 @@
       "notFound": "Buyurtmalar topilmadi",
       "noOrders": "Ishlab chiqarish buyurtmalari yo'q",
       "tryChanging": "Qidiruv parametrlarini yoki filtrlarni o'zgartirib ko'ring.",
-      "createOrder": "Retseptlar bo'yicha ishlab chiqarish buyurtmasi yarating."
+      "createOrder": "Retseptlar bo'yicha ishlab chiqarish buyurtmasi yarating.",
+      "delete": "O'chirish"
     },
     "recipes": {
       "title": "Retseptlar",

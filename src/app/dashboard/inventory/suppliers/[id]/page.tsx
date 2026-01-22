@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
 import { useRouter } from '@/shared/lib/navigation'
@@ -74,6 +75,7 @@ interface PageProps {
 }
 
 export default function SupplierDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
   const supplierId = Number(paramId)
 

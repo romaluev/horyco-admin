@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
 import { useRouter } from '@/shared/lib/navigation'
@@ -59,6 +60,7 @@ interface PageProps {
 }
 
 export default function ProductionDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
   const productionId = Number(paramId)
 
@@ -89,9 +91,9 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
     return (
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-muted-foreground">Заказ не найден</p>
+          <p className="text-muted-foreground">{t('pages.production.notFound')}</p>
           <Button asChild className="mt-4">
-            <Link to="/dashboard/inventory/production">Назад к списку</Link>
+            <Link to="/dashboard/inventory/production">{t('common.back')}</Link>
           </Button>
         </div>
       </PageContainer>
@@ -142,13 +144,13 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
             {canStart && (
               <Button onClick={() => setIsStartDialogOpen(true)}>
                 <IconPlayerPlay className="mr-2 h-4 w-4" />
-                Начать
+                {t('components.productionWorkflow.start.title')}
               </Button>
             )}
             {canComplete && (
               <Button onClick={() => setIsCompleteDialogOpen(true)}>
                 <IconCheck className="mr-2 h-4 w-4" />
-                Завершить
+                {t('components.productionWorkflow.complete.title')}
               </Button>
             )}
             {canCancel && (
@@ -157,7 +159,7 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                 onClick={() => setIsCancelDialogOpen(true)}
               >
                 <IconX className="mr-2 h-4 w-4" />
-                Отменить
+                {t('common.cancel')}
               </Button>
             )}
             {canDelete && (
@@ -165,24 +167,24 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive">
                     <IconTrash className="mr-2 h-4 w-4" />
-                    Удалить
+                    {t('pages.production.delete')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Удалить заказ?</AlertDialogTitle>
+                    <AlertDialogTitle>{t('components.productionWorkflow.cancel.title')}</AlertDialogTitle>
                     <AlertDialogDescription>
                       Это действие нельзя отменить. Заказ на производство будет
                       удалён навсегда.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Отмена</AlertDialogCancel>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      Удалить
+                      {t('pages.production.delete')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -196,7 +198,7 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
         {/* Progress */}
         <Card>
           <CardHeader>
-            <CardTitle>Прогресс производства</CardTitle>
+            <CardTitle>{t('pages.production.columnQuantity')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -220,7 +222,7 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Информация</CardTitle>
+              <CardTitle>Информация о заказе</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
@@ -343,24 +345,24 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
 
         {/* Ingredients Table */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Ингредиенты</h3>
+          <h3 className="text-lg font-semibold">{t('components.recipeWorkflow.addIngredient.title')}</h3>
 
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Товар</TableHead>
-                  <TableHead className="text-right">План. кол-во</TableHead>
-                  <TableHead className="text-right">Факт. кол-во</TableHead>
-                  <TableHead className="text-right">Цена за ед.</TableHead>
-                  <TableHead className="text-right">Сумма</TableHead>
+                  <TableHead>товар</TableHead>
+                  <TableHead className="text-right">план. кол-во</TableHead>
+                  <TableHead className="text-right">факт. кол-во</TableHead>
+                  <TableHead className="text-right">цена за ед.</TableHead>
+                  <TableHead className="text-right">сумма</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {!order.ingredients?.length ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8">
-                      Нет ингредиентов
+                      нет ингредиентов
                     </TableCell>
                   </TableRow>
                 ) : (
