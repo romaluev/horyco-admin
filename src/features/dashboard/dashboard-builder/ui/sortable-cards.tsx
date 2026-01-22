@@ -3,6 +3,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { IconGripVertical, IconX, IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 import {
@@ -24,6 +25,7 @@ interface ISortableKpiCardProps {
 }
 
 export function SortableKpiCard({ slot, onRemove }: ISortableKpiCardProps) {
+  const { t } = useTranslation('dashboard')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: slot.type,
   })
@@ -62,7 +64,7 @@ export function SortableKpiCard({ slot, onRemove }: ISortableKpiCardProps) {
             <div className={cn('rounded-lg p-1.5', config.bgColor)}>
               <Icon className={cn('size-4', config.color)} />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">{config.label}</span>
+            <span className="text-sm font-medium text-muted-foreground">{t(config.labelKey)}</span>
           </div>
           <div className="mt-2">
             <span className="text-xl font-bold">1,234,567</span>
@@ -89,6 +91,7 @@ interface IKpiCardOverlayProps {
 }
 
 export function KpiCardOverlay({ slot }: IKpiCardOverlayProps) {
+  const { t } = useTranslation('dashboard')
   const config = KPI_CONFIG[slot.type]
   const Icon = config.icon
 
@@ -101,7 +104,7 @@ export function KpiCardOverlay({ slot }: IKpiCardOverlayProps) {
             <div className={cn('rounded-lg p-1.5', config.bgColor)}>
               <Icon className={cn('size-4', config.color)} />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">{config.label}</span>
+            <span className="text-sm font-medium text-muted-foreground">{t(config.labelKey)}</span>
           </div>
           <div className="mt-2">
             <span className="text-xl font-bold">1,234,567</span>
@@ -129,6 +132,7 @@ interface ISortableWidgetCardProps {
 }
 
 export function SortableWidgetCard({ widget, onRemove }: ISortableWidgetCardProps) {
+  const { t } = useTranslation('dashboard')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: widget.id,
   })
@@ -168,8 +172,8 @@ export function SortableWidgetCard({ widget, onRemove }: ISortableWidgetCardProp
       </div>
 
       <div className="border-b p-4">
-        <h4 className="font-semibold">{config?.title ?? widget.type}</h4>
-        <p className="text-sm text-muted-foreground">{config?.description}</p>
+        <h4 className="font-semibold">{config ? t(config.titleKey) : widget.type}</h4>
+        <p className="text-sm text-muted-foreground">{config ? t(config.descriptionKey) : ''}</p>
       </div>
 
       <div className="h-48 p-4">
@@ -188,13 +192,14 @@ interface IWidgetCardOverlayProps {
 }
 
 export function WidgetCardOverlay({ widget }: IWidgetCardOverlayProps) {
+  const { t } = useTranslation('dashboard')
   const config = WIDGET_CONFIG[widget.type]
 
   return (
     <div className="overflow-hidden rounded-xl border bg-card shadow-xl ring-2 ring-primary">
       <div className="border-b p-4">
-        <h4 className="font-semibold">{config?.title ?? widget.type}</h4>
-        <p className="text-sm text-muted-foreground">{config?.description}</p>
+        <h4 className="font-semibold">{config ? t(config.titleKey) : widget.type}</h4>
+        <p className="text-sm text-muted-foreground">{config ? t(config.descriptionKey) : ''}</p>
       </div>
       <div className="h-48 p-4">
         {config && <WidgetPreviewChart type={config.preview} />}

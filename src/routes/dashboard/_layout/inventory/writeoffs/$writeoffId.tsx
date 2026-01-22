@@ -8,12 +8,14 @@ export const Route = createFileRoute('/dashboard/_layout/inventory/writeoffs/$wr
 })
 
 function WriteoffDetailRoute() {
+  const { writeoffId } = Route.useParams()
+
   return (
     <>
       <Helmet>
         <title>Списание | Horyco Admin</title>
       </Helmet>
-      <WriteoffDetailPage />
+      <WriteoffDetailPage id={writeoffId} />
     </>
   )
 }

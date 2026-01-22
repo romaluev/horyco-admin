@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useParams, useRouter } from '@/shared/lib/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -54,10 +54,13 @@ import {
   CancelProductionDialog,
 } from '@/features/inventory/production-workflow'
 
-export default function ProductionDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function ProductionDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const productionId = Number(params.id)
+  const productionId = Number(paramId)
 
   const { data: order, isLoading } = useProductionOrderById(productionId)
   const deleteMutation = useDeleteProductionOrder()

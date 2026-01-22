@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useParams, useRouter } from '@/shared/lib/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -58,10 +58,13 @@ import {
   EditIngredientDialog,
 } from '@/features/inventory/recipe-workflow'
 
-export default function RecipeDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function RecipeDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const recipeId = Number(params.id)
+  const recipeId = Number(paramId)
 
   const { data: recipe, isLoading } = useRecipeById(recipeId)
   const deleteMutation = useDeleteRecipe()

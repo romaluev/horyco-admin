@@ -28,9 +28,24 @@ const queryClient = new QueryClient({
   },
 })
 
+function NotFoundComponent() {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold">404</h1>
+        <p className="text-muted-foreground mt-2">Страница не найдена</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          URL: {typeof window !== 'undefined' ? window.location.pathname : ''}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export const Route = createRootRoute({
   component: RootLayout,
   pendingComponent: () => <BaseLoading />,
+  notFoundComponent: NotFoundComponent,
 })
 
 function RootLayout() {

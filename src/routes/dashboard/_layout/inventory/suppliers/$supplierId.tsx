@@ -8,12 +8,14 @@ export const Route = createFileRoute('/dashboard/_layout/inventory/suppliers/$su
 })
 
 function SupplierDetailRoute() {
+  const { supplierId } = Route.useParams()
+
   return (
     <>
       <Helmet>
         <title>Поставщик | Horyco Admin</title>
       </Helmet>
-      <SupplierDetailPage />
+      <SupplierDetailPage id={supplierId} />
     </>
   )
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useParams, useRouter } from '@/shared/lib/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -58,10 +58,13 @@ import {
   AddWriteoffItemDialog,
 } from '@/features/inventory/writeoff-workflow'
 
-export default function WriteoffDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function WriteoffDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const writeoffId = Number(params.id)
+  const writeoffId = Number(paramId)
 
   const { data: writeoff, isLoading } = useWriteoffById(writeoffId)
   const deleteMutation = useDeleteWriteoff()

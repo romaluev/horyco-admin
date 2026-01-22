@@ -13,6 +13,7 @@ const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
+  trailingSlash: 'never',
 })
 
 // Type registration for TypeScript

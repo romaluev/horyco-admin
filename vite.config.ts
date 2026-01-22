@@ -6,11 +6,12 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
-    react(),
     TanStackRouterVite({
       routesDirectory: './src/routes',
       generatedRouteTree: './src/routeTree.gen.ts',
+      autoCodeSplitting: true,
     }),
+    react(),
   ],
   resolve: {
     alias: {

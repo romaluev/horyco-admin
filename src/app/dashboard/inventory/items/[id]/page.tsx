@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useParams, useRouter } from '@/shared/lib/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -53,10 +53,13 @@ import {
   AddUnitConversionDialog,
 } from '@/features/inventory/inventory-item-workflow'
 
-export default function InventoryItemDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const itemId = Number(params.id)
+  const itemId = Number(paramId)
 
   const { data: item, isLoading } = useGetInventoryItemById(itemId)
   const { data: conversions } = useGetItemConversions(itemId)

@@ -8,12 +8,14 @@ export const Route = createFileRoute('/dashboard/_layout/inventory/recipes/$reci
 })
 
 function RecipeDetailRoute() {
+  const { recipeId } = Route.useParams()
+
   return (
     <>
       <Helmet>
         <title>Рецепт | Horyco Admin</title>
       </Helmet>
-      <RecipeDetailPage />
+      <RecipeDetailPage id={recipeId} />
     </>
   )
 }

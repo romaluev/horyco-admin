@@ -8,12 +8,14 @@ export const Route = createFileRoute('/dashboard/_layout/inventory/items/$itemId
 })
 
 function InventoryItemDetailRoute() {
+  const { itemId } = Route.useParams()
+
   return (
     <>
       <Helmet>
         <title>Товар склада | Horyco Admin</title>
       </Helmet>
-      <InventoryItemDetailPage />
+      <InventoryItemDetailPage id={itemId} />
     </>
   )
 }

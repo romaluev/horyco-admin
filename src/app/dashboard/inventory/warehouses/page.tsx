@@ -178,7 +178,8 @@ export default function WarehousesPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" asChild>
                           <Link
-                            to={`/dashboard/inventory/stock?warehouseId=${warehouse.id}` as any}
+                            to="/dashboard/inventory/stock"
+                            search={{ warehouseId: warehouse.id }}
                           >
                             {t('pages.warehouses.stockLink')}
                           </Link>

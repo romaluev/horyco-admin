@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useParams, useRouter } from '@/shared/lib/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -69,10 +69,13 @@ import {
   EditSupplierItemDialog,
 } from '@/features/inventory/supplier-workflow'
 
-export default function SupplierDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function SupplierDetailPage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const supplierId = Number(params.id)
+  const supplierId = Number(paramId)
 
   const { data: supplier, isLoading } = useSupplierById(supplierId)
   const { data: items } = useSupplierItems(supplierId)
