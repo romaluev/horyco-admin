@@ -420,9 +420,24 @@
   },
   "analytics": {
     "revenue": "Выручка",
+    "orders": "Количество заказов",
+    "average": "Средний чек",
     "noData": "Нет данных",
+    "forSelectedPeriod": "за выбранный период",
     "dataUnavailable": "Данные недоступны",
-    "noDataForDisplay": "Нет данных для отображения"
+    "noDataForDisplay": "Нет данных для отображения",
+    "dynamics": "Динамика",
+    "revenueMetric": "выручки",
+    "ordersMetric": "количества заказов",
+    "averageMetric": "среднего чека",
+    "byHours": "по часам",
+    "byDays": "по дням",
+    "byWeeks": "по неделям",
+    "topDish": "Самое популярное блюдо",
+    "quantity": "шт.",
+    "forPeriod": "за {period}",
+    "orders_count": "Кол-во заказов",
+    "avg_check": "Средний чек"
   },
   "widgets": {
     "topProducts": {

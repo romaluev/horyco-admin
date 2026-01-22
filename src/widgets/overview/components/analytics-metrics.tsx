@@ -5,6 +5,7 @@ import * as React from 'react'
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
@@ -118,11 +119,13 @@ interface TopDishCardProps {
 }
 
 function TopDishCard({ dish, period, formatCurrency }: TopDishCardProps) {
+  const { t } = useTranslation('dashboard')
+
   return (
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-muted-foreground text-sm font-medium">
-          Самое популярное блюдо
+          {t('analytics.topDish')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -130,10 +133,10 @@ function TopDishCard({ dish, period, formatCurrency }: TopDishCardProps) {
           {dish.name}
         </div>
         <div className="mt-1 flex justify-between text-sm">
-          <span>{dish.quantity} шт.</span>
+          <span>{dish.quantity} {t('analytics.quantity')}</span>
           <span>{formatCurrency(dish.revenue)}</span>
         </div>
-        <div className="text-muted-foreground mt-1 text-xs">за {period}</div>
+        <div className="text-muted-foreground mt-1 text-xs">{t('analytics.forPeriod', { period })}</div>
       </CardContent>
     </Card>
   )
@@ -158,6 +161,8 @@ export function AnalyticsMetrics({
   selectedMetric,
   onMetricChange,
 }: AnalyticsMetricsProps) {
+  const { t } = useTranslation('dashboard')
+
   const formatCurrency = (amount: number) => {
     const formattedNumber = amount
       .toString()
@@ -212,7 +217,7 @@ export function AnalyticsMetrics({
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <MetricCard
-        title="Выручка"
+        title={t('analytics.revenue')}
         value={metrics.revenue}
         previousValue={metrics.previousPeriod?.revenue}
         formatValue={formatCurrency}
@@ -222,7 +227,7 @@ export function AnalyticsMetrics({
       />
 
       <MetricCard
-        title="Кол-во заказов"
+        title={t('analytics.orders_count')}
         value={metrics.ordersCount}
         previousValue={metrics.previousPeriod?.ordersCount}
         formatValue={(value) => value.toString()}
@@ -232,7 +237,7 @@ export function AnalyticsMetrics({
       />
 
       <MetricCard
-        title="Средний чек"
+        title={t('analytics.avg_check')}
         value={metrics.averageCheck}
         previousValue={metrics.previousPeriod?.averageCheck}
         formatValue={formatCurrency}

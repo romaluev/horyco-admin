@@ -420,9 +420,24 @@
   },
   "analytics": {
     "revenue": "Revenue",
+    "orders": "Orders",
+    "average": "Average Check",
     "noData": "No data",
+    "forSelectedPeriod": "for the selected period",
     "dataUnavailable": "Data unavailable",
-    "noDataForDisplay": "No data to display"
+    "noDataForDisplay": "No data to display",
+    "dynamics": "Dynamics",
+    "revenueMetric": "revenue",
+    "ordersMetric": "order count",
+    "averageMetric": "average check",
+    "byHours": "by hours",
+    "byDays": "by days",
+    "byWeeks": "by weeks",
+    "topDish": "Most Popular Dish",
+    "quantity": "pcs.",
+    "forPeriod": "for {period}",
+    "orders_count": "Orders",
+    "avg_check": "Average Check"
   },
   "widgets": {
     "topProducts": {

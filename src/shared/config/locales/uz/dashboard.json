@@ -420,9 +420,24 @@
   },
   "analytics": {
     "revenue": "Daromad",
+    "orders": "Buyurtmalar",
+    "average": "O'rtacha tekshiruv",
     "noData": "Ma'lumot yo'q",
+    "forSelectedPeriod": "tanlangan davr uchun",
     "dataUnavailable": "Ma'lumot mavjud emas",
-    "noDataForDisplay": "Ko'rsatish uchun ma'lumot yo'q"
+    "noDataForDisplay": "Ko'rsatish uchun ma'lumot yo'q",
+    "dynamics": "Dinamika",
+    "revenueMetric": "daromad",
+    "ordersMetric": "buyurtmalar soni",
+    "averageMetric": "o'rtacha tekshiruv",
+    "byHours": "soatga",
+    "byDays": "kunlar bo'yicha",
+    "byWeeks": "haftalar bo'yicha",
+    "topDish": "Eng mashhur taom",
+    "quantity": "dona",
+    "forPeriod": "{period} uchun",
+    "orders_count": "Buyurtmalar",
+    "avg_check": "O'rtacha tekshiruv"
   },
   "widgets": {
     "topProducts": {
