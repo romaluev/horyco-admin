@@ -96,7 +96,12 @@
         "descriptionPlaceholder": "Dish description",
         "cancel": "Cancel",
         "add_button": "Add",
-        "save": "Save"
+        "save": "Save",
+        "image": "Image",
+        "imagePreview": "Image preview",
+        "imagePlaceholder": "Image URL",
+        "category": "Category *",
+        "categorySelect": "Select category"
       },
       "categoryDialog": {
         "add": "Add Category",
@@ -162,8 +167,42 @@
       }
     },
     "staffInvite": {
-      "title": "Staff Invitation",
-      "description": "Staff Invitation"
+      "title": "Invite Staff",
+      "description": "Add waiters to manage orders",
+      "cardTitle": "Invite Team",
+      "cardDescription": "Send SMS invitations to waiters at your restaurant",
+      "fullName": "Full Name *",
+      "fullNamePlaceholder": "Anna Petrova",
+      "phone": "Phone *",
+      "phonePlaceholder": "90 111 11 11",
+      "email": "Email",
+      "emailPlaceholder": "anna@example.com",
+      "emailOptional": "Optional",
+      "permissions": "Access Rights",
+      "emptyState": "No staff members added yet",
+      "addStaff": "Add Waiter",
+      "staffNumber": "Staff Member #{{number}}",
+      "selectPermissions": "Select Permissions ({{count}})",
+      "addMore": "Add More",
+      "skipReason": "I'll add staff later",
+      "buttons": {
+        "back": "Back",
+        "skip": "Skip",
+        "sendInvitations": "Send Invitations",
+        "complete": "Complete"
+      },
+      "skipDialog": {
+        "title": "Skip staff invitations?",
+        "description": "You can invite team members later in the \"Staff\" section. For now, you can work with the system independently and add staff at any convenient time.",
+        "cancel": "Cancel",
+        "confirm": "Skip"
+      },
+      "permissionsModal": {
+        "title": "Manage Permissions",
+        "description": "Select permissions for the staff member in this branch",
+        "cancel": "Cancel",
+        "save": "Save"
+      }
     }
   }
 }

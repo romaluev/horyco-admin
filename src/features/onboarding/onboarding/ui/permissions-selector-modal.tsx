@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
@@ -43,6 +44,7 @@ export const PermissionsSelectorModal = ({
   isLoading = false,
   onPermissionsSave,
 }: PermissionsSelectorModalProps) => {
+  const { t } = useTranslation('onboarding')
   const [selectedPermissions, setSelectedPermissions] = useState<Set<number>>(
     new Set(currentPermissionIds)
   )
@@ -83,9 +85,9 @@ export const PermissionsSelectorModal = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Управление правами - {branchName}</DialogTitle>
+          <DialogTitle>{t('pages.staffInvite.permissionsModal.title')} - {branchName}</DialogTitle>
           <DialogDescription>
-            Выберите права для сотрудника в этом филиале
+            {t('pages.staffInvite.permissionsModal.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -137,11 +139,11 @@ export const PermissionsSelectorModal = ({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Отмена
+            {t('pages.staffInvite.permissionsModal.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Сохранить
+            {t('pages.staffInvite.permissionsModal.save')}
           </Button>
         </DialogFooter>
       </DialogContent>

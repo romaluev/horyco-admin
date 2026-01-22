@@ -97,7 +97,12 @@
         "descriptionPlaceholder": "Описание блюда",
         "cancel": "Отмена",
         "add_button": "Добавить",
-        "save": "Сохранить"
+        "save": "Сохранить",
+        "image": "Изображение",
+        "imagePreview": "Предпросмотр изображения",
+        "imagePlaceholder": "URL изображения",
+        "category": "Категория *",
+        "categorySelect": "Выберите категорию"
       },
       "categoryDialog": {
         "add": "Добавить категорию",
@@ -163,8 +168,42 @@
       }
     },
     "staffInvite": {
-      "title": "Приглашение персонала",
-      "description": "Приглашение персонала"
+      "title": "Пригласите сотрудников",
+      "description": "Добавьте официантов для управления заказами",
+      "cardTitle": "Пригласить команду",
+      "cardDescription": "Отправьте приглашения по SMS официантам вашего ресторана",
+      "fullName": "ФИО *",
+      "fullNamePlaceholder": "Анна Петрова",
+      "phone": "Телефон *",
+      "phonePlaceholder": "90 111 11 11",
+      "email": "Email",
+      "emailPlaceholder": "anna@example.com",
+      "emailOptional": "Необязательно",
+      "permissions": "Права доступа",
+      "emptyState": "Пока не добавлено ни одного сотрудника",
+      "addStaff": "Добавить официанта",
+      "staffNumber": "Сотрудник #{{number}}",
+      "selectPermissions": "Выбрать права ({{count}})",
+      "addMore": "Добавить ещё",
+      "skipReason": "Добавлю сотрудников позже",
+      "buttons": {
+        "back": "Назад",
+        "skip": "Пропустить",
+        "sendInvitations": "Отправить приглашения",
+        "complete": "Завершить"
+      },
+      "skipDialog": {
+        "title": "Пропустить приглашение сотрудников?",
+        "description": "Вы сможете пригласить членов команды позже в разделе \"Персонал\". Сейчас вы сможете работать с системой самостоятельно и добавить сотрудников в любое удобное время.",
+        "cancel": "Отмена",
+        "confirm": "Пропустить"
+      },
+      "permissionsModal": {
+        "title": "Управление правами",
+        "description": "Выберите права для сотрудника в этом филиале",
+        "cancel": "Отмена",
+        "save": "Сохранить"
+      }
     }
   }
 }
