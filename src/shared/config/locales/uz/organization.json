@@ -372,5 +372,42 @@
     "confirm": "Tasdiqlash",
     "back": "Orqaga",
     "details": "Tafsilotlar"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Filiallar",
+      "title": "Filiallar",
+      "description": "Tashkilot filiallarini boshqarish",
+      "actions": {
+        "import": "Import",
+        "addNew": "Filial qo'shish"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Yuklab olinmoqda",
+      "notFoundTitle": "Filial topilmadi",
+      "notFoundMessage": "Filial topilmadi",
+      "description": "Filial haqida ma'lumot",
+      "actions": {
+        "edit": "Tahrirlash",
+        "delete": "O'chirish"
+      },
+      "statistics": {
+        "title": "Statistika",
+        "description": "Filial samaradorlik ko'rsatgichlari"
+      }
+    },
+    "employees": {
+      "pageTitle": "Xodimlar",
+      "title": "Xodimlar",
+      "description": "Xodimlar va ularning ma'lumotlarini boshqarish",
+      "states": {
+        "empty": "Xodimlar hali mavjud emas",
+        "loadError": "Xodimlarni yuklab olishda xato"
+      }
+    },
+    "settings": {
+      "pageTitle": "Sozlamalar"
+    }
   }
 }

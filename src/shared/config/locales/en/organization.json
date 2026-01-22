@@ -372,5 +372,42 @@
     "confirm": "Confirm",
     "back": "Back",
     "details": "Details"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Branches",
+      "title": "Branches",
+      "description": "Manage branches of your organization",
+      "actions": {
+        "import": "Import",
+        "addNew": "Add branch"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Loading",
+      "notFoundTitle": "Branch not found",
+      "notFoundMessage": "Branch not found",
+      "description": "Branch information",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "statistics": {
+        "title": "Statistics",
+        "description": "Branch performance metrics"
+      }
+    },
+    "employees": {
+      "pageTitle": "Employees",
+      "title": "Employees",
+      "description": "Manage employees and their data",
+      "states": {
+        "empty": "No employees yet",
+        "loadError": "Error loading employees"
+      }
+    },
+    "settings": {
+      "pageTitle": "Settings"
+    }
   }
 }

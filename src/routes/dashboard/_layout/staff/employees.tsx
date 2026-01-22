@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 
 import { BaseError, BaseLoading } from '@/shared/ui'
 
@@ -19,6 +20,7 @@ export const Route = createFileRoute('/dashboard/_layout/staff/employees')({
 })
 
 function EmployeesPage() {
+  const { t } = useTranslation('organization')
   const { data: employeesResponse, isLoading, isError } = useGetEmployees()
 
   const columns = useMemo(
@@ -41,26 +43,26 @@ function EmployeesPage() {
   return (
     <>
       <Helmet>
-        <title>Сотрудники | Horyco Admin</title>
+        <title>{t('pages.employees.pageTitle')} | Horyco Admin</title>
       </Helmet>
       <div className="absolute inset-0 flex flex-col gap-6 overflow-hidden p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Сотрудники</h1>
+            <h1 className="text-3xl font-bold">{t('pages.employees.title')}</h1>
             <p className="text-muted-foreground text-sm">
-              Управление сотрудниками и их данными
+              {t('pages.employees.description')}
             </p>
           </div>
           <CreateEmployeeDialog />
         </div>
 
         {isLoading && <BaseLoading />}
-        {isError && <BaseError message="Ошибка при загрузке сотрудников" />}
+        {isError && <BaseError message={t('pages.employees.states.loadError')} />}
 
         {employees.length === 0 && !isLoading && !isError && (
           <div className="flex flex-1 flex-col items-center justify-center gap-4">
             <h2 className="text-muted-foreground text-lg font-semibold">
-              Сотрудников пока нет
+              {t('pages.employees.states.empty')}
             </h2>
             <CreateEmployeeDialog />
           </div>

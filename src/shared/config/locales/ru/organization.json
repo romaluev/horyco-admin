@@ -367,5 +367,42 @@
     "confirm": "Подтвердить",
     "back": "Назад",
     "details": "Детали"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Филиалы",
+      "title": "Филиалы",
+      "description": "Управление филиалами вашей организации",
+      "actions": {
+        "import": "Импорт",
+        "addNew": "Добавить филиал"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Загрузка",
+      "notFoundTitle": "Филиал не найден",
+      "notFoundMessage": "Филиал не найден",
+      "description": "Информация о филиале",
+      "actions": {
+        "edit": "Редактировать",
+        "delete": "Удалить"
+      },
+      "statistics": {
+        "title": "Статистика",
+        "description": "Показатели эффективности филиала"
+      }
+    },
+    "employees": {
+      "pageTitle": "Сотрудники",
+      "title": "Сотрудники",
+      "description": "Управление сотрудниками и их данными",
+      "states": {
+        "empty": "Сотрудников пока нет",
+        "loadError": "Ошибка при загрузке сотрудников"
+      }
+    },
+    "settings": {
+      "pageTitle": "Настройки"
+    }
   }
 }
