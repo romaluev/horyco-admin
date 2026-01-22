@@ -115,8 +115,8 @@ export function WidgetsTab({
       {/* Active Widgets */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('dashboard.widgets.widgetsTab.activeWidgets')}</CardTitle>
-          <CardDescription>{t('dashboard.widgets.widgetsTab.reorderHint')}</CardDescription>
+          <CardTitle>{t('widgets.widgetsTab.activeWidgets')}</CardTitle>
+          <CardDescription>{t('widgets.widgetsTab.reorderHint')}</CardDescription>
         </CardHeader>
         <CardContent>
           <DndContext
@@ -129,7 +129,7 @@ export function WidgetsTab({
               {widgets.length === 0 ? (
                 <div className="rounded-xl border border-dashed p-12 text-center">
                   <p className="text-muted-foreground">
-                    {t('dashboard.widgets.widgetsTab.noActiveWidgets')}
+                    {t('widgets.widgetsTab.noActiveWidgets')}
                   </p>
                 </div>
               ) : (
@@ -152,8 +152,8 @@ export function WidgetsTab({
       {/* Widget Gallery */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('dashboard.widgets.widgetsTab.widgetGallery')}</CardTitle>
-          <CardDescription>{t('dashboard.widgets.widgetsTab.selectWidgets')}</CardDescription>
+          <CardTitle>{t('widgets.widgetsTab.widgetGallery')}</CardTitle>
+          <CardDescription>{t('widgets.widgetsTab.selectWidgets')}</CardDescription>
         </CardHeader>
         <CardContent>
           {WIDGET_CATEGORIES.map((category) => {
@@ -189,7 +189,7 @@ export function WidgetsTab({
                             <span className="font-medium">{opt.title}</span>
                             {isUsed && (
                               <span className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                                {t('dashboard.widgets.widgetsTab.added')}
+                                {t('widgets.widgetsTab.added')}
                               </span>
                             )}
                           </div>

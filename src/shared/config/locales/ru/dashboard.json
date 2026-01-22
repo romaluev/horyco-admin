@@ -418,6 +418,12 @@
     "retentionRate": "Удержание",
     "staffProductivity": "Продуктивность"
   },
+  "analytics": {
+    "revenue": "Выручка",
+    "noData": "Нет данных",
+    "dataUnavailable": "Данные недоступны",
+    "noDataForDisplay": "Нет данных для отображения"
+  },
   "widgets": {
     "topProducts": {
       "title": "Топ продукты",

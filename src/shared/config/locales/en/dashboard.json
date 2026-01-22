@@ -418,6 +418,12 @@
     "retentionRate": "Retention",
     "staffProductivity": "Productivity"
   },
+  "analytics": {
+    "revenue": "Revenue",
+    "noData": "No data",
+    "dataUnavailable": "Data unavailable",
+    "noDataForDisplay": "No data to display"
+  },
   "widgets": {
     "topProducts": {
       "title": "Top Products",

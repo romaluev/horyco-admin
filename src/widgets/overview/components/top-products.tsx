@@ -38,13 +38,13 @@ export const TopProducts = ({ products }: ITopProductsProps) => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>{t('dashboard.widgets.topProducts.title')}</CardTitle>
+          <CardTitle>{t('widgets.topProducts.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex h-48 items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground text-sm">{t('dashboard.widgets.topProducts.noData')}</p>
-              <p className="text-muted-foreground text-xs">{t('dashboard.widgets.topProducts.period')}</p>
+              <p className="text-muted-foreground text-sm">{t('widgets.topProducts.noData')}</p>
+              <p className="text-muted-foreground text-xs">{t('widgets.topProducts.period')}</p>
             </div>
           </div>
         </CardContent>
@@ -57,17 +57,17 @@ export const TopProducts = ({ products }: ITopProductsProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('dashboard.widgets.topProducts.title')}</CardTitle>
+        <CardTitle>{t('widgets.topProducts.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">{t('dashboard.widgets.topProducts.table.index')}</TableHead>
-              <TableHead>{t('dashboard.widgets.topProducts.table.product')}</TableHead>
-              <TableHead className="text-right">{t('dashboard.widgets.topProducts.table.orders')}</TableHead>
-              <TableHead className="text-right">{t('dashboard.widgets.topProducts.table.revenue')}</TableHead>
-              <TableHead className="w-32">{t('dashboard.widgets.topProducts.table.share')}</TableHead>
+              <TableHead className="w-12">{t('widgets.topProducts.table.index')}</TableHead>
+              <TableHead>{t('widgets.topProducts.table.product')}</TableHead>
+              <TableHead className="text-right">{t('widgets.topProducts.table.orders')}</TableHead>
+              <TableHead className="text-right">{t('widgets.topProducts.table.revenue')}</TableHead>
+              <TableHead className="w-32">{t('widgets.topProducts.table.share')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

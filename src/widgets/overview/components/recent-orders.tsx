@@ -56,27 +56,27 @@ const PAYMENT_METHOD_CONFIG: Record<
   PaymentMethod,
   { icon: string; labelKey: string }
 > = {
-  CASH: { icon: '💵', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CASH' },
-  CARD: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CARD' },
-  CREDIT: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CREDIT' },
-  PAYME: { icon: '📱', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.PAYME' },
-  CLICK: { icon: '📱', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.CLICK' },
-  UZUM: { icon: '💳', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.UZUM' },
-  BANK_TRANSFER: { icon: '🏦', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.BANK_TRANSFER' },
-  MIXED: { icon: '🔀', labelKey: 'dashboard.widgets.recentOrders.paymentMethods.MIXED' },
+  CASH: { icon: '💵', labelKey: 'widgets.recentOrders.paymentMethods.CASH' },
+  CARD: { icon: '💳', labelKey: 'widgets.recentOrders.paymentMethods.CARD' },
+  CREDIT: { icon: '💳', labelKey: 'widgets.recentOrders.paymentMethods.CREDIT' },
+  PAYME: { icon: '📱', labelKey: 'widgets.recentOrders.paymentMethods.PAYME' },
+  CLICK: { icon: '📱', labelKey: 'widgets.recentOrders.paymentMethods.CLICK' },
+  UZUM: { icon: '💳', labelKey: 'widgets.recentOrders.paymentMethods.UZUM' },
+  BANK_TRANSFER: { icon: '🏦', labelKey: 'widgets.recentOrders.paymentMethods.BANK_TRANSFER' },
+  MIXED: { icon: '🔀', labelKey: 'widgets.recentOrders.paymentMethods.MIXED' },
 }
 
 const STATUS_CONFIG: Record<
   OrderStatus,
   { icon: string; labelKey: string; className: string }
 > = {
-  PAID: { icon: '✓', labelKey: 'dashboard.widgets.recentOrders.statuses.PAID', className: 'text-green-600' },
+  PAID: { icon: '✓', labelKey: 'widgets.recentOrders.statuses.PAID', className: 'text-green-600' },
   PARTIALLY_PAID: {
     icon: '⏳',
-    labelKey: 'dashboard.widgets.recentOrders.statuses.PARTIALLY_PAID',
+    labelKey: 'widgets.recentOrders.statuses.PARTIALLY_PAID',
     className: 'text-orange-600',
   },
-  NOT_PAID: { icon: '⏸️', labelKey: 'dashboard.widgets.recentOrders.statuses.NOT_PAID', className: 'text-gray-600' },
+  NOT_PAID: { icon: '⏸️', labelKey: 'widgets.recentOrders.statuses.NOT_PAID', className: 'text-gray-600' },
 }
 
 export function RecentOrders({
@@ -128,14 +128,14 @@ export function RecentOrders({
     return (
       <Card className="h-full">
         <CardHeader>
-          <CardTitle>{t('dashboard.widgets.recentOrders.title')}</CardTitle>
-          {!compact && <CardDescription>{t('dashboard.widgets.recentOrders.subtitle')}</CardDescription>}
+          <CardTitle>{t('widgets.recentOrders.title')}</CardTitle>
+          {!compact && <CardDescription>{t('widgets.recentOrders.subtitle')}</CardDescription>}
         </CardHeader>
         <CardContent>
           <div className="flex h-[400px] items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground">{t('dashboard.widgets.recentOrders.noOrders')}</p>
-              <p className="text-muted-foreground text-sm">{t('dashboard.widgets.recentOrders.period')}</p>
+              <p className="text-muted-foreground">{t('widgets.recentOrders.noOrders')}</p>
+              <p className="text-muted-foreground text-sm">{t('widgets.recentOrders.period')}</p>
             </div>
           </div>
         </CardContent>
@@ -146,12 +146,12 @@ export function RecentOrders({
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>{t('dashboard.widgets.recentOrders.title')}</CardTitle>
+        <CardTitle>{t('widgets.recentOrders.title')}</CardTitle>
         {!compact && (
           <CardDescription>
             {showBranch
-              ? t('dashboard.widgets.recentOrders.allBranches')
-              : t('dashboard.widgets.recentOrders.subtitle')}
+              ? t('widgets.recentOrders.allBranches')
+              : t('widgets.recentOrders.subtitle')}
           </CardDescription>
         )}
       </CardHeader>
@@ -160,12 +160,12 @@ export function RecentOrders({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-16">{t('dashboard.widgets.recentOrders.table.time')}</TableHead>
-                <TableHead>{t('dashboard.widgets.recentOrders.table.order')}</TableHead>
-                {showBranch && <TableHead>{t('dashboard.widgets.recentOrders.table.branch')}</TableHead>}
-                <TableHead className="text-right">{t('dashboard.widgets.recentOrders.table.amount')}</TableHead>
-                <TableHead>{t('dashboard.widgets.recentOrders.table.payment')}</TableHead>
-                <TableHead>{t('dashboard.widgets.recentOrders.table.status')}</TableHead>
+                <TableHead className="w-16">{t('widgets.recentOrders.table.time')}</TableHead>
+                <TableHead>{t('widgets.recentOrders.table.order')}</TableHead>
+                {showBranch && <TableHead>{t('widgets.recentOrders.table.branch')}</TableHead>}
+                <TableHead className="text-right">{t('widgets.recentOrders.table.amount')}</TableHead>
+                <TableHead>{t('widgets.recentOrders.table.payment')}</TableHead>
+                <TableHead>{t('widgets.recentOrders.table.status')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

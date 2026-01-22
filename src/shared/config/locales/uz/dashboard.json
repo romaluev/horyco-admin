@@ -418,6 +418,12 @@
     "retentionRate": "Saqlab qolish",
     "staffProductivity": "Samaradorlik"
   },
+  "analytics": {
+    "revenue": "Daromad",
+    "noData": "Ma'lumot yo'q",
+    "dataUnavailable": "Ma'lumot mavjud emas",
+    "noDataForDisplay": "Ko'rsatish uchun ma'lumot yo'q"
+  },
   "widgets": {
     "topProducts": {
       "title": "Yuqori mahsulotlar",
