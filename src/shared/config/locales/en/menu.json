@@ -506,6 +506,43 @@
       "title": "Delete override?",
       "withNames": "The override for \"{{productName}}\" in branch \"{{branchName}}\" will be deleted. After that, the basic product settings will be used.",
       "withoutNames": "The override will be deleted. This action cannot be undone."
+    },
+    "page": {
+      "title": "Branch Overrides",
+      "description": "Configure individual prices and availability for each branch",
+      "stats": {
+        "totalBranches": "Total branches",
+        "customPrices": "Custom prices",
+        "customAvailability": "Custom availability"
+      },
+      "table": {
+        "title": "Overrides List",
+        "description": "Manage product settings for branches",
+        "selectProduct": "Select product",
+        "allProducts": "All products",
+        "selectBranch": "Select branch",
+        "allBranches": "All branches",
+        "noProductSelected": "Select a product to view branch overrides",
+        "loading": "Loading...",
+        "noOverrides": "No overrides for this product",
+        "noOverridesFiltered": "No overrides with selected filters",
+        "columns": {
+          "product": "Product",
+          "branch": "Branch",
+          "price": "Price",
+          "availability": "Availability",
+          "actions": "Actions"
+        }
+      },
+      "badges": {
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "default": "Default"
+      },
+      "price": {
+        "override": "sum",
+        "base": "base:"
+      }
     }
   },
   "pages": {
@@ -576,6 +613,22 @@
       "messages": {
         "loadError": "Error loading products",
         "error": "Unknown error"
+      },
+      "page": {
+        "create": {
+          "title": "Create product",
+          "description": "Add a new product to the menu"
+        },
+        "edit": {
+          "title": "Edit product",
+          "descriptionFallback": "Change product information"
+        }
+      },
+      "stats": {
+        "total": "Total products",
+        "available": "Available (on page)",
+        "unavailable": "Unavailable (on page)",
+        "page": "Page"
       }
     },
     "categories": {

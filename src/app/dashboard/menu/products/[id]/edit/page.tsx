@@ -3,6 +3,9 @@
  * Page for editing existing products
  */
 
+'use client'
+
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 
 import { ArrowLeft } from 'lucide-react'
@@ -22,6 +25,7 @@ interface EditProductPageProps {
 export default function EditProductPage({
   id,
 }: EditProductPageProps): JSX.Element {
+  const { t } = useTranslation('menu')
   const productId = parseInt(id)
 
   const { data: product, isLoading } = useGetProductById(productId)
@@ -45,10 +49,10 @@ export default function EditProductPage({
           </Link>
           <div>
             <h2 className="text-3xl font-bold tracking-tight">
-              Редактировать продукт
+              {t('pages.products.page.edit.title')}
             </h2>
             <p className="text-muted-foreground">
-              {product?.name || 'Измените информацию о продукте'}
+              {product?.name || t('pages.products.page.edit.descriptionFallback')}
             </p>
           </div>
         </div>

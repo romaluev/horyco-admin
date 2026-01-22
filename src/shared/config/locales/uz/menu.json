@@ -506,6 +506,43 @@
       "title": "Qayta belgilashni o'chirishmi?",
       "withNames": "\"{{productName}}\" uchun \"{{branchName}}\" filialida qayta belgilash o'chiriladi. Shundan keyin mahsulotning asosiy sozlamalari ishlatiladi.",
       "withoutNames": "Qayta belgilash o'chiriladi. Bu amalni qaytarib bo'lmaydi."
+    },
+    "page": {
+      "title": "Filial qayta belgilashlari",
+      "description": "Har bir filial uchun individual narxlar va mavjudligini sozlang",
+      "stats": {
+        "totalBranches": "Jami filiallar",
+        "customPrices": "Alohida narxlar",
+        "customAvailability": "Alohida mavjudlik"
+      },
+      "table": {
+        "title": "Qayta belgilashlar ro'yxati",
+        "description": "Filiallar uchun mahsulot sozlamalarini boshqarish",
+        "selectProduct": "Mahsulotni tanlang",
+        "allProducts": "Barcha mahsulotlar",
+        "selectBranch": "Filialni tanlang",
+        "allBranches": "Barcha filiallar",
+        "noProductSelected": "Filial qayta belgilashlarini ko'rish uchun mahsulotni tanlang",
+        "loading": "Yuklanimoqda...",
+        "noOverrides": "Bu mahsulot uchun qayta belgilashlar yo'q",
+        "noOverridesFiltered": "Tanlangan filterlar bilan qayta belgilashlar yo'q",
+        "columns": {
+          "product": "Mahsulot",
+          "branch": "Filial",
+          "price": "Narx",
+          "availability": "Mavjudlik",
+          "actions": "Harakatlari"
+        }
+      },
+      "badges": {
+        "available": "Mavjud",
+        "unavailable": "Mavjud emas",
+        "default": "Standart"
+      },
+      "price": {
+        "override": "so'm",
+        "base": "asosiy:"
+      }
     }
   },
   "pages": {
@@ -576,6 +613,22 @@
       "messages": {
         "loadError": "Mahsulotlarni yuklashda xato",
         "error": "Noma'lum xato"
+      },
+      "page": {
+        "create": {
+          "title": "Mahsulot yaratish",
+          "description": "Menyuya yangi mahsulot qo'shish"
+        },
+        "edit": {
+          "title": "Mahsulotni tahrirlash",
+          "descriptionFallback": "Mahsulot ma'lumotlarini o'zgartiring"
+        }
+      },
+      "stats": {
+        "total": "Jami mahsulotlar",
+        "available": "Mavjud (sahifada)",
+        "unavailable": "Mavjud emas (sahifada)",
+        "page": "Sahifa"
       }
     },
     "categories": {
