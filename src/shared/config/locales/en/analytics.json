@@ -134,6 +134,25 @@
     },
     "timeFormat": "Today {time}"
   },
+  "views": {
+    "pinned": "Pinned",
+    "default": "Default",
+    "custom": "My Views",
+    "save": "Save Current View",
+    "manage": "Manage Views",
+    "limitReached": "Limit",
+    "upgrade": "Upgrade to PRO",
+    "saveViews": "Save Your Views"
+  },
+  "lockedPage": {
+    "requiresPlan": "This feature requires {plan} plan or higher.",
+    "upgradeNow": "Upgrade now to get:",
+    "viewLimitReached": "You've reached the maximum of {maxViews} views on PRO plan. Delete a view or upgrade to ULTRA for unlimited.",
+    "unlockFeatures": "Unlock Features"
+  },
+  "heatmapWidget": {
+    "dayLabels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
   "payments": {
     "title": "Payment Methods",
     "description": "Payment method analysis",

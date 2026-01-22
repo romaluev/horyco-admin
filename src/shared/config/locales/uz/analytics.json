@@ -134,6 +134,25 @@
     },
     "timeFormat": "Bugun {time}"
   },
+  "views": {
+    "pinned": "Mahkamlangan",
+    "default": "Standart",
+    "custom": "Mening ko'rinishlari",
+    "save": "Joriy ko'rinishni saqlash",
+    "manage": "Ko'rinishlarni boshqarish",
+    "limitReached": "Limit",
+    "upgrade": "PRO ga yangilash",
+    "saveViews": "Ko'rinishlaringizni saqlang"
+  },
+  "lockedPage": {
+    "requiresPlan": "Bu xususiyat {plan} rejasi yoki undan yuqori talab qiladi.",
+    "upgradeNow": "Yangilash uchun olish uchun:",
+    "viewLimitReached": "PRO rejasida maksimal {maxViews} ta ko'rinishlarga etdingiz. Ko'rinishni o'chirib tashlang yoki cheksizlik uchun ULTRA ga yangilang.",
+    "unlockFeatures": "Xususiyatlarni qulfdan chiqarish"
+  },
+  "heatmapWidget": {
+    "dayLabels": ["Dush", "Sesh", "Chor", "Pay", "Jum", "Shan", "Yaks"]
+  },
   "payments": {
     "title": "To'lov usullari",
     "description": "To'lov usuli tahlili",

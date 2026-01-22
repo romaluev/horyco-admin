@@ -168,7 +168,7 @@ function AlertCard({ alert }: IAlertCardProps) {
             </div>
             <p className="mt-1 text-sm opacity-90">{alert.message}</p>
             <div className="mt-2 flex items-center gap-4 text-xs opacity-70">
-              <span>{t('alerts.card.detected', { time: formatDateTime(alert.detectedAt) })}</span>
+              <span>{t('alerts.card.detected', { time: formatDateTime(alert.detectedAt, t) })}</span>
               {alert.branchName && <span>{t('alerts.card.branch', { name: alert.branchName })}</span>}
             </div>
           </div>
@@ -195,13 +195,14 @@ function getSeverityLabel(severity: string, t: any): string {
   return labels[severity] || severity
 }
 
-function formatDateTime(dateStr: string): string {
+function formatDateTime(dateStr: string, t: any): string {
   const date = new Date(dateStr)
   const today = new Date()
   const isToday = date.toDateString() === today.toDateString()
 
   if (isToday) {
-    return `Сегодня ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`
+    const timeStr = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    return t('alerts.timeFormat', { time: timeStr })
   }
 
   return date.toLocaleDateString('ru-RU', {
