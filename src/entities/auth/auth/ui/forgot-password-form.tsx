@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react'
@@ -33,34 +34,28 @@ import { Input } from '@/shared/ui/base/input'
 import { authApi } from '../model/api'
 
 const forgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Введите email адрес' })
-    .email({ message: 'Введите корректный email адрес' }),
+  email: z.string().min(1).email(),
 })
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
 
 const extractErrorMessage = (err: unknown): string => {
-  const defaultMessage = 'Не удалось отправить код. Попробуйте снова.'
-
   if (typeof err !== 'object' || err === null || !('response' in err)) {
-    return defaultMessage
+    return ''
   }
 
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
 
   if (typeof response !== 'object' || response === null || !('data' in response)) {
-    return defaultMessage
+    return ''
   }
 
   const responseData = response as Record<string, unknown>
   const data = responseData.data as Record<string, unknown> | undefined
 
-  if (!data) return defaultMessage
+  if (!data) return ''
 
-  // Check for nested error object
   if ('error' in data && typeof data.error === 'object' && data.error !== null) {
     const errorData = data.error as Record<string, unknown>
     if ('message' in errorData && typeof errorData.message === 'string') {
@@ -68,16 +63,16 @@ const extractErrorMessage = (err: unknown): string => {
     }
   }
 
-  // Check for direct message
   if ('message' in data && typeof data.message === 'string') {
     return data.message
   }
 
-  return defaultMessage
+  return ''
 }
 
 const ForgotPasswordForm = () => {
   const router = useRouter()
+  const { t } = useTranslation('auth')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -100,7 +95,8 @@ const ForgotPasswordForm = () => {
         router.push(`/auth/reset-password?email=${encodeURIComponent(data.email)}`)
       }
     } catch (err: unknown) {
-      setError(extractErrorMessage(err))
+      const apiError = extractErrorMessage(err)
+      setError(apiError || t('forgotPassword.failed'))
     } finally {
       setIsLoading(false)
     }
@@ -109,9 +105,9 @@ const ForgotPasswordForm = () => {
   return (
     <Card className="w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Забыли пароль?</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t('forgotPassword.title')}</CardTitle>
         <CardDescription>
-          Введите email, и мы отправим вам код для восстановления пароля
+          {t('forgotPassword.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="w-full">
@@ -129,11 +125,11 @@ const ForgotPasswordForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t('forgotPassword.email')}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="example@email.com"
+                      placeholder={t('forgotPassword.emailPlaceholder')}
                       autoComplete="email"
                       {...field}
                       disabled={isLoading}
@@ -148,19 +144,19 @@ const ForgotPasswordForm = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Отправка...
+                  {t('forgotPassword.sending')}
                 </>
               ) : (
-                'Отправить код'
+                t('forgotPassword.sendButton')
               )}
             </Button>
 
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in" search={{ redirect: undefined }}
               className="text-muted-foreground hover:text-primary flex items-center justify-center gap-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
-              Вернуться к входу
+              {t('forgotPassword.backToLogin')}
             </Link>
           </form>
         </Form>

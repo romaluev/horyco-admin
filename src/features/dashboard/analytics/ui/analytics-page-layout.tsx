@@ -14,9 +14,10 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconArrowLeft, IconDownload } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -95,7 +96,7 @@ export function AnalyticsPageLayout({
   period,
   onPeriodChange,
   backHref = '/dashboard/analytics',
-  backLabel = 'Аналитика',
+  backLabel,
   onExport,
   isExporting = false,
   children,
@@ -103,7 +104,9 @@ export function AnalyticsPageLayout({
   filters,
   isLoading = false,
 }: IAnalyticsPageLayoutProps) {
+  const { t } = useTranslation('dashboard')
   const { canAccess, isLoading: isCheckingAccess, config, requiredTier } = useAnalyticsPageAccess(pageCode)
+  const finalBackLabel = backLabel || t('analytics.title')
 
   // Show loading skeleton while checking access
   if (isCheckingAccess) {
@@ -120,14 +123,14 @@ export function AnalyticsPageLayout({
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <Link href={backHref}>
+          <Link to={backHref}>
             <Button variant="ghost" size="icon" className="size-8">
               <IconArrowLeft className="size-4" />
             </Button>
           </Link>
           <div>
             <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
-            <p className="text-sm text-muted-foreground">{backLabel}</p>
+            <p className="text-sm text-muted-foreground">{finalBackLabel}</p>
           </div>
         </div>
 
@@ -166,7 +169,7 @@ export function AnalyticsPageLayout({
             disabled={isExporting}
           >
             <IconDownload className="mr-1.5 size-4" />
-            {isExporting ? 'Экспорт...' : 'Экспорт CSV'}
+            {isExporting ? t('dashboard.common.loading') : t('dashboard.common.export')}
           </Button>
         </div>
       )}
@@ -228,7 +231,7 @@ export function AnalyticsPageHeader({
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
-        <Link href={backHref}>
+        <Link to={backHref}>
           <Button variant="ghost" size="icon" className="size-8">
             <IconArrowLeft className="size-4" />
           </Button>
@@ -289,19 +292,23 @@ interface IErrorStateProps {
 }
 
 export function AnalyticsErrorState({
-  title = 'Ошибка загрузки данных',
-  description = 'Не удалось загрузить аналитические данные',
+  title,
+  description,
   onRetry,
 }: IErrorStateProps) {
+  const { t } = useTranslation('dashboard')
+  const finalTitle = title || t('dashboard.common.error')
+  const finalDescription = description || t('analytics.dataUnavailable')
+
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-destructive/50 bg-destructive/5 p-12 text-center">
       <div className="space-y-1">
-        <p className="font-medium text-destructive">{title}</p>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="font-medium text-destructive">{finalTitle}</p>
+        <p className="text-sm text-muted-foreground">{finalDescription}</p>
       </div>
       {onRetry && (
         <Button variant="outline" size="sm" onClick={onRetry}>
-          Повторить
+          {t('dashboard.common.retry')}
         </Button>
       )}
     </div>

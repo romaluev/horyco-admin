@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { X, Filter } from 'lucide-react'
 

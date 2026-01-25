@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import logo from '@/shared/assets/logo.png'
 
 import { OnboardingProgress } from './onboarding-progress'
@@ -60,7 +58,7 @@ export function OnboardingLayout({
       <div className="bg-muted/30 shrink-0 border-b">
         <div className="container mx-auto px-2 py-3">
           <div className="mb-3 flex items-center justify-center gap-2">
-            <Image
+            <img
               className="w-32 overflow-hidden rounded-lg"
               src={logo}
               alt="Horyco Admin"

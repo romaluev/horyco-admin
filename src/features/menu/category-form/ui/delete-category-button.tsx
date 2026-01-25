@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import {
   AlertDialog,
@@ -31,6 +32,7 @@ interface DeleteCategoryButtonProps {
 export const DeleteCategoryButton = ({
   category,
 }: DeleteCategoryButtonProps) => {
+  const { t } = useTranslation('menu')
   const [open, setOpen] = useState(false)
   const { mutate: deleteCategory, isPending } = useDeleteCategory()
 
@@ -58,36 +60,36 @@ export const DeleteCategoryButton = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Подтвердите удаление</AlertDialogTitle>
+          <AlertDialogTitle>{t('categories.delete.title')}</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
             <p>
-              Вы уверены, что хотите удалить категорию{' '}
-              <strong>{category.name}</strong>?
+              {t('categories.delete.confirmMessage', { name: category.name })}
             </p>
             {hasChildren && (
               <p className="text-destructive">
-                ⚠️ Эта категория содержит подкатегории. Сначала удалите их.
+                {t('categories.delete.warningChildren')}
               </p>
             )}
             {hasProducts && (
               <p className="text-destructive">
-                ⚠️ Эта категория содержит {category.productCount} продукт(ов).
-                Переместите их в другую категорию перед удалением.
+                {t('categories.delete.warningProducts', { count: category.productCount })}
               </p>
             )}
             {!hasChildren && !hasProducts && (
-              <p>Это действие нельзя отменить.</p>
+              <p>{t('categories.delete.irreversible')}</p>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Отмена</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {t('common.cancel')}
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending || hasChildren || hasProducts}
             className="bg-destructive hover:bg-destructive/90"
           >
-            {isPending ? 'Удаление...' : 'Удалить'}
+            {isPending ? t('common.loading') : t('categories.actions.delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

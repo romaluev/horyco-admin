@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus, IconTable } from '@tabler/icons-react'
 
@@ -102,7 +102,7 @@ export function ViewsSidebarSection() {
                             asChild
                             isActive={pathname === `/dashboard/views/${view.id}`}
                           >
-                            <Link href={`/dashboard/views/${view.id}`}>
+                            <Link to={`/dashboard/views/${view.id}` as any}>
                               <span className="text-[17px]">{view.name}</span>
                               {view.isPinned && (
                                 <span className="ml-auto text-xs text-muted-foreground">

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -58,10 +59,14 @@ import {
   EditIngredientDialog,
 } from '@/features/inventory/recipe-workflow'
 
-export default function RecipeDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function RecipeDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const recipeId = Number(params.id)
+  const recipeId = Number(paramId)
 
   const { data: recipe, isLoading } = useRecipeById(recipeId)
   const deleteMutation = useDeleteRecipe()
@@ -103,7 +108,7 @@ export default function RecipeDetailPage() {
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Техкарта не найдена</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/recipes">Назад к списку</Link>
+            <Link to="/dashboard/inventory/recipes">Назад к списку</Link>
           </Button>
         </div>
       </PageContainer>
@@ -126,7 +131,7 @@ export default function RecipeDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/recipes">
+              <Link to="/dashboard/inventory/recipes">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>

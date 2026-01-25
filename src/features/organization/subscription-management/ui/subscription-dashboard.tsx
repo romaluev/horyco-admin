@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import { formatPrice } from '@/shared/lib/format'
 import { BaseError, BaseLoading } from '@/shared/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
@@ -8,10 +10,11 @@ import { Separator } from '@/shared/ui/base/separator'
 import { SubscriptionStatusBadge, useGetSubscription } from '@/entities/organization/subscription'
 
 export const SubscriptionDashboard = () => {
+  const { t } = useTranslation('organization')
   const { data: subscription, isLoading, error } = useGetSubscription()
 
   if (isLoading) return <BaseLoading className="py-10" />
-  if (error) return <BaseError className="py-10" message="Ошибка загрузки подписки" />
+  if (error) return <BaseError className="py-10" message={t('subscription.loadError')} />
   if (!subscription) return null
 
   return (
@@ -20,20 +23,20 @@ export const SubscriptionDashboard = () => {
       <Card>
         <CardHeader className="gap-1.5">
           <div className="flex items-center justify-between">
-            <CardTitle>Статус подписки</CardTitle>
+            <CardTitle>{t('subscription.status.title')}</CardTitle>
             <SubscriptionStatusBadge status={subscription.status} />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm text-muted-foreground">План</p>
+              <p className="text-sm text-muted-foreground">{t('subscription.status.plan')}</p>
               <p className="text-lg font-medium">{subscription.currentPlan.name}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Способ оплаты</p>
+              <p className="text-sm text-muted-foreground">{t('subscription.status.paymentFlow')}</p>
               <p className="text-lg font-medium">
-                {subscription.paymentFlow === 'manual' ? 'Ручной платеж' : 'Автоматический'}
+                {subscription.paymentFlow === 'manual' ? t('subscription.status.manual') : t('subscription.status.automatic')}
               </p>
             </div>
           </div>
@@ -43,12 +46,12 @@ export const SubscriptionDashboard = () => {
       {/* Billing Period Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Период биллинга</CardTitle>
+          <CardTitle className="text-base">{t('subscription.billingPeriod.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
-              <p className="text-sm text-muted-foreground">Начало периода</p>
+              <p className="text-sm text-muted-foreground">{t('subscription.billingPeriod.start')}</p>
               <p className="text-sm font-medium">
                 {new Date(subscription.billingPeriod.currentPeriodStart).toLocaleDateString(
                   'ru-RU'
@@ -56,7 +59,7 @@ export const SubscriptionDashboard = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Конец периода</p>
+              <p className="text-sm text-muted-foreground">{t('subscription.billingPeriod.end')}</p>
               <p className="text-sm font-medium">
                 {new Date(subscription.billingPeriod.currentPeriodEnd).toLocaleDateString(
                   'ru-RU'
@@ -64,7 +67,7 @@ export const SubscriptionDashboard = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Дней до продления</p>
+              <p className="text-sm text-muted-foreground">{t('subscription.billingPeriod.daysUntilRenewal')}</p>
               <p className="text-sm font-medium">{subscription.billingPeriod.daysUntilRenewal}</p>
             </div>
           </div>
@@ -74,11 +77,11 @@ export const SubscriptionDashboard = () => {
       {/* Pricing Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Стоимость подписки</CardTitle>
+          <CardTitle className="text-base">{t('subscription.pricing.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Итого:</span>
+            <span className="text-sm text-muted-foreground">{t('subscription.pricing.total')}:</span>
             <span className="font-semibold">
               {formatPrice(subscription.billingSummary.total)}
             </span>
@@ -87,7 +90,7 @@ export const SubscriptionDashboard = () => {
             <>
               <Separator />
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Скидка:</span>
+                <span className="text-sm text-muted-foreground">{t('subscription.pricing.discount')}:</span>
                 <span className="text-sm">
                   -{formatPrice(subscription.billingSummary.discount)}
                 </span>
@@ -102,17 +105,17 @@ export const SubscriptionDashboard = () => {
         <Card className="border-orange-200 bg-orange-50 dark:border-orange-900/50 dark:bg-orange-950/20">
           <CardHeader>
             <CardTitle className="text-base text-orange-900 dark:text-orange-200">
-              Пробный период
+              {t('subscription.trial.title')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-orange-800 dark:text-orange-300">
-              Пробный период заканчивается{' '}
+              {t('subscription.trial.endsAt')}{' '}
               <strong>
                 {subscription.trial.trialEndsAt &&
                   new Date(subscription.trial.trialEndsAt).toLocaleDateString('ru-RU')}
               </strong>
-              ({subscription.trial.daysRemaining} дн.)
+              ({subscription.trial.daysRemaining} {t('subscription.trial.daysRemaining')})
             </p>
           </CardContent>
         </Card>
@@ -122,7 +125,7 @@ export const SubscriptionDashboard = () => {
       {subscription.modules.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Активные модули</CardTitle>
+            <CardTitle className="text-base">{t('subscription.modules.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -132,12 +135,12 @@ export const SubscriptionDashboard = () => {
                     <p className="text-sm font-medium">{module.name}</p>
                     {module.isInTrial && (
                       <p className="text-xs text-muted-foreground">
-                        Пробный период: {module.daysRemainingInTrial} дн.
+                        {t('subscription.modules.trial')}: {module.daysRemainingInTrial} {t('subscription.modules.daysRemaining')}
                       </p>
                     )}
                   </div>
                   <p className="text-sm font-medium">
-                    {formatPrice(module.priceMonthly)}/мес
+                    {formatPrice(module.priceMonthly)}{t('subscription.modules.monthly')}
                   </p>
                 </div>
               ))}

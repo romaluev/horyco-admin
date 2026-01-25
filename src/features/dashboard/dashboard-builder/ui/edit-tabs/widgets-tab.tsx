@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   DndContext,
@@ -31,7 +32,7 @@ import {
 
 import {
   WIDGET_CONFIG,
-  WIDGET_CATEGORY_LABELS,
+  WIDGET_CATEGORY_LABEL_KEYS,
   type IDashboardWidget,
   type WidgetType,
   type WidgetCategory,
@@ -60,6 +61,8 @@ export function WidgetsTab({
   activeWidgetId,
   onActiveWidgetIdChange,
 }: IWidgetsTabProps) {
+  const { t } = useTranslation('dashboard')
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -112,8 +115,8 @@ export function WidgetsTab({
       {/* Active Widgets */}
       <Card>
         <CardHeader>
-          <CardTitle>Активные виджеты</CardTitle>
-          <CardDescription>Перетащите для изменения порядка</CardDescription>
+          <CardTitle>{t('widgets.widgetsTab.activeWidgets')}</CardTitle>
+          <CardDescription>{t('widgets.widgetsTab.reorderHint')}</CardDescription>
         </CardHeader>
         <CardContent>
           <DndContext
@@ -126,7 +129,7 @@ export function WidgetsTab({
               {widgets.length === 0 ? (
                 <div className="rounded-xl border border-dashed p-12 text-center">
                   <p className="text-muted-foreground">
-                    Нет активных виджетов. Добавьте из галереи ниже.
+                    {t('widgets.widgetsTab.noActiveWidgets')}
                   </p>
                 </div>
               ) : (
@@ -149,8 +152,8 @@ export function WidgetsTab({
       {/* Widget Gallery */}
       <Card>
         <CardHeader>
-          <CardTitle>Галерея виджетов</CardTitle>
-          <CardDescription>Выберите виджеты с визуальным превью</CardDescription>
+          <CardTitle>{t('widgets.widgetsTab.widgetGallery')}</CardTitle>
+          <CardDescription>{t('widgets.widgetsTab.selectWidgets')}</CardDescription>
         </CardHeader>
         <CardContent>
           {WIDGET_CATEGORIES.map((category) => {
@@ -160,7 +163,7 @@ export function WidgetsTab({
             return (
               <div key={category} className="mb-6 last:mb-0">
                 <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  {WIDGET_CATEGORY_LABELS[category]}
+                  {t(WIDGET_CATEGORY_LABEL_KEYS[category])}
                 </h4>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {categoryWidgets.map((opt) => {
@@ -183,14 +186,14 @@ export function WidgetsTab({
                         </div>
                         <div className="p-3">
                           <div className="flex items-center justify-between">
-                            <span className="font-medium">{opt.title}</span>
+                            <span className="font-medium">{t(opt.titleKey)}</span>
                             {isUsed && (
                               <span className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                                Добавлен
+                                {t('widgets.widgetsTab.added')}
                               </span>
                             )}
                           </div>
-                          <p className="mt-0.5 text-xs text-muted-foreground">{opt.description}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">{t(opt.descriptionKey)}</p>
                         </div>
                       </button>
                     )

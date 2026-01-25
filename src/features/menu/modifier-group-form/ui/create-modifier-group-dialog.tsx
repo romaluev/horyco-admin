@@ -9,6 +9,7 @@ import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -47,6 +48,7 @@ export const CreateModifierGroupDialog = ({
   trigger,
 }: CreateModifierGroupDialogProps) => {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation('menu')
   const { mutate: createGroup, isPending } = useCreateModifierGroup()
 
   const form = useForm<ModifierGroupFormValues>({
@@ -73,13 +75,13 @@ export const CreateModifierGroupDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger || <Button>Создать группу</Button>}
+        {trigger || <Button>{t('modifiers.groups.create.trigger')}</Button>}
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Создать группу модификаторов</DialogTitle>
+          <DialogTitle>{t('modifiers.groups.create.title')}</DialogTitle>
           <DialogDescription>
-            Создайте новую группу модификаторов для продуктов
+            {t('modifiers.groups.create.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -93,9 +95,9 @@ export const CreateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название</FormLabel>
+                  <FormLabel>{t('modifiers.groups.create.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Соусы" {...field} />
+                    <Input placeholder={t('modifiers.groups.create.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,9 +109,9 @@ export const CreateModifierGroupDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('modifiers.groups.create.form.description.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Выберите соус к блюду" {...field} />
+                    <Textarea placeholder={t('modifiers.groups.create.form.description.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +124,7 @@ export const CreateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Мин. выбор</FormLabel>
+                    <FormLabel>{t('modifiers.groups.create.form.minSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -131,7 +133,7 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Минимальное кол-во выборов
+                      {t('modifiers.groups.create.form.minSelection.description')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -143,7 +145,7 @@ export const CreateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Макс. выбор</FormLabel>
+                    <FormLabel>{t('modifiers.groups.create.form.maxSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -152,7 +154,7 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Максимальное кол-во выборов
+                      {t('modifiers.groups.create.form.maxSelection.description')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -165,7 +167,7 @@ export const CreateModifierGroupDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Порядок сортировки</FormLabel>
+                  <FormLabel>{t('modifiers.groups.create.form.sortOrder.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -173,7 +175,7 @@ export const CreateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>Порядок отображения группы</FormDescription>
+                  <FormDescription>{t('modifiers.groups.create.form.sortOrder.description')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -185,9 +187,9 @@ export const CreateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Обязательно</FormLabel>
+                    <FormLabel>{t('modifiers.groups.create.form.isRequired.label')}</FormLabel>
                     <FormDescription>
-                      Клиент должен выбрать хотя бы один модификатор
+                      {t('modifiers.groups.create.form.isRequired.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -206,10 +208,10 @@ export const CreateModifierGroupDialog = ({
                 variant="outline"
                 onClick={() => setOpen(false)}
               >
-                Отмена
+                {t('modifiers.groups.create.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('modifiers.groups.create.form.actions.saving') : t('modifiers.groups.create.form.actions.save')}
               </Button>
             </div>
           </form>

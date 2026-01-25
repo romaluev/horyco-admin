@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations'
@@ -49,18 +50,19 @@ import {
   branchSetupSchema,
 } from '@/features/onboarding/onboarding/model'
 
-const DAYS_OF_WEEK = [
-  { key: 'monday', label: 'Понедельник' },
-  { key: 'tuesday', label: 'Вторник' },
-  { key: 'wednesday', label: 'Среда' },
-  { key: 'thursday', label: 'Четверг' },
-  { key: 'friday', label: 'Пятница' },
-  { key: 'saturday', label: 'Суббота' },
-  { key: 'sunday', label: 'Воскресенье' },
+const getDaysOfWeek = (t: any) => [
+  { key: 'monday', label: t('pages.branchSetup.days.monday') },
+  { key: 'tuesday', label: t('pages.branchSetup.days.tuesday') },
+  { key: 'wednesday', label: t('pages.branchSetup.days.wednesday') },
+  { key: 'thursday', label: t('pages.branchSetup.days.thursday') },
+  { key: 'friday', label: t('pages.branchSetup.days.friday') },
+  { key: 'saturday', label: t('pages.branchSetup.days.saturday') },
+  { key: 'sunday', label: t('pages.branchSetup.days.sunday') },
 ]
 
 export default function BranchSetupPage() {
   const router = useRouter()
+  const { t } = useTranslation('onboarding')
   const [selectedCity, setSelectedCity] = useState<string>('')
   const [availableRegions, setAvailableRegions] = useState<
     { id: string; name: string }[]
@@ -209,14 +211,14 @@ export default function BranchSetupPage() {
       currentStep="branch_setup"
       completedSteps={progress?.completedSteps || ['business_identity']}
       skippedSteps={progress?.skippedSteps || []}
-      title="Настройка филиала"
-      description="Укажите информацию о вашем первом филиале"
+      title={t('pages.branchSetup.title')}
+      description={t('pages.branchSetup.description')}
     >
       <Card className="mx-auto w-full max-w-3xl">
         <CardHeader>
-          <CardTitle>Настройка филиала</CardTitle>
+          <CardTitle>{t('pages.branchSetup.cardTitle')}</CardTitle>
           <CardDescription>
-            Укажите информацию о вашем первом филиале
+            {t('pages.branchSetup.cardDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -228,11 +230,11 @@ export default function BranchSetupPage() {
                 name="branchName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Название филиала *</FormLabel>
+                    <FormLabel>{t('pages.branchSetup.branchName')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Главный филиал"
+                        placeholder={t('pages.branchSetup.branchNamePlaceholder')}
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -248,7 +250,7 @@ export default function BranchSetupPage() {
                   name="city"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Город *</FormLabel>
+                      <FormLabel>{t('pages.branchSetup.city')}</FormLabel>
                       <Select
                         onValueChange={handleCityChange}
                         value={selectedCity}
@@ -256,7 +258,7 @@ export default function BranchSetupPage() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Выберите город" />
+                            <SelectValue placeholder={t('pages.branchSetup.citySelect')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -277,14 +279,14 @@ export default function BranchSetupPage() {
                   name="region"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Район *</FormLabel>
+                      <FormLabel>{t('pages.branchSetup.region')}</FormLabel>
                       <Select
                         onValueChange={handleRegionChange}
                         disabled={!selectedCity || isSubmitting}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Выберите район" />
+                            <SelectValue placeholder={t('pages.branchSetup.regionSelect')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -307,11 +309,11 @@ export default function BranchSetupPage() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Полный адрес *</FormLabel>
+                    <FormLabel>{t('pages.branchSetup.address')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="ул. Мустакиллик, д. 45"
+                        placeholder={t('pages.branchSetup.addressPlaceholder')}
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -323,14 +325,14 @@ export default function BranchSetupPage() {
               {/* Business Hours */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="mb-2 text-sm font-medium">Часы работы</h3>
+                  <h3 className="mb-2 text-sm font-medium">{t('pages.branchSetup.businessHours.title')}</h3>
                   <p className="text-muted-foreground text-sm">
-                    Настройте график работы для каждого дня недели
+                    {t('pages.branchSetup.businessHours.description')}
                   </p>
                 </div>
 
                 <div className="space-y-3">
-                  {DAYS_OF_WEEK.map(({ key, label }) => {
+                  {getDaysOfWeek(t).map(({ key, label }) => {
                     const dayKey =
                       key as keyof BranchSetupFormValues['businessHours']
                     return (
@@ -388,7 +390,7 @@ export default function BranchSetupPage() {
                           render={({ field }) => (
                             <FormItem className="flex items-center gap-2">
                               <FormLabel className="text-sm font-normal">
-                                Выходной
+                                {t('pages.branchSetup.businessHours.closed')}
                               </FormLabel>
                               <FormControl>
                                 <Switch
@@ -410,10 +412,10 @@ export default function BranchSetupPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="mb-2 text-sm font-medium">
-                    Типы обслуживания
+                    {t('pages.branchSetup.serviceTypes.title')}
                   </h3>
                   <p className="text-muted-foreground text-sm">
-                    Выберите доступные способы обслуживания клиентов
+                    {t('pages.branchSetup.serviceTypes.description')}
                   </p>
                 </div>
 
@@ -427,10 +429,10 @@ export default function BranchSetupPage() {
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
                               <FormLabel className="mx-auto w-max text-base font-semibold">
-                                В зале
+                                {t('pages.branchSetup.serviceTypes.dineIn')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                Можно заказать в зал
+                                {t('pages.branchSetup.serviceTypes.dineInDescription')}
                               </p>
                             </div>
                             <FormControl>
@@ -455,10 +457,10 @@ export default function BranchSetupPage() {
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
                               <FormLabel className="mx-auto w-max text-base font-semibold">
-                                Собой
+                                {t('pages.branchSetup.serviceTypes.takeaway')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                Можно забрать с собой
+                                {t('pages.branchSetup.serviceTypes.takeawayDescription')}
                               </p>
                             </div>
                             <FormControl>
@@ -483,10 +485,10 @@ export default function BranchSetupPage() {
                           <CardContent className="flex flex-col items-center justify-center gap-3 p-3 text-center">
                             <div className="space-y-1">
                               <FormLabel className="mx-auto w-max text-base font-semibold">
-                                Доставка
+                                {t('pages.branchSetup.serviceTypes.delivery')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                Можно заказать доставку
+                                {t('pages.branchSetup.serviceTypes.deliveryDescription')}
                               </p>
                             </div>
                             <FormControl>
@@ -511,13 +513,13 @@ export default function BranchSetupPage() {
                   onClick={handleBack}
                   disabled={isSubmitting}
                 >
-                  Назад
+                  {t('pages.branchSetup.buttons.back')}
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Продолжить
+                  {t('pages.branchSetup.buttons.continue')}
                 </Button>
               </div>
             </form>

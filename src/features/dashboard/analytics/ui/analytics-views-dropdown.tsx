@@ -13,6 +13,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconCheck, IconPin, IconPlus, IconSettings } from '@tabler/icons-react'
 
@@ -78,6 +79,8 @@ export function AnalyticsViewsDropdown({
   onSaveView,
   onManageViews,
 }: IAnalyticsViewsDropdownProps) {
+  const { t } = useTranslation('analytics')
+
   // Get default views (hardcoded)
   const { defaultViews } = useDefaultViews(pageCode)
 
@@ -107,7 +110,7 @@ export function AnalyticsViewsDropdown({
 
   // Find selected view name
   const selectedViewName = React.useMemo(() => {
-    if (!selectedViewId) return 'По умолчанию'
+    if (!selectedViewId) return t('views.default')
 
     // Check default views
     const defaultView = defaultViews.find((v) => v.id === selectedViewId)
@@ -117,8 +120,8 @@ export function AnalyticsViewsDropdown({
     const customView = customViews?.find((v) => v.id === selectedViewId)
     if (customView) return customView.name
 
-    return 'По умолчанию'
-  }, [selectedViewId, defaultViews, customViews])
+    return t('views.default')
+  }, [selectedViewId, defaultViews, customViews, t])
 
   const handleViewClick = (viewId: string, isDefault: boolean) => {
     onViewSelect(viewId, isDefault)
@@ -149,7 +152,7 @@ export function AnalyticsViewsDropdown({
         {sortedViews.pinned.length > 0 && (
           <>
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Закрепленные
+              {t('views.pinned')}
             </DropdownMenuLabel>
             {sortedViews.pinned.map((view) => (
               <ViewMenuItem
@@ -168,7 +171,7 @@ export function AnalyticsViewsDropdown({
         {sortedViews.default.length > 0 && (
           <>
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              По умолчанию
+              {t('views.default')}
             </DropdownMenuLabel>
             {sortedViews.default.map((view) => (
               <DefaultViewMenuItem
@@ -186,7 +189,7 @@ export function AnalyticsViewsDropdown({
         {sortedViews.custom.length > 0 && (
           <>
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Мои представления
+              {t('views.custom')}
             </DropdownMenuLabel>
             {sortedViews.custom.map((view) => (
               <ViewMenuItem
@@ -205,17 +208,17 @@ export function AnalyticsViewsDropdown({
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSaveClick} disabled={hasReachedLimit}>
               <IconPlus className="mr-2 size-4" />
-              Сохранить текущий вид
+              {t('views.save')}
               {hasReachedLimit && (
                 <span className="ml-auto text-xs text-muted-foreground">
-                  Лимит
+                  {t('views.limitReached')}
                 </span>
               )}
             </DropdownMenuItem>
             {onManageViews && (
               <DropdownMenuItem onClick={onManageViews}>
                 <IconSettings className="mr-2 size-4" />
-                Управление представлениями
+                {t('views.manage')}
               </DropdownMenuItem>
             )}
           </>

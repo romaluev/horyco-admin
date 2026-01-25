@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 /**
  * Custom hook to warn users about unsaved changes when navigating away

@@ -3,6 +3,7 @@
 import { useMemo, type ComponentType } from 'react'
 
 import { KpiType } from '@/shared/api/graphql'
+import { useTranslation } from 'react-i18next'
 
 import {
   useRankedList,
@@ -120,6 +121,7 @@ interface IWidgetRendererProps {
 }
 
 function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
+  const { t } = useTranslation('dashboard')
   const config = WIDGET_CONFIG[widget.type]
 
   switch (widget.type) {
@@ -133,9 +135,9 @@ function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
       return <StaffRankingContainer period={period} branchId={branchId} />
     default:
       return (
-        <WidgetCard title={config?.title}>
+        <WidgetCard title={config ? t(config.titleKey) : ''}>
           <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-            Скоро
+            {t('common.comingSoon')}
           </div>
         </WidgetCard>
       )
@@ -143,6 +145,7 @@ function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
 }
 
 function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
+  const { t } = useTranslation('dashboard')
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'PRODUCTS',
     period,
@@ -153,7 +156,7 @@ function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
 
   return (
     <WidgetCard
-      title={WIDGET_CONFIG.TOP_PRODUCTS.title}
+      title={t(WIDGET_CONFIG.TOP_PRODUCTS.titleKey)}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -165,6 +168,7 @@ function TopProductsContainer({ period, branchId }: IWidgetContainerProps) {
 }
 
 function PaymentMethodsContainer({ period, branchId }: IWidgetContainerProps) {
+  const { t } = useTranslation('dashboard')
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'PAYMENT_METHOD',
     period,
@@ -173,7 +177,7 @@ function PaymentMethodsContainer({ period, branchId }: IWidgetContainerProps) {
 
   return (
     <WidgetCard
-      title={WIDGET_CONFIG.PAYMENT_METHODS.title}
+      title={t(WIDGET_CONFIG.PAYMENT_METHODS.titleKey)}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -185,6 +189,7 @@ function PaymentMethodsContainer({ period, branchId }: IWidgetContainerProps) {
 }
 
 function ChannelSplitContainer({ period, branchId }: IWidgetContainerProps) {
+  const { t } = useTranslation('dashboard')
   const { data, isLoading, error, refetch } = useProportions({
     dimension: 'CHANNEL',
     period,
@@ -193,7 +198,7 @@ function ChannelSplitContainer({ period, branchId }: IWidgetContainerProps) {
 
   return (
     <WidgetCard
-      title={WIDGET_CONFIG.CHANNEL_SPLIT.title}
+      title={t(WIDGET_CONFIG.CHANNEL_SPLIT.titleKey)}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}
@@ -205,6 +210,7 @@ function ChannelSplitContainer({ period, branchId }: IWidgetContainerProps) {
 }
 
 function StaffRankingContainer({ period, branchId }: IWidgetContainerProps) {
+  const { t } = useTranslation('dashboard')
   const { data, isLoading, error, refetch } = useRankedList({
     dataset: 'STAFF',
     period,
@@ -215,7 +221,7 @@ function StaffRankingContainer({ period, branchId }: IWidgetContainerProps) {
 
   return (
     <WidgetCard
-      title={WIDGET_CONFIG.STAFF_RANKING.title}
+      title={t(WIDGET_CONFIG.STAFF_RANKING.titleKey)}
       isLoading={isLoading}
       error={error}
       onRetry={refetch}

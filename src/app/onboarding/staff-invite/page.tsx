@@ -3,7 +3,8 @@
 
 import { useState, useCallback } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
@@ -64,6 +65,7 @@ interface InvitationPermissions {
 // eslint-disable-next-line max-lines-per-function
 export default function StaffInvitePage() {
   const router = useRouter()
+  const { t } = useTranslation('onboarding')
   const [isSkipConfirmOpen, setSkipConfirmOpen] = useState(false)
   const [permissionsMap, setPermissionsMap] = useState<
     Record<number, InvitationPermissions>
@@ -184,7 +186,7 @@ export default function StaffInvitePage() {
   const confirmSkip = () => {
     skipStep({
       step: 'staff_invited',
-      reason: 'Добавлю сотрудников позже',
+      reason: t('pages.staffInvite.skipReason'),
     })
     setSkipConfirmOpen(false)
   }
@@ -194,15 +196,15 @@ export default function StaffInvitePage() {
       currentStep="staff_invited"
       completedSteps={progress?.completedSteps || []}
       skippedSteps={progress?.skippedSteps || []}
-      title="Пригласите сотрудников"
-      description="Добавьте официантов для управления заказами"
+      title={t('pages.staffInvite.title')}
+      description={t('pages.staffInvite.description')}
     >
       <>
           <Card>
             <CardHeader>
-              <CardTitle>Пригласить команду</CardTitle>
+              <CardTitle>{t('pages.staffInvite.cardTitle')}</CardTitle>
               <CardDescription>
-                Отправьте приглашения по SMS официантам вашего ресторана
+                {t('pages.staffInvite.cardDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -214,7 +216,7 @@ export default function StaffInvitePage() {
                   {fields.length === 0 ? (
                     <div className="py-6 text-center">
                       <p className="text-muted-foreground mb-4">
-                        Пока не добавлено ни одного сотрудника
+                        {t('pages.staffInvite.emptyState')}
                       </p>
                       <Button
                         type="button"
@@ -222,7 +224,7 @@ export default function StaffInvitePage() {
                         onClick={addInvitation}
                       >
                         <Plus className="mr-2 h-4 w-4" />
-                        Добавить официанта
+                        {t('pages.staffInvite.addStaff')}
                       </Button>
                     </div>
                   ) : (
@@ -232,7 +234,7 @@ export default function StaffInvitePage() {
                         <Card key={field.id} className="gap-2">
                           <CardHeader className="flex items-center justify-between">
                             <CardTitle className="text-base">
-                              Сотрудник #{index + 1}
+                              {t('pages.staffInvite.staffNumber', { number: index + 1 })}
                             </CardTitle>
                             <Button
                               type="button"
@@ -257,10 +259,10 @@ export default function StaffInvitePage() {
                               name={`invitations.${index}.fullName`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>ФИО *</FormLabel>
+                                  <FormLabel>{t('pages.staffInvite.fullName')}</FormLabel>
                                   <FormControl>
                                     <Input
-                                      placeholder="Анна Петрова"
+                                      placeholder={t('pages.staffInvite.fullNamePlaceholder')}
                                       {...field}
                                       disabled={isLoading}
                                     />
@@ -275,11 +277,11 @@ export default function StaffInvitePage() {
                               name={`invitations.${index}.phone`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Телефон *</FormLabel>
+                                  <FormLabel>{t('pages.staffInvite.phone')}</FormLabel>
                                   <FormControl>
                                     <PhoneInput
                                       defaultCountry={'UZ'}
-                                      placeholder={'90 111 11 11'}
+                                      placeholder={t('pages.staffInvite.phonePlaceholder')}
                                       limitMaxLength
                                       countries={['UZ']}
                                       {...field}
@@ -296,17 +298,17 @@ export default function StaffInvitePage() {
                               name={`invitations.${index}.email`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Email</FormLabel>
+                                  <FormLabel>{t('pages.staffInvite.email')}</FormLabel>
                                   <FormControl>
                                     <Input
                                       type="email"
-                                      placeholder="anna@example.com"
+                                      placeholder={t('pages.staffInvite.emailPlaceholder')}
                                       {...field}
                                       disabled={isLoading}
                                     />
                                   </FormControl>
                                   <FormDescription>
-                                    Необязательно
+                                    {t('pages.staffInvite.emailOptional')}
                                   </FormDescription>
                                   <FormMessage />
                                 </FormItem>
@@ -316,7 +318,7 @@ export default function StaffInvitePage() {
                             {/* Permissions Selection */}
                             <div className="border-t pt-4">
                               <h3 className="mb-3 text-sm font-medium">
-                                Права доступа
+                                {t('pages.staffInvite.permissions')}
                               </h3>
                               <Button
                                 type="button"
@@ -325,9 +327,9 @@ export default function StaffInvitePage() {
                                 disabled={isLoading}
                                 className="w-full"
                               >
-                                Выбрать права (
-                                {permissionsMap[index]?.permissionIds?.length || 0}
-                                )
+                                {t('pages.staffInvite.selectPermissions', {
+                                  count: permissionsMap[index]?.permissionIds?.length || 0,
+                                })}
                               </Button>
                             </div>
                           </CardContent>
@@ -342,7 +344,7 @@ export default function StaffInvitePage() {
                         disabled={isLoading}
                       >
                         <Plus className="mr-2 h-4 w-4" />
-                        Добавить ещё
+                        {t('pages.staffInvite.addMore')}
                       </Button>
                     </div>
                   )}
@@ -358,7 +360,7 @@ export default function StaffInvitePage() {
                       }}
                       disabled={isLoading}
                     >
-                      Назад
+                      {t('pages.staffInvite.buttons.back')}
                     </Button>
                     <div className="flex gap-4">
                       <Button
@@ -367,12 +369,12 @@ export default function StaffInvitePage() {
                         onClick={handleSkip}
                         disabled={isLoading}
                       >
-                        Пропустить
+                        {t('pages.staffInvite.buttons.skip')}
                       </Button>
                       <Button type="submit" disabled={isLoading}>
                         {fields.length > 0
-                          ? 'Отправить приглашения'
-                          : 'Завершить'}
+                          ? t('pages.staffInvite.buttons.sendInvitations')
+                          : t('pages.staffInvite.buttons.complete')}
                       </Button>
                     </div>
                   </div>
@@ -404,20 +406,18 @@ export default function StaffInvitePage() {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Пропустить приглашение сотрудников?
+                  {t('pages.staffInvite.skipDialog.title')}
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Вы сможете пригласить членов команды позже в разделе
-                  &quot;Персонал&quot;. Сейчас вы сможете работать с системой
-                  самостоятельно и добавить сотрудников в любое удобное время.
+                  {t('pages.staffInvite.skipDialog.description')}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel disabled={isLoading}>
-                  Отмена
+                  {t('pages.staffInvite.skipDialog.cancel')}
                 </AlertDialogCancel>
                 <AlertDialogAction onClick={confirmSkip} disabled={isLoading}>
-                  Пропустить
+                  {t('pages.staffInvite.skipDialog.confirm')}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

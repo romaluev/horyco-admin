@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StarsIcon } from 'lucide-react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import {
@@ -32,6 +33,7 @@ import type { ProductFormValues } from '../model/contract'
 const EXPAND_USAGE_KEY = 'expand_usage'
 
 export const CreateProductForm = () => {
+  const { t } = useTranslation('menu')
   const { mutateAsync: createProductMutation } = useCreateProduct()
   const router = useRouter()
   const [sending, setSending] = useState(false)
@@ -66,7 +68,7 @@ export const CreateProductForm = () => {
     const description = form.getValues('description')
 
     if (description.length < 10) {
-      toast.error('Слишком короткое описание')
+      toast.error(t('products.form.expandDescription.tooShort'))
       return
     }
 
@@ -81,10 +83,10 @@ export const CreateProductForm = () => {
       const body = await res.json()
 
       form.setValue('description', body.description)
-      toast.success('Описание успешно расширено!')
+      toast.success(t('products.form.expandDescription.success'))
       setExpanded(true)
     } catch (e) {
-      toast.error('Что-то пошло не так')
+      toast.error(t('products.form.expandDescription.error'))
     }
     setExpandLoading(false)
   }
@@ -138,9 +140,9 @@ export const CreateProductForm = () => {
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-3">
-                <FormLabel>Название</FormLabel>
+                <FormLabel>{t('products.form.name.label')}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Введите название продукта" {...field} />
+                  <Input placeholder={t('products.form.name.placeholder')} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -154,11 +156,11 @@ export const CreateProductForm = () => {
             name="price"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Цена (обязательно)</FormLabel>
+                <FormLabel>{t('products.form.price.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Введите цену"
+                    placeholder={t('products.form.price.placeholder')}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -173,11 +175,11 @@ export const CreateProductForm = () => {
             name="preparationTime"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Время приготовления (мин)</FormLabel>
+                <FormLabel>{t('products.form.preparationTime.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Например: 15"
+                    placeholder={t('products.form.preparationTime.placeholder')}
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -196,11 +198,11 @@ export const CreateProductForm = () => {
             name="calories"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Калории</FormLabel>
+                <FormLabel>{t('products.form.calories.label')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Например: 350"
+                    placeholder={t('products.form.calories.placeholder')}
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -219,10 +221,10 @@ export const CreateProductForm = () => {
             name="description"
             render={({ field }) => (
               <FormItem className="md:col-span-6">
-                <FormLabel>Описание</FormLabel>
+                <FormLabel>{t('products.form.description.label')}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Введите описание продукта"
+                    placeholder={t('products.form.description.placeholder')}
                     className="resize-none"
                     {...field}
                   />
@@ -241,7 +243,7 @@ export const CreateProductForm = () => {
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
               <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl transition hover:text-[#fe4a49]">
                 <StarsIcon size={16} />
-                {expandLoading ? 'Обрабатывается...' : 'Расширить с AI'}
+                {expandLoading ? t('products.form.expandDescription.loading') : t('products.form.expandDescription.button')}
               </span>
             </Button>
           )}
@@ -251,10 +253,10 @@ export const CreateProductForm = () => {
             name="allergens"
             render={({ field }) => (
               <FormItem className="md:col-span-6">
-                <FormLabel>Аллергены (через запятую)</FormLabel>
+                <FormLabel>{t('products.form.allergens.label')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Например: молоко, яйца, орехи"
+                    placeholder={t('products.form.allergens.placeholder')}
                     {...field}
                     value={field.value?.join(', ') || ''}
                     onChange={(e) => {
@@ -283,7 +285,7 @@ export const CreateProductForm = () => {
                   <Switch checked={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormLabel className="!mt-0">
-                  Продукт доступен для заказа
+                  {t('products.form.available.label')}
                 </FormLabel>
                 <FormMessage />
               </FormItem>
@@ -291,7 +293,7 @@ export const CreateProductForm = () => {
           />
 
           <Button type="submit" className="w-40 max-w-40" disabled={sending}>
-            Создать продукт
+            {t('products.actions.create')}
           </Button>
         </div>
       </form>

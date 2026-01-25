@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconClipboardCheck } from '@tabler/icons-react'
 import { format } from 'date-fns'
@@ -44,6 +45,7 @@ import { WarehouseSelector } from '@/entities/inventory/warehouse'
 import { CreateCountDialog } from '@/features/inventory/inventory-count-form'
 
 export default function InventoryCountsPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<CountStatus | ''>('')
   const [countType, setCountType] = useState<CountType | ''>('')
@@ -76,8 +78,8 @@ export default function InventoryCountsPage() {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Инвентаризации"
-            description="Учёт и сверка фактических остатков"
+            title={t('pages.counts.title')}
+            description={t('pages.counts.description')}
           />
           <CreateCountDialog />
         </div>
@@ -88,7 +90,7 @@ export default function InventoryCountsPage() {
           <div className="relative min-w-[200px] flex-1">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск по номеру..."
+              placeholder={t('pages.counts.searchOrder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -100,10 +102,10 @@ export default function InventoryCountsPage() {
             onValueChange={(val) => setStatus(val === 'all' ? '' : (val as CountStatus))}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все статусы" />
+              <SelectValue placeholder={t('pages.counts.allStatuses')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все статусы</SelectItem>
+              <SelectItem value="all">{t('pages.counts.allStatuses')}</SelectItem>
               {Object.entries(COUNT_STATUS_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -117,10 +119,10 @@ export default function InventoryCountsPage() {
             onValueChange={(val) => setCountType(val === 'all' ? '' : (val as CountType))}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все типы" />
+              <SelectValue placeholder={t('pages.counts.allTypes')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все типы</SelectItem>
+              <SelectItem value="all">{t('pages.counts.allTypes')}</SelectItem>
               {Object.entries(COUNT_TYPE_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -134,7 +136,7 @@ export default function InventoryCountsPage() {
               value={warehouseId}
               onChange={setWarehouseId}
               showAll
-              placeholder="Все склады"
+              placeholder={t('pages.counts.allWarehouses')}
             />
           </div>
         </div>
@@ -153,12 +155,12 @@ export default function InventoryCountsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Номер</TableHead>
-                  <TableHead>Дата</TableHead>
-                  <TableHead>Тип</TableHead>
-                  <TableHead className="text-right">Позиций</TableHead>
-                  <TableHead className="text-right">Расхождение</TableHead>
-                  <TableHead>Статус</TableHead>
+                  <TableHead>{t('pages.counts.columnNumber')}</TableHead>
+                  <TableHead>{t('pages.counts.columnDate')}</TableHead>
+                  <TableHead>{t('pages.counts.columnType')}</TableHead>
+                  <TableHead className="text-right">{t('pages.counts.columnItems')}</TableHead>
+                  <TableHead className="text-right">{t('pages.counts.columnVariance')}</TableHead>
+                  <TableHead>{t('pages.counts.columnStatus')}</TableHead>
                   <TableHead className="w-[100px]" />
                 </TableRow>
               </TableHeader>
@@ -195,8 +197,8 @@ export default function InventoryCountsPage() {
                       </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/dashboard/inventory/counts/${count.id}`}>
-                            Открыть
+                          <Link to={`/dashboard/inventory/counts/${count.id}` as any}>
+                            {t('pages.counts.open')}
                           </Link>
                         </Button>
                       </TableCell>
@@ -212,21 +214,25 @@ export default function InventoryCountsPage() {
   )
 }
 
-const EmptyCountsState = ({ hasFilters }: { hasFilters: boolean }) => (
-  <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconClipboardCheck className="h-12 w-12 text-muted-foreground/50" />
-    <h3 className="mt-4 text-lg font-semibold">
-      {hasFilters ? 'Инвентаризации не найдены' : 'Нет инвентаризаций'}
-    </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
-      {hasFilters
-        ? 'Попробуйте изменить параметры поиска или фильтры.'
-        : 'Проведите инвентаризацию для сверки фактических остатков.'}
-    </p>
-    {!hasFilters && (
-      <div className="mt-6">
-        <CreateCountDialog />
-      </div>
-    )}
-  </div>
-)
+const EmptyCountsState = ({ hasFilters }: { hasFilters: boolean }) => {
+  const { t } = useTranslation('inventory')
+
+  return (
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
+      <IconClipboardCheck className="h-12 w-12 text-muted-foreground/50" />
+      <h3 className="mt-4 text-lg font-semibold">
+        {hasFilters ? t('pages.counts.notFound') : t('pages.counts.noCounts')}
+      </h3>
+      <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+        {hasFilters
+          ? t('pages.counts.tryChanging')
+          : t('pages.counts.conductCount')}
+      </p>
+      {!hasFilters && (
+        <div className="mt-6">
+          <CreateCountDialog />
+        </div>
+      )}
+    </div>
+  )
+}

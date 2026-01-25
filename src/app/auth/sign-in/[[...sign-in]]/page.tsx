@@ -1,12 +1,5 @@
 import SignInViewPage from '@/entities/auth/auth/ui/sign-in-view'
 
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Авторизация',
-  description: 'Вход в систему',
-}
-
-export default async function Page() {
+export default function Page() {
   return <SignInViewPage />
 }

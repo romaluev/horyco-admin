@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -34,6 +35,7 @@ import {
 const AUTO_REFRESH_INTERVAL = 60000 // 60 seconds
 
 export default function InventoryDashboardPage() {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
   const searchParams = useSearchParams()
   const warehouseIdParam = searchParams.get('warehouseId')
@@ -103,13 +105,13 @@ export default function InventoryDashboardPage() {
       <div className="flex flex-1 flex-col space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <Heading
-            title="Управление складом"
-            description="Контроль остатков, движений и уведомлений"
+            title={t('pages.dashboard.title')}
+            description={t('pages.dashboard.description')}
           />
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>
-                Обновлено{' '}
+                {t('pages.dashboard.updated')}{' '}
                 {formatDistanceToNow(lastRefresh, { addSuffix: true, locale: ru })}
               </span>
               <Button
@@ -128,7 +130,7 @@ export default function InventoryDashboardPage() {
               disabled={isWarehousesLoading || !warehouses?.length}
             >
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Выберите склад" />
+                <SelectValue placeholder={t('pages.dashboard.selectWarehouse')} />
               </SelectTrigger>
               <SelectContent>
                 {warehouses?.map((warehouse) => (

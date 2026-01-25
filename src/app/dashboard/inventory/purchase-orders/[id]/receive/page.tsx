@@ -1,8 +1,6 @@
-'use client'
+import { useState } from 'react'
 
-import { use, useState } from 'react'
-
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
@@ -59,13 +57,12 @@ const receiveSchema = z.object({
 type ReceiveFormValues = z.infer<typeof receiveSchema>
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
-export default function ReceivePage({ params }: PageProps) {
-  const resolvedParams = use(params)
+export default function ReceivePage({ id: paramId }: PageProps) {
   const router = useRouter()
-  const id = parseInt(resolvedParams.id)
+  const id = parseInt(paramId)
 
   const { data: order, isLoading, error } = usePurchaseOrderById(id)
   const receiveMutation = useReceivePurchaseOrder()

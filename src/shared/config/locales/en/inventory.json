@@ -1,0 +1,566 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "Get started with inventory",
+    "description": "Add items to warehouse to get started",
+    "steps": {
+      "addItems": "Add items to warehouse"
+    }
+  },
+  "warehouses": {
+    "title": "Warehouses",
+    "description": "Manage warehouses"
+  },
+  "items": {
+    "title": "Items",
+    "description": "Manage warehouse items"
+  },
+  "stock": {
+    "title": "Stock",
+    "description": "View item stock levels"
+  },
+  "movements": {
+    "title": "Movements",
+    "description": "Item movement history"
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "description": "Manage suppliers"
+  },
+  "recipes": {
+    "title": "Recipes",
+    "description": "Manage recipes"
+  },
+  "purchaseOrders": {
+    "title": "Purchase Orders",
+    "description": "Manage purchase orders"
+  },
+  "writeoffs": {
+    "title": "Writeoffs",
+    "description": "Manage item writeoffs"
+  },
+  "inventoryCounts": {
+    "title": "Inventory Counts",
+    "description": "Conduct inventory counts"
+  },
+  "production": {
+    "title": "Production",
+    "description": "Manage production"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "description": "Low stock alerts"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Inventory Management",
+      "description": "Control stock levels, movements and alerts",
+      "selectWarehouse": "Select warehouse",
+      "updated": "Updated",
+      "refresh": "Refresh"
+    },
+    "stock": {
+      "title": "Stock Levels by Warehouses",
+      "description": "View current stock levels",
+      "selectWarehouse": "Select warehouse",
+      "selectCategory": "Category",
+      "allWarehouses": "All warehouses",
+      "allCategories": "All categories",
+      "allProducts": "All products",
+      "lowStock": "Low stock",
+      "outOfStock": "Out of stock",
+      "searchProduct": "Search products...",
+      "export": "Export",
+      "selectWarehouseMessage": "Select warehouse to view stock"
+    },
+    "warehouses": {
+      "title": "Warehouses",
+      "description": "Manage warehouses and their settings",
+      "searchWarehouse": "Search warehouse...",
+      "allStatuses": "All statuses",
+      "active": "Active",
+      "inactive": "Inactive",
+      "notFound": "Warehouses not found",
+      "noWarehouses": "No warehouses",
+      "tryChanging": "Try changing search parameters",
+      "createFirst": "Create your first warehouse to start managing inventory.",
+      "columnName": "Name",
+      "columnBranch": "Branch",
+      "columnItems": "Items",
+      "columnCost": "Cost",
+      "columnStatus": "Status",
+      "columnActions": "Actions",
+      "stockLink": "Stock",
+      "active": "Active",
+      "inactive": "Inactive",
+      "branchNumber": "Branch #"
+    },
+    "items": {
+      "title": "Inventory Items",
+      "description": "Manage raw materials and semi-finished goods nomenclature",
+      "searchItems": "Search by name, SKU, barcode...",
+      "allCategories": "All categories",
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive",
+      "allTypes": "All types",
+      "raw": "Raw materials",
+      "semiFinished": "Semi-finished goods",
+      "import": "Import CSV",
+      "notFound": "Items not found",
+      "noItems": "No items",
+      "tryChanging": "Try changing search parameters",
+      "addItems": "Add items to get started"
+    },
+    "itemDetail": {
+      "backToList": "Back to list",
+      "active": "Active",
+      "inactive": "Inactive",
+      "semiFinished": "Semi-finished",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete item?",
+      "deleteDescription": "This action cannot be undone. The item will be permanently deleted. Make sure there are no active stock balances for this item.",
+      "basicInfo": "Basic information",
+      "name": "Name",
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "category": "Category",
+      "unit": "Unit",
+      "stockLevels": "Stock levels",
+      "minLevel": "Min level",
+      "maxLevel": "Max level",
+      "reorderPoint": "Reorder point",
+      "reorderQuantity": "Reorder quantity",
+      "additional": "Additional",
+      "shelfLife": "Shelf life",
+      "days": "days",
+      "taxRate": "Tax rate",
+      "trackable": "Trackable",
+      "yes": "Yes",
+      "no": "No",
+      "created": "Created",
+      "notes": "Notes",
+      "conversions": "Unit conversions",
+      "addConversion": "Add conversion",
+      "noConversions": "No configured unit conversions",
+      "addConversionsInfo": "Add conversions to convert between units",
+      "fromUnit": "From unit",
+      "toUnit": "To unit",
+      "factor": "Factor",
+      "note": "Note",
+      "deleteConversion": "Delete conversion?",
+      "conversionDescription": "Conversion"
+    },
+    "production": {
+      "title": "Production",
+      "description": "Semi-finished products production orders",
+      "searchOrder": "Search by number or product...",
+      "allStatuses": "All statuses",
+      "allWarehouses": "All warehouses",
+      "selectDate": "Select date",
+      "planned": "Planned",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "columnNumber": "Number",
+      "columnProduct": "Product",
+      "columnQuantity": "Quantity",
+      "columnStatus": "Status",
+      "columnDate": "Scheduled date",
+      "open": "Open",
+      "notFound": "Orders not found",
+      "noOrders": "No production orders",
+      "tryChanging": "Try changing search parameters or filters.",
+      "createOrder": "Create a production order from recipes.",
+      "delete": "Delete"
+    },
+    "recipes": {
+      "title": "Recipes",
+      "description": "Product recipes and cost price",
+      "searchRecipe": "Search recipe...",
+      "allStatuses": "All statuses",
+      "active": "Active",
+      "inactive": "Inactive",
+      "allTypes": "All types",
+      "products": "Products",
+      "modifiers": "Modifiers",
+      "semiFinished": "Semi-finished",
+      "unlinked": "Unlinked",
+      "columnRecipe": "Recipe",
+      "columnProduct": "Product",
+      "columnCost": "Cost price",
+      "columnMargin": "Margin",
+      "columnStatus": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "open": "Open",
+      "notFound": "Recipes not found",
+      "noRecipes": "No recipes",
+      "tryChanging": "Try changing search parameters or filters.",
+      "createRecipe": "Create recipes to track cost and automatic writeoff."
+    },
+    "purchaseOrders": {
+      "title": "Purchase Orders",
+      "description": "Manage purchases and goods receipt",
+      "searchOrder": "Search by number...",
+      "allSuppliers": "All suppliers",
+      "allStatuses": "All statuses",
+      "allWarehouses": "All warehouses",
+      "columnNumber": "Number",
+      "columnSupplier": "Supplier",
+      "columnWarehouse": "Warehouse",
+      "columnAmount": "Amount",
+      "columnExpected": "Expected",
+      "columnStatus": "Status",
+      "open": "Open",
+      "notFound": "Orders not found",
+      "noOrders": "No orders",
+      "tryChanging": "Try changing search parameters or filters.",
+      "createOrder": "Create a purchase order to replenish the warehouse."
+    },
+    "purchaseOrderDetail": {
+      "back": "Back",
+      "addProduct": "Add product",
+      "send": "Send",
+      "receive": "Receive goods",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteConfirm": "Delete order?",
+      "deleteDescription": "This action is irreversible. Order will be deleted.",
+      "dates": "Dates",
+      "orderDate": "Order date",
+      "expected": "Expected",
+      "received": "Received",
+      "amounts": "Amounts",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "tax": "Tax",
+      "total": "Total",
+      "info": "Information",
+      "warehouse": "Warehouse",
+      "currency": "Currency",
+      "note": "Note",
+      "items": "Items",
+      "receivedHistory": "Receipt history",
+      "cancellation": "Cancellation reason",
+      "cancelled": "Cancelled"
+    },
+    "purchaseOrderReceive": {
+      "header": "Goods Receipt",
+      "back": "Back",
+      "orderInfo": "Order information",
+      "supplier": "Supplier",
+      "warehouse": "Warehouse",
+      "orderDate": "Order date",
+      "expectedDate": "Expected date",
+      "receiveDate": "Receipt date",
+      "date": "Date",
+      "previousReceipts": "Previous receipts",
+      "itemsToReceive": "Items to receive",
+      "specifyQuantity": "Specify actual quantity and price for each item",
+      "columnItem": "Item",
+      "columnOrdered": "Ordered",
+      "columnReceived": "Received",
+      "columnRemaining": "Remaining",
+      "columnToReceive": "Accept",
+      "columnPrice": "Price",
+      "priceVariance": "Price variance",
+      "note": "Note",
+      "commentToReceipt": "Comment to receipt...",
+      "summary": "Summary",
+      "itemsToReceive": "Items to receive",
+      "totalQuantity": "Total quantity",
+      "amount": "Amount",
+      "actions": "Actions",
+      "cancel": "Cancel",
+      "confirm": "Confirm receipt",
+      "confirmDialog": "Confirm receipt?",
+      "confirmMessage": "You are about to receive goods:",
+      "confirmMessageInfo": "This will update warehouse balances and recalculate average cost.",
+      "fullyReceived": "Order fully received",
+      "allReceived": "All items for this order have already been received."
+    },
+    "suppliers": {
+      "title": "Suppliers",
+      "description": "Manage suppliers and their product catalogs",
+      "searchSupplier": "Search supplier...",
+      "allStatuses": "All statuses",
+      "active": "Active",
+      "inactive": "Inactive",
+      "columnSupplier": "Supplier",
+      "columnContact": "Contact",
+      "columnItems": "Items",
+      "columnOrders": "Orders",
+      "columnLastOrder": "Last order",
+      "open": "Open",
+      "notFound": "Suppliers not found",
+      "noSuppliers": "No suppliers",
+      "tryChanging": "Try changing search parameters or filters.",
+      "addSuppliers": "Add suppliers to manage purchases and prices."
+    },
+    "writeoffs": {
+      "title": "Writeoffs",
+      "description": "Item writeoff acts",
+      "searchOrder": "Search by number...",
+      "allStatuses": "All statuses",
+      "allReasons": "All reasons",
+      "columnNumber": "Number",
+      "columnDate": "Date",
+      "columnReason": "Reason",
+      "columnItems": "Items",
+      "columnAmount": "Amount",
+      "columnStatus": "Status",
+      "open": "Open",
+      "totalWriteoffs": "Total written off",
+      "pendingApproval": "Awaiting approval",
+      "notFound": "Writeoffs not found",
+      "noWriteoffs": "No writeoffs",
+      "tryChanging": "Try changing search parameters or filters.",
+      "createWriteoff": "Create a writeoff act to account for losses."
+    },
+    "alerts": {
+      "title": "Stock Notifications",
+      "description": "Manage low stock and critical notifications",
+      "selectWarehouse": "Select warehouse",
+      "selectType": "Type",
+      "selectStatus": "Status",
+      "allTypes": "All types",
+      "outOfStock": "Out of stock",
+      "lowStock": "Low stock",
+      "overstock": "Overstock",
+      "expiringKoon": "Expiring soon",
+      "unread": "Unread",
+      "read": "Read",
+      "all": "All",
+      "markAllAsRead": "Mark all as read",
+      "selectWarehouseMessage": "Select warehouse to view notifications",
+      "outOfStockCount": "Out of stock",
+      "lowStockCount": "Low stock",
+      "overstockCount": "Overstock",
+      "expiringCount": "Expiring",
+      "everythingOk": "Everything is fine",
+      "noNotifications": "No active notifications for selected warehouse",
+      "critical": "Critical",
+      "warnings": "Warnings",
+      "current": "Current",
+      "minimum": "Minimum",
+      "order": "Order",
+      "stock": "Stock",
+      "confirm": "Confirm",
+      "read": "Read"
+    },
+    "movements": {
+      "title": "Movement History",
+      "description": "View history of all warehouse movements",
+      "export": "Export",
+      "selectWarehouse": "Select warehouse",
+      "selectItem": "Select item",
+      "selectType": "Select type",
+      "selectDateRange": "Date range",
+      "purchases": "Purchases",
+      "sales": "Sales",
+      "writeoffs": "Writeoffs",
+      "adjustments": "Adjustments",
+      "page": "Page",
+      "of": "of",
+      "records": "records"
+    },
+    "counts": {
+      "title": "Inventory Counts",
+      "description": "Count and reconcile actual balances",
+      "searchOrder": "Search by number...",
+      "allStatuses": "All statuses",
+      "allTypes": "All types",
+      "allWarehouses": "All warehouses",
+      "columnNumber": "Number",
+      "columnDate": "Date",
+      "columnType": "Type",
+      "columnItems": "Items",
+      "columnVariance": "Variance",
+      "columnStatus": "Status",
+      "open": "Open",
+      "notFound": "Counts not found",
+      "noCounts": "No inventory counts",
+      "tryChanging": "Try changing search parameters or filters.",
+      "conductCount": "Conduct an inventory count to reconcile actual balances."
+    }
+  },
+  "components": {
+    "warehouseForm": {
+      "create": {
+        "trigger": "Add warehouse",
+        "title": "Add warehouse",
+        "nameLabel": "Name *",
+        "namePlaceholder": "Main warehouse",
+        "codeLabel": "Code",
+        "codePlaceholder": "WH-001",
+        "branchLabel": "Branch *",
+        "branchPlaceholder": "Select branch",
+        "activeLabel": "Active",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    },
+    "inventoryItemForm": {
+      "create": {
+        "title": "Add item",
+        "trigger": "Add item"
+      },
+      "delete": {
+        "title": "Delete item?",
+        "description": "This action cannot be undone. The item will be deleted permanently. Make sure there are no active balances for this item.",
+        "cancel": "Cancel",
+        "submit": "Delete"
+      }
+    },
+    "inventoryItemWorkflow": {
+      "edit": {
+        "title": "Edit item"
+      },
+      "unitConversion": {
+        "title": "Add conversion",
+        "fromLabel": "From unit",
+        "toLabel": "To unit",
+        "factorLabel": "Factor",
+        "noteLabel": "Note",
+        "cancel": "Cancel",
+        "submit": "Add"
+      }
+    },
+    "supplierForm": {
+      "create": {
+        "trigger": "Add supplier",
+        "title": "Add supplier"
+      },
+      "update": {
+        "title": "Edit supplier"
+      },
+      "delete": {
+        "title": "Delete supplier?",
+        "cancel": "Cancel",
+        "submit": "Delete"
+      }
+    },
+    "purchaseOrderForm": {
+      "create": {
+        "trigger": "Create order",
+        "title": "Create purchase order"
+      }
+    },
+    "purchaseOrderWorkflow": {
+      "send": {
+        "title": "Send order",
+        "submit": "Send"
+      },
+      "receive": {
+        "title": "Receive goods",
+        "submit": "Confirm receipt"
+      },
+      "addItem": {
+        "title": "Add item"
+      },
+      "cancel": {
+        "title": "Cancel order",
+        "submit": "Cancel"
+      }
+    },
+    "recipeForm": {
+      "create": {
+        "trigger": "Create recipe",
+        "title": "Create recipe"
+      }
+    },
+    "recipeWorkflow": {
+      "edit": {
+        "title": "Edit recipe"
+      },
+      "addIngredient": {
+        "title": "Add ingredient"
+      },
+      "editIngredient": {
+        "title": "Edit ingredient"
+      },
+      "duplicate": {
+        "title": "Duplicate recipe"
+      }
+    },
+    "productionForm": {
+      "create": {
+        "trigger": "Create order",
+        "title": "Create production order"
+      }
+    },
+    "productionWorkflow": {
+      "start": {
+        "title": "Start production",
+        "submit": "Start"
+      },
+      "complete": {
+        "title": "Complete production",
+        "submit": "Complete"
+      },
+      "cancel": {
+        "title": "Cancel production",
+        "submit": "Cancel"
+      }
+    },
+    "writeoffForm": {
+      "create": {
+        "trigger": "Create writeoff",
+        "title": "Create writeoff"
+      }
+    },
+    "writeoffWorkflow": {
+      "submit": {
+        "title": "Submit writeoff",
+        "submit": "Submit"
+      },
+      "approve": {
+        "title": "Approve writeoff",
+        "submit": "Approve"
+      },
+      "reject": {
+        "title": "Reject writeoff",
+        "submit": "Reject"
+      },
+      "addItem": {
+        "title": "Add item"
+      }
+    },
+    "inventoryCountForm": {
+      "create": {
+        "trigger": "Create count",
+        "title": "Create inventory count"
+      }
+    },
+    "inventoryCountWorkflow": {
+      "addItem": {
+        "title": "Add item"
+      },
+      "complete": {
+        "title": "Complete count",
+        "submit": "Complete"
+      },
+      "approve": {
+        "title": "Approve results",
+        "submit": "Approve"
+      },
+      "reject": {
+        "title": "Reject results",
+        "submit": "Reject"
+      }
+    },
+    "stockAdjustment": {
+      "adjust": {
+        "title": "Adjust stock",
+        "submit": "Save"
+      }
+    }
+  }
+}

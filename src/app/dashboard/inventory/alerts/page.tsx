@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconBell, IconCheck, IconAlertTriangle, IconPackageOff, IconChecks } from '@tabler/icons-react'
 
@@ -25,19 +26,23 @@ import PageContainer from '@/shared/ui/layout/page-container'
 import { useStockAlerts, useAcknowledgeAlert, useAcknowledgeAllAlerts } from '@/entities/inventory/stock'
 import { WarehouseSelector } from '@/entities/inventory/warehouse'
 
-const alertTypeOptions = [
-  { value: 'all', label: 'Все типы' },
-  { value: 'OUT_OF_STOCK', label: 'Нет в наличии' },
-  { value: 'LOW_STOCK', label: 'Низкий остаток' },
-  { value: 'OVERSTOCK', label: 'Избыточный запас' },
-  { value: 'EXPIRING_SOON', label: 'Скоро истекает срок' },
-]
+function getAlertTypeOptions(t: any) {
+  return [
+    { value: 'all', label: t('pages.alerts.allTypes') },
+    { value: 'OUT_OF_STOCK', label: t('pages.alerts.outOfStock') },
+    { value: 'LOW_STOCK', label: t('pages.alerts.lowStock') },
+    { value: 'OVERSTOCK', label: t('pages.alerts.overstock') },
+    { value: 'EXPIRING_SOON', label: t('pages.alerts.expiringKoon') },
+  ]
+}
 
-const statusOptions = [
-  { value: 'unacknowledged', label: 'Непрочитанные' },
-  { value: 'acknowledged', label: 'Прочитанные' },
-  { value: 'all', label: 'Все' },
-]
+function getStatusOptions(t: any) {
+  return [
+    { value: 'unacknowledged', label: t('pages.alerts.unread') },
+    { value: 'acknowledged', label: t('pages.alerts.read') },
+    { value: 'all', label: t('pages.alerts.all') },
+  ]
+}
 
 function getAlertIcon(alertType: string) {
   if (alertType === 'OUT_OF_STOCK') {
@@ -56,6 +61,7 @@ function getAlertBadgeVariant(
 }
 
 export default function AlertsPage() {
+  const { t } = useTranslation('inventory')
   const [warehouseId, setWarehouseId] = useState<number | undefined>()
   const [alertType, setAlertType] = useState<string>('all')
   const [status, setStatus] = useState<string>('unacknowledged')
@@ -89,13 +95,16 @@ export default function AlertsPage() {
     expiring: alerts?.filter((a) => a.alertType === 'EXPIRING_SOON').length || 0,
   }
 
+  const alertTypeOptions = getAlertTypeOptions(t)
+  const statusOptions = getStatusOptions(t)
+
   return (
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Уведомления о запасах"
-            description="Управление уведомлениями о низких остатках и критических ситуациях"
+            title={t('pages.alerts.title')}
+            description={t('pages.alerts.description')}
           />
           {warehouseId && hasUnacknowledged && (
             <Button
@@ -104,7 +113,7 @@ export default function AlertsPage() {
               disabled={isAcknowledgingAll}
             >
               <IconChecks className="mr-2 h-4 w-4" />
-              Прочитать все
+              {t('pages.alerts.markAllAsRead')}
             </Button>
           )}
         </div>
@@ -116,11 +125,11 @@ export default function AlertsPage() {
             value={warehouseId}
             onChange={setWarehouseId}
             showAll
-            placeholder="Выберите склад"
+            placeholder={t('pages.alerts.selectWarehouse')}
           />
           <Select value={alertType} onValueChange={setAlertType}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Тип" />
+              <SelectValue placeholder={t('pages.alerts.selectType')} />
             </SelectTrigger>
             <SelectContent>
               {alertTypeOptions.map((option) => (
@@ -132,7 +141,7 @@ export default function AlertsPage() {
           </Select>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Статус" />
+              <SelectValue placeholder={t('pages.alerts.selectStatus')} />
             </SelectTrigger>
             <SelectContent>
               {statusOptions.map((option) => (
@@ -148,9 +157,9 @@ export default function AlertsPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <IconBell className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">Выберите склад</h3>
+              <h3 className="text-lg font-medium">{t('pages.alerts.selectWarehouse')}</h3>
               <p className="text-muted-foreground mt-1">
-                Выберите склад для просмотра уведомлений
+                {t('pages.alerts.selectWarehouseMessage')}
               </p>
             </CardContent>
           </Card>
@@ -160,7 +169,7 @@ export default function AlertsPage() {
             <div className="grid gap-4 md:grid-cols-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>Нет в наличии</CardDescription>
+                  <CardDescription>{t('pages.alerts.outOfStockCount')}</CardDescription>
                   <CardTitle className="text-2xl text-destructive">
                     {alertSummary.outOfStock}
                   </CardTitle>
@@ -168,7 +177,7 @@ export default function AlertsPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>Низкий остаток</CardDescription>
+                  <CardDescription>{t('pages.alerts.lowStockCount')}</CardDescription>
                   <CardTitle className="text-2xl text-yellow-500">
                     {alertSummary.lowStock}
                   </CardTitle>
@@ -176,7 +185,7 @@ export default function AlertsPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>Избыточный запас</CardDescription>
+                  <CardDescription>{t('pages.alerts.overstockCount')}</CardDescription>
                   <CardTitle className="text-2xl text-blue-500">
                     {alertSummary.overstock}
                   </CardTitle>
@@ -184,7 +193,7 @@ export default function AlertsPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>Истекает срок</CardDescription>
+                  <CardDescription>{t('pages.alerts.expiringCount')}</CardDescription>
                   <CardTitle className="text-2xl text-yellow-500">
                     {alertSummary.expiring}
                   </CardTitle>
@@ -203,9 +212,9 @@ export default function AlertsPage() {
               <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                   <IconChecks className="h-12 w-12 text-green-500 mb-4" />
-                  <h3 className="text-lg font-medium">Все в порядке</h3>
+                  <h3 className="text-lg font-medium">{t('pages.alerts.everythingOk')}</h3>
                   <p className="text-muted-foreground mt-1">
-                    Нет активных уведомлений для выбранного склада
+                    {t('pages.alerts.noNotifications')}
                   </p>
                 </CardContent>
               </Card>
@@ -217,7 +226,7 @@ export default function AlertsPage() {
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base flex items-center gap-2 text-destructive">
                         <IconPackageOff className="h-4 w-4" />
-                        Критические ({alerts.filter((a) => a.alertType === 'OUT_OF_STOCK').length})
+                        {t('pages.alerts.critical')} ({alerts.filter((a) => a.alertType === 'OUT_OF_STOCK').length})
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -239,7 +248,7 @@ export default function AlertsPage() {
                                   </Badge>
                                 </div>
                                 <p className="text-sm text-muted-foreground">
-                                  {alert.warehouse?.name} • Текущий:{' '}
+                                  {alert.warehouse?.name} • {t('pages.alerts.current')}{' '}
                                   <span
                                     className={
                                       alert.currentValue <= 0 ? 'text-destructive font-medium' : ''
@@ -247,16 +256,16 @@ export default function AlertsPage() {
                                   >
                                     {alert.currentValue}
                                   </span>
-                                  , Минимум: {alert.threshold}
+                                  , {t('pages.alerts.minimum')}: {alert.threshold}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
                                 <Link
-                                  href={`/dashboard/inventory/purchase-orders?itemId=${alert.itemId}`}
+                                  to={`/dashboard/inventory/purchase-orders?itemId=${alert.itemId}` as any}
                                 >
-                                  Заказать
+                                  {t('pages.alerts.order')}
                                 </Link>
                               </Button>
                               {!alert.isAcknowledged && (
@@ -265,7 +274,7 @@ export default function AlertsPage() {
                                   size="icon"
                                   onClick={() => handleAcknowledge(alert.id)}
                                   disabled={isAcknowledging}
-                                  title="Подтвердить"
+                                  title={t('pages.alerts.confirm')}
                                 >
                                   <IconCheck className="h-4 w-4" />
                                 </Button>
@@ -288,7 +297,7 @@ export default function AlertsPage() {
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base flex items-center gap-2 text-yellow-600">
                         <IconAlertTriangle className="h-4 w-4" />
-                        Предупреждения (
+                        {t('pages.alerts.warnings')} (
                         {
                           alerts.filter(
                             (a) =>
@@ -323,19 +332,19 @@ export default function AlertsPage() {
                                       alert.alertType}
                                   </Badge>
                                   {alert.isAcknowledged && (
-                                    <Badge variant="secondary">Прочитано</Badge>
+                                    <Badge variant="secondary">{t('pages.alerts.read')}</Badge>
                                   )}
                                 </div>
                                 <p className="text-sm text-muted-foreground">
-                                  {alert.warehouse?.name} • Текущий: {alert.currentValue},
-                                  Минимум: {alert.threshold}
+                                  {alert.warehouse?.name} • {t('pages.alerts.current')}: {alert.currentValue},
+                                  {t('pages.alerts.minimum')}: {alert.threshold}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
-                                <Link href={`/dashboard/inventory/stock?itemId=${alert.itemId}`}>
-                                  Остатки
+                                <Link to={`/dashboard/inventory/stock?itemId=${alert.itemId}` as any}>
+                                  {t('pages.alerts.stock')}
                                 </Link>
                               </Button>
                               {!alert.isAcknowledged && (
@@ -344,7 +353,7 @@ export default function AlertsPage() {
                                   size="icon"
                                   onClick={() => handleAcknowledge(alert.id)}
                                   disabled={isAcknowledging}
-                                  title="Подтвердить"
+                                  title={t('pages.alerts.confirm')}
                                 >
                                   <IconCheck className="h-4 w-4" />
                                 </Button>

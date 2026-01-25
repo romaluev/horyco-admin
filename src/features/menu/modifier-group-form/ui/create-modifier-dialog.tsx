@@ -9,6 +9,7 @@ import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -46,6 +47,7 @@ export const CreateModifierDialog = ({
   trigger,
 }: CreateModifierDialogProps) => {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation('menu')
   const { mutate: createModifier, isPending } = useCreateModifier()
 
   const form = useForm<ModifierFormValues>({
@@ -72,13 +74,13 @@ export const CreateModifierDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger || <Button size="sm">Добавить модификатор</Button>}
+        {trigger || <Button size="sm">{t('modifiers.create.trigger')}</Button>}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Добавить модификатор</DialogTitle>
+          <DialogTitle>{t('modifiers.create.title')}</DialogTitle>
           <DialogDescription>
-            Создайте новый модификатор в группе
+            {t('modifiers.create.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -92,9 +94,9 @@ export const CreateModifierDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название</FormLabel>
+                  <FormLabel>{t('modifiers.create.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Кетчуп" {...field} />
+                    <Input placeholder={t('modifiers.create.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,10 +108,10 @@ export const CreateModifierDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('modifiers.create.form.description.label')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Классический томатный кетчуп"
+                      placeholder={t('modifiers.create.form.description.placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -123,17 +125,17 @@ export const CreateModifierDialog = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена (UZS)</FormLabel>
+                  <FormLabel>{t('modifiers.create.form.price.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="20"
+                      placeholder={t('modifiers.create.form.price.placeholder')}
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormDescription>
-                    Дополнительная стоимость модификатора
+                    {t('modifiers.create.form.price.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -145,7 +147,7 @@ export const CreateModifierDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Порядок сортировки</FormLabel>
+                  <FormLabel>{t('modifiers.create.form.sortOrder.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -154,7 +156,7 @@ export const CreateModifierDialog = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Порядок отображения модификатора в списке
+                    {t('modifiers.create.form.sortOrder.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -167,9 +169,9 @@ export const CreateModifierDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Активен</FormLabel>
+                    <FormLabel>{t('modifiers.create.form.isActive.label')}</FormLabel>
                     <FormDescription>
-                      Модификатор доступен для выбора
+                      {t('modifiers.create.form.isActive.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -188,10 +190,10 @@ export const CreateModifierDialog = ({
                 variant="outline"
                 onClick={() => setOpen(false)}
               >
-                Отмена
+                {t('modifiers.create.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('modifiers.create.form.actions.saving') : t('modifiers.create.form.actions.save')}
               </Button>
             </div>
           </form>

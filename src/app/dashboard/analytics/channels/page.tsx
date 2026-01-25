@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -64,6 +65,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function ChannelsAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
   const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
@@ -113,7 +115,7 @@ export default function ChannelsAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="channels"
-      title="Каналы продаж"
+      title={t('channels.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -134,7 +136,10 @@ export default function ChannelsAnalyticsPage() {
 
           {/* Summary */}
           <div className="mt-4 text-sm text-muted-foreground">
-            Всего: {formatPrice(data.totalRevenue ?? 0)} ({(data.totalOrders ?? 0).toLocaleString('ru-RU')} заказов)
+            {t('channels.summary', {
+              revenue: formatPrice(data.totalRevenue ?? 0),
+              orders: (data.totalOrders ?? 0).toLocaleString('ru-RU'),
+            })}
           </div>
         </>
       ) : null}
@@ -159,6 +164,8 @@ function ChannelsTable({
   sortDirection,
   onSort,
 }: IChannelsTableProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
@@ -166,14 +173,14 @@ function ChannelsTable({
           <TableRow>
             <SortableHeader
               column="label"
-              label="Канал"
+              label={t('channels.table.channel')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="orders"
-              label="Заказов"
+              label={t('channels.table.orders')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -181,7 +188,7 @@ function ChannelsTable({
             />
             <SortableHeader
               column="revenue"
-              label="Выручка"
+              label={t('channels.table.revenue')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -189,7 +196,7 @@ function ChannelsTable({
             />
             <SortableHeader
               column="revenueShare"
-              label="Доля"
+              label={t('channels.table.share')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -197,20 +204,20 @@ function ChannelsTable({
             />
             <SortableHeader
               column="avgCheck"
-              label="Ср. чек"
+              label={t('channels.table.avgCheck')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead className="text-right">{t('channels.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {channels.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                Нет данных для отображения
+                {t('channels.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
@@ -351,17 +358,19 @@ function SortableHeader({
 // ============================================
 
 function ChannelsTableSkeleton() {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Канал</TableHead>
-            <TableHead className="text-right">Заказов</TableHead>
-            <TableHead className="text-right">Выручка</TableHead>
-            <TableHead className="text-right">Доля</TableHead>
-            <TableHead className="text-right">Ср. чек</TableHead>
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead>{t('channels.table.channel')}</TableHead>
+            <TableHead className="text-right">{t('channels.table.orders')}</TableHead>
+            <TableHead className="text-right">{t('channels.table.revenue')}</TableHead>
+            <TableHead className="text-right">{t('channels.table.share')}</TableHead>
+            <TableHead className="text-right">{t('channels.table.avgCheck')}</TableHead>
+            <TableHead className="text-right">{t('channels.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

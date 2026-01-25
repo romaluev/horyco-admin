@@ -1,20 +1,15 @@
+'use client'
+
 import { Suspense } from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import logo from '@/shared/assets/logo.png'
 
 import StaffInviteForm from '@/entities/auth/auth/ui/staff-invite-form'
-
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Активация аккаунта сотрудника',
-  description: 'Активируйте ваш аккаунт сотрудника Horyco',
-}
 
 function StaffInviteFormFallback() {
   return (
@@ -25,10 +20,12 @@ function StaffInviteFormFallback() {
 }
 
 export default function StaffInvitePage() {
+  const { t } = useTranslation('onboarding')
+
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden rounded-2xl"
           src={logo}
           alt="Horyco"
@@ -41,30 +38,30 @@ export default function StaffInvitePage() {
           </Suspense>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Уже есть аккаунт?{' '}
+            {t('pages.staffInvite.title')} {' '}
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in" search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
-              Войти
+              {t('pages.staffInvite.description')}
             </Link>
           </p>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Активируя аккаунт, вы соглашаетесь с{' '}
-            <Link
-              href="/terms"
+            {t('pages.staffInvite.title')} {' '}
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Условиями использования
-            </Link>{' '}
+            </a>{' '}
             и{' '}
-            <Link
-              href="/privacy"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Политикой конфиденциальности
-            </Link>
+            </a>
             .
           </p>
         </div>

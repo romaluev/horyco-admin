@@ -1,6 +1,7 @@
 'use client'
 
 import { useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import {
   FormControl,
@@ -20,6 +21,7 @@ import {
 import { useGetCategories } from '@/entities/menu/category'
 
 export const ProductFormCategory = () => {
+  const { t } = useTranslation('menu')
   const form = useFormContext()
   const { data: categories = [] } = useGetCategories()
 
@@ -29,7 +31,7 @@ export const ProductFormCategory = () => {
       name="categoryId"
       render={({ field }) => (
         <FormItem className="md:col-span-3">
-          <FormLabel>Категория</FormLabel>
+          <FormLabel>{t('products.form.category.label')}</FormLabel>
           <div className="w-full">
             <Select
               onValueChange={(value) => {
@@ -41,7 +43,7 @@ export const ProductFormCategory = () => {
             >
               <FormControl>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Выберите категорию" />
+                  <SelectValue placeholder={t('products.form.category.placeholder')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>

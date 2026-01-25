@@ -1,6 +1,6 @@
 'use client'
 
-import { parseAsInteger, useQueryState } from 'nuqs'
+import { useSearch } from '@tanstack/react-router'
 
 import BaseLoading from '@/shared/ui/base-loading'
 
@@ -9,8 +9,9 @@ import { useGetAllBranches } from '../model'
 import { columns } from './branch-tables/columns'
 
 export default function BranchListingPage() {
-  const [size] = useQueryState('perPage', parseAsInteger.withDefault(10))
-  const [page] = useQueryState('page', parseAsInteger.withDefault(1))
+  const search = useSearch({ strict: false }) as { perPage?: number; page?: number }
+  const size = search.perPage ?? 10
+  const page = search.page ?? 1
 
   // API uses 0-indexed pages
   const { data: branches, isLoading, error } = useGetAllBranches({ size, page: page - 1 })

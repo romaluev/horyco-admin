@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconClipboardList } from '@tabler/icons-react'
 import { format } from 'date-fns'
@@ -164,7 +164,7 @@ export default function PurchaseOrdersPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/purchase-orders/${order.id}`}>
+                        <Link to={`/dashboard/inventory/purchase-orders/${order.id}` as any}>
                           Открыть
                         </Link>
                       </Button>

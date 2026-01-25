@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconChefHat } from '@tabler/icons-react'
 
@@ -38,6 +39,7 @@ type StatusFilter = 'all' | 'active' | 'inactive'
 type LinkedFilter = 'all' | 'product' | 'modifier' | 'semi-finished' | 'unlinked'
 
 export default function RecipesPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [linkedFilter, setLinkedFilter] = useState<LinkedFilter>('all')
@@ -69,7 +71,7 @@ export default function RecipesPage() {
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
-          <Heading title="Техкарты" description="Рецепты и себестоимость продуктов" />
+          <Heading title={t('pages.recipes.title')} description={t('pages.recipes.description')} />
           <CreateRecipeDialog />
         </div>
         <Separator />
@@ -172,7 +174,7 @@ export default function RecipesPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/recipes/${recipe.id}`}>Открыть</Link>
+                        <Link to={`/dashboard/inventory/recipes/${recipe.id}` as any}>Открыть</Link>
                       </Button>
                     </TableCell>
                   </TableRow>

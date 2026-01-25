@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   AlertCircle,
@@ -11,6 +11,7 @@ import {
   PartyPopper,
   XCircle,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Badge } from '@/shared/ui/base/badge'
@@ -32,6 +33,7 @@ import {
 
 export default function CompletePage() {
   const router = useRouter()
+  const { t } = useTranslation('onboarding')
 
   // Validate step access but skip automatic redirect on completion
   // The complete page manages its own success state and user-initiated redirect
@@ -74,17 +76,17 @@ export default function CompletePage() {
       skippedSteps={progress?.skippedSteps || []}
       title={
         isError
-          ? 'Ошибка завершения'
+          ? t('pages.complete.titleError')
           : isCompleted
-            ? 'Поздравляем!'
-            : 'Завершение настройки'
+            ? t('pages.complete.titleSuccess')
+            : t('pages.complete.title')
       }
       description={
         isError
-          ? 'Произошла ошибка при завершении настройки'
+          ? t('pages.complete.descriptionError')
           : isCompleted
-            ? 'Ваш ресторан готов к запуску'
-            : 'Подождите, система активируется...'
+            ? t('pages.complete.descriptionSuccess')
+            : t('pages.complete.descriptionLoading')
       }
     >
       {isProgressLoading || isCompleting ? (
@@ -96,7 +98,7 @@ export default function CompletePage() {
             <AlertDescription>
               {(error as { response?: { data?: { message?: string } } })
                 ?.response?.data?.message ||
-                'Не удалось завершить настройку. Попробуйте снова.'}
+                t('pages.complete.buttons.error')}
             </AlertDescription>
           </Alert>
           <div className="mt-6 flex justify-center gap-4">
@@ -104,10 +106,10 @@ export default function CompletePage() {
               variant="outline"
               onClick={() => router.push('/onboarding/staff-invite')}
             >
-              Назад
+              {t('pages.complete.buttons.back')}
             </Button>
             <Button onClick={() => completeOnboarding()}>
-              Попробовать снова
+              {t('pages.complete.buttons.retry')}
             </Button>
           </div>
         </>
@@ -121,9 +123,9 @@ export default function CompletePage() {
                   <PartyPopper className="text-primary h-8 w-8" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">Все готово!</CardTitle>
+                  <CardTitle className="text-2xl">{t('pages.complete.successBanner.title')}</CardTitle>
                   <CardDescription className="mt-1 text-base">
-                    Система активирована и готова к приёму заказов
+                    {t('pages.complete.successBanner.description')}
                   </CardDescription>
                 </div>
               </div>
@@ -133,7 +135,7 @@ export default function CompletePage() {
           {/* Completion Summary */}
           <Card>
             <CardHeader>
-              <CardTitle>Что было настроено</CardTitle>
+              <CardTitle>{t('pages.complete.completionSummary')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -141,12 +143,7 @@ export default function CompletePage() {
                   <div key={step} className="flex items-center gap-3">
                     <CheckCircle2 className="text-primary h-5 w-5" />
                     <span className="capitalize">
-                      {step === 'registration_complete' && 'Регистрация'}
-                      {step === 'business_identity' && 'Информация о бизнесе'}
-                      {step === 'branch_setup' && 'Настройка филиала'}
-                      {step === 'menu_template' && 'Шаблон меню'}
-                      {step === 'staff_invited' && 'Приглашение персонала'}
-                      {step === 'go_live' && 'Запуск системы'}
+                      {t(`pages.complete.steps.${step}`)}
                     </span>
                   </div>
                 ))}
@@ -155,7 +152,7 @@ export default function CompletePage() {
                   completionData.skippedSteps.length > 0 && (
                     <div className="border-t pt-3">
                       <p className="text-muted-foreground mb-2 text-sm font-medium">
-                        Пропущенные шаги:
+                        {t('pages.complete.skippedSteps')}
                       </p>
                       {completionData.skippedSteps.map((step) => (
                         <div key={step} className="flex items-center gap-3">
@@ -174,9 +171,9 @@ export default function CompletePage() {
           {/* Next Steps */}
           <Card>
             <CardHeader>
-              <CardTitle>Следующие шаги</CardTitle>
+              <CardTitle>{t('pages.complete.nextSteps')}</CardTitle>
               <CardDescription>
-                Рекомендуем выполнить эти действия для полноценной работы
+                {t('pages.complete.nextStepsDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -197,8 +194,8 @@ export default function CompletePage() {
                           }
                         >
                           {nextStep.priority === 'high'
-                            ? 'Важно'
-                            : 'Рекомендуется'}
+                            ? t('pages.complete.priority.high')
+                            : t('pages.complete.priority.recommended')}
                         </Badge>
                       </div>
                     </div>
@@ -207,7 +204,7 @@ export default function CompletePage() {
                       size="sm"
                       onClick={() => router.push(nextStep.link)}
                     >
-                      Перейти
+                      {t('pages.complete.goToNextStep')}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
@@ -219,7 +216,7 @@ export default function CompletePage() {
           {/* Action Buttons */}
           <div className="flex justify-center">
             <Button size="lg" onClick={handleGoToDashboard}>
-              Начать работу
+              {t('pages.complete.buttons.start')}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react'
 
 import { Badge } from '@/shared/ui/base/badge'
@@ -19,112 +20,114 @@ import { PieGraph } from './pie-graph'
 import { RecentSales } from './recent-sales'
 
 export default function OverViewPage() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <PageContainer>
       <div className="flex flex-1 flex-col space-y-2">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">
-            Hi, Welcome back 👋
+            {t('widgets.overview.greeting')}
           </h2>
           <div className="hidden items-center space-x-2 md:flex">
-            <Button>Download</Button>
+            <Button>{t('widgets.overview.download')}</Button>
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="overview">{t('widgets.overview.tabs.overview')}</TabsTrigger>
             <TabsTrigger value="analytics" disabled>
-              Analytics
+              {t('widgets.overview.tabs.analytics')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>Total Revenue</CardDescription>
+                  <CardDescription>{t('widgets.overview.kpiCards.totalRevenue.title')}</CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                    $1,250.00
+                    {t('widgets.overview.kpiCards.totalRevenue.value')}
                   </CardTitle>
                   <CardAction>
                     <Badge variant="outline">
                       <IconTrendingUp />
-                      +12.5%
+                      {t('widgets.overview.kpiCards.totalRevenue.trend')}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    Trending up this month <IconTrendingUp className="size-4" />
+                    {t('widgets.overview.kpiCards.totalRevenue.description')} <IconTrendingUp className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
-                    Visitors for the last 6 months
+                    {t('widgets.overview.kpiCards.totalRevenue.subdescription')}
                   </div>
                 </CardFooter>
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>New Customers</CardDescription>
+                  <CardDescription>{t('widgets.overview.kpiCards.newCustomers.title')}</CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                    1,234
+                    {t('widgets.overview.kpiCards.newCustomers.value')}
                   </CardTitle>
                   <CardAction>
                     <Badge variant="outline">
                       <IconTrendingDown />
-                      -20%
+                      {t('widgets.overview.kpiCards.newCustomers.trend')}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    Down 20% this period <IconTrendingDown className="size-4" />
+                    {t('widgets.overview.kpiCards.newCustomers.description')} <IconTrendingDown className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
-                    Acquisition needs attention
+                    {t('widgets.overview.kpiCards.newCustomers.subdescription')}
                   </div>
                 </CardFooter>
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>Active Accounts</CardDescription>
+                  <CardDescription>{t('widgets.overview.kpiCards.activeAccounts.title')}</CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                    45,678
+                    {t('widgets.overview.kpiCards.activeAccounts.value')}
                   </CardTitle>
                   <CardAction>
                     <Badge variant="outline">
                       <IconTrendingUp />
-                      +12.5%
+                      {t('widgets.overview.kpiCards.activeAccounts.trend')}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    Strong user retention <IconTrendingUp className="size-4" />
+                    {t('widgets.overview.kpiCards.activeAccounts.description')} <IconTrendingUp className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
-                    Engagement exceed targets
+                    {t('widgets.overview.kpiCards.activeAccounts.subdescription')}
                   </div>
                 </CardFooter>
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>Growth Rate</CardDescription>
+                  <CardDescription>{t('widgets.overview.kpiCards.growthRate.title')}</CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                    4.5%
+                    {t('widgets.overview.kpiCards.growthRate.value')}
                   </CardTitle>
                   <CardAction>
                     <Badge variant="outline">
                       <IconTrendingUp />
-                      +4.5%
+                      {t('widgets.overview.kpiCards.growthRate.trend')}
                     </Badge>
                   </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    Steady performance increase{' '}
+                    {t('widgets.overview.kpiCards.growthRate.description')}{' '}
                     <IconTrendingUp className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
-                    Meets growth projections
+                    {t('widgets.overview.kpiCards.growthRate.subdescription')}
                   </div>
                 </CardFooter>
               </Card>

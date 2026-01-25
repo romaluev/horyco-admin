@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { Copy, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 import {
   Alert,
@@ -48,6 +49,7 @@ export const PermissionsEditorModal = ({
   onPermissionsChange,
   onSave,
 }: PermissionsEditorModalProps) => {
+  const { t } = useTranslation('organization')
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -117,12 +119,12 @@ export const PermissionsEditorModal = ({
       // Notify parent component of permission changes
       onPermissionsChange?.(branchId, selectedPermissions)
 
-      toast.success('Разрешения успешно сохранены')
+      toast.success(t('permissions.saveSuccess'))
       onSave?.()
       onClose()
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Ошибка при сохранении'
+        err instanceof Error ? err.message : t('permissions.saveError')
       setError(errorMessage)
       toast.error(errorMessage)
     } finally {
@@ -149,9 +151,9 @@ export const PermissionsEditorModal = ({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Управление разрешениями</DialogTitle>
+            <DialogTitle>{t('permissions.title')}</DialogTitle>
             <DialogDescription>
-              {`Разрешения для сотрудника в филиале "${branchName}"`}
+              {t('permissions.description', { branchName })}
             </DialogDescription>
           </DialogHeader>
 
@@ -179,7 +181,7 @@ export const PermissionsEditorModal = ({
                   disabled={isSaving}
                 >
                   <Copy className="h-4 w-4 mr-2" />
-                  Скопировать от другого филиала
+                  {t('permissions.copyFromBranch')}
                 </Button>
               )}
 
@@ -187,7 +189,7 @@ export const PermissionsEditorModal = ({
               <div className="space-y-6">
                 {categories.length === 0 ? (
                   <p className="text-muted-foreground text-sm">
-                    Нет доступных разрешений
+                    {t('permissions.noAvailable')}
                   </p>
                 ) : (
                   categories.map((category) => (
@@ -233,8 +235,7 @@ export const PermissionsEditorModal = ({
               {/* Info Box */}
               <div className="rounded-lg bg-muted p-4">
                 <p className="text-sm text-muted-foreground">
-                  Настройте разрешения для этого филиала. Изменения сохранятся при
-                  нажатии кнопки &quot;Сохранить&quot;.
+                  {t('permissions.info')}
                 </p>
               </div>
             </div>
@@ -247,7 +248,7 @@ export const PermissionsEditorModal = ({
               onClick={onClose}
               disabled={isSaving}
             >
-              Отмена
+              {t('common.cancel')}
             </Button>
             <Button
               type="button"
@@ -255,7 +256,7 @@ export const PermissionsEditorModal = ({
               disabled={isSaving || isLoading}
             >
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSaving ? 'Сохранение...' : 'Сохранить'}
+              {isSaving ? t('common.actions.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </DialogContent>

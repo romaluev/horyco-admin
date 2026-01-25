@@ -1,0 +1,413 @@
+{
+  "branches": {
+    "title": "Filiallar",
+    "description": "Tashkilot filiallarini boshqarish",
+    "addNew": "Filial qo'shish",
+    "actions": {
+      "import": "Import",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish"
+    },
+    "detail": {
+      "description": "Filial haqida ma'lumot",
+      "statistics": "Statistika",
+      "statisticsDescription": "Filial samaradorlik ko'rsatgichlari"
+    },
+    "form": {
+      "title": {
+        "create": "Yangi filial yaratish",
+        "edit": "Filialni tahrirlash: {{name}}"
+      },
+      "fields": {
+        "name": {
+          "label": "Filial nomi",
+          "placeholder": "Filial nomini kiriting",
+          "validation": "Filial nomi kamida 2 ta belgiga ega bo'lishi kerak"
+        },
+        "address": {
+          "label": "Manzil",
+          "placeholder": "Filial manzilini kiriting",
+          "validation": "Manzil kamida 5 ta belgiga ega bo'lishi kerak"
+        }
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Nomi",
+        "address": "Manzil",
+        "createdAt": "Yaratilgan",
+        "actions": "Harakatlari"
+      },
+      "search": {
+        "name": "Nomi bo'yicha qidirish...",
+        "address": "Manzil bo'yicha qidirish..."
+      }
+    },
+    "delete": {
+      "title": "Filialni o'chirish?",
+      "description": "Siz filial \"{{name}}\" ni o'chirishga ishonchingiz komilmi? Bu amalni qaytarib bo'lmaydi."
+    },
+    "errors": {
+      "notFound": "Filial topilmadi",
+      "loadError": "Xato: {{message}}"
+    }
+  },
+  "staff": {
+    "title": "Xodimlar",
+    "description": "Xodimlar va ularning ma'lumotlarini boshqarish",
+    "addNew": "Xodim qo'shish",
+    "actions": {
+      "openMenu": "Menyuni ochish",
+      "menuLabel": "Harakatlari"
+    },
+    "states": {
+      "empty": "Xodimlar hali mavjud emas",
+      "loadError": "Xodimlarni yuklab olishda xato"
+    },
+    "form": {
+      "title": {
+        "create": "Yangi xodim yaratish",
+        "edit": "Xodimni tahrirlash: {{name}}"
+      },
+      "fields": {
+        "fullName": {
+          "label": "To'liq ism",
+          "placeholder": "To'liq ismni kiriting",
+          "validation": "Ism kamida 2 ta belgiga ega bo'lishi kerak"
+        },
+        "phone": {
+          "label": "Telefon",
+          "placeholder": "90 123 45 67"
+        },
+        "password": {
+          "label": "Parol",
+          "placeholder": "Parolni kiriting",
+          "validation": "Parol kamida 4 ta belgiga ega bo'lishi kerak"
+        },
+        "confirmPassword": {
+          "label": "Parolni tasdiqlang",
+          "placeholder": "Parolni tasdiqlang"
+        },
+        "branch": {
+          "label": "Filial",
+          "placeholder": "Filialni tanlang"
+        },
+        "photo": {
+          "label": "Profil rasmi"
+        }
+      },
+      "submit": {
+        "create": "Xodim yaratish",
+        "update": "Ma'lumotni yangilash"
+      },
+      "steps": {
+        "basicInfo": "Asosiy ma'lumotlar",
+        "branchesPermissions": "Filiallar va ruxsatnomalar",
+        "step1": "1-bosqich 2 dan",
+        "step2": "2-bosqich 2 dan",
+        "next": "Keyingi"
+      },
+      "title": {
+        "edit": "Xodimni tahrirlash: {{name}}"
+      },
+      "description": {
+        "update": "Xodim {{name}} uchun ma'lumotni yangilang"
+      },
+      "tabs": {
+        "info": "Ma'lumot",
+        "branches": "Filiallar"
+      },
+      "saveChanges": "O'zgarishlarni saqlash"
+    },
+    "table": {
+      "columns": {
+        "fullName": "To'liq ism",
+        "phone": "Telefon",
+        "branch": "Filial",
+        "createdAt": "Yaratilgan",
+        "actions": "Harakatlari"
+      },
+      "search": {
+        "fullName": "Ism bo'yicha qidirish...",
+        "phone": "Telefon bo'yicha qidirish..."
+      }
+    },
+    "delete": {
+      "title": "Xodimni o'chirish?",
+      "description": "Bu amalni qaytarib bo'lmaydi. Xodim {{name}} tizimdan o'chiriladi.",
+      "deleting": "O'chirilmoqda...",
+      "delete": "O'chirish"
+    },
+    "errors": {
+      "notFound": "Xodim topilmadi",
+      "loadError": "Xato: {{message}}"
+    }
+  },
+  "branchForm": {
+    "title": {
+      "create": "Filial yaratish",
+      "edit": "Filialni tahrirlash"
+    },
+    "description": {
+      "create": "Yangi filial haqida ma'lumot to'ldiring",
+      "edit": "Filial ma'lumotlarini yangilang"
+    },
+    "actions": {
+      "create": "Yaratish",
+      "creating": "Yaratilmoqda...",
+      "save": "Saqlash"
+    }
+  },
+  "branches": {
+    "delete": {
+      "title": "Filialni o'chirish?",
+      "cannotDelete": "Filialni o'chira olmaysiz",
+      "confirmMessage": "Siz filial {{name}} ni o'chirishga ishonchingiz komilmi?",
+      "irreversible": "Bu amalni qaytarib bo'lmaydi.",
+      "reasonsMessage": "Bu filial quyidagi sabablarga ko'ra o'chirilib bo'lmaydi:",
+      "deleting": "O'chirilmoqda...",
+      "delete": "O'chirish"
+    }
+  },
+  "paymentSettings": {
+    "title": "To'lov sozlamalari",
+    "description": "To'lov shlyuzlarini sozlang",
+    "saveChanges": "O'zgarishlarni saqlash",
+    "test": "Sinab ko'rish",
+    "testing": "Sinab ko'rilmoqda...",
+    "providers": {
+      "payme": {
+        "description": "PayMe to'lov shlyuzi"
+      },
+      "click": {
+        "description": "Click to'lov shlyuzi"
+      },
+      "uzum": {
+        "description": "Uzum to'lov shlyuzi"
+      }
+    }
+  },
+  "smsSettings": {
+    "title": "SMS Integratsiyasi",
+    "description": "Bildirishnomalarni yuborish uchun SMS provayderini sozlang",
+    "saveChanges": "O'zgarishlarni saqlash",
+    "provider": "SMS Provaydera",
+    "playmobileSettings": "Playmobile Sozlamalari",
+    "eskizSettings": "Eskiz Sozlamalari",
+    "login": "Kirish",
+    "password": "Parol",
+    "senderName": "Yuboruvchi nomi",
+    "testing": "Integratsiyani sinab ko'rish",
+    "sendTest": "Sinov yuborish",
+    "sending": "Yuborilmoqda..."
+  },
+  "permissions": {
+    "title": "Ruxsatnomalarni boshqarish",
+    "description": "Xodim uchun filial {{branchName}} da ruxsatnomalar",
+    "copyFromBranch": "Boshqa filialdan nusxalash",
+    "noAvailable": "Mavjud ruxsatnomalar yo'q",
+    "info": "Ushbu filial uchun ruxsatnomalarni sozlang. O'zgarishlar \"Saqlash\" tugmasini bosganda saqlanadi.",
+    "saveSuccess": "Ruxsatnomalar muvaffaqiyatli saqlandi",
+    "saveError": "Ruxsatnomalarni saqlashda xato"
+  },
+  "halls": {
+    "title": "Zallar",
+    "description": "Tashkilot zallarini boshqarish"
+  },
+  "subscription": {
+    "title": "Obuna boshqaruvi",
+    "status": {
+      "title": "Obuna statusi",
+      "plan": "Rejasi",
+      "paymentFlow": "To'lov usuli",
+      "manual": "Qo'l bo'yicha to'lov",
+      "automatic": "Avtomatik"
+    },
+    "billingPeriod": {
+      "title": "Hisob-kitob davri",
+      "start": "Davr boshlanishi",
+      "end": "Davr tugashi",
+      "daysUntilRenewal": "Yangilashgacha bo'lgan kunlar"
+    },
+    "pricing": {
+      "title": "Obuna narxi",
+      "total": "Jami",
+      "discount": "Chegirma"
+    },
+    "trial": {
+      "title": "Sinov davri",
+      "endsAt": "Sinov davri tugatiladi",
+      "daysRemaining": "kun",
+      "noActiveGoals": "Faol maqsadlar yo'q"
+    },
+    "modules": {
+      "title": "Faol modullar",
+      "trial": "Sinov davri",
+      "daysRemaining": "kun",
+      "monthly": "/oy"
+    },
+    "loadError": "Obunani yuklab olishda xato"
+  },
+  "moduleCatalog": {
+    "loadError": "Modul katalogini yuklab olishda xato",
+    "active": "Faol",
+    "free": "Bepul",
+    "trial": "kun sinov",
+    "features": "XUSUSIYATLAR",
+    "dependencies": "Talab qilinadigan modullar",
+    "sections": {
+      "plans": "Rejalar",
+      "coreModules": "Asosiy modullar",
+      "addons": "Qo'shimchalar"
+    },
+    "actions": {
+      "alreadyActivated": "Allaqachon faollashtirilgan",
+      "add": "Qo'shish",
+      "unavailable": "Mavjud emas"
+    }
+  },
+  "paymentsHistory": {
+    "loadError": "To'lov tarixini yuklab olishda xato",
+    "summary": {
+      "title": "To'lovlar xulasos",
+      "totalPaid": "Jami to'langan",
+      "paymentsCount": "To'lovlar soni",
+      "lastPayment": "Oxirgi to'lov"
+    },
+    "table": {
+      "receiptNumber": "Kvitansiya raqami",
+      "paymentType": "To'lov turi",
+      "amount": "Miqdor",
+      "date": "Sana",
+      "status": "Holat",
+      "cash": "Naqd pul",
+      "bankTransfer": "Bank o'tkazuvchisi",
+      "card": "Karta",
+      "verified": "Tekshirilgan",
+      "pending": "Kutilmoqda",
+      "noPayments": "To'lovlar topilmadi"
+    }
+  },
+  "branding": {
+    "title": "Brending sozlamalari",
+    "identity": "Brend identifikatsiyasi",
+    "colors": "Ranglar",
+    "socialMedia": "Ijtimoiy media",
+    "contact": "Aloqa ma'lumotlari",
+    "fields": {
+      "brandName": "Brend nomi",
+      "brandNameRequired": "Brend nomi *",
+      "description": "Tavsifi",
+      "logo": "Logotip",
+      "logoDark": "Logotip (qora rejim)",
+      "favicon": "Favicon",
+      "primaryColor": "Asosiy rang",
+      "secondaryColor": "Ikkinchi rang",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "website": "Veb-sayt",
+      "phone": "Telefon",
+      "email": "Email",
+      "address": "Manzil",
+      "current": "Joriy"
+    },
+    "placeholders": {
+      "brandName": "Mening restorani",
+      "description": "Sizning biznes tavsifi",
+      "facebook": "https://facebook.com/myrestaurant",
+      "instagram": "@myrestaurant",
+      "telegram": "@myrestaurant",
+      "website": "https://myrestaurant.com",
+      "phone": "+998 90 123 45 67",
+      "email": "info@myrestaurant.com",
+      "address": "Jismoniy manzil"
+    },
+    "uploadError": "Fayllarni yuklab olishda xato",
+    "saving": "Saqlanmoqda...",
+    "saveChanges": "O'zgarishlarni saqlash"
+  },
+  "theme": {
+    "title": "Rang sxemasi",
+    "description": "Asosiy interfeys rangini tanlang",
+    "colors": {
+      "default": "Standart",
+      "blue": "Ko'k",
+      "green": "Yashil",
+      "amber": "Sherozi"
+    },
+    "placeholder": "Rangni tanlang"
+  },
+  "employee": {
+    "form": {
+      "basicInfo": {
+        "fullName": "To'liq ism",
+        "fullNameRequired": "To'liq ism *",
+        "phone": "Telefon",
+        "phoneRequired": "Telefon *",
+        "email": "Email",
+        "password": "Parol",
+        "passwordRequired": "Parol *",
+        "passwordPlaceholder": "Minimal 6 ta belgi",
+        "birthDate": "Tug'ilgan sana",
+        "photo": "Profil rasmi"
+      },
+      "placeholders": {
+        "fullName": "To'liq ismni kiriting",
+        "email": "example@example.com",
+        "phone": "90 123 45 67"
+      }
+    }
+  },
+  "common": {
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "add": "Qo'shish",
+    "close": "Yopish",
+    "loading": "Yuklab olinmoqda...",
+    "error": "Xato",
+    "success": "Muvaffaqiyat",
+    "confirm": "Tasdiqlash",
+    "back": "Orqaga",
+    "details": "Tafsilotlar"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Filiallar",
+      "title": "Filiallar",
+      "description": "Tashkilot filiallarini boshqarish",
+      "actions": {
+        "import": "Import",
+        "addNew": "Filial qo'shish"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Yuklab olinmoqda",
+      "notFoundTitle": "Filial topilmadi",
+      "notFoundMessage": "Filial topilmadi",
+      "description": "Filial haqida ma'lumot",
+      "actions": {
+        "edit": "Tahrirlash",
+        "delete": "O'chirish"
+      },
+      "statistics": {
+        "title": "Statistika",
+        "description": "Filial samaradorlik ko'rsatgichlari"
+      }
+    },
+    "employees": {
+      "pageTitle": "Xodimlar",
+      "title": "Xodimlar",
+      "description": "Xodimlar va ularning ma'lumotlarini boshqarish",
+      "states": {
+        "empty": "Xodimlar hali mavjud emas",
+        "loadError": "Xodimlarni yuklab olishda xato"
+      }
+    },
+    "settings": {
+      "pageTitle": "Sozlamalar"
+    }
+  }
+}

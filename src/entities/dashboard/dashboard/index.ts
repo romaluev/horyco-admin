@@ -56,10 +56,10 @@ export { dashboardKeys } from './model/query-keys'
 // Constants
 export {
   KPI_CONFIG,
-  KPI_LABELS,
+  KPI_LABEL_KEYS,
   CURRENCY_METRICS,
   WIDGET_CONFIG,
-  WIDGET_CATEGORY_LABELS,
+  WIDGET_CATEGORY_LABEL_KEYS,
   CHART_TYPE_OPTIONS,
   DEMO_CHART_DATA,
   DEMO_RADAR_DATA,
@@ -67,6 +67,9 @@ export {
   PRIMARY_COLOR,
   getWidgetsByCategory,
 } from './model/constants'
+
+// Re-export aliases for backwards compatibility
+export { KPI_LABEL_KEYS as KPI_LABELS, WIDGET_CATEGORY_LABEL_KEYS as WIDGET_CATEGORY_LABELS } from './model/constants'
 
 export type {
   IKpiConfig,

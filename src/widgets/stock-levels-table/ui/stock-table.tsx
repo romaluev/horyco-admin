@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { format } from 'date-fns'
@@ -114,7 +114,7 @@ export const StockTable = ({ items }: IStockTableProps) => {
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/inventory/movements?itemId=${stock.itemId}`}>
+                        <Link to={`/dashboard/inventory/movements?itemId=${stock.itemId}` as any}>
                           История
                         </Link>
                       </Button>

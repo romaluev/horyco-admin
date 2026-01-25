@@ -20,6 +20,7 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable'
 import { IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { KpiType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
@@ -49,6 +50,7 @@ export function KpiTab({
   activeKpiId,
   onActiveKpiIdChange,
 }: IKpiTabProps) {
+  const { t } = useTranslation('dashboard')
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -168,7 +170,7 @@ export function KpiTab({
                             <Icon className={cn('size-4', config.color)} />
                           </div>
                           <div>
-                            <p className="font-medium">{config.label}</p>
+                            <p className="font-medium">{t(config.labelKey)}</p>
                             <p className="text-xs text-muted-foreground">Нажмите для добавления</p>
                           </div>
                         </div>

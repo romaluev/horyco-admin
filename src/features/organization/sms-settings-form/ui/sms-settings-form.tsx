@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -75,6 +76,7 @@ const convertToFormData = (
 }
 
 export const SmsSettingsForm = () => {
+  const { t } = useTranslation('organization')
   const { data: smsSettings, isLoading } = useSmsSettings()
   const { mutate: updateSettings, isPending } = useUpdateSmsSettings()
   const { mutate: testIntegration, isPending: isTesting } = useTestIntegration()
@@ -120,9 +122,9 @@ export const SmsSettingsForm = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>SMS Интеграция</CardTitle>
+                <CardTitle>{t('smsSettings.title')}</CardTitle>
                 <CardDescription>
-                  Настройте SMS-провайдера для отправки уведомлений
+                  {t('smsSettings.description')}
                 </CardDescription>
               </div>
               <FormField
@@ -147,7 +149,7 @@ export const SmsSettingsForm = () => {
               name="smsProvider"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Провайдер SMS</FormLabel>
+                  <FormLabel>{t('smsSettings.provider')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -157,13 +159,13 @@ export const SmsSettingsForm = () => {
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="playmobile" id="playmobile" />
                         <Label htmlFor="playmobile" className="cursor-pointer">
-                          Playmobile
+                          {'Playmobile'}
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="eskiz" id="eskiz" />
                         <Label htmlFor="eskiz" className="cursor-pointer">
-                          Eskiz
+                          {'Eskiz'}
                         </Label>
                       </div>
                     </RadioGroup>
@@ -175,14 +177,14 @@ export const SmsSettingsForm = () => {
 
             {selectedProvider === 'playmobile' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">Настройки Playmobile</h4>
+                <h4 className="font-medium">{t('smsSettings.playmobileSettings')}</h4>
 
                 <FormField
                   control={form.control}
                   name="playmobileLogin"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Логин</FormLabel>
+                      <FormLabel>{t('smsSettings.login')}</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="your_login" />
                       </FormControl>
@@ -198,7 +200,7 @@ export const SmsSettingsForm = () => {
                     <FormItem>
                       <FormControl>
                         <SecretInput
-                          label="Пароль"
+                          label={t('smsSettings.password')}
                           value={field.value}
                           onChange={field.onChange}
                           isMasked={isPlaymobilePasswordMasked}
@@ -215,7 +217,7 @@ export const SmsSettingsForm = () => {
                   name="playmobileSender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Имя отправителя</FormLabel>
+                      <FormLabel>{t('smsSettings.senderName')}</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Horyco" />
                       </FormControl>
@@ -228,7 +230,7 @@ export const SmsSettingsForm = () => {
 
             {selectedProvider === 'eskiz' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">Настройки Eskiz</h4>
+                <h4 className="font-medium">{t('smsSettings.eskizSettings')}</h4>
 
                 <FormField
                   control={form.control}
@@ -255,7 +257,7 @@ export const SmsSettingsForm = () => {
                     <FormItem>
                       <FormControl>
                         <SecretInput
-                          label="Пароль"
+                          label={t('smsSettings.password')}
                           value={field.value}
                           onChange={field.onChange}
                           isMasked={isEskizPasswordMasked}
@@ -272,7 +274,7 @@ export const SmsSettingsForm = () => {
                   name="eskizSender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Имя отправителя</FormLabel>
+                      <FormLabel>{t('smsSettings.senderName')}</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Horyco" />
                       </FormControl>
@@ -284,7 +286,7 @@ export const SmsSettingsForm = () => {
             )}
 
             <div className="space-y-2">
-              <Label>Тестирование интеграции</Label>
+              <Label>{t('smsSettings.testing')}</Label>
               <div className="flex gap-2">
                 <PhoneInput
                   value={testPhone}
@@ -299,7 +301,7 @@ export const SmsSettingsForm = () => {
                   onClick={handleTest}
                   disabled={isTesting || !form.watch('smsEnabled')}
                 >
-                  {isTesting ? 'Отправка...' : 'Отправить тест'}
+                  {isTesting ? t('smsSettings.sending') : t('smsSettings.sendTest')}
                 </Button>
               </div>
             </div>
@@ -308,7 +310,7 @@ export const SmsSettingsForm = () => {
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending ? 'Сохранение...' : 'Сохранить изменения'}
+            {isPending ? t('common.actions.saving') : t('smsSettings.saveChanges')}
           </Button>
         </div>
       </form>

@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -65,6 +66,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function PaymentsAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('amount')
   const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
@@ -116,7 +118,7 @@ export default function PaymentsAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="payments"
-      title="Способы оплаты"
+      title={t('payments.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -138,7 +140,10 @@ export default function PaymentsAnalyticsPage() {
           {/* Summary */}
           <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
             <span>
-              Всего: {formatPrice(data.summary?.totalAmount ?? 0)} ({(data.summary?.totalTransactions ?? 0).toLocaleString('ru-RU')} транзакций)
+              {t('payments.summary', {
+                amount: formatPrice(data.summary?.totalAmount ?? 0),
+                count: data.summary?.totalTransactions ?? 0,
+              })}
             </span>
             {data.summary?.changes && <ChangeSummary changes={data.summary.changes} />}
           </div>
@@ -165,6 +170,8 @@ function PaymentsTable({
   sortDirection,
   onSort,
 }: IPaymentsTableProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
@@ -172,14 +179,14 @@ function PaymentsTable({
           <TableRow>
             <SortableHeader
               column="label"
-              label="Способ оплаты"
+              label={t('payments.table.method')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="transactions"
-              label="Транзакций"
+              label={t('payments.table.transactions')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -187,7 +194,7 @@ function PaymentsTable({
             />
             <SortableHeader
               column="amount"
-              label="Сумма"
+              label={t('payments.table.amount')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -195,7 +202,7 @@ function PaymentsTable({
             />
             <SortableHeader
               column="share"
-              label="Доля"
+              label={t('payments.table.share')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -203,7 +210,7 @@ function PaymentsTable({
             />
             <SortableHeader
               column="avgAmount"
-              label="Средняя сумма"
+              label={t('payments.table.avgAmount')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -215,7 +222,7 @@ function PaymentsTable({
           {methods.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                Нет данных для отображения
+                {t('payments.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
@@ -290,12 +297,14 @@ interface IChangeSummaryProps {
 }
 
 function ChangeSummary({ changes }: IChangeSummaryProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="flex items-center gap-4">
-      <ChangeChip label="Всего" value={changes?.total ?? 0} />
-      <ChangeChip label="Наличные" value={changes?.cash ?? 0} />
-      <ChangeChip label="Карты" value={changes?.card ?? 0} />
-      <ChangeChip label="Онлайн" value={changes?.online ?? 0} />
+      <ChangeChip label={t('payments.summary_label.total')} value={changes?.total ?? 0} />
+      <ChangeChip label={t('payments.summary_label.cash')} value={changes?.cash ?? 0} />
+      <ChangeChip label={t('payments.summary_label.card')} value={changes?.card ?? 0} />
+      <ChangeChip label={t('payments.summary_label.online')} value={changes?.online ?? 0} />
     </div>
   )
 }
@@ -375,16 +384,18 @@ function SortableHeader({
 // ============================================
 
 function PaymentsTableSkeleton() {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Способ оплаты</TableHead>
-            <TableHead className="text-right">Транзакций</TableHead>
-            <TableHead className="text-right">Сумма</TableHead>
-            <TableHead className="text-right">Доля</TableHead>
-            <TableHead className="text-right">Средняя сумма</TableHead>
+            <TableHead>{t('payments.table.method')}</TableHead>
+            <TableHead className="text-right">{t('payments.table.transactions')}</TableHead>
+            <TableHead className="text-right">{t('payments.table.amount')}</TableHead>
+            <TableHead className="text-right">{t('payments.table.share')}</TableHead>
+            <TableHead className="text-right">{t('payments.table.avgAmount')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconBuilding, IconUsers } from '@tabler/icons-react'
 
@@ -54,7 +54,7 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
       </CardContent>
       <CardFooter className="flex gap-2">
         <Button asChild variant="default" size="sm" className="flex-1">
-          <Link href={`/dashboard/halls/${hall.id}/floor-plan`}>
+          <Link to={`/dashboard/halls/${hall.id}/floor-plan` as any}>
             View Этаж Plan
           </Link>
         </Button>

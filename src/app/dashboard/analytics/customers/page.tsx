@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -44,6 +45,7 @@ import type {
 // ============================================
 
 export default function CustomersAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.LAST_30_DAYS)
   const [activeTab, setActiveTab] = React.useState('overview')
 
@@ -55,16 +57,16 @@ export default function CustomersAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="customers"
-      title="Клиенты"
+      title={t('customers.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="overview">Обзор</TabsTrigger>
-          <TabsTrigger value="rfm">RFM анализ</TabsTrigger>
-          <TabsTrigger value="cohorts">Когорты</TabsTrigger>
+          <TabsTrigger value="overview">{t('customers.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="rfm">{t('customers.tabs.rfm')}</TabsTrigger>
+          <TabsTrigger value="cohorts">{t('customers.tabs.cohorts')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">
@@ -92,6 +94,7 @@ interface ICustomerOverviewTabProps {
 }
 
 function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
+  const { t } = useTranslation('analytics')
   const { data, isLoading, error, refetch } = useCustomerOverview({
     period: { type: period },
   })
@@ -122,41 +125,41 @@ function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
     <div className="space-y-6">
       {/* Summary Metrics */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <MetricCard label="Всего клиентов" value={totalCustomers} />
-        <MetricCard label="Активные" value={activeCustomers} />
-        <MetricCard label="Новые" value={newCustomers} />
-        <MetricCard label="Возвратные" value={returningCustomers} />
-        <MetricCard label="Отток" value={churnedCustomers} />
+        <MetricCard label={t('customers.overview.totalCustomers')} value={totalCustomers} />
+        <MetricCard label={t('customers.overview.active')} value={activeCustomers} />
+        <MetricCard label={t('customers.overview.new')} value={newCustomers} />
+        <MetricCard label={t('customers.overview.returning')} value={returningCustomers} />
+        <MetricCard label={t('customers.overview.churned')} value={churnedCustomers} />
       </div>
 
       {/* Key Metrics */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          label="Активность"
+          label={t('customers.overview.activityRate')}
           value={`${(activeRate ?? 0).toFixed(1)}%`}
         />
         <MetricCard
-          label="Удержание"
+          label={t('customers.overview.retentionRate')}
           value={`${(retentionRate ?? 0).toFixed(1)}%`}
         />
         <MetricCard
-          label="Отток"
+          label={t('customers.overview.churnRate')}
           value={`${(churnRate ?? 0).toFixed(1)}%`}
         />
         <MetricCard
-          label="Ср. выручка/клиент"
+          label={t('customers.overview.avgRevenuePerCustomer')}
           value={formatPrice(avgRevenuePerCustomer)}
         />
       </div>
 
       {/* Segments Table */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Сегменты клиентов</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('customers.overview.segments')}</h3>
         {segments.length > 0 ? (
           <SegmentsTable segments={segments} />
         ) : (
           <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-            Нет данных о сегментах
+            {t('customers.overview.noSegmentData')}
           </div>
         )}
       </div>
@@ -169,6 +172,7 @@ function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
 // ============================================
 
 function RfmAnalysisTab() {
+  const { t } = useTranslation('analytics')
   const { data, isLoading, error, refetch } = useRfmAnalysis({
     lookbackDays: 365,
   })
@@ -184,19 +188,19 @@ function RfmAnalysisTab() {
     <div className="space-y-6">
       {/* RFM Segments Table */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">RFM сегменты</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('customers.rfm.segments')}</h3>
         {segments.length > 0 ? (
           <RfmSegmentsTable segments={segments} />
         ) : (
           <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-            Нет данных для RFM анализа
+            {t('customers.rfm.noData')}
           </div>
         )}
       </div>
 
       {/* RFM Distribution */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Распределение RFM</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('customers.rfm.distribution')}</h3>
         <RfmDistribution distribution={distribution} />
       </div>
     </div>
@@ -208,6 +212,7 @@ function RfmAnalysisTab() {
 // ============================================
 
 function CohortAnalysisTab() {
+  const { t } = useTranslation('analytics')
   const { data, isLoading, error, refetch } = useCohortAnalysis({
     months: 6,
   })
@@ -223,23 +228,23 @@ function CohortAnalysisTab() {
     <div className="space-y-6">
       {/* Cohort Grid */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Удержание по когортам</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('customers.cohorts.retention')}</h3>
         {cohorts.length > 0 ? (
           <CohortGrid cohorts={cohorts} />
         ) : (
           <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-            Нет данных для когортного анализа
+            {t('customers.cohorts.noData')}
           </div>
         )}
       </div>
 
       {/* Average Retention */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Среднее удержание</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('customers.cohorts.avgRetention')}</h3>
         <div className="grid gap-4 sm:grid-cols-3">
-          <MetricCard label="1 месяц" value={`${(avgRetention.period1 ?? 0).toFixed(1)}%`} />
-          <MetricCard label="3 месяца" value={`${(avgRetention.period3 ?? 0).toFixed(1)}%`} />
-          <MetricCard label="6 месяцев" value={`${(avgRetention.period6 ?? 0).toFixed(1)}%`} />
+          <MetricCard label={t('customers.cohorts.period1')} value={`${(avgRetention.period1 ?? 0).toFixed(1)}%`} />
+          <MetricCard label={t('customers.cohorts.period3')} value={`${(avgRetention.period3 ?? 0).toFixed(1)}%`} />
+          <MetricCard label={t('customers.cohorts.period6')} value={`${(avgRetention.period6 ?? 0).toFixed(1)}%`} />
         </div>
       </div>
     </div>
@@ -275,15 +280,16 @@ interface ISegmentsTableProps {
 }
 
 function SegmentsTable({ segments }: ISegmentsTableProps) {
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Сегмент</TableHead>
-            <TableHead className="text-right">Количество</TableHead>
-            <TableHead className="text-right">Доля</TableHead>
-            <TableHead className="text-right">Выручка</TableHead>
+            <TableHead>{t('customers.table.segment')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.count')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.share')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.revenue')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -310,17 +316,18 @@ interface IRfmSegmentsTableProps {
 }
 
 function RfmSegmentsTable({ segments }: IRfmSegmentsTableProps) {
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Сегмент</TableHead>
-            <TableHead className="text-right">Количество</TableHead>
-            <TableHead className="text-right">Доля</TableHead>
-            <TableHead className="text-center">R</TableHead>
-            <TableHead className="text-center">F</TableHead>
-            <TableHead className="text-center">M</TableHead>
+            <TableHead>{t('customers.table.rfmSegment')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.count')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.share')}</TableHead>
+            <TableHead className="text-center">{t('customers.table.recency')}</TableHead>
+            <TableHead className="text-center">{t('customers.table.frequency')}</TableHead>
+            <TableHead className="text-center">{t('customers.table.monetary')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -385,10 +392,11 @@ interface ICohortGridProps {
 }
 
 function CohortGrid({ cohorts }: ICohortGridProps) {
+  const { t } = useTranslation('analytics')
   if (!cohorts || cohorts.length === 0) {
     return (
       <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-        Нет данных для когортного анализа
+        {t('customers.cohorts.noData')}
       </div>
     )
   }
@@ -400,8 +408,8 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Когорта</TableHead>
-            <TableHead className="text-right">Размер</TableHead>
+            <TableHead>{t('customers.table.cohort')}</TableHead>
+            <TableHead className="text-right">{t('customers.table.size')}</TableHead>
             {Array.from({ length: maxPeriods }).map((_, i) => (
               <TableHead key={i} className="text-center">M{i}</TableHead>
             ))}

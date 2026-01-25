@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { IconPlus } from '@tabler/icons-react'
 import { useForm } from 'react-hook-form'
 
@@ -40,6 +41,7 @@ import { warehouseFormSchema } from '../model/schema'
 import type { WarehouseFormValues } from '../model/schema'
 
 export function CreateWarehouseDialog() {
+  const { t } = useTranslation('inventory')
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: createWarehouse, isPending } = useCreateWarehouse()
   const { data: branches } = useGetAllBranches()
@@ -73,12 +75,12 @@ export function CreateWarehouseDialog() {
       <DialogTrigger asChild>
         <Button>
           <IconPlus className="mr-2 h-4 w-4" />
-          Добавить склад
+          {t('components.warehouseForm.create.trigger')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Добавить склад</DialogTitle>
+          <DialogTitle>{t('components.warehouseForm.create.title')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -87,9 +89,9 @@ export function CreateWarehouseDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название *</FormLabel>
+                  <FormLabel>{t('components.warehouseForm.create.nameLabel')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Основной склад" {...field} />
+                    <Input placeholder={t('components.warehouseForm.create.namePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,9 +103,9 @@ export function CreateWarehouseDialog() {
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Код</FormLabel>
+                  <FormLabel>{t('components.warehouseForm.create.codeLabel')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="WH-001" {...field} />
+                    <Input placeholder={t('components.warehouseForm.create.codePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,14 +117,14 @@ export function CreateWarehouseDialog() {
               name="branchId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Филиал *</FormLabel>
+                  <FormLabel>{t('components.warehouseForm.create.branchLabel')}</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
                     value={field.value?.toString()}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Выберите филиал" />
+                        <SelectValue placeholder={t('components.warehouseForm.create.branchPlaceholder')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -144,7 +146,7 @@ export function CreateWarehouseDialog() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Активен</FormLabel>
+                    <FormLabel>{t('components.warehouseForm.create.activeLabel')}</FormLabel>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -160,10 +162,10 @@ export function CreateWarehouseDialog() {
                 className="flex-1"
                 onClick={() => setIsOpen(false)}
               >
-                Отмена
+                {t('components.warehouseForm.create.cancel')}
               </Button>
               <Button type="submit" className="flex-1" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('components.warehouseForm.create.submitting') : t('components.warehouseForm.create.submit')}
               </Button>
             </div>
           </form>

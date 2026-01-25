@@ -12,6 +12,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconInfoCircle, IconTrendingUp } from '@tabler/icons-react'
 
@@ -30,6 +31,7 @@ import {
 // ============================================
 
 export default function ForecastingPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_MONTH)
 
   const { data, isLoading, error, refetch } = useCashFlow({
@@ -44,7 +46,7 @@ export default function ForecastingPage() {
   return (
     <AnalyticsPageLayout
       pageCode="forecasting"
-      title="Прогнозирование"
+      title={t('forecasting.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -97,6 +99,7 @@ interface IForecastContentProps {
 }
 
 function ForecastContent({ data: rawData }: IForecastContentProps) {
+  const { t } = useTranslation('analytics')
   // Cast to the actual API response structure
   const data = rawData as ICashFlowApiResponse
 
@@ -121,22 +124,22 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
       {/* Cash Flow Summary */}
       <div className="grid gap-4 sm:grid-cols-4">
         <SummaryCard
-          label="Общий приток"
+          label={t('forecasting.cashFlow.totalInflow')}
           value={formatPrice(totalInflow)}
           trend="UP"
         />
         <SummaryCard
-          label="Общий отток"
+          label={t('forecasting.cashFlow.totalOutflow')}
           value={formatPrice(totalOutflow)}
           trend="DOWN"
         />
         <SummaryCard
-          label="Чистый денежный поток"
+          label={t('forecasting.cashFlow.netCashFlow')}
           value={formatPrice(netCashFlow)}
           trend={netCashFlow >= 0 ? 'UP' : 'DOWN'}
         />
         <SummaryCard
-          label="Средний дневной поток"
+          label={t('forecasting.cashFlow.avgDailyFlow')}
           value={formatPrice(averageDailyFlow)}
           trend="UP"
         />
@@ -144,10 +147,10 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
 
       {/* Balance Projection */}
       <div className="rounded-lg border p-6">
-        <h3 className="mb-4 text-sm font-medium">Проекция баланса</h3>
+        <h3 className="mb-4 text-sm font-medium">{t('forecasting.balance.title')}</h3>
         <div className="flex items-center justify-between">
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Начальный баланс</div>
+            <div className="text-sm text-muted-foreground">{t('forecasting.balance.opening')}</div>
             <div className="mt-1 text-2xl font-semibold">
               {formatPrice(openingBalance)}
             </div>
@@ -157,7 +160,7 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
             <span className="text-sm">→</span>
           </div>
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Конечный баланс</div>
+            <div className="text-sm text-muted-foreground">{t('forecasting.balance.closing')}</div>
             <div className="mt-1 text-2xl font-semibold">
               {formatPrice(closingBalance)}
             </div>
@@ -168,7 +171,7 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
       {/* Peak Day */}
       {peakDay && (
         <div className="rounded-lg border p-4">
-          <h3 className="mb-2 text-sm font-medium">Пиковый день</h3>
+          <h3 className="mb-2 text-sm font-medium">{t('forecasting.peakDay')}</h3>
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">{new Date(peakDay.date).toLocaleDateString('ru-RU')}</span>
             <span className="text-xl font-semibold text-green-600 dark:text-green-500">
@@ -181,7 +184,7 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
       {/* Daily Flow Table */}
       <div className="rounded-lg border">
         <div className="border-b p-4">
-          <h3 className="text-sm font-medium">Дневной денежный поток (последние 7 дней)</h3>
+          <h3 className="text-sm font-medium">{t('forecasting.dailyFlow')}</h3>
         </div>
         <div className="divide-y">
           {last7Days.map((day, index) => (
@@ -200,14 +203,14 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
                   {day.netFlow >= 0 ? '+' : ''}{formatPrice(day.netFlow)}
                 </span>
                 <span className="text-muted-foreground">
-                  Баланс: {formatPrice(day.runningBalance)}
+                  {t('forecasting.balanceText', { amount: formatPrice(day.runningBalance) })}
                 </span>
               </div>
             </div>
           ))}
           {last7Days.length === 0 && (
             <div className="p-4 text-center text-muted-foreground">
-              Нет данных о дневных потоках
+              {t('forecasting.noFlowData')}
             </div>
           )}
         </div>
@@ -217,7 +220,7 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
       {dailyFlow.length > 7 && (
         <details className="rounded-lg border">
           <summary className="cursor-pointer border-b p-4 font-medium">
-            Показать все дни ({dailyFlow.length} записей)
+            {t('forecasting.allDays', { count: dailyFlow.length })}
           </summary>
           <div className="divide-y">
             {dailyFlow.map((day, index) => (
@@ -250,8 +253,7 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
         <IconInfoCircle className="mt-0.5 size-5 shrink-0 text-blue-600 dark:text-blue-400" />
         <div>
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            Прогноз основан на текущих данных денежного потока за выбранный период.
-            Для более точных прогнозов используйте данные за более длительный период.
+            {t('forecasting.note')}
           </p>
         </div>
       </div>

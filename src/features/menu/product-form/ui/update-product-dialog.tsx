@@ -5,6 +5,8 @@
 
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import {
   Dialog,
   DialogContent,
@@ -26,12 +28,14 @@ export const UpdateProductDialog = ({
   isOpen,
   onClose,
 }: UpdateProductDialogProps) => {
+  const { t } = useTranslation('menu')
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Редактировать продукт</DialogTitle>
-          <DialogDescription>Измените информацию о продукте</DialogDescription>
+          <DialogTitle>{t('products.edit')}</DialogTitle>
+          <DialogDescription>{t('products.form.updateDescription')}</DialogDescription>
         </DialogHeader>
         <UpdateProductForm productId={productId} onSuccess={onClose} />
       </DialogContent>

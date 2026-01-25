@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -43,6 +44,7 @@ interface EditCategoryDialogProps {
 }
 
 export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
+  const { t } = useTranslation('menu')
   const [open, setOpen] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const { mutate: updateCategory, isPending } = useUpdateCategory()
@@ -113,9 +115,9 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Редактировать категорию</DialogTitle>
+          <DialogTitle>{t('categories.form.title.edit')}</DialogTitle>
           <DialogDescription>
-            Внесите изменения в категорию {category.name}
+            {t('categories.editDescription', { name: category.name })}
           </DialogDescription>
         </DialogHeader>
 
@@ -126,9 +128,9 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название *</FormLabel>
+                  <FormLabel>{t('categories.form.name.label')} *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Напитки" {...field} />
+                    <Input placeholder={t('categories.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,10 +142,10 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('categories.form.description.label')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Горячие и холодные напитки"
+                      placeholder={t('categories.form.description.placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -157,7 +159,7 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
               name="parentId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Родительская категория</FormLabel>
+                  <FormLabel>{t('categories.form.parent.label')}</FormLabel>
                   <FormControl>
                     <CategoryParentSelector
                       value={field.value ?? undefined}
@@ -171,7 +173,7 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
             />
 
             <div>
-              <FormLabel className="pb-2">Изображение</FormLabel>
+              <FormLabel className="pb-2">{t('categories.form.image.label')}</FormLabel>
               <ImageUpload
                 value={imageFile}
                 onChange={setImageFile}
@@ -185,9 +187,9 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <FormLabel>Активна</FormLabel>
+                    <FormLabel>{t('categories.form.isActive.label')}</FormLabel>
                     <p className="text-muted-foreground text-sm">
-                      Категория будет доступна в меню
+                      {t('categories.form.isActive.description')}
                     </p>
                   </div>
                   <FormControl>
@@ -207,10 +209,10 @@ export const EditCategoryDialog = ({ category }: EditCategoryDialogProps) => {
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Отмена
+                {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Сохранение...' : 'Сохранить'}
+                {isPending ? t('common.loading') : t('common.save')}
               </Button>
             </div>
           </form>

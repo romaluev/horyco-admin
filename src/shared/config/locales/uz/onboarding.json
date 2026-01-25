@@ -1,0 +1,208 @@
+{
+  "pages": {
+    "businessInfo": {
+      "title": "Biznesing haqida ayting",
+      "description": "Bu ma'lumot tizimni sizning ehtiyojlaringiz bo'yicha sozlashda yordam beradi",
+      "cardTitle": "Biznes Ma'lumoti",
+      "cardDescription": "Restoranning asosiy ma'lumotlarini to'ldiring",
+      "businessName": "Biznesning nomi *",
+      "businessNamePlaceholder": "Golden Dragon Restaurant",
+      "businessNameDescription": "Restoranning rasmiy nomi",
+      "businessType": "Biznes turi *",
+      "businessTypeDescription": "Bu tegishli menu shablonini tanlashda yordam beradi",
+      "businessTypeSelect": "Turni tanlang",
+      "slug": "URL manzili (slug) *",
+      "slugPlaceholder": "golden-dragon",
+      "slugDescription": "Noyob havolani yaratish uchun (masalan: Horyco.uz/golden-dragon). Faqat kichik harflar, raqamlar va defislar.",
+      "logo": "Biznes logotipi",
+      "logoDescription": "Ixtiyoriy. Biznesingizning logotipini yuklang (5 MB gacha)",
+      "currentLogo": "Joriy logotip:",
+      "buttons": {
+        "back": "Orqaga",
+        "next": "Keyingi",
+        "uploading": "Yuklanmoqda...",
+        "saving": "Saqlanmoqda..."
+      }
+    },
+    "branchSetup": {
+      "title": "Filial Sozlash",
+      "description": "Birinchi filialingiz haqida ma'lumot bering",
+      "cardTitle": "Filial Sozlash",
+      "cardDescription": "Birinchi filialingiz haqida ma'lumot bering",
+      "branchName": "Filial nomi *",
+      "branchNamePlaceholder": "Asosiy Filial",
+      "city": "Shahar *",
+      "citySelect": "Shaharni tanlang",
+      "region": "Tuman *",
+      "regionSelect": "Tumanani tanlang",
+      "address": "To'liq manzil *",
+      "addressPlaceholder": "Ко'cha Mustaqillik, 45",
+      "businessHours": {
+        "title": "Ish Vaqti",
+        "description": "Hafta kunlarining har biri uchun ish vaqtini belgilang"
+      },
+      "days": {
+        "monday": "Dushanba",
+        "tuesday": "Seshanba",
+        "wednesday": "Chorshanba",
+        "thursday": "Payshanba",
+        "friday": "Juma",
+        "saturday": "Shanba",
+        "sunday": "Yakshanba"
+      },
+      "serviceTypes": {
+        "title": "Xizmat Turlari",
+        "description": "Mavjud bo'lgan xizmat ko'rsatish usullarini tanlang",
+        "dineIn": "Zailda",
+        "dineInDescription": "Zaildan buyurtma berish mumkin",
+        "takeaway": "O'zingiz olib ketish",
+        "takeawayDescription": "O'zingiz olib ketish mumkin",
+        "delivery": "Yetkazib berish",
+        "deliveryDescription": "Yetkazib berish buyurtmasi berilishi mumkin"
+      },
+      "buttons": {
+        "back": "Orqaga",
+        "continue": "Davom etish"
+      }
+    },
+    "menuTemplate": {
+      "title": "Menu Sozlash",
+      "description": "Taomlarni kategoriyalar bo'yicha tashkil etish",
+      "selected": "Tanlangan:",
+      "category": "kategoriya",
+      "categories": "kategoriya",
+      "categories_4plus": "kategoriya",
+      "dish": "taom",
+      "dishes": "taom",
+      "dishes_4plus": "taom",
+      "createCategory": "Kategoriya yaratish",
+      "emptyState": {
+        "title": "Menu bo'sh",
+        "description": "Kategoriya yaratishdan boshlang, keyin taomlar qo'shing."
+      },
+      "categoryCard": {
+        "selected": "tanlangan"
+      },
+      "productDialog": {
+        "add": "Taom Qo'shish",
+        "addDescription": "Kategoriyaga yangi taom qo'shing",
+        "edit": "Taomni Tahrirlash",
+        "editDescription": "Taomning nomi, narxi yoki tavsifini o'zgartiring",
+        "name": "Nomi *",
+        "namePlaceholder": "Taom nomi",
+        "price": "Narxi (so'm) *",
+        "pricePlaceholder": "25000",
+        "description": "Tavsif",
+        "descriptionPlaceholder": "Taom tavsifi",
+        "cancel": "Bekor qilish",
+        "add_button": "Qo'shish",
+        "save": "Saqlash",
+        "image": "Rasm",
+        "imagePreview": "Rasm ko'rinishi",
+        "imagePlaceholder": "Rasm URLi",
+        "category": "Kategoriya *",
+        "categorySelect": "Kategoriyani tanlang"
+      },
+      "categoryDialog": {
+        "add": "Kategoriya Qo'shish",
+        "addDescription": "Taomlar uchun yangi kategoriya yarating",
+        "edit": "Kategoriyani Tahrirlash",
+        "editDescription": "Kategoriyaning nomi yoki tavsifini o'zgartiring",
+        "name": "Kategoriya nomi *",
+        "namePlaceholder": "Masalan: Oqshomlar",
+        "description": "Tavsif",
+        "descriptionPlaceholder": "Kategoriya tavsifi",
+        "cancel": "Bekor qilish",
+        "create": "Yaratish",
+        "save": "Saqlash"
+      },
+      "addDishButton": "Kategoriyaga taom qo'shish",
+      "buttons": {
+        "back": "Orqaga",
+        "skip": "O'tkazib yuborish",
+        "skip_loading": "O'tkazib yuborilmoqda...",
+        "continue": "Davom etish",
+        "saving": "Saqlanmoqda..."
+      },
+      "errors": {
+        "loadError": "Menu yuklanish xatosi",
+        "loadErrorMessage": "Menu shablonlarini yuklab bo'lmadi. Iltimos sahifani yangilab ko'ring.",
+        "refresh": "Yangilash"
+      }
+    },
+    "complete": {
+      "title": "Biznesing haqida ayting",
+      "titleSuccess": "Tabriklaymiz!",
+      "titleError": "Tugallash Xatosi",
+      "description": "Bu ma'lumot tizimni sizning ehtiyojlaringiz bo'yicha sozlashda yordam beradi",
+      "descriptionSuccess": "Restoraning ishga tushishga tayyor",
+      "descriptionError": "Sozlashni tugatishda xato yuz berdi",
+      "descriptionLoading": "Kuting, tizim faollashtirilyapti...",
+      "successBanner": {
+        "title": "Hammasi tayyor!",
+        "description": "Tizim faolashtirilgan va buyurtmalarni qabul qilishga tayyor"
+      },
+      "completionSummary": "Nima sozlandi",
+      "steps": {
+        "registration_complete": "Ro'yxatdan o'tish",
+        "business_identity": "Biznes Ma'lumoti",
+        "branch_setup": "Filial Sozlash",
+        "menu_template": "Menu Shabloni",
+        "staff_invited": "Xodimlar Taklif Qilingan",
+        "go_live": "Tizim Ishga Tushishi"
+      },
+      "skippedSteps": "O'tkazib yuborilgan qadamlar:",
+      "nextSteps": "Keyingi Qadamlar",
+      "nextStepsDescription": "To'liq ishlashi uchun bu amallarni bajarishni tavsiya etamiz",
+      "priority": {
+        "high": "Muhim",
+        "recommended": "Tavsiya etilgan"
+      },
+      "goToNextStep": "O'tish",
+      "buttons": {
+        "back": "Orqaga",
+        "retry": "Yana urinib ko'ring",
+        "start": "Ishni Boshlash",
+        "error": "Sozlashni tugatishda xato yuz berdi. Iltimos qayta urinib ko'ring."
+      }
+    },
+    "staffInvite": {
+      "title": "Xodimlarni Taklif Qiling",
+      "description": "Buyurtmalarni boshqarish uchun ofitsiantlar qo'shing",
+      "cardTitle": "Jamani Taklif Qiling",
+      "cardDescription": "Restoratingizning ofitsiantlariga SMS taklifnomalarini yuboring",
+      "fullName": "To'liq Ism *",
+      "fullNamePlaceholder": "Anna Petrova",
+      "phone": "Telefon *",
+      "phonePlaceholder": "90 111 11 11",
+      "email": "Email",
+      "emailPlaceholder": "anna@example.com",
+      "emailOptional": "Ixtiyoriy",
+      "permissions": "Kirish Huquqlari",
+      "emptyState": "Hali xodim qo'shilmagan",
+      "addStaff": "Ofitsiant Qo'shish",
+      "staffNumber": "Xodim #{{number}}",
+      "selectPermissions": "Huquqlarni Tanlang ({{count}})",
+      "addMore": "Yana Qo'shish",
+      "skipReason": "Xodimlarni keyinroq qo'shaman",
+      "buttons": {
+        "back": "Orqaga",
+        "skip": "O'tkazib yuborish",
+        "sendInvitations": "Taklifnomalarni Yuborish",
+        "complete": "Tugatish"
+      },
+      "skipDialog": {
+        "title": "Xodimlarni taklif qilishni o'tkazib yuborish?",
+        "description": "Siz jamoani keyinroq \"Xodimlar\" bo'limida taklif qilishingiz mumkin. Hozir siz tizimda mustaqil ravishda ishlashingiz va xodimlarni istalgan vaqtda qo'shishingiz mumkin.",
+        "cancel": "Bekor qilish",
+        "confirm": "O'tkazib yuborish"
+      },
+      "permissionsModal": {
+        "title": "Huquqlarni Boshqarish",
+        "description": "Bu filialda xodim uchun huquqlarni tanlang",
+        "cancel": "Bekor qilish",
+        "save": "Saqlash"
+      }
+    }
+  }
+}

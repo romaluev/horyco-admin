@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconBox, IconCheck } from '@tabler/icons-react'
 
@@ -35,7 +35,7 @@ export const EmptyStockState = ({ hasFilters, onClearFilters }: IEmptyStockState
         Остатки появятся после приёмки первого заказа на закупку.
       </p>
       <Button asChild className="mt-6">
-        <Link href="/dashboard/inventory/purchase-orders">
+        <Link to="/dashboard/inventory/purchase-orders">
           Создать заказ на закупку
         </Link>
       </Button>

@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import { format, parseISO } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 import {
   Area,
   AreaChart,
@@ -57,6 +58,8 @@ export function AnalyticsChart({
   hourStep,
   onHourStepChange,
 }: AnalyticsChartProps) {
+  const { t } = useTranslation('dashboard')
+
   // Форматирование суммы в узбекские сумы - используем статический формат
   const formatCurrency = (amount: number) => {
     // Форматируем вручную, чтобы избежать различий между сервером и клиентом
@@ -178,13 +181,13 @@ export function AnalyticsChart({
   const getMetricTitle = (metric: 'revenue' | 'orders' | 'average') => {
     switch (metric) {
       case 'revenue':
-        return 'Выручка'
+        return t('analytics.revenue')
       case 'orders':
-        return 'Количество заказов'
+        return t('analytics.orders')
       case 'average':
-        return 'Средний чек'
+        return t('analytics.average')
       default:
-        return 'Метрика'
+        return t('analytics.revenue')
     }
   }
 
@@ -198,29 +201,29 @@ export function AnalyticsChart({
 
     switch (metric) {
       case 'revenue':
-        metricText = 'выручки'
+        metricText = t('analytics.revenueMetric')
         break
       case 'orders':
-        metricText = 'количества заказов'
+        metricText = t('analytics.ordersMetric')
         break
       case 'average':
-        metricText = 'среднего чека'
+        metricText = t('analytics.averageMetric')
         break
     }
 
     switch (groupBy) {
       case 'hour':
-        periodText = 'по часам'
+        periodText = t('analytics.byHours')
         break
       case 'day':
-        periodText = 'по дням'
+        periodText = t('analytics.byDays')
         break
       case 'week':
-        periodText = 'по неделям'
+        periodText = t('analytics.byWeeks')
         break
     }
 
-    return `Динамика ${metricText} ${periodText}`
+    return `${t('analytics.dynamics')} ${metricText} ${periodText}`
   }
 
   // Определение цвета графика в зависимости от метрики
@@ -261,9 +264,9 @@ export function AnalyticsChart({
         <CardContent>
           <div className="flex h-[300px] items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground">Нет данных</p>
+              <p className="text-muted-foreground">{t('analytics.noData')}</p>
               <p className="text-muted-foreground text-sm">
-                за выбранный период
+                {t('analytics.forSelectedPeriod')}
               </p>
             </div>
           </div>

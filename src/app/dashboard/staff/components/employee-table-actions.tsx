@@ -2,6 +2,8 @@
 
 import { MoreHorizontal } from 'lucide-react'
 
+import { useTranslation } from 'react-i18next'
+
 import {
   Button,
   DropdownMenu,
@@ -29,16 +31,18 @@ interface EmployeeTableActionsProps {
 export const EmployeeTableActions = ({
   employee,
 }: EmployeeTableActionsProps): JSX.Element => {
+  const { t } = useTranslation('organization')
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">{t('staff.actions.openMenu')}</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="flex flex-col gap-2">
-        <DropdownMenuLabel>Действия</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('staff.actions.menuLabel')}</DropdownMenuLabel>
         <UpdateEmployeeDialog employee={employee} />
         <GeneratePinButton employee={employee} />
         <GenerateInviteLinkButton employee={employee} />

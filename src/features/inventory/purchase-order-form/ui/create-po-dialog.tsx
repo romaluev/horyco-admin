@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { IconPlus } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
@@ -35,6 +36,7 @@ import { purchaseOrderFormSchema } from '../model/schema'
 import type { PurchaseOrderFormValues } from '../model/schema'
 
 export function CreatePODialog() {
+  const { t } = useTranslation('inventory')
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: createPO, isPending } = useCreatePurchaseOrder()
 

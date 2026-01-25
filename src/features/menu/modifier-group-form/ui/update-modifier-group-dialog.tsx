@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -51,6 +52,7 @@ export const UpdateModifierGroupDialog = ({
   isOpen,
   onClose,
 }: UpdateModifierGroupDialogProps) => {
+  const { t } = useTranslation('menu')
   const { mutate: updateGroup, isPending } = useUpdateModifierGroup()
 
   const form = useForm<ModifierGroupFormValues>({
@@ -94,9 +96,9 @@ export const UpdateModifierGroupDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Редактировать группу модификаторов</DialogTitle>
+          <DialogTitle>{t('modifiers.groups.update.title')}</DialogTitle>
           <DialogDescription>
-            Измените параметры группы модификаторов
+            {t('modifiers.groups.update.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -110,9 +112,9 @@ export const UpdateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название</FormLabel>
+                  <FormLabel>{t('modifiers.groups.update.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Соусы" {...field} />
+                    <Input placeholder={t('modifiers.groups.update.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,9 +126,9 @@ export const UpdateModifierGroupDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('modifiers.groups.update.form.description.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Выберите соус к блюду" {...field} />
+                    <Textarea placeholder={t('modifiers.groups.update.form.description.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -139,7 +141,7 @@ export const UpdateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Мин. выбор</FormLabel>
+                    <FormLabel>{t('modifiers.groups.update.form.minSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -148,7 +150,7 @@ export const UpdateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Минимальное кол-во выборов
+                      {t('modifiers.groups.update.form.minSelection.description')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -160,7 +162,7 @@ export const UpdateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Макс. выбор</FormLabel>
+                    <FormLabel>{t('modifiers.groups.update.form.maxSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -169,7 +171,7 @@ export const UpdateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      Максимальное кол-во выборов
+                      {t('modifiers.groups.update.form.maxSelection.description')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -182,7 +184,7 @@ export const UpdateModifierGroupDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Порядок сортировки</FormLabel>
+                  <FormLabel>{t('modifiers.groups.update.form.sortOrder.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -190,7 +192,7 @@ export const UpdateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>Порядок отображения группы</FormDescription>
+                  <FormDescription>{t('modifiers.groups.update.form.sortOrder.description')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -202,9 +204,9 @@ export const UpdateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Обязательно</FormLabel>
+                    <FormLabel>{t('modifiers.groups.update.form.isRequired.label')}</FormLabel>
                     <FormDescription>
-                      Клиент должен выбрать хотя бы один модификатор
+                      {t('modifiers.groups.update.form.isRequired.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -219,10 +221,10 @@ export const UpdateModifierGroupDialog = ({
 
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={onClose}>
-                Отмена
+                {t('modifiers.groups.update.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Обновление...' : 'Обновить'}
+                {isPending ? t('modifiers.groups.update.form.actions.saving') : t('modifiers.groups.update.form.actions.save')}
               </Button>
             </div>
           </form>

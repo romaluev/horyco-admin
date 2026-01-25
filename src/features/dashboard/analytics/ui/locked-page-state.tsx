@@ -8,8 +8,9 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { IconLock } from '@tabler/icons-react'
 
@@ -60,6 +61,7 @@ interface ILockedPageStateProps {
  * ```
  */
 export function LockedPageState({ config, requiredTier }: ILockedPageStateProps) {
+  const { t } = useTranslation('analytics')
   const router = useRouter()
 
   const prompt = requiredTier === 'analytics_full' ? UPGRADE_PROMPTS.ultra : UPGRADE_PROMPTS.pro
@@ -79,14 +81,14 @@ export function LockedPageState({ config, requiredTier }: ILockedPageStateProps)
           </div>
           <CardTitle className="text-xl">{config.title}</CardTitle>
           <CardDescription className="text-base">
-            Эта функция требует план {targetPlan} или выше.
+            {t('lockedPage.requiresPlan', { plan: targetPlan })}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {config.upgradeFeatures.length > 0 && (
             <div className="text-left">
               <p className="mb-3 text-sm font-medium text-muted-foreground">
-                Обновитесь сейчас, чтобы получить:
+                {t('lockedPage.upgradeNow')}
               </p>
               <ul className="space-y-2">
                 {config.upgradeFeatures.map((feature, index) => (
@@ -135,6 +137,7 @@ export function ViewLimitReachedState({
   maxViews,
   onManageViews,
 }: IViewLimitStateProps) {
+  const { t } = useTranslation('analytics')
   const router = useRouter()
 
   const handleUpgrade = () => {
@@ -150,9 +153,7 @@ export function ViewLimitReachedState({
       <div className="space-y-1">
         <h3 className="font-medium">{UPGRADE_PROMPTS.viewLimit.title}</h3>
         <p className="text-sm text-muted-foreground">
-          Вы достигли максимума в {maxViews} представлений на плане PRO.
-          <br />
-          Удалите представление или перейдите на ULTRA для неограниченного количества.
+          {t('lockedPage.viewLimitReached', { maxViews })}
         </p>
       </div>
 
@@ -162,7 +163,7 @@ export function ViewLimitReachedState({
         </Button>
         {onManageViews && (
           <Button variant="outline" onClick={onManageViews} className="w-full">
-            Управление представлениями
+            {t('views.manage')}
           </Button>
         )}
       </div>
@@ -181,6 +182,7 @@ export function ViewLimitReachedState({
  * BASIC users cannot create custom views, only use defaults
  */
 export function ViewsUpgradePrompt() {
+  const { t } = useTranslation('analytics')
   const router = useRouter()
 
   const handleUpgrade = () => {
@@ -191,7 +193,7 @@ export function ViewsUpgradePrompt() {
     <div className="border-t p-3 text-center">
       <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
         <IconLock className="size-4" />
-        <span>Сохраняйте свои представления</span>
+        <span>{t('views.saveViews')}</span>
       </div>
       <Button
         variant="link"
@@ -199,7 +201,7 @@ export function ViewsUpgradePrompt() {
         onClick={handleUpgrade}
         className="mt-1 h-auto p-0 text-sm"
       >
-        Перейти на PRO
+        {t('views.upgrade')}
       </Button>
     </div>
   )

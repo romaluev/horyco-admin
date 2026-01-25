@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -136,7 +136,7 @@ export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps
                     </div>
                     {referenceLink && (
                       <Button asChild variant="outline" size="sm">
-                        <Link href={referenceLink}>
+                        <Link to={referenceLink}>
                           <ExternalLink className="mr-2 h-4 w-4" />
                           Открыть {getReferenceLabel(movement.referenceType).toLowerCase()}
                         </Link>

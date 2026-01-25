@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -48,6 +49,7 @@ export const UpdateModifierDialog = ({
   isOpen,
   onClose,
 }: UpdateModifierDialogProps) => {
+  const { t } = useTranslation('menu')
   const { mutate: updateModifier, isPending } = useUpdateModifier()
 
   const form = useForm<ModifierFormValues>({
@@ -91,8 +93,8 @@ export const UpdateModifierDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Редактировать модификатор</DialogTitle>
-          <DialogDescription>Измените параметры модификатора</DialogDescription>
+          <DialogTitle>{t('modifiers.update.title')}</DialogTitle>
+          <DialogDescription>{t('modifiers.update.description')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -105,9 +107,9 @@ export const UpdateModifierDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название</FormLabel>
+                  <FormLabel>{t('modifiers.update.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Кетчуп" {...field} />
+                    <Input placeholder={t('modifiers.update.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,10 +121,10 @@ export const UpdateModifierDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('modifiers.update.form.description.label')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Классический томатный кетчуп"
+                      placeholder={t('modifiers.update.form.description.placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -136,17 +138,17 @@ export const UpdateModifierDialog = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена (UZS)</FormLabel>
+                  <FormLabel>{t('modifiers.update.form.price.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="20"
+                      placeholder={t('modifiers.update.form.price.placeholder')}
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormDescription>
-                    Дополнительная стоимость модификатора
+                    {t('modifiers.update.form.price.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -158,7 +160,7 @@ export const UpdateModifierDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Порядок сортировки</FormLabel>
+                  <FormLabel>{t('modifiers.update.form.sortOrder.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -167,7 +169,7 @@ export const UpdateModifierDialog = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Порядок отображения модификатора в списке
+                    {t('modifiers.update.form.sortOrder.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -180,9 +182,9 @@ export const UpdateModifierDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Активен</FormLabel>
+                    <FormLabel>{t('modifiers.update.form.isActive.label')}</FormLabel>
                     <FormDescription>
-                      Модификатор доступен для выбора
+                      {t('modifiers.update.form.isActive.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -197,10 +199,10 @@ export const UpdateModifierDialog = ({
 
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={onClose}>
-                Отмена
+                {t('modifiers.update.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Обновление...' : 'Обновить'}
+                {isPending ? t('modifiers.update.form.actions.saving') : t('modifiers.update.form.actions.save')}
               </Button>
             </div>
           </form>

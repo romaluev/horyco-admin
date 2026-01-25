@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import { KpiType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import {
@@ -34,6 +36,8 @@ export function ChartTab({
   onChartTypeChange,
   onChartMetricChange,
 }: IChartTabProps) {
+  const { t } = useTranslation('dashboard')
+
   return (
     <div className="space-y-6">
       {/* Chart Type Selection */}
@@ -67,7 +71,7 @@ export function ChartTab({
                       isSelected ? 'text-primary' : 'text-foreground'
                     )}
                   >
-                    {opt.label}
+                    {t(opt.labelKey)}
                   </span>
                 </button>
               )
@@ -103,7 +107,7 @@ export function ChartTab({
             <SelectContent>
               {Object.entries(KPI_CONFIG).map(([type, config]) => (
                 <SelectItem key={type} value={type}>
-                  {config.label}
+                  {t(config.labelKey)}
                 </SelectItem>
               ))}
             </SelectContent>

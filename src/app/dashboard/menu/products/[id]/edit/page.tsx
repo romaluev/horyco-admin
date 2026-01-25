@@ -5,10 +5,8 @@
 
 'use client'
 
-
-import { use } from 'react'
-
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
 
 import { ArrowLeft } from 'lucide-react'
 
@@ -21,13 +19,13 @@ import { UpdateProductForm } from '@/features/menu/product-form'
 import type { JSX } from 'react'
 
 interface EditProductPageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
 export default function EditProductPage({
-  params,
+  id,
 }: EditProductPageProps): JSX.Element {
-  const { id } = use(params)
+  const { t } = useTranslation('menu')
   const productId = parseInt(id)
 
   const { data: product, isLoading } = useGetProductById(productId)
@@ -44,17 +42,17 @@ export default function EditProductPage({
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/menu/products">
+          <Link to="/dashboard/menu/products">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
             <h2 className="text-3xl font-bold tracking-tight">
-              Редактировать продукт
+              {t('pages.products.page.edit.title')}
             </h2>
             <p className="text-muted-foreground">
-              {product?.name || 'Измените информацию о продукте'}
+              {product?.name || t('pages.products.page.edit.descriptionFallback')}
             </p>
           </div>
         </div>

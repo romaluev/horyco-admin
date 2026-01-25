@@ -1,24 +1,16 @@
 import * as React from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import logo from '@/shared/assets/logo.png'
 
 import LoginForm from './login-form'
 
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Sign In',
-  description: 'Sign in to your account',
-}
-
 export default function SignInViewPage() {
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden"
           src={logo}
           alt=""
@@ -31,7 +23,7 @@ export default function SignInViewPage() {
           <p className="text-muted-foreground px-8 text-center text-sm">
             Нет аккаунта?{' '}
             <Link
-              href="/auth/register"
+              to="/auth/register"
               className="hover:text-primary font-medium underline underline-offset-4"
             >
               Зарегистрироваться
@@ -40,19 +32,19 @@ export default function SignInViewPage() {
 
           <p className="text-muted-foreground px-8 text-center text-sm">
             Входя в аккаунт, вы соглашаетесь с{' '}
-            <Link
-              href="/terms"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Условиями использования
-            </Link>{' '}
+            </a>{' '}
             и{' '}
-            <Link
-              href="/privacy"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Политикой конфиденциальности
-            </Link>
+            </a>
             .
           </p>
         </div>

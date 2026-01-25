@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Package, Upload } from 'lucide-react'
 
@@ -27,13 +27,13 @@ export function EmptyInventoryState() {
 
         <div className="flex gap-4">
           <Button asChild>
-            <Link href="/dashboard/inventory/items/new">
+            <Link to={"/dashboard/inventory/items/new" as any}>
               <Package className="mr-2 h-4 w-4" />
               Добавить товар
             </Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/inventory/items?import=true">
+            <Link to={"/dashboard/inventory/items?import=true" as any}>
               <Upload className="mr-2 h-4 w-4" />
               Импортировать
             </Link>

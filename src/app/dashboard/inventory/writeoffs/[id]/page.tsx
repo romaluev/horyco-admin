@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -58,10 +59,14 @@ import {
   AddWriteoffItemDialog,
 } from '@/features/inventory/writeoff-workflow'
 
-export default function WriteoffDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function WriteoffDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const writeoffId = Number(params.id)
+  const writeoffId = Number(paramId)
 
   const { data: writeoff, isLoading } = useWriteoffById(writeoffId)
   const deleteMutation = useDeleteWriteoff()
@@ -98,7 +103,7 @@ export default function WriteoffDetailPage() {
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Списание не найдено</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/writeoffs">Назад к списку</Link>
+            <Link to="/dashboard/inventory/writeoffs">Назад к списку</Link>
           </Button>
         </div>
       </PageContainer>
@@ -117,7 +122,7 @@ export default function WriteoffDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/writeoffs">
+              <Link to="/dashboard/inventory/writeoffs">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>

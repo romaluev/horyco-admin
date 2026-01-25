@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { IconArrowLeft, IconUpload } from '@tabler/icons-react'
 

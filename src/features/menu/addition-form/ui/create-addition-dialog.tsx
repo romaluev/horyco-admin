@@ -10,6 +10,7 @@ import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -55,6 +56,7 @@ export const CreateAdditionDialog = ({
   productId,
   trigger,
 }: CreateAdditionDialogProps) => {
+  const { t } = useTranslation('menu')
   const [isOpen, setIsOpen] = useState(false)
   const [imageFile, setImageFile] = React.useState<File | null>(null)
   const { mutate: createAddition, isPending } = useCreateAddition()
@@ -117,13 +119,13 @@ export const CreateAdditionDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {trigger || <Button>Создать дополнение</Button>}
+        {trigger || <Button>{t('additions.form.title.create')}</Button>}
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Создать дополнение</DialogTitle>
+          <DialogTitle>{t('additions.form.title.create')}</DialogTitle>
           <DialogDescription>
-            Создайте новую группу дополнений для продукта
+            {t('additions.form.title.createDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -138,14 +140,14 @@ export const CreateAdditionDialog = ({
                 name="productId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Продукт</FormLabel>
+                    <FormLabel>{t('additions.form.product.label')}</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={field.value ? field.value.toString() : ''}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите продукт" />
+                          <SelectValue placeholder={t('additions.form.product.placeholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -170,9 +172,9 @@ export const CreateAdditionDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Название</FormLabel>
+                  <FormLabel>{t('additions.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Размер порции" {...field} />
+                    <Input placeholder={t('additions.form.name.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -184,9 +186,9 @@ export const CreateAdditionDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>{t('additions.form.description.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Выберите размер порции" {...field} />
+                    <Textarea placeholder={t('additions.form.description.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,7 +196,7 @@ export const CreateAdditionDialog = ({
             />
 
             <div>
-              <FormLabel className="pb-2">Изображение</FormLabel>
+              <FormLabel className="pb-2">{t('additions.form.image.label')}</FormLabel>
               <ImageUpload value={imageFile} onChange={setImageFile} />
             </div>
 
@@ -204,7 +206,7 @@ export const CreateAdditionDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Мин. выбор</FormLabel>
+                    <FormLabel>{t('additions.form.minSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -222,7 +224,7 @@ export const CreateAdditionDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Макс. выбор</FormLabel>
+                    <FormLabel>{t('additions.form.maxSelection.label')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -241,7 +243,7 @@ export const CreateAdditionDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Порядок сортировки</FormLabel>
+                  <FormLabel>{t('additions.form.sortOrder.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -250,7 +252,7 @@ export const CreateAdditionDialog = ({
                     />
                   </FormControl>
                   <FormDescription>
-                    Порядок отображения дополнения
+                    {t('additions.form.sortOrder.description')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -263,9 +265,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Обязательно</FormLabel>
+                    <FormLabel>{t('additions.form.isRequired.label')}</FormLabel>
                     <FormDescription>
-                      Клиент должен выбрать хотя бы один вариант
+                      {t('additions.form.isRequired.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -284,9 +286,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Множественный выбор</FormLabel>
+                    <FormLabel>{t('additions.form.isMultiple.label')}</FormLabel>
                     <FormDescription>
-                      Клиент может выбрать несколько вариантов
+                      {t('additions.form.isMultiple.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -305,9 +307,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Количественный</FormLabel>
+                    <FormLabel>{t('additions.form.isCountable.label')}</FormLabel>
                     <FormDescription>
-                      Клиент может указать количество
+                      {t('additions.form.isCountable.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -326,9 +328,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>Активно</FormLabel>
+                    <FormLabel>{t('additions.form.isActive.label')}</FormLabel>
                     <FormDescription>
-                      Дополнение доступно для заказа
+                      {t('additions.form.isActive.description')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -346,11 +348,12 @@ export const CreateAdditionDialog = ({
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
+                disabled={isPending}
               >
-                Отмена
+                {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Создание...' : 'Создать'}
+                {isPending ? t('common.loading') : t('additions.form.title.create')}
               </Button>
             </div>
           </form>

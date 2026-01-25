@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconDownload, IconSearch } from '@tabler/icons-react'
 
@@ -31,6 +32,7 @@ import {
 type StockStatus = 'all' | 'low' | 'out'
 
 export default function StockPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [warehouseId, setWarehouseId] = useState<number | undefined>()
   const [category, setCategory] = useState<string>('')
@@ -80,7 +82,7 @@ export default function StockPage() {
     if (!warehouseId) {
       return (
         <div className="flex items-center justify-center rounded-lg border border-dashed py-16">
-          <p className="text-muted-foreground">Выберите склад для просмотра остатков</p>
+          <p className="text-muted-foreground">{t('pages.stock.selectWarehouseMessage')}</p>
         </div>
       )
     }
@@ -95,13 +97,13 @@ export default function StockPage() {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Остатки по складам"
-            description="Просмотр текущих остатков товаров"
+            title={t('pages.stock.title')}
+            description={t('pages.stock.description')}
           />
           <div className="flex gap-2">
             <Button variant="outline" onClick={handleExport}>
               <IconDownload className="mr-2 h-4 w-4" />
-              Экспорт
+              {t('pages.stock.export')}
             </Button>
             <AdjustStockDialog />
           </div>
@@ -114,10 +116,10 @@ export default function StockPage() {
             onValueChange={(val) => setWarehouseId(val === 'all' ? undefined : Number(val))}
           >
             <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Выберите склад" />
+              <SelectValue placeholder={t('pages.stock.selectWarehouse')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все склады</SelectItem>
+              <SelectItem value="all">{t('pages.stock.allWarehouses')}</SelectItem>
               {warehouses?.map((warehouse) => (
                 <SelectItem key={warehouse.id} value={String(warehouse.id)}>
                   {warehouse.name}
@@ -130,10 +132,10 @@ export default function StockPage() {
             onValueChange={(val) => setCategory(val === 'all' ? '' : val)}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Категория" />
+              <SelectValue placeholder={t('pages.stock.selectCategory')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все категории</SelectItem>
+              <SelectItem value="all">{t('pages.stock.allCategories')}</SelectItem>
               {categoryOptions.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
@@ -146,15 +148,15 @@ export default function StockPage() {
               <SelectValue placeholder="Статус" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все товары</SelectItem>
-              <SelectItem value="low">Мало на складе</SelectItem>
-              <SelectItem value="out">Нет в наличии</SelectItem>
+              <SelectItem value="all">{t('pages.stock.allProducts')}</SelectItem>
+              <SelectItem value="low">{t('pages.stock.lowStock')}</SelectItem>
+              <SelectItem value="out">{t('pages.stock.outOfStock')}</SelectItem>
             </SelectContent>
           </Select>
           <div className="relative flex-1 min-w-[200px]">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск товара..."
+              placeholder={t('pages.stock.searchProduct')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"

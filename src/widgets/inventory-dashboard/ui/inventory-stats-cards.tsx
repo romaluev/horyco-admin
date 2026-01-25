@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { AlertTriangle, Package, TrendingUp, XCircle } from 'lucide-react'
 
@@ -88,7 +88,7 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Link key={card.title} href={card.href}>
+        <Link key={card.title} to={card.href}>
           <Card
             className={`cursor-pointer transition-colors hover:bg-muted/50 ${card.alert ? 'border-destructive/50' : ''}`}
           >

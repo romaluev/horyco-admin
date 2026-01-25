@@ -1,9 +1,8 @@
 'use client'
 
-import Image from 'next/image'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import { Button } from '@/shared/ui/base/button'
@@ -64,6 +63,7 @@ export function EditProductModal({
   onOpenChange,
   onSave,
 }: EditProductModalProps) {
+  const { t } = useTranslation('onboarding')
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -92,9 +92,9 @@ export function EditProductModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Редактировать продукт</DialogTitle>
+          <DialogTitle>{t('pages.menuTemplate.productDialog.edit')}</DialogTitle>
           <DialogDescription>
-            Измените информацию о продукте и нажмите &quot;Сохранить&quot;
+            {t('pages.menuTemplate.productDialog.editDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -103,19 +103,18 @@ export function EditProductModal({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Left column - Image preview */}
               <div>
-                <FormLabel>Изображение</FormLabel>
+                <FormLabel>{t('pages.menuTemplate.productDialog.image')}</FormLabel>
                 <div className="bg-muted relative mt-2 h-48 w-full overflow-hidden rounded-lg border">
                   {imageUrl ? (
-                    <Image
+                    <img
                       src={imageUrl}
                       alt="Product preview"
-                      fill
-                      className="object-cover"
-                      sizes="400px"
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-                      Предпросмотр изображения
+                      {t('pages.menuTemplate.productDialog.imagePreview')}
                     </div>
                   )}
                 </div>
@@ -126,7 +125,7 @@ export function EditProductModal({
                   render={({ field }) => (
                     <FormItem className="mt-2">
                       <FormControl>
-                        <Input placeholder="URL изображения" {...field} />
+                        <Input placeholder={t('pages.menuTemplate.productDialog.imagePlaceholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -141,9 +140,9 @@ export function EditProductModal({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Название *</FormLabel>
+                      <FormLabel>{t('pages.menuTemplate.productDialog.name')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Пицца Маргарита" {...field} />
+                        <Input placeholder={t('pages.menuTemplate.productDialog.namePlaceholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -155,11 +154,11 @@ export function EditProductModal({
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Цена (сум) *</FormLabel>
+                      <FormLabel>{t('pages.menuTemplate.productDialog.price')}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="89000"
+                          placeholder={t('pages.menuTemplate.productDialog.pricePlaceholder')}
                           {...field}
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))
@@ -176,14 +175,14 @@ export function EditProductModal({
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Категория *</FormLabel>
+                      <FormLabel>{t('pages.menuTemplate.productDialog.category')}</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Выберите категорию" />
+                            <SelectValue placeholder={t('pages.menuTemplate.productDialog.categorySelect')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -206,10 +205,10 @@ export function EditProductModal({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание *</FormLabel>
+                  <FormLabel>{t('pages.menuTemplate.productDialog.description')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Описание продукта..."
+                      placeholder={t('pages.menuTemplate.productDialog.descriptionPlaceholder')}
                       className="resize-none"
                       rows={3}
                       {...field}
@@ -226,9 +225,9 @@ export function EditProductModal({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Отмена
+                {t('pages.menuTemplate.productDialog.cancel')}
               </Button>
-              <Button type="submit">Сохранить</Button>
+              <Button type="submit">{t('pages.menuTemplate.productDialog.save')}</Button>
             </DialogFooter>
           </form>
         </Form>

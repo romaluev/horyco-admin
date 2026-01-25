@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconArrowDown, IconArrowUp, IconMinus } from '@tabler/icons-react'
 
@@ -46,6 +47,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function BranchesAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [activeTab, setActiveTab] = React.useState('comparison')
 
@@ -57,15 +59,15 @@ export default function BranchesAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="branches"
-      title="Филиалы"
+      title={t('branches.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="comparison">Сравнение</TabsTrigger>
-          <TabsTrigger value="benchmark">Бенчмарк</TabsTrigger>
+          <TabsTrigger value="comparison">{t('branches.tabs.comparison')}</TabsTrigger>
+          <TabsTrigger value="benchmark">{t('branches.tabs.benchmark')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="comparison" className="mt-4">
@@ -137,13 +139,14 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
   if (error) return <AnalyticsErrorState onRetry={() => refetch()} />
   if (!data) return null
 
+  const { t } = useTranslation('analytics')
   return (
     <div className="space-y-6">
       {/* Network Average Summary */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <MetricCard label="Средняя выручка" value={formatPrice(networkAvg.revenue ?? 0)} />
-        <MetricCard label="Средние заказы" value={networkAvg.orders ?? 0} />
-        <MetricCard label="Средний чек" value={formatPrice(networkAvg.avgCheck ?? 0)} />
+        <MetricCard label={t('branches.comparison.avgRevenue')} value={formatPrice(networkAvg.revenue ?? 0)} />
+        <MetricCard label={t('branches.comparison.avgOrders')} value={networkAvg.orders ?? 0} />
+        <MetricCard label={t('branches.comparison.avgCheck')} value={formatPrice(networkAvg.avgCheck ?? 0)} />
       </div>
 
       {/* Comparison Table */}
@@ -153,14 +156,14 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
             <TableRow>
               <SortableHeader
                 column="name"
-                label="Филиал"
+                label={t('branches.comparison.table.branch')}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 onSort={handleSort}
               />
               <SortableHeader
                 column="revenue"
-                label="Выручка"
+                label={t('branches.comparison.table.revenue')}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 onSort={handleSort}
@@ -168,7 +171,7 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
               />
               <SortableHeader
                 column="orders"
-                label="Заказов"
+                label={t('branches.comparison.table.orders')}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 onSort={handleSort}
@@ -176,7 +179,7 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
               />
               <SortableHeader
                 column="avgCheck"
-                label="Ср. чек"
+                label={t('branches.comparison.table.avgCheck')}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 onSort={handleSort}
@@ -184,7 +187,7 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
               />
               <SortableHeader
                 column="vsAvg"
-                label="vs Среднее"
+                label={t('branches.comparison.table.vsAverage')}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 onSort={handleSort}
@@ -226,6 +229,7 @@ interface IBranchBenchmarkTabProps {
 }
 
 function BranchBenchmarkTab({ period }: IBranchBenchmarkTabProps) {
+  const { t } = useTranslation('analytics')
   const { data, isLoading, error, refetch } = useBranchBenchmark({
     period: { type: period },
   })
@@ -239,11 +243,11 @@ function BranchBenchmarkTab({ period }: IBranchBenchmarkTabProps) {
 
   const metrics = ['revenue', 'orders', 'avgCheck', 'customerCount', 'retentionRate'] as const
   const metricLabels: Record<string, string> = {
-    revenue: 'Выручка',
-    orders: 'Заказы',
-    avgCheck: 'Ср. чек',
-    customerCount: 'Клиенты',
-    retentionRate: 'Удержание',
+    revenue: t('branches.benchmark.metrics.revenue'),
+    orders: t('branches.benchmark.metrics.orders'),
+    avgCheck: t('branches.benchmark.metrics.avgCheck'),
+    customerCount: t('branches.benchmark.metrics.customerCount'),
+    retentionRate: t('branches.benchmark.metrics.retentionRate'),
   }
 
   // Format metric value based on type
@@ -257,17 +261,18 @@ function BranchBenchmarkTab({ period }: IBranchBenchmarkTabProps) {
   if (branches.length === 0) {
     return (
       <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-        Нет данных для сравнения филиалов
+        {t('branches.benchmark.noData')}
       </div>
     )
   }
 
+  const { t: t2 } = useTranslation('analytics')
   return (
     <div className="overflow-x-auto rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Метрика</TableHead>
+            <TableHead>{t2('branches.benchmark.metric')}</TableHead>
             {branches.map((branch) => (
               <TableHead key={branch.id} className="text-center">
                 {branch.name ?? 'N/A'}

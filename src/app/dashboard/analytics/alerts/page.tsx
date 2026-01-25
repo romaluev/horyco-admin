@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconAlertCircle,
@@ -38,6 +39,7 @@ import type { IAlertItem } from '@/features/dashboard/analytics'
 // ============================================
 
 export default function AlertsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [activeTab, setActiveTab] = React.useState('active')
 
@@ -62,7 +64,7 @@ export default function AlertsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="alerts"
-      title="Оповещения"
+      title={t('alerts.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -70,14 +72,14 @@ export default function AlertsPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="active">
-            Активные
+            {t('alerts.tabs.active')}
             {totalActive > 0 ? (
               <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
                 {totalActive}
               </span>
             ) : null}
           </TabsTrigger>
-          <TabsTrigger value="history">История</TabsTrigger>
+          <TabsTrigger value="history">{t('alerts.tabs.history')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="mt-4">
@@ -135,6 +137,7 @@ interface IAlertCardProps {
 }
 
 function AlertCard({ alert }: IAlertCardProps) {
+  const { t } = useTranslation('analytics')
   const icons: Record<string, React.ComponentType<{ className?: string }>> = {
     CRITICAL: IconAlertCircle,
     WARNING: IconAlertTriangle,
@@ -160,13 +163,13 @@ function AlertCard({ alert }: IAlertCardProps) {
           <Icon className="mt-0.5 size-5 shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium">{getSeverityLabel(alert.severity)}</span>
+              <span className="font-medium">{getSeverityLabel(alert.severity, t)}</span>
               <span className="text-sm">- {alert.title}</span>
             </div>
             <p className="mt-1 text-sm opacity-90">{alert.message}</p>
             <div className="mt-2 flex items-center gap-4 text-xs opacity-70">
-              <span>Обнаружено: {formatDateTime(alert.detectedAt)}</span>
-              {alert.branchName && <span>Филиал: {alert.branchName}</span>}
+              <span>{t('alerts.card.detected', { time: formatDateTime(alert.detectedAt, t) })}</span>
+              {alert.branchName && <span>{t('alerts.card.branch', { name: alert.branchName })}</span>}
             </div>
           </div>
         </div>
@@ -183,22 +186,23 @@ function AlertCard({ alert }: IAlertCardProps) {
   )
 }
 
-function getSeverityLabel(severity: string): string {
+function getSeverityLabel(severity: string, t: any): string {
   const labels: Record<string, string> = {
-    CRITICAL: 'КРИТИЧНО',
-    WARNING: 'ВНИМАНИЕ',
-    INFO: 'ИНФО',
+    CRITICAL: t('alerts.severity.critical'),
+    WARNING: t('alerts.severity.warning'),
+    INFO: t('alerts.severity.info'),
   }
   return labels[severity] || severity
 }
 
-function formatDateTime(dateStr: string): string {
+function formatDateTime(dateStr: string, t: any): string {
   const date = new Date(dateStr)
   const today = new Date()
   const isToday = date.toDateString() === today.toDateString()
 
   if (isToday) {
-    return `Сегодня ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`
+    const timeStr = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    return t('alerts.timeFormat', { time: timeStr })
   }
 
   return date.toLocaleDateString('ru-RU', {
@@ -214,12 +218,13 @@ function formatDateTime(dateStr: string): string {
 // ============================================
 
 function EmptyAlertsState() {
+  const { t } = useTranslation('analytics')
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
       <IconInfoCircle className="size-12 text-muted-foreground/50" />
-      <h3 className="mt-4 text-lg font-medium">Нет оповещений</h3>
+      <h3 className="mt-4 text-lg font-medium">{t('alerts.empty.title')}</h3>
       <p className="mt-2 text-sm text-muted-foreground">
-        Все показатели в норме. Мы уведомим вас, если обнаружим аномалии.
+        {t('alerts.empty.description')}
       </p>
     </div>
   )

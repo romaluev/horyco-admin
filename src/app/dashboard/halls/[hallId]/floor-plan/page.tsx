@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconArrowLeft } from '@tabler/icons-react'
 
@@ -24,7 +24,7 @@ export default async function FloorPlanPage(props: IFloorPlanPageProps) {
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <Button asChild variant="ghost" size="sm">
-              <Link href="/dashboard/halls">
+              <Link to="/dashboard/halls">
                 <IconArrowLeft className="mr-2 h-4 w-4" />
                 Назад к залам
               </Link>

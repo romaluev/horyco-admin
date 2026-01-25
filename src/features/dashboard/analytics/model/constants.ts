@@ -23,7 +23,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   sales: {
     pageCode: 'sales',
     requiredTier: 'analytics_basic',
-    title: 'Обзор продаж',
+    title: 'sales',
     titleEn: 'Sales Overview',
     description: 'Сводка по продажам и выручке',
     icon: 'chartBar',
@@ -32,7 +32,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   products: {
     pageCode: 'products',
     requiredTier: 'analytics_basic',
-    title: 'Продукты',
+    title: 'products',
     titleEn: 'Products',
     description: 'Анализ продаж по продуктам',
     icon: 'package',
@@ -41,7 +41,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   categories: {
     pageCode: 'categories',
     requiredTier: 'analytics_basic',
-    title: 'Категории',
+    title: 'categories',
     titleEn: 'Categories',
     description: 'Анализ продаж по категориям',
     icon: 'category',
@@ -50,7 +50,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   payments: {
     pageCode: 'payments',
     requiredTier: 'analytics_basic',
-    title: 'Способы оплаты',
+    title: 'payments',
     titleEn: 'Payments',
     description: 'Анализ по способам оплаты',
     icon: 'billing',
@@ -61,7 +61,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   staff: {
     pageCode: 'staff',
     requiredTier: 'analytics_pro',
-    title: 'Персонал',
+    title: 'staff',
     titleEn: 'Staff',
     description: 'Анализ эффективности персонала',
     icon: 'users',
@@ -75,7 +75,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   customers: {
     pageCode: 'customers',
     requiredTier: 'analytics_pro',
-    title: 'Клиенты',
+    title: 'customers',
     titleEn: 'Customers',
     description: 'Анализ клиентской базы',
     icon: 'user',
@@ -88,7 +88,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   heatmap: {
     pageCode: 'heatmap',
     requiredTier: 'analytics_pro',
-    title: 'Тепловая карта',
+    title: 'heatmap',
     titleEn: 'Heatmap',
     description: 'Анализ нагрузки по часам и дням',
     icon: 'layoutGrid',
@@ -100,7 +100,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   channels: {
     pageCode: 'channels',
     requiredTier: 'analytics_pro',
-    title: 'Каналы продаж',
+    title: 'channels',
     titleEn: 'Channels',
     description: 'Анализ по каналам продаж',
     icon: 'arrowsExchange',
@@ -114,7 +114,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   branches: {
     pageCode: 'branches',
     requiredTier: 'analytics_full',
-    title: 'Филиалы',
+    title: 'branches',
     titleEn: 'Branches',
     description: 'Сравнение и бенчмаркинг филиалов',
     icon: 'hierarchy',
@@ -127,7 +127,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   financial: {
     pageCode: 'financial',
     requiredTier: 'analytics_full',
-    title: 'Финансы',
+    title: 'financial',
     titleEn: 'Financial',
     description: 'Финансовая аналитика и отчетность',
     icon: 'billing',
@@ -140,7 +140,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   forecasting: {
     pageCode: 'forecasting',
     requiredTier: 'analytics_full',
-    title: 'Прогнозирование',
+    title: 'forecasting',
     titleEn: 'Forecasting',
     description: 'Прогноз продаж и спроса',
     icon: 'chartPie',
@@ -153,7 +153,7 @@ export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = 
   alerts: {
     pageCode: 'alerts',
     requiredTier: 'analytics_full',
-    title: 'Оповещения',
+    title: 'alerts',
     titleEn: 'Alerts',
     description: 'Уведомления о важных событиях',
     icon: 'warning',

@@ -7,9 +7,10 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus } from '@tabler/icons-react'
 
@@ -59,6 +60,7 @@ const ANALYTICS_PAGE_URLS: Record<AnalyticsPageCode, string> = {
 }
 
 export function AnalyticsSidebarSection() {
+  const { t } = useTranslation('analytics')
   const pathname = usePathname()
   const { state, isMobile } = useSidebar()
   // On mobile, always show expanded view (never show HoverCard tooltips)
@@ -96,9 +98,9 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <HoverCard openDelay={0} closeDelay={100}>
             <HoverCardTrigger asChild>
-              <SidebarMenuButton tooltip="Аналитика">
+              <SidebarMenuButton tooltip={t('analytics.title')}>
                 <FirstIcon className="!size-6" />
-                <span className="text-[17px]">Аналитика</span>
+                <span className="text-[17px]">{t('analytics.title')}</span>
               </SidebarMenuButton>
             </HoverCardTrigger>
             <HoverCardContent
@@ -109,7 +111,7 @@ export function AnalyticsSidebarSection() {
             >
               <div className="flex flex-col gap-0.5">
                 <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Аналитика
+                  {t('analytics.title')}
                 </div>
 
                 {/* Loading State */}
@@ -131,7 +133,7 @@ export function AnalyticsSidebarSection() {
                     return (
                       <Link
                         key={pageCode}
-                        href={url}
+                        to={url}
                         className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                           pathname === url
                             ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
@@ -139,7 +141,7 @@ export function AnalyticsSidebarSection() {
                         }`}
                       >
                         <PageIcon className="h-6 w-6" />
-                        {config.title}
+                        {t(`${pageCode}.title`)}
                       </Link>
                     )
                   })}
@@ -154,7 +156,7 @@ export function AnalyticsSidebarSection() {
                   views?.map((view) => (
                     <Link
                       key={view.id}
-                      href={`/dashboard/views/${view.id}`}
+                      to={`/dashboard/views/${view.id}` as any}
                       className={`flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                         pathname === `/dashboard/views/${view.id}`
                           ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
@@ -175,7 +177,7 @@ export function AnalyticsSidebarSection() {
                     className="flex items-center rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
                   >
                     <IconPlus className="mr-1 size-4" />
-                    Создать
+                    {t('dashboard.views.create')}
                   </button>
                 )}
               </div>
@@ -197,8 +199,8 @@ export function AnalyticsSidebarSection() {
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             {/* Group header - small, without icon */}
-            <SidebarMenuButton tooltip="Аналитика" size="sm">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Аналитика</span>
+            <SidebarMenuButton tooltip={t('analytics.title')} size="sm">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('analytics.title')}</span>
               <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
@@ -229,9 +231,9 @@ export function AnalyticsSidebarSection() {
                         asChild
                         isActive={pathname === url}
                       >
-                        <Link href={url} className="flex items-center gap-2">
+                        <Link to={url} className="flex items-center gap-2">
                           <PageIcon className="!h-[1.25rem] !w-[1.25rem]" />
-                          <span className="text-[17px]">{config.title}</span>
+                          <span className="text-[17px]">{t(`${pageCode}.title`)}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -254,7 +256,7 @@ export function AnalyticsSidebarSection() {
                       asChild
                       isActive={pathname === `/dashboard/views/${view.id}`}
                     >
-                      <Link href={`/dashboard/views/${view.id}`} className="flex items-center gap-2">
+                      <Link to={`/dashboard/views/${view.id}` as any} className="flex items-center gap-2">
                         <Icons.chartPie className="h-6 w-6" />
                         <span className="text-[17px]">{view.name}</span>
                         {view.isPinned && (
@@ -275,7 +277,7 @@ export function AnalyticsSidebarSection() {
                     onClick={() => setIsModalOpen(true)}
                   >
                     <IconPlus className="mr-1 size-4" />
-                    <span className="text-[17px]">Создать</span>
+                    <span className="text-[17px]">{t('dashboard.views.create')}</span>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               )}

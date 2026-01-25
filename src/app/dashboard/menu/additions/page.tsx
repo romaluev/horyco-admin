@@ -9,6 +9,8 @@ import { useState } from 'react'
 
 import { Edit, Plus } from 'lucide-react'
 
+import { useTranslation } from 'react-i18next'
+
 import {
   Accordion,
   AccordionContent,
@@ -43,6 +45,7 @@ import {
 import type { JSX } from 'react'
 
 export default function AdditionsPage(): JSX.Element {
+  const { t } = useTranslation('menu')
   const [productFilter, setProductFilter] = useState<string>('all')
   const [view, setView] = useState<'tree' | 'grid'>('grid')
   const [editingAddition, setEditingAddition] = useState<IAddition | null>(null)
@@ -69,9 +72,11 @@ export default function AdditionsPage(): JSX.Element {
       <div className="w-full space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Дополнения</h2>
+            <h2 className="text-3xl font-bold tracking-tight">
+              {t('pages.additions.title')}
+            </h2>
             <p className="text-muted-foreground">
-              Управляйте дополнительными позициями к продуктам
+              {t('pages.additions.description')}
             </p>
           </div>
           <CreateAdditionDialog
@@ -81,7 +86,7 @@ export default function AdditionsPage(): JSX.Element {
             trigger={
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Создать дополнение
+                {t('pages.additions.actions.create')}
               </Button>
             }
           />
@@ -91,10 +96,14 @@ export default function AdditionsPage(): JSX.Element {
           <ViewModeToggler value={view} onChange={setView} />
           <Select value={productFilter} onValueChange={setProductFilter}>
             <SelectTrigger className="w-[300px]">
-              <SelectValue placeholder="Выберите продукт" />
+              <SelectValue
+                placeholder={t('pages.additions.filters.selectProduct')}
+              />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все продукты</SelectItem>
+              <SelectItem value="all">
+                {t('pages.additions.filters.allProducts')}
+              </SelectItem>
               {products.map((product) => (
                 <SelectItem key={product.id} value={product.id.toString()}>
                   {product.name}
@@ -108,13 +117,13 @@ export default function AdditionsPage(): JSX.Element {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-lg border p-4">
               <p className="text-muted-foreground text-sm font-medium">
-                Групп дополнений
+                {t('pages.additions.stats.groups')}
               </p>
               <p className="text-2xl font-bold">{additions.length}</p>
             </div>
             <div className="rounded-lg border p-4">
               <p className="text-muted-foreground text-sm font-medium">
-                Активных
+                {t('pages.additions.stats.active')}
               </p>
               <p className="text-2xl font-bold">
                 {additions.filter((a) => a.isActive).length}
@@ -127,12 +136,12 @@ export default function AdditionsPage(): JSX.Element {
           <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
             <div className="text-center">
               <p className="text-muted-foreground text-lg font-medium">
-                Дополнения не найдены
+                {t('pages.additions.empty.notFound')}
               </p>
               <p className="text-muted-foreground text-sm">
                 {productFilter === 'all'
-                  ? 'Выберите продукт и создайте первую группу дополнений'
-                  : 'Создайте первую группу дополнений'}
+                  ? t('pages.additions.empty.selectProductFirst')
+                  : t('pages.additions.empty.createFirst')}
               </p>
             </div>
           </div>
@@ -185,25 +194,35 @@ export default function AdditionsPage(): JSX.Element {
                       <div className="space-y-4">
                         <div className="flex flex-wrap gap-2">
                           {addition.isRequired && (
-                            <Badge variant="secondary">Обязательно</Badge>
+                            <Badge variant="secondary">
+                              {t('pages.additions.badges.required')}
+                            </Badge>
                           )}
                           {addition.isMultiple && (
-                            <Badge variant="secondary">Множественный</Badge>
+                            <Badge variant="secondary">
+                              {t('pages.additions.badges.multiple')}
+                            </Badge>
                           )}
                           {addition.isCountable && (
-                            <Badge variant="secondary">Количественный</Badge>
+                            <Badge variant="secondary">
+                              {t('pages.additions.badges.countable')}
+                            </Badge>
                           )}
                           {addition.isActive ? (
-                            <Badge variant="default">Активно</Badge>
+                            <Badge variant="default">
+                              {t('pages.additions.badges.active')}
+                            </Badge>
                           ) : (
-                            <Badge variant="outline">Неактивно</Badge>
+                            <Badge variant="outline">
+                              {t('pages.additions.badges.inactive')}
+                            </Badge>
                           )}
                         </div>
 
                         <div className="grid gap-3 md:grid-cols-2">
                           <div className="rounded-lg border p-3">
                             <p className="text-muted-foreground text-xs font-medium">
-                              Минимальный выбор
+                              {t('pages.additions.details.minSelection')}
                             </p>
                             <p className="text-lg font-semibold">
                               {addition.minSelection}
@@ -211,7 +230,7 @@ export default function AdditionsPage(): JSX.Element {
                           </div>
                           <div className="rounded-lg border p-3">
                             <p className="text-muted-foreground text-xs font-medium">
-                              Максимальный выбор
+                              {t('pages.additions.details.maxSelection')}
                             </p>
                             <p className="text-lg font-semibold">
                               {addition.maxSelection}
@@ -219,7 +238,7 @@ export default function AdditionsPage(): JSX.Element {
                           </div>
                           <div className="rounded-lg border p-3">
                             <p className="text-muted-foreground text-xs font-medium">
-                              Порядок сортировки
+                              {t('pages.additions.details.sortOrder')}
                             </p>
                             <p className="text-lg font-semibold">
                               {addition.sortOrder}
@@ -227,7 +246,7 @@ export default function AdditionsPage(): JSX.Element {
                           </div>
                           <div className="rounded-lg border p-3">
                             <p className="text-muted-foreground text-xs font-medium">
-                              Позиций в группе
+                              {t('pages.additions.details.itemsCount')}
                             </p>
                             <p className="text-lg font-semibold">
                               {addition.itemsCount ?? 0}

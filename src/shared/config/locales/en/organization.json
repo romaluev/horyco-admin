@@ -1,0 +1,413 @@
+{
+  "branches": {
+    "title": "Branches",
+    "description": "Manage organization branches",
+    "addNew": "Add branch",
+    "actions": {
+      "import": "Import",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "description": "Branch information",
+      "statistics": "Statistics",
+      "statisticsDescription": "Branch performance metrics"
+    },
+    "form": {
+      "title": {
+        "create": "Create new branch",
+        "edit": "Edit branch: {{name}}"
+      },
+      "fields": {
+        "name": {
+          "label": "Branch name",
+          "placeholder": "Enter branch name",
+          "validation": "Branch name must contain at least 2 characters"
+        },
+        "address": {
+          "label": "Address",
+          "placeholder": "Enter branch address",
+          "validation": "Address must contain at least 5 characters"
+        }
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Name",
+        "address": "Address",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "search": {
+        "name": "Search by name...",
+        "address": "Search by address..."
+      }
+    },
+    "delete": {
+      "title": "Delete branch?",
+      "description": "Are you sure you want to delete branch \"{{name}}\"? This action cannot be undone."
+    },
+    "errors": {
+      "notFound": "Branch not found",
+      "loadError": "Error: {{message}}"
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "description": "Manage staff and their data",
+    "addNew": "Add employee",
+    "actions": {
+      "openMenu": "Open menu",
+      "menuLabel": "Actions"
+    },
+    "states": {
+      "empty": "No employees yet",
+      "loadError": "Error loading employees"
+    },
+    "form": {
+      "title": {
+        "create": "Create new employee",
+        "edit": "Edit employee: {{name}}"
+      },
+      "fields": {
+        "fullName": {
+          "label": "Full name",
+          "placeholder": "Enter full name",
+          "validation": "Name must contain at least 2 characters"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "90 123 45 67"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter password",
+          "validation": "Password must contain at least 4 characters"
+        },
+        "confirmPassword": {
+          "label": "Confirm password",
+          "placeholder": "Confirm password"
+        },
+        "branch": {
+          "label": "Branch",
+          "placeholder": "Select branch"
+        },
+        "photo": {
+          "label": "Profile photo"
+        }
+      },
+      "submit": {
+        "create": "Create employee",
+        "update": "Update information"
+      },
+      "steps": {
+        "basicInfo": "Basic information",
+        "branchesPermissions": "Branches and permissions",
+        "step1": "Step 1 of 2",
+        "step2": "Step 2 of 2",
+        "next": "Next"
+      },
+      "title": {
+        "edit": "Edit employee: {{name}}"
+      },
+      "description": {
+        "update": "Update information for employee {{name}}"
+      },
+      "tabs": {
+        "info": "Information",
+        "branches": "Branches"
+      },
+      "saveChanges": "Save changes"
+    },
+    "table": {
+      "columns": {
+        "fullName": "Full name",
+        "phone": "Phone",
+        "branch": "Branch",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "search": {
+        "fullName": "Search by name...",
+        "phone": "Search by phone..."
+      }
+    },
+    "delete": {
+      "title": "Delete employee?",
+      "description": "This action cannot be undone. Employee {{name}} will be removed from the system.",
+      "deleting": "Deleting...",
+      "delete": "Delete"
+    },
+    "errors": {
+      "notFound": "Employee not found",
+      "loadError": "Error: {{message}}"
+    }
+  },
+  "branchForm": {
+    "title": {
+      "create": "Create branch",
+      "edit": "Edit branch"
+    },
+    "description": {
+      "create": "Fill in information about the new branch",
+      "edit": "Update branch information"
+    },
+    "actions": {
+      "create": "Create",
+      "creating": "Creating...",
+      "save": "Save"
+    }
+  },
+  "branches": {
+    "delete": {
+      "title": "Delete branch?",
+      "cannotDelete": "Cannot delete branch",
+      "confirmMessage": "Are you sure you want to delete branch {{name}}?",
+      "irreversible": "This action cannot be undone.",
+      "reasonsMessage": "This branch cannot be deleted for the following reasons:",
+      "deleting": "Deleting...",
+      "delete": "Delete"
+    }
+  },
+  "paymentSettings": {
+    "title": "Payment settings",
+    "description": "Configure payment gateways",
+    "saveChanges": "Save changes",
+    "test": "Test",
+    "testing": "Testing...",
+    "providers": {
+      "payme": {
+        "description": "PayMe payment gateway"
+      },
+      "click": {
+        "description": "Click payment gateway"
+      },
+      "uzum": {
+        "description": "Uzum payment gateway"
+      }
+    }
+  },
+  "smsSettings": {
+    "title": "SMS Integration",
+    "description": "Configure SMS provider for sending notifications",
+    "saveChanges": "Save changes",
+    "provider": "SMS Provider",
+    "playmobileSettings": "Playmobile Settings",
+    "eskizSettings": "Eskiz Settings",
+    "login": "Login",
+    "password": "Password",
+    "senderName": "Sender name",
+    "testing": "Integration testing",
+    "sendTest": "Send test",
+    "sending": "Sending..."
+  },
+  "permissions": {
+    "title": "Manage permissions",
+    "description": "Permissions for employee in branch {{branchName}}",
+    "copyFromBranch": "Copy from another branch",
+    "noAvailable": "No available permissions",
+    "info": "Configure permissions for this branch. Changes will be saved when you click \"Save\".",
+    "saveSuccess": "Permissions saved successfully",
+    "saveError": "Error saving permissions"
+  },
+  "halls": {
+    "title": "Halls",
+    "description": "Manage organization halls"
+  },
+  "subscription": {
+    "title": "Subscription Management",
+    "status": {
+      "title": "Subscription Status",
+      "plan": "Plan",
+      "paymentFlow": "Payment Method",
+      "manual": "Manual Payment",
+      "automatic": "Automatic"
+    },
+    "billingPeriod": {
+      "title": "Billing Period",
+      "start": "Period Start",
+      "end": "Period End",
+      "daysUntilRenewal": "Days Until Renewal"
+    },
+    "pricing": {
+      "title": "Subscription Cost",
+      "total": "Total",
+      "discount": "Discount"
+    },
+    "trial": {
+      "title": "Trial Period",
+      "endsAt": "Trial period ends",
+      "daysRemaining": "days",
+      "noActiveGoals": "No active goals"
+    },
+    "modules": {
+      "title": "Active Modules",
+      "trial": "Trial period",
+      "daysRemaining": "days",
+      "monthly": "/month"
+    },
+    "loadError": "Error loading subscription"
+  },
+  "moduleCatalog": {
+    "loadError": "Error loading module catalog",
+    "active": "Active",
+    "free": "Free",
+    "trial": "days trial",
+    "features": "FEATURES",
+    "dependencies": "Required modules",
+    "sections": {
+      "plans": "Plans",
+      "coreModules": "Core Modules",
+      "addons": "Add-ons"
+    },
+    "actions": {
+      "alreadyActivated": "Already activated",
+      "add": "Add",
+      "unavailable": "Unavailable"
+    }
+  },
+  "paymentsHistory": {
+    "loadError": "Error loading payment history",
+    "summary": {
+      "title": "Payment Summary",
+      "totalPaid": "Total Paid",
+      "paymentsCount": "Payment Count",
+      "lastPayment": "Last Payment"
+    },
+    "table": {
+      "receiptNumber": "Receipt Number",
+      "paymentType": "Payment Type",
+      "amount": "Amount",
+      "date": "Date",
+      "status": "Status",
+      "cash": "Cash",
+      "bankTransfer": "Bank Transfer",
+      "card": "Card",
+      "verified": "Verified",
+      "pending": "Pending",
+      "noPayments": "No payments found"
+    }
+  },
+  "branding": {
+    "title": "Branding Settings",
+    "identity": "Brand Identity",
+    "colors": "Colors",
+    "socialMedia": "Social Media",
+    "contact": "Contact Information",
+    "fields": {
+      "brandName": "Brand Name",
+      "brandNameRequired": "Brand Name *",
+      "description": "Description",
+      "logo": "Logo",
+      "logoDark": "Logo (Dark Mode)",
+      "favicon": "Favicon",
+      "primaryColor": "Primary Color",
+      "secondaryColor": "Secondary Color",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "website": "Website",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "current": "Current"
+    },
+    "placeholders": {
+      "brandName": "My Restaurant",
+      "description": "Your business description",
+      "facebook": "https://facebook.com/myrestaurant",
+      "instagram": "@myrestaurant",
+      "telegram": "@myrestaurant",
+      "website": "https://myrestaurant.com",
+      "phone": "+998 90 123 45 67",
+      "email": "info@myrestaurant.com",
+      "address": "Physical address"
+    },
+    "uploadError": "Error uploading files",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes"
+  },
+  "theme": {
+    "title": "Color Scheme",
+    "description": "Select the primary interface color",
+    "colors": {
+      "default": "Default",
+      "blue": "Blue",
+      "green": "Green",
+      "amber": "Amber"
+    },
+    "placeholder": "Select color"
+  },
+  "employee": {
+    "form": {
+      "basicInfo": {
+        "fullName": "Full Name",
+        "fullNameRequired": "Full Name *",
+        "phone": "Phone",
+        "phoneRequired": "Phone *",
+        "email": "Email",
+        "password": "Password",
+        "passwordRequired": "Password *",
+        "passwordPlaceholder": "Minimum 6 characters",
+        "birthDate": "Date of Birth",
+        "photo": "Profile Photo"
+      },
+      "placeholders": {
+        "fullName": "Enter full name",
+        "email": "example@example.com",
+        "phone": "90 123 45 67"
+      }
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "details": "Details"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Branches",
+      "title": "Branches",
+      "description": "Manage branches of your organization",
+      "actions": {
+        "import": "Import",
+        "addNew": "Add branch"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Loading",
+      "notFoundTitle": "Branch not found",
+      "notFoundMessage": "Branch not found",
+      "description": "Branch information",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "statistics": {
+        "title": "Statistics",
+        "description": "Branch performance metrics"
+      }
+    },
+    "employees": {
+      "pageTitle": "Employees",
+      "title": "Employees",
+      "description": "Manage employees and their data",
+      "states": {
+        "empty": "No employees yet",
+        "loadError": "Error loading employees"
+      }
+    },
+    "settings": {
+      "pageTitle": "Settings"
+    }
+  }
+}

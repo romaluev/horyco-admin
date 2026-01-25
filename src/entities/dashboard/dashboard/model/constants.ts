@@ -27,7 +27,7 @@ import type { WidgetType } from './types'
 // ============================================
 
 export interface IKpiConfig {
-  label: string
+  labelKey: string
   icon: typeof IconCurrencyDollar
   color: string
   bgColor: string
@@ -35,82 +35,82 @@ export interface IKpiConfig {
 
 export const KPI_CONFIG: Record<KpiType, IKpiConfig> = {
   [KpiType.REVENUE]: {
-    label: 'Выручка',
+    labelKey: 'dashboard.kpiLabels.revenue',
     icon: IconCurrencyDollar,
     color: 'text-emerald-600',
     bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
   },
   [KpiType.ORDERS]: {
-    label: 'Заказы',
+    labelKey: 'dashboard.kpiLabels.orders',
     icon: IconShoppingCart,
     color: 'text-blue-600',
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
   },
   [KpiType.AVG_CHECK]: {
-    label: 'Средний чек',
+    labelKey: 'dashboard.kpiLabels.avgCheck',
     icon: IconReceipt,
     color: 'text-violet-600',
     bgColor: 'bg-violet-100 dark:bg-violet-900/30',
   },
   [KpiType.CUSTOMERS]: {
-    label: 'Клиенты',
+    labelKey: 'dashboard.kpiLabels.customers',
     icon: IconUsers,
     color: 'text-cyan-600',
     bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
   },
   [KpiType.NEW_CUSTOMERS]: {
-    label: 'Новые клиенты',
+    labelKey: 'dashboard.kpiLabels.newCustomers',
     icon: IconUserPlus,
     color: 'text-teal-600',
     bgColor: 'bg-teal-100 dark:bg-teal-900/30',
   },
   [KpiType.RETURNING_CUSTOMERS]: {
-    label: 'Постоянные',
+    labelKey: 'dashboard.kpiLabels.returningCustomers',
     icon: IconRefresh,
     color: 'text-indigo-600',
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
   },
   [KpiType.TIPS]: {
-    label: 'Чаевые',
+    labelKey: 'dashboard.kpiLabels.tips',
     icon: IconCash,
     color: 'text-amber-600',
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
   },
   [KpiType.REFUNDS]: {
-    label: 'Возвраты',
+    labelKey: 'dashboard.kpiLabels.refunds',
     icon: IconReceiptRefund,
     color: 'text-orange-600',
     bgColor: 'bg-orange-100 dark:bg-orange-900/30',
   },
   [KpiType.CANCELLATIONS]: {
-    label: 'Отмены',
+    labelKey: 'dashboard.kpiLabels.cancellations',
     icon: IconX,
     color: 'text-red-600',
     bgColor: 'bg-red-100 dark:bg-red-900/30',
   },
   [KpiType.MARGIN]: {
-    label: 'Маржа',
+    labelKey: 'dashboard.kpiLabels.margin',
     icon: IconChartBar,
     color: 'text-lime-600',
     bgColor: 'bg-lime-100 dark:bg-lime-900/30',
   },
   [KpiType.RETENTION_RATE]: {
-    label: 'Удержание',
+    labelKey: 'dashboard.kpiLabels.retentionRate',
     icon: IconPercentage,
     color: 'text-pink-600',
     bgColor: 'bg-pink-100 dark:bg-pink-900/30',
   },
   [KpiType.STAFF_PRODUCTIVITY]: {
-    label: 'Продуктивность',
+    labelKey: 'dashboard.kpiLabels.staffProductivity',
     icon: IconActivity,
     color: 'text-fuchsia-600',
     bgColor: 'bg-fuchsia-100 dark:bg-fuchsia-900/30',
   },
 }
 
-// Simple label map for charts/components that only need labels
-export const KPI_LABELS: Record<KpiType, string> = Object.fromEntries(
-  Object.entries(KPI_CONFIG).map(([key, config]) => [key, config.label])
+// Translation key map for charts/components that only need keys
+export const KPI_LABEL_KEYS: Record<KpiType, string> = Object.fromEntries(
+  Object.entries(KPI_CONFIG).map(([key, config]) => [key, config.labelKey])
 ) as Record<KpiType, string>
 
 // Currency metrics for formatting
@@ -140,8 +140,8 @@ export type WidgetPreviewType =
 export type WidgetCategory = 'charts' | 'analytics' | 'data' | 'insights'
 
 export interface IWidgetConfig {
-  title: string
-  description: string
+  titleKey: string
+  descriptionKey: string
   category: WidgetCategory
   preview: WidgetPreviewType
   size?: 'normal' | 'wide' | 'tall'
@@ -150,131 +150,131 @@ export interface IWidgetConfig {
 export const WIDGET_CONFIG: Record<WidgetType, IWidgetConfig> = {
   // Charts
   REVENUE_OVERVIEW: {
-    title: 'Обзор дохода',
-    description: 'График с суммарной статистикой',
+    titleKey: 'dashboard.widgetTitles.revenueOverview',
+    descriptionKey: 'dashboard.widgetDescriptions.revenueOverview',
     category: 'charts',
     preview: 'area',
     size: 'wide',
   },
   TRANSACTIONS_SUMMARY: {
-    title: 'Сводка транзакций',
-    description: 'Анализ транзакций',
+    titleKey: 'dashboard.widgetTitles.transactionsSummary',
+    descriptionKey: 'dashboard.widgetDescriptions.transactionsSummary',
     category: 'charts',
     preview: 'bar',
     size: 'wide',
   },
   INCOME_EXPENSE: {
-    title: 'Доходы и расходы',
-    description: 'Финансовый отчет',
+    titleKey: 'dashboard.widgetTitles.incomeExpense',
+    descriptionKey: 'dashboard.widgetDescriptions.incomeExpense',
     category: 'charts',
     preview: 'bar',
     size: 'wide',
   },
   DAILY_COMPARISON: {
-    title: 'Дневное сравнение',
-    description: 'Сравнение с предыдущим днем',
+    titleKey: 'dashboard.widgetTitles.dailyComparison',
+    descriptionKey: 'dashboard.widgetDescriptions.dailyComparison',
     category: 'charts',
     preview: 'line',
   },
   CUSTOMER_RATINGS: {
-    title: 'Рейтинг клиентов',
-    description: 'Звездный рейтинг с графиком',
+    titleKey: 'dashboard.widgetTitles.customerRatings',
+    descriptionKey: 'dashboard.widgetDescriptions.customerRatings',
     category: 'charts',
     preview: 'line',
   },
   ORDERS_CHART: {
-    title: 'График заказов',
-    description: 'Динамика заказов',
+    titleKey: 'dashboard.widgetTitles.ordersChart',
+    descriptionKey: 'dashboard.widgetDescriptions.ordersChart',
     category: 'charts',
     preview: 'area',
   },
 
   // Analytics
   PERFORMANCE_RADAR: {
-    title: 'Эффективность',
-    description: 'Radar-анализ показателей',
+    titleKey: 'dashboard.widgetTitles.performanceRadar',
+    descriptionKey: 'dashboard.widgetDescriptions.performanceRadar',
     category: 'analytics',
     preview: 'radar',
   },
   CONVERSION_FUNNEL: {
-    title: 'Конверсионная воронка',
-    description: 'Воронка продаж',
+    titleKey: 'dashboard.widgetTitles.conversionFunnel',
+    descriptionKey: 'dashboard.widgetDescriptions.conversionFunnel',
     category: 'analytics',
     preview: 'funnel',
   },
   GOAL_RADIAL: {
-    title: 'Прогресс целей',
-    description: 'Радиальный прогресс',
+    titleKey: 'dashboard.widgetTitles.goalRadial',
+    descriptionKey: 'dashboard.widgetDescriptions.goalRadial',
     category: 'analytics',
     preview: 'donut',
   },
   HOURLY_BREAKDOWN: {
-    title: 'По часам',
-    description: 'Тепловая карта',
+    titleKey: 'dashboard.widgetTitles.hourlyBreakdown',
+    descriptionKey: 'dashboard.widgetDescriptions.hourlyBreakdown',
     category: 'analytics',
     preview: 'heatmap',
   },
   GOAL_PROGRESS: {
-    title: 'Цели',
-    description: 'Прогресс по целям',
+    titleKey: 'dashboard.widgetTitles.goalProgress',
+    descriptionKey: 'dashboard.widgetDescriptions.goalProgress',
     category: 'analytics',
     preview: 'donut',
   },
   ALERTS: {
-    title: 'Уведомления',
-    description: 'Важные оповещения',
+    titleKey: 'dashboard.widgetTitles.alerts',
+    descriptionKey: 'dashboard.widgetDescriptions.alerts',
     category: 'analytics',
     preview: 'list',
   },
 
   // Data
   TOP_PRODUCTS: {
-    title: 'Топ продукты',
-    description: 'Лучшие товары по выручке',
+    titleKey: 'dashboard.widgetTitles.topProducts',
+    descriptionKey: 'dashboard.widgetDescriptions.topProducts',
     category: 'data',
     preview: 'list',
   },
   PAYMENT_METHODS: {
-    title: 'Способы оплаты',
-    description: 'Распределение по типам',
+    titleKey: 'dashboard.widgetTitles.paymentMethods',
+    descriptionKey: 'dashboard.widgetDescriptions.paymentMethods',
     category: 'data',
     preview: 'pie',
   },
   CHANNEL_SPLIT: {
-    title: 'Каналы продаж',
-    description: 'Доставка, зал, самовывоз',
+    titleKey: 'dashboard.widgetTitles.channelSplit',
+    descriptionKey: 'dashboard.widgetDescriptions.channelSplit',
     category: 'data',
     preview: 'donut',
   },
   STAFF_RANKING: {
-    title: 'Рейтинг сотрудников',
-    description: 'Топ сотрудников',
+    titleKey: 'dashboard.widgetTitles.staffRanking',
+    descriptionKey: 'dashboard.widgetDescriptions.staffRanking',
     category: 'data',
     preview: 'list',
   },
   ORDERS_BY_CATEGORY: {
-    title: 'Заказы по категориям',
-    description: 'Пончиковая диаграмма',
+    titleKey: 'dashboard.widgetTitles.ordersByCategory',
+    descriptionKey: 'dashboard.widgetDescriptions.ordersByCategory',
     category: 'data',
     preview: 'donut',
   },
   VISITORS_TRAFFIC: {
-    title: 'Трафик посетителей',
-    description: 'Разбивка по устройствам',
+    titleKey: 'dashboard.widgetTitles.visitorsTraffic',
+    descriptionKey: 'dashboard.widgetDescriptions.visitorsTraffic',
     category: 'data',
     preview: 'bar',
   },
 
   // Insights
   ANOMALY_DETECTION: {
-    title: 'Обнаружение аномалий',
-    description: 'Выявление отклонений',
+    titleKey: 'dashboard.widgetTitles.anomalyDetection',
+    descriptionKey: 'dashboard.widgetDescriptions.anomalyDetection',
     category: 'insights',
     preview: 'bar',
   },
   SALES_METRICS: {
-    title: 'Метрики продаж',
-    description: 'Комплексная аналитика',
+    titleKey: 'dashboard.widgetTitles.salesMetrics',
+    descriptionKey: 'dashboard.widgetDescriptions.salesMetrics',
     category: 'insights',
     preview: 'donut',
     size: 'wide',
@@ -282,102 +282,102 @@ export const WIDGET_CONFIG: Record<WidgetType, IWidgetConfig> = {
 
   // Enhanced Widgets (placeholders)
   EARNINGS_REPORT: {
-    title: 'Отчет о доходах',
-    description: 'Детальный отчет',
+    titleKey: 'dashboard.widgetTitles.earningsReport',
+    descriptionKey: 'dashboard.widgetDescriptions.earningsReport',
     category: 'insights',
     preview: 'bar',
   },
   GROWTH_GAUGE: {
-    title: 'Индикатор роста',
-    description: 'Показатель роста',
+    titleKey: 'dashboard.widgetTitles.growthGauge',
+    descriptionKey: 'dashboard.widgetDescriptions.growthGauge',
     category: 'analytics',
     preview: 'donut',
   },
   COMBO_CHART: {
-    title: 'Комбо график',
-    description: 'Смешанный график',
+    titleKey: 'dashboard.widgetTitles.comboChart',
+    descriptionKey: 'dashboard.widgetDescriptions.comboChart',
     category: 'charts',
     preview: 'area',
     size: 'wide',
   },
   CHANNEL_SALES_BREAKDOWN: {
-    title: 'Продажи по каналам',
-    description: 'Разбивка продаж',
+    titleKey: 'dashboard.widgetTitles.channelSalesBreakdown',
+    descriptionKey: 'dashboard.widgetDescriptions.channelSalesBreakdown',
     category: 'data',
     preview: 'bar',
   },
   PERFORMANCE_TABS: {
-    title: 'Эффективность',
-    description: 'Табличный вид',
+    titleKey: 'dashboard.widgetTitles.performanceTabs',
+    descriptionKey: 'dashboard.widgetDescriptions.performanceTabs',
     category: 'analytics',
     preview: 'list',
   },
   SALES_PLAN_PROGRESS: {
-    title: 'Прогресс плана продаж',
-    description: 'Выполнение плана',
+    titleKey: 'dashboard.widgetTitles.salesPlanProgress',
+    descriptionKey: 'dashboard.widgetDescriptions.salesPlanProgress',
     category: 'analytics',
     preview: 'donut',
   },
   YEAR_COMPARISON: {
-    title: 'Сравнение по годам',
-    description: 'Год к году',
+    titleKey: 'dashboard.widgetTitles.yearComparison',
+    descriptionKey: 'dashboard.widgetDescriptions.yearComparison',
     category: 'charts',
     preview: 'bar',
     size: 'wide',
   },
   FINANCE_REPORT: {
-    title: 'Финансовый отчет',
-    description: 'Полный отчет',
+    titleKey: 'dashboard.widgetTitles.financeReport',
+    descriptionKey: 'dashboard.widgetDescriptions.financeReport',
     category: 'insights',
     preview: 'area',
     size: 'wide',
   },
   TOP_SERVICES_BARS: {
-    title: 'Топ услуги',
-    description: 'Популярные услуги',
+    titleKey: 'dashboard.widgetTitles.topServices',
+    descriptionKey: 'dashboard.widgetDescriptions.topServices',
     category: 'data',
     preview: 'bar',
   },
   TOTAL_EARNING_DUAL: {
-    title: 'Общий доход',
-    description: 'Двойной график',
+    titleKey: 'dashboard.widgetTitles.totalEarning',
+    descriptionKey: 'dashboard.widgetDescriptions.totalEarning',
     category: 'charts',
     preview: 'area',
   },
   WEEKLY_OVERVIEW_COMBO: {
-    title: 'Недельный обзор',
-    description: 'Комбо за неделю',
+    titleKey: 'dashboard.widgetTitles.weeklyOverview',
+    descriptionKey: 'dashboard.widgetDescriptions.weeklyOverview',
     category: 'charts',
     preview: 'bar',
   },
 
   // Legacy (backwards compatibility)
   RECENT_ORDERS: {
-    title: 'Последние заказы',
-    description: 'Список заказов',
+    titleKey: 'dashboard.widgetTitles.recentOrders',
+    descriptionKey: 'dashboard.widgetDescriptions.recentOrders',
     category: 'data',
     preview: 'list',
   },
   CUSTOMER_SEGMENTS: {
-    title: 'Сегменты клиентов',
-    description: 'Группы клиентов',
+    titleKey: 'dashboard.widgetTitles.customerSegments',
+    descriptionKey: 'dashboard.widgetDescriptions.customerSegments',
     category: 'data',
     preview: 'pie',
   },
   BRANCH_COMPARISON: {
-    title: 'Сравнение филиалов',
-    description: 'По филиалам',
+    titleKey: 'dashboard.widgetTitles.branchComparison',
+    descriptionKey: 'dashboard.widgetDescriptions.branchComparison',
     category: 'analytics',
     preview: 'bar',
   },
 }
 
-// Category labels for grouping
-export const WIDGET_CATEGORY_LABELS: Record<WidgetCategory, string> = {
-  charts: 'Графики и диаграммы',
-  analytics: 'Аналитика',
-  data: 'Данные',
-  insights: 'Аналитические выводы',
+// Category label keys for grouping
+export const WIDGET_CATEGORY_LABEL_KEYS: Record<WidgetCategory, string> = {
+  charts: 'dashboard.widgetCategories.charts',
+  analytics: 'dashboard.widgetCategories.analytics',
+  data: 'dashboard.widgetCategories.data',
+  insights: 'dashboard.widgetCategories.insights',
 }
 
 // Helper to get widgets by category
@@ -395,15 +395,15 @@ import type { ChartType } from './types'
 
 export interface IChartTypeOption {
   value: ChartType
-  label: string
+  labelKey: string
 }
 
 export const CHART_TYPE_OPTIONS: IChartTypeOption[] = [
-  { value: 'area', label: 'Область' },
-  { value: 'bar', label: 'Столбцы' },
-  { value: 'line', label: 'Линия' },
-  { value: 'radial', label: 'Радиальный' },
-  { value: 'radar', label: 'Радар' },
+  { value: 'area', labelKey: 'dashboard.chartTypes.area' },
+  { value: 'bar', labelKey: 'dashboard.chartTypes.bar' },
+  { value: 'line', labelKey: 'dashboard.chartTypes.line' },
+  { value: 'radial', labelKey: 'dashboard.chartTypes.radial' },
+  { value: 'radar', labelKey: 'dashboard.chartTypes.radar' },
 ]
 
 // ============================================

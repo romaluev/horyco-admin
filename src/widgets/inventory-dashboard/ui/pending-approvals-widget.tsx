@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -111,7 +111,7 @@ export function PendingApprovalsWidget({
             {allPending.map((item) => (
               <Link
                 key={`${item.type}-${item.id}`}
-                href={item.href}
+                to={item.href}
                 className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
               >
                 <div className="space-y-1">
@@ -151,7 +151,7 @@ export function PendingApprovalsWidget({
         {totalPending > size && (
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/inventory/writeoffs?status=pending">
+              <Link to={"/dashboard/inventory/writeoffs?status=pending" as any}>
                 Показать все ({totalPending})
               </Link>
             </Button>
