@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus, IconTable } from '@tabler/icons-react'
 
@@ -22,8 +22,8 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
-import { useViews } from '@/entities/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/view-builder'
+import { useViews } from '@/entities/dashboard/view'
+import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
 
 export function ViewsSidebarSection() {
   const pathname = usePathname()
@@ -102,7 +102,7 @@ export function ViewsSidebarSection() {
                             asChild
                             isActive={pathname === `/dashboard/views/${view.id}`}
                           >
-                            <Link href={`/dashboard/views/${view.id}`}>
+                            <Link to={`/dashboard/views/${view.id}` as any}>
                               <span className="text-[17px]">{view.name}</span>
                               {view.isPinned && (
                                 <span className="ml-auto text-xs text-muted-foreground">

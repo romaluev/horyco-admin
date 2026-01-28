@@ -1,13 +1,13 @@
 'use client'
 
 import { ArrowLeftRight } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetMovements, MovementTypeBadge } from '@/entities/stock-movement'
+import { useGetMovements, MovementTypeBadge } from '@/entities/inventory/stock-movement'
 
 interface IRecentMovementsWidgetProps {
   warehouseId?: number
@@ -36,10 +36,10 @@ export function RecentMovementsWidget({
           <CardDescription>История операций с товарами</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/inventory/movements">Все</Link>
+          <Link to="/dashboard/inventory/movements">Все</Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {!warehouseId ? (
           <p className="text-center text-sm text-muted-foreground py-4">
             Выберите склад для просмотра

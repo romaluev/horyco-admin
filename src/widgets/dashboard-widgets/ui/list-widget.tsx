@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard-widget'
+import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
 
 interface ListWidgetProps {
   data: WidgetData

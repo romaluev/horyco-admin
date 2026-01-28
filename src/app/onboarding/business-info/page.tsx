@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { BUSINESS_TYPES } from '@/shared/config/business-types'
 import { getNextStep } from '@/shared/config/onboarding'
@@ -44,11 +45,11 @@ import { OnboardingLayout } from '@/shared/ui/onboarding'
 import {
   useSubmitBusinessInfo,
   useStepValidation,
-} from '@/entities/onboarding'
+} from '@/entities/onboarding/onboarding'
 import {
   type BusinessInfoFormValues,
   businessInfoSchema,
-} from '@/features/onboarding/model'
+} from '@/features/onboarding/onboarding/model'
 
 const uploadBusinessLogo = async (file: File): Promise<string> => {
   const response = await uploadFile({
@@ -62,6 +63,7 @@ const uploadBusinessLogo = async (file: File): Promise<string> => {
 
 export default function BusinessInfoPage() {
   const router = useRouter()
+  const { t } = useTranslation('onboarding')
   const [logoFiles, setLogoFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
 
@@ -138,14 +140,14 @@ export default function BusinessInfoPage() {
       currentStep="business_identity"
       completedSteps={progress?.completedSteps || []}
       skippedSteps={progress?.skippedSteps || []}
-      title="Расскажите о вашем бизнесе"
-      description="Эта информация поможет нам настроить систему под ваши потребности"
+      title={t('pages.businessInfo.title')}
+      description={t('pages.businessInfo.description')}
     >
       <Card>
           <CardHeader>
-            <CardTitle>Информация о заведении</CardTitle>
+            <CardTitle>{t('pages.businessInfo.cardTitle')}</CardTitle>
             <CardDescription>
-              Заполните основные данные о вашем ресторане
+              {t('pages.businessInfo.cardDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -159,16 +161,16 @@ export default function BusinessInfoPage() {
                   name="businessName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Название заведения *</FormLabel>
+                      <FormLabel>{t('pages.businessInfo.businessName')}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Golden Dragon Restaurant"
+                          placeholder={t('pages.businessInfo.businessNamePlaceholder')}
                           {...field}
                           disabled={isSubmitting}
                         />
                       </FormControl>
                       <FormDescription>
-                        Официальное название вашего ресторана
+                        {t('pages.businessInfo.businessNameDescription')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -180,7 +182,7 @@ export default function BusinessInfoPage() {
                   name="businessType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Тип заведения *</FormLabel>
+                      <FormLabel>{t('pages.businessInfo.businessType')}</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -188,7 +190,7 @@ export default function BusinessInfoPage() {
                       >
                         <FormControl className="w-60">
                           <SelectTrigger>
-                            <SelectValue placeholder="Выберите тип" />
+                            <SelectValue placeholder={t('pages.businessInfo.businessTypeSelect')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -200,7 +202,7 @@ export default function BusinessInfoPage() {
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        Это поможет подобрать подходящий шаблон меню
+                        {t('pages.businessInfo.businessTypeDescription')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -212,18 +214,16 @@ export default function BusinessInfoPage() {
                   name="slug"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>URL-адрес (slug) *</FormLabel>
+                      <FormLabel>{t('pages.businessInfo.slug')}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="golden-dragon"
+                          placeholder={t('pages.businessInfo.slugPlaceholder')}
                           {...field}
                           disabled={isSubmitting || isUploading}
                         />
                       </FormControl>
                       <FormDescription>
-                        Для создания уникальной ссылки (например:
-                        Horyco.uz/golden-dragon). Только строчные буквы, цифры и
-                        дефисы.
+                        {t('pages.businessInfo.slugDescription')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -235,7 +235,7 @@ export default function BusinessInfoPage() {
                   name="logoUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Логотип заведения</FormLabel>
+                      <FormLabel>{t('pages.businessInfo.logo')}</FormLabel>
                       <FormControl>
                         <FileUploader
                           value={logoFiles}
@@ -250,12 +250,11 @@ export default function BusinessInfoPage() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Необязательно. Загрузите логотип вашего заведения (до 5
-                        МБ)
+                        {t('pages.businessInfo.logoDescription')}
                       </FormDescription>
                       {field.value && (
                         <p className="text-muted-foreground text-sm">
-                          Текущий логотип: {field.value}
+                          {t('pages.businessInfo.currentLogo')} {field.value}
                         </p>
                       )}
                       <FormMessage />
@@ -274,16 +273,16 @@ export default function BusinessInfoPage() {
                     }}
                     disabled={isSubmitting || isUploading}
                   >
-                    Назад
+                    {t('pages.businessInfo.buttons.back')}
                   </Button>
                   <Button type="submit" disabled={isSubmitting || isUploading}>
                     {isSubmitting || isUploading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {isUploading ? 'Загрузка...' : 'Сохранение...'}
+                        {isUploading ? t('pages.businessInfo.buttons.uploading') : t('pages.businessInfo.buttons.saving')}
                       </>
                     ) : (
-                      'Далее'
+                      t('pages.businessInfo.buttons.next')
                     )}
                   </Button>
                 </div>

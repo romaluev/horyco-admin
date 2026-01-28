@@ -2,7 +2,8 @@
 
 import { Suspense, useState } from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { IconPlus, IconUpload } from '@tabler/icons-react'
 
@@ -13,10 +14,11 @@ import { Separator } from '@/shared/ui/base/separator'
 import { DataTableSkeleton } from '@/shared/ui/base/table/data-table-skeleton'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import BranchListingPage from '@/entities/branch/ui/branch-listing'
-import { CreateBranchDialog } from '@/features/branch-form'
+import BranchListingPage from '@/entities/organization/branch/ui/branch-listing'
+import { CreateBranchDialog } from '@/features/organization/branch-form'
 
 export default function Page() {
+  const { t } = useTranslation('organization')
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   return (
@@ -25,24 +27,24 @@ export default function Page() {
         <div className="flex flex-1 flex-col space-y-4">
           <div className="flex items-start justify-between">
             <Heading
-              title={'Филиалы'}
-              description={'Управление филиалами вашей организации'}
+              title={t('branches.title')}
+              description={t('branches.description')}
             />
             <div className="flex gap-2">
               <Link
-                href="/dashboard/branches/bulk-import"
+                to="/dashboard/branches/bulk-import"
                 className={cn(
                   buttonVariants({ variant: 'outline' }),
                   'text-xs md:text-sm'
                 )}
               >
-                <IconUpload className="mr-2 h-4 w-4" /> Импорт
+                <IconUpload className="mr-2 h-4 w-4" /> {t('branches.actions.import')}
               </Link>
               <Button
                 onClick={() => setIsCreateDialogOpen(true)}
                 className="text-xs md:text-sm"
               >
-                <IconPlus className="mr-2 h-4 w-4" /> Добавить филиал
+                <IconPlus className="mr-2 h-4 w-4" /> {t('branches.addNew')}
               </Button>
             </div>
           </div>

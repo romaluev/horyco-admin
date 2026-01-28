@@ -4,7 +4,7 @@ Docs: $ARGUMENTS
 
 ---
 
-## 1. ANALYZE
+## 1. ANALYZE & PLAN
 
 Load: `skills/*`, `standards/*`
 
@@ -21,7 +21,7 @@ Compare code vs docs:
 
 ---
 
-## 2. SYNC
+## 2. EXECUTE & SYNC
 
 For each violation:
 
@@ -40,25 +40,22 @@ For each violation:
 
 ---
 
-## 3. VALIDATE
+## 3. TEST & VALIDATE
 
 **Guardians:**
 
 - Call **code-guardian** → fix violations
 - Call **design-guardian** → fix UI violations
 
-**Quality gates:** (see `workflow.md`)
-
-**Verify UI matches docs** (skip: `--skip-ui-test`):
-
-- Call **browser-tester** agent for comprehensive testing
+- Call **browser-tester** agent for comprehensive testing: using agent-browser command
 - Test EVERY documented user flow end-to-end
 - Test COMPLETE CRUD if documented
 - Verify ALL documented elements visible
+- Interact with every action that you can - buttons, forms, filters, submittion, sorting, pagination and more.
 - Test ALL states (loading, error, empty, success)
 - `agent-browser console` → 0 errors
 
-**If fail → FIX LOOP** (see `workflow.md`, max 3 cycles)
+**If fail → FIX LOOP**. Go back to planning.
 
 ---
 

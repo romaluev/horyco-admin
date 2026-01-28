@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { IconArrowLeft, IconUpload } from '@tabler/icons-react'
 
@@ -12,7 +12,7 @@ import { Heading } from '@/shared/ui/base/heading'
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { BulkImportDialog } from '@/features/branch-bulk-import'
+import { BulkImportDialog } from '@/features/organization/branch-bulk-import'
 
 export default function BulkImportPage() {
   const router = useRouter()

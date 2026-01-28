@@ -1,35 +1,14 @@
-'use client'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { use, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
+
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ArrowLeft, CheckCircle, XCircle, Loader2, Plus } from 'lucide-react'
 
-import {
-  useInventoryCountById,
-  useCountVarianceSummary,
-  CountStatusBadge,
-  CountTypeBadge,
-} from '@/entities/inventory-count'
-import {
-  useUpdateCountItem,
-  useCancelCount,
-} from '@/entities/inventory-count/model/mutations'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { Button } from '@/shared/ui/base/button'
-import { Separator } from '@/shared/ui/base/separator'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Input } from '@/shared/ui/base/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,25 +19,47 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Input } from '@/shared/ui/base/input'
 import { Progress } from '@/shared/ui/base/progress'
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
+import {
+  useInventoryCountById,
+  useCountVarianceSummary,
+  CountStatusBadge,
+  CountTypeBadge,
+} from '@/entities/inventory/inventory-count'
+import {
+  useUpdateCountItem,
+  useCancelCount,
+} from '@/entities/inventory/inventory-count/model/mutations'
 import {
   CompleteCountDialog,
   ApproveCountDialog,
   RejectCountDialog,
   AddCountItemDialog,
-} from '@/features/inventory-count-workflow'
+} from '@/features/inventory/inventory-count-workflow'
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
-export default function InventoryCountDetailPage({ params }: PageProps) {
-  const resolvedParams = use(params)
+export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const id = parseInt(resolvedParams.id)
+  const id = parseInt(paramId)
 
   const { data: count, isLoading, error } = useInventoryCountById(id)
   const { data: variance } = useCountVarianceSummary(id)
@@ -111,11 +112,11 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-destructive mb-4">
-            {error?.message || 'Инвентаризация не найдена'}
+            {error?.message || t('pages.counts.notFound')}
           </p>
           <Button variant="outline" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Назад
+            {t('common.back')}
           </Button>
         </div>
       </PageContainer>
@@ -156,15 +157,15 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
               <>
                 <Button variant="outline" onClick={() => setIsAddItemDialogOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Добавить товар
+                  {t('components.inventoryCountWorkflow.addItem.title')}
                 </Button>
                 <Button onClick={() => setIsCompleteDialogOpen(true)}>
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Завершить подсчёт
+                  {t('components.inventoryCountWorkflow.complete.title')}
                 </Button>
                 <Button variant="destructive" onClick={() => setIsCancelDialogOpen(true)}>
                   <XCircle className="mr-2 h-4 w-4" />
-                  Отменить
+                  {t('common.cancel')}
                 </Button>
               </>
             )}
@@ -172,14 +173,14 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
               <>
                 <Button onClick={() => setIsApproveDialogOpen(true)}>
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Одобрить
+                  {t('components.inventoryCountWorkflow.approve.title')}
                 </Button>
                 <Button variant="outline" onClick={() => setIsRejectDialogOpen(true)}>
-                  Отклонить
+                  {t('components.inventoryCountWorkflow.reject.title')}
                 </Button>
                 <Button variant="destructive" onClick={() => setIsCancelDialogOpen(true)}>
                   <XCircle className="mr-2 h-4 w-4" />
-                  Отменить
+                  {t('common.cancel')}
                 </Button>
               </>
             )}
@@ -192,11 +193,11 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">Прогресс</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('pages.counts.columnVariance')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>Подсчитано товаров</span>
+                <span>{t('pages.counts.columnItems')}</span>
                 <span className="font-medium">
                   {countedItems} / {totalItems}
                 </span>
@@ -207,17 +208,17 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">Расхождения</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('pages.counts.columnVariance')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Недостача:</span>
+                <span className="text-muted-foreground">недостача:</span>
                 <span className="text-destructive">
                   {formatCurrency(variance?.shortageValue || count.shortageValue)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Излишек:</span>
+                <span className="text-muted-foreground">излишек:</span>
                 <span className="text-emerald-600 dark:text-emerald-500">
                   {formatCurrency(variance?.surplusValue || count.surplusValue)}
                 </span>
@@ -296,7 +297,7 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
                     <TableHead className="text-right">Подсчитано</TableHead>
                     <TableHead className="text-right">Расхождение</TableHead>
                     <TableHead className="text-right">Сумма</TableHead>
-                    {isInProgress && <TableHead className="w-[100px]" />}
+                    {isInProgress && <TableHead className="w-[100px]">{t('common.actions')}</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -461,12 +462,12 @@ export default function InventoryCountDetailPage({ params }: PageProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Отменить инвентаризацию?</AlertDialogTitle>
             <AlertDialogDescription>
-              Инвентаризация {count.countNumber} будет отменена. Все внесённые данные
+              {t('pages.counts.columnVariance')} {count.countNumber} будет отменена. Все внесённые данные
               будут сохранены, но корректировки остатков не будут применены.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Назад</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleCancel}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

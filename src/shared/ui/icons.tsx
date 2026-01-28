@@ -3,6 +3,7 @@ import {
   IconArrowRight,
   IconArrowsExchange,
   IconAdjustments,
+  IconBell,
   IconBuilding,
   IconBuildingFactory,
   IconCategory,
@@ -133,4 +134,5 @@ export const Icons = {
   arrowsExchange: IconArrowsExchange,
   listCheck: IconListCheck,
   buildingFactory: IconBuildingFactory,
+  bell: IconBell,
 }

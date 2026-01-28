@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconTrendingDown,
@@ -25,7 +26,7 @@ import { KpiType, Trend } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import { Card, CardContent } from '@/shared/ui/base/card'
 
-import type { IKpiMetricValue } from '@/entities/dashboard'
+import type { IKpiMetricValue } from '@/entities/dashboard/dashboard'
 
 // Hardcoded colors for proper rendering (CSS variables use oklch, not hsl)
 const CHART_SUCCESS = '#22c55e'
@@ -38,86 +39,86 @@ interface IKpiCardSparklineProps {
   className?: string
 }
 
-const KPI_CONFIG: Record<
+const KPI_ICONS: Record<
   KpiType,
   {
-    label: string
     icon: typeof IconCurrencyDollar
     color: string
     bgColor: string
+    labelKey: string
   }
 > = {
   [KpiType.REVENUE]: {
-    label: 'Выручка',
     icon: IconCurrencyDollar,
     color: 'text-emerald-600 dark:text-emerald-400',
     bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
+    labelKey: 'kpiLabels.revenue',
   },
   [KpiType.ORDERS]: {
-    label: 'Заказы',
     icon: IconShoppingCart,
     color: 'text-blue-600 dark:text-blue-400',
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    labelKey: 'kpiLabels.orders',
   },
   [KpiType.AVG_CHECK]: {
-    label: 'Средний чек',
     icon: IconReceipt,
     color: 'text-violet-600 dark:text-violet-400',
     bgColor: 'bg-violet-100 dark:bg-violet-900/30',
+    labelKey: 'kpiLabels.avgCheck',
   },
   [KpiType.CUSTOMERS]: {
-    label: 'Клиенты',
     icon: IconUsers,
     color: 'text-cyan-600 dark:text-cyan-400',
     bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
+    labelKey: 'kpiLabels.customers',
   },
   [KpiType.NEW_CUSTOMERS]: {
-    label: 'Новые клиенты',
     icon: IconUserPlus,
     color: 'text-teal-600 dark:text-teal-400',
     bgColor: 'bg-teal-100 dark:bg-teal-900/30',
+    labelKey: 'kpiLabels.newCustomers',
   },
   [KpiType.RETURNING_CUSTOMERS]: {
-    label: 'Постоянные',
     icon: IconRefresh,
     color: 'text-indigo-600 dark:text-indigo-400',
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
+    labelKey: 'kpiLabels.returningCustomers',
   },
   [KpiType.TIPS]: {
-    label: 'Чаевые',
     icon: IconCash,
     color: 'text-amber-600 dark:text-amber-400',
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    labelKey: 'kpiLabels.tips',
   },
   [KpiType.REFUNDS]: {
-    label: 'Возвраты',
     icon: IconReceiptRefund,
     color: 'text-orange-600 dark:text-orange-400',
     bgColor: 'bg-orange-100 dark:bg-orange-900/30',
+    labelKey: 'kpiLabels.refunds',
   },
   [KpiType.CANCELLATIONS]: {
-    label: 'Отмены',
     icon: IconX,
     color: 'text-red-600 dark:text-red-400',
     bgColor: 'bg-red-100 dark:bg-red-900/30',
+    labelKey: 'kpiLabels.cancellations',
   },
   [KpiType.MARGIN]: {
-    label: 'Маржа',
     icon: IconChartBar,
     color: 'text-lime-600 dark:text-lime-400',
     bgColor: 'bg-lime-100 dark:bg-lime-900/30',
+    labelKey: 'kpiLabels.margin',
   },
   [KpiType.RETENTION_RATE]: {
-    label: 'Удержание',
     icon: IconPercentage,
     color: 'text-pink-600 dark:text-pink-400',
     bgColor: 'bg-pink-100 dark:bg-pink-900/30',
+    labelKey: 'kpiLabels.retentionRate',
   },
   [KpiType.STAFF_PRODUCTIVITY]: {
-    label: 'Продуктивность',
     icon: IconActivity,
     color: 'text-fuchsia-600 dark:text-fuchsia-400',
     bgColor: 'bg-fuchsia-100 dark:bg-fuchsia-900/30',
+    labelKey: 'kpiLabels.staffProductivity',
   },
 }
 
@@ -141,8 +142,10 @@ export function KpiCardSparkline({
   sparklineData,
   className,
 }: IKpiCardSparklineProps) {
-  const config = KPI_CONFIG[metric.type]
+  const { t } = useTranslation('dashboard')
+  const config = KPI_ICONS[metric.type]
   const Icon = config.icon
+  const label = t(config.labelKey)
 
   const isPositive = metric.trend === Trend.UP
   const isNegative = metric.trend === Trend.DOWN
@@ -169,7 +172,7 @@ export function KpiCardSparkline({
                 <Icon className={cn('size-4', config.color)} />
               </div>
               <span className="text-sm font-medium text-muted-foreground">
-                {config.label}
+                {label}
               </span>
             </div>
 

@@ -2,7 +2,7 @@
 
 import { cn } from '@/shared/lib/utils'
 
-import type { IRankedItem } from '@/entities/dashboard'
+import type { IRankedItem } from '@/entities/dashboard/dashboard'
 
 interface TopProductsWidgetProps {
   data: IRankedItem[]

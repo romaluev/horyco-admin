@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 .playwright-mcp
+.tanstack
+dist
 
 # testing
 /coverage

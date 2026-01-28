@@ -10,7 +10,7 @@ import {
   getBranchesWithPermission,
 } from '@/shared/lib/permissions'
 
-import { useAuthStore } from '@/entities/auth'
+import { useAuthStore } from '@/entities/auth/auth'
 
 /**
  * Hook to check if user has a permission at ANY branch (Admin Panel mode)

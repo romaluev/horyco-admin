@@ -2,17 +2,29 @@
 
 import * as React from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { Link } from '@tanstack/react-router'
+import { usePathname, useRouter } from '@/shared/lib/navigation'
 
 import {
+  IconCheck,
   IconChevronRight,
   IconChevronsDown,
+  IconLanguage,
   IconLogout,
+  IconMoon,
   IconSettings,
+  IconSun,
+  IconSunMoon,
   IconUserCircle,
 } from '@tabler/icons-react'
+import { useTheme } from 'next-themes'
+import { useTranslation } from 'react-i18next'
+
+import {
+  Language,
+  LANGUAGE_NAMES,
+  SUPPORTED_LANGUAGES,
+} from '@/shared/config/i18n'
 
 import logo from '@/shared/assets/logo.png'
 import { getNavItems, getSettingsNavItem } from '@/shared/config/data'
@@ -32,7 +44,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/shared/ui/base/dropdown-menu'
 import {
@@ -58,9 +74,10 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 
-import { useAuthStore } from '@/entities/auth/model/store'
-import { useGetAllBranches, useBranchStore } from '@/entities/branch'
-import { AnalyticsSidebarSection } from '@/features/analytics'
+import { useAuthStore } from '@/entities/auth/auth/model/store'
+import { useGetAllBranches, useBranchStore } from '@/entities/organization/branch'
+import { AnalyticsSidebarSection } from '@/features/dashboard/analytics'
+import { useNavItems } from '@/shared/hooks/use-nav-items'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
@@ -157,9 +174,9 @@ function NavItemWithSub({
                 return (
                   <Link
                     key={subItem.title}
-                    href={subItem.url}
+                    to={subItem.url}
                     className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
-                      pathname === subItem.url
+                      pathname === subItem.url || pathname.startsWith(subItem.url + '/')
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                         : ''
                     }`}
@@ -197,10 +214,10 @@ function NavItemWithSub({
                   <SidebarMenuSubButton
                     className="!p-3"
                     asChild
-                    isActive={pathname === subItem.url}
+                    isActive={pathname === subItem.url || pathname.startsWith(subItem.url + '/')}
                   >
                     <Link
-                      href={subItem.url}
+                      to={subItem.url}
                       className="flex items-center gap-2"
                     >
                       {SubIcon && (
@@ -224,8 +241,13 @@ export default function AppSidebar() {
   const authStore = useAuthStore()
   const { user } = useAuthStore()
   const router = useRouter()
-  const allNavItems = getNavItems()
-  const settingsNavItem = getSettingsNavItem()
+  const { i18n } = useTranslation()
+  const { theme, setTheme } = useTheme()
+  const { navItems: allNavItems, settingsNavItem } = useNavItems()
+
+  const handleChangeLanguage = (lng: Language) => {
+    i18n.changeLanguage(lng)
+  }
 
   const navItems = filterNavItemsByPermission(
     allNavItems,
@@ -263,7 +285,7 @@ export default function AppSidebar() {
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
-            <Image
+            <img
               className="w-40 overflow-hidden"
               src={logo}
               alt=""
@@ -301,7 +323,7 @@ export default function AppSidebar() {
                         tooltip={item.title}
                         isActive={pathname === item.url}
                       >
-                        <Link href={item.url}>
+                        <Link to={item.url}>
                           <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`} />
                           <span className="text-[17px]">{item.title}</span>
                         </Link>
@@ -327,7 +349,7 @@ export default function AppSidebar() {
                 tooltip="Настройки"
                 isActive={pathname === settingsNavItem.url}
               >
-                <Link href={settingsNavItem.url}>
+                <Link to={settingsNavItem.url}>
                   <IconSettings className="!h-6 !w-6" />
                   <span className="text-[17px]">Настройки</span>
                 </Link>
@@ -376,13 +398,61 @@ export default function AppSidebar() {
                   <DropdownMenuItem
                     onClick={() => router.push('/dashboard/profile')}
                   >
-                    <IconUserCircle className="mr-2 h-4 w-4" />
+                    <IconUserCircle />
                     Профиль
                   </DropdownMenuItem>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <IconLanguage />
+                      Язык
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        {SUPPORTED_LANGUAGES.map((lng) => (
+                          <DropdownMenuItem
+                            key={lng}
+                            onClick={() => handleChangeLanguage(lng)}
+                          >
+                            {LANGUAGE_NAMES[lng]}
+                            {i18n.language === lng && (
+                              <IconCheck className="ml-auto" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <IconSunMoon />
+                      Тема
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem onClick={() => setTheme('light')}>
+                          <IconSun />
+                          Светлая
+                          {theme === 'light' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('dark')}>
+                          <IconMoon />
+                          Тёмная
+                          {theme === 'dark' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme('system')}>
+                          <IconSunMoon />
+                          Системная
+                          {theme === 'system' && <IconCheck className="ml-auto" />}
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <IconLogout className="mr-2 h-4 w-4" />
+                  <IconLogout />
                   Выход из системы
                 </DropdownMenuItem>
               </DropdownMenuContent>

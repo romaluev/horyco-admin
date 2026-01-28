@@ -5,7 +5,7 @@ import { CheckCircle2, AlertCircle, Clock } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Progress } from '@/shared/ui/base/progress'
 
-import type { IGoalsSummary, IGoalProgress } from '@/entities/dashboard'
+import type { IGoalsSummary, IGoalProgress } from '@/entities/dashboard/dashboard'
 
 interface GoalProgressWidgetProps {
   data: IGoalsSummary | null

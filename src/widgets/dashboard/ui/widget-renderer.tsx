@@ -1,10 +1,10 @@
 'use client'
 
-import { WidgetCard, WidgetSkeleton } from '@/entities/dashboard-widget'
+import { WidgetCard, WidgetSkeleton } from '@/entities/dashboard/dashboard-widget'
 import {
   WidgetActions,
   WidgetDragHandle,
-} from '@/features/dashboard-builder'
+} from '@/features/dashboard/dashboard-builder'
 import {
   BarChartWidget,
   LineChartWidget,
@@ -14,7 +14,7 @@ import {
   TextWidget,
 } from '@/widgets/dashboard-widgets'
 
-import type { WidgetConfig, WidgetData, WidgetVisualization } from '@/entities/dashboard-widget'
+import type { WidgetConfig, WidgetData, WidgetVisualization } from '@/entities/dashboard/dashboard-widget'
 
 interface WidgetRendererProps {
   widget: WidgetConfig

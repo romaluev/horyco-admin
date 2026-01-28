@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
+
 import {
   IconArrowLeft,
   IconPlus,
@@ -13,20 +13,9 @@ import {
   IconTrash,
   IconArrowsExchange,
 } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
-import { Heading } from '@/shared/ui/base/heading'
-import { Separator } from '@/shared/ui/base/separator'
-import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,25 +27,41 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useGetInventoryItemById,
   useGetItemConversions,
   useDeleteInventoryItem,
   useRemoveUnitConversion,
-} from '@/entities/inventory-item'
-
+} from '@/entities/inventory/inventory-item'
 import {
   EditItemDialog,
   AddUnitConversionDialog,
-} from '@/features/inventory-item-workflow'
+} from '@/features/inventory/inventory-item-workflow'
 
-export default function InventoryItemDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const itemId = Number(params.id)
+  const itemId = Number(paramId)
 
   const { data: item, isLoading } = useGetInventoryItemById(itemId)
   const { data: conversions } = useGetItemConversions(itemId)
@@ -91,9 +96,9 @@ export default function InventoryItemDetailPage() {
     return (
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-muted-foreground">Товар не найден</p>
+          <p className="text-muted-foreground">{t('pages.itemDetail.backToList')}</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/items">Назад к списку</Link>
+            <Link to="/dashboard/inventory/items">{t('pages.itemDetail.backToList')}</Link>
           </Button>
         </div>
       </PageContainer>
@@ -107,7 +112,7 @@ export default function InventoryItemDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/items">
+              <Link to="/dashboard/inventory/items">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
@@ -115,10 +120,10 @@ export default function InventoryItemDetailPage() {
               <div className="flex items-center gap-3">
                 <Heading title={item.name} description={item.sku || 'Товар'} />
                 <Badge variant={item.isActive ? 'default' : 'secondary'}>
-                  {item.isActive ? 'Активен' : 'Неактивен'}
+                  {item.isActive ? t('pages.itemDetail.active') : t('pages.itemDetail.inactive')}
                 </Badge>
                 {item.isSemiFinished && (
-                  <Badge variant="outline">Полуфабрикат</Badge>
+                  <Badge variant="outline">{t('pages.itemDetail.semiFinished')}</Badge>
                 )}
               </div>
             </div>
@@ -127,30 +132,29 @@ export default function InventoryItemDetailPage() {
           <div className="flex gap-2">
             <Button onClick={() => setIsEditDialogOpen(true)}>
               <IconEdit className="mr-2 h-4 w-4" />
-              Редактировать
+              {t('pages.itemDetail.edit')}
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
                   <IconTrash className="mr-2 h-4 w-4" />
-                  Удалить
+                  {t('pages.itemDetail.delete')}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Удалить товар?</AlertDialogTitle>
+                  <AlertDialogTitle>{t('pages.itemDetail.deleteConfirm')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Это действие нельзя отменить. Товар будет удалён навсегда.
-                    Убедитесь, что нет активных остатков данного товара.
+                    {t('pages.itemDetail.deleteDescription')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                  <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Удалить
+                    {t('pages.itemDetail.delete')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -164,7 +168,7 @@ export default function InventoryItemDetailPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>Основная информация</CardTitle>
+              <CardTitle>{t('pages.itemDetail.basicInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
@@ -196,18 +200,18 @@ export default function InventoryItemDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Уровни запасов</CardTitle>
+              <CardTitle>{t('pages.itemDetail.stockLevels')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Мин. остаток</span>
+                <span className="text-muted-foreground">{t('pages.itemDetail.minLevel')}</span>
                 <span className="font-medium">
                   {item.minStockLevel} {item.unit}
                 </span>
               </div>
               {item.maxStockLevel && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Макс. остаток</span>
+                  <span className="text-muted-foreground">{t('pages.itemDetail.maxLevel')}</span>
                   <span className="font-medium">
                     {item.maxStockLevel} {item.unit}
                   </span>
@@ -215,7 +219,7 @@ export default function InventoryItemDetailPage() {
               )}
               {item.reorderPoint && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Точка заказа</span>
+                  <span className="text-muted-foreground">{t('pages.itemDetail.reorderPoint')}</span>
                   <span className="font-medium">
                     {item.reorderPoint} {item.unit}
                   </span>
@@ -223,7 +227,7 @@ export default function InventoryItemDetailPage() {
               )}
               {item.reorderQuantity && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Количество заказа</span>
+                  <span className="text-muted-foreground">{t('pages.itemDetail.reorderQuantity')}</span>
                   <span className="font-medium">
                     {item.reorderQuantity} {item.unit}
                   </span>
@@ -234,27 +238,27 @@ export default function InventoryItemDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Дополнительно</CardTitle>
+              <CardTitle>{t('pages.itemDetail.additional')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {item.shelfLifeDays && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Срок годности</span>
-                  <span className="font-medium">{item.shelfLifeDays} дней</span>
+                  <span className="text-muted-foreground">{t('pages.itemDetail.shelfLife')}</span>
+                  <span className="font-medium">{item.shelfLifeDays} {t('pages.itemDetail.days')}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Налоговая ставка</span>
+                <span className="text-muted-foreground">{t('pages.itemDetail.taxRate')}</span>
                 <span className="font-medium">{item.taxRate}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Отслеживаемый</span>
+                <span className="text-muted-foreground">{t('pages.itemDetail.trackable')}</span>
                 <span className="font-medium">
-                  {item.isTrackable ? 'Да' : 'Нет'}
+                  {item.isTrackable ? t('pages.itemDetail.yes') : t('pages.itemDetail.no')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Создан</span>
+                <span className="text-muted-foreground">{t('pages.itemDetail.created')}</span>
                 <span>
                   {format(new Date(item.createdAt), 'dd MMM yyyy', {
                     locale: ru,
@@ -263,7 +267,7 @@ export default function InventoryItemDetailPage() {
               </div>
               {item.notes && (
                 <div className="pt-2 border-t">
-                  <span className="text-muted-foreground text-sm">Примечания:</span>
+                  <span className="text-muted-foreground text-sm">{t('pages.itemDetail.notes')}:</span>
                   <p className="mt-1 text-sm">{item.notes}</p>
                 </div>
               )}
@@ -276,11 +280,11 @@ export default function InventoryItemDetailPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <IconArrowsExchange className="h-5 w-5" />
-              <h3 className="text-lg font-semibold">Конверсии единиц</h3>
+              <h3 className="text-lg font-semibold">{t('pages.itemDetail.conversions')}</h3>
             </div>
             <Button onClick={() => setIsAddConversionDialogOpen(true)}>
               <IconPlus className="mr-2 h-4 w-4" />
-              Добавить конверсию
+              {t('pages.itemDetail.addConversion')}
             </Button>
           </div>
 
@@ -289,20 +293,20 @@ export default function InventoryItemDetailPage() {
               {!conversions?.length ? (
                 <div className="text-center py-8">
                   <p className="text-muted-foreground">
-                    Нет настроенных конверсий единиц
+                    {t('pages.itemDetail.noConversions')}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Добавьте конверсии для перевода между единицами измерения
+                    {t('pages.itemDetail.addConversionsInfo')}
                   </p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Из единицы</TableHead>
-                      <TableHead>В единицу</TableHead>
-                      <TableHead className="text-right">Коэффициент</TableHead>
-                      <TableHead>Примечание</TableHead>
+                      <TableHead>{t('pages.itemDetail.fromUnit')}</TableHead>
+                      <TableHead>{t('pages.itemDetail.toUnit')}</TableHead>
+                      <TableHead className="text-right">{t('pages.itemDetail.factor')}</TableHead>
+                      <TableHead>{t('pages.itemDetail.note')}</TableHead>
                       <TableHead className="w-[80px]" />
                     </TableRow>
                   </TableHeader>
@@ -338,22 +342,22 @@ export default function InventoryItemDetailPage() {
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>
-                                  Удалить конверсию?
+                                  {t('pages.itemDetail.deleteConversion')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Конверсия {conversion.fromUnit} → {conversion.toUnit}{' '}
+                                  {t('pages.itemDetail.conversionDescription')} {conversion.fromUnit} → {conversion.toUnit}{' '}
                                   будет удалена.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() =>
                                     handleRemoveConversion(conversion.id)
                                   }
                                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
-                                  Удалить
+                                  {t('pages.itemDetail.delete')}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>

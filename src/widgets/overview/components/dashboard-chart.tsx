@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { IconTrendingDown, IconTrendingUp, IconMinus } from '@tabler/icons-react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
@@ -21,7 +22,7 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { ITimeSeriesData } from '@/entities/dashboard'
+import type { ITimeSeriesData } from '@/entities/dashboard/dashboard'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface IDashboardChartProps {
@@ -30,18 +31,18 @@ interface IDashboardChartProps {
 }
 
 const METRIC_LABELS: Record<KpiType, string> = {
-  [KpiType.REVENUE]: 'Выручка',
-  [KpiType.ORDERS]: 'Заказы',
-  [KpiType.AVG_CHECK]: 'Средний чек',
-  [KpiType.CUSTOMERS]: 'Клиенты',
-  [KpiType.NEW_CUSTOMERS]: 'Новые клиенты',
-  [KpiType.RETURNING_CUSTOMERS]: 'Постоянные клиенты',
-  [KpiType.TIPS]: 'Чаевые',
-  [KpiType.REFUNDS]: 'Возвраты',
-  [KpiType.CANCELLATIONS]: 'Отмены',
-  [KpiType.MARGIN]: 'Маржа',
-  [KpiType.RETENTION_RATE]: 'Удержание',
-  [KpiType.STAFF_PRODUCTIVITY]: 'Продуктивность',
+  [KpiType.REVENUE]: 'kpiLabels.revenue',
+  [KpiType.ORDERS]: 'kpiLabels.orders',
+  [KpiType.AVG_CHECK]: 'kpiLabels.avgCheck',
+  [KpiType.CUSTOMERS]: 'kpiLabels.customers',
+  [KpiType.NEW_CUSTOMERS]: 'kpiLabels.newCustomers',
+  [KpiType.RETURNING_CUSTOMERS]: 'kpiLabels.returningCustomers',
+  [KpiType.TIPS]: 'kpiLabels.tips',
+  [KpiType.REFUNDS]: 'kpiLabels.refunds',
+  [KpiType.CANCELLATIONS]: 'kpiLabels.cancellations',
+  [KpiType.MARGIN]: 'kpiLabels.margin',
+  [KpiType.RETENTION_RATE]: 'kpiLabels.retentionRate',
+  [KpiType.STAFF_PRODUCTIVITY]: 'kpiLabels.staffProductivity',
 }
 
 const chartConfig: ChartConfig = {
@@ -52,6 +53,7 @@ const chartConfig: ChartConfig = {
 }
 
 export function DashboardChart({ data, metric }: IDashboardChartProps) {
+  const { t } = useTranslation('dashboard')
   const chartData = useMemo(() => {
     if (!data?.points) return []
     return data.points.map((point) => ({
@@ -78,12 +80,12 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>{METRIC_LABELS[metric] ?? metric}</CardTitle>
-          <CardDescription>Нет данных для отображения</CardDescription>
+          <CardTitle>{t(METRIC_LABELS[metric] ?? metric)}</CardTitle>
+          <CardDescription>{t('analytics.noDataForDisplay')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex h-[300px] items-center justify-center text-muted-foreground">
-            Данные недоступны
+            {t('analytics.dataUnavailable')}
           </div>
         </CardContent>
       </Card>
@@ -94,7 +96,7 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle>{METRIC_LABELS[metric] ?? metric}</CardTitle>
+          <CardTitle>{t(METRIC_LABELS[metric] ?? metric)}</CardTitle>
           <CardDescription className="flex items-center gap-2">
             <span className="text-foreground text-2xl font-bold">
               {formatValue(data.totalValue)}
@@ -166,7 +168,7 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
                   labelFormatter={(label) => label}
                   formatter={(value) => [
                     formatValue(Number(value)),
-                    METRIC_LABELS[metric],
+                    t(METRIC_LABELS[metric]),
                   ]}
                 />
               }

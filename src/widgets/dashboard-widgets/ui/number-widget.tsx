@@ -5,9 +5,9 @@ import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
 import { useAnimatedCounter } from '@/shared/hooks/use-animated-counter'
 import { cn } from '@/shared/lib/utils'
 
-import { COUNTER_ANIMATION_DURATION } from '@/entities/dashboard-widget'
+import { COUNTER_ANIMATION_DURATION } from '@/entities/dashboard/dashboard-widget'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard-widget'
+import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
 
 interface NumberWidgetProps {
   data: WidgetData

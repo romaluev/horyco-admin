@@ -1,0 +1,408 @@
+{
+  "branches": {
+    "title": "Филиалы",
+    "description": "Управление филиалами вашей организации",
+    "addNew": "Добавить филиал",
+    "actions": {
+      "import": "Импорт",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "detail": {
+      "description": "Информация о филиале",
+      "statistics": "Статистика",
+      "statisticsDescription": "Показатели эффективности филиала"
+    },
+    "form": {
+      "title": {
+        "create": "Создать новый филиал",
+        "edit": "Редактировать филиал: {{name}}"
+      },
+      "fields": {
+        "name": {
+          "label": "Название филиала",
+          "placeholder": "Введите название филиала",
+          "validation": "Название филиала должно содержать минимум 2 символа"
+        },
+        "address": {
+          "label": "Адрес",
+          "placeholder": "Введите адрес филиала",
+          "validation": "Адрес должен содержать минимум 5 символов"
+        }
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Название",
+        "address": "Адрес",
+        "createdAt": "Дата создания",
+        "actions": "Действия"
+      },
+      "search": {
+        "name": "Поиск по названию...",
+        "address": "Поиск по адресу..."
+      }
+    },
+    "delete": {
+      "title": "Удалить филиал?",
+      "cannotDelete": "Невозможно удалить филиал",
+      "confirmMessage": "Вы уверены, что хотите удалить филиал {{name}}?",
+      "irreversible": "Это действие нельзя отменить.",
+      "reasonsMessage": "Этот филиал невозможно удалить по следующим причинам:",
+      "deleting": "Удаление...",
+      "delete": "Удалить",
+      "description": "Вы уверены, что хотите удалить филиал \"{{name}}\"? Это действие нельзя отменить."
+    },
+    "errors": {
+      "notFound": "Филиал не найден",
+      "loadError": "Ошибка: {{message}}"
+    }
+  },
+  "staff": {
+    "title": "Сотрудники",
+    "description": "Управление сотрудниками и их данными",
+    "addNew": "Добавить сотрудника",
+    "actions": {
+      "openMenu": "Открыть меню",
+      "menuLabel": "Действия"
+    },
+    "states": {
+      "empty": "Сотрудников пока нет",
+      "loadError": "Ошибка при загрузке сотрудников"
+    },
+    "form": {
+      "title": {
+        "create": "Создать нового сотрудника",
+        "edit": "Редактировать сотрудника: {{name}}"
+      },
+      "fields": {
+        "fullName": {
+          "label": "Полное имя",
+          "placeholder": "Введите полное имя",
+          "validation": "Имя должно содержать минимум 2 символа"
+        },
+        "phone": {
+          "label": "Телефон",
+          "placeholder": "90 123 45 67"
+        },
+        "password": {
+          "label": "Пароль",
+          "placeholder": "Введите пароль",
+          "validation": "Пароль должен содержать минимум 4 символа"
+        },
+        "confirmPassword": {
+          "label": "Повторите пароль",
+          "placeholder": "Повторите пароль"
+        },
+        "branch": {
+          "label": "Филиал",
+          "placeholder": "Выберите филиал"
+        },
+        "photo": {
+          "label": "Фото профиля"
+        }
+      },
+      "submit": {
+        "create": "Создать сотрудника",
+        "update": "Обновить информацию"
+      },
+      "steps": {
+        "basicInfo": "Основная информация",
+        "branchesPermissions": "Филиалы и разрешения",
+        "step1": "Шаг 1 из 2",
+        "step2": "Шаг 2 из 2",
+        "next": "Далее"
+      },
+      "title": {
+        "edit": "Редактировать сотрудника: {{name}}"
+      },
+      "description": {
+        "update": "Обновите информацию о сотруднике {{name}}"
+      },
+      "tabs": {
+        "info": "Информация",
+        "branches": "Филиалы"
+      },
+      "saveChanges": "Сохранить изменения"
+    },
+    "table": {
+      "columns": {
+        "fullName": "Полное имя",
+        "phone": "Телефон",
+        "branch": "Филиал",
+        "createdAt": "Дата создания",
+        "actions": "Действия"
+      },
+      "search": {
+        "fullName": "Поиск по имени...",
+        "phone": "Поиск по телефону..."
+      }
+    },
+    "delete": {
+      "title": "Удалить сотрудника?",
+      "description": "Это действие нельзя отменить. Сотрудник {{name}} будет удален из системы.",
+      "deleting": "Удаление...",
+      "delete": "Удалить"
+    },
+    "errors": {
+      "notFound": "Сотрудник не существует",
+      "loadError": "Ошибка: {{message}}"
+    }
+  },
+  "branchForm": {
+    "title": {
+      "create": "Создать филиал",
+      "edit": "Редактировать филиал"
+    },
+    "description": {
+      "create": "Заполните информацию о новом филиале",
+      "edit": "Обновите информацию о филиале"
+    },
+    "actions": {
+      "create": "Создать",
+      "creating": "Создание...",
+      "save": "Сохранить"
+    }
+  },
+  "halls": {
+    "title": "Залы",
+    "description": "Управление залами вашей организации"
+  },
+  "paymentSettings": {
+    "title": "Настройки платежей",
+    "description": "Настройка платежных шлюзов",
+    "saveChanges": "Сохранить изменения",
+    "test": "Тестировать",
+    "testing": "Тестирование...",
+    "providers": {
+      "payme": {
+        "description": "Платежный шлюз PayMe"
+      },
+      "click": {
+        "description": "Платежный шлюз Click"
+      },
+      "uzum": {
+        "description": "Платежный шлюз Uzum"
+      }
+    }
+  },
+  "smsSettings": {
+    "title": "SMS Интеграция",
+    "description": "Настройте SMS-провайдера для отправки уведомлений",
+    "saveChanges": "Сохранить изменения",
+    "provider": "Провайдер SMS",
+    "playmobileSettings": "Настройки Playmobile",
+    "eskizSettings": "Настройки Eskiz",
+    "login": "Логин",
+    "password": "Пароль",
+    "senderName": "Имя отправителя",
+    "testing": "Тестирование интеграции",
+    "sendTest": "Отправить тест",
+    "sending": "Отправка..."
+  },
+  "permissions": {
+    "title": "Управление разрешениями",
+    "description": "Разрешения для сотрудника в филиале {{branchName}}",
+    "copyFromBranch": "Скопировать от другого филиала",
+    "noAvailable": "Нет доступных разрешений",
+    "info": "Настройте разрешения для этого филиала. Изменения сохранятся при нажатии кнопки \"Сохранить\".",
+    "saveSuccess": "Разрешения успешно сохранены",
+    "saveError": "Ошибка при сохранении"
+  },
+  "subscription": {
+    "title": "Управление подпиской",
+    "status": {
+      "title": "Статус подписки",
+      "plan": "План",
+      "paymentFlow": "Способ оплаты",
+      "manual": "Ручной платеж",
+      "automatic": "Автоматический"
+    },
+    "billingPeriod": {
+      "title": "Период биллинга",
+      "start": "Начало периода",
+      "end": "Конец периода",
+      "daysUntilRenewal": "Дней до продления"
+    },
+    "pricing": {
+      "title": "Стоимость подписки",
+      "total": "Итого",
+      "discount": "Скидка"
+    },
+    "trial": {
+      "title": "Пробный период",
+      "endsAt": "Пробный период заканчивается",
+      "daysRemaining": "дн.",
+      "noActiveGoals": "Нет активных целей"
+    },
+    "modules": {
+      "title": "Активные модули",
+      "trial": "Пробный период",
+      "daysRemaining": "дн.",
+      "monthly": "/мес"
+    },
+    "loadError": "Ошибка загрузки подписки"
+  },
+  "moduleCatalog": {
+    "loadError": "Ошибка загрузки каталога модулей",
+    "active": "Активен",
+    "free": "Бесплатно",
+    "trial": "дн. пробный",
+    "features": "ВОЗМОЖНОСТИ",
+    "dependencies": "Требуемые модули",
+    "sections": {
+      "plans": "Планы",
+      "coreModules": "Основные модули",
+      "addons": "Дополнительные модули"
+    },
+    "actions": {
+      "alreadyActivated": "Уже активирован",
+      "add": "Добавить",
+      "unavailable": "Недоступно"
+    }
+  },
+  "paymentsHistory": {
+    "loadError": "Ошибка загрузки истории платежей",
+    "summary": {
+      "title": "Сводка платежей",
+      "totalPaid": "Всего оплачено",
+      "paymentsCount": "Количество платежей",
+      "lastPayment": "Последний платеж"
+    },
+    "table": {
+      "receiptNumber": "Номер квитанции",
+      "paymentType": "Тип платежа",
+      "amount": "Сумма",
+      "date": "Дата",
+      "status": "Статус",
+      "cash": "Наличные",
+      "bankTransfer": "Банковский перевод",
+      "card": "Карта",
+      "verified": "Проверено",
+      "pending": "На ожидании",
+      "noPayments": "Платежи не найдены"
+    }
+  },
+  "branding": {
+    "title": "Настройки брендинга",
+    "identity": "Идентичность бренда",
+    "colors": "Цвета",
+    "socialMedia": "Социальные сети",
+    "contact": "Контактная информация",
+    "fields": {
+      "brandName": "Название бренда",
+      "brandNameRequired": "Название бренда *",
+      "description": "Описание",
+      "logo": "Логотип",
+      "logoDark": "Логотип (темная тема)",
+      "favicon": "Фавикон",
+      "primaryColor": "Основной цвет",
+      "secondaryColor": "Вторичный цвет",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "website": "Веб-сайт",
+      "phone": "Телефон",
+      "email": "Email",
+      "address": "Адрес",
+      "current": "Текущий"
+    },
+    "placeholders": {
+      "brandName": "Мой ресторан",
+      "description": "Описание вашего бизнеса",
+      "facebook": "https://facebook.com/myrestaurant",
+      "instagram": "@myrestaurant",
+      "telegram": "@myrestaurant",
+      "website": "https://myrestaurant.com",
+      "phone": "+998 90 123 45 67",
+      "email": "info@myrestaurant.com",
+      "address": "Физический адрес"
+    },
+    "uploadError": "Ошибка загрузки файлов",
+    "saving": "Сохранение...",
+    "saveChanges": "Сохранить изменения"
+  },
+  "theme": {
+    "title": "Цветовая схема",
+    "description": "Выберите основной цвет интерфейса",
+    "colors": {
+      "default": "По умолчанию",
+      "blue": "Синий",
+      "green": "Зеленый",
+      "amber": "Янтарный"
+    },
+    "placeholder": "Выберите цвет"
+  },
+  "employee": {
+    "form": {
+      "basicInfo": {
+        "fullName": "Полное имя",
+        "fullNameRequired": "Полное имя *",
+        "phone": "Телефон",
+        "phoneRequired": "Телефон *",
+        "email": "Email",
+        "password": "Пароль",
+        "passwordRequired": "Пароль *",
+        "passwordPlaceholder": "Минимум 6 символов",
+        "birthDate": "Дата рождения",
+        "photo": "Фото профиля"
+      },
+      "placeholders": {
+        "fullName": "Введите полное имя",
+        "email": "example@example.com",
+        "phone": "90 123 45 67"
+      }
+    }
+  },
+  "common": {
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "add": "Добавить",
+    "close": "Закрыть",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "confirm": "Подтвердить",
+    "back": "Назад",
+    "details": "Детали"
+  },
+  "pages": {
+    "branches": {
+      "pageTitle": "Филиалы",
+      "title": "Филиалы",
+      "description": "Управление филиалами вашей организации",
+      "actions": {
+        "import": "Импорт",
+        "addNew": "Добавить филиал"
+      }
+    },
+    "branchDetail": {
+      "loadingTitle": "Загрузка",
+      "notFoundTitle": "Филиал не найден",
+      "notFoundMessage": "Филиал не найден",
+      "description": "Информация о филиале",
+      "actions": {
+        "edit": "Редактировать",
+        "delete": "Удалить"
+      },
+      "statistics": {
+        "title": "Статистика",
+        "description": "Показатели эффективности филиала"
+      }
+    },
+    "employees": {
+      "pageTitle": "Сотрудники",
+      "title": "Сотрудники",
+      "description": "Управление сотрудниками и их данными",
+      "states": {
+        "empty": "Сотрудников пока нет",
+        "loadError": "Ошибка при загрузке сотрудников"
+      }
+    },
+    "settings": {
+      "pageTitle": "Настройки"
+    }
+  }
+}

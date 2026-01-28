@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { format } from 'date-fns'
 import { IconCrown, IconPencil } from '@tabler/icons-react'
@@ -18,9 +19,9 @@ import {
   useCanCustomizeDashboard,
   type IDashboardConfig,
   type IPeriodInput,
-} from '@/entities/dashboard'
+} from '@/entities/dashboard/dashboard'
 
-import { DashboardEditMode } from '@/features/dashboard-builder'
+import { DashboardEditMode } from '@/features/dashboard/dashboard-builder'
 import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
 import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'
@@ -29,6 +30,7 @@ import { DashboardPeriodSelector } from './dashboard-period-selector'
 import { DashboardBranchSelector } from './dashboard-branch-selector'
 
 export function AnalyticsOverview() {
+  const { t } = useTranslation('dashboard')
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(PeriodType.TODAY)
   const [customRange, setCustomRange] = useState<{ start?: string; end?: string }>({})
   const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(undefined)
@@ -132,19 +134,19 @@ export function AnalyticsOverview() {
         },
         {
           onSuccess: () => {
-            toast.success('Дашборд сохранен')
+            toast.success(t('dashboard.overview.messages.saved'))
             setIsEditMode(false)
             setLocalGroupBy(null)
           },
           onError: (error) => {
-            const errorMessage = error instanceof Error ? error.message : 'Ошибка'
+            const errorMessage = error instanceof Error ? error.message : t('common.error')
             if (
               errorMessage.includes('ENTITLEMENT_REQUIRED') ||
               errorMessage.includes('PRO')
             ) {
-              toast.error('Кастомизация доступна только на PRO плане')
+              toast.error(t('dashboard.overview.messages.proOnly'))
             } else {
-              toast.error('Не удалось сохранить: ' + errorMessage)
+              toast.error(t('dashboard.overview.messages.saveFailed') + ': ' + errorMessage)
             }
           },
         }
@@ -173,15 +175,15 @@ export function AnalyticsOverview() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Аналитика</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{t('dashboard.overview.title')}</h2>
             <p className="text-muted-foreground">
-              Отслеживайте ключевые показатели вашего бизнеса
+              {t('dashboard.overview.description')}
             </p>
           </div>
           {canCustomize ? (
             <Button variant="outline" size="sm" onClick={handleEnterEditMode}>
               <IconPencil className="mr-1.5 h-4 w-4" />
-              Настроить
+              {t('dashboard.overview.edit')}
             </Button>
           ) : (
             <Button
@@ -214,7 +216,7 @@ export function AnalyticsOverview() {
       {hasError && (
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
           <p className="text-sm text-destructive">
-            Не удалось загрузить данные. Проверьте подключение к интернету.
+            {t('dashboard.overview.messages.loadFailed')}
           </p>
         </div>
       )}

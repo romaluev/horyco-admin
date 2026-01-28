@@ -11,6 +11,7 @@
 import * as React from 'react'
 
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -29,9 +30,10 @@ import {
   useSalesOverview,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 export default function SalesOverviewPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.TODAY)
 
   const { data, isLoading, error, refetch } = useSalesOverview({
@@ -46,7 +48,7 @@ export default function SalesOverviewPage() {
   return (
     <AnalyticsPageLayout
       pageCode="sales"
-      title="Обзор продаж"
+      title={t('sales.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -87,6 +89,7 @@ interface ISalesOverviewContentProps {
 }
 
 function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
+  const { t } = useTranslation('analytics')
   const summary = data.summary ?? {}
   const changes = data.changes ?? {}
 
@@ -118,14 +121,14 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
 
   const rows = [
     {
-      label: 'Валовые продажи',
+      label: t('sales.table.grossSales'),
       current: grossSales,
       previous: previousGrossSales,
       change: revenueChange,
       format: 'currency' as const,
     },
     {
-      label: 'Возвраты',
+      label: t('sales.table.refunds'),
       current: -refunds,
       previous: -calcPrevious(refunds, revenueChange),
       change: revenueChange,
@@ -133,7 +136,7 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
       isNegative: true,
     },
     {
-      label: 'Скидки',
+      label: t('sales.table.discounts'),
       current: -discounts,
       previous: -previousDiscounts,
       change: discountsChange,
@@ -141,7 +144,7 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
       isNegative: true,
     },
     {
-      label: 'Чистая выручка',
+      label: t('sales.table.netRevenue'),
       current: netRevenue,
       previous: previousNetRevenue,
       change: revenueChange,
@@ -149,21 +152,21 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
       isHighlighted: true,
     },
     {
-      label: 'Заказов',
+      label: t('sales.table.orders'),
       current: orderCount,
       previous: previousOrders,
       change: ordersChange,
       format: 'number' as const,
     },
     {
-      label: 'Средний чек',
+      label: t('sales.table.avgCheck'),
       current: avgCheck,
       previous: previousAvgCheck,
       change: avgCheckChange,
       format: 'currency' as const,
     },
     {
-      label: 'Чаевые',
+      label: t('sales.table.tips'),
       current: tips,
       previous: calcPrevious(tips, revenueChange),
       change: revenueChange,
@@ -176,10 +179,10 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">Метрика</TableHead>
-            <TableHead className="text-right">Сегодня</TableHead>
-            <TableHead className="text-right">Вчера</TableHead>
-            <TableHead className="text-right">Изменение</TableHead>
+            <TableHead className="w-[200px]">{t('sales.table.metric')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.today')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.yesterday')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -244,15 +247,16 @@ function ChangeIndicator({ value, inverted = false }: IChangeIndicatorProps) {
 // ============================================
 
 function SalesOverviewSkeleton() {
+  const { t } = useTranslation('analytics')
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">Метрика</TableHead>
-            <TableHead className="text-right">Сегодня</TableHead>
-            <TableHead className="text-right">Вчера</TableHead>
-            <TableHead className="text-right">Изменение</TableHead>
+            <TableHead className="w-[200px]">{t('sales.table.metric')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.today')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.yesterday')}</TableHead>
+            <TableHead className="text-right">{t('sales.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

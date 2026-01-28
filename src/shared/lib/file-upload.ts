@@ -1,6 +1,6 @@
 import api from './axios'
 
-import type { EntityType, IFileMetadata, IFileVariants } from '@/entities/file/model/types'
+import type { EntityType, IFileMetadata, IFileVariants } from '@/shared/file/model/types'
 
 /**
  * Response from single file upload endpoint

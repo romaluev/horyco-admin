@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { ICapacityStats } from '@/entities/branch'
+import type { ICapacityStats } from '@/entities/organization/branch'
 
 interface CapacityOverviewProps {
   capacity: ICapacityStats

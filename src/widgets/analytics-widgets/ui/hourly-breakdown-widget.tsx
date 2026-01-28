@@ -1,18 +1,17 @@
 'use client'
 
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 
-import type { IHeatmapData } from '@/entities/dashboard'
+import type { IHeatmapData } from '@/entities/dashboard/dashboard'
 
 interface HourlyBreakdownWidgetProps {
   data: IHeatmapData | null
   isLoading?: boolean
   className?: string
 }
-
-const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
 function getIntensityClass(value: number, maxValue: number): string {
@@ -31,6 +30,9 @@ export function HourlyBreakdownWidget({
   isLoading = false,
   className,
 }: HourlyBreakdownWidgetProps) {
+  const { t } = useTranslation('analytics')
+  const DAYS = t('heatmapWidget.dayLabels', { returnObjects: true }) as string[]
+
   const heatmapGrid = useMemo(() => {
     if (!data?.cells) return null
 

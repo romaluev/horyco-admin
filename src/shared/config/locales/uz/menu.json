@@ -1,0 +1,805 @@
+{
+  "products": {
+    "title": "Mahsulotlar",
+    "description": "Mahsulotlarni boshqarish",
+    "addNew": "Mahsulot qo'shish",
+    "create": "Yangi mahsulot yaratish",
+    "edit": "Mahsulotni tahrirlash",
+    "updateDescription": "Mahsulot ma'lumotlarini o'zgartiring",
+    "delete": "Mahsulotni o'chirish",
+    "deleteConfirm": "Siz bu mahsulotni o'chirishga ishonchingiz komilmi?",
+    "search": "Mahsulotlarni qidirish...",
+    "available": "Mavjud",
+    "unavailable": "Mavjud emas",
+    "expand": "Kengaytirish",
+    "form": {
+      "name": {
+        "label": "Nomi",
+        "placeholder": "Mahsulot nomini kiriting",
+        "validation": "Nomi kamida 2 ta belgiga ega bo'lishi kerak"
+      },
+      "price": {
+        "label": "Narxi",
+        "placeholder": "Narxni kiriting",
+        "validation": "Narx ijobiy raqam bo'lishi kerak"
+      },
+      "description": {
+        "label": "Tavsifi",
+        "placeholder": "Mahsulot tavsifini kiriting"
+      },
+      "category": {
+        "label": "Kategoriya",
+        "placeholder": "Kategoriyani tanlang",
+        "validation": "Kategoriyani tanlang"
+      },
+      "images": {
+        "label": "Mahsulot rasmlari",
+        "dragDrop": "Rasmlarni shunga o'tkazing yoki yuklash uchun bosing",
+        "validation": {
+          "size": "Maksimal fayl o'lchami 5MB",
+          "type": "Faqat .jpg, .jpeg, .png va .webp fayllari ruxsat etiladi"
+        }
+      },
+      "type": {
+        "label": "Mahsulot turi",
+        "placeholder": "Turni tanlang"
+      },
+      "available": {
+        "label": "Buyurtma uchun mavjud",
+        "yes": "Ha",
+        "no": "Yo'q"
+      },
+      "preparationTime": {
+        "label": "Tayyorlash vaqti (min)",
+        "placeholder": "Masalan: 15"
+      },
+      "calories": {
+        "label": "Kalorijalar",
+        "placeholder": "Masalan: 350"
+      },
+      "allergens": {
+        "label": "Allergenlar (vergul bilan ajratilgan)",
+        "placeholder": "Masalan: sut, tuxum, yong'oq"
+      },
+      "expandDescription": {
+        "button": "AI bilan kengaytirish",
+        "loading": "Qayta ishlanmoqda...",
+        "success": "Tavsif muvaffaqiyatli kengaytirildi!",
+        "error": "Nimadir xato ketdi",
+        "tooShort": "Tavsif juda qisqa"
+      },
+      "additions": {
+        "title": "Qo'shimchalar",
+        "addNew": "Qo'shimcha qo'shish",
+        "noAdditions": "Qo'shimchalar yo'q. Mahsulot variantlarini yaratish uchun \"Qo'shimcha qo'shish\" tugmasini bosing.",
+        "name": {
+          "label": "Qo'shimcha nomi",
+          "placeholder": "Masalan: Go'sht turi",
+          "validation": "Qo'shimcha nomi kamida 2 ta belgiga ega bo'lishi kerak"
+        },
+        "required": {
+          "label": "Majburiy tanlov"
+        },
+        "multiple": {
+          "label": "Ko'p tanlov"
+        },
+        "limit": {
+          "label": "Maksimal variantlar",
+          "placeholder": "Maksimal raqam",
+          "validation": "Chegarasi kamida 1 bo'lishi kerak"
+        },
+        "items": {
+          "title": "Qo'shimcha variantlari",
+          "addNew": "Variant qo'shish",
+          "noItems": "Variantlar qo'shilmadi. Mijozlar tanlay oladigan variantlarni qo'shing.",
+          "name": {
+            "placeholder": "Variant nomi",
+            "validation": "Variant nomi talab qilinadi"
+          },
+          "price": {
+            "placeholder": "Narx (qo'shimcha)",
+            "validation": "Narx ijobiy raqam bo'lishi kerak"
+          },
+          "delete": "Variantni o'chirish"
+        },
+        "delete": "Qo'shimchani o'chirish"
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Nomi",
+        "price": "Narxi",
+        "category": "Kategoriya",
+        "status": "Holati",
+        "createdAt": "Yaratilgan",
+        "actions": "Harakatlari"
+      }
+    },
+    "actions": {
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "save": "Saqlash",
+      "cancel": "Bekor qilish",
+      "create": "Yaratish",
+      "update": "Yangilash",
+      "loading": "Yuklanimoqda..."
+    },
+    "messages": {
+      "created": "Mahsulot muvaffaqiyatli yaratildi",
+      "updated": "Mahsulot muvaffaqiyatli yangilandi",
+      "deleted": "Mahsulot muvaffaqiyatli o'chirildi",
+      "error": "Mahsulot bilan ishlashda xato",
+      "notExist": "Mahsulot mavjud emas",
+      "loadError": "Mahsulotlarni yuklashda xato"
+    },
+    "delete": {
+      "confirmTitle": "Siz bu mahsulotni o'chirishga ishonchingiz komilmi?",
+      "confirmDescription": "Mahsulot butunlay o'chiriladi",
+      "successMessage": "Mahsulot muvaffaqiyatli o'chirildi",
+      "errorMessage": "Mahsulotni o'chirishda xato"
+    },
+    "aiImport": {
+      "button": "AI bilan qo'shish",
+      "dialog": {
+        "title": "Menyuni suratlardan import qiling",
+        "description": "Avtomatik ma'lumot ekstraktsiyi uchun menyu yoki mahsulotlarning 4 gacha rasmini yuklang"
+      },
+      "extractedSection": "Ekstrakт qilingan mahsulotlar",
+      "fields": {
+        "name": "Nomi",
+        "price": "Narxi",
+        "description": "Tavsifi"
+      },
+      "buttons": {
+        "startProcessing": "Qayta ishlashni boshlash",
+        "processing": "Qayta ishlanmoqda...",
+        "saveProducts": "Mahsulotlarni saqlash",
+        "saving": "Saqlanmoqda...",
+        "cancel": "Bekor qilish"
+      },
+      "messages": {
+        "noImage": "Kamida bitta rasmni qo'shing",
+        "limitReached": "AI import foydalanish chegarasi tugadi",
+        "extractError": "Ma'lumot ekstraktsiysida xato",
+        "unknownError": "Xatolik yuz berdi",
+        "successCreate": "Mahsulotlar muvaffaqiyatli yaratildi",
+        "errorCreate": "Mahsulotlarni yaratishda xato"
+      }
+    }
+  },
+  "categories": {
+    "title": "Kategoriyalar",
+    "description": "Mahsulot kategoriyalarini boshqarish",
+    "addNew": "Kategoriya qo'shish",
+    "search": "Kategoriyalarni qidirish...",
+    "form": {
+      "title": {
+        "create": "Yangi kategoriya yaratish",
+        "edit": "Kategoriyani tahrirlash",
+        "dialogDescription": "Yangi menyu kategoriyasi uchun ma'lumotni to'ldiring"
+      },
+      "name": {
+        "label": "Nomi",
+        "placeholder": "Ichimliklar",
+        "validation": "Nomi talab qilinadi"
+      },
+      "description": {
+        "label": "Tavsifi",
+        "placeholder": "Issiq va sovuq ichimliklar",
+        "validation": "Tavsifi talab qilinadi"
+      },
+      "parent": {
+        "label": "Asosiy kategoriya",
+        "placeholder": "Kategoriyani tanlang (ixtiyoriy)"
+      },
+      "image": {
+        "label": "Rasm"
+      },
+      "isActive": {
+        "label": "Faol",
+        "description": "Kategoriya menyuda mavjud bo'ladi"
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Nomi",
+        "description": "Tavsifi",
+        "parent": "Asosiy kategoriya",
+        "actions": "Harakatlari"
+      }
+    },
+    "editDescription": "{{name}} kategoriyasida o'zgarishlar kiriting",
+    "delete": {
+      "title": "O'chirishni tasdiqlang",
+      "confirmMessage": "Siz kategoriya {{name}} ni o'chirishga ishonchingiz komilmi?",
+      "warningChildren": "⚠️ Bu kategoriya ichida turkum kategoriyalar mavjud. Ularni avval o'chiring.",
+      "warningProducts": "⚠️ Bu kategoriya ichida {{count}} ta mahsulot mavjud. Ularni boshqa kategoriyaga o'tkazing.",
+      "irreversible": "Bu amalni qaytarib bo'lmaydi.",
+      "successMessage": "Kategoriya muvaffaqiyatli o'chirildi",
+      "errorMessage": "Kategoriyani o'chirishda xato"
+    },
+    "actions": {
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "save": "Saqlash",
+      "cancel": "Bekor qilish",
+      "create": "Yaratish"
+    },
+    "messages": {
+      "created": "Kategoriya muvaffaqiyatli yaratildi",
+      "updated": "Kategoriya muvaffaqiyatli yangilandi",
+      "deleted": "Kategoriya muvaffaqiyatli o'chirildi",
+      "error": "Kategoriya bilan ishlashda xato"
+    }
+  },
+  "modifiers": {
+    "title": "O'zgartirgichlar",
+    "description": "Mahsulot o'zgartirgichlarini boshqarish",
+    "addNew": "O'zgartirgich qo'shish",
+    "search": "O'zgartirgichlarni qidirish...",
+    "create": {
+      "title": "O'zgartirgich qo'shish",
+      "description": "Guruhda yangi o'zgartirgich yarating",
+      "trigger": "O'zgartirgich qo'shish",
+      "form": {
+        "name": {
+          "label": "Nomi",
+          "placeholder": "Ketchup"
+        },
+        "description": {
+          "label": "Tavsifi",
+          "placeholder": "Klassik pomidor ketchupi"
+        },
+        "price": {
+          "label": "Narx (UZS)",
+          "placeholder": "20",
+          "description": "O'zgartirgichning qo'shimcha narxi"
+        },
+        "sortOrder": {
+          "label": "Saralash tartibi",
+          "description": "O'zgartirgichni ro'yxatda ko'rsatish tartibi"
+        },
+        "isActive": {
+          "label": "Faol",
+          "description": "O'zgartirgich tanlash uchun mavjud"
+        },
+        "actions": {
+          "save": "Yaratish",
+          "saving": "Yaratilmoqda...",
+          "cancel": "Bekor qilish"
+        }
+      }
+    },
+    "update": {
+      "title": "O'zgartirgichni tahrirlash",
+      "description": "O'zgartirgichning parametrlarini o'zgartiring",
+      "form": {
+        "name": {
+          "label": "Nomi",
+          "placeholder": "Ketchup"
+        },
+        "description": {
+          "label": "Tavsifi",
+          "placeholder": "Klassik pomidor ketchupi"
+        },
+        "price": {
+          "label": "Narx (UZS)",
+          "placeholder": "20",
+          "description": "O'zgartirgichning qo'shimcha narxi"
+        },
+        "sortOrder": {
+          "label": "Saralash tartibi",
+          "description": "O'zgartirgichni ro'yxatda ko'rsatish tartibi"
+        },
+        "isActive": {
+          "label": "Faol",
+          "description": "O'zgartirgich tanlash uchun mavjud"
+        },
+        "actions": {
+          "save": "Yangilash",
+          "saving": "Yangilanmoqda...",
+          "cancel": "Bekor qilish"
+        }
+      }
+    },
+    "groups": {
+      "title": "O'zgartirgich guruhlari",
+      "description": "O'zgartirgich guruhlarini boshqarish",
+      "addNew": "Guruh yaratish",
+      "create": {
+        "title": "O'zgartirgich guruhini yaratish",
+        "description": "Mahsulotlar uchun yangi o'zgartirgich guruhini yarating",
+        "trigger": "Guruh yaratish",
+        "form": {
+          "name": {
+            "label": "Nomi",
+            "placeholder": "Souslari"
+          },
+          "description": {
+            "label": "Tavsifi",
+            "placeholder": "Taomi uchun sous tanlang"
+          },
+          "minSelection": {
+            "label": "Min. tanlov",
+            "description": "Minimal tanlash soni"
+          },
+          "maxSelection": {
+            "label": "Max. tanlov",
+            "description": "Maksimal tanlash soni"
+          },
+          "sortOrder": {
+            "label": "Saralash tartibi",
+            "description": "Guruhni ko'rsatish tartibi"
+          },
+          "isRequired": {
+            "label": "Majburiy",
+            "description": "Mijoz kamida bitta o'zgartirgichni tanlashi kerak"
+          },
+          "actions": {
+            "save": "Yaratish",
+            "saving": "Yaratilmoqda...",
+            "cancel": "Bekor qilish"
+          }
+        }
+      },
+      "update": {
+        "title": "O'zgartirgich guruhini tahrirlash",
+        "description": "O'zgartirgich guruhining parametrlarini o'zgartiring",
+        "form": {
+          "name": {
+            "label": "Nomi",
+            "placeholder": "Souslari"
+          },
+          "description": {
+            "label": "Tavsifi",
+            "placeholder": "Taomi uchun sous tanlang"
+          },
+          "minSelection": {
+            "label": "Min. tanlov",
+            "description": "Minimal tanlash soni"
+          },
+          "maxSelection": {
+            "label": "Max. tanlov",
+            "description": "Maksimal tanlash soni"
+          },
+          "sortOrder": {
+            "label": "Saralash tartibi",
+            "description": "Guruhni ko'rsatish tartibi"
+          },
+          "isRequired": {
+            "label": "Majburiy",
+            "description": "Mijoz kamida bitta o'zgartirgichni tanlashi kerak"
+          },
+          "actions": {
+            "save": "Yangilash",
+            "saving": "Yangilanmoqda...",
+            "cancel": "Bekor qilish"
+          }
+        }
+      }
+    },
+    "form": {
+      "title": {
+        "create": "Yangi o'zgartirgich qo'shish",
+        "edit": "O'zgartirgichni tahrirlash"
+      },
+      "name": {
+        "label": "Nomi",
+        "placeholder": "Masalan: O'lcham",
+        "validation": "Nomi talab qilinadi"
+      },
+      "options": {
+        "title": "O'zgartirgich variantlari",
+        "addNew": "Variant qo'shish",
+        "name": {
+          "placeholder": "Masalan: Kichik",
+          "validation": "Variant nomi talab qilinadi"
+        },
+        "price": {
+          "placeholder": "Narx (ixtiyoriy)"
+        }
+      }
+    },
+    "actions": {
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "save": "Saqlash",
+      "cancel": "Bekor qilish"
+    },
+    "messages": {
+      "created": "O'zgartirgich muvaffaqiyatli yaratildi",
+      "updated": "O'zgartirgich muvaffaqiyatli yangilandi",
+      "deleted": "O'zgartirgich muvaffaqiyatli o'chirildi"
+    }
+  },
+  "additions": {
+    "title": "Qo'shimchalar",
+    "description": "Qo'shimchalar va variantlarni boshqarish",
+    "addNew": "Qo'shimcha qo'shish",
+    "search": "Qo'shimchalarni qidirish...",
+    "form": {
+      "title": {
+        "create": "Yangi qo'shimcha qo'shish",
+        "edit": "Qo'shimchani tahrirlash",
+        "createDescription": "Mahsulot uchun yangi qo'shimchalar guruhi yarating",
+        "editDescription": "Qo'shimchalar guruhining parametrlarini o'zgartiring"
+      },
+      "name": {
+        "label": "Nomi",
+        "placeholder": "Porsiya o'lchami",
+        "validation": "Nomi talab qilinadi"
+      },
+      "description": {
+        "label": "Tavsifi",
+        "placeholder": "Porsiya o'lchamini tanlang"
+      },
+      "product": {
+        "label": "Mahsulot",
+        "placeholder": "Mahsulotni tanlang"
+      },
+      "image": {
+        "label": "Rasm"
+      },
+      "minSelection": {
+        "label": "Min. tanlov"
+      },
+      "maxSelection": {
+        "label": "Max. tanlov"
+      },
+      "sortOrder": {
+        "label": "Saralash tartibi",
+        "description": "Qo'shimchani ko'rsatish tartibi"
+      },
+      "isRequired": {
+        "label": "Majburiy",
+        "description": "Mijoz kamida bitta variantni tanlashi kerak"
+      },
+      "isMultiple": {
+        "label": "Ko'p tanlov",
+        "description": "Mijoz bir nechta variantni tanlashi mumkin"
+      },
+      "isCountable": {
+        "label": "Hisob-kitob",
+        "description": "Mijoz miqdorni ko'rsatishi mumkin"
+      },
+      "isActive": {
+        "label": "Faol",
+        "description": "Qo'shimcha buyurtmalar uchun mavjud"
+      },
+      "required": {
+        "label": "Majburiy qo'shimcha"
+      },
+      "options": {
+        "title": "Variantlar",
+        "addNew": "Variant qo'shish",
+        "name": {
+          "placeholder": "Variant nomi",
+          "validation": "Nomi talab qilinadi"
+        },
+        "price": {
+          "placeholder": "Narx (ixtiyoriy)"
+        }
+      }
+    },
+    "delete": {
+      "title": "O'chirishni tasdiqlang",
+      "confirmMessage": "Siz qo'shimcha {{name}} ni o'chirishga ishonchingiz komilmi?",
+      "warningItems": "⚠️ Bu qo'shimcha {{count}} ta pozitsiyani o'z ichiga oladi.",
+      "irreversible": "Bu amalni qaytarib bo'lmaydi."
+    },
+    "actions": {
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "save": "Saqlash",
+      "update": "Yangilash",
+      "cancel": "Bekor qilish",
+      "create": "Yaratish"
+    },
+    "messages": {
+      "created": "Qo'shimcha muvaffaqiyatli yaratildi",
+      "updated": "Qo'shimcha muvaffaqiyatli yangilandi",
+      "deleted": "Qo'shimcha muvaffaqiyatli o'chirildi"
+    }
+  },
+  "branchOverrides": {
+    "delete": {
+      "title": "Qayta belgilashni o'chirishmi?",
+      "withNames": "\"{{productName}}\" uchun \"{{branchName}}\" filialida qayta belgilash o'chiriladi. Shundan keyin mahsulotning asosiy sozlamalari ishlatiladi.",
+      "withoutNames": "Qayta belgilash o'chiriladi. Bu amalni qaytarib bo'lmaydi."
+    },
+    "page": {
+      "title": "Filial qayta belgilashlari",
+      "description": "Har bir filial uchun individual narxlar va mavjudligini sozlang",
+      "stats": {
+        "totalBranches": "Jami filiallar",
+        "customPrices": "Alohida narxlar",
+        "customAvailability": "Alohida mavjudlik"
+      },
+      "table": {
+        "title": "Qayta belgilashlar ro'yxati",
+        "description": "Filiallar uchun mahsulot sozlamalarini boshqarish",
+        "selectProduct": "Mahsulotni tanlang",
+        "allProducts": "Barcha mahsulotlar",
+        "selectBranch": "Filialni tanlang",
+        "allBranches": "Barcha filiallar",
+        "noProductSelected": "Filial qayta belgilashlarini ko'rish uchun mahsulotni tanlang",
+        "loading": "Yuklanimoqda...",
+        "noOverrides": "Bu mahsulot uchun qayta belgilashlar yo'q",
+        "noOverridesFiltered": "Tanlangan filterlar bilan qayta belgilashlar yo'q",
+        "columns": {
+          "product": "Mahsulot",
+          "branch": "Filial",
+          "price": "Narx",
+          "availability": "Mavjudlik",
+          "actions": "Harakatlari"
+        }
+      },
+      "badges": {
+        "available": "Mavjud",
+        "unavailable": "Mavjud emas",
+        "default": "Standart"
+      },
+      "price": {
+        "override": "so'm",
+        "base": "asosiy:"
+      }
+    }
+  },
+  "pages": {
+    "menu": {
+      "title": "Menyuni boshqarish",
+      "description": "Menyu strukturasi, mahsulotlar va sozlamalarni to'liq boshqarish",
+      "sections": {
+        "categories": {
+          "title": "Kategoriyalar",
+          "description": "Menyu kategoriyalarining ierarxik strukturasini boshqarish"
+        },
+        "products": {
+          "title": "Mahsulotlar",
+          "description": "Mahsulotlar, narxlar va mavjudligini boshqarish"
+        },
+        "modifiers": {
+          "title": "O'zgartirgichlar",
+          "description": "Mahsulotlar uchun o'zgartirgichlarni sozlash"
+        },
+        "additions": {
+          "title": "Qo'shimchalar",
+          "description": "Mahsulotlarga qo'shimchalarni boshqarish"
+        },
+        "branchOverrides": {
+          "title": "Filial qayta belgilashlari",
+          "description": "Har bir filial uchun individual sozlamalar"
+        }
+      },
+      "stats": {
+        "categories": "Kategoriyalar",
+        "products": "Mahsulotlar",
+        "modifiers": "O'zgartirgichlar",
+        "additions": "Qo'shimchalar"
+      },
+      "actions": {
+        "navigate": "O'tish"
+      },
+      "quickStart": {
+        "title": "Tezkor boshlash",
+        "description": "Menyu strukturasini tashkil qilish uchun maslahatlar",
+        "recommendedOrder": "Tavsiyalangan sozlash tartibi:",
+        "steps": {
+          "categories": "Kategoriya strukturasini (ierarxiyasini) yarating",
+          "products": "Mahsulotlarni qo'shing va ularni kategoriyalarga belgilang",
+          "modifiers": "Mahsulotlar uchun o'zgartirgichlarni sozlang (ixtiyoriy)",
+          "additions": "Mahsulotlarga qo'shimchalar qo'shing (ixtiyoriy)",
+          "branchOverrides": "Agar turli narx/mavjudlik zarur bo'lsa, filial qayta belgilashlarini yarating"
+        }
+      }
+    },
+    "products": {
+      "title": "Mahsulotlar",
+      "description": "Menyuning mahsulotlarini boshqarish",
+      "actions": {
+        "create": "Yaratish"
+      },
+      "filters": {
+        "searchPlaceholder": "Nomi bo'yicha qidirish...",
+        "allCategories": "Barcha kategoriyalar",
+        "allStatuses": "Barcha holatlar",
+        "available": "Mavjud",
+        "unavailable": "Mavjud emas"
+      },
+      "empty": {
+        "notFound": "Mahsulotlar topilmadi",
+        "createFirst": "Birinchi mahsulotni yarating yoki filterlarni o'zgartiring"
+      },
+      "messages": {
+        "loadError": "Mahsulotlarni yuklashda xato",
+        "error": "Noma'lum xato"
+      },
+      "page": {
+        "create": {
+          "title": "Mahsulot yaratish",
+          "description": "Menyuya yangi mahsulot qo'shish"
+        },
+        "edit": {
+          "title": "Mahsulotni tahrirlash",
+          "descriptionFallback": "Mahsulot ma'lumotlarini o'zgartiring"
+        }
+      },
+      "stats": {
+        "total": "Jami mahsulotlar",
+        "available": "Mavjud (sahifada)",
+        "unavailable": "Mavjud emas (sahifada)",
+        "page": "Sahifa"
+      }
+    },
+    "categories": {
+      "title": "Menyu kategoriyalari",
+      "description": "Menyu kategoriyalari va subkategoriyalarini boshqarish",
+      "stats": {
+        "total": "Jami kategoriyalar",
+        "active": "Faol kategoriyalar",
+        "totalProducts": "Jami mahsulotlar"
+      },
+      "empty": {
+        "notFound": "Kategoriyalar topilmadi",
+        "createFirst": "Boshlash uchun birinchi kategoriyani yarating"
+      }
+    },
+    "additions": {
+      "title": "Qo'shimchalar",
+      "description": "Mahsulotlar uchun qo'shimcha elementlarni boshqarish",
+      "actions": {
+        "create": "Qo'shimcha yaratish"
+      },
+      "filters": {
+        "selectProduct": "Mahsulotni tanlang",
+        "allProducts": "Barcha mahsulotlar"
+      },
+      "stats": {
+        "groups": "Qo'shimcha guruhlar",
+        "active": "Faol"
+      },
+      "empty": {
+        "notFound": "Qo'shimchalar topilmadi",
+        "selectProductFirst": "Mahsulotni tanlang va birinchi qo'shimcha guruhini yarating",
+        "createFirst": "Birinchi qo'shimcha guruhini yarating"
+      },
+      "badges": {
+        "required": "Majburiy",
+        "multiple": "Ko'p tanlov",
+        "countable": "Hisob-kitobli",
+        "active": "Faol",
+        "inactive": "Faol emas"
+      },
+      "details": {
+        "minSelection": "Minimal tanlov",
+        "maxSelection": "Maksimal tanlov",
+        "sortOrder": "Saralash tartibi",
+        "itemsCount": "Guruhda pozitsiyalar"
+      }
+    },
+    "modifiers": {
+      "title": "O'zgartirgichlar",
+      "description": "O'zgartirgich guruhlarini va o'zgartirgichlarni boshqarish",
+      "actions": {
+        "createGroup": "Guruh yaratish",
+        "edit": "Tahrirlash",
+        "delete": "O'chirish",
+        "addModifier": "O'zgartirgich qo'shish"
+      },
+      "filters": {
+        "searchPlaceholder": "Guruhlar bo'yicha qidirish..."
+      },
+      "stats": {
+        "totalGroups": "Jami guruhlar",
+        "required": "Majburiy",
+        "totalModifiers": "Jami o'zgartirgichlar"
+      },
+      "badges": {
+        "required": "Majburiy",
+        "active": "Faol",
+        "inactive": "Faol emas"
+      },
+      "empty": {
+        "notFound": "O'zgartirgich guruhlar topilmadi",
+        "noGroups": "O'zgartirgich guruhlar yo'q",
+        "tryChangeQuery": "Qidiruv so'rovini o'zgartirib ko'ring",
+        "createFirst": "Birinchi o'zgartirgich guruhini yarating",
+        "noModifiersInGroup": "Bu guruhda o'zgartirgichlar yo'q"
+      },
+      "selectionRange": "Tanlov: {{min}}-{{max}}",
+      "modifierCount": "{{count}} o'zgartirgich"
+    }
+  },
+  "components": {
+    "pinButton": {
+      "title": "PIN yaratish"
+    },
+    "categoryParentSelector": {
+      "placeholder": "Ota kategoriya yo'q",
+      "noParent": "Ota kategoriya yo'q"
+    },
+    "branchOverride": {
+      "create": {
+        "trigger": "O'zgartirishni qo'shish",
+        "title": "Filial uchun yangi o'zgartirish",
+        "description": "Bu filial uchun mahsulotning alohida sozlamalarini o'rnating",
+        "productLabel": "Mahsulot",
+        "productPlaceholder": "Mahsulotni tanlang",
+        "branchLabel": "Filial",
+        "branchPlaceholder": "Filialni tanlang",
+        "priceLabel": "Filial uchun narx",
+        "priceDescription": "Asosiy narxni ishlatish uchun bo'shda qoldiring",
+        "availabilityLabel": "Mavjudlik",
+        "availabilityDescription": "Bu filial uchun mavjudlikni o'zgartiring",
+        "basePricePrefix": "Asosiy:",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      },
+      "edit": {
+        "title": "O'zgartirishni tahrirlash",
+        "description": "Bu filial uchun sozlamalarni o'zgartiring",
+        "priceLabel": "Filial uchun narx",
+        "priceDescription": "Asosiy narxni ishlatish uchun bo'shda qoldiring",
+        "availabilityLabel": "Mavjudlik",
+        "availabilityDescription": "Bu filial uchun mavjudlikni o'zgartiring",
+        "basePricePrefix": "Asosiy:",
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "submitting": "Saqlanmoqda..."
+      }
+    },
+    "modifierGroup": {
+      "create": {
+        "trigger": "Guruhni qo'shish",
+        "title": "O'zgartirgich guruhini yaratish",
+        "description": "Bog'liq variantlarni bir-biriga birlashtirib guruhlang (masalan, o'lcham yoki toppinglar)",
+        "nameLabel": "Guruh nomi *",
+        "namePlaceholder": "Pizza o'lchami",
+        "minLabel": "Minimal tanlov",
+        "minDescription": "Tanlash uchun minimal variantlar soni",
+        "maxLabel": "Maksimal tanlov",
+        "maxDescription": "Tanlash uchun maksimal variantlar soni",
+        "requiredLabel": "Majburiy tanlov",
+        "requiredDescription": "Mijoz kamida bitta variantni tanlashi kerak",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      }
+    },
+    "modifier": {
+      "create": {
+        "trigger": "O'zgartirgich qo'shish",
+        "title": "O'zgartirgichni qo'shish",
+        "description": "Guruhda yangi o'zgartirgich yarating",
+        "nameLabel": "Nomi",
+        "namePlaceholder": "Ketchup",
+        "descriptionLabel": "Tavsifi",
+        "descriptionPlaceholder": "Klassik pomidor ketchupi",
+        "priceLabel": "Narx (UZS)",
+        "pricePlaceholder": "20",
+        "priceDescription": "O'zgartirgichning qo'shimcha xaraji",
+        "sortOrderLabel": "Saralash tartibi",
+        "sortOrderDescription": "O'zgartirgichning ro'yxatda ko'rsatilish tartibi",
+        "activeLabel": "Faol",
+        "activeDescription": "O'zgartirgich tanlash uchun mavjud",
+        "cancel": "Bekor qilish",
+        "submit": "Yaratish",
+        "submitting": "Yaratilmoqda..."
+      }
+    }
+  },
+  "common": {
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "add": "Qo'shish",
+    "close": "Yopish",
+    "loading": "Yuklanimoqda...",
+    "error": "Xato",
+    "success": "Muvaffaqiyat",
+    "confirm": "Tasdiqlash",
+    "back": "Orqaga"
+  }
+}

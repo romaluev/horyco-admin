@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -42,9 +43,9 @@ import {
   useStaffAnalytics,
   AnalyticsPageLayout,
   AnalyticsErrorState,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
-import type { IStaffAnalyticsItem } from '@/features/analytics'
+import type { IStaffAnalyticsItem } from '@/features/dashboard/analytics'
 
 // ============================================
 // TYPES
@@ -58,6 +59,7 @@ type SortDirection = 'asc' | 'desc'
 // ============================================
 
 export default function StaffAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [search, setSearch] = React.useState('')
   const [roleFilter, setRoleFilter] = React.useState<string>('all')
@@ -130,7 +132,7 @@ export default function StaffAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="staff"
-      title="Персонал"
+      title={t('staff.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
@@ -140,7 +142,7 @@ export default function StaffAnalyticsPage() {
         <div className="relative flex-1 min-w-[200px] max-w-[300px]">
           <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Поиск сотрудника..."
+            placeholder={t('staff.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -148,10 +150,10 @@ export default function StaffAnalyticsPage() {
         </div>
         <Select value={roleFilter} onValueChange={setRoleFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Все должности" />
+            <SelectValue placeholder={t('staff.allRoles')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Все должности</SelectItem>
+            <SelectItem value="all">{t('staff.allRoles')}</SelectItem>
             {roles.map((role) => (
               <SelectItem key={role} value={role}>
                 {role}
@@ -178,7 +180,7 @@ export default function StaffAnalyticsPage() {
       {/* Summary */}
       {data && (
         <div className="mt-4 text-sm text-muted-foreground">
-          Показано {filteredStaff.length} сотрудников
+          {t('staff.summary', { count: filteredStaff.length })}
         </div>
       )}
     </AnalyticsPageLayout>
@@ -202,6 +204,8 @@ function StaffTable({
   sortDirection,
   onSort,
 }: IStaffTableProps) {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
@@ -210,21 +214,21 @@ function StaffTable({
             <TableHead className="w-[60px]">#</TableHead>
             <SortableHeader
               column="name"
-              label="Сотрудник"
+              label={t('staff.table.employee')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="roleCode"
-              label="Должность"
+              label={t('staff.table.role')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
             />
             <SortableHeader
               column="orders"
-              label="Заказов"
+              label={t('staff.table.orders')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -232,7 +236,7 @@ function StaffTable({
             />
             <SortableHeader
               column="revenue"
-              label="Выручка"
+              label={t('staff.table.revenue')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
@@ -240,20 +244,20 @@ function StaffTable({
             />
             <SortableHeader
               column="tips"
-              label="Чаевые"
+              label={t('staff.table.tips')}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {staff.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                Нет данных для отображения
+                {t('staff.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
@@ -362,18 +366,20 @@ function ChangeIndicator({ value }: IChangeIndicatorProps) {
 // ============================================
 
 function StaffTableSkeleton() {
+  const { t } = useTranslation('analytics')
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]">#</TableHead>
-            <TableHead>Сотрудник</TableHead>
-            <TableHead>Должность</TableHead>
-            <TableHead className="text-right">Заказов</TableHead>
-            <TableHead className="text-right">Выручка</TableHead>
-            <TableHead className="text-right">Чаевые</TableHead>
-            <TableHead className="text-right">Изм.</TableHead>
+            <TableHead>{t('staff.table.employee')}</TableHead>
+            <TableHead>{t('staff.table.role')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.orders')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.revenue')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.tips')}</TableHead>
+            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

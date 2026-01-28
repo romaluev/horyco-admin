@@ -13,10 +13,10 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 import { DataTable } from '@/shared/ui/base/table/data-table'
 import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header'
 
-import { useViewData } from '@/entities/view'
-import { selectAvailableColumns, useViewBuilderStore } from '@/features/view-builder'
+import { useViewData } from '@/entities/dashboard/view'
+import { selectAvailableColumns, useViewBuilderStore } from '@/features/dashboard/view-builder'
 
-import type { IColumnDef, IViewDataParams } from '@/entities/view'
+import type { IColumnDef, IViewDataParams } from '@/entities/dashboard/view'
 import type { IRankedItem } from '@/shared/api/graphql'
 
 interface IViewDataTableProps {

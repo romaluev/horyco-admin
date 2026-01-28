@@ -1,6 +1,6 @@
 'use client'
 
-import type { WidgetData } from '@/entities/dashboard-widget'
+import type { WidgetData } from '@/entities/dashboard/dashboard-widget'
 
 interface TextWidgetProps {
   data: WidgetData

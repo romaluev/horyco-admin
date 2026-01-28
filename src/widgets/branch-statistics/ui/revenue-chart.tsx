@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
-import type { IRevenueStats } from '@/entities/branch'
+import type { IRevenueStats } from '@/entities/organization/branch'
 
 interface RevenueChartProps {
   revenue: IRevenueStats

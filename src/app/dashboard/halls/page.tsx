@@ -6,11 +6,11 @@ import { Heading } from '@/shared/ui/base/heading'
 import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useBranchStore } from '@/entities/branch'
-import { HallList } from '@/entities/hall'
-import { CreateHallDialog, UpdateHallDialog } from '@/features/hall-form'
+import { useBranchStore } from '@/entities/organization/branch'
+import { HallList } from '@/entities/organization/hall'
+import { CreateHallDialog, UpdateHallDialog } from '@/features/organization/hall-form'
 
-import type { IHall } from '@/entities/hall'
+import type { IHall } from '@/entities/organization/hall'
 
 export default function HallsPage() {
   const { selectedBranchId } = useBranchStore()

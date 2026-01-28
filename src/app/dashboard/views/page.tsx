@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
@@ -17,8 +17,8 @@ import {
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
-import { useDeleteView, useViews } from '@/entities/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/view-builder'
+import { useDeleteView, useViews } from '@/entities/dashboard/view'
+import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
 
 export default function ViewsPage() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -71,7 +71,7 @@ export default function ViewsPage() {
               Icons[datasetConfig?.icon as keyof typeof Icons] || Icons.table
 
             return (
-              <Link key={view.id} href={`/dashboard/views/${view.id}`}>
+              <Link key={view.id} to={`/dashboard/views/${view.id}` as any}>
                 <Card className="transition-colors hover:bg-muted/50">
                   <CardHeader>
                     <div className="flex items-start justify-between">

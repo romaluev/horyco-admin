@@ -1,15 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
-import { IconSearch } from '@tabler/icons-react'
+import { IconSearch, IconUpload } from '@tabler/icons-react'
 
-import { Heading } from '@/shared/ui/base/heading'
 import { Button } from '@/shared/ui/base/button'
+import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
-import { Separator } from '@/shared/ui/base/separator'
-import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
   Select,
   SelectContent,
@@ -17,46 +15,62 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
-import { Badge } from '@/shared/ui/base/badge'
+import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetInventoryItems } from '@/entities/inventory-item'
+import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
+import { CreateItemDialog, categoryOptions } from '@/features/inventory/inventory-item-form'
 import {
-  CreateItemDialog,
-  DeleteItemButton,
-  categoryOptions,
-} from '@/features/inventory-item-form'
+  EmptyItemsState,
+  ItemsTable,
+  ItemsTableSkeleton,
+} from '@/widgets/inventory-items-table'
+
+type ItemType = 'all' | 'raw' | 'semi-finished'
 
 export default function InventoryItemsPage() {
+  const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<string>('')
   const [isActive, setIsActive] = useState<boolean | undefined>()
+  const [itemType, setItemType] = useState<ItemType>('all')
+
+  const isSemiFinished = itemType === 'all' ? undefined : itemType === 'semi-finished'
 
   const { data: items, isLoading } = useGetInventoryItems({
     search: search || undefined,
     category: category || undefined,
     isActive,
+    isSemiFinished,
   })
 
   const filteredItems = items ?? []
+
+  const handleImportCSV = () => {
+    // CSV import will be implemented in separate feature
+  }
+
+  const renderContent = () => {
+    if (isLoading) return <ItemsTableSkeleton />
+    if (filteredItems.length === 0) return <EmptyItemsState onImportCSV={handleImportCSV} />
+    return <ItemsTable items={filteredItems} />
+  }
 
   return (
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Товары"
-            description="Управление номенклатурой складских товаров"
+            title={t('pages.items.title')}
+            description={t('pages.items.description')}
           />
-          <CreateItemDialog />
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleImportCSV}>
+              <IconUpload className="mr-2 h-4 w-4" />
+              {t('pages.items.import')}
+            </Button>
+            <CreateItemDialog />
+          </div>
         </div>
         <Separator />
 
@@ -64,7 +78,7 @@ export default function InventoryItemsPage() {
           <div className="relative flex-1 min-w-[200px]">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Поиск по названию, SKU..."
+              placeholder={t('pages.items.searchItems')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -75,10 +89,10 @@ export default function InventoryItemsPage() {
             onValueChange={(val) => setCategory(val === 'all' ? '' : val)}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Все категории" />
+              <SelectValue placeholder={t('pages.items.allCategories')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все категории</SelectItem>
+              <SelectItem value="all">{t('pages.items.allCategories')}</SelectItem>
               {categoryOptions.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
@@ -88,80 +102,33 @@ export default function InventoryItemsPage() {
           </Select>
           <Select
             value={isActive === undefined ? 'all' : isActive ? 'active' : 'inactive'}
-            onValueChange={(value) =>
-              setIsActive(value === 'all' ? undefined : value === 'active')
-            }
+            onValueChange={(val) => setIsActive(val === 'all' ? undefined : val === 'active')}
           >
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Статус" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все</SelectItem>
-              <SelectItem value="active">Активные</SelectItem>
-              <SelectItem value="inactive">Неактивные</SelectItem>
+              <SelectItem value="all">{t('pages.items.all')}</SelectItem>
+              <SelectItem value="active">{t('pages.items.active')}</SelectItem>
+              <SelectItem value="inactive">{t('pages.items.inactive')}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={itemType}
+            onValueChange={(value) => setItemType(value as ItemType)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Тип товара" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('pages.items.allTypes')}</SelectItem>
+              <SelectItem value="raw">{t('pages.items.raw')}</SelectItem>
+              <SelectItem value="semi-finished">{t('pages.items.semiFinished')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {isLoading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Название</TableHead>
-                  <TableHead>SKU</TableHead>
-                  <TableHead>Категория</TableHead>
-                  <TableHead>Единица</TableHead>
-                  <TableHead>Мин. остаток</TableHead>
-                  <TableHead>Статус</TableHead>
-                  <TableHead className="w-[100px]">Действия</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredItems.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      Товары не найдены
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredItems.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium">{item.name}</TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {item.sku || '—'}
-                      </TableCell>
-                      <TableCell>{item.category || '—'}</TableCell>
-                      <TableCell>{item.unit}</TableCell>
-                      <TableCell>{item.minStockLevel}</TableCell>
-                      <TableCell>
-                        <Badge variant={item.isActive ? 'default' : 'secondary'}>
-                          {item.isActive ? 'Активен' : 'Неактивен'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="sm" asChild>
-                            <Link href={`/dashboard/inventory/items/${item.id}`}>
-                              Открыть
-                            </Link>
-                          </Button>
-                          <DeleteItemButton itemId={item.id} itemName={item.name} />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        {renderContent()}
       </div>
     </PageContainer>
   )

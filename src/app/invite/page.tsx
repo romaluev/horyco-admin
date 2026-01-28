@@ -1,20 +1,12 @@
 import { Suspense } from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Loader2 } from 'lucide-react'
 
 import logo from '@/shared/assets/logo.png'
 
-import InviteForm from '@/entities/auth/ui/invite-form'
-
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Активация аккаунта',
-  description: 'Активируйте ваш аккаунт Horyco',
-}
+import InviteForm from '@/entities/auth/auth/ui/invite-form'
 
 function InviteFormFallback() {
   return (
@@ -28,7 +20,7 @@ export default function InvitePage() {
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden rounded-2xl"
           src={logo}
           alt="Horyco"
@@ -43,7 +35,7 @@ export default function InvitePage() {
           <p className="text-muted-foreground px-8 text-center text-sm">
             Уже есть аккаунт?{' '}
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in" search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
               Войти
@@ -52,19 +44,19 @@ export default function InvitePage() {
 
           <p className="text-muted-foreground px-8 text-center text-sm">
             Активируя аккаунт, вы соглашаетесь с{' '}
-            <Link
-              href="/terms"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Условиями использования
-            </Link>{' '}
+            </a>{' '}
             и{' '}
-            <Link
-              href="/privacy"
+            <a
+              href="#"
               className="hover:text-primary underline underline-offset-4"
             >
               Политикой конфиденциальности
-            </Link>
+            </a>
             .
           </p>
         </div>

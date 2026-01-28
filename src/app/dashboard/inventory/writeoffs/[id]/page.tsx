@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
+
 import {
   IconArrowLeft,
   IconPlus,
@@ -14,20 +14,10 @@ import {
   IconX,
   IconTrash,
 } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { Heading } from '@/shared/ui/base/heading'
-import { Separator } from '@/shared/ui/base/separator'
-import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,8 +29,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
-import PageContainer from '@/shared/ui/layout/page-container'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useWriteoffById,
@@ -49,19 +51,22 @@ import {
   WRITEOFF_REASON_LABELS,
   useDeleteWriteoff,
   useRemoveWriteoffItem,
-} from '@/entities/writeoff'
-
+} from '@/entities/inventory/writeoff'
 import {
   SubmitWriteoffDialog,
   ApproveWriteoffDialog,
   RejectWriteoffDialog,
   AddWriteoffItemDialog,
-} from '@/features/writeoff-workflow'
+} from '@/features/inventory/writeoff-workflow'
 
-export default function WriteoffDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function WriteoffDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const writeoffId = Number(params.id)
+  const writeoffId = Number(paramId)
 
   const { data: writeoff, isLoading } = useWriteoffById(writeoffId)
   const deleteMutation = useDeleteWriteoff()
@@ -98,7 +103,7 @@ export default function WriteoffDetailPage() {
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Списание не найдено</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/writeoffs">Назад к списку</Link>
+            <Link to="/dashboard/inventory/writeoffs">Назад к списку</Link>
           </Button>
         </div>
       </PageContainer>
@@ -117,7 +122,7 @@ export default function WriteoffDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/writeoffs">
+              <Link to="/dashboard/inventory/writeoffs">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>

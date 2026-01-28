@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS } from '@/shared/types/inventory'
 
-import { useStockAlerts, useAcknowledgeAlert } from '@/entities/stock'
+import { useStockAlerts, useAcknowledgeAlert } from '@/entities/inventory/stock'
 
 interface IStockAlertsWidgetProps {
   warehouseId?: number

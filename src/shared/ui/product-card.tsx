@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { Plus, Check } from 'lucide-react'
 
 import { Badge } from './base/badge'

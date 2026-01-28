@@ -1,0 +1,592 @@
+{
+  "title": "Bosh panel",
+  "overview": {
+    "title": "Umumiy ko'rinish",
+    "description": "Umumiy biznes ma'lumotlari"
+  },
+  "analytics": {
+    "title": "Tahlillar",
+    "description": "Biznes ma'lumotlarini tahlil qiling"
+  },
+  "sales": {
+    "title": "Sotuv tahlili",
+    "description": "Sotuv tahlili",
+    "table": {
+      "metric": "Ko'rsatkich",
+      "today": "Bugun",
+      "yesterday": "Kecha",
+      "change": "O'zgarish",
+      "grossSales": "Umumiy sotuv",
+      "refunds": "Qaytarilar",
+      "discounts": "Chegirmalar",
+      "netRevenue": "Sof daromad",
+      "orders": "Buyurtmalar",
+      "avgCheck": "O'rtacha tekshiruv",
+      "tips": "Bahshish"
+    }
+  },
+  "products": {
+    "title": "Mahsulotlar",
+    "description": "Mahsulot samaradorligi tahlili",
+    "filters": {
+      "searchPlaceholder": "Mahsulot qidiring...",
+      "allCategories": "Barcha kategoriyalar"
+    },
+    "table": {
+      "index": "#",
+      "product": "Mahsulot",
+      "quantity": "Miqdori",
+      "revenue": "Daromad",
+      "share": "Ulush",
+      "abc": "ABC",
+      "trend": "Tendentsiya",
+      "noData": "Ko'rsatish uchun ma'lumot yo'q"
+    },
+    "pagination": "{count} ta {total} dan mahsulot ko'rsatilmoqda"
+  },
+  "customers": {
+    "title": "Mijozlar",
+    "description": "Mijoz tahlili",
+    "tabs": {
+      "overview": "Umumiy ko'rinish",
+      "rfm": "RFM tahlili",
+      "cohorts": "Kogorta"
+    },
+    "overview": {
+      "totalCustomers": "Jami mijozlar",
+      "active": "Faol",
+      "new": "Yangi",
+      "returning": "Qaytaydigan",
+      "churned": "Ketgan",
+      "activityRate": "Faollik darajasi",
+      "retentionRate": "Saqlab qolish darajasi",
+      "churnRate": "Ketish darajasi",
+      "avgRevenuePerCustomer": "O'rtacha daromad/mijoz",
+      "segments": "Mijoz segmentlari",
+      "noSegmentData": "Segment ma'lumotlari yo'q"
+    },
+    "rfm": {
+      "segments": "RFM segmentlari",
+      "distribution": "RFM taqsimoti",
+      "noData": "RFM tahlili uchun ma'lumot yo'q"
+    },
+    "cohorts": {
+      "retention": "Kogorta saqlab qolish",
+      "avgRetention": "O'rtacha saqlab qolish",
+      "period1": "1 oy",
+      "period3": "3 oy",
+      "period6": "6 oy",
+      "noData": "Kogorta tahlili uchun ma'lumot yo'q"
+    },
+    "table": {
+      "segment": "Segment",
+      "count": "Sonlar",
+      "share": "Ulush",
+      "revenue": "Daromad",
+      "rfmSegment": "Segment",
+      "recency": "Yaqin vaqt",
+      "frequency": "Chastota",
+      "monetary": "Pul"
+    }
+  },
+  "payments": {
+    "title": "To'lov usullari",
+    "description": "To'lov usuli tahlili",
+    "table": {
+      "method": "To'lov usuli",
+      "transactions": "Tranzaksiyalar",
+      "amount": "Summa",
+      "share": "Ulush",
+      "avgAmount": "O'rtacha summa",
+      "noData": "Ko'rsatish uchun ma'lumot yo'q"
+    },
+    "summary": {
+      "total": "Jami",
+      "transactions": "tranzaksiyalar",
+      "cash": "Naqd pul",
+      "card": "Kartalar",
+      "online": "Onlayn"
+    }
+  },
+  "staff": {
+    "title": "Xodimlar",
+    "description": "Xodim samaradorligi tahlili",
+    "filters": {
+      "searchPlaceholder": "Xodimni qidiring...",
+      "allRoles": "Barcha lavozimlar"
+    },
+    "table": {
+      "index": "#",
+      "employee": "Xodim",
+      "role": "Lavozim",
+      "orders": "Buyurtmalar",
+      "revenue": "Daromad",
+      "tips": "Bahshish",
+      "change": "O'zgarish",
+      "noData": "Ko'rsatish uchun ma'lumot yo'q"
+    },
+    "summary": "{count} ta xodim ko'rsatilmoqda"
+  },
+  "financial": {
+    "title": "Moliya",
+    "description": "Moliyaviy tahlillar",
+    "tabs": {
+      "pnl": "P&L",
+      "margins": "Marjalarga"
+    },
+    "pnl": {
+      "title": "Foyda va zarara hisobi",
+      "netRevenue": "Sof daromad",
+      "grossProfit": "Umumiy foyda",
+      "operatingProfit": "Operatsiyaviy foyda",
+      "avgCheck": "O'rtacha tekshiruv",
+      "section": {
+        "revenue": "Daromad",
+        "expenses": "Operatsiyaviy xarajatlar"
+      },
+      "item": {
+        "grossRevenue": "Umumiy daromad",
+        "discounts": "Chegirmalar",
+        "refunds": "Qaytarilar",
+        "cogs": "Sotilgan mahsulotlarning narxi",
+        "operatingExpenses": "Jami operatsiyaviy xarajatlar"
+      },
+      "margin": "Operatsiyaviy maržina"
+    },
+    "margins": {
+      "avgMargin": "O'rtacha maržina",
+      "highMargin": "Yuqori maržina",
+      "lowMargin": "Pastki maržina",
+      "negative": "Salbiy",
+      "products": "Maržinaga ko'ra mahsulotlar",
+      "noData": "Mahsulot maržina ma'lumotlari yo'q",
+      "table": {
+        "product": "Mahsulot",
+        "cost": "Xarajat",
+        "price": "Narx",
+        "margin": "Maržina",
+        "class": "Sinf"
+      }
+    }
+  },
+  "heatmap": {
+    "title": "Issiqlik xaritasi",
+    "description": "Vaqtga ko'ra faollik tahlili",
+    "grid": {
+      "orders": "Kun va soatga bo'lgan buyurtmalar",
+      "hour": "Soat"
+    },
+    "legend": {
+      "label": "Legendalar",
+      "low": "Past (0-5)",
+      "medium": "O'rtacha (6-15)",
+      "high": "Yuqori (16-30)",
+      "peak": "Cho'qqi (31+)"
+    },
+    "peakTime": "Cho'qqi vaqti",
+    "peakDay": "Kun",
+    "peakHour": "Soat"
+  },
+  "forecasting": {
+    "title": "Prognozlash",
+    "description": "Pul oqimi prognozi",
+    "cashFlow": {
+      "totalInflow": "Umumiy kirim",
+      "totalOutflow": "Umumiy chiqim",
+      "netCashFlow": "Sof pul oqimi",
+      "avgDailyFlow": "O'rtacha kunlik oqim"
+    },
+    "balance": {
+      "title": "Balans proyeksiyasi",
+      "opening": "Boshlang'ich balans",
+      "closing": "Tugatilish balansi"
+    },
+    "peakDay": "Cho'qqi kun",
+    "dailyFlow": "Kunlik pul oqimi (Oxirgi 7 kun)",
+    "allDays": "Barcha kunlarni ko'rsatish ({count} yozuvlar)",
+    "noFlowData": "Kunlik oqim ma'lumotlari yo'q",
+    "note": "Prognoz tanlangan davr uchun hozirgi pul oqimi ma'lumotlariga asoslangan. Aniqroq prognozlar uchun uzun muddatli ma'lumotlardan foydalaning."
+  },
+  "branches": {
+    "title": "Filiallar",
+    "description": "Filial tahlili",
+    "tabs": {
+      "comparison": "Taqqoslash",
+      "benchmark": "Benchmark"
+    },
+    "comparison": {
+      "avgRevenue": "O'rtacha daromad",
+      "avgOrders": "O'rtacha buyurtmalar",
+      "avgCheck": "O'rtacha tekshiruv",
+      "table": {
+        "branch": "Filial",
+        "revenue": "Daromad",
+        "orders": "Buyurtmalar",
+        "avgCheck": "O'rtacha tekshiruv",
+        "vsAverage": "o'rtachaga nisbatan"
+      }
+    },
+    "benchmark": {
+      "metric": "Ko'rsatkich",
+      "noData": "Filiallarni taqqoslash uchun ma'lumot yo'q",
+      "metrics": {
+        "revenue": "Daromad",
+        "orders": "Buyurtmalar",
+        "avgCheck": "O'rtacha tekshiruv",
+        "customerCount": "Mijozlar",
+        "retentionRate": "Saqlab qolish darajasi"
+      }
+    }
+  },
+  "alerts": {
+    "title": "Ogohlantirish",
+    "description": "Monitoring va ogohlantirish",
+    "tabs": {
+      "active": "Faol",
+      "history": "Tarix"
+    },
+    "severity": {
+      "critical": "JIDDIY",
+      "warning": "OGOHLANTIRISH",
+      "info": "MA'LUMOT"
+    },
+    "card": {
+      "detected": "Aniqlangan",
+      "branch": "Filial"
+    },
+    "empty": {
+      "title": "Ogohlantirish yo'q",
+      "description": "Barcha ko'rsatichlar normalda. Agar anomaliyalar aniqlanmasa, sizni xabardor qilamiz."
+    }
+  },
+  "categories": {
+    "title": "Kategoriyalar",
+    "description": "Kategoriya tahlili",
+    "table": {
+      "index": "#",
+      "category": "Kategoriya",
+      "productCount": "Mahsulotlar",
+      "orders": "Buyurtmalar",
+      "revenue": "Daromad",
+      "share": "Ulush",
+      "change": "O'zgarish",
+      "noData": "Ko'rsatish uchun ma'lumot yo'q"
+    },
+    "summary": "Jami {count} kategoriya, daromad: {revenue}"
+  },
+  "channels": {
+    "title": "Sotuv kanallari",
+    "description": "Sotuv kanali tahlili",
+    "table": {
+      "channel": "Kanal",
+      "orders": "Buyurtmalar",
+      "revenue": "Daromad",
+      "share": "Ulush",
+      "avgCheck": "O'rtacha tekshiruv",
+      "change": "O'zgarish",
+      "noData": "Ko'rsatish uchun ma'lumot yo'q"
+    },
+    "summary": "Jami: {revenue} ({orders} buyurtmalar)"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Foydalanuvchi profili"
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "description": "Sizning biznesning sozlamalarini boshqaring",
+    "tabs": {
+      "branding": "Brendlash",
+      "features": "Xususiyatlar",
+      "payment": "To'lov",
+      "sms": "SMS",
+      "subscription": "Obuna",
+      "appearance": "Ko'rinish"
+    },
+    "warnings": {
+      "paymentOrgLevel": "To'lov sozlamalari faqat tashkilot darajasida mavjud. Tahrirlash uchun \"Barcha filiallar (Sukut bo'yicha)\" ni tanlang.",
+      "smsOrgLevel": "SMS sozlamalari faqat tashkilot darajasida mavjud. Tahrirlash uchun \"Barcha filiallar (Sukut bo'yicha)\" ni tanlang."
+    }
+  },
+  "widgets": {
+    "overview": {
+      "greeting": "Salom, qaytib kelganingizdan xursand! 👋",
+      "download": "Yuklab olish",
+      "tabs": {
+        "overview": "Umumiy ko'rinish",
+        "analytics": "Tahlillar"
+      },
+      "kpiCards": {
+        "totalRevenue": {
+          "title": "Umumiy daromad",
+          "value": "$1,250.00",
+          "trend": "+12.5%",
+          "description": "Bu oyda o'sish",
+          "subdescription": "Oxirgi 6 oy uchun tashrif etuvchilar"
+        },
+        "newCustomers": {
+          "title": "Yangi mijozlar",
+          "value": "1,234",
+          "trend": "-20%",
+          "description": "Bu davrda 20% qulashi",
+          "subdescription": "Jalb qilish e'tiborni talab qiladi"
+        },
+        "activeAccounts": {
+          "title": "Faol hisoblar",
+          "value": "45,678",
+          "trend": "+12.5%",
+          "description": "Kuchli foydalanuvchi saqlanishi",
+          "subdescription": "Jalb qilish maqsadlarni oshqadi"
+        },
+        "growthRate": {
+          "title": "O'sish tezligi",
+          "value": "4.5%",
+          "trend": "+4.5%",
+          "description": "Barqaror unumdorlik o'sishi",
+          "subdescription": "O'sish prognozlariga javob beradi"
+        }
+      }
+    },
+    "recentSales": {
+      "title": "Yangi sotuvlar",
+      "description": "Bu oyda 200 ta buyurtma qildingiz."
+    },
+    "barGraph": {
+      "title": "Sistema faoliyati",
+      "description": "3 oy jami",
+      "descriptionShort": "Oxirgi 3 oy"
+    },
+    "areaGraph": {
+      "title": "Tashrif etishlar soni",
+      "description": "6 oy uchun tashrif etishlar soni",
+      "growth": "Bu oyda 5.2% o'sish",
+      "period": "Yanvar - Iyun 2024"
+    },
+    "pieGraph": {
+      "title": "Veb-sayt tashrif etuvchilari",
+      "description": "Oxirgi 6 oy ichida",
+      "descriptionShort": "Brauzer taqsimoti",
+      "centerLabel": "Tashrif etishlar soni",
+      "footer": "Ma'lumotlar asosida Yanvar - Iyun 2024"
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Tahlillar",
+      "description": "Biznesingizning asosiy ko'rsatichlarini kuzatib boring",
+      "edit": "Sozlash",
+      "branch": "Filial:",
+      "allBranches": "Barcha filiallar",
+      "selectPeriod": "Davr tanglang",
+      "periods": {
+        "today": "Bugun",
+        "yesterday": "Kecha",
+        "week": "Hafta",
+        "month": "Oy",
+        "custom": "Boshqa"
+      },
+      "messages": {
+        "saved": "Deshbord saqlandi",
+        "proOnly": "Moslash faqat PRO rejasida mavjud",
+        "saveFailed": "Saqlash amalga oshmadi",
+        "loadFailed": "Ma'lumotni yuklashda xato. Internet ulanishingizni tekshiring."
+      }
+    },
+    "editMode": {
+      "title": "Deshbordni sozlash",
+      "description": "Koʻrish bilan vizual editor",
+      "save": "Saqlash",
+      "saving": "Saqlanmoqda...",
+      "tabs": {
+        "kpi": "KPI kartalar",
+        "chart": "Asosiy grafikoni",
+        "widgets": "Vijetlari"
+      }
+    }
+  },
+  "kpiLabels": {
+    "revenue": "Daromad",
+    "orders": "Buyurtmalar",
+    "avgCheck": "O'rtacha tekshiruv",
+    "customers": "Mijozlar",
+    "newCustomers": "Yangi mijozlar",
+    "returningCustomers": "Qaytaydigan",
+    "tips": "Bahshish",
+    "refunds": "Qaytarilar",
+    "cancellations": "Bekor qilishlar",
+    "margin": "Maržina",
+    "retentionRate": "Saqlab qolish",
+    "staffProductivity": "Samaradorlik"
+  },
+  "analytics": {
+    "revenue": "Daromad",
+    "orders": "Buyurtmalar",
+    "average": "O'rtacha tekshiruv",
+    "noData": "Ma'lumot yo'q",
+    "forSelectedPeriod": "tanlangan davr uchun",
+    "dataUnavailable": "Ma'lumot mavjud emas",
+    "noDataForDisplay": "Ko'rsatish uchun ma'lumot yo'q",
+    "dynamics": "Dinamika",
+    "revenueMetric": "daromad",
+    "ordersMetric": "buyurtmalar soni",
+    "averageMetric": "o'rtacha tekshiruv",
+    "byHours": "soatga",
+    "byDays": "kunlar bo'yicha",
+    "byWeeks": "haftalar bo'yicha",
+    "topDish": "Eng mashhur taom",
+    "quantity": "dona",
+    "forPeriod": "{period} uchun",
+    "orders_count": "Buyurtmalar",
+    "avg_check": "O'rtacha tekshiruv"
+  },
+  "widgets": {
+    "topProducts": {
+      "title": "Yuqori mahsulotlar",
+      "noData": "Ma'lumot yo'q",
+      "period": "bu davr uchun",
+      "table": {
+        "index": "#",
+        "product": "Mahsulot",
+        "orders": "Buyurtmalar",
+        "revenue": "Daromad",
+        "share": "Ulush"
+      }
+    },
+    "recentOrders": {
+      "title": "Yaqinda buyurtmalar",
+      "subtitle": "Oxirgi 10 buyurtmalar",
+      "allBranches": "Oxirgi 10 buyurtmalar (barcha filiallar)",
+      "noOrders": "Buyurtmalar yo'q",
+      "period": "bu davrda",
+      "table": {
+        "time": "Vaqt",
+        "order": "Buyurtma",
+        "branch": "Filial",
+        "amount": "Summa",
+        "payment": "To'lov",
+        "status": "Holati"
+      },
+      "paymentMethods": {
+        "CASH": "Naqd pul",
+        "CARD": "Karta",
+        "CREDIT": "Kredit",
+        "PAYME": "Payme",
+        "CLICK": "Click",
+        "UZUM": "Uzum",
+        "BANK_TRANSFER": "Translfer",
+        "MIXED": "Aralash"
+      },
+      "statuses": {
+        "PAID": "To'langan",
+        "PARTIALLY_PAID": "Qisman",
+        "NOT_PAID": "To'lanmagan"
+      }
+    },
+    "widgetsTab": {
+      "activeWidgets": "Faol vijetlar",
+      "reorderHint": "Tartibni o'zgartirish uchun suring",
+      "noActiveWidgets": "Faol vijetlar yo'q. Quyidagi galereyadon qo'shing.",
+      "widgetGallery": "Vijet galereyasi",
+      "selectWidgets": "Vizual ko'rinish bilan vijetlarni tanlang",
+      "added": "Qo'shilgan"
+    }
+  },
+  "common": {
+    "noData": "Ko'rsatish uchun ma'lumot yo'q",
+    "loading": "Yuklanmoqda...",
+    "error": "Xato",
+    "retry": "Qayta urinib ko'ring",
+    "export": "Eksport",
+    "period": "Davr",
+    "search": "Qidirish",
+    "cancel": "Bekor qilish",
+    "apply": "Qo'llash",
+    "details": "Tafsilotlar",
+    "comingSoon": "Tez kunda"
+  },
+  "widgetTitles": {
+    "revenueOverview": "Daromad ko'rinishi",
+    "transactionsSummary": "Tranzaksiyalar jamlangani",
+    "incomeExpense": "Daromad va xarajatlar",
+    "dailyComparison": "Kunlik taqqoslash",
+    "customerRatings": "Mijoz reytingi",
+    "ordersChart": "Buyurtmalar grafigi",
+    "performanceRadar": "Samaradorlik",
+    "conversionFunnel": "Konversiya voronkasi",
+    "goalRadial": "Maqsadlarning taraqqiyoti",
+    "hourlyBreakdown": "Soatning buzilishi",
+    "goalProgress": "Maqsadlar",
+    "alerts": "Ogohlantirishlar",
+    "topProducts": "Yuqori mahsulotlar",
+    "paymentMethods": "To'lov usullari",
+    "channelSplit": "Sotuv kanallari",
+    "staffRanking": "Xodimlar reytingi",
+    "ordersByCategory": "Kategoriya bo'yicha buyurtmalar",
+    "visitorsTraffic": "Tashrif etuvchilar trafikи",
+    "anomalyDetection": "Anomaliya aniqlash",
+    "salesMetrics": "Sotuv metrikalari",
+    "earningsReport": "Daromad hisoboti",
+    "growthGauge": "O'sish ko'rsatgichi",
+    "comboChart": "Kombo grafiki",
+    "channelSalesBreakdown": "Kanal bo'yicha sotuv buzilishi",
+    "performanceTabs": "Samaradorlik",
+    "salesPlanProgress": "Sotuv rejasining taraqqiyoti",
+    "yearComparison": "Yil taqqoslash",
+    "financeReport": "Moliya hisoboti",
+    "topServices": "Yuqori xizmatlar",
+    "totalEarning": "Jami daromad",
+    "weeklyOverview": "Haftalik ko'rinish",
+    "recentOrders": "Yaqinda buyurtmalar",
+    "customerSegments": "Mijoz segmentlari",
+    "branchComparison": "Filial taqqoslash"
+  },
+  "widgetDescriptions": {
+    "revenueOverview": "Yig'indi statistika bilan grafik",
+    "transactionsSummary": "Tranzaksiya tahlili",
+    "incomeExpense": "Moliya hisoboti",
+    "dailyComparison": "Oldingi kun bilan taqqoslash",
+    "customerRatings": "Yulduz reytingi bilan grafik",
+    "ordersChart": "Buyurtmalarning dinamikasi",
+    "performanceRadar": "Metrikallarning radar tahlili",
+    "conversionFunnel": "Sotuv voronkasi",
+    "goalRadial": "Radial taraqqiyot",
+    "hourlyBreakdown": "Issiqlik xaritasi",
+    "goalProgress": "Maqsadlar bo'yicha taraqqiyot",
+    "alerts": "Muhim ogohlantirishlar",
+    "topProducts": "Daromad bo'yicha yuqori mahsulotlar",
+    "paymentMethods": "Tur bo'yicha taqsimot",
+    "channelSplit": "Yetkazib berish, xona, o'z-o'zidan olish",
+    "staffRanking": "Eng yaxshi xodimlar",
+    "ordersByCategory": "Donut diagramma",
+    "visitorsTraffic": "Qurilma bo'yicha buzilishi",
+    "anomalyDetection": "Anomaliya aniqlash",
+    "salesMetrics": "Kompleks tahlil",
+    "earningsReport": "Batafsil hisobot",
+    "growthGauge": "O'sish ko'rsatgichi",
+    "comboChart": "Aralash grafik",
+    "channelSalesBreakdown": "Sotuv buzilishi",
+    "performanceTabs": "Jadval ko'rinishi",
+    "salesPlanProgress": "Reja bajarilishi",
+    "yearComparison": "Yildan yilga",
+    "financeReport": "To'liq hisobot",
+    "topServices": "Mashhur xizmatlar",
+    "totalEarning": "Ikki grafik",
+    "weeklyOverview": "Haftalik kombo",
+    "recentOrders": "Buyurtmalar ro'yxati",
+    "customerSegments": "Mijoz guruhları",
+    "branchComparison": "Filiallar bo'yicha"
+  },
+  "widgetCategories": {
+    "charts": "Grafiklar va diagrammalar",
+    "analytics": "Tahlillar",
+    "data": "Ma'lumot",
+    "insights": "Tashkil etilgan ma'lumotlar"
+  },
+  "chartTypes": {
+    "area": "Hudud",
+    "bar": "Shtolbtslar",
+    "line": "Chiziq",
+    "radial": "Radial",
+    "radar": "Radar"
+  }
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Label, Pie, PieChart } from 'recharts'
 
@@ -55,6 +56,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function PieGraph() {
+  const { t } = useTranslation('dashboard')
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   }, [])
@@ -62,13 +64,13 @@ export function PieGraph() {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Количество посетителей на вебсайт</CardTitle>
+        <CardTitle>{t('widgets.pieGraph.title')}</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            За последние 6 месяцев
+            {t('widgets.pieGraph.description')}
           </span>
           <span className="@[540px]/card:hidden">
-            Распространение в браузере
+            {t('widgets.pieGraph.descriptionShort')}
           </span>
         </CardDescription>
       </CardHeader>
@@ -140,7 +142,7 @@ export function PieGraph() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground text-sm"
                         >
-                          Количество посещении
+                          {t('widgets.pieGraph.centerLabel')}
                         </tspan>
                       </text>
                     )
@@ -154,7 +156,7 @@ export function PieGraph() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Основанный на данных January - June 2024
+          {t('widgets.pieGraph.footer')}
         </div>
       </CardFooter>
     </Card>

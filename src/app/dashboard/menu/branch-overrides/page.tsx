@@ -6,6 +6,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Building2 } from 'lucide-react'
 
@@ -34,18 +35,19 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetAllBranches } from '@/entities/branch'
-import { useGetProductBranchOverrides } from '@/entities/branch-override'
-import { useGetProducts } from '@/entities/product'
+import { useGetAllBranches } from '@/entities/organization/branch'
+import { useGetProductBranchOverrides } from '@/entities/menu/branch-override'
+import { useGetProducts } from '@/entities/menu/product'
 import {
   CreateBranchOverrideDialog,
   EditBranchOverrideDialog,
   DeleteBranchOverrideButton,
-} from '@/features/branch-override-form'
+} from '@/features/menu/branch-override-form'
 
 import type { JSX } from 'react'
 
 export default function BranchOverridesPage(): JSX.Element {
+  const { t } = useTranslation('menu')
   const [selectedProduct, setSelectedProduct] = useState<string>('all')
   const [selectedBranch, setSelectedBranch] = useState<string>('all')
 
@@ -97,10 +99,10 @@ export default function BranchOverridesPage(): JSX.Element {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">
-              Переопределения филиалов
+              {t('branchOverrides.page.title')}
             </h2>
             <p className="text-muted-foreground">
-              Настройте индивидуальные цены и доступность для каждого филиала
+              {t('branchOverrides.page.description')}
             </p>
           </div>
           <CreateBranchOverrideDialog
@@ -113,7 +115,7 @@ export default function BranchOverridesPage(): JSX.Element {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Всего филиалов
+                {t('branchOverrides.page.stats.totalBranches')}
               </CardTitle>
               <Building2 className="text-muted-foreground h-4 w-4" />
             </CardHeader>
@@ -124,7 +126,7 @@ export default function BranchOverridesPage(): JSX.Element {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Индивид. цены
+                {t('branchOverrides.page.stats.customPrices')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -134,7 +136,7 @@ export default function BranchOverridesPage(): JSX.Element {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Индивид. доступность
+                {t('branchOverrides.page.stats.customAvailability')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -149,9 +151,9 @@ export default function BranchOverridesPage(): JSX.Element {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Список переопределений</CardTitle>
+                <CardTitle>{t('branchOverrides.page.table.title')}</CardTitle>
                 <CardDescription>
-                  Управление настройками продуктов для филиалов
+                  {t('branchOverrides.page.table.description')}
                 </CardDescription>
               </div>
               <div className="flex gap-2">
@@ -160,10 +162,10 @@ export default function BranchOverridesPage(): JSX.Element {
                   onValueChange={setSelectedProduct}
                 >
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Все продукты" />
+                    <SelectValue placeholder={t('branchOverrides.page.table.allProducts')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Все продукты</SelectItem>
+                    <SelectItem value="all">{t('branchOverrides.page.table.allProducts')}</SelectItem>
                     {products.map((product) => (
                       <SelectItem
                         key={product.id}
@@ -179,10 +181,10 @@ export default function BranchOverridesPage(): JSX.Element {
                   onValueChange={setSelectedBranch}
                 >
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Все филиалы" />
+                    <SelectValue placeholder={t('branchOverrides.page.table.allBranches')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Все филиалы</SelectItem>
+                    <SelectItem value="all">{t('branchOverrides.page.table.allBranches')}</SelectItem>
                     {branches.map((branch: { id: number; name: string }) => (
                       <SelectItem key={branch.id} value={branch.id.toString()}>
                         {branch.name}
@@ -196,27 +198,27 @@ export default function BranchOverridesPage(): JSX.Element {
           <CardContent>
             {selectedProduct === 'all' ? (
               <div className="text-muted-foreground py-8 text-center">
-                Выберите продукт для просмотра переопределений филиалов
+                {t('branchOverrides.page.table.noProductSelected')}
               </div>
             ) : isLoadingProducts || isLoadingOverrides ? (
               <div className="text-muted-foreground py-8 text-center">
-                Загрузка...
+                {t('branchOverrides.page.table.loading')}
               </div>
             ) : filteredOverrides.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
                 {overrides.length === 0
-                  ? 'Нет переопределений для этого продукта'
-                  : 'Нет переопределений с выбранными фильтрами'}
+                  ? t('branchOverrides.page.table.noOverrides')
+                  : t('branchOverrides.page.table.noOverridesFiltered')}
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Продукт</TableHead>
-                    <TableHead>Филиал</TableHead>
-                    <TableHead>Цена</TableHead>
-                    <TableHead>Доступность</TableHead>
-                    <TableHead className="w-[100px]">Действия</TableHead>
+                    <TableHead>{t('branchOverrides.page.table.columns.product')}</TableHead>
+                    <TableHead>{t('branchOverrides.page.table.columns.branch')}</TableHead>
+                    <TableHead>{t('branchOverrides.page.table.columns.price')}</TableHead>
+                    <TableHead>{t('branchOverrides.page.table.columns.availability')}</TableHead>
+                    <TableHead className="w-[100px]">{t('branchOverrides.page.table.columns.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -239,18 +241,18 @@ export default function BranchOverridesPage(): JSX.Element {
                           {override.overridePrice !== null ? (
                             <div className="flex items-center gap-2">
                               <span className="font-semibold">
-                                {override.overridePrice} сум
+                                {override.overridePrice} {t('branchOverrides.page.price.override')}
                               </span>
                               {basePrice &&
                                 override.overridePrice !== basePrice && (
                                   <span className="text-muted-foreground text-xs">
-                                    (базовая: {basePrice} сум)
+                                    ({t('branchOverrides.page.price.base')} {basePrice} {t('branchOverrides.page.price.override')})
                                   </span>
                                 )}
                             </div>
                           ) : (
                             <span className="text-muted-foreground">
-                              Базовая{basePrice ? `: ${basePrice} сум` : ''}
+                              {t('branchOverrides.page.badges.default')}{basePrice ? `: ${basePrice} ${t('branchOverrides.page.price.override')}` : ''}
                             </span>
                           )}
                         </TableCell>
@@ -264,11 +266,11 @@ export default function BranchOverridesPage(): JSX.Element {
                               }
                             >
                               {override.overrideAvailability
-                                ? 'Доступен'
-                                : 'Недоступен'}
+                                ? t('branchOverrides.page.badges.available')
+                                : t('branchOverrides.page.badges.unavailable')}
                             </Badge>
                           ) : (
-                            <Badge variant="outline">По умолчанию</Badge>
+                            <Badge variant="outline">{t('branchOverrides.page.badges.default')}</Badge>
                           )}
                         </TableCell>
                         <TableCell>

@@ -1,0 +1,566 @@
+{
+  "empty": {
+    "title": "Начните работу со складом",
+    "description": "Добавьте товары на склад чтобы начать работу",
+    "steps": {
+      "addItems": "Добавьте товары на склад"
+    }
+  },
+  "warehouses": {
+    "title": "Склады",
+    "description": "Управление складами"
+  },
+  "items": {
+    "title": "Товары",
+    "description": "Управление товарами склада"
+  },
+  "stock": {
+    "title": "Остатки",
+    "description": "Просмотр остатков товаров"
+  },
+  "movements": {
+    "title": "Движения",
+    "description": "История движений товаров"
+  },
+  "suppliers": {
+    "title": "Поставщики",
+    "description": "Управление поставщиками"
+  },
+  "recipes": {
+    "title": "Техкарты",
+    "description": "Управление техкартами"
+  },
+  "purchaseOrders": {
+    "title": "Закупки",
+    "description": "Управление заказами поставщикам"
+  },
+  "writeoffs": {
+    "title": "Списания",
+    "description": "Управление списаниями товаров"
+  },
+  "inventoryCounts": {
+    "title": "Инвентаризации",
+    "description": "Проведение инвентаризации"
+  },
+  "production": {
+    "title": "Производство",
+    "description": "Управление производством"
+  },
+  "alerts": {
+    "title": "Уведомления",
+    "description": "Оповещение о низких остатках"
+  },
+  "common": {
+    "back": "Назад",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "actions": "Действия"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Управление складом",
+      "description": "Контроль остатков, движений и уведомлений",
+      "selectWarehouse": "Выберите склад",
+      "updated": "Обновлено",
+      "refresh": "Обновить"
+    },
+    "stock": {
+      "title": "Остатки по складам",
+      "description": "Просмотр текущих остатков товаров",
+      "selectWarehouse": "Выберите склад",
+      "selectCategory": "Категория",
+      "allWarehouses": "Все склады",
+      "allCategories": "Все категории",
+      "allProducts": "Все товары",
+      "lowStock": "Мало на складе",
+      "outOfStock": "Нет в наличии",
+      "searchProduct": "Поиск товара...",
+      "export": "Экспорт",
+      "selectWarehouseMessage": "Выберите склад для просмотра остатков"
+    },
+    "warehouses": {
+      "title": "Склады",
+      "description": "Управление складами и их настройками",
+      "searchWarehouse": "Поиск склада...",
+      "allStatuses": "Все статусы",
+      "active": "Активные",
+      "inactive": "Неактивные",
+      "notFound": "Склады не найдены",
+      "noWarehouses": "Нет складов",
+      "tryChanging": "Попробуйте изменить параметры поиска",
+      "createFirst": "Создайте первый склад для начала работы с инвентарем.",
+      "columnName": "Название",
+      "columnBranch": "Филиал",
+      "columnItems": "Товаров",
+      "columnCost": "Стоимость",
+      "columnStatus": "Статус",
+      "columnActions": "Действия",
+      "stockLink": "Остатки",
+      "active": "Активен",
+      "inactive": "Неактивен",
+      "branchNumber": "Филиал #"
+    },
+    "items": {
+      "title": "Номенклатура товаров",
+      "description": "Управление номенклатурой сырья и полуфабрикатов",
+      "searchItems": "Поиск по названию, SKU, штрихкоду...",
+      "allCategories": "Все категории",
+      "all": "Все",
+      "active": "Активные",
+      "inactive": "Неактивные",
+      "allTypes": "Все типы",
+      "raw": "Сырьё",
+      "semiFinished": "Полуфабрикаты",
+      "import": "Импорт CSV",
+      "notFound": "Товары не найдены",
+      "noItems": "Нет товаров",
+      "tryChanging": "Попробуйте изменить параметры поиска",
+      "addItems": "Добавьте товары для начала работы"
+    },
+    "itemDetail": {
+      "backToList": "Назад к списку",
+      "active": "Активен",
+      "inactive": "Неактивен",
+      "semiFinished": "Полуфабрикат",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "deleteConfirm": "Удалить товар?",
+      "deleteDescription": "Это действие нельзя отменить. Товар будет удалён навсегда. Убедитесь, что нет активных остатков данного товара.",
+      "basicInfo": "Основная информация",
+      "name": "Название",
+      "sku": "SKU",
+      "barcode": "Штрихкод",
+      "category": "Категория",
+      "unit": "Единица измерения",
+      "stockLevels": "Уровни запасов",
+      "minLevel": "Мин. остаток",
+      "maxLevel": "Макс. остаток",
+      "reorderPoint": "Точка заказа",
+      "reorderQuantity": "Количество заказа",
+      "additional": "Дополнительно",
+      "shelfLife": "Срок годности",
+      "days": "дней",
+      "taxRate": "Налоговая ставка",
+      "trackable": "Отслеживаемый",
+      "yes": "Да",
+      "no": "Нет",
+      "created": "Создан",
+      "notes": "Примечания",
+      "conversions": "Конверсии единиц",
+      "addConversion": "Добавить конверсию",
+      "noConversions": "Нет настроенных конверсий единиц",
+      "addConversionsInfo": "Добавьте конверсии для перевода между единицами измерения",
+      "fromUnit": "Из единицы",
+      "toUnit": "В единицу",
+      "factor": "Коэффициент",
+      "note": "Примечание",
+      "deleteConversion": "Удалить конверсию?",
+      "conversionDescription": "Конверсия"
+    },
+    "production": {
+      "title": "Производство",
+      "description": "Заказы на производство полуфабрикатов",
+      "searchOrder": "Поиск по номеру или продукту...",
+      "allStatuses": "Все статусы",
+      "allWarehouses": "Все склады",
+      "selectDate": "Выберите дату",
+      "planned": "Запланировано",
+      "inProgress": "В процессе",
+      "completed": "Завершено",
+      "columnNumber": "Номер",
+      "columnProduct": "Продукт",
+      "columnQuantity": "Количество",
+      "columnStatus": "Статус",
+      "columnDate": "План. дата",
+      "open": "Открыть",
+      "notFound": "Заказы не найдены",
+      "noOrders": "Нет заказов на производство",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "createOrder": "Создайте заказ на производство полуфабрикатов по техкартам.",
+      "delete": "Удалить"
+    },
+    "recipes": {
+      "title": "Техкарты",
+      "description": "Рецепты и себестоимость продуктов",
+      "searchRecipe": "Поиск техкарты...",
+      "allStatuses": "Все статусы",
+      "active": "Активные",
+      "inactive": "Неактивные",
+      "allTypes": "Все типы",
+      "products": "Продукты",
+      "modifiers": "Модификаторы",
+      "semiFinished": "Полуфабрикаты",
+      "unlinked": "Без привязки",
+      "columnRecipe": "Техкарта",
+      "columnProduct": "Продукт",
+      "columnCost": "Себестоимость",
+      "columnMargin": "Маржа",
+      "columnStatus": "Статус",
+      "active": "Активна",
+      "inactive": "Неактивна",
+      "open": "Открыть",
+      "notFound": "Техкарты не найдены",
+      "noRecipes": "Нет техкарт",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "createRecipe": "Создайте техкарты для отслеживания себестоимости и автоматического списания."
+    },
+    "purchaseOrders": {
+      "title": "Заказы поставщикам",
+      "description": "Управление закупками и приёмом товаров",
+      "searchOrder": "Поиск по номеру...",
+      "allSuppliers": "Все поставщики",
+      "allStatuses": "Все статусы",
+      "allWarehouses": "Все склады",
+      "columnNumber": "Номер",
+      "columnSupplier": "Поставщик",
+      "columnWarehouse": "Склад",
+      "columnAmount": "Сумма",
+      "columnExpected": "Ожидается",
+      "columnStatus": "Статус",
+      "open": "Открыть",
+      "notFound": "Заказы не найдены",
+      "noOrders": "Нет заказов",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "createOrder": "Создайте заказ поставщику для пополнения склада."
+    },
+    "purchaseOrderDetail": {
+      "back": "Назад",
+      "addProduct": "Добавить товар",
+      "send": "Отправить",
+      "receive": "Принять товары",
+      "cancel": "Отменить",
+      "delete": "Удалить",
+      "deleteConfirm": "Удалить заказ?",
+      "deleteDescription": "Это действие необратимо. Заказ будет удалён.",
+      "dates": "Даты",
+      "orderDate": "Дата заказа:",
+      "expected": "Ожидается:",
+      "received": "Получен:",
+      "amounts": "Суммы",
+      "subtotal": "Подытог:",
+      "discount": "Скидка:",
+      "tax": "Налог:",
+      "total": "Итого:",
+      "info": "Информация",
+      "warehouse": "Склад:",
+      "currency": "Валюта:",
+      "note": "Примечание:",
+      "items": "Товары",
+      "receivedHistory": "История приёмок",
+      "cancellation": "Причина отмены",
+      "cancelled": "Отменён:"
+    },
+    "purchaseOrderReceive": {
+      "header": "Приёмка товаров",
+      "back": "Назад",
+      "orderInfo": "Информация о заказе",
+      "supplier": "Поставщик",
+      "warehouse": "Склад",
+      "orderDate": "Дата заказа",
+      "expectedDate": "Ожидаемая дата",
+      "receiveDate": "Дата приёмки",
+      "date": "Дата",
+      "previousReceipts": "Предыдущие приёмки",
+      "itemsToReceive": "Товары к приёмке",
+      "specifyQuantity": "Укажите фактическое количество и цену для каждого товара",
+      "columnItem": "Товар",
+      "columnOrdered": "Заказано",
+      "columnReceived": "Получено",
+      "columnRemaining": "Осталось",
+      "columnToReceive": "Принять",
+      "columnPrice": "Цена",
+      "priceVariance": "Отклонение цен",
+      "note": "Примечание",
+      "commentToReceipt": "Комментарий к приёмке...",
+      "summary": "Итого",
+      "itemsToReceive": "Позиций к приёмке",
+      "totalQuantity": "Общее количество",
+      "amount": "Сумма",
+      "actions": "Действия",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить приёмку",
+      "confirmDialog": "Подтвердить приёмку?",
+      "confirmMessage": "Вы собираетесь принять товары:",
+      "confirmMessageInfo": "Это действие обновит остатки на складе и пересчитает среднюю стоимость.",
+      "fullyReceived": "Заказ полностью получен",
+      "allReceived": "Все товары по этому заказу уже были приняты."
+    },
+    "suppliers": {
+      "title": "Поставщики",
+      "description": "Управление поставщиками и их каталогами товаров",
+      "searchSupplier": "Поиск поставщика...",
+      "allStatuses": "Все статусы",
+      "active": "Активные",
+      "inactive": "Неактивные",
+      "columnSupplier": "Поставщик",
+      "columnContact": "Контакт",
+      "columnItems": "Товаров",
+      "columnOrders": "Заказов",
+      "columnLastOrder": "Последний заказ",
+      "open": "Открыть",
+      "notFound": "Поставщики не найдены",
+      "noSuppliers": "Нет поставщиков",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "addSuppliers": "Добавьте поставщиков для управления закупками и ценами на товары."
+    },
+    "writeoffs": {
+      "title": "Списания",
+      "description": "Акты списания товаров со склада",
+      "searchOrder": "Поиск по номеру...",
+      "allStatuses": "Все статусы",
+      "allReasons": "Все причины",
+      "columnNumber": "Номер",
+      "columnDate": "Дата",
+      "columnReason": "Причина",
+      "columnItems": "Позиций",
+      "columnAmount": "Сумма",
+      "columnStatus": "Статус",
+      "open": "Открыть",
+      "totalWriteoffs": "Всего списано",
+      "pendingApproval": "Ожидают согласования",
+      "notFound": "Списания не найдены",
+      "noWriteoffs": "Нет списаний",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "createWriteoff": "Создайте акт списания для учёта убытков и потерь."
+    },
+    "alerts": {
+      "title": "Уведомления о запасах",
+      "description": "Управление уведомлениями о низких остатках и критических ситуациях",
+      "selectWarehouse": "Выберите склад",
+      "selectType": "Тип",
+      "selectStatus": "Статус",
+      "allTypes": "Все типы",
+      "outOfStock": "Нет в наличии",
+      "lowStock": "Низкий остаток",
+      "overstock": "Избыточный запас",
+      "expiringKoon": "Скоро истекает срок",
+      "unread": "Непрочитанные",
+      "read": "Прочитанные",
+      "all": "Все",
+      "markAllAsRead": "Прочитать все",
+      "selectWarehouseMessage": "Выберите склад для просмотра уведомлений",
+      "outOfStockCount": "Нет в наличии",
+      "lowStockCount": "Низкий остаток",
+      "overstockCount": "Избыточный запас",
+      "expiringCount": "Истекает срок",
+      "everythingOk": "Все в порядке",
+      "noNotifications": "Нет активных уведомлений для выбранного склада",
+      "critical": "Критические",
+      "warnings": "Предупреждения",
+      "current": "Текущий:",
+      "minimum": "Минимум:",
+      "order": "Заказать",
+      "stock": "Остатки",
+      "confirm": "Подтвердить",
+      "read": "Прочитано"
+    },
+    "movements": {
+      "title": "История движений",
+      "description": "Просмотр истории всех движений склада",
+      "export": "Экспорт",
+      "selectWarehouse": "Выберите склад",
+      "selectItem": "Выберите товар",
+      "selectType": "Выберите тип",
+      "selectDateRange": "Диапазон дат",
+      "purchases": "Закупки",
+      "sales": "Продажи",
+      "writeoffs": "Списания",
+      "adjustments": "Корректировки",
+      "page": "Страница",
+      "of": "из",
+      "records": "записей"
+    },
+    "counts": {
+      "title": "Инвентаризации",
+      "description": "Учёт и сверка фактических остатков",
+      "searchOrder": "Поиск по номеру...",
+      "allStatuses": "Все статусы",
+      "allTypes": "Все типы",
+      "allWarehouses": "Все склады",
+      "columnNumber": "Номер",
+      "columnDate": "Дата",
+      "columnType": "Тип",
+      "columnItems": "Позиций",
+      "columnVariance": "Расхождение",
+      "columnStatus": "Статус",
+      "open": "Открыть",
+      "notFound": "Инвентаризации не найдены",
+      "noCounts": "Нет инвентаризаций",
+      "tryChanging": "Попробуйте изменить параметры поиска или фильтры.",
+      "conductCount": "Проведите инвентаризацию для сверки фактических остатков."
+    }
+  },
+  "components": {
+    "warehouseForm": {
+      "create": {
+        "trigger": "Добавить склад",
+        "title": "Добавить склад",
+        "nameLabel": "Название *",
+        "namePlaceholder": "Основной склад",
+        "codeLabel": "Код",
+        "codePlaceholder": "WH-001",
+        "branchLabel": "Филиал *",
+        "branchPlaceholder": "Выберите филиал",
+        "activeLabel": "Активен",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "submitting": "Создание..."
+      }
+    },
+    "inventoryItemForm": {
+      "create": {
+        "title": "Добавить товар",
+        "trigger": "Добавить товар"
+      },
+      "delete": {
+        "title": "Удалить товар?",
+        "description": "Это действие нельзя отменить. Товар будет удалён навсегда. Убедитесь, что нет активных остатков данного товара.",
+        "cancel": "Отмена",
+        "submit": "Удалить"
+      }
+    },
+    "inventoryItemWorkflow": {
+      "edit": {
+        "title": "Редактировать товар"
+      },
+      "unitConversion": {
+        "title": "Добавить конверсию",
+        "fromLabel": "Из единицы",
+        "toLabel": "В единицу",
+        "factorLabel": "Коэффициент",
+        "noteLabel": "Примечание",
+        "cancel": "Отмена",
+        "submit": "Добавить"
+      }
+    },
+    "supplierForm": {
+      "create": {
+        "trigger": "Добавить поставщика",
+        "title": "Добавить поставщика"
+      },
+      "update": {
+        "title": "Редактировать поставщика"
+      },
+      "delete": {
+        "title": "Удалить поставщика?",
+        "cancel": "Отмена",
+        "submit": "Удалить"
+      }
+    },
+    "purchaseOrderForm": {
+      "create": {
+        "trigger": "Создать заказ",
+        "title": "Создать заказ поставщику"
+      }
+    },
+    "purchaseOrderWorkflow": {
+      "send": {
+        "title": "Отправить заказ",
+        "submit": "Отправить"
+      },
+      "receive": {
+        "title": "Приёмка товаров",
+        "submit": "Подтвердить приёмку"
+      },
+      "addItem": {
+        "title": "Добавить товар"
+      },
+      "cancel": {
+        "title": "Отменить заказ",
+        "submit": "Отменить"
+      }
+    },
+    "recipeForm": {
+      "create": {
+        "trigger": "Создать техкарту",
+        "title": "Создать техкарту"
+      }
+    },
+    "recipeWorkflow": {
+      "edit": {
+        "title": "Редактировать техкарту"
+      },
+      "addIngredient": {
+        "title": "Добавить ингредиент"
+      },
+      "editIngredient": {
+        "title": "Редактировать ингредиент"
+      },
+      "duplicate": {
+        "title": "Дублировать техкарту"
+      }
+    },
+    "productionForm": {
+      "create": {
+        "trigger": "Создать заказ",
+        "title": "Создать заказ на производство"
+      }
+    },
+    "productionWorkflow": {
+      "start": {
+        "title": "Начать производство",
+        "submit": "Начать"
+      },
+      "complete": {
+        "title": "Завершить производство",
+        "submit": "Завершить"
+      },
+      "cancel": {
+        "title": "Отменить производство",
+        "submit": "Отменить"
+      }
+    },
+    "writeoffForm": {
+      "create": {
+        "trigger": "Создать списание",
+        "title": "Создать списание"
+      }
+    },
+    "writeoffWorkflow": {
+      "submit": {
+        "title": "Отправить списание",
+        "submit": "Отправить"
+      },
+      "approve": {
+        "title": "Утвердить списание",
+        "submit": "Утвердить"
+      },
+      "reject": {
+        "title": "Отклонить списание",
+        "submit": "Отклонить"
+      },
+      "addItem": {
+        "title": "Добавить товар"
+      }
+    },
+    "inventoryCountForm": {
+      "create": {
+        "trigger": "Создать инвентаризацию",
+        "title": "Создать инвентаризацию"
+      }
+    },
+    "inventoryCountWorkflow": {
+      "addItem": {
+        "title": "Добавить товар"
+      },
+      "complete": {
+        "title": "Завершить инвентаризацию",
+        "submit": "Завершить"
+      },
+      "approve": {
+        "title": "Утвердить результаты",
+        "submit": "Утвердить"
+      },
+      "reject": {
+        "title": "Отклонить результаты",
+        "submit": "Отклонить"
+      }
+    },
+    "stockAdjustment": {
+      "adjust": {
+        "title": "Отрегулировать остаток",
+        "submit": "Сохранить"
+      }
+    }
+  }
+}

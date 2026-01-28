@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { IconTrendingDown, IconTrendingUp, IconMinus } from '@tabler/icons-react'
 import {
   Area,
@@ -45,9 +46,28 @@ import {
   type ITimeSeriesData,
   type ChartType,
   type ChartVariant,
-} from '@/entities/dashboard'
+} from '@/entities/dashboard/dashboard'
 
 import type { ChartConfig } from '@/shared/ui/base/chart'
+
+// Map KPI_LABELS to translation keys
+const getKPILabelTranslationKey = (kpiType: KpiType): string => {
+  const keyMap: Record<KpiType, string> = {
+    [KpiType.REVENUE]: 'kpiLabels.revenue',
+    [KpiType.ORDERS]: 'kpiLabels.orders',
+    [KpiType.AVG_CHECK]: 'kpiLabels.avgCheck',
+    [KpiType.CUSTOMERS]: 'kpiLabels.customers',
+    [KpiType.NEW_CUSTOMERS]: 'kpiLabels.newCustomers',
+    [KpiType.RETURNING_CUSTOMERS]: 'kpiLabels.returningCustomers',
+    [KpiType.TIPS]: 'kpiLabels.tips',
+    [KpiType.REFUNDS]: 'kpiLabels.refunds',
+    [KpiType.CANCELLATIONS]: 'kpiLabels.cancellations',
+    [KpiType.MARGIN]: 'kpiLabels.margin',
+    [KpiType.RETENTION_RATE]: 'kpiLabels.retentionRate',
+    [KpiType.STAFF_PRODUCTIVITY]: 'kpiLabels.staffProductivity',
+  }
+  return keyMap[kpiType] || 'kpiLabels.revenue'
+}
 
 interface IDashboardMainChartProps {
   data: ITimeSeriesData | null | undefined
@@ -76,6 +96,7 @@ export function DashboardMainChart({
   className,
   isLoading = false,
 }: IDashboardMainChartProps) {
+  const { t } = useTranslation('dashboard')
   const activeChart = chartType
   const activeGroupBy = groupBy ?? GroupBy.DAY
 
@@ -90,14 +111,14 @@ export function DashboardMainChart({
 
   const chartConfig = useMemo<ChartConfig>(() => ({
     value: {
-      label: KPI_LABELS[metric],
+      label: t(getKPILabelTranslationKey(metric)),
       color: 'hsl(var(--primary))',
     },
     previous: {
       label: 'Предыдущий период',
       color: 'hsl(var(--muted-foreground))',
     },
-  }), [metric])
+  }), [metric, t])
 
   const changePercent = data?.changePercent ?? 0
   const isPositiveChange = changePercent > 0
@@ -130,12 +151,12 @@ export function DashboardMainChart({
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle>{KPI_LABELS[metric] ?? metric}</CardTitle>
-          <CardDescription>Нет данных для отображения</CardDescription>
+          <CardTitle>{t(getKPILabelTranslationKey(metric))}</CardTitle>
+          <CardDescription>{t('analytics.noDataForDisplay')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
-            Данные недоступны
+            {t('analytics.dataUnavailable')}
           </div>
         </CardContent>
       </Card>
@@ -153,7 +174,7 @@ export function DashboardMainChart({
       )}
       <CardHeader className="flex flex-col gap-4 space-y-0 border-b py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col justify-center gap-1">
-          <CardTitle className="text-xl">{KPI_LABELS[metric] ?? metric}</CardTitle>
+          <CardTitle className="text-xl">{t(getKPILabelTranslationKey(metric))}</CardTitle>
           <CardDescription className="flex items-center gap-3">
             <span className="text-3xl font-bold text-foreground">
               {formatValue(data.totalValue)}
@@ -227,7 +248,7 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
                   />
                 }
               />
@@ -262,7 +283,7 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
                   />
                 }
               />
@@ -295,7 +316,7 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
                   />
                 }
               />
@@ -344,7 +365,7 @@ export function DashboardMainChart({
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    formatter={(value) => [formatValue(Number(value)), KPI_LABELS[metric]]}
+                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
                   />
                 }
               />

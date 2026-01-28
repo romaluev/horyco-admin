@@ -2,21 +2,21 @@
 
 import * as React from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { Dataset } from '@/shared/api/graphql'
 
-import { useCreateView } from '@/entities/view'
+import { useCreateView } from '@/entities/dashboard/view'
 import {
   DATASET_CONFIG,
   FilterBar,
   DisplaySettings,
   useViewBuilderStore,
   ViewHeader,
-} from '@/features/view-builder'
+} from '@/features/dashboard/view-builder'
 import { ViewDataTable } from '@/widgets/views'
 
-import type { IViewDataParams } from '@/entities/view'
+import type { IViewDataParams } from '@/entities/dashboard/view'
 
 export default function NewViewPage() {
   const router = useRouter()

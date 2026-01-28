@@ -17,7 +17,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 // Configuration
 // ============================================================================
 
-export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
+export const BASE_API_URL = import.meta.env.VITE_API_URL
 
 const AUTH_ENDPOINTS = ['/auth/login', '/auth/refresh', '/auth/register']
 

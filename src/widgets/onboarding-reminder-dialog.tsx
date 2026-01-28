@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { AlertCircle, X } from 'lucide-react'
 
@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/shared/ui/base/card'
 
-import { useGetOnboardingProgress } from '@/entities/onboarding'
+import { useGetOnboardingProgress } from '@/entities/onboarding/onboarding'
 
 import type { JSX } from 'react'
 

@@ -1,24 +1,17 @@
-import { Suspense } from 'react'
+'use client'
 
-import Image from 'next/image'
+import { Suspense } from 'react'
 
 import logo from '@/shared/assets/logo.png'
 import { BaseLoading } from '@/shared/ui'
 
-import ResetPasswordForm from '@/entities/auth/ui/reset-password-form'
-
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Сброс пароля',
-  description: 'Установка нового пароля',
-}
+import ResetPasswordForm from '@/entities/auth/auth/ui/reset-password-form'
 
 export default function ResetPasswordPage() {
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden"
           src={logo}
           alt=""

@@ -1,15 +1,16 @@
 'use client'
 
-import { ProductsDataTable } from '@/entities/product/ui/products-data-table'
-import { ProductsGridView } from '@/entities/product/ui/products-grid-view'
-import { ProductsListSkeleton } from '@/entities/product/ui/products-list-skeleton'
+import { useTranslation } from 'react-i18next'
+import { ProductsDataTable } from '@/entities/menu/product/ui/products-data-table'
+import { ProductsGridView } from '@/entities/menu/product/ui/products-grid-view'
+import { ProductsListSkeleton } from '@/entities/menu/product/ui/products-list-skeleton'
 
 import { ProductsFilters } from './products-filters'
 import { ProductsHeader } from './products-header'
 import { ProductsStats } from './products-stats'
 
 import type { Category } from './products-filters'
-import type { IProduct } from '@/entities/product'
+import type { IProduct } from '@/entities/menu/product'
 import type { JSX } from 'react'
 
 export type { Category } from './products-filters'
@@ -38,14 +39,16 @@ interface ProductsContentProps {
 }
 
 function ErrorState({ error }: { error: Error | null }): JSX.Element {
+  const { t } = useTranslation('menu')
+
   return (
     <div className="rounded-lg border border-destructive bg-destructive/5 p-6">
       <div className="text-center">
         <p className="text-lg font-medium text-destructive">
-          Ошибка загрузки продуктов
+          {t('pages.products.messages.loadError')}
         </p>
         <p className="text-sm text-muted-foreground">
-          {error?.message || 'Неизвестная ошибка'}
+          {error?.message || t('pages.products.messages.error')}
         </p>
       </div>
     </div>
@@ -53,14 +56,16 @@ function ErrorState({ error }: { error: Error | null }): JSX.Element {
 }
 
 function EmptyState(): JSX.Element {
+  const { t } = useTranslation('menu')
+
   return (
     <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
       <div className="text-center">
         <p className="text-lg font-medium text-muted-foreground">
-          Продукты не найдены
+          {t('pages.products.empty.notFound')}
         </p>
         <p className="text-sm text-muted-foreground">
-          Создайте первый продукт или измените фильтры
+          {t('pages.products.empty.createFirst')}
         </p>
       </div>
     </div>

@@ -1,0 +1,805 @@
+{
+  "products": {
+    "title": "Products",
+    "description": "Manage products",
+    "addNew": "Add product",
+    "create": "Create new product",
+    "edit": "Edit product",
+    "updateDescription": "Change product information",
+    "delete": "Delete product",
+    "deleteConfirm": "Are you sure you want to delete this product?",
+    "search": "Search products...",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "expand": "Expand",
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter product name",
+        "validation": "Name must contain at least 2 characters"
+      },
+      "price": {
+        "label": "Price",
+        "placeholder": "Enter price",
+        "validation": "Price must be a positive number"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter product description"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select category",
+        "validation": "Select a category"
+      },
+      "images": {
+        "label": "Product images",
+        "dragDrop": "Drag images here or click to upload",
+        "validation": {
+          "size": "Maximum file size is 5MB",
+          "type": "Only .jpg, .jpeg, .png and .webp files are allowed"
+        }
+      },
+      "type": {
+        "label": "Product type",
+        "placeholder": "Select type"
+      },
+      "available": {
+        "label": "Available for order",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "preparationTime": {
+        "label": "Preparation time (min)",
+        "placeholder": "E.g.: 15"
+      },
+      "calories": {
+        "label": "Calories",
+        "placeholder": "E.g.: 350"
+      },
+      "allergens": {
+        "label": "Allergens (comma-separated)",
+        "placeholder": "E.g.: milk, eggs, nuts"
+      },
+      "expandDescription": {
+        "button": "Expand with AI",
+        "loading": "Processing...",
+        "success": "Description expanded successfully!",
+        "error": "Something went wrong",
+        "tooShort": "Description too short"
+      },
+      "additions": {
+        "title": "Additions",
+        "addNew": "Add addition",
+        "noAdditions": "No additions. Click \"Add addition\" to create product options.",
+        "name": {
+          "label": "Addition name",
+          "placeholder": "E.g.: Choice of meat",
+          "validation": "Addition name must contain at least 2 characters"
+        },
+        "required": {
+          "label": "Required choice"
+        },
+        "multiple": {
+          "label": "Multiple choice"
+        },
+        "limit": {
+          "label": "Maximum variants",
+          "placeholder": "Maximum number",
+          "validation": "Limit must be at least 1"
+        },
+        "items": {
+          "title": "Addition variants",
+          "addNew": "Add variant",
+          "noItems": "No variants added. Add variants that customers can choose from.",
+          "name": {
+            "placeholder": "Variant name",
+            "validation": "Variant name is required"
+          },
+          "price": {
+            "placeholder": "Price (extra)",
+            "validation": "Price must be a positive number"
+          },
+          "delete": "Delete variant"
+        },
+        "delete": "Delete addition"
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Name",
+        "price": "Price",
+        "category": "Category",
+        "status": "Status",
+        "createdAt": "Created",
+        "actions": "Actions"
+      }
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update",
+      "loading": "Loading..."
+    },
+    "messages": {
+      "created": "Product created successfully",
+      "updated": "Product updated successfully",
+      "deleted": "Product deleted successfully",
+      "error": "Error working with product",
+      "notExist": "Product does not exist",
+      "loadError": "Error loading products"
+    },
+    "delete": {
+      "confirmTitle": "Are you sure you want to delete this product?",
+      "confirmDescription": "The product will be completely deleted",
+      "successMessage": "Product deleted successfully",
+      "errorMessage": "Error deleting product"
+    },
+    "aiImport": {
+      "button": "Add with AI",
+      "dialog": {
+        "title": "Import menu from photos",
+        "description": "Upload up to 4 images of menu or products for automatic data extraction using AI"
+      },
+      "extractedSection": "Extracted products",
+      "fields": {
+        "name": "Name",
+        "price": "Price",
+        "description": "Description"
+      },
+      "buttons": {
+        "startProcessing": "Start processing",
+        "processing": "Processing...",
+        "saveProducts": "Save products",
+        "saving": "Saving...",
+        "cancel": "Cancel"
+      },
+      "messages": {
+        "noImage": "Add at least one image",
+        "limitReached": "AI import usage limit reached",
+        "extractError": "Error extracting data",
+        "unknownError": "An error occurred",
+        "successCreate": "Products created successfully",
+        "errorCreate": "Error creating products"
+      }
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Manage product categories",
+    "addNew": "Add category",
+    "search": "Search categories...",
+    "form": {
+      "title": {
+        "create": "Create new category",
+        "edit": "Edit category",
+        "dialogDescription": "Fill in the information for the new menu category"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Beverages",
+        "validation": "Name is required"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Hot and cold beverages",
+        "validation": "Description is required"
+      },
+      "parent": {
+        "label": "Parent category",
+        "placeholder": "Select category (optional)"
+      },
+      "image": {
+        "label": "Image"
+      },
+      "isActive": {
+        "label": "Active",
+        "description": "Category will be available in the menu"
+      }
+    },
+    "table": {
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "parent": "Parent category",
+        "actions": "Actions"
+      }
+    },
+    "editDescription": "Make changes to category {{name}}",
+    "delete": {
+      "title": "Confirm deletion",
+      "confirmMessage": "Are you sure you want to delete category {{name}}?",
+      "warningChildren": "⚠️ This category contains subcategories. Delete them first.",
+      "warningProducts": "⚠️ This category contains {{count}} product(s). Move them to another category before deleting.",
+      "irreversible": "This action cannot be undone.",
+      "successMessage": "Category deleted successfully",
+      "errorMessage": "Error deleting category"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "create": "Create"
+    },
+    "messages": {
+      "created": "Category created successfully",
+      "updated": "Category updated successfully",
+      "deleted": "Category deleted successfully",
+      "error": "Error working with category"
+    }
+  },
+  "modifiers": {
+    "title": "Modifiers",
+    "description": "Manage product modifiers",
+    "addNew": "Add modifier",
+    "search": "Search modifiers...",
+    "create": {
+      "title": "Add modifier",
+      "description": "Create a new modifier in the group",
+      "trigger": "Add modifier",
+      "form": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Ketchup"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Classic tomato ketchup"
+        },
+        "price": {
+          "label": "Price (UZS)",
+          "placeholder": "20",
+          "description": "Additional cost of the modifier"
+        },
+        "sortOrder": {
+          "label": "Sort order",
+          "description": "Order of displaying the modifier in the list"
+        },
+        "isActive": {
+          "label": "Active",
+          "description": "Modifier is available for selection"
+        },
+        "actions": {
+          "save": "Create",
+          "saving": "Creating...",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "update": {
+      "title": "Edit modifier",
+      "description": "Change the modifier parameters",
+      "form": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Ketchup"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Classic tomato ketchup"
+        },
+        "price": {
+          "label": "Price (UZS)",
+          "placeholder": "20",
+          "description": "Additional cost of the modifier"
+        },
+        "sortOrder": {
+          "label": "Sort order",
+          "description": "Order of displaying the modifier in the list"
+        },
+        "isActive": {
+          "label": "Active",
+          "description": "Modifier is available for selection"
+        },
+        "actions": {
+          "save": "Update",
+          "saving": "Updating...",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "groups": {
+      "title": "Modifier Groups",
+      "description": "Manage modifier groups",
+      "addNew": "Create group",
+      "create": {
+        "title": "Create modifier group",
+        "description": "Create a new modifier group for products",
+        "trigger": "Create group",
+        "form": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Sauces"
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Select a sauce for your dish"
+          },
+          "minSelection": {
+            "label": "Min. choice",
+            "description": "Minimum number of selections"
+          },
+          "maxSelection": {
+            "label": "Max. choice",
+            "description": "Maximum number of selections"
+          },
+          "sortOrder": {
+            "label": "Sort order",
+            "description": "Order of displaying the group"
+          },
+          "isRequired": {
+            "label": "Required",
+            "description": "Customer must select at least one modifier"
+          },
+          "actions": {
+            "save": "Create",
+            "saving": "Creating...",
+            "cancel": "Cancel"
+          }
+        }
+      },
+      "update": {
+        "title": "Edit modifier group",
+        "description": "Change the modifier group parameters",
+        "form": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Sauces"
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Select a sauce for your dish"
+          },
+          "minSelection": {
+            "label": "Min. choice",
+            "description": "Minimum number of selections"
+          },
+          "maxSelection": {
+            "label": "Max. choice",
+            "description": "Maximum number of selections"
+          },
+          "sortOrder": {
+            "label": "Sort order",
+            "description": "Order of displaying the group"
+          },
+          "isRequired": {
+            "label": "Required",
+            "description": "Customer must select at least one modifier"
+          },
+          "actions": {
+            "save": "Update",
+            "saving": "Updating...",
+            "cancel": "Cancel"
+          }
+        }
+      }
+    },
+    "form": {
+      "title": {
+        "create": "Add new modifier",
+        "edit": "Edit modifier"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "E.g.: Size",
+        "validation": "Name is required"
+      },
+      "options": {
+        "title": "Modifier options",
+        "addNew": "Add option",
+        "name": {
+          "placeholder": "E.g.: Small",
+          "validation": "Option name is required"
+        },
+        "price": {
+          "placeholder": "Price (optional)"
+        }
+      }
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "created": "Modifier created successfully",
+      "updated": "Modifier updated successfully",
+      "deleted": "Modifier deleted successfully"
+    }
+  },
+  "additions": {
+    "title": "Additions",
+    "description": "Manage additions and options",
+    "addNew": "Add addition",
+    "search": "Search additions...",
+    "form": {
+      "title": {
+        "create": "Add new addition",
+        "edit": "Edit addition",
+        "createDescription": "Create a new additions group for the product",
+        "editDescription": "Change the parameters of the additions group"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Portion size",
+        "validation": "Name is required"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Select portion size"
+      },
+      "product": {
+        "label": "Product",
+        "placeholder": "Select product"
+      },
+      "image": {
+        "label": "Image"
+      },
+      "minSelection": {
+        "label": "Min. choice"
+      },
+      "maxSelection": {
+        "label": "Max. choice"
+      },
+      "sortOrder": {
+        "label": "Sort order",
+        "description": "Order of displaying the addition"
+      },
+      "isRequired": {
+        "label": "Required",
+        "description": "Customer must select at least one option"
+      },
+      "isMultiple": {
+        "label": "Multiple choice",
+        "description": "Customer can select multiple options"
+      },
+      "isCountable": {
+        "label": "Countable",
+        "description": "Customer can specify quantity"
+      },
+      "isActive": {
+        "label": "Active",
+        "description": "Addition available for order"
+      },
+      "required": {
+        "label": "Required addition"
+      },
+      "options": {
+        "title": "Options",
+        "addNew": "Add option",
+        "name": {
+          "placeholder": "Option name",
+          "validation": "Name is required"
+        },
+        "price": {
+          "placeholder": "Price (optional)"
+        }
+      }
+    },
+    "delete": {
+      "title": "Confirm deletion",
+      "confirmMessage": "Are you sure you want to delete addition {{name}}?",
+      "warningItems": "⚠️ This addition contains {{count}} items.",
+      "irreversible": "This action cannot be undone."
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "update": "Update",
+      "cancel": "Cancel",
+      "create": "Create"
+    },
+    "messages": {
+      "created": "Addition created successfully",
+      "updated": "Addition updated successfully",
+      "deleted": "Addition deleted successfully"
+    }
+  },
+  "branchOverrides": {
+    "delete": {
+      "title": "Delete override?",
+      "withNames": "The override for \"{{productName}}\" in branch \"{{branchName}}\" will be deleted. After that, the basic product settings will be used.",
+      "withoutNames": "The override will be deleted. This action cannot be undone."
+    },
+    "page": {
+      "title": "Branch Overrides",
+      "description": "Configure individual prices and availability for each branch",
+      "stats": {
+        "totalBranches": "Total branches",
+        "customPrices": "Custom prices",
+        "customAvailability": "Custom availability"
+      },
+      "table": {
+        "title": "Overrides List",
+        "description": "Manage product settings for branches",
+        "selectProduct": "Select product",
+        "allProducts": "All products",
+        "selectBranch": "Select branch",
+        "allBranches": "All branches",
+        "noProductSelected": "Select a product to view branch overrides",
+        "loading": "Loading...",
+        "noOverrides": "No overrides for this product",
+        "noOverridesFiltered": "No overrides with selected filters",
+        "columns": {
+          "product": "Product",
+          "branch": "Branch",
+          "price": "Price",
+          "availability": "Availability",
+          "actions": "Actions"
+        }
+      },
+      "badges": {
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "default": "Default"
+      },
+      "price": {
+        "override": "sum",
+        "base": "base:"
+      }
+    }
+  },
+  "pages": {
+    "menu": {
+      "title": "Menu Management",
+      "description": "Complete management of menu structure, products and settings",
+      "sections": {
+        "categories": {
+          "title": "Categories",
+          "description": "Manage hierarchical menu category structure"
+        },
+        "products": {
+          "title": "Products",
+          "description": "Manage products, prices and availability"
+        },
+        "modifiers": {
+          "title": "Modifiers",
+          "description": "Configure modifiers for products"
+        },
+        "additions": {
+          "title": "Additions",
+          "description": "Manage additions to products"
+        },
+        "branchOverrides": {
+          "title": "Branch Overrides",
+          "description": "Individual settings for each branch"
+        }
+      },
+      "stats": {
+        "categories": "Categories",
+        "products": "Products",
+        "modifiers": "Modifiers",
+        "additions": "Additions"
+      },
+      "actions": {
+        "navigate": "Go to"
+      },
+      "quickStart": {
+        "title": "Quick Start",
+        "description": "Tips for organizing menu structure",
+        "recommendedOrder": "Recommended setup order:",
+        "steps": {
+          "categories": "Create category structure (hierarchy)",
+          "products": "Add products and assign them to categories",
+          "modifiers": "Configure product modifiers (optional)",
+          "additions": "Add product additions (optional)",
+          "branchOverrides": "Create branch overrides if different price/availability is required"
+        }
+      }
+    },
+    "products": {
+      "title": "Products",
+      "description": "Manage your menu products",
+      "actions": {
+        "create": "Create"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name...",
+        "allCategories": "All categories",
+        "allStatuses": "All statuses",
+        "available": "Available",
+        "unavailable": "Unavailable"
+      },
+      "empty": {
+        "notFound": "No products found",
+        "createFirst": "Create your first product or change filters"
+      },
+      "messages": {
+        "loadError": "Error loading products",
+        "error": "Unknown error"
+      },
+      "page": {
+        "create": {
+          "title": "Create product",
+          "description": "Add a new product to the menu"
+        },
+        "edit": {
+          "title": "Edit product",
+          "descriptionFallback": "Change product information"
+        }
+      },
+      "stats": {
+        "total": "Total products",
+        "available": "Available (on page)",
+        "unavailable": "Unavailable (on page)",
+        "page": "Page"
+      }
+    },
+    "categories": {
+      "title": "Menu Categories",
+      "description": "Manage menu categories and subcategories",
+      "stats": {
+        "total": "Total categories",
+        "active": "Active categories",
+        "totalProducts": "Total products"
+      },
+      "empty": {
+        "notFound": "No categories found",
+        "createFirst": "Create your first category to get started"
+      }
+    },
+    "additions": {
+      "title": "Additions",
+      "description": "Manage additional items for products",
+      "actions": {
+        "create": "Create addition"
+      },
+      "filters": {
+        "selectProduct": "Select product",
+        "allProducts": "All products"
+      },
+      "stats": {
+        "groups": "Addition groups",
+        "active": "Active"
+      },
+      "empty": {
+        "notFound": "No additions found",
+        "selectProductFirst": "Select a product and create your first addition group",
+        "createFirst": "Create your first addition group"
+      },
+      "badges": {
+        "required": "Required",
+        "multiple": "Multiple",
+        "countable": "Countable",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "details": {
+        "minSelection": "Minimum selection",
+        "maxSelection": "Maximum selection",
+        "sortOrder": "Sort order",
+        "itemsCount": "Items in group"
+      }
+    },
+    "modifiers": {
+      "title": "Modifiers",
+      "description": "Manage modifier groups and modifiers",
+      "actions": {
+        "createGroup": "Create group",
+        "edit": "Edit",
+        "delete": "Delete",
+        "addModifier": "Add modifier"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by groups..."
+      },
+      "stats": {
+        "totalGroups": "Total groups",
+        "required": "Required",
+        "totalModifiers": "Total modifiers"
+      },
+      "badges": {
+        "required": "Required",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "empty": {
+        "notFound": "No modifier groups found",
+        "noGroups": "No modifier groups",
+        "tryChangeQuery": "Try changing your search query",
+        "createFirst": "Create your first modifier group",
+        "noModifiersInGroup": "No modifiers in this group"
+      },
+      "selectionRange": "Selection: {{min}}-{{max}}",
+      "modifierCount": "{{count}} modifiers"
+    }
+  },
+  "components": {
+    "pinButton": {
+      "title": "Generate PIN"
+    },
+    "categoryParentSelector": {
+      "placeholder": "No parent category",
+      "noParent": "No parent category"
+    },
+    "branchOverride": {
+      "create": {
+        "trigger": "Add override",
+        "title": "New branch override",
+        "description": "Set custom product settings for this branch",
+        "productLabel": "Product",
+        "productPlaceholder": "Select product",
+        "branchLabel": "Branch",
+        "branchPlaceholder": "Select branch",
+        "priceLabel": "Price for branch",
+        "priceDescription": "Leave empty to use base price",
+        "availabilityLabel": "Availability",
+        "availabilityDescription": "Override availability for this branch",
+        "basePricePrefix": "Base:",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      },
+      "edit": {
+        "title": "Edit override",
+        "description": "Change settings for this branch",
+        "priceLabel": "Price for branch",
+        "priceDescription": "Leave empty to use base price",
+        "availabilityLabel": "Availability",
+        "availabilityDescription": "Override availability for this branch",
+        "basePricePrefix": "Base:",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "submitting": "Saving..."
+      }
+    },
+    "modifierGroup": {
+      "create": {
+        "trigger": "Add group",
+        "title": "Create modifier group",
+        "description": "Group related options together (e.g., size or toppings)",
+        "nameLabel": "Group name *",
+        "namePlaceholder": "Pizza size",
+        "minLabel": "Minimum selection",
+        "minDescription": "Minimum number of options to select",
+        "maxLabel": "Maximum selection",
+        "maxDescription": "Maximum number of options to select",
+        "requiredLabel": "Required selection",
+        "requiredDescription": "Customer must select at least one option",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    },
+    "modifier": {
+      "create": {
+        "trigger": "Add modifier",
+        "title": "Add modifier",
+        "description": "Create a new modifier in the group",
+        "nameLabel": "Name",
+        "namePlaceholder": "Ketchup",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Classic tomato ketchup",
+        "priceLabel": "Price (UZS)",
+        "pricePlaceholder": "20",
+        "priceDescription": "Additional cost of the modifier",
+        "sortOrderLabel": "Sort order",
+        "sortOrderDescription": "Display order of the modifier in the list",
+        "activeLabel": "Active",
+        "activeDescription": "Modifier is available for selection",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "submitting": "Creating..."
+      }
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back"
+  }
+}

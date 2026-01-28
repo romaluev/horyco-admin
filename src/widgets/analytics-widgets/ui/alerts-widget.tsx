@@ -7,7 +7,7 @@ import { AlertCircle, Info, AlertTriangle, Bell } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/base/badge'
 
-import type { IAlertSummary, IAlert } from '@/entities/dashboard'
+import type { IAlertSummary, IAlert } from '@/entities/dashboard/dashboard'
 
 interface AlertsWidgetProps {
   data: IAlertSummary | null

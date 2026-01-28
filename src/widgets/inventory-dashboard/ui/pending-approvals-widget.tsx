@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -16,11 +16,11 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/writeoff'
+import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/inventory/writeoff'
 import {
   useGetInventoryCounts,
   COUNT_TYPE_LABELS,
-} from '@/entities/inventory-count'
+} from '@/entities/inventory/inventory-count'
 
 interface IPendingApprovalsWidgetProps {
   warehouseId?: number
@@ -89,7 +89,7 @@ export function PendingApprovalsWidget({
           <CardDescription>Списания и инвентаризации</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -111,7 +111,7 @@ export function PendingApprovalsWidget({
             {allPending.map((item) => (
               <Link
                 key={`${item.type}-${item.id}`}
-                href={item.href}
+                to={item.href}
                 className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
               >
                 <div className="space-y-1">
@@ -131,10 +131,10 @@ export function PendingApprovalsWidget({
                 </div>
                 <div className="text-right">
                   <Badge
-                    variant={item.value >= 0 ? 'outline' : 'destructive'}
+                    variant={(item.value ?? 0) >= 0 ? 'outline' : 'destructive'}
                     className="mb-1"
                   >
-                    {item.value.toLocaleString('ru-RU')} сум
+                    {(item.value ?? 0).toLocaleString('ru-RU')} сум
                   </Badge>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
                     <Clock className="h-3 w-3" />
@@ -151,7 +151,7 @@ export function PendingApprovalsWidget({
         {totalPending > size && (
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/inventory/writeoffs?status=pending">
+              <Link to={"/dashboard/inventory/writeoffs?status=pending" as any}>
                 Показать все ({totalPending})
               </Link>
             </Button>

@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 
-import { useBranchStatistics } from '@/entities/branch'
+import { useBranchStatistics } from '@/entities/organization/branch'
 
 import { CapacityOverview } from './capacity-overview'
 import { OrdersMetrics } from './orders-metrics'

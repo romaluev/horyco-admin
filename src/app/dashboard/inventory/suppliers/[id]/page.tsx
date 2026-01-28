@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { Link } from '@tanstack/react-router'
+import { useRouter } from '@/shared/lib/navigation'
+
 import {
   IconArrowLeft,
   IconPlus,
@@ -18,21 +18,10 @@ import {
   IconMapPin,
   IconBuilding,
 } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import { formatCurrency } from '@/shared/lib/format'
-import { Heading } from '@/shared/ui/base/heading'
-import { Separator } from '@/shared/ui/base/separator'
-import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/base/table'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,14 +33,27 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/ui/base/alert-dialog'
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { Heading } from '@/shared/ui/base/heading'
+import { Separator } from '@/shared/ui/base/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/ui/base/table'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/shared/ui/base/tabs'
-import PageContainer from '@/shared/ui/layout/page-container'
 import BaseLoading from '@/shared/ui/base-loading'
+import PageContainer from '@/shared/ui/layout/page-container'
 
 import {
   useSupplierById,
@@ -61,18 +63,21 @@ import {
   useRemoveSupplierItem,
   useActivateSupplier,
   useDeactivateSupplier,
-} from '@/entities/supplier'
-
+} from '@/entities/inventory/supplier'
 import {
   EditSupplierDialog,
   AddSupplierItemDialog,
   EditSupplierItemDialog,
-} from '@/features/supplier-workflow'
+} from '@/features/inventory/supplier-workflow'
 
-export default function SupplierDetailPage() {
-  const params = useParams()
+interface PageProps {
+  id: string
+}
+
+export default function SupplierDetailPage({ id: paramId }: PageProps) {
+  const { t } = useTranslation('inventory')
   const router = useRouter()
-  const supplierId = Number(params.id)
+  const supplierId = Number(paramId)
 
   const { data: supplier, isLoading } = useSupplierById(supplierId)
   const { data: items } = useSupplierItems(supplierId)
@@ -121,7 +126,7 @@ export default function SupplierDetailPage() {
         <div className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Поставщик не найден</p>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/inventory/suppliers">Назад к списку</Link>
+            <Link to="/dashboard/inventory/suppliers">Назад к списку</Link>
           </Button>
         </div>
       </PageContainer>
@@ -138,7 +143,7 @@ export default function SupplierDetailPage() {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/inventory/suppliers">
+              <Link to="/dashboard/inventory/suppliers">
                 <IconArrowLeft className="h-4 w-4" />
               </Link>
             </Button>

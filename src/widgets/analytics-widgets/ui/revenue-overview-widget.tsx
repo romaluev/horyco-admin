@@ -8,6 +8,7 @@ import {
   IconArrowUpRight,
 } from '@tabler/icons-react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { useTranslation } from 'react-i18next'
 
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -18,7 +19,7 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { ITimeSeriesData } from '@/entities/dashboard'
+import type { ITimeSeriesData } from '@/entities/dashboard/dashboard'
 
 interface IRevenueOverviewWidgetProps {
   data: ITimeSeriesData | null
@@ -31,6 +32,8 @@ export function RevenueOverviewWidget({
   isLoading = false,
   onViewDetails,
 }: IRevenueOverviewWidgetProps) {
+  const { t } = useTranslation('dashboard')
+
   const chartData = useMemo(() => {
     if (!data?.points) return []
     return data.points.map((point) => ({
@@ -41,10 +44,10 @@ export function RevenueOverviewWidget({
 
   const chartConfig = useMemo(() => ({
     value: {
-      label: 'Выручка',
+      label: t('kpiLabels.revenue'),
       color: 'hsl(var(--chart-success))',
     },
-  }), [])
+  }), [t])
 
   const totalValue = data?.totalValue ?? 0
   const changePercent = data?.changePercent ?? 0
@@ -64,7 +67,7 @@ export function RevenueOverviewWidget({
     <div className="flex h-full flex-col rounded-xl border bg-card">
       <div className="flex items-start justify-between border-b p-5">
         <div>
-          <h3 className="text-lg font-semibold">Обзор дохода</h3>
+          <h3 className="text-lg font-semibold">{t('widgetTitles.revenueOverview')}</h3>
           <div className="mt-2 flex items-baseline gap-3">
             <span className="text-3xl font-bold">{formatPrice(totalValue)}</span>
             <span
@@ -81,7 +84,7 @@ export function RevenueOverviewWidget({
           </div>
         </div>
         <Button variant="ghost" size="sm" onClick={onViewDetails}>
-          Детали
+          {t('common.details')}
           <IconArrowUpRight className="ml-1 size-4" />
         </Button>
       </div>
@@ -117,7 +120,7 @@ export function RevenueOverviewWidget({
               content={
                 <ChartTooltipContent
                   labelFormatter={(label) => label}
-                  formatter={(value) => [formatPrice(Number(value)), 'Выручка']}
+                  formatter={(value) => [formatPrice(Number(value)), t('kpiLabels.revenue')]}
                 />
               }
             />

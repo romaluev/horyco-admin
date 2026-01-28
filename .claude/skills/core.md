@@ -7,7 +7,7 @@ triggers: ['ts rules', 'best practices', 'typescript', 'clean code']
 
 # Core Rules (Quick Reference)
 
-Critical rules only. Full details: `.claude/standards/next.md`
+Critical rules only. Full details: `.claude/standards/react.md`
 
 ---
 
@@ -69,7 +69,7 @@ Critical rules only. Full details: `.claude/standards/next.md`
 ## IMPORTS ORDER
 
 ```
-1. react, next
+1. react, @tanstack/react-router
 2. external libs
 3. @/... internal
 4. ./... relative
@@ -112,4 +112,4 @@ magic numbers         → use constants
 
 ---
 
-**Full rules:** `.claude/standards/next.md`
+**Full rules:** `.claude/standards/react.md`

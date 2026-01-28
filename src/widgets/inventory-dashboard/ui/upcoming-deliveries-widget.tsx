@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import { Truck, Calendar, Clock, AlertCircle } from 'lucide-react'
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -16,7 +16,7 @@ import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/purchase-order'
+import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/inventory/purchase-order'
 
 interface IUpcomingDeliveriesWidgetProps {
   warehouseId?: number
@@ -84,12 +84,12 @@ export function UpcomingDeliveriesWidget({
           <CardDescription>Заказы поставщикам в пути</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/inventory/purchase-orders?status=sent">
+          <Link to={"/dashboard/inventory/purchase-orders?status=sent" as any}>
             Все заказы
           </Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -117,7 +117,7 @@ export function UpcomingDeliveriesWidget({
               return (
                 <Link
                   key={po.id}
-                  href={`/dashboard/inventory/purchase-orders/${po.id}`}
+                  to={`/dashboard/inventory/purchase-orders/${po.id}` as any}
                   className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
                 >
                   <div className="space-y-1">
@@ -155,7 +155,7 @@ export function UpcomingDeliveriesWidget({
         {totalPending > size && (
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/inventory/purchase-orders?status=sent">
+              <Link to={"/dashboard/inventory/purchase-orders?status=sent" as any}>
                 Показать все ({totalPending})
               </Link>
             </Button>

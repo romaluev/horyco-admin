@@ -1,13 +1,13 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { Check, Slash } from 'lucide-react'
 
 import { getStepConfig } from '@/shared/config/onboarding'
 import { cn } from '@/shared/lib/utils'
 
-import type { OnboardingStep as OnboardingStepType } from '@/entities/onboarding/model/types'
+import type { OnboardingStep as OnboardingStepType } from '@/entities/onboarding/onboarding/model/types'
 
 interface OnboardingStep {
   id: string

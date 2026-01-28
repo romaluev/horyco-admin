@@ -1,22 +1,19 @@
-import Image from 'next/image'
-import Link from 'next/link'
+'use client'
+
+import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import logo from '@/shared/assets/logo.png'
 
-import ForgotPasswordForm from '@/entities/auth/ui/forgot-password-form'
-
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Забыли пароль',
-  description: 'Восстановление пароля',
-}
+import ForgotPasswordForm from '@/entities/auth/auth/ui/forgot-password-form'
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation('auth')
+
   return (
     <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
       <div className="flex items-center justify-center p-4 text-lg font-medium">
-        <Image
+        <img
           className="w-32 overflow-hidden"
           src={logo}
           alt=""
@@ -27,12 +24,12 @@ export default function ForgotPasswordPage() {
           <ForgotPasswordForm />
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            Вспомнили пароль?{' '}
+            {t('forgotPassword.backToLogin')} {' '}
             <Link
-              href="/auth/sign-in"
+              to="/auth/sign-in" search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
-              Войти
+              {t('signIn.title')}
             </Link>
           </p>
         </div>

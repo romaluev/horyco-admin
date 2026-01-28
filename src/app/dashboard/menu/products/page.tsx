@@ -7,18 +7,19 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetCategories } from '@/entities/category'
-import { useGetProducts } from '@/entities/product'
+import { useGetCategories } from '@/entities/menu/category'
+import { useGetProducts } from '@/entities/menu/product'
 
 import { ProductsContent } from './products-content'
 
 import type { ProductsPageState } from './products-content'
-import type { IProduct } from '@/entities/product'
+import type { IProduct } from '@/entities/menu/product'
 import type { JSX } from 'react'
 
 export default function ProductsPage(): JSX.Element {

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import {
   Card,
@@ -46,11 +47,13 @@ const salesData = [
 ]
 
 export function RecentSales() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Недавние заказы</CardTitle>
-        <CardDescription>Вы сделали 200 заказов в этом месяце.</CardDescription>
+        <CardTitle>{t('widgets.recentSales.title')}</CardTitle>
+        <CardDescription>{t('widgets.recentSales.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-8">

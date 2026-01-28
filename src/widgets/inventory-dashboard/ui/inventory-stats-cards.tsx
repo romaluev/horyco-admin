@@ -1,27 +1,38 @@
 'use client'
 
-import { Package, AlertTriangle, XCircle, TrendingUp, Warehouse } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+
+import { AlertTriangle, Package, TrendingUp, XCircle } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useStockSummary } from '@/entities/stock'
-import { useGetWarehouses } from '@/entities/warehouse'
+import { useStockSummary } from '@/entities/inventory/stock'
 
 interface IInventoryStatsCardsProps {
   warehouseId?: number
 }
 
-export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) {
-  const { data: summary, isLoading: summaryLoading } = useStockSummary(warehouseId)
-  const { data: warehouses, isLoading: warehousesLoading } = useGetWarehouses()
+const MILLION = 1000000
+const THOUSAND = 1000
 
-  const isLoading = summaryLoading || warehousesLoading
+function formatCompactValue(value: number): string {
+  if (value >= MILLION) {
+    return `${(value / MILLION).toFixed(1)}M`
+  }
+  if (value >= THOUSAND) {
+    return `${(value / THOUSAND).toFixed(0)}k`
+  }
+  return value.toLocaleString('ru-RU')
+}
+
+export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) {
+  const { data: summary, isLoading } = useStockSummary(warehouseId)
 
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <Skeleton className="h-4 w-24" />
@@ -37,29 +48,15 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
     )
   }
 
+  const warehouseParam = warehouseId ? `&warehouseId=${warehouseId}` : ''
+
   const cards = [
-    {
-      title: 'Склады',
-      value: warehouses?.length ?? 0,
-      icon: Warehouse,
-      description: 'Активных складов',
-    },
     {
       title: 'Позиций',
       value: summary?.totalItems ?? 0,
       icon: Package,
       description: 'Уникальных товаров',
-    },
-    {
-      title: 'Стоимость',
-      value: new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'UZS',
-        maximumFractionDigits: 0,
-        notation: 'compact',
-      }).format(summary?.totalValue ?? 0),
-      icon: TrendingUp,
-      description: 'Общая стоимость',
+      href: `/dashboard/inventory/items`,
     },
     {
       title: 'Мало',
@@ -68,6 +65,7 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
       description: 'Требуют пополнения',
       alert: (summary?.lowStockCount ?? 0) > 0,
       alertColor: 'text-amber-500',
+      href: `/dashboard/inventory/stock?filter=low${warehouseParam}`,
     },
     {
       title: 'Нет в наличии',
@@ -76,26 +74,38 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
       description: 'Срочно закупить',
       alert: (summary?.outOfStockCount ?? 0) > 0,
       alertColor: 'text-destructive',
+      href: `/dashboard/inventory/stock?filter=out${warehouseParam}`,
+    },
+    {
+      title: 'Стоимость',
+      value: formatCompactValue(summary?.totalValue ?? 0),
+      icon: TrendingUp,
+      description: 'Общая стоимость',
+      href: `/dashboard/inventory/stock${warehouseParam ? `?${warehouseParam.slice(1)}` : ''}`,
     },
   ]
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.title} className={card.alert ? 'border-destructive/50' : ''}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-            <card.icon
-              className={`h-4 w-4 ${card.alert ? card.alertColor : 'text-muted-foreground'}`}
-            />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${card.alert ? card.alertColor : ''}`}>
-              {card.value}
-            </div>
-            <p className="text-xs text-muted-foreground">{card.description}</p>
-          </CardContent>
-        </Card>
+        <Link key={card.title} to={card.href}>
+          <Card
+            className={`cursor-pointer transition-colors hover:bg-muted/50 ${card.alert ? 'border-destructive/50' : ''}`}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+              <card.icon
+                className={`h-4 w-4 ${card.alert ? card.alertColor : 'text-muted-foreground'}`}
+              />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${card.alert ? card.alertColor : ''}`}>
+                {card.value}
+              </div>
+              <p className="text-xs text-muted-foreground">{card.description}</p>
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   )

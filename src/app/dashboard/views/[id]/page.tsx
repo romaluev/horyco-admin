@@ -1,32 +1,29 @@
-'use client'
-
 import * as React from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/shared/lib/navigation'
 
 import { SortBy, SortDirection } from '@/shared/api/graphql'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useDeleteView, useUpdateView, useViewById } from '@/entities/view'
+import { useDeleteView, useUpdateView, useViewById } from '@/entities/dashboard/view'
 import {
   FilterBar,
   DisplaySettings,
   useViewBuilderStore,
   ViewHeader,
-} from '@/features/view-builder'
+} from '@/features/dashboard/view-builder'
 import { ViewDataTable } from '@/widgets/views'
 
-import type { IFilter, IViewConfig, IViewDataParams } from '@/entities/view'
+import type { IFilter, IViewConfig, IViewDataParams } from '@/entities/dashboard/view'
 import type { Dataset } from '@/shared/api/graphql'
 
 interface IViewPageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
-export default function ViewPage({ params }: IViewPageProps) {
+export default function ViewPage({ id }: IViewPageProps) {
   const router = useRouter()
-  const resolvedParams = React.use(params)
-  const viewId = resolvedParams.id
+  const viewId = id
 
   const { data: view, isLoading } = useViewById(viewId)
   const { mutate: updateView, isPending } = useUpdateView()

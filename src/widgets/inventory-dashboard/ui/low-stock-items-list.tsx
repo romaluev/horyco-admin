@@ -1,14 +1,15 @@
 'use client'
 
 import { AlertTriangle } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
+import { Progress } from '@/shared/ui/base/progress'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useLowStock } from '@/entities/stock'
+import { useLowStock } from '@/entities/inventory/stock'
 
 interface ILowStockItemsListProps {
   warehouseId?: number
@@ -32,10 +33,10 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
           <CardDescription>Товары требующие пополнения</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/inventory/stock?filter=low">Все</Link>
+          <Link to={"/dashboard/inventory/stock?filter=low" as any}>Все</Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[320px] overflow-auto">
         {!warehouseId ? (
           <p className="text-center text-sm text-muted-foreground py-4">
             Выберите склад для просмотра
@@ -58,22 +59,42 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
           </p>
         ) : (
           <div className="space-y-3">
-            {lowStockItems.map((stock) => (
-              <div
-                key={stock.id}
-                className="flex items-center justify-between rounded-lg border p-3"
-              >
-                <div className="space-y-1">
-                  <p className="font-medium leading-none">{stock.item?.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {stock.warehouse?.name} • Мин: {stock.item?.minStockLevel}
-                  </p>
+            {lowStockItems.map((stock) => {
+              const minLevel = stock.item?.minStockLevel ?? 1
+              const percent = Math.min(100, Math.round((stock.quantity / minLevel) * 100))
+              const isOutOfStock = stock.quantity <= 0
+
+              return (
+                <div
+                  key={stock.id}
+                  className="rounded-lg border p-3 space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <p className="font-medium leading-none">{stock.item?.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {stock.warehouse?.name}
+                      </p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={isOutOfStock ? 'text-destructive' : 'text-amber-500'}
+                    >
+                      {stock.quantity} / {minLevel} {stock.item?.unit}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Progress
+                      value={percent}
+                      className={`h-2 ${isOutOfStock ? '[&>div]:bg-destructive' : '[&>div]:bg-amber-500'}`}
+                    />
+                    <span className={`text-xs font-medium ${isOutOfStock ? 'text-destructive' : 'text-amber-500'}`}>
+                      {percent}%
+                    </span>
+                  </div>
                 </div>
-                <Badge variant="outline" className="text-amber-500">
-                  {stock.quantity} {stock.item?.unit}
-                </Badge>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </CardContent>

@@ -1,13 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
-import { IconSearch } from '@tabler/icons-react'
+import { Link } from '@tanstack/react-router'
 
-import { formatCurrency } from '@/shared/lib/format'
+import { IconSearch, IconTruck } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
+
+import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
 import { Input } from '@/shared/ui/base/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui/base/select'
 import { Separator } from '@/shared/ui/base/separator'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import {
@@ -18,22 +28,26 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import { Badge } from '@/shared/ui/base/badge'
-import { Button } from '@/shared/ui/base/button'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetSuppliers } from '@/entities/supplier'
+import { useGetSuppliers } from '@/entities/inventory/supplier'
 import {
   CreateSupplierDialog,
   DeleteSupplierButton,
-} from '@/features/supplier-form'
+} from '@/features/inventory/supplier-form'
+
+type StatusFilter = 'all' | 'active' | 'inactive'
 
 export default function SuppliersPage() {
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
 
   const { data: suppliers, isLoading } = useGetSuppliers({
     search: search || undefined,
+    isActive: statusFilter === 'all' ? undefined : statusFilter === 'active',
   })
+
+  const hasFilters = Boolean(search || statusFilter !== 'all')
 
   return (
     <PageContainer scrollable>
@@ -47,8 +61,9 @@ export default function SuppliersPage() {
         </div>
         <Separator />
 
+        {/* Filters */}
         <div className="flex flex-wrap gap-4">
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative min-w-[200px] flex-1">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Поиск поставщика..."
@@ -57,14 +72,31 @@ export default function SuppliersPage() {
               className="pl-10"
             />
           </div>
+
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => setStatusFilter(v as StatusFilter)}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Статус" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все статусы</SelectItem>
+              <SelectItem value="active">Активные</SelectItem>
+              <SelectItem value="inactive">Неактивные</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
+        {/* Content */}
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-16 w-full" />
             ))}
           </div>
+        ) : !suppliers?.length ? (
+          <EmptySuppliersState hasFilters={hasFilters} />
         ) : (
           <div className="rounded-md border">
             <Table>
@@ -72,68 +104,52 @@ export default function SuppliersPage() {
                 <TableRow>
                   <TableHead>Поставщик</TableHead>
                   <TableHead>Контакт</TableHead>
-                  <TableHead>Телефон</TableHead>
-                  <TableHead className="text-center">Срок доставки</TableHead>
+                  <TableHead className="text-right">Товаров</TableHead>
                   <TableHead className="text-right">Заказов</TableHead>
-                  <TableHead className="text-right">Сумма</TableHead>
-                  <TableHead>Статус</TableHead>
+                  <TableHead>Последний заказ</TableHead>
                   <TableHead className="w-[100px]" />
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {!suppliers?.length ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
-                      Поставщики не найдены
+                {suppliers.map((supplier) => (
+                  <TableRow key={supplier.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{supplier.name}</p>
+                        {supplier.code && (
+                          <p className="text-sm text-muted-foreground">{supplier.code}</p>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {supplier.phone || supplier.contactName || '—'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {supplier.itemCount ?? 0}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {supplier.totalOrders}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {supplier.lastOrderAt
+                        ? format(new Date(supplier.lastOrderAt), 'd MMM yyyy', { locale: ru })
+                        : '—'}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={`/dashboard/inventory/suppliers/${supplier.id}` as any}>
+                            Открыть
+                          </Link>
+                        </Button>
+                        <DeleteSupplierButton
+                          supplierId={supplier.id}
+                          supplierName={supplier.name}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  suppliers.map((supplier) => (
-                    <TableRow key={supplier.id}>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{supplier.name}</p>
-                          {supplier.code && (
-                            <p className="text-sm text-muted-foreground">{supplier.code}</p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {supplier.contactName || '—'}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {supplier.phone || '—'}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {supplier.leadTimeDays} дн.
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {supplier.totalOrders}
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        {formatCurrency(supplier.totalAmount)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={supplier.isActive ? 'default' : 'secondary'}>
-                          {supplier.isActive ? 'Активен' : 'Неактивен'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="sm" asChild>
-                            <Link href={`/dashboard/inventory/suppliers/${supplier.id}`}>
-                              Открыть
-                            </Link>
-                          </Button>
-                          <DeleteSupplierButton
-                            supplierId={supplier.id}
-                            supplierName={supplier.name}
-                          />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
           </div>
@@ -142,3 +158,22 @@ export default function SuppliersPage() {
     </PageContainer>
   )
 }
+
+const EmptySuppliersState = ({ hasFilters }: { hasFilters: boolean }) => (
+  <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
+    <IconTruck className="h-12 w-12 text-muted-foreground/50" />
+    <h3 className="mt-4 text-lg font-semibold">
+      {hasFilters ? 'Поставщики не найдены' : 'Нет поставщиков'}
+    </h3>
+    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+      {hasFilters
+        ? 'Попробуйте изменить параметры поиска или фильтры.'
+        : 'Добавьте поставщиков для управления закупками и ценами на товары.'}
+    </p>
+    {!hasFilters && (
+      <div className="mt-6">
+        <CreateSupplierDialog />
+      </div>
+    )}
+  </div>
+)

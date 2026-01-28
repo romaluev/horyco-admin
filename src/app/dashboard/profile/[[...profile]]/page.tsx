@@ -1,4 +1,4 @@
-import { ProfileView } from '@/entities/auth'
+import { ProfileView } from '@/entities/auth/auth'
 
 export const metadata = {
   title: 'Dashboard : Profile',

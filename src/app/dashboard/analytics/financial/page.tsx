@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { IconArrowDown, IconArrowUp, IconMinus } from '@tabler/icons-react'
 
@@ -33,7 +34,7 @@ import {
   AnalyticsPageLayout,
   AnalyticsErrorState,
   MARGIN_CLASS_COLORS,
-} from '@/features/analytics'
+} from '@/features/dashboard/analytics'
 
 
 // ============================================
@@ -41,6 +42,7 @@ import {
 // ============================================
 
 export default function FinancialAnalyticsPage() {
+  const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_MONTH)
   const [activeTab, setActiveTab] = React.useState('pnl')
 
@@ -52,15 +54,15 @@ export default function FinancialAnalyticsPage() {
   return (
     <AnalyticsPageLayout
       pageCode="financial"
-      title="Финансы"
+      title={t('financial.title')}
       period={period}
       onPeriodChange={setPeriod}
       onExport={handleExport}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="pnl">P&L</TabsTrigger>
-          <TabsTrigger value="margins">Маржинальность</TabsTrigger>
+          <TabsTrigger value="pnl">{t('financial.tabs.pnl')}</TabsTrigger>
+          <TabsTrigger value="margins">{t('financial.tabs.margins')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pnl" className="mt-4">
@@ -136,6 +138,7 @@ interface IProfitLossApiResponse {
 }
 
 function ProfitLossTab({ period }: IProfitLossTabProps) {
+  const { t } = useTranslation('analytics')
   const { data: rawData, isLoading, error, refetch } = useProfitLoss({
     period: { type: period },
     comparePreviousPeriod: true,
@@ -152,12 +155,12 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
 
   // Build revenue items from the API structure
   const revenueItems = [
-    { label: 'Валовая выручка', currentValue: current.grossRevenue, previousValue: previous.grossRevenue },
-    { label: 'Скидки', currentValue: -current.discounts, previousValue: -previous.discounts },
-    { label: 'Возвраты', currentValue: -current.refunds, previousValue: -previous.refunds },
-    { label: 'Чистая выручка', currentValue: current.netRevenue, previousValue: previous.netRevenue, isTotal: true },
-    { label: 'Себестоимость', currentValue: current.cogs, previousValue: previous.cogs },
-    { label: 'Валовая прибыль', currentValue: current.grossProfit, previousValue: previous.grossProfit, isTotal: true },
+    { label: t('financial.pnl.item.grossRevenue'), currentValue: current.grossRevenue, previousValue: previous.grossRevenue },
+    { label: t('financial.pnl.item.discounts'), currentValue: -current.discounts, previousValue: -previous.discounts },
+    { label: t('financial.pnl.item.refunds'), currentValue: -current.refunds, previousValue: -previous.refunds },
+    { label: t('financial.pnl.item.netRevenue'), currentValue: current.netRevenue, previousValue: previous.netRevenue, isTotal: true },
+    { label: t('financial.pnl.item.cogs'), currentValue: current.cogs, previousValue: previous.cogs },
+    { label: t('financial.pnl.item.grossProfit'), currentValue: current.grossProfit, previousValue: previous.grossProfit, isTotal: true },
   ]
 
   // Build expense items from operatingExpenses
@@ -175,7 +178,7 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
       previousValue: previous.operatingExpenses[idx]?.amount ?? 0,
     })),
     {
-      label: 'Итого операционные расходы',
+      label: t('financial.pnl.item.operatingExpenses'),
       currentValue: current.totalOperatingExpenses,
       previousValue: previous.totalOperatingExpenses,
       isTotal: true,
@@ -192,43 +195,43 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
       {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-4">
         <MetricCard
-          label="Чистая выручка"
+          label={t('financial.pnl.netRevenue')}
           value={formatPrice(current.netRevenue)}
           suffix={`${data.revenueChange.trend === 'up' ? '+' : ''}${data.revenueChange.changePercent.toFixed(1)}%`}
         />
         <MetricCard
-          label="Валовая прибыль"
+          label={t('financial.pnl.grossProfit')}
           value={formatPrice(current.grossProfit)}
           suffix={`${current.grossMarginPercent}%`}
         />
         <MetricCard
-          label="Операционная прибыль"
+          label={t('financial.pnl.operatingProfit')}
           value={formatPrice(current.operatingProfit)}
           suffix={`${current.operatingMarginPercent}%`}
         />
         <MetricCard
-          label="Средний чек"
+          label={t('financial.pnl.avgCheck')}
           value={formatPrice(current.averageOrderValue)}
-          suffix={`${current.totalOrders} заказов`}
+          suffix={`${current.totalOrders} ${t('common:orders')}`}
         />
       </div>
 
-      <h3 className="text-sm font-medium">Отчет о прибылях и убытках</h3>
+      <h3 className="text-sm font-medium">{t('financial.pnl.title')}</h3>
 
       <div className="rounded-lg border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Статья</TableHead>
-              <TableHead className="text-right">Текущий период</TableHead>
-              <TableHead className="text-right">Предыдущий период</TableHead>
-              <TableHead className="text-right">Изменение</TableHead>
+              <TableHead>{t('financial.pnl.table.item')}</TableHead>
+              <TableHead className="text-right">{t('financial.pnl.table.current')}</TableHead>
+              <TableHead className="text-right">{t('financial.pnl.table.previous')}</TableHead>
+              <TableHead className="text-right">{t('financial.pnl.table.change')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {/* Revenue Section */}
             <TableRow className="bg-muted/30">
-              <TableCell colSpan={4} className="font-medium">Выручка</TableCell>
+              <TableCell colSpan={4} className="font-medium">{t('financial.pnl.section.revenue')}</TableCell>
             </TableRow>
             {revenueItems.map((item, index) => (
               <TableRow key={item.label ?? index} className={cn(item.isTotal && 'bg-muted/50 font-medium')}>
@@ -250,7 +253,7 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
 
             {/* Expenses Section */}
             <TableRow className="bg-muted/30">
-              <TableCell colSpan={4} className="font-medium">Операционные расходы</TableCell>
+              <TableCell colSpan={4} className="font-medium">{t('financial.pnl.section.expenses')}</TableCell>
             </TableRow>
             {expenseItems.map((item, index) => (
               <TableRow key={item.label ?? index} className={cn(item.isTotal && 'bg-muted/50 font-medium')}>
@@ -267,7 +270,7 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
 
             {/* Operating Profit */}
             <TableRow className="border-t-2 bg-primary/5 font-semibold">
-              <TableCell>Операционная прибыль</TableCell>
+              <TableCell>{t('financial.pnl.item.operatingExpenses')}</TableCell>
               <TableCell className="text-right">{formatPrice(operatingProfit)}</TableCell>
               <TableCell className="text-right text-muted-foreground">
                 {formatPrice(previousOperatingProfit)}
@@ -281,7 +284,7 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
 
             {/* Operating Margin */}
             <TableRow className="bg-primary/5 font-semibold">
-              <TableCell>Операционная рентабельность</TableCell>
+              <TableCell>{t('financial.pnl.margin')}</TableCell>
               <TableCell className="text-right">{operatingMargin.toFixed(1)}%</TableCell>
               <TableCell className="text-right text-muted-foreground">
                 {previousOperatingMargin.toFixed(1)}%
@@ -308,7 +311,7 @@ function ProfitLossTab({ period }: IProfitLossTabProps) {
       {/* Insights */}
       {data.insights && data.insights.length > 0 && (
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
-          <h4 className="mb-2 text-sm font-medium text-blue-800 dark:text-blue-300">Инсайты</h4>
+          <h4 className="mb-2 text-sm font-medium text-blue-800 dark:text-blue-300">{t('financial.insights')}</h4>
           <ul className="list-inside list-disc space-y-1 text-sm text-blue-700 dark:text-blue-400">
             {data.insights.map((insight, idx) => (
               <li key={idx}>{insight}</li>
@@ -337,6 +340,7 @@ interface IMarginAnalysisTabProps {
 }
 
 function MarginAnalysisTab({ period }: IMarginAnalysisTabProps) {
+  const { t } = useTranslation('analytics')
   const { data, isLoading, error, refetch } = useMarginAnalysis({
     period: { type: period },
   })
@@ -352,25 +356,25 @@ function MarginAnalysisTab({ period }: IMarginAnalysisTabProps) {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-4">
-        <MetricCard label="Средняя маржа" value={`${(summary.avgMargin ?? 0).toFixed(1)}%`} />
-        <MetricCard label="Высокая маржа" value={summary.highMarginCount ?? 0} suffix="товаров" />
-        <MetricCard label="Низкая маржа" value={summary.lowMarginCount ?? 0} suffix="товаров" />
-        <MetricCard label="Отрицательная" value={summary.negativeCount ?? 0} suffix="товаров" />
+        <MetricCard label={t('financial.margins.avgMargin')} value={`${(summary.avgMargin ?? 0).toFixed(1)}%`} />
+        <MetricCard label={t('financial.margins.highMargin')} value={summary.highMarginCount ?? 0} suffix={t('common:items')} />
+        <MetricCard label={t('financial.margins.lowMargin')} value={summary.lowMarginCount ?? 0} suffix={t('common:items')} />
+        <MetricCard label={t('financial.margins.negative')} value={summary.negativeCount ?? 0} suffix={t('common:items')} />
       </div>
 
       {/* Products Table */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Продукты по маржинальности</h3>
+        <h3 className="mb-3 text-sm font-medium">{t('financial.margins.products')}</h3>
         {products.length > 0 ? (
           <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Продукт</TableHead>
-                  <TableHead className="text-right">Себестоимость</TableHead>
-                  <TableHead className="text-right">Цена</TableHead>
-                  <TableHead className="text-right">Маржа</TableHead>
-                  <TableHead className="text-center">Класс</TableHead>
+                  <TableHead>{t('financial.margins.table.product')}</TableHead>
+                  <TableHead className="text-right">{t('financial.margins.table.cost')}</TableHead>
+                  <TableHead className="text-right">{t('financial.margins.table.price')}</TableHead>
+                  <TableHead className="text-right">{t('financial.margins.table.margin')}</TableHead>
+                  <TableHead className="text-center">{t('financial.margins.table.class')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -390,7 +394,7 @@ function MarginAnalysisTab({ period }: IMarginAnalysisTabProps) {
           </div>
         ) : (
           <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
-            Нет данных о маржинальности продуктов
+            {t('financial.margins.noData')}
           </div>
         )}
       </div>
@@ -431,11 +435,12 @@ interface IMarginBadgeProps {
 }
 
 function MarginBadge({ marginClass }: IMarginBadgeProps) {
+  const { t } = useTranslation('analytics')
   const labels: Record<string, string> = {
-    HIGH: 'Высокая',
-    MEDIUM: 'Средняя',
-    LOW: 'Низкая',
-    NEGATIVE: 'Отрицательная',
+    HIGH: t('financial.margins.marginClass.high'),
+    MEDIUM: t('financial.margins.marginClass.medium'),
+    LOW: t('financial.margins.marginClass.low'),
+    NEGATIVE: t('financial.margins.marginClass.negative'),
   }
 
   return (
