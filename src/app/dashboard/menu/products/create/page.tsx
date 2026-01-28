@@ -20,7 +20,7 @@ export default function CreateProductPage(): JSX.Element {
   const { t } = useTranslation('menu')
 
   return (
-    <div className="h-full overflow-auto">
+    <div className="h-[calc(100dvh-52px)] overflow-auto">
       <div className="space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center gap-4">
           <Link to="/dashboard/menu/products">
