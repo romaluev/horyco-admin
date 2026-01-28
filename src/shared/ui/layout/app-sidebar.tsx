@@ -17,7 +17,7 @@ import {
   IconSunMoon,
   IconUserCircle,
 } from '@tabler/icons-react'
-import { useTheme } from 'next-themes'
+import { useTheme } from './ThemeToggle/theme-provider'
 import { useTranslation } from 'react-i18next'
 
 import {

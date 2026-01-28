@@ -211,7 +211,7 @@ All code meets quality standards:
 2. **Be Specific**: Include exact file names and line numbers
 3. **Be Actionable**: Provide concrete fixes, not vague suggestions
 4. **Prioritize**: List critical violations first (any type, security issues, broken functionality)
-5. **Context-Aware**: Consider the project's Next.js 15 + TypeScript + FSD architecture from CLAUDE.md
+5. **Context-Aware**: Consider the project's React + Vite + TypeScript + FSD architecture from CLAUDE.md
 6. **Stay in Scope**: Don't comment on architecture/file placement - that's Architector's job
 7. **Explain WHY**: Help developers understand the principle behind each violation
 8. **No False Positives**: If you're unsure, ask for clarification rather than flag incorrectly

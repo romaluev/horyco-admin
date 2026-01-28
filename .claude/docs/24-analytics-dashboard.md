@@ -77,7 +77,7 @@ Config    Config (4 KPIs + 4 widgets)
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: React + Vite + TanStack Router
 - **UI**: shadcn/ui + Tailwind CSS
 - **Charts**: Recharts
 - **State**: React Query (TanStack Query)

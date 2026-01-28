@@ -3,9 +3,9 @@
 import * as React from 'react'
 
 import { IconBrightness } from '@tabler/icons-react'
-import { useTheme } from 'next-themes'
 
 import { Button } from '@/shared/ui/base/button'
+import { useTheme } from './theme-provider'
 
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme()

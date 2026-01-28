@@ -46,7 +46,7 @@ This document provides a complete understanding of the Horyco Admin Panel: archi
 │                                                        │
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
 │  │   POS App    │  │ Admin Panel  │  │   WebApp    │ │
-│  │  (Flutter)   │  │    (Web)     │  │  (Next.js)  │ │
+│  │  (Flutter)   │  │(React+Vite)  │  │  (React)    │ │
 │  │              │  │              │  │             │ │
 │  │ For cashiers │  │ For managers │  │ For         │ │
 │  │ and waiters  │  │ and owners   │  │ customers   │ │
@@ -718,7 +718,7 @@ Detailed documentation for each section:
 ### Frontend Stack (Recommendations)
 
 **Framework:**
-- React / Next.js (for SSR and SEO)
+- React + Vite (SPA)
 - TypeScript (strict typing)
 
 **UI Libraries:**

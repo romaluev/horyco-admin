@@ -434,7 +434,7 @@ GET /admin/menu/products?page=1&limit=20&categoryId=5&isActive=true&search=pizza
 
 **Frontend responsibilities:**
 
-- Use i18n library (`react-i18next`, `next-intl`)
+- Use i18n library (`react-i18next`)
 - Format dates/numbers per locale
 - Translate UI text (API returns data in English)
 

@@ -1,10 +1,11 @@
 module.exports = {
   extends: [
-    'next/core-web-vitals',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -80,7 +81,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: 'next/**',
+            pattern: '@tanstack/**',
             group: 'external',
             position: 'before',
           },
@@ -228,11 +229,7 @@ module.exports = {
   overrides: [
     {
       files: [
-        'src/app/**/page.tsx',
-        'src/app/**/layout.tsx',
-        'src/app/**/loading.tsx',
-        'src/app/**/error.tsx',
-        'src/app/**/not-found.tsx',
+        'src/routes/**/*.tsx',
         '*.config.ts',
         '*.config.js',
       ],

@@ -1,6 +1,5 @@
 /**
  * Auth Guard Utilities for TanStack Router
- * Replaces Next.js middleware functionality
  */
 
 import Cookies from 'js-cookie'
