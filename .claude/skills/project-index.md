@@ -118,7 +118,7 @@ entities/[domain]/[entity-name]/
 
 ### API Layer (`/api/`)
 
-- **Vercel Serverless Functions** - Replaces Next.js API routes
+- **Vercel Serverless Functions** - API routes for AI operations
 - `expand-description.ts` - AI product description expansion
 - `extract-products.ts` - AI menu extraction from images
 

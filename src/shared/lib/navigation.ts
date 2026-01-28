@@ -1,14 +1,13 @@
 /**
- * Navigation compatibility layer for Next.js to TanStack Router migration
+ * Navigation utilities for TanStack Router
  *
- * This module provides hooks that mimic Next.js navigation API
- * while using TanStack Router under the hood.
+ * This module provides convenience hooks for common navigation patterns.
  */
 
 import { useNavigate as useTanStackNavigate, useLocation, useSearch, useParams as useTanStackParams } from '@tanstack/react-router'
 
 /**
- * Compatibility hook that mimics Next.js useRouter
+ * Router hook for navigation
  *
  * Usage:
  * const router = useRouter()
@@ -31,7 +30,7 @@ export function useRouter() {
 }
 
 /**
- * Compatibility hook that mimics Next.js usePathname
+ * Hook to get the current pathname
  */
 export function usePathname() {
   const location = useLocation()
@@ -39,8 +38,8 @@ export function usePathname() {
 }
 
 /**
- * Compatibility hook that mimics Next.js useSearchParams
- * Note: Returns a simplified interface, not the full URLSearchParams
+ * Hook to access URL search params
+ * Note: Returns a simplified interface
  */
 export function useSearchParams() {
   const search = useSearch({ strict: false }) as Record<string, unknown>
@@ -66,9 +65,8 @@ export function useSearchParams() {
 }
 
 /**
- * Compatibility hook that mimics Next.js useParams
- * Note: In TanStack Router, params come from the route context
- * This hook extracts params from the URL path directly
+ * Hook to access route params
+ * Note: Params come from the TanStack Router context
  */
 export function useParams(): Record<string, string> {
   const params = useTanStackParams({ strict: false })
@@ -76,7 +74,7 @@ export function useParams(): Record<string, string> {
 }
 
 /**
- * Redirect function compatible with TanStack Router
- * Note: This should be used in beforeLoad or loader, not in components
+ * Redirect function for TanStack Router
+ * Note: Use in beforeLoad or loader, not in components
  */
 export { redirect } from '@tanstack/react-router'

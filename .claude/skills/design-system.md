@@ -7,7 +7,7 @@ triggers: ['ui rules', 'design system', 'component style', 'ui']
 
 # Design System (Quick Reference)
 
-Stack: Next.js + shadcn/ui + Tailwind
+Stack: React + Vite + shadcn/ui + Tailwind
 Style: Minimalist, no shadows, semantic colors
 
 ---

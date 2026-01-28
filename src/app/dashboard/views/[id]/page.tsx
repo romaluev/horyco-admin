@@ -137,7 +137,7 @@ export default function ViewPage({ id }: IViewPageProps) {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
       {/* Header with title/description and save */}
       <ViewHeader
         onSave={handleSave}
@@ -160,7 +160,7 @@ export default function ViewPage({ id }: IViewPageProps) {
 
 function ViewPageSkeleton() {
   return (
-    <div className="flex h-full flex-col gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
       <div className="flex items-center justify-between border-b pb-4">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />

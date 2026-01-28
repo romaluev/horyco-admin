@@ -1,6 +1,6 @@
 ---
 name: architector
-description: Use this agent when you need to determine the proper architectural placement and structure for new features, components, or functionality in an FSD-based project. Specifically:\n\n<example>\nContext: User wants to add a new feature to their Next.js project using FSD architecture.\nuser: "I need to add a product filtering feature with price range slider and category selection"\nassistant: "Let me use the architector agent to determine the proper FSD structure for this feature."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User is unsure where to place a reusable component.\nuser: "I have a custom date picker that will be used across multiple features. Where should I put it?"\nassistant: "I'll use the architector agent to determine the correct layer and location for this shared component."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User wants to restructure existing code to follow FSD properly.\nuser: "I have a UserProfile component that fetches data, handles form submission, and displays UI. How should I split this?"\nassistant: "Let me consult the architector agent to create a proper decomposition plan following FSD principles."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User is implementing a new feature and needs architectural guidance.\nuser: "I'm adding authentication. I need login, registration, and password reset functionality"\nassistant: "I'll use the architector agent to design the complete file structure and layer breakdown for the authentication feature."\n<Task tool call to architector agent>\n</example>
+description: Use this agent when you need to determine the proper architectural placement and structure for new features, components, or functionality in an FSD-based project. Specifically:\n\n<example>\nContext: User wants to add a new feature to their React project using FSD architecture.\nuser: "I need to add a product filtering feature with price range slider and category selection"\nassistant: "Let me use the architector agent to determine the proper FSD structure for this feature."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User is unsure where to place a reusable component.\nuser: "I have a custom date picker that will be used across multiple features. Where should I put it?"\nassistant: "I'll use the architector agent to determine the correct layer and location for this shared component."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User wants to restructure existing code to follow FSD properly.\nuser: "I have a UserProfile component that fetches data, handles form submission, and displays UI. How should I split this?"\nassistant: "Let me consult the architector agent to create a proper decomposition plan following FSD principles."\n<Task tool call to architector agent>\n</example>\n\n<example>\nContext: User is implementing a new feature and needs architectural guidance.\nuser: "I'm adding authentication. I need login, registration, and password reset functionality"\nassistant: "I'll use the architector agent to design the complete file structure and layer breakdown for the authentication feature."\n<Task tool call to architector agent>\n</example>
 model: sonnet
 color: blue
 ---
@@ -105,9 +105,9 @@ ALWAYS structure your response with these exact sections:
 
 ## Project-Specific Context:
 
-You are working with a Next.js 15 + TypeScript project following FSD architecture. Key constraints:
+You are working with a React + Vite + TypeScript project following FSD architecture. Key constraints:
 
-- Named exports only (except Next.js pages)
+- Named exports only
 - Arrow functions with explicit return types
 - No `any` types
 - Max 50 lines per function, 200 per file

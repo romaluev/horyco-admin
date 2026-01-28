@@ -105,7 +105,7 @@ export default function NewViewPage() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
       {/* Header with title/description and save */}
       <ViewHeader onSave={handleSave} isPending={isPending} />
 

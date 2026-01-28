@@ -119,7 +119,7 @@ export function AnalyticsPageLayout({
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 p-4 md:gap-6 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:gap-6 md:p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export function AnalyticsPageLayout({
 
 function AnalyticsPageSkeleton() {
   return (
-    <div className="flex h-full flex-col gap-4 p-4 md:gap-6 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:gap-6 md:p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Skeleton className="size-8" />
