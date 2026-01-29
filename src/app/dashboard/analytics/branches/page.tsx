@@ -92,6 +92,7 @@ interface IBranchComparisonTabProps {
 }
 
 function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
+  const { t } = useTranslation('analytics')
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
   const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
 
@@ -139,8 +140,6 @@ function BranchComparisonTab({ period }: IBranchComparisonTabProps) {
   if (isLoading) return <ComparisonSkeleton />
   if (error) return <AnalyticsErrorState onRetry={() => refetch()} />
   if (!data) return null
-
-  const { t } = useTranslation('analytics')
   return (
     <div className="space-y-6">
       {/* Network Average Summary */}
@@ -267,13 +266,12 @@ function BranchBenchmarkTab({ period }: IBranchBenchmarkTabProps) {
     )
   }
 
-  const { t: t2 } = useTranslation('analytics')
   return (
     <div className="overflow-x-auto rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t2('branches.benchmark.metric')}</TableHead>
+            <TableHead>{t('branches.benchmark.metric')}</TableHead>
             {branches.map((branch) => (
               <TableHead key={branch.id} className="text-center">
                 {branch.name ?? 'N/A'}

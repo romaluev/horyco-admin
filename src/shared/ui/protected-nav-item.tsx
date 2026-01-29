@@ -25,14 +25,19 @@ export const ProtectedNavItem = ({
   permissionMode = 'all',
   children,
 }: ProtectedNavItemProps) => {
-  let hasPermission: boolean
+  // Call all hooks unconditionally
+  const hasSinglePermission = useHasPermission(permission ?? '')
+  const hasAllPermissions = useHasAllPermissions(permissions ?? [])
+  const hasAnyPermissions = useHasAnyPermission(permissions ?? [])
 
+  // Determine which result to use based on props
+  let hasPermission: boolean
   if (permission) {
-    hasPermission = useHasPermission(permission)
+    hasPermission = hasSinglePermission
   } else if (permissions && permissionMode === 'all') {
-    hasPermission = useHasAllPermissions(permissions)
+    hasPermission = hasAllPermissions
   } else if (permissions && permissionMode === 'any') {
-    hasPermission = useHasAnyPermission(permissions)
+    hasPermission = hasAnyPermissions
   } else {
     hasPermission = true
   }
