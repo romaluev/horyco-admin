@@ -41,7 +41,9 @@ export const ItemsTable = ({ items }: IItemsTableProps) => {
         <TableBody>
           {items.map((item, index) => (
             <TableRow key={item.id}>
-              <TableCell className="text-muted-foreground">{index + 1}</TableCell>
+              <TableCell className="text-muted-foreground">
+                {index + 1}
+              </TableCell>
               <TableCell className="font-medium">
                 <Link
                   to={`/dashboard/inventory/items/${item.id}` as any}
@@ -49,11 +51,15 @@ export const ItemsTable = ({ items }: IItemsTableProps) => {
                 >
                   {item.name}
                   {item.isSemiFinished && (
-                    <Badge variant="outline" className="ml-2 text-xs">ПФ</Badge>
+                    <Badge variant="outline" className="ml-2 text-xs">
+                      ПФ
+                    </Badge>
                   )}
                 </Link>
               </TableCell>
-              <TableCell className="text-muted-foreground">{item.sku || '—'}</TableCell>
+              <TableCell className="text-muted-foreground">
+                {item.sku || '—'}
+              </TableCell>
               <TableCell>{item.unit}</TableCell>
               <TableCell className="text-right">
                 {item.totalStock !== null ? (
@@ -70,7 +76,7 @@ export const ItemsTable = ({ items }: IItemsTableProps) => {
                   '—'
                 )}
               </TableCell>
-              <TableCell className="text-right text-muted-foreground">
+              <TableCell className="text-muted-foreground text-right">
                 {item.minStockLevel}
               </TableCell>
               <TableCell className="text-right">

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import {
   ArrowRight,
   Building2,
@@ -8,6 +8,7 @@ import {
   Plus,
   Settings,
 } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -170,7 +171,9 @@ function MenuPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <h3 className="font-semibold">Рекомендуемый порядок настройки:</h3>
+              <h3 className="font-semibold">
+                Рекомендуемый порядок настройки:
+              </h3>
               <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
                 <li>Создайте структуру категорий (иерархию)</li>
                 <li>Добавьте продукты и привяжите их к категориям</li>

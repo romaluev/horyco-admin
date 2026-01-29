@@ -1,19 +1,19 @@
 import { useMemo } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
 import { BaseError, BaseLoading } from '@/shared/ui'
 
+import { EmployeeTableActions } from '@/app/dashboard/staff/components/employee-table-actions'
 import {
   useGetEmployees,
   EmployeeTable,
   createEmployeeColumns,
 } from '@/entities/organization/employee'
 import { CreateEmployeeDialog } from '@/features/organization/employee-form'
-
-import { EmployeeTableActions } from '@/app/dashboard/staff/components/employee-table-actions'
 
 export const Route = createFileRoute('/dashboard/_layout/staff/employees')({
   component: EmployeesPage,
@@ -57,7 +57,9 @@ function EmployeesPage() {
         </div>
 
         {isLoading && <BaseLoading />}
-        {isError && <BaseError message={t('pages.employees.states.loadError')} />}
+        {isError && (
+          <BaseError message={t('pages.employees.states.loadError')} />
+        )}
 
         {employees.length === 0 && !isLoading && !isError && (
           <div className="flex flex-1 flex-col items-center justify-center gap-4">

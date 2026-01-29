@@ -8,11 +8,7 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { productApi } from './api'
 import { productKeys } from './query-keys'
 
-import type {
-  IProduct,
-  IProductsResponse,
-  IGetProductsParams,
-} from './types'
+import type { IProduct, IProductsResponse, IGetProductsParams } from './types'
 
 /**
  * Get all products with filters and pagination

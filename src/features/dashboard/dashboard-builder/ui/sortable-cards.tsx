@@ -6,6 +6,7 @@ import { IconGripVertical, IconX, IconTrendingUp } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
+
 import {
   KPI_CONFIG,
   WIDGET_CONFIG,
@@ -26,7 +27,14 @@ interface ISortableKpiCardProps {
 
 export function SortableKpiCard({ slot, onRemove }: ISortableKpiCardProps) {
   const { t } = useTranslation('dashboard')
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: slot.type,
   })
 
@@ -43,28 +51,35 @@ export function SortableKpiCard({ slot, onRemove }: ISortableKpiCardProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative overflow-hidden rounded-xl border bg-card p-4 shadow-sm',
+        'group bg-card relative overflow-hidden rounded-xl border p-4 shadow-sm',
         isDragging && 'opacity-0'
       )}
     >
       <button
         type="button"
         onClick={onRemove}
-        className="absolute right-1 top-1 z-10 flex size-6 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+        className="bg-background/80 text-muted-foreground hover:bg-destructive/10 hover:text-destructive absolute top-1 right-1 z-10 flex size-6 items-center justify-center rounded-full opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100"
       >
         <IconX className="size-3.5" />
       </button>
 
       <div className="flex items-start gap-3">
-        <button type="button" className="cursor-grab touch-none" {...attributes} {...listeners}>
-          <IconGripVertical className="size-4 text-muted-foreground" />
+        <button
+          type="button"
+          className="cursor-grab touch-none"
+          {...attributes}
+          {...listeners}
+        >
+          <IconGripVertical className="text-muted-foreground size-4" />
         </button>
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <div className={cn('rounded-lg p-1.5', config.bgColor)}>
               <Icon className={cn('size-4', config.color)} />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">{t(config.labelKey)}</span>
+            <span className="text-muted-foreground text-sm font-medium">
+              {t(config.labelKey)}
+            </span>
           </div>
           <div className="mt-2">
             <span className="text-xl font-bold">1,234,567</span>
@@ -96,15 +111,17 @@ export function KpiCardOverlay({ slot }: IKpiCardOverlayProps) {
   const Icon = config.icon
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card p-4 shadow-xl ring-2 ring-primary">
+    <div className="bg-card ring-primary overflow-hidden rounded-xl border p-4 shadow-xl ring-2">
       <div className="flex items-start gap-3">
-        <IconGripVertical className="size-4 text-muted-foreground" />
+        <IconGripVertical className="text-muted-foreground size-4" />
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <div className={cn('rounded-lg p-1.5', config.bgColor)}>
               <Icon className={cn('size-4', config.color)} />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">{t(config.labelKey)}</span>
+            <span className="text-muted-foreground text-sm font-medium">
+              {t(config.labelKey)}
+            </span>
           </div>
           <div className="mt-2">
             <span className="text-xl font-bold">1,234,567</span>
@@ -131,9 +148,19 @@ interface ISortableWidgetCardProps {
   onRemove: () => void
 }
 
-export function SortableWidgetCard({ widget, onRemove }: ISortableWidgetCardProps) {
+export function SortableWidgetCard({
+  widget,
+  onRemove,
+}: ISortableWidgetCardProps) {
   const { t } = useTranslation('dashboard')
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: widget.id,
   })
 
@@ -149,14 +176,14 @@ export function SortableWidgetCard({ widget, onRemove }: ISortableWidgetCardProp
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative overflow-hidden rounded-xl border bg-card shadow-sm',
+        'group bg-card relative overflow-hidden rounded-xl border shadow-sm',
         isDragging && 'opacity-0'
       )}
     >
-      <div className="absolute right-2 top-2 z-10 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute top-2 right-2 z-10 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
         <button
           type="button"
-          className="cursor-grab touch-none rounded-lg bg-background/80 p-1.5 text-muted-foreground backdrop-blur-sm hover:text-foreground"
+          className="bg-background/80 text-muted-foreground hover:text-foreground cursor-grab touch-none rounded-lg p-1.5 backdrop-blur-sm"
           {...attributes}
           {...listeners}
         >
@@ -165,15 +192,19 @@ export function SortableWidgetCard({ widget, onRemove }: ISortableWidgetCardProp
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg bg-background/80 p-1.5 text-muted-foreground backdrop-blur-sm hover:bg-destructive/10 hover:text-destructive"
+          className="bg-background/80 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg p-1.5 backdrop-blur-sm"
         >
           <IconX className="size-4" />
         </button>
       </div>
 
       <div className="border-b p-4">
-        <h4 className="font-semibold">{config ? t(config.titleKey) : widget.type}</h4>
-        <p className="text-sm text-muted-foreground">{config ? t(config.descriptionKey) : ''}</p>
+        <h4 className="font-semibold">
+          {config ? t(config.titleKey) : widget.type}
+        </h4>
+        <p className="text-muted-foreground text-sm">
+          {config ? t(config.descriptionKey) : ''}
+        </p>
       </div>
 
       <div className="h-48 p-4">
@@ -196,10 +227,14 @@ export function WidgetCardOverlay({ widget }: IWidgetCardOverlayProps) {
   const config = WIDGET_CONFIG[widget.type]
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-xl ring-2 ring-primary">
+    <div className="bg-card ring-primary overflow-hidden rounded-xl border shadow-xl ring-2">
       <div className="border-b p-4">
-        <h4 className="font-semibold">{config ? t(config.titleKey) : widget.type}</h4>
-        <p className="text-sm text-muted-foreground">{config ? t(config.descriptionKey) : ''}</p>
+        <h4 className="font-semibold">
+          {config ? t(config.titleKey) : widget.type}
+        </h4>
+        <p className="text-muted-foreground text-sm">
+          {config ? t(config.descriptionKey) : ''}
+        </p>
       </div>
       <div className="h-48 p-4">
         {config && <WidgetPreviewChart type={config.preview} />}

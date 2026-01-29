@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconDownload, IconSearch } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
@@ -62,10 +62,16 @@ export default function StockPage() {
   const summary = stockData?.summary ?? {
     totalItems: stockItems.length,
     lowStockCount: stockItems.filter(
-      (s) => s.quantity > 0 && s.item?.minStockLevel && s.quantity <= s.item.minStockLevel
+      (s) =>
+        s.quantity > 0 &&
+        s.item?.minStockLevel &&
+        s.quantity <= s.item.minStockLevel
     ).length,
     outOfStockCount: stockItems.filter((s) => s.quantity <= 0).length,
-    totalValue: stockItems.reduce((sum, s) => sum + s.quantity * s.averageCost, 0),
+    totalValue: stockItems.reduce(
+      (sum, s) => sum + s.quantity * s.averageCost,
+      0
+    ),
   }
 
   const handleClearFilters = () => {
@@ -82,12 +88,19 @@ export default function StockPage() {
     if (!warehouseId) {
       return (
         <div className="flex items-center justify-center rounded-lg border border-dashed py-16">
-          <p className="text-muted-foreground">{t('pages.stock.selectWarehouseMessage')}</p>
+          <p className="text-muted-foreground">
+            {t('pages.stock.selectWarehouseMessage')}
+          </p>
         </div>
       )
     }
     if (filteredStock.length === 0) {
-      return <EmptyStockState hasFilters={hasFilters} onClearFilters={handleClearFilters} />
+      return (
+        <EmptyStockState
+          hasFilters={hasFilters}
+          onClearFilters={handleClearFilters}
+        />
+      )
     }
     return <StockTable items={filteredStock} />
   }
@@ -113,13 +126,17 @@ export default function StockPage() {
         <div className="flex flex-wrap gap-4">
           <Select
             value={warehouseId ? String(warehouseId) : 'all'}
-            onValueChange={(val) => setWarehouseId(val === 'all' ? undefined : Number(val))}
+            onValueChange={(val) =>
+              setWarehouseId(val === 'all' ? undefined : Number(val))
+            }
           >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder={t('pages.stock.selectWarehouse')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.stock.allWarehouses')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.stock.allWarehouses')}
+              </SelectItem>
               {warehouses?.map((warehouse) => (
                 <SelectItem key={warehouse.id} value={String(warehouse.id)}>
                   {warehouse.name}
@@ -135,7 +152,9 @@ export default function StockPage() {
               <SelectValue placeholder={t('pages.stock.selectCategory')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.stock.allCategories')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.stock.allCategories')}
+              </SelectItem>
               {categoryOptions.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
@@ -143,18 +162,23 @@ export default function StockPage() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={status} onValueChange={(val) => setStatus(val as StockStatus)}>
+          <Select
+            value={status}
+            onValueChange={(val) => setStatus(val as StockStatus)}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Статус" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.stock.allProducts')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.stock.allProducts')}
+              </SelectItem>
               <SelectItem value="low">{t('pages.stock.lowStock')}</SelectItem>
               <SelectItem value="out">{t('pages.stock.outOfStock')}</SelectItem>
             </SelectContent>
           </Select>
-          <div className="relative flex-1 min-w-[200px]">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="relative min-w-[200px] flex-1">
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder={t('pages.stock.searchProduct')}
               value={search}

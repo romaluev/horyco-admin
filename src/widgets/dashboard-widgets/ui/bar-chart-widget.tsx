@@ -10,7 +10,10 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+} from '@/entities/dashboard/dashboard-widget'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface BarChartWidgetProps {
@@ -38,7 +41,7 @@ export function BarChartWidget({ data, config }: BarChartWidgetProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )
@@ -73,11 +76,7 @@ export function BarChartWidget({ data, config }: BarChartWidgetProps) {
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
-        <Bar
-          dataKey="value"
-          fill="var(--color-value)"
-          radius={[4, 4, 0, 0]}
-        />
+        <Bar dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
   )

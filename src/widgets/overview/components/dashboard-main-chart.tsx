@@ -2,8 +2,12 @@
 
 import { useMemo } from 'react'
 
+import {
+  IconTrendingDown,
+  IconTrendingUp,
+  IconMinus,
+} from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
-import { IconTrendingDown, IconTrendingUp, IconMinus } from '@tabler/icons-react'
 import {
   Area,
   AreaChart,
@@ -109,16 +113,19 @@ export function DashboardMainChart({
     }))
   }, [data])
 
-  const chartConfig = useMemo<ChartConfig>(() => ({
-    value: {
-      label: t(getKPILabelTranslationKey(metric)),
-      color: 'hsl(var(--primary))',
-    },
-    previous: {
-      label: 'Предыдущий период',
-      color: 'hsl(var(--muted-foreground))',
-    },
-  }), [metric, t])
+  const chartConfig = useMemo<ChartConfig>(
+    () => ({
+      value: {
+        label: t(getKPILabelTranslationKey(metric)),
+        color: 'hsl(var(--primary))',
+      },
+      previous: {
+        label: 'Предыдущий период',
+        color: 'hsl(var(--muted-foreground))',
+      },
+    }),
+    [metric, t]
+  )
 
   const changePercent = data?.changePercent ?? 0
   const isPositiveChange = changePercent > 0
@@ -155,7 +162,7 @@ export function DashboardMainChart({
           <CardDescription>{t('analytics.noDataForDisplay')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+          <div className="text-muted-foreground flex h-[350px] items-center justify-center">
             {t('analytics.dataUnavailable')}
           </div>
         </CardContent>
@@ -168,28 +175,36 @@ export function DashboardMainChart({
   return (
     <Card className={cn('relative overflow-hidden', className)}>
       {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="bg-background/50 absolute inset-0 z-10 flex items-center justify-center">
+          <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
         </div>
       )}
       <CardHeader className="flex flex-col gap-4 space-y-0 border-b py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col justify-center gap-1">
-          <CardTitle className="text-xl">{t(getKPILabelTranslationKey(metric))}</CardTitle>
+          <CardTitle className="text-xl">
+            {t(getKPILabelTranslationKey(metric))}
+          </CardTitle>
           <CardDescription className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-foreground">
+            <span className="text-foreground text-3xl font-bold">
               {formatValue(data.totalValue)}
             </span>
             <span
               className={cn(
                 'flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium',
-                isPositiveChange && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-                isNegativeChange && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-                !isPositiveChange && !isNegativeChange && 'bg-muted text-muted-foreground'
+                isPositiveChange &&
+                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+                isNegativeChange &&
+                  'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                !isPositiveChange &&
+                  !isNegativeChange &&
+                  'bg-muted text-muted-foreground'
               )}
             >
               {isPositiveChange && <IconTrendingUp className="size-4" />}
               {isNegativeChange && <IconTrendingDown className="size-4" />}
-              {!isPositiveChange && !isNegativeChange && <IconMinus className="size-4" />}
+              {!isPositiveChange && !isNegativeChange && (
+                <IconMinus className="size-4" />
+              )}
               {changePercent > 0 ? '+' : ''}
               {changePercent.toFixed(1)}%
             </span>
@@ -200,13 +215,13 @@ export function DashboardMainChart({
           type="single"
           value={activeGroupBy}
           onValueChange={handleGroupByChange}
-          className="rounded-lg border bg-muted/30 p-1"
+          className="bg-muted/30 rounded-lg border p-1"
         >
           {GROUPBY_OPTIONS.map((opt) => (
             <ToggleGroupItem
               key={opt.value}
               value={opt.value}
-              className="rounded-md px-3 text-sm data-[state=on]:bg-background data-[state=on]:shadow-sm"
+              className="data-[state=on]:bg-background rounded-md px-3 text-sm data-[state=on]:shadow-sm"
             >
               {opt.label}
             </ToggleGroupItem>
@@ -220,14 +235,29 @@ export function DashboardMainChart({
           className="aspect-auto h-[350px] w-full"
         >
           {activeChart === 'area' ? (
-            <AreaChart data={chartData} margin={{ left: 12, right: 12, top: 12, bottom: 0 }}>
+            <AreaChart
+              data={chartData}
+              margin={{ left: 12, right: 12, top: 12, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={PRIMARY_COLOR} stopOpacity={0.4} />
-                  <stop offset="100%" stopColor={PRIMARY_COLOR} stopOpacity={0.05} />
+                  <stop
+                    offset="0%"
+                    stopColor={PRIMARY_COLOR}
+                    stopOpacity={0.4}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={PRIMARY_COLOR}
+                    stopOpacity={0.05}
+                  />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                className="stroke-muted"
+              />
               <XAxis
                 dataKey="label"
                 tickLine={false}
@@ -248,7 +278,10 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
+                    formatter={(value) => [
+                      formatValue(Number(value)),
+                      t(getKPILabelTranslationKey(metric)),
+                    ]}
                   />
                 }
               />
@@ -261,8 +294,15 @@ export function DashboardMainChart({
               />
             </AreaChart>
           ) : activeChart === 'bar' ? (
-            <BarChart data={chartData} margin={{ left: 12, right: 12, top: 12, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+            <BarChart
+              data={chartData}
+              margin={{ left: 12, right: 12, top: 12, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                className="stroke-muted"
+              />
               <XAxis
                 dataKey="label"
                 tickLine={false}
@@ -283,19 +323,25 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
+                    formatter={(value) => [
+                      formatValue(Number(value)),
+                      t(getKPILabelTranslationKey(metric)),
+                    ]}
                   />
                 }
               />
-              <Bar
-                dataKey="value"
-                fill={PRIMARY_COLOR}
-                radius={[4, 4, 0, 0]}
-              />
+              <Bar dataKey="value" fill={PRIMARY_COLOR} radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : activeChart === 'line' ? (
-            <LineChart data={chartData} margin={{ left: 12, right: 12, top: 12, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+            <LineChart
+              data={chartData}
+              margin={{ left: 12, right: 12, top: 12, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                className="stroke-muted"
+              />
               <XAxis
                 dataKey="label"
                 tickLine={false}
@@ -316,7 +362,10 @@ export function DashboardMainChart({
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) => label}
-                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
+                    formatter={(value) => [
+                      formatValue(Number(value)),
+                      t(getKPILabelTranslationKey(metric)),
+                    ]}
                   />
                 }
               />
@@ -343,11 +392,7 @@ export function DashboardMainChart({
                 angleAxisId={0}
                 tick={false}
               />
-              <RadialBar
-                background
-                dataKey="value"
-                cornerRadius={10}
-              />
+              <RadialBar background dataKey="value" cornerRadius={10} />
               <text
                 x="50%"
                 y="50%"
@@ -365,7 +410,10 @@ export function DashboardMainChart({
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    formatter={(value) => [formatValue(Number(value)), t(getKPILabelTranslationKey(metric))]}
+                    formatter={(value) => [
+                      formatValue(Number(value)),
+                      t(getKPILabelTranslationKey(metric)),
+                    ]}
                   />
                 }
               />
@@ -388,21 +436,25 @@ export function DashboardMainChart({
   )
 }
 
-export function DashboardMainChartSkeleton({ className }: { className?: string }) {
+export function DashboardMainChartSkeleton({
+  className,
+}: {
+  className?: string
+}) {
   return (
     <Card className={className}>
       <CardHeader className="flex flex-col gap-4 space-y-0 border-b py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col justify-center gap-1">
-          <div className="h-6 w-32 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-6 w-32 animate-pulse rounded" />
           <div className="flex items-center gap-3">
-            <div className="h-9 w-40 animate-pulse rounded bg-muted" />
-            <div className="h-6 w-16 animate-pulse rounded-full bg-muted" />
+            <div className="bg-muted h-9 w-40 animate-pulse rounded" />
+            <div className="bg-muted h-6 w-16 animate-pulse rounded-full" />
           </div>
         </div>
-        <div className="h-9 w-[140px] animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-9 w-[140px] animate-pulse rounded" />
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:p-6">
-        <div className="h-[350px] w-full animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-[350px] w-full animate-pulse rounded" />
       </CardContent>
     </Card>
   )

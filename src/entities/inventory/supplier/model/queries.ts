@@ -43,7 +43,10 @@ export const useSupplierItems = (id: number) => {
 /**
  * Get price history for supplier
  */
-export const useSupplierPriceHistory = (id: number, params?: IGetPriceHistoryParams) => {
+export const useSupplierPriceHistory = (
+  id: number,
+  params?: IGetPriceHistoryParams
+) => {
   return useQuery({
     queryKey: supplierKeys.priceHistory(id, params),
     queryFn: () => supplierApi.getPriceHistory(id, params),

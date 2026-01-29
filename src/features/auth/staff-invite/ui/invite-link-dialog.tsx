@@ -18,7 +18,10 @@ import { Input } from '@/shared/ui/base/input'
 
 import { employeeApi } from '@/entities/organization/employee/model/api'
 
-import type { IEmployee, IGenerateInviteLinkResponse } from '@/entities/organization/employee'
+import type {
+  IEmployee,
+  IGenerateInviteLinkResponse,
+} from '@/entities/organization/employee'
 
 interface InviteLinkDialogProps {
   employee: IEmployee
@@ -33,7 +36,8 @@ export const InviteLinkDialog = ({
 }: InviteLinkDialogProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isRegenerating, setIsRegenerating] = useState(false)
-  const [inviteData, setInviteData] = useState<IGenerateInviteLinkResponse | null>(null)
+  const [inviteData, setInviteData] =
+    useState<IGenerateInviteLinkResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isCopied, setIsCopied] = useState(false)
 
@@ -104,7 +108,8 @@ export const InviteLinkDialog = ({
         <DialogHeader>
           <DialogTitle>Пригласительная ссылка</DialogTitle>
           <DialogDescription>
-            Отправьте эту ссылку сотруднику {employee.fullName} для установки пароля
+            Отправьте эту ссылку сотруднику {employee.fullName} для установки
+            пароля
           </DialogDescription>
         </DialogHeader>
 

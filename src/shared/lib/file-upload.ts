@@ -1,6 +1,10 @@
 import api from './axios'
 
-import type { EntityType, IFileMetadata, IFileVariants } from '@/shared/file/model/types'
+import type {
+  EntityType,
+  IFileMetadata,
+  IFileVariants,
+} from '@/shared/file/model/types'
 
 /**
  * Response from single file upload endpoint
@@ -68,15 +72,14 @@ export async function uploadFile({
   }
 
   // Don't set Content-Type header for FormData - let browser handle it
-  const axiosResponse = await api.post<{ success: boolean; data: FileUploadResponse }>(
-    `/files/upload?${params.toString()}`,
-    formData,
-    {
-      headers: {
-        'Content-Type': undefined,
-      },
-    }
-  )
+  const axiosResponse = await api.post<{
+    success: boolean
+    data: FileUploadResponse
+  }>(`/files/upload?${params.toString()}`, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
 
   return axiosResponse.data.data
 }

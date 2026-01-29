@@ -7,8 +7,8 @@ import {
   IconTrendingDown,
   IconArrowUpRight,
 } from '@tabler/icons-react'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { useTranslation } from 'react-i18next'
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -42,12 +42,15 @@ export function RevenueOverviewWidget({
     }))
   }, [data])
 
-  const chartConfig = useMemo(() => ({
-    value: {
-      label: t('kpiLabels.revenue'),
-      color: 'hsl(var(--chart-success))',
-    },
-  }), [t])
+  const chartConfig = useMemo(
+    () => ({
+      value: {
+        label: t('kpiLabels.revenue'),
+        color: 'hsl(var(--chart-success))',
+      },
+    }),
+    [t]
+  )
 
   const totalValue = data?.totalValue ?? 0
   const changePercent = data?.changePercent ?? 0
@@ -64,12 +67,16 @@ export function RevenueOverviewWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="flex items-start justify-between border-b p-5">
         <div>
-          <h3 className="text-lg font-semibold">{t('widgetTitles.revenueOverview')}</h3>
+          <h3 className="text-lg font-semibold">
+            {t('widgetTitles.revenueOverview')}
+          </h3>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className="text-3xl font-bold">{formatPrice(totalValue)}</span>
+            <span className="text-3xl font-bold">
+              {formatPrice(totalValue)}
+            </span>
             <span
               className={cn(
                 'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm font-medium',
@@ -78,8 +85,13 @@ export function RevenueOverviewWidget({
                   : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
               )}
             >
-              {isPositive ? <IconTrendingUp className="size-4" /> : <IconTrendingDown className="size-4" />}
-              {isPositive ? '+' : ''}{changePercent.toFixed(1)}%
+              {isPositive ? (
+                <IconTrendingUp className="size-4" />
+              ) : (
+                <IconTrendingDown className="size-4" />
+              )}
+              {isPositive ? '+' : ''}
+              {changePercent.toFixed(1)}%
             </span>
           </div>
         </div>
@@ -91,14 +103,35 @@ export function RevenueOverviewWidget({
 
       <div className="flex-1 p-4">
         <ChartContainer config={chartConfig} className="h-[200px] w-full">
-          <AreaChart data={chartData} margin={{ left: 0, right: 12, top: 12, bottom: 0 }}>
+          <AreaChart
+            data={chartData}
+            margin={{ left: 0, right: 12, top: 12, bottom: 0 }}
+          >
             <defs>
-              <linearGradient id="revenueWidgetGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--chart-success))" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="hsl(var(--chart-success))" stopOpacity={0.05} />
+              <linearGradient
+                id="revenueWidgetGradient"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="hsl(var(--chart-success))"
+                  stopOpacity={0.4}
+                />
+                <stop
+                  offset="100%"
+                  stopColor="hsl(var(--chart-success))"
+                  stopOpacity={0.05}
+                />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              className="stroke-muted"
+            />
             <XAxis
               dataKey="label"
               tickLine={false}
@@ -120,7 +153,10 @@ export function RevenueOverviewWidget({
               content={
                 <ChartTooltipContent
                   labelFormatter={(label) => label}
-                  formatter={(value) => [formatPrice(Number(value)), t('kpiLabels.revenue')]}
+                  formatter={(value) => [
+                    formatPrice(Number(value)),
+                    t('kpiLabels.revenue'),
+                  ]}
                 />
               }
             />
@@ -141,19 +177,19 @@ export function RevenueOverviewWidget({
 
 function RevenueOverviewWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="flex items-start justify-between border-b p-5">
         <div className="space-y-2">
-          <div className="h-6 w-32 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-6 w-32 animate-pulse rounded" />
           <div className="flex items-center gap-3">
-            <div className="h-9 w-40 animate-pulse rounded bg-muted" />
-            <div className="h-6 w-16 animate-pulse rounded-full bg-muted" />
+            <div className="bg-muted h-9 w-40 animate-pulse rounded" />
+            <div className="bg-muted h-6 w-16 animate-pulse rounded-full" />
           </div>
         </div>
-        <div className="h-8 w-20 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-8 w-20 animate-pulse rounded" />
       </div>
       <div className="flex-1 p-4">
-        <div className="h-[200px] animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-[200px] animate-pulse rounded" />
       </div>
     </div>
   )

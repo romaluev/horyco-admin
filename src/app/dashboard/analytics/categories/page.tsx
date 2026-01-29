@@ -9,13 +9,9 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
-import {
-  IconArrowDown,
-  IconArrowUp,
-  IconMinus,
-} from '@tabler/icons-react'
+import { IconArrowDown, IconArrowUp, IconMinus } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -42,7 +38,12 @@ import type { ICategoryAnalyticsItem } from '@/features/dashboard/analytics'
 // TYPES
 // ============================================
 
-type SortColumn = 'name' | 'productCount' | 'orders' | 'revenue' | 'revenueShare'
+type SortColumn =
+  | 'name'
+  | 'productCount'
+  | 'orders'
+  | 'revenue'
+  | 'revenueShare'
 type SortDirection = 'asc' | 'desc'
 
 // ============================================
@@ -53,7 +54,8 @@ export default function CategoriesAnalyticsPage() {
   const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
+  const [sortDirection, setSortDirection] =
+    React.useState<SortDirection>('desc')
 
   const { data, isLoading, error, refetch } = useCategoryAnalytics({
     period: { type: period },
@@ -123,7 +125,7 @@ export default function CategoriesAnalyticsPage() {
 
       {/* Summary */}
       {data && (
-        <div className="mt-4 text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-4 text-sm">
           {t('categories.summary', {
             count: data.summary?.totalCategories ?? categories.length,
             revenue: formatPrice(data.summary?.totalRevenue ?? 0),
@@ -198,23 +200,33 @@ function CategoriesTable({
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">{t('categories.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {categories.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell
+                colSpan={7}
+                className="text-muted-foreground h-24 text-center"
+              >
                 {t('categories.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
             categories.map((category, index) => (
-              <TableRow key={category.categoryId ?? index} className="cursor-pointer hover:bg-muted/50">
-                <TableCell className="font-medium text-muted-foreground">
+              <TableRow
+                key={category.categoryId ?? index}
+                className="hover:bg-muted/50 cursor-pointer"
+              >
+                <TableCell className="text-muted-foreground font-medium">
                   {index + 1}
                 </TableCell>
-                <TableCell className="font-medium">{category.name ?? 'N/A'}</TableCell>
+                <TableCell className="font-medium">
+                  {category.name ?? 'N/A'}
+                </TableCell>
                 <TableCell className="text-right">
                   {(category.productCount ?? 0).toLocaleString('ru-RU')}
                 </TableCell>
@@ -224,9 +236,13 @@ function CategoriesTable({
                 <TableCell className="text-right font-medium">
                   {formatPrice(category.revenue ?? 0)}
                 </TableCell>
-                <TableCell className="text-right">{category.revenueShare ?? 0}%</TableCell>
                 <TableCell className="text-right">
-                  <ChangeIndicator value={category.revenueChange?.percent ?? 0} />
+                  {category.revenueShare ?? 0}%
+                </TableCell>
+                <TableCell className="text-right">
+                  <ChangeIndicator
+                    value={category.revenueChange?.percent ?? 0}
+                  />
                 </TableCell>
               </TableRow>
             ))
@@ -262,18 +278,22 @@ function SortableHeader({
 
   return (
     <TableHead
-      className={cn('cursor-pointer select-none hover:bg-muted/50', className)}
+      className={cn('hover:bg-muted/50 cursor-pointer select-none', className)}
       onClick={() => onSort(column)}
     >
-      <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end')}>
+      <div
+        className={cn(
+          'flex items-center gap-1',
+          className?.includes('text-right') && 'justify-end'
+        )}
+      >
         {label}
-        {isActive && (
-          sortDirection === 'asc' ? (
+        {isActive &&
+          (sortDirection === 'asc' ? (
             <IconArrowUp className="size-3" />
           ) : (
             <IconArrowDown className="size-3" />
-          )
-        )}
+          ))}
       </div>
     </TableHead>
   )
@@ -323,11 +343,21 @@ function CategoriesTableSkeleton() {
           <TableRow>
             <TableHead className="w-[60px]">#</TableHead>
             <TableHead>{t('categories.table.category')}</TableHead>
-            <TableHead className="text-right">{t('categories.table.productCount')}</TableHead>
-            <TableHead className="text-right">{t('categories.table.orders')}</TableHead>
-            <TableHead className="text-right">{t('categories.table.revenue')}</TableHead>
-            <TableHead className="text-right">{t('categories.table.share')}</TableHead>
-            <TableHead className="text-right">{t('categories.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.productCount')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.orders')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.revenue')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.share')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('categories.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

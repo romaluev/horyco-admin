@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import { BaseLoading, ViewModeToggler } from '@/shared/ui'

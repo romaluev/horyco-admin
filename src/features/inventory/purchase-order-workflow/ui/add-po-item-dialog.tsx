@@ -1,14 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useAddPOItem } from '@/entities/inventory/purchase-order/model/mutations'
-import { useGetInventoryItems } from '@/entities/inventory/inventory-item/model/queries'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -17,8 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
 import {
   Form,
   FormControl,
@@ -27,6 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
@@ -34,6 +32,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+
+import { useGetInventoryItems } from '@/entities/inventory/inventory-item/model/queries'
+import { useAddPOItem } from '@/entities/inventory/purchase-order/model/mutations'
 
 const addItemSchema = z.object({
   itemId: z.string().min(1, 'Выберите товар'),
@@ -125,17 +126,17 @@ export function AddPOItemDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="itemId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Товар</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={handleItemChange}
-                  >
+                  <Select value={field.value} onValueChange={handleItemChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите товар" />
@@ -173,7 +174,9 @@ export function AddPOItemDialog({
                         min={0.01}
                         step="any"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -209,7 +212,9 @@ export function AddPOItemDialog({
                         min={0}
                         step="100"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -230,7 +235,9 @@ export function AddPOItemDialog({
                         max={100}
                         step="1"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />

@@ -99,7 +99,7 @@ export default function WriteoffsPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <div className="relative min-w-[200px] flex-1">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Поиск по номеру..."
               value={search}
@@ -110,7 +110,9 @@ export default function WriteoffsPage() {
 
           <Select
             value={status || 'all'}
-            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as WriteoffStatus))}
+            onValueChange={(val) =>
+              setStatus(val === 'all' ? '' : (val as WriteoffStatus))
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Все статусы" />
@@ -127,7 +129,9 @@ export default function WriteoffsPage() {
 
           <Select
             value={reason || 'all'}
-            onValueChange={(val) => setReason(val === 'all' ? '' : (val as WriteoffReason))}
+            onValueChange={(val) =>
+              setReason(val === 'all' ? '' : (val as WriteoffReason))
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Все причины" />
@@ -151,12 +155,18 @@ export default function WriteoffsPage() {
             <CardContent className="py-4">
               <div className="flex flex-wrap gap-6">
                 <div>
-                  <p className="text-sm text-muted-foreground">Всего списано</p>
-                  <p className="text-xl font-bold">{formatCurrency(summary.total)}</p>
+                  <p className="text-muted-foreground text-sm">Всего списано</p>
+                  <p className="text-xl font-bold">
+                    {formatCurrency(summary.total)}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Ожидают согласования</p>
-                  <p className="text-xl font-bold text-yellow-600">{formatCurrency(summary.pending)}</p>
+                  <p className="text-muted-foreground text-sm">
+                    Ожидают согласования
+                  </p>
+                  <p className="text-xl font-bold text-yellow-600">
+                    {formatCurrency(summary.pending)}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -189,9 +199,13 @@ export default function WriteoffsPage() {
               <TableBody>
                 {filteredWriteoffs.map((writeoff) => (
                   <TableRow key={writeoff.id}>
-                    <TableCell className="font-medium">{writeoff.writeoffNumber}</TableCell>
+                    <TableCell className="font-medium">
+                      {writeoff.writeoffNumber}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {format(new Date(writeoff.createdAt), 'd MMM', { locale: ru })}
+                      {format(new Date(writeoff.createdAt), 'd MMM', {
+                        locale: ru,
+                      })}
                     </TableCell>
                     <TableCell>
                       <WriteoffReasonBadge reason={writeoff.reason} />
@@ -207,7 +221,11 @@ export default function WriteoffsPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dashboard/inventory/writeoffs/${writeoff.id}` as any}>
+                        <Link
+                          to={
+                            `/dashboard/inventory/writeoffs/${writeoff.id}` as any
+                          }
+                        >
                           Открыть
                         </Link>
                       </Button>
@@ -225,11 +243,11 @@ export default function WriteoffsPage() {
 
 const EmptyWriteoffsState = ({ hasFilters }: { hasFilters: boolean }) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconTrash className="h-12 w-12 text-muted-foreground/50" />
+    <IconTrash className="text-muted-foreground/50 h-12 w-12" />
     <h3 className="mt-4 text-lg font-semibold">
       {hasFilters ? 'Списания не найдены' : 'Нет списаний'}
     </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+    <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
       {hasFilters
         ? 'Попробуйте изменить параметры поиска или фильтры.'
         : 'Создайте акт списания для учёта убытков и потерь.'}

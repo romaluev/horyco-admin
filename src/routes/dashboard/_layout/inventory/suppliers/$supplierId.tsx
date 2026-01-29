@@ -1,9 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import SupplierDetailPage from '@/app/dashboard/inventory/suppliers/[id]/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/suppliers/$supplierId')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/inventory/suppliers/$supplierId'
+)({
   component: SupplierDetailRoute,
 })
 

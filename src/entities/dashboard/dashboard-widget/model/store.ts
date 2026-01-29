@@ -7,11 +7,7 @@ import {
   WIDGET_SIZE_MAP,
 } from './constants'
 
-import type {
-  DashboardConfig,
-  WidgetConfig,
-  WidgetLayoutItem,
-} from './types'
+import type { DashboardConfig, WidgetConfig, WidgetLayoutItem } from './types'
 
 interface DashboardState {
   // State
@@ -29,10 +25,7 @@ interface DashboardState {
   toggleEditMode: () => void
 
   // Widget operations
-  addWidget: (
-    widget: WidgetConfig,
-    position?: { x: number; y: number }
-  ) => void
+  addWidget: (widget: WidgetConfig, position?: { x: number; y: number }) => void
   updateWidget: (widgetId: string, updates: Partial<WidgetConfig>) => void
   removeWidget: (widgetId: string) => void
   duplicateWidget: (widgetId: string) => void

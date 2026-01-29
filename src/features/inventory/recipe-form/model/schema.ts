@@ -2,7 +2,10 @@ import * as z from 'zod'
 
 export const recipeFormSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
-  outputQuantity: z.number().min(0.01, 'Количество должно быть больше 0').default(1),
+  outputQuantity: z
+    .number()
+    .min(0.01, 'Количество должно быть больше 0')
+    .default(1),
   outputUnit: z.string().optional(),
   prepTimeMinutes: z.number().min(0).optional(),
   isActive: z.boolean().default(true),

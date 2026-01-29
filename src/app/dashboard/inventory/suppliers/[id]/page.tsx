@@ -1,10 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -20,8 +18,10 @@ import {
 } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,12 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/ui/base/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
@@ -149,7 +144,10 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
             </Button>
             <div>
               <div className="flex items-center gap-3">
-                <Heading title={supplier.name} description={supplier.code || 'Поставщик'} />
+                <Heading
+                  title={supplier.name}
+                  description={supplier.code || 'Поставщик'}
+                />
                 <Badge variant={supplier.isActive ? 'default' : 'secondary'}>
                   {supplier.isActive ? 'Активен' : 'Неактивен'}
                 </Badge>
@@ -224,12 +222,16 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
               )}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Срок доставки</span>
-                <span className="font-medium">{supplier.leadTimeDays} дней</span>
+                <span className="font-medium">
+                  {supplier.leadTimeDays} дней
+                </span>
               </div>
               {supplier.minimumOrder && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Мин. заказ</span>
-                  <span className="font-medium">{formatCurrency(supplier.minimumOrder)}</span>
+                  <span className="font-medium">
+                    {formatCurrency(supplier.minimumOrder)}
+                  </span>
                 </div>
               )}
             </CardContent>
@@ -257,7 +259,7 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                   </span>
                   <a
                     href={`tel:${supplier.phone}`}
-                    className="font-medium text-primary hover:underline"
+                    className="text-primary font-medium hover:underline"
                   >
                     {supplier.phone}
                   </a>
@@ -271,14 +273,14 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                   </span>
                   <a
                     href={`mailto:${supplier.email}`}
-                    className="font-medium text-primary hover:underline"
+                    className="text-primary font-medium hover:underline"
                   >
                     {supplier.email}
                   </a>
                 </div>
               )}
               {supplier.address && (
-                <div className="pt-2 border-t">
+                <div className="border-t pt-2">
                   <span className="text-muted-foreground flex items-center gap-1 text-sm">
                     <IconMapPin className="h-3 w-3" />
                     Адрес
@@ -300,7 +302,9 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Общая сумма</span>
-                <span className="font-medium">{formatCurrency(supplier.totalAmount)}</span>
+                <span className="font-medium">
+                  {formatCurrency(supplier.totalAmount)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Средний чек</span>
@@ -357,7 +361,7 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                 <TableBody>
                   {!items?.length ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
+                      <TableCell colSpan={6} className="py-8 text-center">
                         Нет товаров в каталоге
                       </TableCell>
                     </TableRow>
@@ -367,7 +371,7 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                         <TableCell>
                           <div>
                             <p className="font-medium">{item.itemName}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               {item.itemUnit}
                             </p>
                           </div>
@@ -383,9 +387,9 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                         </TableCell>
                         <TableCell className="text-center">
                           {item.isPreferred ? (
-                            <IconStarFilled className="h-4 w-4 text-amber-500 mx-auto" />
+                            <IconStarFilled className="mx-auto h-4 w-4 text-amber-500" />
                           ) : (
-                            <IconStar className="h-4 w-4 text-muted-foreground mx-auto" />
+                            <IconStar className="text-muted-foreground mx-auto h-4 w-4" />
                           )}
                         </TableCell>
                         <TableCell>
@@ -413,8 +417,8 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                                     Удалить товар из каталога?
                                   </AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Товар &quot;{item.itemName}&quot; будет удалён из
-                                    каталога поставщика.
+                                    Товар &quot;{item.itemName}&quot; будет
+                                    удалён из каталога поставщика.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -456,7 +460,7 @@ export default function SupplierDetailPage({ id: paramId }: PageProps) {
                 <TableBody>
                   {!priceHistory?.length ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
+                      <TableCell colSpan={6} className="py-8 text-center">
                         История цен пуста
                       </TableCell>
                     </TableRow>

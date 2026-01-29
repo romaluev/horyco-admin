@@ -8,9 +8,9 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -84,7 +84,9 @@ export const CreateModifierGroupDialog = ({
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('components.modifierGroup.create.title')}</DialogTitle>
+          <DialogTitle>
+            {t('components.modifierGroup.create.title')}
+          </DialogTitle>
           <DialogDescription>
             {t('components.modifierGroup.create.description')}
           </DialogDescription>
@@ -97,9 +99,16 @@ export const CreateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.modifierGroup.create.nameLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.modifierGroup.create.nameLabel')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('components.modifierGroup.create.namePlaceholder')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'components.modifierGroup.create.namePlaceholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +121,9 @@ export const CreateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('components.modifierGroup.create.minLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.modifierGroup.create.minLabel')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -135,7 +146,9 @@ export const CreateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('components.modifierGroup.create.maxLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.modifierGroup.create.maxLabel')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -160,7 +173,9 @@ export const CreateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <FormLabel>{t('components.modifierGroup.create.requiredLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.modifierGroup.create.requiredLabel')}
+                    </FormLabel>
                     <FormDescription>
                       {t('components.modifierGroup.create.requiredDescription')}
                     </FormDescription>
@@ -185,7 +200,9 @@ export const CreateModifierGroupDialog = ({
                 {t('components.modifierGroup.create.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('components.modifierGroup.create.submitting') : t('components.modifierGroup.create.submit')}
+                {isPending
+                  ? t('components.modifierGroup.create.submitting')
+                  : t('components.modifierGroup.create.submit')}
               </Button>
             </div>
           </form>

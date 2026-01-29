@@ -2,7 +2,16 @@
 
 import { useState } from 'react'
 
-import { BaseError, BaseLoading, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui'
+import {
+  BaseError,
+  BaseLoading,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui'
 
 import { EmployeePermissionGrid } from './employee-permission-grid'
 import { PermissionCopyDialog } from './permission-copy-dialog'
@@ -37,9 +46,7 @@ export const BranchPermissionManager = ({
   const [showCopyDialog, setShowCopyDialog] = useState(false)
 
   if (!selectedBranchId) {
-    return (
-      <BaseError message="Нет доступных филиалов для выбора" />
-    )
+    return <BaseError message="Нет доступных филиалов для выбора" />
   }
 
   const selectedPermissionIds = currentPermissions[selectedBranchId] || []

@@ -170,7 +170,9 @@ export const productApi = {
    * Bulk availability update
    * PATCH /admin/menu/products/bulk-availability
    */
-  async bulkUpdateAvailability(data: IBulkAvailabilityUpdateDto): Promise<void> {
+  async bulkUpdateAvailability(
+    data: IBulkAvailabilityUpdateDto
+  ): Promise<void> {
     await api.patch('/admin/menu/products/bulk-availability', data)
   },
 
@@ -221,7 +223,6 @@ export const productApi = {
       data
     )
   },
-
 }
 
 /**

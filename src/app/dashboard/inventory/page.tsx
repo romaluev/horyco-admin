@@ -1,14 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
-import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { RefreshCw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
 import {
@@ -40,23 +39,30 @@ export default function InventoryDashboardPage() {
   const searchParams = useSearchParams()
   const warehouseIdParam = searchParams.get('warehouseId')
 
-  const { data: warehouses, isLoading: isWarehousesLoading } = useGetWarehouses()
+  const { data: warehouses, isLoading: isWarehousesLoading } =
+    useGetWarehouses()
 
   // Auto-select default warehouse or first one
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | undefined>(
-    warehouseIdParam ? Number(warehouseIdParam) : undefined
-  )
+  const [selectedWarehouse, setSelectedWarehouse] = useState<
+    number | undefined
+  >(warehouseIdParam ? Number(warehouseIdParam) : undefined)
 
   // Track last refresh time
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   // Get stock summary to check if inventory is empty
-  const { data: summary, refetch: refetchSummary } = useStockSummary(selectedWarehouse)
+  const { data: summary, refetch: refetchSummary } =
+    useStockSummary(selectedWarehouse)
 
   // Auto-select default warehouse when warehouses load
   useEffect(() => {
-    if (warehouses && warehouses.length > 0 && !selectedWarehouse && !warehouseIdParam) {
+    if (
+      warehouses &&
+      warehouses.length > 0 &&
+      !selectedWarehouse &&
+      !warehouseIdParam
+    ) {
       // Find default warehouse (isDefault=true) or first active one
       const defaultWarehouse =
         warehouses.find((w) => w.isDefault) ||
@@ -64,9 +70,12 @@ export default function InventoryDashboardPage() {
         warehouses[0]
       if (defaultWarehouse) {
         setSelectedWarehouse(defaultWarehouse.id)
-        router.replace(`/dashboard/inventory?warehouseId=${defaultWarehouse.id}`, {
-          scroll: false,
-        })
+        router.replace(
+          `/dashboard/inventory?warehouseId=${defaultWarehouse.id}`,
+          {
+            scroll: false,
+          }
+        )
       }
     }
   }, [warehouses, selectedWarehouse, warehouseIdParam, router])
@@ -109,10 +118,13 @@ export default function InventoryDashboardPage() {
             description={t('pages.dashboard.description')}
           />
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <span>
                 {t('pages.dashboard.updated')}{' '}
-                {formatDistanceToNow(lastRefresh, { addSuffix: true, locale: ru })}
+                {formatDistanceToNow(lastRefresh, {
+                  addSuffix: true,
+                  locale: ru,
+                })}
               </span>
               <Button
                 variant="ghost"
@@ -121,7 +133,9 @@ export default function InventoryDashboardPage() {
                 onClick={handleRefresh}
                 disabled={isRefreshing}
               >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
+                />
               </Button>
             </div>
             <Select
@@ -130,7 +144,9 @@ export default function InventoryDashboardPage() {
               disabled={isWarehousesLoading || !warehouses?.length}
             >
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder={t('pages.dashboard.selectWarehouse')} />
+                <SelectValue
+                  placeholder={t('pages.dashboard.selectWarehouse')}
+                />
               </SelectTrigger>
               <SelectContent>
                 {warehouses?.map((warehouse) => (

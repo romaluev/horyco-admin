@@ -2,8 +2,12 @@
 
 import { useMemo } from 'react'
 
+import {
+  IconTrendingDown,
+  IconTrendingUp,
+  IconMinus,
+} from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
-import { IconTrendingDown, IconTrendingUp, IconMinus } from '@tabler/icons-react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { KpiType } from '@/shared/api/graphql'
@@ -68,9 +72,13 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
   const isNegativeChange = changePercent < 0
 
   const formatValue = (value: number) => {
-    if (metric === KpiType.REVENUE || metric === KpiType.AVG_CHECK ||
-        metric === KpiType.TIPS || metric === KpiType.REFUNDS ||
-        metric === KpiType.MARGIN) {
+    if (
+      metric === KpiType.REVENUE ||
+      metric === KpiType.AVG_CHECK ||
+      metric === KpiType.TIPS ||
+      metric === KpiType.REFUNDS ||
+      metric === KpiType.MARGIN
+    ) {
       return formatPrice(value)
     }
     return value.toLocaleString('ru-RU')
@@ -84,7 +92,7 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
           <CardDescription>{t('analytics.noDataForDisplay')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[300px] items-center justify-center text-muted-foreground">
+          <div className="text-muted-foreground flex h-[300px] items-center justify-center">
             {t('analytics.dataUnavailable')}
           </div>
         </CardContent>
@@ -133,11 +141,7 @@ export function DashboardChart({ data, metric }: IDashboardChartProps) {
           >
             <defs>
               <linearGradient id="fillValue" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#fe4a49"
-                  stopOpacity={1}
-                />
+                <stop offset="5%" stopColor="#fe4a49" stopOpacity={1} />
                 <stop offset="95%" stopColor="#fe4a49" stopOpacity={0.1} />
               </linearGradient>
             </defs>

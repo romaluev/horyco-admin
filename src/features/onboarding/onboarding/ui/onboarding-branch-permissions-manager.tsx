@@ -33,7 +33,7 @@ interface OnboardingBranchPermissionsManagerProps {
  * Allows selecting branches and assigning permissions to each branch
  * Does not support permission copy - simpler UI for onboarding
  */
-// eslint-disable-next-line max-lines-per-function
+
 export const OnboardingBranchPermissionsManager = ({
   branches,
   onBranchPermissionsChange,

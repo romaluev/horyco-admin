@@ -1,12 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useAddUnitConversion } from '@/entities/inventory/inventory-item/model/mutations'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -15,9 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Form,
   FormControl,
@@ -27,6 +23,10 @@ import {
   FormMessage,
   FormDescription,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useAddUnitConversion } from '@/entities/inventory/inventory-item/model/mutations'
 
 const addConversionSchema = z.object({
   fromUnit: z.string().min(1, 'Укажите исходную единицу'),
@@ -82,7 +82,12 @@ export function AddUnitConversionDialog({
       {
         onSuccess: () => {
           onOpenChange(false)
-          form.reset({ fromUnit: baseUnit, toUnit: '', conversionFactor: 1, notes: '' })
+          form.reset({
+            fromUnit: baseUnit,
+            toUnit: '',
+            conversionFactor: 1,
+            notes: '',
+          })
           onSuccess?.()
         },
       }
@@ -100,7 +105,10 @@ export function AddUnitConversionDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -149,7 +157,8 @@ export function AddUnitConversionDialog({
                     />
                   </FormControl>
                   <FormDescription>
-                    Сколько {toUnit || 'целевых единиц'} в 1 {fromUnit || 'исходной единице'}
+                    Сколько {toUnit || 'целевых единиц'} в 1{' '}
+                    {fromUnit || 'исходной единице'}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

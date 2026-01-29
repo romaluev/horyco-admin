@@ -2,9 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useSendPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
-import type { IPurchaseOrder } from '@/entities/inventory/purchase-order/model/types'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +12,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useSendPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
+
+import type { IPurchaseOrder } from '@/entities/inventory/purchase-order/model/types'
 
 interface SendPODialogProps {
   order: IPurchaseOrder
@@ -55,8 +56,8 @@ export function SendPODialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                Заказ <strong>{order.poNumber}</strong> будет отправлен поставщику{' '}
-                <strong>{order.supplierName}</strong>.
+                Заказ <strong>{order.poNumber}</strong> будет отправлен
+                поставщику <strong>{order.supplierName}</strong>.
               </p>
               <p>После отправки заказ нельзя будет редактировать.</p>
               <div className="bg-muted mt-4 rounded-md p-3">

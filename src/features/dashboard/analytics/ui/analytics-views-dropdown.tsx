@@ -13,9 +13,9 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconCheck, IconPin, IconPlus, IconSettings } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -30,8 +30,8 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useViews } from '@/entities/dashboard/view'
 
-import { useDefaultViews, useViewAccess } from '../model/hooks'
 import { ViewsUpgradePrompt } from './locked-page-state'
+import { useDefaultViews, useViewAccess } from '../model/hooks'
 
 import type { AnalyticsPageCode, IDefaultView } from '../model/types'
 import type { IView } from '@/shared/api/graphql'
@@ -151,7 +151,7 @@ export function AnalyticsViewsDropdown({
         {/* Pinned Views */}
         {sortedViews.pinned.length > 0 && (
           <>
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
+            <DropdownMenuLabel className="text-muted-foreground text-xs">
               {t('views.pinned')}
             </DropdownMenuLabel>
             {sortedViews.pinned.map((view) => (
@@ -170,7 +170,7 @@ export function AnalyticsViewsDropdown({
         {/* Default Views */}
         {sortedViews.default.length > 0 && (
           <>
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
+            <DropdownMenuLabel className="text-muted-foreground text-xs">
               {t('views.default')}
             </DropdownMenuLabel>
             {sortedViews.default.map((view) => (
@@ -188,7 +188,7 @@ export function AnalyticsViewsDropdown({
         {/* Custom Views */}
         {sortedViews.custom.length > 0 && (
           <>
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
+            <DropdownMenuLabel className="text-muted-foreground text-xs">
               {t('views.custom')}
             </DropdownMenuLabel>
             {sortedViews.custom.map((view) => (
@@ -206,11 +206,14 @@ export function AnalyticsViewsDropdown({
         {canCreateViews ? (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSaveClick} disabled={hasReachedLimit}>
+            <DropdownMenuItem
+              onClick={handleSaveClick}
+              disabled={hasReachedLimit}
+            >
               <IconPlus className="mr-2 size-4" />
               {t('views.save')}
               {hasReachedLimit && (
-                <span className="ml-auto text-xs text-muted-foreground">
+                <span className="text-muted-foreground ml-auto text-xs">
                   {t('views.limitReached')}
                 </span>
               )}
@@ -249,7 +252,12 @@ interface IViewMenuItemProps {
   onClick: () => void
 }
 
-function ViewMenuItem({ view, isSelected, isPinned, onClick }: IViewMenuItemProps) {
+function ViewMenuItem({
+  view,
+  isSelected,
+  isPinned,
+  onClick,
+}: IViewMenuItemProps) {
   return (
     <DropdownMenuItem onClick={onClick} className="justify-between">
       <div className="flex items-center gap-2">
@@ -257,7 +265,7 @@ function ViewMenuItem({ view, isSelected, isPinned, onClick }: IViewMenuItemProp
         {!isSelected && <span className="size-4" />}
         <span className="truncate">{view.name}</span>
       </div>
-      {isPinned && <IconPin className="size-3 text-muted-foreground" />}
+      {isPinned && <IconPin className="text-muted-foreground size-3" />}
     </DropdownMenuItem>
   )
 }
@@ -268,7 +276,11 @@ interface IDefaultViewMenuItemProps {
   onClick: () => void
 }
 
-function DefaultViewMenuItem({ view, isSelected, onClick }: IDefaultViewMenuItemProps) {
+function DefaultViewMenuItem({
+  view,
+  isSelected,
+  onClick,
+}: IDefaultViewMenuItemProps) {
   return (
     <DropdownMenuItem onClick={onClick} className="justify-between">
       <div className="flex items-center gap-2">

@@ -27,9 +27,11 @@ export const TOKEN_KEYS = {
 // Token Getters
 // ============================================================================
 
-export const getAccessToken = (): string | undefined => Cookies.get(TOKEN_KEYS.ACCESS)
+export const getAccessToken = (): string | undefined =>
+  Cookies.get(TOKEN_KEYS.ACCESS)
 
-export const getRefreshToken = (): string | undefined => Cookies.get(TOKEN_KEYS.REFRESH)
+export const getRefreshToken = (): string | undefined =>
+  Cookies.get(TOKEN_KEYS.REFRESH)
 
 export const getTokenExpiresAt = (): number | null => {
   const expiresAt = Cookies.get(TOKEN_KEYS.EXPIRES_AT)
@@ -121,7 +123,11 @@ export const refreshAccessToken = async (apiUrl: string): Promise<string> => {
 
       // Handle both wrapped { data: {...} } and flat response structures
       const tokenData = responseData.data ?? responseData
-      const { accessToken, refreshToken: newRefreshToken, expiresIn } = tokenData
+      const {
+        accessToken,
+        refreshToken: newRefreshToken,
+        expiresIn,
+      } = tokenData
 
       storeTokens(accessToken, newRefreshToken, expiresIn)
 

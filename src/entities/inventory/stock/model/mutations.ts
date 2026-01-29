@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
 
 import { stockApi } from './api'
@@ -50,7 +51,8 @@ export const useAcknowledgeAllAlerts = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (warehouseId: number) => stockApi.acknowledgeAllAlerts(warehouseId),
+    mutationFn: (warehouseId: number) =>
+      stockApi.acknowledgeAllAlerts(warehouseId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: stockKeys.alerts() })
       toast.success(`Подтверждено ${data.acknowledged} уведомлений`)

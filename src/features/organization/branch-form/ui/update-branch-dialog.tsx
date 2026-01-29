@@ -17,7 +17,11 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Form } from '@/shared/ui/base/form'
 
-import { useUpdateBranch, type IBranch, type IUpdateBranchDto } from '@/entities/organization/branch'
+import {
+  useUpdateBranch,
+  type IBranch,
+  type IUpdateBranchDto,
+} from '@/entities/organization/branch'
 
 import { BranchFormFields } from './branch-form-fields'
 import { getBranchFormDefaults } from '../lib/get-branch-form-defaults'
@@ -71,7 +75,9 @@ export const UpdateBranchDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('branchForm.title.edit')}</DialogTitle>
-          <DialogDescription>{t('branchForm.description.edit')}</DialogDescription>
+          <DialogDescription>
+            {t('branchForm.description.edit')}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -88,7 +94,9 @@ export const UpdateBranchDialog = ({
                 {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('common.actions.saving') : t('branchForm.actions.save')}
+                {isPending
+                  ? t('common.actions.saving')
+                  : t('branchForm.actions.save')}
               </Button>
             </DialogFooter>
           </form>

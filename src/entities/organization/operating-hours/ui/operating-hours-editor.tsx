@@ -36,8 +36,18 @@ interface OperatingHoursEditorProps {
   onSuccess?: () => void
 }
 
-export function OperatingHoursEditor({ branchId, onSuccess }: OperatingHoursEditorProps) {
-  const { operatingHours, isLoading, error, fetchOperatingHours, updateOperatingHours, clearError } = useOperatingHoursStore()
+export function OperatingHoursEditor({
+  branchId,
+  onSuccess,
+}: OperatingHoursEditorProps) {
+  const {
+    operatingHours,
+    isLoading,
+    error,
+    fetchOperatingHours,
+    updateOperatingHours,
+    clearError,
+  } = useOperatingHoursStore()
   const [hours, setHours] = useState<OperatingHour[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
@@ -51,7 +61,11 @@ export function OperatingHoursEditor({ branchId, onSuccess }: OperatingHoursEdit
     }
   }, [operatingHours])
 
-  const handleTimeChange = (dayIndex: number, field: 'openTime' | 'closeTime', value: string) => {
+  const handleTimeChange = (
+    dayIndex: number,
+    field: 'openTime' | 'closeTime',
+    value: string
+  ) => {
     const updated = [...hours]
     const hour = updated[dayIndex]
     if (hour) {
@@ -104,16 +118,15 @@ export function OperatingHoursEditor({ branchId, onSuccess }: OperatingHoursEdit
     <Card>
       <CardHeader>
         <CardTitle>Operating Hours</CardTitle>
-        <CardDescription>Set the hours when your branch is open</CardDescription>
+        <CardDescription>
+          Set the hours when your branch is open
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
-            <button
-              onClick={clearError}
-              className="ml-auto text-sm underline"
-            >
+            <button onClick={clearError} className="ml-auto text-sm underline">
               Dismiss
             </button>
           </Alert>
@@ -142,16 +155,20 @@ export function OperatingHoursEditor({ branchId, onSuccess }: OperatingHoursEdit
                     <Input
                       type="time"
                       value={hour.openTime || '09:00'}
-                      onChange={(e) => handleTimeChange(index, 'openTime', e.target.value)}
+                      onChange={(e) =>
+                        handleTimeChange(index, 'openTime', e.target.value)
+                      }
                       className="w-32"
                     />
                   </div>
-                  <div className="text-sm text-muted-foreground">to</div>
+                  <div className="text-muted-foreground text-sm">to</div>
                   <div>
                     <Input
                       type="time"
                       value={hour.closeTime || '22:00'}
-                      onChange={(e) => handleTimeChange(index, 'closeTime', e.target.value)}
+                      onChange={(e) =>
+                        handleTimeChange(index, 'closeTime', e.target.value)
+                      }
                       className="w-32"
                     />
                   </div>

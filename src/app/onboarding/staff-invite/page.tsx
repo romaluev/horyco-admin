@@ -1,18 +1,16 @@
-/* eslint-disable max-lines */
 'use client'
 
 import { useState, useCallback } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-import { useTranslation } from 'react-i18next'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { getNextStep } from '@/shared/config/onboarding'
 import { useFormPersist } from '@/shared/hooks/use-form-persist'
 import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,12 +42,12 @@ import { Input } from '@/shared/ui/base/input'
 import { PhoneInput } from '@/shared/ui/base/phone-input'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
+import { useGetAllPermissions } from '@/entities/auth/role'
 import {
   useSubmitStaffInvite,
   useSkipStep,
   useStepValidation,
 } from '@/entities/onboarding/onboarding'
-import { useGetAllPermissions } from '@/entities/auth/role'
 import {
   staffInviteSchema,
   type StaffInviteFormValues,
@@ -62,7 +60,6 @@ interface InvitationPermissions {
   permissionIds: number[]
 }
 
-// eslint-disable-next-line max-lines-per-function
 export default function StaffInvitePage() {
   const router = useRouter()
   const { t } = useTranslation('onboarding')
@@ -71,7 +68,9 @@ export default function StaffInvitePage() {
     Record<number, InvitationPermissions>
   >({})
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
-  const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<number | null>(null)
+  const [selectedInvitationIndex, setSelectedInvitationIndex] = useState<
+    number | null
+  >(null)
 
   // Validate step access and get progress
   const { progress } = useStepValidation('staff_invited')
@@ -200,229 +199,246 @@ export default function StaffInvitePage() {
       description={t('pages.staffInvite.description')}
     >
       <>
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('pages.staffInvite.cardTitle')}</CardTitle>
-              <CardDescription>
-                {t('pages.staffInvite.cardDescription')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  {fields.length === 0 ? (
-                    <div className="py-6 text-center">
-                      <p className="text-muted-foreground mb-4">
-                        {t('pages.staffInvite.emptyState')}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={addInvitation}
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        {t('pages.staffInvite.addStaff')}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {/* eslint-disable-next-line max-lines-per-function */}
-                      {fields.map((field, index) => (
-                        <Card key={field.id} className="gap-2">
-                          <CardHeader className="flex items-center justify-between">
-                            <CardTitle className="text-base">
-                              {t('pages.staffInvite.staffNumber', { number: index + 1 })}
-                            </CardTitle>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                remove(index)
-                                setPermissionsMap((prev: Record<number, InvitationPermissions>) => {
-                                  const updated = { ...prev }
-                                  delete updated[index]
-                                  return updated
-                                })
-                              }}
-                              disabled={isLoading}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            <FormField
-                              control={form.control}
-                              name={`invitations.${index}.fullName`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{t('pages.staffInvite.fullName')}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      placeholder={t('pages.staffInvite.fullNamePlaceholder')}
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <FormField
-                              control={form.control}
-                              name={`invitations.${index}.phone`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{t('pages.staffInvite.phone')}</FormLabel>
-                                  <FormControl>
-                                    <PhoneInput
-                                      defaultCountry={'UZ'}
-                                      placeholder={t('pages.staffInvite.phonePlaceholder')}
-                                      limitMaxLength
-                                      countries={['UZ']}
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <FormField
-                              control={form.control}
-                              name={`invitations.${index}.email`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{t('pages.staffInvite.email')}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      type="email"
-                                      placeholder={t('pages.staffInvite.emailPlaceholder')}
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                  </FormControl>
-                                  <FormDescription>
-                                    {t('pages.staffInvite.emailOptional')}
-                                  </FormDescription>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Permissions Selection */}
-                            <div className="border-t pt-4">
-                              <h3 className="mb-3 text-sm font-medium">
-                                {t('pages.staffInvite.permissions')}
-                              </h3>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => handleOpenPermissionsModal(index)}
-                                disabled={isLoading}
-                                className="w-full"
-                              >
-                                {t('pages.staffInvite.selectPermissions', {
-                                  count: permissionsMap[index]?.permissionIds?.length || 0,
-                                })}
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={addInvitation}
-                        className="w-full"
-                        disabled={isLoading}
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        {t('pages.staffInvite.addMore')}
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between pt-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('pages.staffInvite.cardTitle')}</CardTitle>
+            <CardDescription>
+              {t('pages.staffInvite.cardDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                {fields.length === 0 ? (
+                  <div className="py-6 text-center">
+                    <p className="text-muted-foreground mb-4">
+                      {t('pages.staffInvite.emptyState')}
+                    </p>
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => {
-                        if (confirmNavigation()) {
-                          router.back()
-                        }
-                      }}
+                      onClick={addInvitation}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t('pages.staffInvite.addStaff')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {}
+                    {fields.map((field, index) => (
+                      <Card key={field.id} className="gap-2">
+                        <CardHeader className="flex items-center justify-between">
+                          <CardTitle className="text-base">
+                            {t('pages.staffInvite.staffNumber', {
+                              number: index + 1,
+                            })}
+                          </CardTitle>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              remove(index)
+                              setPermissionsMap(
+                                (
+                                  prev: Record<number, InvitationPermissions>
+                                ) => {
+                                  const updated = { ...prev }
+                                  delete updated[index]
+                                  return updated
+                                }
+                              )
+                            }}
+                            disabled={isLoading}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <FormField
+                            control={form.control}
+                            name={`invitations.${index}.fullName`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('pages.staffInvite.fullName')}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder={t(
+                                      'pages.staffInvite.fullNamePlaceholder'
+                                    )}
+                                    {...field}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`invitations.${index}.phone`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('pages.staffInvite.phone')}
+                                </FormLabel>
+                                <FormControl>
+                                  <PhoneInput
+                                    defaultCountry={'UZ'}
+                                    placeholder={t(
+                                      'pages.staffInvite.phonePlaceholder'
+                                    )}
+                                    limitMaxLength
+                                    countries={['UZ']}
+                                    {...field}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`invitations.${index}.email`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('pages.staffInvite.email')}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="email"
+                                    placeholder={t(
+                                      'pages.staffInvite.emailPlaceholder'
+                                    )}
+                                    {...field}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  {t('pages.staffInvite.emailOptional')}
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Permissions Selection */}
+                          <div className="border-t pt-4">
+                            <h3 className="mb-3 text-sm font-medium">
+                              {t('pages.staffInvite.permissions')}
+                            </h3>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => handleOpenPermissionsModal(index)}
+                              disabled={isLoading}
+                              className="w-full"
+                            >
+                              {t('pages.staffInvite.selectPermissions', {
+                                count:
+                                  permissionsMap[index]?.permissionIds
+                                    ?.length || 0,
+                              })}
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={addInvitation}
+                      className="w-full"
                       disabled={isLoading}
                     >
-                      {t('pages.staffInvite.buttons.back')}
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t('pages.staffInvite.addMore')}
                     </Button>
-                    <div className="flex gap-4">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={handleSkip}
-                        disabled={isLoading}
-                      >
-                        {t('pages.staffInvite.buttons.skip')}
-                      </Button>
-                      <Button type="submit" disabled={isLoading}>
-                        {fields.length > 0
-                          ? t('pages.staffInvite.buttons.sendInvitations')
-                          : t('pages.staffInvite.buttons.complete')}
-                      </Button>
-                    </div>
                   </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
+                )}
 
-          {/* Permissions Modal */}
-          {selectedInvitationIndex !== null && (
-            <PermissionsSelectorModal
-              isOpen={isPermissionsModalOpen}
-              onOpenChange={setIsPermissionsModalOpen}
-              branchName="Филиал по умолчанию"
-              allPermissions={allPermissions}
-              currentPermissionIds={
-                permissionsMap[selectedInvitationIndex]?.permissionIds || []
-              }
-              isLoading={isLoadingPermissions}
-              onPermissionsSave={handleSavePermissions}
-            />
-          )}
+                <div className="flex justify-between pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      if (confirmNavigation()) {
+                        router.back()
+                      }
+                    }}
+                    disabled={isLoading}
+                  >
+                    {t('pages.staffInvite.buttons.back')}
+                  </Button>
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleSkip}
+                      disabled={isLoading}
+                    >
+                      {t('pages.staffInvite.buttons.skip')}
+                    </Button>
+                    <Button type="submit" disabled={isLoading}>
+                      {fields.length > 0
+                        ? t('pages.staffInvite.buttons.sendInvitations')
+                        : t('pages.staffInvite.buttons.complete')}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
 
-          {/* Skip Confirmation Dialog */}
-          <AlertDialog
-            open={isSkipConfirmOpen}
-            onOpenChange={setSkipConfirmOpen}
-          >
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {t('pages.staffInvite.skipDialog.title')}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('pages.staffInvite.skipDialog.description')}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel disabled={isLoading}>
-                  {t('pages.staffInvite.skipDialog.cancel')}
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={confirmSkip} disabled={isLoading}>
-                  {t('pages.staffInvite.skipDialog.confirm')}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </>
+        {/* Permissions Modal */}
+        {selectedInvitationIndex !== null && (
+          <PermissionsSelectorModal
+            isOpen={isPermissionsModalOpen}
+            onOpenChange={setIsPermissionsModalOpen}
+            branchName="Филиал по умолчанию"
+            allPermissions={allPermissions}
+            currentPermissionIds={
+              permissionsMap[selectedInvitationIndex]?.permissionIds || []
+            }
+            isLoading={isLoadingPermissions}
+            onPermissionsSave={handleSavePermissions}
+          />
+        )}
+
+        {/* Skip Confirmation Dialog */}
+        <AlertDialog open={isSkipConfirmOpen} onOpenChange={setSkipConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {t('pages.staffInvite.skipDialog.title')}
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('pages.staffInvite.skipDialog.description')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isLoading}>
+                {t('pages.staffInvite.skipDialog.cancel')}
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={confirmSkip} disabled={isLoading}>
+                {t('pages.staffInvite.skipDialog.confirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     </OnboardingLayout>
   )
 }

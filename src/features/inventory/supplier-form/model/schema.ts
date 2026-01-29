@@ -12,7 +12,10 @@ export const supplierFormSchema = z.object({
   bankName: z.string().optional(),
   bankAccount: z.string().optional(),
   paymentTerms: z.string().optional(),
-  leadTimeDays: z.number().min(0, 'Срок доставки не может быть отрицательным').default(1),
+  leadTimeDays: z
+    .number()
+    .min(0, 'Срок доставки не может быть отрицательным')
+    .default(1),
   minimumOrder: z.number().min(0).optional(),
   isActive: z.boolean().default(true),
   notes: z.string().optional(),

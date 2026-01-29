@@ -28,9 +28,27 @@ interface IDeviceBreakdown {
 }
 
 const DEFAULT_DEVICES: IDeviceBreakdown[] = [
-  { name: 'Desktop', percentage: 17, value: 23.8, trend: 'up', color: 'bg-foreground' },
-  { name: 'Tablet', percentage: 65, value: 13.604, trend: 'down', color: 'bg-muted' },
-  { name: 'Mobile', percentage: 18, value: 47.146, trend: 'up', color: 'bg-muted-foreground' },
+  {
+    name: 'Desktop',
+    percentage: 17,
+    value: 23.8,
+    trend: 'up',
+    color: 'bg-foreground',
+  },
+  {
+    name: 'Tablet',
+    percentage: 65,
+    value: 13.604,
+    trend: 'down',
+    color: 'bg-muted',
+  },
+  {
+    name: 'Mobile',
+    percentage: 18,
+    value: 47.146,
+    trend: 'up',
+    color: 'bg-muted-foreground',
+  },
 ]
 
 export function VisitorsTrafficWidget({
@@ -58,11 +76,11 @@ export function VisitorsTrafficWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="rounded-lg bg-muted p-2">
-            <IconUsers className="size-4 text-muted-foreground" />
+          <div className="bg-muted rounded-lg p-2">
+            <IconUsers className="text-muted-foreground size-4" />
           </div>
           <span className="text-sm font-medium">Total visitors</span>
         </div>
@@ -81,14 +99,15 @@ export function VisitorsTrafficWidget({
               : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
           )}
         >
-          {isPositive ? '+' : ''}{changePercent}%
+          {isPositive ? '+' : ''}
+          {changePercent}%
         </span>
       </div>
 
       <div className="mb-6 grid grid-cols-3 gap-4 border-y py-4">
         {devices.map((device, index) => (
           <div key={index} className="text-center">
-            <p className="text-xs text-muted-foreground">{device.name}</p>
+            <p className="text-muted-foreground text-xs">{device.name}</p>
             <p className="text-2xl font-bold">{device.percentage}%</p>
           </div>
         ))}
@@ -123,31 +142,31 @@ export function VisitorsTrafficWidget({
 
 function VisitorsTrafficWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="size-8 animate-pulse rounded-lg bg-muted" />
-          <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+          <div className="bg-muted size-8 animate-pulse rounded-lg" />
+          <div className="bg-muted h-4 w-24 animate-pulse rounded" />
         </div>
-        <div className="h-8 w-16 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-8 w-16 animate-pulse rounded" />
       </div>
       <div className="mb-6 flex items-center gap-2">
-        <div className="h-10 w-20 animate-pulse rounded bg-muted" />
-        <div className="h-7 w-12 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-10 w-20 animate-pulse rounded" />
+        <div className="bg-muted h-7 w-12 animate-pulse rounded" />
       </div>
       <div className="mb-6 grid grid-cols-3 gap-4 border-y py-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
-            <div className="h-3 w-12 animate-pulse rounded bg-muted" />
-            <div className="h-8 w-10 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-3 w-12 animate-pulse rounded" />
+            <div className="bg-muted h-8 w-10 animate-pulse rounded" />
           </div>
         ))}
       </div>
       <div className="grid grid-cols-3 gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex flex-col items-center">
-            <div className="mb-2 h-24 w-full animate-pulse rounded-lg bg-muted" />
-            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+            <div className="bg-muted mb-2 h-24 w-full animate-pulse rounded-lg" />
+            <div className="bg-muted h-4 w-12 animate-pulse rounded" />
           </div>
         ))}
       </div>

@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -13,6 +11,7 @@ import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations'
 import { useFormPersist } from '@/shared/hooks/use-form-persist'
 import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,
@@ -234,7 +233,9 @@ export default function BranchSetupPage() {
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder={t('pages.branchSetup.branchNamePlaceholder')}
+                        placeholder={t(
+                          'pages.branchSetup.branchNamePlaceholder'
+                        )}
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -258,7 +259,9 @@ export default function BranchSetupPage() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('pages.branchSetup.citySelect')} />
+                            <SelectValue
+                              placeholder={t('pages.branchSetup.citySelect')}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -286,7 +289,9 @@ export default function BranchSetupPage() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('pages.branchSetup.regionSelect')} />
+                            <SelectValue
+                              placeholder={t('pages.branchSetup.regionSelect')}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -325,7 +330,9 @@ export default function BranchSetupPage() {
               {/* Business Hours */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="mb-2 text-sm font-medium">{t('pages.branchSetup.businessHours.title')}</h3>
+                  <h3 className="mb-2 text-sm font-medium">
+                    {t('pages.branchSetup.businessHours.title')}
+                  </h3>
                   <p className="text-muted-foreground text-sm">
                     {t('pages.branchSetup.businessHours.description')}
                   </p>
@@ -432,7 +439,9 @@ export default function BranchSetupPage() {
                                 {t('pages.branchSetup.serviceTypes.dineIn')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                {t('pages.branchSetup.serviceTypes.dineInDescription')}
+                                {t(
+                                  'pages.branchSetup.serviceTypes.dineInDescription'
+                                )}
                               </p>
                             </div>
                             <FormControl>
@@ -460,7 +469,9 @@ export default function BranchSetupPage() {
                                 {t('pages.branchSetup.serviceTypes.takeaway')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                {t('pages.branchSetup.serviceTypes.takeawayDescription')}
+                                {t(
+                                  'pages.branchSetup.serviceTypes.takeawayDescription'
+                                )}
                               </p>
                             </div>
                             <FormControl>
@@ -488,7 +499,9 @@ export default function BranchSetupPage() {
                                 {t('pages.branchSetup.serviceTypes.delivery')}
                               </FormLabel>
                               <p className="text-muted-foreground text-xs">
-                                {t('pages.branchSetup.serviceTypes.deliveryDescription')}
+                                {t(
+                                  'pages.branchSetup.serviceTypes.deliveryDescription'
+                                )}
                               </p>
                             </div>
                             <FormControl>

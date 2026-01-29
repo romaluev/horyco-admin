@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from '@/shared/lib/navigation'
-
 import { Button } from '@/shared/ui/base/button'
 
 export default function NotFound() {

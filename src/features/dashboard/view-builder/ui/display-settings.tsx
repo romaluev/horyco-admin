@@ -2,7 +2,11 @@
 
 import * as React from 'react'
 
-import { IconAdjustments, IconSortAscending, IconSortDescending } from '@tabler/icons-react'
+import {
+  IconAdjustments,
+  IconSortAscending,
+  IconSortDescending,
+} from '@tabler/icons-react'
 
 import { SortBy, SortDirection } from '@/shared/api/graphql'
 import { Button } from '@/shared/ui/base/button'
@@ -23,6 +27,11 @@ import {
 import { Separator } from '@/shared/ui/base/separator'
 
 import { GROUP_BY_OPTIONS } from '../model/constants'
+import {
+  selectAvailableColumns,
+  selectDatasetConfig,
+  useViewBuilderStore,
+} from '../model/store'
 
 const SORT_BY_LABELS: Record<SortBy, string> = {
   [SortBy.REVENUE]: 'Выручка',
@@ -33,11 +42,6 @@ const SORT_BY_LABELS: Record<SortBy, string> = {
   [SortBy.CUSTOMERS]: 'Клиенты',
   [SortBy.GROWTH]: 'Рост',
 }
-import {
-  selectAvailableColumns,
-  selectDatasetConfig,
-  useViewBuilderStore,
-} from '../model/store'
 
 export function DisplaySettings() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -82,7 +86,7 @@ export function DisplaySettings() {
         <div className="space-y-4">
           {/* Sorting */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase text-muted-foreground">
+            <Label className="text-muted-foreground text-xs font-medium uppercase">
               Сортировка
             </Label>
             <div className="flex items-center gap-2">
@@ -121,7 +125,7 @@ export function DisplaySettings() {
           {availableGroupBy.length > 0 && (
             <>
               <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase text-muted-foreground">
+                <Label className="text-muted-foreground text-xs font-medium uppercase">
                   Группировка
                 </Label>
                 <Select
@@ -149,14 +153,14 @@ export function DisplaySettings() {
 
           {/* Columns */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase text-muted-foreground">
+            <Label className="text-muted-foreground text-xs font-medium uppercase">
               Отображаемые колонки
             </Label>
             <div className="max-h-48 space-y-1 overflow-y-auto">
               {availableColumns.map((col) => (
                 <label
                   key={col.key}
-                  className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 hover:bg-muted"
+                  className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5"
                 >
                   <Checkbox
                     checked={workingConfig.columns.includes(col.key)}

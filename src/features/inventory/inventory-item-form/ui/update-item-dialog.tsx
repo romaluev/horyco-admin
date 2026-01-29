@@ -34,7 +34,10 @@ import {
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateInventoryItem, type IInventoryItem } from '@/entities/inventory/inventory-item'
+import {
+  useUpdateInventoryItem,
+  type IInventoryItem,
+} from '@/entities/inventory/inventory-item'
 
 import {
   inventoryItemFormSchema,
@@ -229,7 +232,9 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
-                    <FormDescription>Уведомление при достижении</FormDescription>
+                    <FormDescription>
+                      Уведомление при достижении
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -247,7 +252,9 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                         min={0}
                         value={field.value ?? ''}
                         onChange={(e) =>
-                          field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -288,7 +295,9 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                         min={1}
                         value={field.value ?? ''}
                         onChange={(e) =>
-                          field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -308,7 +317,10 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                       <FormLabel>Активен</FormLabel>
                     </div>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -323,7 +335,10 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                       <FormLabel>Учёт остатков</FormLabel>
                     </div>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -338,7 +353,10 @@ export const UpdateItemDialog = ({ item, trigger }: IUpdateItemDialogProps) => {
                       <FormLabel>Полуфабрикат</FormLabel>
                     </div>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

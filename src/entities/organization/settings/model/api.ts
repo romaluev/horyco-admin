@@ -24,9 +24,7 @@ export const settingsApi = {
   /**
    * Get all settings (structured response)
    */
-  getAllSettings: async (
-    branchId?: number
-  ): Promise<IAllSettingsResponse> => {
+  getAllSettings: async (branchId?: number): Promise<IAllSettingsResponse> => {
     const params = branchId ? { branchId } : {}
     const response = await api.get<IAllSettingsResponse>(BASE_URL, { params })
     return response.data
@@ -37,10 +35,9 @@ export const settingsApi = {
    */
   getBranding: async (branchId?: number): Promise<IBrandingSettings> => {
     const params = branchId ? { branchId } : {}
-    const response = await api.get<IBrandingSettings>(
-      `${BASE_URL}/branding`,
-      { params }
-    )
+    const response = await api.get<IBrandingSettings>(`${BASE_URL}/branding`, {
+      params,
+    })
     return response.data
   },
 
@@ -129,9 +126,7 @@ export const settingsApi = {
    * Get SMS integration settings
    */
   getSmsSettings: async (): Promise<ISmsSettings> => {
-    const response = await api.get<ISmsSettings>(
-      `${BASE_URL}/integrations/sms`
-    )
+    const response = await api.get<ISmsSettings>(`${BASE_URL}/integrations/sms`)
     return response.data
   },
 

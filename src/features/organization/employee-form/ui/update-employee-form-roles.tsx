@@ -14,7 +14,11 @@ interface UpdateEmployeeFormRolesProps {
 export const UpdateEmployeeFormRoles = ({
   form,
 }: UpdateEmployeeFormRolesProps) => {
-  const { setValue, watch, formState: { errors } } = form
+  const {
+    setValue,
+    watch,
+    formState: { errors },
+  } = form
   const { data: rolesResponse, isLoading, isError } = useGetAllRoles()
 
   const selectedRoleIds = watch('roleIds') || []
@@ -27,7 +31,10 @@ export const UpdateEmployeeFormRoles = ({
   const toggleRole = (roleId: number): void => {
     const currentRoleIds = selectedRoleIds
     if (currentRoleIds.includes(roleId)) {
-      setValue('roleIds', currentRoleIds.filter((id) => id !== roleId))
+      setValue(
+        'roleIds',
+        currentRoleIds.filter((id) => id !== roleId)
+      )
     } else {
       setValue('roleIds', [...currentRoleIds, roleId])
     }
@@ -47,7 +54,7 @@ export const UpdateEmployeeFormRoles = ({
         <Label className="text-base font-semibold">
           Выберите роли <span className="text-destructive">*</span>
         </Label>
-        <p className="text-muted-foreground text-sm mt-2">
+        <p className="text-muted-foreground mt-2 text-sm">
           Роли определяют, какие действия может выполнять сотрудник. Сотруднику
           можно назначить несколько ролей.
         </p>
@@ -55,7 +62,10 @@ export const UpdateEmployeeFormRoles = ({
 
       <div className="space-y-3">
         {roles.map((role) => (
-          <div key={role.id} className="flex items-start gap-3 rounded-lg border p-4">
+          <div
+            key={role.id}
+            className="flex items-start gap-3 rounded-lg border p-4"
+          >
             <Checkbox
               id={`role-${role.id}`}
               checked={selectedRoleIds.includes(role.id)}

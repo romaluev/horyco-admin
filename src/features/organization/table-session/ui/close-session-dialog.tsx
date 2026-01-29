@@ -54,7 +54,8 @@ export const CloseSessionDialog = ({
         <DialogHeader>
           <DialogTitle>Close Session</DialogTitle>
           <DialogDescription>
-            Are you sure you want to close this active session? This will free up the table for new customers.
+            Are you sure you want to close this active session? This will free
+            up the table for new customers.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

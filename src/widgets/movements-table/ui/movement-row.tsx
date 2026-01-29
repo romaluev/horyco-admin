@@ -16,7 +16,10 @@ import {
 } from '@/shared/ui/base/collapsible'
 import { TableCell, TableRow } from '@/shared/ui/base/table'
 
-import { MovementTypeBadge, type IStockMovement } from '@/entities/inventory/stock-movement'
+import {
+  MovementTypeBadge,
+  type IStockMovement,
+} from '@/entities/inventory/stock-movement'
 
 interface MovementRowProps {
   movement: IStockMovement
@@ -66,15 +69,25 @@ const DetailRow = ({ label, value }: { label: string; value: string }) => (
   </div>
 )
 
-export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps) => {
-  const referenceLink = getReferenceLink(movement.referenceType, movement.referenceId)
+export const MovementRow = ({
+  movement,
+  isExpanded,
+  onToggle,
+}: MovementRowProps) => {
+  const referenceLink = getReferenceLink(
+    movement.referenceType,
+    movement.referenceId
+  )
   const unit = movement.item?.unit ?? ''
 
   return (
     <Collapsible open={isExpanded} asChild>
       <>
         <CollapsibleTrigger asChild>
-          <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onToggle}>
+          <TableRow
+            className="hover:bg-muted/50 cursor-pointer"
+            onClick={onToggle}
+          >
             <TableCell>
               {isExpanded ? (
                 <ChevronDown className="h-4 w-4" />
@@ -83,7 +96,9 @@ export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps
               )}
             </TableCell>
             <TableCell className="text-muted-foreground">
-              {format(new Date(movement.createdAt), 'dd MMM yyyy HH:mm', { locale: ru })}
+              {format(new Date(movement.createdAt), 'dd MMM yyyy HH:mm', {
+                locale: ru,
+              })}
             </TableCell>
             <TableCell className="font-medium">{movement.item?.name}</TableCell>
             <TableCell>
@@ -91,13 +106,17 @@ export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps
             </TableCell>
             <TableCell
               className={`text-right font-medium ${
-                movement.quantity > 0 ? 'text-emerald-600 dark:text-emerald-500' : 'text-destructive'
+                movement.quantity > 0
+                  ? 'text-emerald-600 dark:text-emerald-500'
+                  : 'text-destructive'
               }`}
             >
               {movement.quantity > 0 ? '+' : ''}
               {movement.quantity} {unit}
             </TableCell>
-            <TableCell className="text-right">{formatCurrency(movement.totalCost)}</TableCell>
+            <TableCell className="text-right">
+              {formatCurrency(movement.totalCost)}
+            </TableCell>
             <TableCell className="text-right">
               {movement.newQuantity} {unit}
             </TableCell>
@@ -109,9 +128,15 @@ export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <h4 className="text-sm font-medium">Детали движения</h4>
-                  <div className="space-y-1 rounded-md border bg-background p-3 text-sm">
-                    <DetailRow label="ID движения" value={String(movement.id)} />
-                    <DetailRow label="Тип" value={MOVEMENT_TYPE_LABELS[movement.type]} />
+                  <div className="bg-background space-y-1 rounded-md border p-3 text-sm">
+                    <DetailRow
+                      label="ID движения"
+                      value={String(movement.id)}
+                    />
+                    <DetailRow
+                      label="Тип"
+                      value={MOVEMENT_TYPE_LABELS[movement.type]}
+                    />
                     <DetailRow
                       label="Количество"
                       value={`${movement.quantity > 0 ? '+' : ''}${movement.quantity} ${unit}`}
@@ -120,25 +145,53 @@ export const MovementRow = ({ movement, isExpanded, onToggle }: MovementRowProps
                       label="Себестоимость ед."
                       value={`${formatCurrency(movement.unitCost)}/${unit}`}
                     />
-                    <DetailRow label="Общая стоимость" value={formatCurrency(movement.totalCost)} />
-                    <DetailRow label="Остаток до" value={movement.previousQuantity !== undefined ? `${movement.previousQuantity} ${unit}` : '—'} />
-                    <DetailRow label="Остаток после" value={movement.newQuantity !== undefined ? `${movement.newQuantity} ${unit}` : '—'} />
+                    <DetailRow
+                      label="Общая стоимость"
+                      value={formatCurrency(movement.totalCost)}
+                    />
+                    <DetailRow
+                      label="Остаток до"
+                      value={
+                        movement.previousQuantity !== undefined
+                          ? `${movement.previousQuantity} ${unit}`
+                          : '—'
+                      }
+                    />
+                    <DetailRow
+                      label="Остаток после"
+                      value={
+                        movement.newQuantity !== undefined
+                          ? `${movement.newQuantity} ${unit}`
+                          : '—'
+                      }
+                    />
                   </div>
                 </div>
 
                 {movement.referenceNumber && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium">Связанный документ</h4>
-                    <div className="space-y-1 rounded-md border bg-background p-3 text-sm">
-                      <DetailRow label="Тип" value={getReferenceLabel(movement.referenceType)} />
-                      <DetailRow label="Номер" value={movement.referenceNumber} />
-                      {movement.notes && <DetailRow label="Примечание" value={movement.notes} />}
+                    <div className="bg-background space-y-1 rounded-md border p-3 text-sm">
+                      <DetailRow
+                        label="Тип"
+                        value={getReferenceLabel(movement.referenceType)}
+                      />
+                      <DetailRow
+                        label="Номер"
+                        value={movement.referenceNumber}
+                      />
+                      {movement.notes && (
+                        <DetailRow label="Примечание" value={movement.notes} />
+                      )}
                     </div>
                     {referenceLink && (
                       <Button asChild variant="outline" size="sm">
                         <Link to={referenceLink}>
                           <ExternalLink className="mr-2 h-4 w-4" />
-                          Открыть {getReferenceLabel(movement.referenceType).toLowerCase()}
+                          Открыть{' '}
+                          {getReferenceLabel(
+                            movement.referenceType
+                          ).toLowerCase()}
                         </Link>
                       </Button>
                     )}

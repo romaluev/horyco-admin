@@ -2,8 +2,9 @@
 
 import { useMemo, type ComponentType } from 'react'
 
-import { KpiType } from '@/shared/api/graphql'
 import { useTranslation } from 'react-i18next'
+
+import { KpiType } from '@/shared/api/graphql'
 
 import {
   useRankedList,
@@ -64,7 +65,10 @@ const STATIC_WIDGETS: Partial<Record<WidgetType, ComponentType>> = {
 }
 
 // Dynamic widgets (need data fetching containers)
-const CONTAINER_WIDGETS: Record<string, ComponentType<IWidgetContainerProps>> = {
+const CONTAINER_WIDGETS: Record<
+  string,
+  ComponentType<IWidgetContainerProps>
+> = {
   TOP_PRODUCTS: TopProductsContainer,
   PAYMENT_METHODS: PaymentMethodsContainer,
   CHANNEL_SPLIT: ChannelSplitContainer,
@@ -84,8 +88,12 @@ export function DashboardWidgetsSection({
     [widgets]
   )
 
-  const wideWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size === 'wide')
-  const normalWidgets = sortedWidgets.filter((w) => WIDGET_CONFIG[w.type]?.size !== 'wide')
+  const wideWidgets = sortedWidgets.filter(
+    (w) => WIDGET_CONFIG[w.type]?.size === 'wide'
+  )
+  const normalWidgets = sortedWidgets.filter(
+    (w) => WIDGET_CONFIG[w.type]?.size !== 'wide'
+  )
 
   return (
     <div className={className}>
@@ -136,7 +144,7 @@ function WidgetRenderer({ widget, period, branchId }: IWidgetRendererProps) {
     default:
       return (
         <WidgetCard title={config ? t(config.titleKey) : ''}>
-          <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex h-48 items-center justify-center text-sm">
             {t('common.comingSoon')}
           </div>
         </WidgetCard>
@@ -242,7 +250,10 @@ function RevenueOverviewContainer({ period, branchId }: IWidgetContainerProps) {
   return <RevenueOverviewWidget data={data ?? null} isLoading={isLoading} />
 }
 
-function TransactionsSummaryContainer({ period, branchId }: IWidgetContainerProps) {
+function TransactionsSummaryContainer({
+  period,
+  branchId,
+}: IWidgetContainerProps) {
   const { data, isLoading } = useTimeSeries({
     metric: KpiType.ORDERS,
     period,

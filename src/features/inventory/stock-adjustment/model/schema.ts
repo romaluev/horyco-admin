@@ -5,7 +5,9 @@ import { MOVEMENT_TYPES, type MovementType } from '@/shared/types/inventory'
 export const stockAdjustmentSchema = z.object({
   warehouseId: z.number().min(1, 'Выберите склад'),
   itemId: z.number().min(1, 'Выберите товар'),
-  quantityChange: z.number().refine((val) => val !== 0, 'Количество не может быть 0'),
+  quantityChange: z
+    .number()
+    .refine((val) => val !== 0, 'Количество не может быть 0'),
   reason: z.string().min(1, 'Выберите причину') as z.ZodType<MovementType>,
   notes: z.string().optional(),
   referenceNumber: z.string().optional(),

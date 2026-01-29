@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import {
   Card,
@@ -53,7 +54,9 @@ export function RecentSales() {
     <Card className="h-full">
       <CardHeader>
         <CardTitle>{t('widgets.recentSales.title')}</CardTitle>
-        <CardDescription>{t('widgets.recentSales.description')}</CardDescription>
+        <CardDescription>
+          {t('widgets.recentSales.description')}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-8">

@@ -37,7 +37,8 @@ export const PinManagementSection = ({
   const [isShowingGenerateDialog, setIsShowingGenerateDialog] = useState(false)
 
   const { data: pinStatus, isLoading, refetch } = usePinStatus(employee.id)
-  const { mutate: togglePinEnabled, isPending: isToggling } = useTogglePinEnabled()
+  const { mutate: togglePinEnabled, isPending: isToggling } =
+    useTogglePinEnabled()
 
   const handleTogglePin = (enabled: boolean): void => {
     togglePinEnabled({ employeeId: employee.id, enabled })
@@ -75,7 +76,7 @@ export const PinManagementSection = ({
             PIN Аутентификация
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-2 space-y-4">
+        <CardContent className="space-y-4 px-2">
           {/* Status Badge */}
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Статус:</span>
@@ -88,7 +89,7 @@ export const PinManagementSection = ({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Включить PIN аутентификацию</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Разрешить вход через PIN в POS-системе
               </p>
             </div>
@@ -101,22 +102,22 @@ export const PinManagementSection = ({
 
           {/* Expiration Warning */}
           {shouldShowWarning && (
-            <div className="bg-yellow-50 p-3 rounded-lg space-y-1">
+            <div className="space-y-1 rounded-lg bg-yellow-50 p-3">
               <p className="text-sm font-medium text-yellow-900">
                 ⚠️ PIN скоро истечет
               </p>
               <p className="text-sm text-yellow-800">
-                PIN истечет через {pinStatus.daysUntilExpiration} дней. Сотрудник
-                не сможет войти в POS после истечения.
+                PIN истечет через {pinStatus.daysUntilExpiration} дней.
+                Сотрудник не сможет войти в POS после истечения.
               </p>
             </div>
           )}
 
           {/* Expired Alert */}
           {shouldShowExpiredAlert && (
-            <div className="bg-red-50 p-3 rounded-lg space-y-1">
+            <div className="space-y-1 rounded-lg bg-red-50 p-3">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-600" />
                 <div>
                   <p className="text-sm font-medium text-red-900">PIN истек</p>
                   <p className="text-sm text-red-800">
@@ -135,7 +136,7 @@ export const PinManagementSection = ({
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Создан:</p>
+                  <p className="text-muted-foreground text-sm">Создан:</p>
                   <p className="text-sm font-medium">
                     {pinStatus.expiresAt
                       ? format(
@@ -150,7 +151,7 @@ export const PinManagementSection = ({
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Истекает:</p>
+                  <p className="text-muted-foreground text-sm">Истекает:</p>
                   <p className="text-sm font-medium">
                     {pinStatus.expiresAt
                       ? format(new Date(pinStatus.expiresAt), 'd MMM yyyy', {
@@ -164,7 +165,7 @@ export const PinManagementSection = ({
               {pinStatus.daysUntilExpiration !== null &&
                 pinStatus.daysUntilExpiration >= 0 && (
                   <div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Осталось дней:
                     </p>
                     <p className="text-sm font-medium">
@@ -178,7 +179,7 @@ export const PinManagementSection = ({
               <div className="space-y-2">
                 <p className="text-sm font-medium">Активность:</p>
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Последнее использование:{' '}
                     <span className="text-foreground font-medium">
                       {pinStatus.lastUsedAt
@@ -186,7 +187,7 @@ export const PinManagementSection = ({
                         : 'Никогда'}
                     </span>
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Неудачных попыток:{' '}
                     <span
                       className={`font-medium ${
@@ -231,8 +232,8 @@ export const PinManagementSection = ({
 
           {/* Help Text */}
           {!pinStatus?.hasPin && (
-            <div className="bg-muted p-3 rounded-lg">
-              <p className="text-sm text-muted-foreground">
+            <div className="bg-muted rounded-lg p-3">
+              <p className="text-muted-foreground text-sm">
                 PIN позволяет сотруднику быстро входить в POS-систему с помощью
                 4-значного кода вместо пароля.
               </p>

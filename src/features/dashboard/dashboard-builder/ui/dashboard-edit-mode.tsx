@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconLayoutDashboard,
@@ -10,14 +9,20 @@ import {
   IconSettings,
   IconCheck,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
-import { KpiType } from '@/shared/api/graphql'
 import { Button } from '@/shared/ui/base/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 
-import type { IDashboardConfig, IKpiSlot, IDashboardWidget, ChartType } from '@/entities/dashboard/dashboard'
-
 import { KpiTab, ChartTab, WidgetsTab } from './edit-tabs'
+
+import type {
+  IDashboardConfig,
+  IKpiSlot,
+  IDashboardWidget,
+  ChartType,
+} from '@/entities/dashboard/dashboard'
+import type { KpiType } from '@/shared/api/graphql'
 
 interface IDashboardEditModeProps {
   config: IDashboardConfig
@@ -35,9 +40,13 @@ export function DashboardEditMode({
   const { t } = useTranslation('dashboard')
   // State
   const [kpiSlots, setKpiSlots] = useState<IKpiSlot[]>(initialConfig.kpiSlots)
-  const [chartMetric, setChartMetric] = useState<KpiType>(initialConfig.chartMetric)
+  const [chartMetric, setChartMetric] = useState<KpiType>(
+    initialConfig.chartMetric
+  )
   const [chartType, setChartType] = useState<ChartType>('area')
-  const [widgets, setWidgets] = useState<IDashboardWidget[]>(initialConfig.widgets)
+  const [widgets, setWidgets] = useState<IDashboardWidget[]>(
+    initialConfig.widgets
+  )
   const [activeTab, setActiveTab] = useState('kpi')
 
   // DnD state
@@ -57,14 +66,18 @@ export function DashboardEditMode({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between rounded-xl border bg-card p-4">
+      <div className="bg-card flex items-center justify-between rounded-xl border p-4">
         <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-primary/10 p-2">
-            <IconLayoutDashboard className="size-5 text-primary" />
+          <div className="bg-primary/10 rounded-lg p-2">
+            <IconLayoutDashboard className="text-primary size-5" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">{t('dashboard.editMode.title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('dashboard.editMode.description')}</p>
+            <h2 className="text-lg font-semibold">
+              {t('dashboard.editMode.title')}
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              {t('dashboard.editMode.description')}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -72,14 +85,20 @@ export function DashboardEditMode({
             {t('common.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? t('dashboard.editMode.saving') : t('dashboard.editMode.save')}
+            {isSaving
+              ? t('dashboard.editMode.saving')
+              : t('dashboard.editMode.save')}
             {!isSaving && <IconCheck className="ml-1 size-4" />}
           </Button>
         </div>
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="kpi" className="gap-2">
             <IconSparkles className="size-4" />

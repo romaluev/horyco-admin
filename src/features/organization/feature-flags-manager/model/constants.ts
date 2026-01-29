@@ -1,4 +1,7 @@
-export const FEATURE_FLAG_LABELS: Record<string, { label: string; description: string }> = {
+export const FEATURE_FLAG_LABELS: Record<
+  string,
+  { label: string; description: string }
+> = {
   qrOrderingEnabled: {
     label: 'QR Заказы',
     description: 'Включить заказ через QR-код меню',

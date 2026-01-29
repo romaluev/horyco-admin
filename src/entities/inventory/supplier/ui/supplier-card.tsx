@@ -2,8 +2,8 @@
 
 import { Phone, Mail, MapPin, Clock, Package } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Badge } from '@/shared/ui/base/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
 import type { ISupplier } from '../model/types'
 
@@ -22,7 +22,11 @@ export function SupplierCard({ supplier, onClick }: ISupplierCardProps) {
 
   return (
     <Card
-      className={onClick ? 'cursor-pointer hover:border-primary transition-colors' : undefined}
+      className={
+        onClick
+          ? 'hover:border-primary cursor-pointer transition-colors'
+          : undefined
+      }
       onClick={onClick}
     >
       <CardHeader className="pb-2">
@@ -33,7 +37,7 @@ export function SupplierCard({ supplier, onClick }: ISupplierCardProps) {
           </Badge>
         </div>
         {supplier.code && (
-          <p className="text-sm text-muted-foreground">{supplier.code}</p>
+          <p className="text-muted-foreground text-sm">{supplier.code}</p>
         )}
       </CardHeader>
       <CardContent className="space-y-3">
@@ -41,7 +45,7 @@ export function SupplierCard({ supplier, onClick }: ISupplierCardProps) {
           <p className="text-sm font-medium">{supplier.contactName}</p>
         )}
 
-        <div className="space-y-1.5 text-sm text-muted-foreground">
+        <div className="text-muted-foreground space-y-1.5 text-sm">
           {supplier.phone && (
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
@@ -62,20 +66,23 @@ export function SupplierCard({ supplier, onClick }: ISupplierCardProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-4 pt-2 border-t text-sm">
+        <div className="flex items-center gap-4 border-t pt-2 text-sm">
           <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="text-muted-foreground h-4 w-4" />
             <span>{supplier.leadTimeDays} дн.</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <Package className="text-muted-foreground h-4 w-4" />
             <span>{supplier.totalOrders} заказов</span>
           </div>
         </div>
 
         {supplier.totalAmount > 0 && (
           <p className="text-sm">
-            Всего: <span className="font-medium">{formatCurrency(supplier.totalAmount)}</span>
+            Всего:{' '}
+            <span className="font-medium">
+              {formatCurrency(supplier.totalAmount)}
+            </span>
           </p>
         )}
       </CardContent>

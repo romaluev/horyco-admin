@@ -1,9 +1,10 @@
 import { useState } from 'react'
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+
+import { IconEdit, IconTrash, IconArrowLeft } from '@tabler/icons-react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { IconEdit, IconTrash, IconArrowLeft } from '@tabler/icons-react'
 
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
@@ -12,7 +13,10 @@ import { Separator } from '@/shared/ui/base/separator'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetBranchById, BranchInfoDisplay } from '@/entities/organization/branch'
+import {
+  useGetBranchById,
+  BranchInfoDisplay,
+} from '@/entities/organization/branch'
 import { DeleteBranchDialog } from '@/features/organization/branch-delete'
 import { UpdateBranchDialog } from '@/features/organization/branch-form'
 import { BranchStatisticsWidget } from '@/widgets/branch-statistics'
@@ -52,7 +56,9 @@ function BranchDetailPage() {
           <title>{t('pages.branchDetail.notFoundTitle')} | Horyco Admin</title>
         </Helmet>
         <Alert variant="destructive">
-          <AlertDescription>{t('pages.branchDetail.notFoundMessage')}</AlertDescription>
+          <AlertDescription>
+            {t('pages.branchDetail.notFoundMessage')}
+          </AlertDescription>
         </Alert>
       </PageContainer>
     )
@@ -79,7 +85,10 @@ function BranchDetailPage() {
                 >
                   <IconArrowLeft className="h-4 w-4" />
                 </Button>
-                <Heading title={branch.name} description={t('pages.branchDetail.description')} />
+                <Heading
+                  title={branch.name}
+                  description={t('pages.branchDetail.description')}
+                />
               </div>
             </div>
             <div className="flex gap-2">
@@ -101,7 +110,10 @@ function BranchDetailPage() {
           <BranchInfoDisplay branch={branch} />
 
           <div className="space-y-4">
-            <Heading title={t('pages.branchDetail.statistics.title')} description={t('pages.branchDetail.statistics.description')} />
+            <Heading
+              title={t('pages.branchDetail.statistics.title')}
+              description={t('pages.branchDetail.statistics.description')}
+            />
             <BranchStatisticsWidget branchId={parseInt(branchId)} />
           </div>
         </div>

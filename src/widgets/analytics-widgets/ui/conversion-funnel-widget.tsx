@@ -93,11 +93,11 @@ export function ConversionFunnelWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2 flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold">Conversion rate</h3>
-          <p className="text-sm text-muted-foreground">{comparisonLabel}</p>
+          <p className="text-muted-foreground text-sm">{comparisonLabel}</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -106,7 +106,9 @@ export function ConversionFunnelWidget({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onViewDetails}>View Details</DropdownMenuItem>
+            <DropdownMenuItem onClick={onViewDetails}>
+              View Details
+            </DropdownMenuItem>
             <DropdownMenuItem>Export Data</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -121,17 +123,36 @@ export function ConversionFunnelWidget({
               isPositive ? 'text-emerald-600' : 'text-red-600'
             )}
           >
-            {isPositive ? <IconTrendingUp className="size-4" /> : <IconTrendingDown className="size-4" />}
-            {changePercent > 0 ? '+' : ''}{changePercent}%
+            {isPositive ? (
+              <IconTrendingUp className="size-4" />
+            ) : (
+              <IconTrendingDown className="size-4" />
+            )}
+            {changePercent > 0 ? '+' : ''}
+            {changePercent}%
           </span>
         </div>
         <div className="h-12 w-24">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
               <defs>
-                <linearGradient id="conversionGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--chart-success))" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="hsl(var(--chart-success))" stopOpacity={0} />
+                <linearGradient
+                  id="conversionGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="hsl(var(--chart-success))"
+                    stopOpacity={0.4}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="hsl(var(--chart-success))"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <Area
@@ -154,12 +175,14 @@ export function ConversionFunnelWidget({
           return (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-muted p-2">
-                  <StepIcon className="size-4 text-muted-foreground" />
+                <div className="bg-muted rounded-lg p-2">
+                  <StepIcon className="text-muted-foreground size-4" />
                 </div>
                 <div>
                   <p className="text-sm font-medium">{step.label}</p>
-                  <p className="text-xs text-muted-foreground">{step.sublabel}</p>
+                  <p className="text-muted-foreground text-xs">
+                    {step.sublabel}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -174,7 +197,8 @@ export function ConversionFunnelWidget({
                     stepPositive ? 'text-emerald-600' : 'text-red-600'
                   )}
                 >
-                  {step.changePercent > 0 ? '+' : ''}{step.changePercent}%
+                  {step.changePercent > 0 ? '+' : ''}
+                  {step.changePercent}%
                 </span>
               </div>
             </div>
@@ -187,32 +211,32 @@ export function ConversionFunnelWidget({
 
 function ConversionFunnelWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2 flex items-start justify-between">
         <div className="space-y-1">
-          <div className="h-6 w-32 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-40 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-40 animate-pulse rounded" />
         </div>
-        <div className="size-8 animate-pulse rounded bg-muted" />
+        <div className="bg-muted size-8 animate-pulse rounded" />
       </div>
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <div className="h-10 w-24 animate-pulse rounded bg-muted" />
-          <div className="h-5 w-12 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-10 w-24 animate-pulse rounded" />
+          <div className="bg-muted h-5 w-12 animate-pulse rounded" />
         </div>
-        <div className="h-12 w-24 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-12 w-24 animate-pulse rounded" />
       </div>
       <div className="flex-1 space-y-3">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="size-9 animate-pulse rounded-lg bg-muted" />
+              <div className="bg-muted size-9 animate-pulse rounded-lg" />
               <div className="space-y-1">
-                <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-                <div className="h-3 w-32 animate-pulse rounded bg-muted" />
+                <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                <div className="bg-muted h-3 w-32 animate-pulse rounded" />
               </div>
             </div>
-            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-4 w-12 animate-pulse rounded" />
           </div>
         ))}
       </div>

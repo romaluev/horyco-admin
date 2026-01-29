@@ -62,7 +62,9 @@ interface IBaseParams {
 // SALES OVERVIEW (BASIC)
 // ============================================
 
-export async function getSalesOverview(params: IBaseParams): Promise<ISalesOverviewData> {
+export async function getSalesOverview(
+  params: IBaseParams
+): Promise<ISalesOverviewData> {
   const result = await executeQuery<{ salesOverview: ISalesOverviewData }>(
     SALES_OVERVIEW_QUERY,
     params
@@ -83,10 +85,9 @@ interface IProductAnalyticsParams extends IBaseParams {
 export async function getProductAnalytics(
   params: IProductAnalyticsParams
 ): Promise<IProductAnalyticsData> {
-  const result = await executeQuery<{ productAnalytics: IProductAnalyticsData }>(
-    PRODUCT_ANALYTICS_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    productAnalytics: IProductAnalyticsData
+  }>(PRODUCT_ANALYTICS_QUERY, params)
   return result.productAnalytics
 }
 
@@ -98,10 +99,9 @@ export async function getProductAnalytics(
 export async function getCategoryAnalytics(
   params: IBaseParams
 ): Promise<ICategoryAnalyticsData> {
-  const result = await executeQuery<{ categoryAnalytics: ICategoryAnalyticsData }>(
-    CATEGORY_ANALYTICS_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    categoryAnalytics: ICategoryAnalyticsData
+  }>(CATEGORY_ANALYTICS_QUERY, params)
   return result.categoryAnalytics
 }
 
@@ -113,10 +113,9 @@ export async function getCategoryAnalytics(
 export async function getPaymentMethodsAnalytics(
   params: IBaseParams
 ): Promise<IPaymentMethodsAnalyticsData> {
-  const result = await executeQuery<{ paymentMethodsAnalytics: IPaymentMethodsAnalyticsData }>(
-    PAYMENT_METHODS_ANALYTICS_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    paymentMethodsAnalytics: IPaymentMethodsAnalyticsData
+  }>(PAYMENT_METHODS_ANALYTICS_QUERY, params)
   return result.paymentMethodsAnalytics
 }
 
@@ -125,7 +124,9 @@ export async function getPaymentMethodsAnalytics(
 // Per doc 23: Returns typed response
 // ============================================
 
-export async function getStaffAnalytics(params: IBaseParams): Promise<IStaffAnalyticsData> {
+export async function getStaffAnalytics(
+  params: IBaseParams
+): Promise<IStaffAnalyticsData> {
   const result = await executeQuery<{ staffAnalytics: IStaffAnalyticsData }>(
     STAFF_ANALYTICS_QUERY,
     params
@@ -141,10 +142,9 @@ export async function getStaffAnalytics(params: IBaseParams): Promise<IStaffAnal
 export async function getCustomerOverview(
   params: IBaseParams
 ): Promise<ICustomerOverviewData> {
-  const result = await executeQuery<{ customerOverview: ICustomerOverviewData }>(
-    CUSTOMER_OVERVIEW_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    customerOverview: ICustomerOverviewData
+  }>(CUSTOMER_OVERVIEW_QUERY, params)
   return result.customerOverview
 }
 
@@ -153,7 +153,9 @@ interface IRfmParams {
   branchId?: number
 }
 
-export async function getRfmAnalysis(params: IRfmParams): Promise<IRfmAnalysisData> {
+export async function getRfmAnalysis(
+  params: IRfmParams
+): Promise<IRfmAnalysisData> {
   const result = await executeQuery<{ rfmAnalysis: IRfmAnalysisData }>(
     RFM_ANALYSIS_QUERY,
     params
@@ -166,7 +168,9 @@ interface ICohortParams {
   branchId?: number
 }
 
-export async function getCohortAnalysis(params: ICohortParams): Promise<ICohortAnalysisData> {
+export async function getCohortAnalysis(
+  params: ICohortParams
+): Promise<ICohortAnalysisData> {
   const result = await executeQuery<{ cohortAnalysis: ICohortAnalysisData }>(
     COHORT_ANALYSIS_QUERY,
     params
@@ -184,7 +188,9 @@ interface IHeatmapParams extends IBaseParams {
   metric?: 'orders' | 'revenue'
 }
 
-export async function getHeatmap(params: IHeatmapParams): Promise<IHeatmapData> {
+export async function getHeatmap(
+  params: IHeatmapParams
+): Promise<IHeatmapData> {
   const result = await executeQuery<{ heatmap: IHeatmapData }>(
     HEATMAP_ANALYTICS_QUERY,
     params
@@ -200,10 +206,9 @@ export async function getHeatmap(params: IHeatmapParams): Promise<IHeatmapData> 
 export async function getChannelsAnalytics(
   params: IBaseParams
 ): Promise<IChannelsAnalyticsData> {
-  const result = await executeQuery<{ channelsAnalytics: IChannelsAnalyticsData }>(
-    CHANNELS_ANALYTICS_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    channelsAnalytics: IChannelsAnalyticsData
+  }>(CHANNELS_ANALYTICS_QUERY, params)
   return result.channelsAnalytics
 }
 
@@ -220,10 +225,9 @@ interface IBranchComparisonParams {
 export async function getBranchComparison(
   params: IBranchComparisonParams
 ): Promise<IBranchComparisonData> {
-  const result = await executeQuery<{ branchComparison: IBranchComparisonData }>(
-    BRANCH_COMPARISON_QUERY,
-    params
-  )
+  const result = await executeQuery<{
+    branchComparison: IBranchComparisonData
+  }>(BRANCH_COMPARISON_QUERY, params)
   return result.branchComparison
 }
 
@@ -250,7 +254,9 @@ interface IProfitLossParams extends IBaseParams {
   comparePreviousPeriod?: boolean
 }
 
-export async function getProfitLoss(params: IProfitLossParams): Promise<IProfitLossData> {
+export async function getProfitLoss(
+  params: IProfitLossParams
+): Promise<IProfitLossData> {
   const result = await executeQuery<{ profitLoss: IProfitLossData }>(
     PROFIT_LOSS_QUERY,
     params

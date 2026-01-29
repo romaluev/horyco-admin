@@ -13,12 +13,12 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
-import { Badge } from '@/shared/ui/base/badge'
 import {
   MOVEMENT_TYPES,
   MOVEMENT_TYPE_LABELS,
   type MovementType,
 } from '@/shared/types/inventory'
+import { Badge } from '@/shared/ui/base/badge'
 
 interface IMovementTypeBadgeProps {
   type: MovementType
@@ -110,7 +110,10 @@ export function MovementTypeBadge({
   const label = MOVEMENT_TYPE_LABELS[type] || type
 
   return (
-    <Badge variant="outline" className={cn('gap-1', config.colorClass, className)}>
+    <Badge
+      variant="outline"
+      className={cn('gap-1', config.colorClass, className)}
+    >
       {showIcon && <Icon className="h-3 w-3" />}
       <span>{label}</span>
     </Badge>

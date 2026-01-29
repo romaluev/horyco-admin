@@ -19,7 +19,12 @@ import type {
   WidgetType,
   IViewWidget,
 } from '@/entities/dashboard/view'
-import type { Dataset, GroupBy, SortBy, SortDirection } from '@/shared/api/graphql'
+import type {
+  Dataset,
+  GroupBy,
+  SortBy,
+  SortDirection,
+} from '@/shared/api/graphql'
 
 // Stable empty arrays for selectors (prevents infinite loops)
 const EMPTY_COLUMNS: readonly IColumnDef[] = []
@@ -84,7 +89,12 @@ interface IViewBuilderStore {
   clearFilters: () => void
 
   // Actions - State management
-  loadView: (viewId: string, name: string, config: IViewConfig, dataset: Dataset) => void
+  loadView: (
+    viewId: string,
+    name: string,
+    config: IViewConfig,
+    dataset: Dataset
+  ) => void
   resetConfig: () => void
   hasUnsavedChanges: () => boolean
 
@@ -192,7 +202,10 @@ export const useViewBuilderStore = create<IViewBuilderStore>((set, get) => ({
     set((state) => ({
       workingConfig: {
         ...state.workingConfig,
-        chart: { ...state.workingConfig.chart, groupBy } as IViewConfig['chart'],
+        chart: {
+          ...state.workingConfig.chart,
+          groupBy,
+        } as IViewConfig['chart'],
       },
     })),
 

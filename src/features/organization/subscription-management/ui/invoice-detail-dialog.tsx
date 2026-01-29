@@ -12,7 +12,10 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Separator } from '@/shared/ui/base/separator'
 
-import { useGetInvoiceDetails, InvoiceStatusBadge } from '@/entities/organization/subscription'
+import {
+  useGetInvoiceDetails,
+  InvoiceStatusBadge,
+} from '@/entities/organization/subscription'
 
 interface InvoiceDetailDialogProps {
   invoiceId: number
@@ -25,10 +28,11 @@ export const InvoiceDetailDialog = ({
   isOpen,
   onOpenChange,
 }: InvoiceDetailDialogProps) => {
-  const { data: invoice, isLoading, error } = useGetInvoiceDetails(
-    isOpen ? invoiceId : null,
-    isOpen
-  )
+  const {
+    data: invoice,
+    isLoading,
+    error,
+  } = useGetInvoiceDetails(isOpen ? invoiceId : null, isOpen)
 
   if (!isOpen) return null
 
@@ -68,7 +72,7 @@ export const InvoiceDetailDialog = ({
           <div className="flex items-start justify-between gap-4">
             <div>
               <DialogTitle>{invoice.invoiceNumber}</DialogTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {new Date(invoice.periodStart).toLocaleDateString('ru-RU')} -{' '}
                 {new Date(invoice.periodEnd).toLocaleDateString('ru-RU')}
               </p>
@@ -81,20 +85,26 @@ export const InvoiceDetailDialog = ({
           {/* Invoice Info */}
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-xs font-medium text-muted-foreground">ДАТА СЧЕТА</p>
+              <p className="text-muted-foreground text-xs font-medium">
+                ДАТА СЧЕТА
+              </p>
               <p className="mt-1 font-medium">
                 {new Date(invoice.createdAt).toLocaleDateString('ru-RU')}
               </p>
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground">СРОК ОПЛАТЫ</p>
+              <p className="text-muted-foreground text-xs font-medium">
+                СРОК ОПЛАТЫ
+              </p>
               <p className="mt-1 font-medium">
                 {new Date(invoice.dueDate).toLocaleDateString('ru-RU')}
               </p>
             </div>
             {invoice.paidAt && (
               <div>
-                <p className="text-xs font-medium text-muted-foreground">ДАТА ОПЛАТЫ</p>
+                <p className="text-muted-foreground text-xs font-medium">
+                  ДАТА ОПЛАТЫ
+                </p>
                 <p className="mt-1 font-medium">
                   {new Date(invoice.paidAt).toLocaleDateString('ru-RU')}
                 </p>
@@ -109,10 +119,13 @@ export const InvoiceDetailDialog = ({
             <p className="mb-3 text-sm font-semibold">Товары и услуги</p>
             <div className="space-y-2">
               {invoice.lineItems.map((item, idx) => (
-                <div key={idx} className="flex items-start justify-between gap-4">
+                <div
+                  key={idx}
+                  className="flex items-start justify-between gap-4"
+                >
                   <div>
                     <p className="text-sm font-medium">{item.description}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {item.quantity} × {formatPrice(item.unitPrice)}
                     </p>
                   </div>
@@ -130,11 +143,15 @@ export const InvoiceDetailDialog = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm">Сумма к оплате:</span>
-              <span className="font-semibold">{formatPrice(invoice.amountDue)}</span>
+              <span className="font-semibold">
+                {formatPrice(invoice.amountDue)}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Оплачено:</span>
-              <span className="font-semibold">{formatPrice(invoice.amountPaid)}</span>
+              <span className="font-semibold">
+                {formatPrice(invoice.amountPaid)}
+              </span>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
@@ -47,7 +48,9 @@ export default function HeatmapPage() {
   }
 
   // Get day names from translations
-  const daysOfWeek = t('heatmap.days', { returnObjects: true }) as string[] || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const daysOfWeek = (t('heatmap.days', {
+    returnObjects: true,
+  }) as string[]) || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   // Build heatmap grid
   const grid = React.useMemo(() => {
@@ -79,7 +82,9 @@ export default function HeatmapPage() {
         <div className="space-y-6">
           {/* Heatmap Grid */}
           <div>
-            <h3 className="mb-3 text-sm font-medium">{t('heatmap.grid.orders')}</h3>
+            <h3 className="mb-3 text-sm font-medium">
+              {t('heatmap.grid.orders')}
+            </h3>
             <HeatmapGrid grid={grid} daysOfWeek={daysOfWeek} />
           </div>
 
@@ -87,7 +92,11 @@ export default function HeatmapPage() {
           <HeatmapLegend />
 
           {/* Peak Info */}
-          <PeakInfo peakHour={data.peakHour ?? 12} peakDay={data.peakDay ?? 0} daysOfWeek={daysOfWeek} />
+          <PeakInfo
+            peakHour={data.peakHour ?? 12}
+            peakDay={data.peakDay ?? 0}
+            daysOfWeek={daysOfWeek}
+          />
         </div>
       ) : null}
     </AnalyticsPageLayout>
@@ -111,9 +120,14 @@ function HeatmapGrid({ grid, daysOfWeek }: IHeatmapGridProps) {
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th className="w-12 p-2 text-left text-muted-foreground">{t('heatmap.grid.hour')}</th>
+            <th className="text-muted-foreground w-12 p-2 text-left">
+              {t('heatmap.grid.hour')}
+            </th>
             {daysOfWeek.map((day, i) => (
-              <th key={i} className="min-w-[48px] p-2 text-center text-muted-foreground">
+              <th
+                key={i}
+                className="text-muted-foreground min-w-[48px] p-2 text-center"
+              >
                 {day}
               </th>
             ))}
@@ -122,7 +136,7 @@ function HeatmapGrid({ grid, daysOfWeek }: IHeatmapGridProps) {
         <tbody>
           {HOURS.map((hour) => (
             <tr key={hour}>
-              <td className="p-2 text-muted-foreground">{hour}:00</td>
+              <td className="text-muted-foreground p-2">{hour}:00</td>
               {daysOfWeek.map((_, dayIndex) => {
                 const value = grid[`${dayIndex}-${hour}`] || 0
                 const level = getHeatLevel(value)
@@ -175,10 +189,14 @@ function HeatmapLegend() {
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <span className="text-sm text-muted-foreground">{t('heatmap.legend.label')}</span>
+      <span className="text-muted-foreground text-sm">
+        {t('heatmap.legend.label')}
+      </span>
       {levels.map(({ key }) => (
         <div key={key} className="flex items-center gap-2">
-          <div className={cn('size-4 rounded', HEATMAP_LEVEL_CONFIG[key].color)} />
+          <div
+            className={cn('size-4 rounded', HEATMAP_LEVEL_CONFIG[key].color)}
+          />
           <span className="text-sm">{t(`heatmap.legend.${key}`)}</span>
         </div>
       ))}
@@ -204,11 +222,15 @@ function PeakInfo({ peakHour, peakDay, daysOfWeek }: IPeakInfoProps) {
       <h3 className="mb-3 text-sm font-medium">{t('heatmap.peakTime')}</h3>
       <div className="flex gap-6">
         <div>
-          <span className="text-sm text-muted-foreground">{t('heatmap.peakDay')}</span>
+          <span className="text-muted-foreground text-sm">
+            {t('heatmap.peakDay')}
+          </span>
           <span className="ml-2 font-medium">{daysOfWeek[peakDay]}</span>
         </div>
         <div>
-          <span className="text-sm text-muted-foreground">{t('heatmap.peakHour')}</span>
+          <span className="text-muted-foreground text-sm">
+            {t('heatmap.peakHour')}
+          </span>
           <span className="ml-2 font-medium">{peakHour}:00</span>
         </div>
       </div>

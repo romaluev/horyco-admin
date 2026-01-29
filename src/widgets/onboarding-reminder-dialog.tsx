@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { AlertCircle, X } from 'lucide-react'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,

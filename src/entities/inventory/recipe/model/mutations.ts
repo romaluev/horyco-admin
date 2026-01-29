@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
+
+import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import { recipeApi } from './api'
 import { recipeKeys } from './query-keys'
-import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateRecipeDto,
@@ -114,10 +116,17 @@ export const useAddRecipeIngredient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ recipeId, data }: { recipeId: number; data: ICreateRecipeIngredientDto }) =>
-      recipeApi.addIngredient(recipeId, data),
+    mutationFn: ({
+      recipeId,
+      data,
+    }: {
+      recipeId: number
+      data: ICreateRecipeIngredientDto
+    }) => recipeApi.addIngredient(recipeId, data),
     onSuccess: (_, { recipeId }) => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({
+        queryKey: recipeKeys.ingredients(recipeId),
+      })
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент добавлен')
     },
@@ -144,7 +153,9 @@ export const useUpdateRecipeIngredient = () => {
       data: IUpdateRecipeIngredientDto
     }) => recipeApi.updateIngredient(recipeId, ingredientId, data),
     onSuccess: (_, { recipeId }) => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({
+        queryKey: recipeKeys.ingredients(recipeId),
+      })
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент обновлен')
     },
@@ -161,10 +172,17 @@ export const useRemoveRecipeIngredient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ recipeId, ingredientId }: { recipeId: number; ingredientId: number }) =>
-      recipeApi.removeIngredient(recipeId, ingredientId),
+    mutationFn: ({
+      recipeId,
+      ingredientId,
+    }: {
+      recipeId: number
+      ingredientId: number
+    }) => recipeApi.removeIngredient(recipeId, ingredientId),
     onSuccess: (_, { recipeId }) => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.ingredients(recipeId) })
+      queryClient.invalidateQueries({
+        queryKey: recipeKeys.ingredients(recipeId),
+      })
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) })
       toast.success('Ингредиент удален')
     },

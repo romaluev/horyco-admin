@@ -24,10 +24,10 @@ export function StaffRankingWidget({
             className="flex items-center justify-between gap-2 rounded-md px-2 py-2"
           >
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 animate-pulse rounded-full bg-muted" />
-              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+              <div className="bg-muted h-8 w-8 animate-pulse rounded-full" />
+              <div className="bg-muted h-4 w-24 animate-pulse rounded" />
             </div>
-            <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-4 w-16 animate-pulse rounded" />
           </div>
         ))}
       </div>
@@ -36,7 +36,7 @@ export function StaffRankingWidget({
 
   if (data.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )
@@ -49,11 +49,11 @@ export function StaffRankingWidget({
       {data.map((item) => (
         <div
           key={item.id}
-          className="group relative flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-muted/50"
+          className="group hover:bg-muted/50 relative flex items-center justify-between gap-2 rounded-md px-2 py-2"
         >
           {/* Background progress bar */}
           <div
-            className="absolute inset-y-0 left-0 rounded-md bg-primary/10"
+            className="bg-primary/10 absolute inset-y-0 left-0 rounded-md"
             style={{ width: `${(item.value / maxValue) * 100}%` }}
           />
 
@@ -80,7 +80,7 @@ export function StaffRankingWidget({
                 {item.formattedValue}
               </div>
               {item.secondaryLabel && (
-                <div className="text-xs text-muted-foreground">
+                <div className="text-muted-foreground text-xs">
                   {item.secondaryValue} {item.secondaryLabel}
                 </div>
               )}

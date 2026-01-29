@@ -32,7 +32,9 @@ export function CustomizableDashboard({
 }: CustomizableDashboardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
-  const [configModalWidgetId, setConfigModalWidgetId] = useState<string | null>(null)
+  const [configModalWidgetId, setConfigModalWidgetId] = useState<string | null>(
+    null
+  )
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
   const {
@@ -90,8 +92,8 @@ export function CustomizableDashboard({
     return (
       <div className={cn('space-y-4', className)}>
         <div className="flex items-center justify-between">
-          <div className="h-7 w-24 animate-pulse rounded bg-muted" />
-          <div className="h-9 w-32 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-7 w-24 animate-pulse rounded" />
+          <div className="bg-muted h-9 w-32 animate-pulse rounded" />
         </div>
       </div>
     )
@@ -99,10 +101,13 @@ export function CustomizableDashboard({
 
   if (widgets.length === 0 && !isEditMode) {
     return (
-      <div className={cn('rounded-xl border border-dashed p-8 text-center', className)}>
-        <p className="mb-4 text-muted-foreground">
-          Виджеты пока не добавлены
-        </p>
+      <div
+        className={cn(
+          'rounded-xl border border-dashed p-8 text-center',
+          className
+        )}
+      >
+        <p className="text-muted-foreground mb-4">Виджеты пока не добавлены</p>
         <EditModeToggle />
       </div>
     )
@@ -130,7 +135,10 @@ export function CustomizableDashboard({
           width={containerWidth}
         >
           {widgets.map((widget) => (
-            <div key={widget.id} data-grid={config.layout.find((l) => l.i === widget.id)}>
+            <div
+              key={widget.id}
+              data-grid={config.layout.find((l) => l.i === widget.id)}
+            >
               <WidgetItem
                 widget={widget}
                 analyticsData={analyticsData}
@@ -148,7 +156,7 @@ export function CustomizableDashboard({
       {/* Empty state in edit mode */}
       {isEditMode && widgets.length === 0 && (
         <div className="rounded-xl border border-dashed p-8 text-center">
-          <p className="mb-4 text-muted-foreground">
+          <p className="text-muted-foreground mb-4">
             Нажмите &quot;Добавить виджет&quot; чтобы начать
           </p>
           <AddWidgetButton onClick={() => setIsAddModalOpen(true)} />
@@ -172,7 +180,9 @@ export function CustomizableDashboard({
 
 // Separate component for widget items to use hook
 interface WidgetItemProps {
-  widget: ReturnType<typeof useDashboardWidgetStore.getState>['config']['widgets'][string]
+  widget: ReturnType<
+    typeof useDashboardWidgetStore.getState
+  >['config']['widgets'][string]
   analyticsData?: IDashboardAnalyticsResponse | null
   isLoading: boolean
   isEditMode: boolean

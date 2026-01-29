@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+
 import { PERMISSIONS } from '@/shared/lib/permissions'
+
 import type { NavItem } from '../types'
 
 export function useNavItems() {
@@ -54,7 +56,11 @@ export function useNavItems() {
       icon: 'building',
       shortcut: ['O'],
       isActive: false,
-      permissions: [PERMISSIONS.STAFF_VIEW, PERMISSIONS.BRANCHES_VIEW, PERMISSIONS.TABLES_VIEW],
+      permissions: [
+        PERMISSIONS.STAFF_VIEW,
+        PERMISSIONS.BRANCHES_VIEW,
+        PERMISSIONS.TABLES_VIEW,
+      ],
       permissionMode: 'any',
       items: [
         {

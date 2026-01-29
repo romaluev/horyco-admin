@@ -24,7 +24,12 @@ export const stockApi = {
     }>('/admin/inventory/stock', { params })
     return {
       data: response.data.data || [],
-      meta: response.data.meta || { total: 0, page: 0, size: 20, totalPages: 0 },
+      meta: response.data.meta || {
+        total: 0,
+        page: 0,
+        size: 20,
+        totalPages: 0,
+      },
     }
   },
 
@@ -103,10 +108,13 @@ export const stockApi = {
    * POST /admin/inventory/alerts/:warehouseId/acknowledge-all
    * Acknowledge all alerts for a warehouse
    */
-  async acknowledgeAllAlerts(warehouseId: number): Promise<{ acknowledged: number }> {
-    const response = await api.post<{ success: boolean; data: { acknowledged: number } }>(
-      `/admin/inventory/alerts/${warehouseId}/acknowledge-all`
-    )
+  async acknowledgeAllAlerts(
+    warehouseId: number
+  ): Promise<{ acknowledged: number }> {
+    const response = await api.post<{
+      success: boolean
+      data: { acknowledged: number }
+    }>(`/admin/inventory/alerts/${warehouseId}/acknowledge-all`)
     return response.data.data
   },
 }

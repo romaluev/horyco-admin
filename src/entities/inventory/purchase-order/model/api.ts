@@ -27,11 +27,12 @@ export const purchaseOrderApi = {
    * Get all purchase orders
    * GET /admin/inventory/purchase-orders
    */
-  async getPurchaseOrders(params?: IGetPurchaseOrdersParams): Promise<IPurchaseOrder[]> {
-    const response = await api.get<ApiResponse<IPurchaseOrder[]> | IPurchaseOrder[]>(
-      '/admin/inventory/purchase-orders',
-      { params }
-    )
+  async getPurchaseOrders(
+    params?: IGetPurchaseOrdersParams
+  ): Promise<IPurchaseOrder[]> {
+    const response = await api.get<
+      ApiResponse<IPurchaseOrder[]> | IPurchaseOrder[]
+    >('/admin/inventory/purchase-orders', { params })
     const data = response.data
     if (Array.isArray(data)) return data
     return data.data || []
@@ -52,7 +53,9 @@ export const purchaseOrderApi = {
    * Create purchase order
    * POST /admin/inventory/purchase-orders
    */
-  async createPurchaseOrder(data: ICreatePurchaseOrderDto): Promise<IPurchaseOrder> {
+  async createPurchaseOrder(
+    data: ICreatePurchaseOrderDto
+  ): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
       '/admin/inventory/purchase-orders',
       data
@@ -64,7 +67,10 @@ export const purchaseOrderApi = {
    * Update purchase order (draft only)
    * PATCH /admin/inventory/purchase-orders/:id
    */
-  async updatePurchaseOrder(id: number, data: IUpdatePurchaseOrderDto): Promise<IPurchaseOrder> {
+  async updatePurchaseOrder(
+    id: number,
+    data: IUpdatePurchaseOrderDto
+  ): Promise<IPurchaseOrder> {
     const response = await api.patch<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}`,
       data
@@ -84,7 +90,10 @@ export const purchaseOrderApi = {
    * Add item to purchase order
    * POST /admin/inventory/purchase-orders/:id/items
    */
-  async addItem(id: number, data: ICreatePOItemDto): Promise<IPurchaseOrderItem> {
+  async addItem(
+    id: number,
+    data: ICreatePOItemDto
+  ): Promise<IPurchaseOrderItem> {
     const response = await api.post<ApiResponse<IPurchaseOrderItem>>(
       `/admin/inventory/purchase-orders/${id}/items`,
       data
@@ -96,7 +105,11 @@ export const purchaseOrderApi = {
    * Update purchase order item
    * PATCH /admin/inventory/purchase-orders/:id/items/:poItemId
    */
-  async updateItem(id: number, poItemId: number, data: IUpdatePOItemDto): Promise<IPurchaseOrderItem> {
+  async updateItem(
+    id: number,
+    poItemId: number,
+    data: IUpdatePOItemDto
+  ): Promise<IPurchaseOrderItem> {
     const response = await api.patch<ApiResponse<IPurchaseOrderItem>>(
       `/admin/inventory/purchase-orders/${id}/items/${poItemId}`,
       data
@@ -127,7 +140,10 @@ export const purchaseOrderApi = {
    * Receive items from purchase order
    * POST /admin/inventory/purchase-orders/:id/receive
    */
-  async receivePurchaseOrder(id: number, data: IReceivePODto): Promise<IPurchaseOrder> {
+  async receivePurchaseOrder(
+    id: number,
+    data: IReceivePODto
+  ): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}/receive`,
       data
@@ -139,7 +155,10 @@ export const purchaseOrderApi = {
    * Cancel purchase order
    * POST /admin/inventory/purchase-orders/:id/cancel
    */
-  async cancelPurchaseOrder(id: number, data: ICancelPODto): Promise<IPurchaseOrder> {
+  async cancelPurchaseOrder(
+    id: number,
+    data: ICancelPODto
+  ): Promise<IPurchaseOrder> {
     const response = await api.post<ApiResponse<IPurchaseOrder>>(
       `/admin/inventory/purchase-orders/${id}/cancel`,
       data

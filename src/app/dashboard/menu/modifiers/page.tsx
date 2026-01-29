@@ -15,8 +15,8 @@ import {
   Settings,
   Trash2,
 } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
+
 import { BaseLoading } from '@/shared/ui'
 import {
   Accordion,
@@ -211,7 +211,11 @@ const ModifierItem = ({ modifier, onEdit, onDelete }: ModifierItemProps) => {
           <Button variant="ghost" size="sm" onClick={() => onEdit(modifier)}>
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => onDelete(modifier.id)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDelete(modifier.id)}
+          >
             <Trash2 className="text-destructive h-4 w-4" />
           </Button>
         </div>

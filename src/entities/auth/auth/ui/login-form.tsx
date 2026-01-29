@@ -3,14 +3,14 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
-import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { BaseLoading } from '@/shared/ui'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
@@ -44,7 +44,8 @@ type LoginFormValues = z.infer<typeof loginFormSchema>
 const LoginForm = () => {
   const router = useRouter()
   const { t } = useTranslation('auth')
-  const { login, isLoading, error, clearError, me, loadFullProfile } = useAuthStore()
+  const { login, isLoading, error, clearError, me, loadFullProfile } =
+    useAuthStore()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -61,15 +62,18 @@ const LoginForm = () => {
       setGeneralError(null)
       clearError()
 
-      const tenantSlug = typeof window !== 'undefined'
-        ? localStorage.getItem('tenantSlug') || undefined
-        : undefined
+      const tenantSlug =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('tenantSlug') || undefined
+          : undefined
 
       await login(data.phone, data.password, tenantSlug)
 
       setIsRedirecting(true)
       await me()
-      void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
+      void loadFullProfile().catch((e: unknown) =>
+        console.warn('Failed to load profile:', e)
+      )
 
       router.push('/')
     } catch (error: unknown) {
@@ -106,7 +110,9 @@ const LoginForm = () => {
   return (
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">{t('signIn.title')}</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {t('signIn.title')}
+        </CardTitle>
         <CardDescription>{t('signIn.description')}</CardDescription>
       </CardHeader>
       <CardContent>

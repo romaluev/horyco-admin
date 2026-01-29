@@ -72,7 +72,11 @@ export const getNavItems = (): NavItem[] => [
     icon: 'building',
     shortcut: ['O'],
     isActive: false,
-    permissions: [PERMISSIONS.STAFF_VIEW, PERMISSIONS.BRANCHES_VIEW, PERMISSIONS.TABLES_VIEW],
+    permissions: [
+      PERMISSIONS.STAFF_VIEW,
+      PERMISSIONS.BRANCHES_VIEW,
+      PERMISSIONS.TABLES_VIEW,
+    ],
     permissionMode: 'any',
     items: [
       {

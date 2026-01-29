@@ -7,13 +7,13 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
+import { usePathname } from '@/shared/lib/navigation'
 import {
   Collapsible,
   CollapsibleContent,
@@ -74,22 +74,34 @@ export function AnalyticsSidebarSection() {
   const { data: views, isLoading: isViewsLoading } = useViews()
 
   // Check if user can create views
-  const { canCreateViews, userTier } = useViewAccess('products', views?.length ?? 0)
+  const { canCreateViews, userTier } = useViewAccess(
+    'products',
+    views?.length ?? 0
+  )
 
   // Debug: log current tier
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development' && !isPagesLoading) {
-      console.log('[Analytics] User tier:', userTier, 'Can create views:', canCreateViews)
+      console.log(
+        '[Analytics] User tier:',
+        userTier,
+        'Can create views:',
+        canCreateViews
+      )
     }
   }, [userTier, canCreateViews, isPagesLoading])
 
   const isLoading = isPagesLoading || isViewsLoading
 
   // Check if current path is in analytics
-  const isAnalyticsActive = pathname.startsWith('/dashboard/analytics') || pathname.startsWith('/dashboard/views')
+  const isAnalyticsActive =
+    pathname.startsWith('/dashboard/analytics') ||
+    pathname.startsWith('/dashboard/views')
 
   // Get first visible page icon for collapsed state
-  const firstPageIcon = visiblePages[0] ? PAGE_ACCESS_CONFIG[visiblePages[0]].icon : 'chartBar'
+  const firstPageIcon = visiblePages[0]
+    ? PAGE_ACCESS_CONFIG[visiblePages[0]].icon
+    : 'chartBar'
   const FirstIcon = Icons[firstPageIcon as keyof typeof Icons] || Icons.chartBar
 
   if (isCollapsed) {
@@ -107,10 +119,10 @@ export function AnalyticsSidebarSection() {
               side="right"
               align="start"
               sideOffset={8}
-              className="w-48 max-h-80 overflow-y-auto p-1"
+              className="max-h-80 w-48 overflow-y-auto p-1"
             >
               <div className="flex flex-col gap-0.5">
-                <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium tracking-wider uppercase">
                   {t('analytics.title')}
                 </div>
 
@@ -128,15 +140,16 @@ export function AnalyticsSidebarSection() {
                   visiblePages.map((pageCode) => {
                     const config = PAGE_ACCESS_CONFIG[pageCode]
                     const url = ANALYTICS_PAGE_URLS[pageCode]
-                    const PageIcon = Icons[config.icon as keyof typeof Icons] || Icons.chartBar
+                    const PageIcon =
+                      Icons[config.icon as keyof typeof Icons] || Icons.chartBar
 
                     return (
                       <Link
                         key={pageCode}
                         to={url}
-                        className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                        className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
                           pathname === url
-                            ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                            ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                             : ''
                         }`}
                       >
@@ -157,15 +170,15 @@ export function AnalyticsSidebarSection() {
                     <Link
                       key={view.id}
                       to={`/dashboard/views/${view.id}` as any}
-                      className={`flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors ${
                         pathname === `/dashboard/views/${view.id}`
-                          ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                           : ''
                       }`}
                     >
                       {view.name}
                       {view.isPinned && (
-                        <span className="text-xs text-muted-foreground">*</span>
+                        <span className="text-muted-foreground text-xs">*</span>
                       )}
                     </Link>
                   ))}
@@ -174,7 +187,7 @@ export function AnalyticsSidebarSection() {
                 {!isLoading && canCreateViews && (
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
+                    className="text-muted-foreground hover:bg-sidebar-accent hover:text-foreground flex items-center rounded-md px-2 py-1.5 text-sm transition-colors"
                   >
                     <IconPlus className="mr-1 size-4" />
                     {t('dashboard.views.create')}
@@ -185,7 +198,10 @@ export function AnalyticsSidebarSection() {
           </HoverCard>
         </SidebarMenuItem>
 
-        <ViewTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <ViewTypeModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </>
     )
   }
@@ -200,12 +216,14 @@ export function AnalyticsSidebarSection() {
           <CollapsibleTrigger asChild>
             {/* Group header - small, without icon */}
             <SidebarMenuButton tooltip={t('analytics.title')} size="sm">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('analytics.title')}</span>
+              <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                {t('analytics.title')}
+              </span>
               <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <SidebarMenuSub className="!border-l-0 !ml-0 !pl-0">
+            <SidebarMenuSub className="!ml-0 !border-l-0 !pl-0">
               {/* Loading State */}
               {isLoading && (
                 <>
@@ -222,7 +240,8 @@ export function AnalyticsSidebarSection() {
                 visiblePages.map((pageCode) => {
                   const config = PAGE_ACCESS_CONFIG[pageCode]
                   const url = ANALYTICS_PAGE_URLS[pageCode]
-                  const PageIcon = Icons[config.icon as keyof typeof Icons] || Icons.chartBar
+                  const PageIcon =
+                    Icons[config.icon as keyof typeof Icons] || Icons.chartBar
 
                   return (
                     <SidebarMenuSubItem key={pageCode}>
@@ -233,7 +252,9 @@ export function AnalyticsSidebarSection() {
                       >
                         <Link to={url} className="flex items-center gap-2">
                           <PageIcon className="!h-[1.25rem] !w-[1.25rem]" />
-                          <span className="text-[17px]">{t(`${pageCode}.title`)}</span>
+                          <span className="text-[17px]">
+                            {t(`${pageCode}.title`)}
+                          </span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -256,11 +277,14 @@ export function AnalyticsSidebarSection() {
                       asChild
                       isActive={pathname === `/dashboard/views/${view.id}`}
                     >
-                      <Link to={`/dashboard/views/${view.id}` as any} className="flex items-center gap-2">
+                      <Link
+                        to={`/dashboard/views/${view.id}` as any}
+                        className="flex items-center gap-2"
+                      >
                         <Icons.chartPie className="h-6 w-6" />
                         <span className="text-[17px]">{view.name}</span>
                         {view.isPinned && (
-                          <span className="ml-auto text-xs text-muted-foreground">
+                          <span className="text-muted-foreground ml-auto text-xs">
                             *
                           </span>
                         )}
@@ -273,11 +297,13 @@ export function AnalyticsSidebarSection() {
               {!isLoading && canCreateViews && (
                 <SidebarMenuSubItem>
                   <SidebarMenuSubButton
-                    className="!p-3 text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground !p-3"
                     onClick={() => setIsModalOpen(true)}
                   >
                     <IconPlus className="mr-1 size-4" />
-                    <span className="text-[17px]">{t('dashboard.views.create')}</span>
+                    <span className="text-[17px]">
+                      {t('dashboard.views.create')}
+                    </span>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               )}
@@ -287,7 +313,10 @@ export function AnalyticsSidebarSection() {
       </Collapsible>
 
       {/* Modal for creating new view */}
-      <ViewTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ViewTypeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   )
 }

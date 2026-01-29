@@ -130,7 +130,9 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
                       <Button
                         key={shape.value}
                         type="button"
-                        variant={field.value === shape.value ? 'default' : 'outline'}
+                        variant={
+                          field.value === shape.value ? 'default' : 'outline'
+                        }
                         className="flex-1"
                         onClick={() => field.onChange(shape.value)}
                       >
@@ -155,7 +157,9 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
                           type="number"
                           placeholder="X: 500"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -172,7 +176,9 @@ export const CreateTableDialog = ({ hallId }: ICreateTableDialogProps) => {
                           type="number"
                           placeholder="Y: 300"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormMessage />

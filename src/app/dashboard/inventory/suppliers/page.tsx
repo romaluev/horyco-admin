@@ -64,7 +64,7 @@ export default function SuppliersPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <div className="relative min-w-[200px] flex-1">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Поиск поставщика..."
               value={search}
@@ -117,7 +117,9 @@ export default function SuppliersPage() {
                       <div>
                         <p className="font-medium">{supplier.name}</p>
                         {supplier.code && (
-                          <p className="text-sm text-muted-foreground">{supplier.code}</p>
+                          <p className="text-muted-foreground text-sm">
+                            {supplier.code}
+                          </p>
                         )}
                       </div>
                     </TableCell>
@@ -132,13 +134,19 @@ export default function SuppliersPage() {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {supplier.lastOrderAt
-                        ? format(new Date(supplier.lastOrderAt), 'd MMM yyyy', { locale: ru })
+                        ? format(new Date(supplier.lastOrderAt), 'd MMM yyyy', {
+                            locale: ru,
+                          })
                         : '—'}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" asChild>
-                          <Link to={`/dashboard/inventory/suppliers/${supplier.id}` as any}>
+                          <Link
+                            to={
+                              `/dashboard/inventory/suppliers/${supplier.id}` as any
+                            }
+                          >
                             Открыть
                           </Link>
                         </Button>
@@ -161,11 +169,11 @@ export default function SuppliersPage() {
 
 const EmptySuppliersState = ({ hasFilters }: { hasFilters: boolean }) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconTruck className="h-12 w-12 text-muted-foreground/50" />
+    <IconTruck className="text-muted-foreground/50 h-12 w-12" />
     <h3 className="mt-4 text-lg font-semibold">
       {hasFilters ? 'Поставщики не найдены' : 'Нет поставщиков'}
     </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+    <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
       {hasFilters
         ? 'Попробуйте изменить параметры поиска или фильтры.'
         : 'Добавьте поставщиков для управления закупками и ценами на товары.'}

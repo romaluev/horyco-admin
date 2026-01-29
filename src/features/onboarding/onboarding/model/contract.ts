@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-/* eslint-disable no-magic-numbers */
-
 /**
  * Onboarding validation schemas (Zod)
  * All validation logic for onboarding features

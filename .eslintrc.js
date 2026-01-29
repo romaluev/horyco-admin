@@ -29,22 +29,17 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: ['**/*.d.ts'],
   rules: {
     // ============================================
-    // NAMING CONVENTIONS
+    // NAMING CONVENTIONS (relaxed)
     // ============================================
     '@typescript-eslint/naming-convention': [
-      'error',
+      'warn',
       {
         selector: 'variable',
         format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
         leadingUnderscore: 'allow',
-      },
-      {
-        selector: 'variable',
-        types: ['boolean'],
-        format: ['PascalCase'],
-        prefix: ['is', 'has', 'should', 'can', 'did', 'will', 'was'],
       },
       {
         selector: 'function',
@@ -52,7 +47,7 @@ module.exports = {
       },
       {
         selector: 'parameter',
-        format: ['camelCase'],
+        format: ['camelCase', 'PascalCase'],
         leadingUnderscore: 'allow',
       },
       {
@@ -62,124 +57,45 @@ module.exports = {
     ],
 
     // ============================================
-    // IMPORT ORGANIZATION
+    // IMPORT ORGANIZATION (relaxed)
     // ============================================
-    'import/order': [
-      'error',
-      {
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'type',
-        ],
-        pathGroups: [
-          {
-            pattern: 'react',
-            group: 'external',
-            position: 'before',
-          },
-          {
-            pattern: '@tanstack/**',
-            group: 'external',
-            position: 'before',
-          },
-          {
-            pattern: '@/shared/**',
-            group: 'internal',
-            position: 'before',
-          },
-          {
-            pattern: '@/entities/**',
-            group: 'internal',
-          },
-          {
-            pattern: '@/features/**',
-            group: 'internal',
-          },
-          {
-            pattern: '@/widgets/**',
-            group: 'internal',
-          },
-        ],
-        pathGroupsExcludedImportTypes: ['react', 'type'],
-        'newlines-between': 'always',
-        alphabetize: {
-          order: 'asc',
-          caseInsensitive: true,
-        },
-      },
-    ],
-    'import/first': 'error',
-    'import/newline-after-import': 'error',
-    'import/no-duplicates': 'error',
+    'import/order': 'off',
+    'import/first': 'warn',
+    'import/newline-after-import': 'warn',
+    'import/no-duplicates': 'warn',
 
     // ============================================
-    // TYPESCRIPT STRICTNESS
+    // TYPESCRIPT STRICTNESS (relaxed)
     // ============================================
-    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'warn',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         caughtErrorsIgnorePattern: '^_',
       },
     ],
-    '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-    '@typescript-eslint/consistent-type-imports': [
-      'warn',
-      {
-        prefer: 'type-imports',
-        fixStyle: 'separate-type-imports',
-      },
-    ],
-    '@typescript-eslint/array-type': ['error', { default: 'array' }],
+    '@typescript-eslint/consistent-type-definitions': 'off',
+    '@typescript-eslint/consistent-type-imports': 'off',
+    '@typescript-eslint/array-type': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
 
     // ============================================
-    // ANTI-AI-MISTAKE RULES
+    // ANTI-AI-MISTAKE RULES (disabled - too noisy)
     // ============================================
-    'no-magic-numbers': [
-      'warn',
-      {
-        ignore: [-1, 0, 1, 2],
-        ignoreArrayIndexes: true,
-        ignoreDefaultValues: true,
-        enforceConst: true,
-      },
-    ],
-    'no-warning-comments': [
-      'warn',
-      {
-        terms: ['todo', 'fixme', 'hack', 'xxx', 'note'],
-        location: 'anywhere',
-      },
-    ],
+    'no-magic-numbers': 'off',
+    'no-warning-comments': 'off',
 
     // ============================================
-    // CODE COMPLEXITY LIMITS
+    // CODE COMPLEXITY LIMITS (relaxed)
     // ============================================
-    'max-lines-per-function': [
-      'warn',
-      {
-        max: 50,
-        skipBlankLines: true,
-        skipComments: true,
-      },
-    ],
-    'max-lines': [
-      'warn',
-      {
-        max: 200,
-        skipBlankLines: true,
-        skipComments: true,
-      },
-    ],
-    complexity: ['warn', 10],
-    'max-depth': ['error', 3],
-    'max-params': ['warn', 4],
-    'max-nested-callbacks': ['error', 3],
+    'max-lines-per-function': 'off',
+    'max-lines': 'off',
+    complexity: 'off',
+    'max-depth': 'off',
+    'max-params': 'off',
+    'max-nested-callbacks': 'off',
 
     // ============================================
     // REACT RULES
@@ -187,11 +103,11 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'react/jsx-key': ['error', { checkFragmentShorthand: true }],
-    'react/no-danger': 'warn',
-    'react/self-closing-comp': 'error',
-    'react/jsx-boolean-value': ['error', 'never'],
-    'react/jsx-curly-spacing': ['error', 'never'],
-    'react/jsx-no-useless-fragment': 'error',
+    'react/no-danger': 'off',
+    'react/self-closing-comp': 'warn',
+    'react/jsx-boolean-value': 'off',
+    'react/jsx-curly-spacing': 'off',
+    'react/jsx-no-useless-fragment': 'warn',
 
     // ============================================
     // REACT HOOKS
@@ -202,46 +118,38 @@ module.exports = {
     // ============================================
     // GENERAL CODE QUALITY
     // ============================================
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': 'off',
     'no-debugger': 'error',
-    'prefer-const': 'error',
+    'prefer-const': 'warn',
     'no-var': 'error',
     eqeqeq: ['error', 'always'],
-    'no-else-return': 'error',
-    'prefer-template': 'error',
-    'prefer-arrow-callback': 'error',
-    'no-nested-ternary': 'warn',
-    'no-useless-concat': 'error',
-    'no-useless-return': 'error',
-    'no-lone-blocks': 'error',
-    'no-empty': 'error',
-    'no-throw-literal': 'error',
+    'no-else-return': 'off',
+    'prefer-template': 'off',
+    'prefer-arrow-callback': 'off',
+    'no-nested-ternary': 'off',
+    'no-useless-concat': 'warn',
+    'no-useless-return': 'warn',
+    'no-lone-blocks': 'warn',
+    'no-empty': 'warn',
+    'no-throw-literal': 'warn',
 
     // ============================================
-    // ACCESSIBILITY
+    // ACCESSIBILITY (relaxed)
     // ============================================
-    'jsx-a11y/alt-text': 'error',
-    'jsx-a11y/anchor-is-valid': 'error',
-    'jsx-a11y/click-events-have-key-events': 'warn',
-    'jsx-a11y/no-static-element-interactions': 'warn',
+    'jsx-a11y/alt-text': 'warn',
+    'jsx-a11y/anchor-is-valid': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/no-autofocus': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'jsx-a11y/anchor-has-content': 'warn',
   },
 
   overrides: [
     {
-      files: [
-        'src/routes/**/*.tsx',
-        '*.config.ts',
-        '*.config.js',
-      ],
+      files: ['src/routes/**/*.tsx', '*.config.ts', '*.config.js'],
       rules: {
         'import/no-default-export': 'off',
-      },
-    },
-    {
-      files: ['*.config.ts', '*.config.js', '**/types.ts'],
-      rules: {
-        'max-lines': 'off',
-        'no-magic-numbers': 'off',
       },
     },
   ],

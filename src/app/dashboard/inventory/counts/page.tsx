@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconClipboardCheck } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
@@ -65,10 +65,15 @@ export default function InventoryCountsPage() {
   const hasFilters = Boolean(search || status || countType || warehouseId)
 
   // Calculate variance percentage
-  const getVariancePercent = (shortageValue: number, surplusValue: number, netValue: number) => {
+  const getVariancePercent = (
+    shortageValue: number,
+    surplusValue: number,
+    netValue: number
+  ) => {
     if (!netValue) return null
     // Use a simple calculation based on total variance values
-    const totalExpected = Math.abs(shortageValue) + Math.abs(surplusValue) + Math.abs(netValue)
+    const totalExpected =
+      Math.abs(shortageValue) + Math.abs(surplusValue) + Math.abs(netValue)
     if (totalExpected === 0) return 0
     return (netValue / totalExpected) * 100
   }
@@ -88,7 +93,7 @@ export default function InventoryCountsPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <div className="relative min-w-[200px] flex-1">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder={t('pages.counts.searchOrder')}
               value={search}
@@ -99,13 +104,17 @@ export default function InventoryCountsPage() {
 
           <Select
             value={status || 'all'}
-            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as CountStatus))}
+            onValueChange={(val) =>
+              setStatus(val === 'all' ? '' : (val as CountStatus))
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder={t('pages.counts.allStatuses')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.counts.allStatuses')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.counts.allStatuses')}
+              </SelectItem>
               {Object.entries(COUNT_STATUS_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -116,7 +125,9 @@ export default function InventoryCountsPage() {
 
           <Select
             value={countType || 'all'}
-            onValueChange={(val) => setCountType(val === 'all' ? '' : (val as CountType))}
+            onValueChange={(val) =>
+              setCountType(val === 'all' ? '' : (val as CountType))
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder={t('pages.counts.allTypes')} />
@@ -158,21 +169,33 @@ export default function InventoryCountsPage() {
                   <TableHead>{t('pages.counts.columnNumber')}</TableHead>
                   <TableHead>{t('pages.counts.columnDate')}</TableHead>
                   <TableHead>{t('pages.counts.columnType')}</TableHead>
-                  <TableHead className="text-right">{t('pages.counts.columnItems')}</TableHead>
-                  <TableHead className="text-right">{t('pages.counts.columnVariance')}</TableHead>
+                  <TableHead className="text-right">
+                    {t('pages.counts.columnItems')}
+                  </TableHead>
+                  <TableHead className="text-right">
+                    {t('pages.counts.columnVariance')}
+                  </TableHead>
                   <TableHead>{t('pages.counts.columnStatus')}</TableHead>
                   <TableHead className="w-[100px]" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredCounts.map((count) => {
-                  const variancePercent = getVariancePercent(count.shortageValue, count.surplusValue, count.netAdjustmentValue)
+                  const variancePercent = getVariancePercent(
+                    count.shortageValue,
+                    count.surplusValue,
+                    count.netAdjustmentValue
+                  )
 
                   return (
                     <TableRow key={count.id}>
-                      <TableCell className="font-medium">{count.countNumber}</TableCell>
+                      <TableCell className="font-medium">
+                        {count.countNumber}
+                      </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {format(new Date(count.countDate), 'd MMM', { locale: ru })}
+                        {format(new Date(count.countDate), 'd MMM', {
+                          locale: ru,
+                        })}
                       </TableCell>
                       <TableCell>
                         <CountTypeBadge type={count.countType} />
@@ -184,8 +207,10 @@ export default function InventoryCountsPage() {
                         className={cn(
                           'text-right font-medium',
                           count.netAdjustmentValue < 0 && 'text-destructive',
-                          count.netAdjustmentValue > 0 && 'text-emerald-600 dark:text-emerald-500',
-                          count.netAdjustmentValue === 0 && 'text-muted-foreground'
+                          count.netAdjustmentValue > 0 &&
+                            'text-emerald-600 dark:text-emerald-500',
+                          count.netAdjustmentValue === 0 &&
+                            'text-muted-foreground'
                         )}
                       >
                         {variancePercent !== null
@@ -197,7 +222,11 @@ export default function InventoryCountsPage() {
                       </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="sm" asChild>
-                          <Link to={`/dashboard/inventory/counts/${count.id}` as any}>
+                          <Link
+                            to={
+                              `/dashboard/inventory/counts/${count.id}` as any
+                            }
+                          >
                             {t('pages.counts.open')}
                           </Link>
                         </Button>
@@ -219,11 +248,11 @@ const EmptyCountsState = ({ hasFilters }: { hasFilters: boolean }) => {
 
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-      <IconClipboardCheck className="h-12 w-12 text-muted-foreground/50" />
+      <IconClipboardCheck className="text-muted-foreground/50 h-12 w-12" />
       <h3 className="mt-4 text-lg font-semibold">
         {hasFilters ? t('pages.counts.notFound') : t('pages.counts.noCounts')}
       </h3>
-      <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
         {hasFilters
           ? t('pages.counts.tryChanging')
           : t('pages.counts.conductCount')}

@@ -88,18 +88,18 @@ export function AddWidgetModal({ isOpen, onClose }: AddWidgetModalProps) {
               )}
               onClick={() => handleAddPreset(preset.id)}
             >
-              <div className="flex items-center gap-2 text-primary">
+              <div className="text-primary flex items-center gap-2">
                 {PRESET_ICONS[preset.id] ?? DEFAULT_ICON}
                 <span className="font-medium">{preset.name}</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 {preset.description}
               </p>
               <div className="mt-1 flex gap-1">
-                <span className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
+                <span className="bg-muted rounded px-1.5 py-0.5 text-[10px]">
                   {preset.defaultConfig.size}
                 </span>
-                <span className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
+                <span className="bg-muted rounded px-1.5 py-0.5 text-[10px]">
                   {preset.defaultConfig.visualization}
                 </span>
               </div>

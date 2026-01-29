@@ -105,9 +105,7 @@ export function AnalyticsChart({
         existing.orders += p.orders
       }
 
-      return [...buckets.entries()]
-        .sort(([a], [b]) => a - b)
-        .map(([, v]) => v)
+      return [...buckets.entries()].sort(([a], [b]) => a - b).map(([, v]) => v)
     },
     []
   )

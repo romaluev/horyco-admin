@@ -34,7 +34,7 @@ export const PinStatusBadge = ({ status, isLoading }: PinStatusBadgeProps) => {
 
   if (!status.pinEnabled) {
     return (
-      <Badge variant="outline" className="gap-1 text-muted-foreground">
+      <Badge variant="outline" className="text-muted-foreground gap-1">
         <span className="h-2 w-2 rounded-full bg-current" />
         PIN отключен
       </Badge>
@@ -55,7 +55,10 @@ export const PinStatusBadge = ({ status, isLoading }: PinStatusBadgeProps) => {
 
   if (daysLeft <= PIN_WARNING_THRESHOLD_DAYS && daysLeft > 0) {
     return (
-      <Badge variant="outline" className="gap-1 border-yellow-500 text-yellow-600">
+      <Badge
+        variant="outline"
+        className="gap-1 border-yellow-500 text-yellow-600"
+      >
         <span className="h-2 w-2 rounded-full bg-current" />
         Истекает через {daysLeft}д
       </Badge>

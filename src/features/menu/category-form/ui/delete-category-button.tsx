@@ -72,7 +72,9 @@ export const DeleteCategoryButton = ({
             )}
             {hasProducts && (
               <p className="text-destructive">
-                {t('categories.delete.warningProducts', { count: category.productCount })}
+                {t('categories.delete.warningProducts', {
+                  count: category.productCount,
+                })}
               </p>
             )}
             {!hasChildren && !hasProducts && (

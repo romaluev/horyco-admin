@@ -112,9 +112,16 @@ export const UpdateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.update.form.name.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.update.form.name.label')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('modifiers.groups.update.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'modifiers.groups.update.form.name.placeholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,9 +133,16 @@ export const UpdateModifierGroupDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.update.form.description.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.update.form.description.label')}
+                  </FormLabel>
                   <FormControl>
-                    <Textarea placeholder={t('modifiers.groups.update.form.description.placeholder')} {...field} />
+                    <Textarea
+                      placeholder={t(
+                        'modifiers.groups.update.form.description.placeholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,7 +155,9 @@ export const UpdateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('modifiers.groups.update.form.minSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.update.form.minSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -150,7 +166,9 @@ export const UpdateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('modifiers.groups.update.form.minSelection.description')}
+                      {t(
+                        'modifiers.groups.update.form.minSelection.description'
+                      )}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -162,7 +180,9 @@ export const UpdateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('modifiers.groups.update.form.maxSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.update.form.maxSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -171,7 +191,9 @@ export const UpdateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('modifiers.groups.update.form.maxSelection.description')}
+                      {t(
+                        'modifiers.groups.update.form.maxSelection.description'
+                      )}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -184,7 +206,9 @@ export const UpdateModifierGroupDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.update.form.sortOrder.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.update.form.sortOrder.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -192,7 +216,9 @@ export const UpdateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>{t('modifiers.groups.update.form.sortOrder.description')}</FormDescription>
+                  <FormDescription>
+                    {t('modifiers.groups.update.form.sortOrder.description')}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -204,7 +230,9 @@ export const UpdateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('modifiers.groups.update.form.isRequired.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.update.form.isRequired.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('modifiers.groups.update.form.isRequired.description')}
                     </FormDescription>
@@ -224,7 +252,9 @@ export const UpdateModifierGroupDialog = ({
                 {t('modifiers.groups.update.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('modifiers.groups.update.form.actions.saving') : t('modifiers.groups.update.form.actions.save')}
+                {isPending
+                  ? t('modifiers.groups.update.form.actions.saving')
+                  : t('modifiers.groups.update.form.actions.save')}
               </Button>
             </div>
           </form>

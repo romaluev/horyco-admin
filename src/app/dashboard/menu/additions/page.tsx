@@ -8,7 +8,6 @@
 import { useState } from 'react'
 
 import { Edit, Plus } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -146,118 +145,118 @@ export default function AdditionsPage(): JSX.Element {
             </div>
           </div>
         ) : view === 'tree' ? (
-              <Accordion type="multiple" className="space-y-4">
-                {additions.map((addition) => (
-                  <AccordionItem
-                    key={addition.id}
-                    value={addition.id.toString()}
-                    className="bg-card rounded-lg border"
-                  >
-                    <AccordionTrigger className="px-4 hover:no-underline">
-                      <div className="flex flex-1 items-center justify-between pr-4">
-                        <div className="text-left">
-                          <h3 className="font-semibold">{addition.name}</h3>
-                          <p className="text-muted-foreground text-sm">
-                            {addition.description}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setEditingAddition(addition)
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <div
-                            onClick={(e) => e.stopPropagation()}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                e.stopPropagation()
-                              }
-                            }}
-                            role="button"
-                            tabIndex={0}
-                          >
-                            <DeleteAdditionButton
-                              addition={addition}
-                              variant="ghost"
-                            />
-                          </div>
-                        </div>
+          <Accordion type="multiple" className="space-y-4">
+            {additions.map((addition) => (
+              <AccordionItem
+                key={addition.id}
+                value={addition.id.toString()}
+                className="bg-card rounded-lg border"
+              >
+                <AccordionTrigger className="px-4 hover:no-underline">
+                  <div className="flex flex-1 items-center justify-between pr-4">
+                    <div className="text-left">
+                      <h3 className="font-semibold">{addition.name}</h3>
+                      <p className="text-muted-foreground text-sm">
+                        {addition.description}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setEditingAddition(addition)
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.stopPropagation()
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        <DeleteAdditionButton
+                          addition={addition}
+                          variant="ghost"
+                        />
                       </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <div className="space-y-4">
-                        <div className="flex flex-wrap gap-2">
-                          {addition.isRequired && (
-                            <Badge variant="secondary">
-                              {t('pages.additions.badges.required')}
-                            </Badge>
-                          )}
-                          {addition.isMultiple && (
-                            <Badge variant="secondary">
-                              {t('pages.additions.badges.multiple')}
-                            </Badge>
-                          )}
-                          {addition.isCountable && (
-                            <Badge variant="secondary">
-                              {t('pages.additions.badges.countable')}
-                            </Badge>
-                          )}
-                          {addition.isActive ? (
-                            <Badge variant="default">
-                              {t('pages.additions.badges.active')}
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline">
-                              {t('pages.additions.badges.inactive')}
-                            </Badge>
-                          )}
-                        </div>
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-4">
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {addition.isRequired && (
+                        <Badge variant="secondary">
+                          {t('pages.additions.badges.required')}
+                        </Badge>
+                      )}
+                      {addition.isMultiple && (
+                        <Badge variant="secondary">
+                          {t('pages.additions.badges.multiple')}
+                        </Badge>
+                      )}
+                      {addition.isCountable && (
+                        <Badge variant="secondary">
+                          {t('pages.additions.badges.countable')}
+                        </Badge>
+                      )}
+                      {addition.isActive ? (
+                        <Badge variant="default">
+                          {t('pages.additions.badges.active')}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline">
+                          {t('pages.additions.badges.inactive')}
+                        </Badge>
+                      )}
+                    </div>
 
-                        <div className="grid gap-3 md:grid-cols-2">
-                          <div className="rounded-lg border p-3">
-                            <p className="text-muted-foreground text-xs font-medium">
-                              {t('pages.additions.details.minSelection')}
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {addition.minSelection}
-                            </p>
-                          </div>
-                          <div className="rounded-lg border p-3">
-                            <p className="text-muted-foreground text-xs font-medium">
-                              {t('pages.additions.details.maxSelection')}
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {addition.maxSelection}
-                            </p>
-                          </div>
-                          <div className="rounded-lg border p-3">
-                            <p className="text-muted-foreground text-xs font-medium">
-                              {t('pages.additions.details.sortOrder')}
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {addition.sortOrder}
-                            </p>
-                          </div>
-                          <div className="rounded-lg border p-3">
-                            <p className="text-muted-foreground text-xs font-medium">
-                              {t('pages.additions.details.itemsCount')}
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {addition.itemsCount ?? 0}
-                            </p>
-                          </div>
-                        </div>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-muted-foreground text-xs font-medium">
+                          {t('pages.additions.details.minSelection')}
+                        </p>
+                        <p className="text-lg font-semibold">
+                          {addition.minSelection}
+                        </p>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                      <div className="rounded-lg border p-3">
+                        <p className="text-muted-foreground text-xs font-medium">
+                          {t('pages.additions.details.maxSelection')}
+                        </p>
+                        <p className="text-lg font-semibold">
+                          {addition.maxSelection}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border p-3">
+                        <p className="text-muted-foreground text-xs font-medium">
+                          {t('pages.additions.details.sortOrder')}
+                        </p>
+                        <p className="text-lg font-semibold">
+                          {addition.sortOrder}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border p-3">
+                        <p className="text-muted-foreground text-xs font-medium">
+                          {t('pages.additions.details.itemsCount')}
+                        </p>
+                        <p className="text-lg font-semibold">
+                          {addition.itemsCount ?? 0}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         ) : (
           <AdditionList
             additions={additions}

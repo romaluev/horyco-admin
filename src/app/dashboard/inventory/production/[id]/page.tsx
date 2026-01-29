@@ -1,10 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -15,8 +13,10 @@ import {
 } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,7 +91,9 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
     return (
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-muted-foreground">{t('pages.production.notFound')}</p>
+          <p className="text-muted-foreground">
+            {t('pages.production.notFound')}
+          </p>
           <Button asChild className="mt-4">
             <Link to="/dashboard/inventory/production">{t('common.back')}</Link>
           </Button>
@@ -106,17 +108,16 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
   const canDelete = order.status === 'planned'
 
   // Calculate progress
-  const progressPercent = order.status === 'completed'
-    ? 100
-    : order.status === 'in_progress'
-    ? 50
-    : 0
+  const progressPercent =
+    order.status === 'completed' ? 100 : order.status === 'in_progress' ? 50 : 0
 
   // Calculate total ingredient cost
-  const totalIngredientCost = order.ingredients?.reduce(
-    (sum, ing) => sum + ing.unitCost * (ing.actualQuantity ?? ing.plannedQuantity),
-    0
-  ) ?? 0
+  const totalIngredientCost =
+    order.ingredients?.reduce(
+      (sum, ing) =>
+        sum + ing.unitCost * (ing.actualQuantity ?? ing.plannedQuantity),
+      0
+    ) ?? 0
 
   return (
     <PageContainer scrollable>
@@ -172,7 +173,9 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>{t('components.productionWorkflow.cancel.title')}</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t('components.productionWorkflow.cancel.title')}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       Это действие нельзя отменить. Заказ на производство будет
                       удалён навсегда.
@@ -204,13 +207,32 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
             <div className="space-y-4">
               <Progress value={progressPercent} className="h-3" />
               <div className="flex justify-between text-sm">
-                <span className={order.status !== 'planned' ? 'text-primary font-medium' : 'text-muted-foreground'}>
+                <span
+                  className={
+                    order.status !== 'planned'
+                      ? 'text-primary font-medium'
+                      : 'text-muted-foreground'
+                  }
+                >
                   Запланировано
                 </span>
-                <span className={order.status === 'in_progress' || order.status === 'completed' ? 'text-primary font-medium' : 'text-muted-foreground'}>
+                <span
+                  className={
+                    order.status === 'in_progress' ||
+                    order.status === 'completed'
+                      ? 'text-primary font-medium'
+                      : 'text-muted-foreground'
+                  }
+                >
                   В процессе
                 </span>
-                <span className={order.status === 'completed' ? 'text-primary font-medium' : 'text-muted-foreground'}>
+                <span
+                  className={
+                    order.status === 'completed'
+                      ? 'text-primary font-medium'
+                      : 'text-muted-foreground'
+                  }
+                >
                   Завершено
                 </span>
               </div>
@@ -246,8 +268,10 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                 <ProductionStatusBadge status={order.status} />
               </div>
               {order.notes && (
-                <div className="pt-2 border-t">
-                  <span className="text-muted-foreground text-sm">Примечания:</span>
+                <div className="border-t pt-2">
+                  <span className="text-muted-foreground text-sm">
+                    Примечания:
+                  </span>
                   <p className="mt-1 text-sm">{order.notes}</p>
                 </div>
               )}
@@ -267,7 +291,9 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
               </div>
               {order.actualQuantity !== null && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Факт. количество</span>
+                  <span className="text-muted-foreground">
+                    Факт. количество
+                  </span>
                   <span className="font-medium">
                     {order.actualQuantity} {order.outputUnit}
                   </span>
@@ -321,21 +347,25 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Ингредиентов: {order.ingredients?.length ?? 0}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  Выход: {order.actualQuantity ?? order.plannedQuantity} {order.outputUnit}
+                <p className="text-muted-foreground text-sm">
+                  Выход: {order.actualQuantity ?? order.plannedQuantity}{' '}
+                  {order.outputUnit}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Общая себестоимость</p>
+                <p className="text-muted-foreground text-sm">
+                  Общая себестоимость
+                </p>
                 <p className="text-2xl font-bold">
                   {formatCurrency(totalIngredientCost)}
                 </p>
                 {order.actualQuantity && (
-                  <p className="text-sm text-muted-foreground">
-                    {formatCurrency(totalIngredientCost / order.actualQuantity)} за единицу
+                  <p className="text-muted-foreground text-sm">
+                    {formatCurrency(totalIngredientCost / order.actualQuantity)}{' '}
+                    за единицу
                   </p>
                 )}
               </div>
@@ -345,7 +375,9 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
 
         {/* Ingredients Table */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">{t('components.recipeWorkflow.addIngredient.title')}</h3>
+          <h3 className="text-lg font-semibold">
+            {t('components.recipeWorkflow.addIngredient.title')}
+          </h3>
 
           <div className="rounded-md border">
             <Table>
@@ -361,7 +393,7 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
               <TableBody>
                 {!order.ingredients?.length ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={5} className="py-8 text-center">
                       нет ингредиентов
                     </TableCell>
                   </TableRow>
@@ -371,7 +403,7 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                       <TableCell>
                         <div>
                           <p className="font-medium">{ingredient.itemName}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {ingredient.itemUnit}
                           </p>
                         </div>
@@ -388,7 +420,8 @@ export default function ProductionDetailPage({ id: paramId }: PageProps) {
                       <TableCell className="text-right font-medium">
                         {formatCurrency(
                           ingredient.unitCost *
-                            (ingredient.actualQuantity ?? ingredient.plannedQuantity)
+                            (ingredient.actualQuantity ??
+                              ingredient.plannedQuantity)
                         )}
                       </TableCell>
                     </TableRow>

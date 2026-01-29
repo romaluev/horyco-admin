@@ -1,9 +1,10 @@
 import { Suspense, useState } from 'react'
 
 import { createFileRoute, Link } from '@tanstack/react-router'
+
+import { IconPlus, IconUpload } from '@tabler/icons-react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { IconPlus, IconUpload } from '@tabler/icons-react'
 
 import { cn } from '@/shared/lib/utils'
 import { Button, buttonVariants } from '@/shared/ui/base/button'
@@ -43,13 +44,15 @@ function BranchesPage() {
                   'text-xs md:text-sm'
                 )}
               >
-                <IconUpload className="mr-2 h-4 w-4" /> {t('pages.branches.actions.import')}
+                <IconUpload className="mr-2 h-4 w-4" />{' '}
+                {t('pages.branches.actions.import')}
               </Link>
               <Button
                 onClick={() => setIsCreateDialogOpen(true)}
                 className="text-xs md:text-sm"
               >
-                <IconPlus className="mr-2 h-4 w-4" /> {t('pages.branches.actions.addNew')}
+                <IconPlus className="mr-2 h-4 w-4" />{' '}
+                {t('pages.branches.actions.addNew')}
               </Button>
             </div>
           </div>

@@ -43,14 +43,19 @@ export const ProtectedButton = React.forwardRef<
     },
     ref
   ) => {
-    let hasPermission: boolean
+    // Call all hooks unconditionally
+    const hasSinglePermission = useHasPermission(permission ?? '')
+    const hasAllPermissions = useHasAllPermissions(permissions ?? [])
+    const hasAnyPermissions = useHasAnyPermission(permissions ?? [])
 
+    // Determine which result to use based on props
+    let hasPermission: boolean
     if (permission) {
-      hasPermission = useHasPermission(permission)
+      hasPermission = hasSinglePermission
     } else if (permissions && permissionMode === 'all') {
-      hasPermission = useHasAllPermissions(permissions)
+      hasPermission = hasAllPermissions
     } else if (permissions && permissionMode === 'any') {
-      hasPermission = useHasAnyPermission(permissions)
+      hasPermission = hasAnyPermissions
     } else {
       hasPermission = true
     }
@@ -61,35 +66,24 @@ export const ProtectedButton = React.forwardRef<
       }
 
       const tooltip =
-        deniedTooltip ||
-        `You don't have permission to perform this action`
+        deniedTooltip || `You don't have permission to perform this action`
 
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                ref={ref}
-                disabled
-                {...props}
-              >
+              <Button ref={ref} disabled {...props}>
                 {children}
               </Button>
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs">
-              {tooltip}
-            </TooltipContent>
+            <TooltipContent className="max-w-xs">{tooltip}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )
     }
 
     return (
-      <Button
-        ref={ref}
-        disabled={disabled}
-        {...props}
-      >
+      <Button ref={ref} disabled={disabled} {...props}>
         {children}
       </Button>
     )

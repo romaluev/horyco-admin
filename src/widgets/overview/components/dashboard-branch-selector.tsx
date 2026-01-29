@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+
 import {
   Select,
   SelectContent,
@@ -27,7 +28,8 @@ export function DashboardBranchSelector({
   })
   const branches = branchesData?.items ?? []
 
-  const value = selectedBranchId !== undefined ? String(selectedBranchId) : 'all'
+  const value =
+    selectedBranchId !== undefined ? String(selectedBranchId) : 'all'
 
   const handleValueChange = (val: string) => {
     if (val === 'all') {
@@ -43,7 +45,9 @@ export function DashboardBranchSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">{t('dashboard.overview.branch')}</span>
+      <span className="text-muted-foreground text-sm">
+        {t('dashboard.overview.branch')}
+      </span>
       <Select
         value={value}
         onValueChange={handleValueChange}
@@ -53,7 +57,9 @@ export function DashboardBranchSelector({
           <SelectValue placeholder={t('dashboard.overview.allBranches')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">{t('dashboard.overview.allBranches')}</SelectItem>
+          <SelectItem value="all">
+            {t('dashboard.overview.allBranches')}
+          </SelectItem>
           {branches.map((branch) => (
             <SelectItem key={branch.id} value={String(branch.id)}>
               {branch.name}

@@ -8,7 +8,6 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 
-
 import { EmptyMovementsState } from './empty-movements-state'
 import { MovementRow } from './movement-row'
 import { MovementsTableSkeleton } from './movements-table-skeleton'
@@ -39,13 +38,19 @@ export const MovementsTable = ({
   if (!warehouseId) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-        <p className="text-muted-foreground">Выберите склад для просмотра движений</p>
+        <p className="text-muted-foreground">
+          Выберите склад для просмотра движений
+        </p>
       </div>
     )
   }
 
   if (movements.length === 0) {
-    return <EmptyMovementsState onClearFilters={hasActiveFilters ? onClearFilters : undefined} />
+    return (
+      <EmptyMovementsState
+        onClearFilters={hasActiveFilters ? onClearFilters : undefined}
+      />
+    )
   }
 
   return (
@@ -68,7 +73,11 @@ export const MovementsTable = ({
               key={movement.id}
               movement={movement}
               isExpanded={expandedId === movement.id}
-              onToggle={() => onToggleExpanded(expandedId === movement.id ? null : movement.id)}
+              onToggle={() =>
+                onToggleExpanded(
+                  expandedId === movement.id ? null : movement.id
+                )
+              }
             />
           ))}
         </TableBody>

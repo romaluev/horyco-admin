@@ -9,8 +9,8 @@ import {
   type IViewConfigInput,
   type IViewConfigOutput,
   type PeriodType,
-  SortBy,
   type SortDirection,
+  SortBy,
 } from '@/shared/api/graphql'
 
 // Re-export from GraphQL types for convenience

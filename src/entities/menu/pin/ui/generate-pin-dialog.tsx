@@ -98,16 +98,15 @@ export const GeneratePinDialog = ({
                 Генерация PIN для {employee.fullName}
               </DialogTitle>
               <DialogDescription>
-                Будет создан 4-значный PIN для быстрой аутентификации в POS-системе.
+                Будет создан 4-значный PIN для быстрой аутентификации в
+                POS-системе.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
-              <div className="bg-yellow-50 p-4 rounded-lg space-y-2">
-                <p className="text-sm font-medium text-yellow-900">
-                  ⚠️ Важно:
-                </p>
-                <ul className="text-sm text-yellow-800 space-y-1 list-disc list-inside">
+              <div className="space-y-2 rounded-lg bg-yellow-50 p-4">
+                <p className="text-sm font-medium text-yellow-900">⚠️ Важно:</p>
+                <ul className="list-inside list-disc space-y-1 text-sm text-yellow-800">
                   <li>PIN будет показан только один раз</li>
                   <li>Скопируйте его немедленно и передайте безопасно</li>
                   <li>Действителен в течение 30 дней</li>
@@ -116,9 +115,11 @@ export const GeneratePinDialog = ({
 
               <div className="space-y-2">
                 <p className="text-sm font-medium">Сотрудник:</p>
-                <div className="bg-muted p-3 rounded-lg">
+                <div className="bg-muted rounded-lg p-3">
                   <p className="font-medium">{employee.fullName}</p>
-                  <p className="text-sm text-muted-foreground">{employee.phone}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {employee.phone}
+                  </p>
                 </div>
               </div>
             </div>
@@ -157,10 +158,12 @@ export const GeneratePinDialog = ({
               <div className="space-y-2">
                 <p className="text-sm font-medium">Сотрудник:</p>
                 <p className="text-lg">{employee.fullName}</p>
-                <p className="text-sm text-muted-foreground">{employee.phone}</p>
+                <p className="text-muted-foreground text-sm">
+                  {employee.phone}
+                </p>
               </div>
 
-              <div className="bg-muted p-6 rounded-lg space-y-4">
+              <div className="bg-muted space-y-4 rounded-lg p-6">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">PIN:</span>
                   <Button
@@ -201,9 +204,9 @@ export const GeneratePinDialog = ({
                 </Button>
               </div>
 
-              <div className="bg-yellow-50 p-4 rounded-lg space-y-2">
+              <div className="space-y-2 rounded-lg bg-yellow-50 p-4">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600" />
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-yellow-900">
                       СОХРАНИТЕ ЭТОТ PIN СЕЙЧАС
@@ -218,9 +221,9 @@ export const GeneratePinDialog = ({
 
               {expiresAt && (
                 <div className="text-center">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Действителен до:{' '}
-                    <span className="font-medium text-foreground">
+                    <span className="text-foreground font-medium">
                       {formatExpirationDate(expiresAt)}
                     </span>
                   </p>
@@ -228,8 +231,10 @@ export const GeneratePinDialog = ({
               )}
 
               <div className="pt-2">
-                <p className="text-sm font-medium mb-2">Как передать сотруднику:</p>
-                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <p className="mb-2 text-sm font-medium">
+                  Как передать сотруднику:
+                </p>
+                <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
                   <li>📱 Отправить через SMS (скоро)</li>
                   <li>📞 Сообщить по телефону</li>
                   <li>💬 Передать лично</li>
@@ -246,7 +251,7 @@ export const GeneratePinDialog = ({
                 />
                 <label
                   htmlFor="confirmed"
-                  className="text-sm font-medium cursor-pointer"
+                  className="cursor-pointer text-sm font-medium"
                 >
                   Я безопасно сохранил этот PIN
                 </label>

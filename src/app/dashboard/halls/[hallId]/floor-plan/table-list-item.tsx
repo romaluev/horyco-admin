@@ -70,7 +70,7 @@ export const TableListItem = ({
               {table.status.toLowerCase()}
             </span>
           </div>
-          <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="text-muted-foreground mt-1 flex items-center gap-3 text-xs">
             <span>Вместимость: {table.capacity}</span>
             <span>Форма: {table.shape}</span>
           </div>

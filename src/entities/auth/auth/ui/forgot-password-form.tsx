@@ -3,15 +3,15 @@
 import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
-import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -47,7 +47,11 @@ const extractErrorMessage = (err: unknown): string => {
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
 
-  if (typeof response !== 'object' || response === null || !('data' in response)) {
+  if (
+    typeof response !== 'object' ||
+    response === null ||
+    !('data' in response)
+  ) {
     return ''
   }
 
@@ -56,7 +60,11 @@ const extractErrorMessage = (err: unknown): string => {
 
   if (!data) return ''
 
-  if ('error' in data && typeof data.error === 'object' && data.error !== null) {
+  if (
+    'error' in data &&
+    typeof data.error === 'object' &&
+    data.error !== null
+  ) {
     const errorData = data.error as Record<string, unknown>
     if ('message' in errorData && typeof errorData.message === 'string') {
       return errorData.message
@@ -83,7 +91,9 @@ const ForgotPasswordForm = () => {
     },
   })
 
-  const handleSubmit = async (data: ForgotPasswordFormValues): Promise<void> => {
+  const handleSubmit = async (
+    data: ForgotPasswordFormValues
+  ): Promise<void> => {
     try {
       setIsLoading(true)
       setError(null)
@@ -92,7 +102,9 @@ const ForgotPasswordForm = () => {
 
       if (response.success && response.data.success) {
         toast.success(response.data.message)
-        router.push(`/auth/reset-password?email=${encodeURIComponent(data.email)}`)
+        router.push(
+          `/auth/reset-password?email=${encodeURIComponent(data.email)}`
+        )
       }
     } catch (err: unknown) {
       const apiError = extractErrorMessage(err)
@@ -105,14 +117,17 @@ const ForgotPasswordForm = () => {
   return (
     <Card className="w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">{t('forgotPassword.title')}</CardTitle>
-        <CardDescription>
-          {t('forgotPassword.description')}
-        </CardDescription>
+        <CardTitle className="text-2xl font-bold">
+          {t('forgotPassword.title')}
+        </CardTitle>
+        <CardDescription>{t('forgotPassword.description')}</CardDescription>
       </CardHeader>
       <CardContent className="w-full">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 w-full">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="w-full space-y-4"
+          >
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -152,7 +167,8 @@ const ForgotPasswordForm = () => {
             </Button>
 
             <Link
-              to="/auth/sign-in" search={{ redirect: undefined }}
+              to="/auth/sign-in"
+              search={{ redirect: undefined }}
               className="text-muted-foreground hover:text-primary flex items-center justify-center gap-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />

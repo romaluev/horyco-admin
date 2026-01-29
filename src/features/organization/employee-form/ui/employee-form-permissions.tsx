@@ -71,7 +71,7 @@ export const EmployeeFormPermissions = ({
         <Label className="text-base font-semibold">
           Разрешения на основе выбранных ролей
         </Label>
-        <p className="text-muted-foreground text-sm mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           Разрешения будут назначены для всех выбранных филиалов на основе
           выбранных ролей. Вы сможете настроить их позже.
         </p>
@@ -92,12 +92,17 @@ export const EmployeeFormPermissions = ({
         />
       )}
 
-      <div className="rounded-lg bg-muted p-4">
-        <p className="text-sm font-medium mb-2">Информация</p>
-        <ul className="text-xs text-muted-foreground space-y-1">
+      <div className="bg-muted rounded-lg p-4">
+        <p className="mb-2 text-sm font-medium">Информация</p>
+        <ul className="text-muted-foreground space-y-1 text-xs">
           <li>• Разрешения будут применены ко всем выбранным филиалам</li>
-          <li>• Вы сможете изменить разрешения отдельно для каждого филиала позже</li>
-          <li>• Изменение ролей после создания не повлияет на уже выданные разрешения</li>
+          <li>
+            • Вы сможете изменить разрешения отдельно для каждого филиала позже
+          </li>
+          <li>
+            • Изменение ролей после создания не повлияет на уже выданные
+            разрешения
+          </li>
         </ul>
       </div>
     </div>

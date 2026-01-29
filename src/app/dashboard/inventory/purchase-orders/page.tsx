@@ -75,7 +75,7 @@ export default function PurchaseOrdersPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <div className="relative min-w-[200px] flex-1">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Поиск по номеру..."
               value={search}
@@ -95,7 +95,9 @@ export default function PurchaseOrdersPage() {
 
           <Select
             value={status || 'all'}
-            onValueChange={(val) => setStatus(val === 'all' ? '' : (val as POStatus))}
+            onValueChange={(val) =>
+              setStatus(val === 'all' ? '' : (val as POStatus))
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Все статусы" />
@@ -146,7 +148,9 @@ export default function PurchaseOrdersPage() {
               <TableBody>
                 {filteredOrders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.poNumber}</TableCell>
+                    <TableCell className="font-medium">
+                      {order.poNumber}
+                    </TableCell>
                     <TableCell>{order.supplierName}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {order.warehouseName}
@@ -156,7 +160,9 @@ export default function PurchaseOrdersPage() {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {order.expectedDate
-                        ? format(new Date(order.expectedDate), 'd MMM', { locale: ru })
+                        ? format(new Date(order.expectedDate), 'd MMM', {
+                            locale: ru,
+                          })
                         : '—'}
                     </TableCell>
                     <TableCell>
@@ -164,7 +170,11 @@ export default function PurchaseOrdersPage() {
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dashboard/inventory/purchase-orders/${order.id}` as any}>
+                        <Link
+                          to={
+                            `/dashboard/inventory/purchase-orders/${order.id}` as any
+                          }
+                        >
                           Открыть
                         </Link>
                       </Button>
@@ -182,11 +192,11 @@ export default function PurchaseOrdersPage() {
 
 const EmptyPurchaseOrdersState = ({ hasFilters }: { hasFilters: boolean }) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconClipboardList className="h-12 w-12 text-muted-foreground/50" />
+    <IconClipboardList className="text-muted-foreground/50 h-12 w-12" />
     <h3 className="mt-4 text-lg font-semibold">
       {hasFilters ? 'Заказы не найдены' : 'Нет заказов'}
     </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+    <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
       {hasFilters
         ? 'Попробуйте изменить параметры поиска или фильтры.'
         : 'Создайте заказ поставщику для пополнения склада.'}

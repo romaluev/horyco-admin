@@ -2,8 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useCancelProduction } from '@/entities/inventory/production-order/model/mutations'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useCancelProduction } from '@/entities/inventory/production-order/model/mutations'
 
 interface CancelProductionDialogProps {
   orderId: number

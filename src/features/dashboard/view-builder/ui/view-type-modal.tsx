@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from '@/shared/lib/navigation'
-
 import {
   Dialog,
   DialogContent,
@@ -52,14 +51,14 @@ export function ViewTypeModal({ isOpen, onClose }: IViewTypeModalProps) {
                 key={card.key}
                 type="button"
                 onClick={() => handleSelectType(card.key)}
-                className="flex flex-col items-center gap-2 rounded-lg border border-border p-4 text-center transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="border-border hover:bg-muted focus-visible:ring-ring flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
-                <div className="flex size-12 items-center justify-center rounded-lg bg-muted">
-                  <IconComponent className="size-6 text-muted-foreground" />
+                <div className="bg-muted flex size-12 items-center justify-center rounded-lg">
+                  <IconComponent className="text-muted-foreground size-6" />
                 </div>
                 <div>
                   <p className="text-sm font-medium">{card.label}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {card.description}
                   </p>
                 </div>

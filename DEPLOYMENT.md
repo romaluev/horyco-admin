@@ -12,13 +12,13 @@
 
 Добавьте в `Settings > Secrets and variables > Actions`:
 
-| Secret | Описание |
-|--------|----------|
-| `VITE_API_URL` | URL бэкенд API |
-| `VITE_GRAPHQL_URL` | URL GraphQL endpoint |
-| `COOLIFY_WEBHOOK_URL_PROD` | Webhook URL из Coolify (production) |
-| `COOLIFY_WEBHOOK_URL_STAGING` | Webhook URL из Coolify (staging) |
-| `COOLIFY_TOKEN` | API токен Coolify |
+| Secret                        | Описание                            |
+| ----------------------------- | ----------------------------------- |
+| `VITE_API_URL`                | URL бэкенд API                      |
+| `VITE_GRAPHQL_URL`            | URL GraphQL endpoint                |
+| `COOLIFY_WEBHOOK_URL_PROD`    | Webhook URL из Coolify (production) |
+| `COOLIFY_WEBHOOK_URL_STAGING` | Webhook URL из Coolify (staging)    |
+| `COOLIFY_TOKEN`               | API токен Coolify                   |
 
 ### 3. Получение Coolify Webhook
 
@@ -38,12 +38,14 @@
 ### Вариант A: Автоматический через GitHub Actions (рекомендуется)
 
 Workflow автоматически:
+
 - Запускает lint/type-check
 - Собирает Docker образ
 - Пушит в GitHub Container Registry
 - Триггерит деплой в Coolify
 
 **Триггеры:**
+
 - `main` → Production
 - `dev` → Staging
 
@@ -54,6 +56,7 @@ Workflow автоматически:
 3. Coolify автоматически соберёт и задеплоит при push
 
 **Настройки в Coolify:**
+
 ```
 Build Pack: Dockerfile
 Port: 80
@@ -95,13 +98,16 @@ VITE_APP_ENV=production
 ## Troubleshooting
 
 ### Build fails
+
 - Проверьте что `pnpm-lock.yaml` закоммичен
 - Убедитесь что secrets настроены
 
 ### Deploy не триггерится
+
 - Проверьте webhook URL
 - Проверьте Coolify API token
 
 ### 502/504 ошибки
+
 - Проверьте healthcheck: `curl http://localhost/health`
 - Посмотрите логи: `docker logs <container>`

@@ -11,13 +11,16 @@ interface IEmptyStockStateProps {
   onClearFilters?: () => void
 }
 
-export const EmptyStockState = ({ hasFilters, onClearFilters }: IEmptyStockStateProps) => {
+export const EmptyStockState = ({
+  hasFilters,
+  onClearFilters,
+}: IEmptyStockStateProps) => {
   if (hasFilters) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-        <IconCheck className="h-12 w-12 text-muted-foreground/50" />
+        <IconCheck className="text-muted-foreground/50 h-12 w-12" />
         <h3 className="mt-4 text-lg font-semibold">Все товары в наличии</h3>
-        <p className="mt-2 text-center text-sm text-muted-foreground max-w-sm">
+        <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
           По выбранным фильтрам нет товаров с низким остатком.
         </p>
         <Button variant="outline" className="mt-6" onClick={onClearFilters}>
@@ -29,9 +32,9 @@ export const EmptyStockState = ({ hasFilters, onClearFilters }: IEmptyStockState
 
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-      <IconBox className="h-12 w-12 text-muted-foreground/50" />
+      <IconBox className="text-muted-foreground/50 h-12 w-12" />
       <h3 className="mt-4 text-lg font-semibold">Нет данных об остатках</h3>
-      <p className="mt-2 text-center text-sm text-muted-foreground max-w-sm">
+      <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
         Остатки появятся после приёмки первого заказа на закупку.
       </p>
       <Button asChild className="mt-6">

@@ -51,7 +51,7 @@ export const ColorPickerInput = ({
             value={inputValue}
             onChange={handleColorChange}
             disabled={disabled}
-            className="h-9 w-16 cursor-pointer rounded-md border border-input disabled:cursor-not-allowed disabled:opacity-50"
+            className="border-input h-9 w-16 cursor-pointer rounded-md border disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
         <Input
@@ -64,7 +64,7 @@ export const ColorPickerInput = ({
           maxLength={7}
         />
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
   )
 }

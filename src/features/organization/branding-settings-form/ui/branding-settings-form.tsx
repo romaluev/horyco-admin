@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { uploadFile } from '@/shared/lib/file-upload'
 import { Button } from '@/shared/ui/base/button'
@@ -44,7 +44,10 @@ const extractValue = <T,>(setting: { value: T } | undefined): T | undefined => {
   return setting?.value
 }
 
-const uploadBrandingFile = async (file: File, altText?: string): Promise<string> => {
+const uploadBrandingFile = async (
+  file: File,
+  altText?: string
+): Promise<string> => {
   const response = await uploadFile({
     file,
     entityType: 'TENANT',
@@ -166,7 +169,10 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>{t('branding.fields.brandNameRequired')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder={t('branding.placeholders.brandName')} />
+                  <Input
+                    {...field}
+                    placeholder={t('branding.placeholders.brandName')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -209,7 +215,8 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}:{' '}
+                    {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -235,7 +242,8 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}:{' '}
+                    {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -261,7 +269,8 @@ export const BrandingSettingsForm = ({
                 </FormControl>
                 {field.value && (
                   <FormDescription>
-                    {t('branding.fields.current')}: {field.value.substring(0, 50)}...
+                    {t('branding.fields.current')}:{' '}
+                    {field.value.substring(0, 50)}...
                   </FormDescription>
                 )}
                 <FormMessage />
@@ -337,7 +346,10 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>{t('branding.fields.instagram')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder={t('branding.placeholders.instagram')} />
+                  <Input
+                    {...field}
+                    placeholder={t('branding.placeholders.instagram')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -351,7 +363,10 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>{t('branding.fields.telegram')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder={t('branding.placeholders.telegram')} />
+                  <Input
+                    {...field}
+                    placeholder={t('branding.placeholders.telegram')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -365,7 +380,10 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>{t('branding.fields.website')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder={t('branding.placeholders.website')} />
+                  <Input
+                    {...field}
+                    placeholder={t('branding.placeholders.website')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -402,7 +420,10 @@ export const BrandingSettingsForm = ({
               <FormItem>
                 <FormLabel>{t('branding.fields.email')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder={t('branding.placeholders.email')} />
+                  <Input
+                    {...field}
+                    placeholder={t('branding.placeholders.email')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -430,7 +451,9 @@ export const BrandingSettingsForm = ({
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending || isUploading}>
-            {isPending || isUploading ? t('branding.saving') : t('branding.saveChanges')}
+            {isPending || isUploading
+              ? t('branding.saving')
+              : t('branding.saveChanges')}
           </Button>
         </div>
       </form>

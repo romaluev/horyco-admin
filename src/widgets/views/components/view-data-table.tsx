@@ -14,7 +14,10 @@ import { DataTable } from '@/shared/ui/base/table/data-table'
 import { DataTableColumnHeader } from '@/shared/ui/base/table/data-table-column-header'
 
 import { useViewData } from '@/entities/dashboard/view'
-import { selectAvailableColumns, useViewBuilderStore } from '@/features/dashboard/view-builder'
+import {
+  selectAvailableColumns,
+  useViewBuilderStore,
+} from '@/features/dashboard/view-builder'
 
 import type { IColumnDef, IViewDataParams } from '@/entities/dashboard/view'
 import type { IRankedItem } from '@/shared/api/graphql'
@@ -67,7 +70,9 @@ export function ViewDataTable({ params }: IViewDataTableProps) {
   if (!data || data.length === 0) {
     return (
       <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
-        <p className="text-sm text-muted-foreground">Нет данных для отображения</p>
+        <p className="text-muted-foreground text-sm">
+          Нет данных для отображения
+        </p>
       </div>
     )
   }
@@ -129,7 +134,7 @@ function formatCellValue(
 
     case 'status':
       return (
-        <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+        <span className="bg-muted inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium">
           {String(value)}
         </span>
       )
@@ -144,7 +149,7 @@ function ViewDataTableSkeleton() {
   return (
     <div className="space-y-4">
       <div className="rounded-lg border">
-        <div className="border-b bg-muted p-3">
+        <div className="bg-muted border-b p-3">
           <div className="flex gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-4 w-24" />

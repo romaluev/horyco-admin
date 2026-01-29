@@ -22,7 +22,6 @@ import {
 import { IconTrendingUp } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-import { KpiType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import {
   Card,
@@ -36,6 +35,8 @@ import { KPI_CONFIG, type IKpiSlot } from '@/entities/dashboard/dashboard'
 
 import { MiniSparkline } from '../chart-previews'
 import { SortableKpiCard, KpiCardOverlay } from '../sortable-cards'
+
+import type { KpiType } from '@/shared/api/graphql'
 
 interface IKpiTabProps {
   kpiSlots: IKpiSlot[]
@@ -57,7 +58,10 @@ export function KpiTab({
   )
 
   const kpiIds = useMemo(() => kpiSlots.map((s) => s.type), [kpiSlots])
-  const usedKpiTypes = useMemo(() => new Set(kpiSlots.map((s) => s.type)), [kpiSlots])
+  const usedKpiTypes = useMemo(
+    () => new Set(kpiSlots.map((s) => s.type)),
+    [kpiSlots]
+  )
   const canAddKpi = kpiSlots.length < 6
 
   const handleDragStart = useCallback(
@@ -76,7 +80,9 @@ export function KpiTab({
         const newIndex = kpiSlots.findIndex((item) => item.type === over.id)
         if (oldIndex === -1 || newIndex === -1) return
         const newItems = arrayMove(kpiSlots, oldIndex, newIndex)
-        onKpiSlotsChange(newItems.map((item, idx) => ({ ...item, position: idx })))
+        onKpiSlotsChange(
+          newItems.map((item, idx) => ({ ...item, position: idx }))
+        )
       }
     },
     [kpiSlots, onKpiSlotsChange, onActiveKpiIdChange]
@@ -85,7 +91,9 @@ export function KpiTab({
   const handleRemoveKpi = useCallback(
     (type: KpiType) => {
       const newItems = kpiSlots.filter((item) => item.type !== type)
-      onKpiSlotsChange(newItems.map((item, idx) => ({ ...item, position: idx })))
+      onKpiSlotsChange(
+        newItems.map((item, idx) => ({ ...item, position: idx }))
+      )
     },
     [kpiSlots, onKpiSlotsChange]
   )
@@ -94,12 +102,17 @@ export function KpiTab({
     (type: KpiType) => {
       if (kpiSlots.length >= 6) return
       if (kpiSlots.some((item) => item.type === type)) return
-      onKpiSlotsChange([...kpiSlots, { position: kpiSlots.length, type, visible: true }])
+      onKpiSlotsChange([
+        ...kpiSlots,
+        { position: kpiSlots.length, type, visible: true },
+      ])
     },
     [kpiSlots, onKpiSlotsChange]
   )
 
-  const activeKpiSlot = activeKpiId ? kpiSlots.find((s) => s.type === activeKpiId) : null
+  const activeKpiSlot = activeKpiId
+    ? kpiSlots.find((s) => s.type === activeKpiId)
+    : null
 
   return (
     <div className="space-y-6">
@@ -127,7 +140,9 @@ export function KpiTab({
                 ))}
               </div>
             </SortableContext>
-            <DragOverlay>{activeKpiSlot && <KpiCardOverlay slot={activeKpiSlot} />}</DragOverlay>
+            <DragOverlay>
+              {activeKpiSlot && <KpiCardOverlay slot={activeKpiSlot} />}
+            </DragOverlay>
           </DndContext>
         </CardContent>
       </Card>
@@ -139,8 +154,9 @@ export function KpiTab({
           <CardDescription>Выберите показатели для отображения</CardDescription>
         </CardHeader>
         <CardContent>
-          {Object.entries(KPI_CONFIG).filter(([type]) => !usedKpiTypes.has(type as KpiType))
-            .length === 0 ? (
+          {Object.entries(KPI_CONFIG).filter(
+            ([type]) => !usedKpiTypes.has(type as KpiType)
+          ).length === 0 ? (
             <div className="rounded-xl border border-dashed p-8 text-center">
               <p className="text-muted-foreground">Все KPI уже добавлены</p>
             </div>
@@ -158,7 +174,7 @@ export function KpiTab({
                       onClick={() => canAddKpi && handleAddKpi(kpiType)}
                       disabled={!canAddKpi}
                       className={cn(
-                        'group relative overflow-hidden rounded-xl border bg-card p-4 text-left transition-all',
+                        'group bg-card relative overflow-hidden rounded-xl border p-4 text-left transition-all',
                         !canAddKpi
                           ? 'cursor-not-allowed opacity-50'
                           : 'hover:border-primary hover:shadow-md'
@@ -171,7 +187,9 @@ export function KpiTab({
                           </div>
                           <div>
                             <p className="font-medium">{t(config.labelKey)}</p>
-                            <p className="text-xs text-muted-foreground">Нажмите для добавления</p>
+                            <p className="text-muted-foreground text-xs">
+                              Нажмите для добавления
+                            </p>
                           </div>
                         </div>
                       </div>

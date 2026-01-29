@@ -6,7 +6,12 @@ import { create } from 'zustand'
 
 import * as operatingHoursApi from './api'
 
-import type { OperatingHoursResponse, HolidaysResponse, Holiday, OperatingHoursRequest } from './types'
+import type {
+  OperatingHoursResponse,
+  HolidaysResponse,
+  Holiday,
+  OperatingHoursRequest,
+} from './types'
 
 interface OperatingHoursState {
   operatingHours: OperatingHoursResponse | null
@@ -16,9 +21,18 @@ interface OperatingHoursState {
 
   // Actions
   fetchOperatingHours: (branchId: number) => Promise<void>
-  updateOperatingHours: (branchId: number, data: OperatingHoursRequest) => Promise<void>
+  updateOperatingHours: (
+    branchId: number,
+    data: OperatingHoursRequest
+  ) => Promise<void>
   fetchHolidays: (branchId: number, year?: number) => Promise<void>
-  createHoliday: (branchId: number, date: string, name: string, openTime?: string | null, closeTime?: string | null) => Promise<void>
+  createHoliday: (
+    branchId: number,
+    date: string,
+    name: string,
+    openTime?: string | null,
+    closeTime?: string | null
+  ) => Promise<void>
   deleteHoliday: (holidayId: number) => Promise<void>
   clearError: () => void
 }
@@ -35,19 +49,31 @@ export const useOperatingHoursStore = create<OperatingHoursState>()((set) => ({
       const data = await operatingHoursApi.getOperatingHours(branchId)
       set({ operatingHours: data, isLoading: false })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch operating hours'
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch operating hours'
       set({ error: errorMessage, isLoading: false })
       throw error
     }
   },
 
-  updateOperatingHours: async (branchId: number, data: OperatingHoursRequest) => {
+  updateOperatingHours: async (
+    branchId: number,
+    data: OperatingHoursRequest
+  ) => {
     try {
       set({ isLoading: true, error: null })
-      const result = await operatingHoursApi.updateOperatingHours(branchId, data)
+      const result = await operatingHoursApi.updateOperatingHours(
+        branchId,
+        data
+      )
       set({ operatingHours: result, isLoading: false })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update operating hours'
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to update operating hours'
       set({ error: errorMessage, isLoading: false })
       throw error
     }
@@ -59,13 +85,20 @@ export const useOperatingHoursStore = create<OperatingHoursState>()((set) => ({
       const data = await operatingHoursApi.getHolidays(branchId, year)
       set({ holidays: data, isLoading: false })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch holidays'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch holidays'
       set({ error: errorMessage, isLoading: false })
       throw error
     }
   },
 
-  createHoliday: async (branchId: number, date: string, name: string, openTime?: string | null, closeTime?: string | null) => {
+  createHoliday: async (
+    branchId: number,
+    date: string,
+    name: string,
+    openTime?: string | null,
+    closeTime?: string | null
+  ) => {
     try {
       set({ isLoading: true, error: null })
       const holiday = await operatingHoursApi.createHoliday(branchId, {
@@ -84,7 +117,8 @@ export const useOperatingHoursStore = create<OperatingHoursState>()((set) => ({
         isLoading: false,
       }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create holiday'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to create holiday'
       set({ error: errorMessage, isLoading: false })
       throw error
     }
@@ -98,13 +132,16 @@ export const useOperatingHoursStore = create<OperatingHoursState>()((set) => ({
         holidays: state.holidays
           ? {
               ...state.holidays,
-              holidays: state.holidays.holidays.filter((h) => h.id !== holidayId),
+              holidays: state.holidays.holidays.filter(
+                (h) => h.id !== holidayId
+              ),
             }
           : null,
         isLoading: false,
       }))
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete holiday'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to delete holiday'
       set({ error: errorMessage, isLoading: false })
       throw error
     }

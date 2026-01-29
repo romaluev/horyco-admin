@@ -21,7 +21,10 @@ interface IFormatPriceOptions {
   currency?: boolean
 }
 
-export function formatPrice(amount: number | undefined | null, options?: IFormatPriceOptions): string {
+export function formatPrice(
+  amount: number | undefined | null,
+  options?: IFormatPriceOptions
+): string {
   const { short = false, currency = true } = options ?? {}
 
   // Handle undefined, null, or NaN
@@ -31,13 +34,13 @@ export function formatPrice(amount: number | undefined | null, options?: IFormat
 
   if (short) {
     if (amount >= 1_000_000_000) {
-      return (amount / 1_000_000_000).toFixed(1) + 'B' + (currency ? ' UZS' : '')
+      return `${(amount / 1_000_000_000).toFixed(1)}B${currency ? ' UZS' : ''}`
     }
     if (amount >= 1_000_000) {
-      return (amount / 1_000_000).toFixed(1) + 'M' + (currency ? ' UZS' : '')
+      return `${(amount / 1_000_000).toFixed(1)}M${currency ? ' UZS' : ''}`
     }
     if (amount >= 1_000) {
-      return (amount / 1_000).toFixed(0) + 'K' + (currency ? ' UZS' : '')
+      return `${(amount / 1_000).toFixed(0)}K${currency ? ' UZS' : ''}`
     }
   }
 
@@ -47,7 +50,7 @@ export function formatPrice(amount: number | undefined | null, options?: IFormat
     maximumFractionDigits: 0,
   }).format(amount)
 
-  return currency ? formatted + ' UZS' : formatted
+  return currency ? `${formatted} UZS` : formatted
 }
 
 /**

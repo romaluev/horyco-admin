@@ -26,7 +26,9 @@ function formatCompactValue(value: number): string {
   return value.toLocaleString('ru-RU')
 }
 
-export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) {
+export function InventoryStatsCards({
+  warehouseId,
+}: IInventoryStatsCardsProps) {
   const { data: summary, isLoading } = useStockSummary(warehouseId)
 
   if (isLoading) {
@@ -90,19 +92,25 @@ export function InventoryStatsCards({ warehouseId }: IInventoryStatsCardsProps) 
       {cards.map((card) => (
         <Link key={card.title} to={card.href}>
           <Card
-            className={`cursor-pointer transition-colors hover:bg-muted/50 ${card.alert ? 'border-destructive/50' : ''}`}
+            className={`hover:bg-muted/50 cursor-pointer transition-colors ${card.alert ? 'border-destructive/50' : ''}`}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {card.title}
+              </CardTitle>
               <card.icon
                 className={`h-4 w-4 ${card.alert ? card.alertColor : 'text-muted-foreground'}`}
               />
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${card.alert ? card.alertColor : ''}`}>
+              <div
+                className={`text-2xl font-bold ${card.alert ? card.alertColor : ''}`}
+              >
                 {card.value}
               </div>
-              <p className="text-xs text-muted-foreground">{card.description}</p>
+              <p className="text-muted-foreground text-xs">
+                {card.description}
+              </p>
             </CardContent>
           </Card>
         </Link>

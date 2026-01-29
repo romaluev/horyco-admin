@@ -49,7 +49,10 @@ export function PaymentMethodsWidget({
       name: segment.label,
       value: segment.value,
       percentage: segment.percentage,
-      fill: segment.color || PAYMENT_COLORS[segment.key] || FALLBACK_COLORS[index % FALLBACK_COLORS.length],
+      fill:
+        segment.color ||
+        PAYMENT_COLORS[segment.key] ||
+        FALLBACK_COLORS[index % FALLBACK_COLORS.length],
     }))
   }, [data])
 
@@ -69,14 +72,14 @@ export function PaymentMethodsWidget({
   if (isLoading) {
     return (
       <div className={cn('flex h-full items-center justify-center', className)}>
-        <div className="h-32 w-32 animate-pulse rounded-full bg-muted" />
+        <div className="bg-muted h-32 w-32 animate-pulse rounded-full" />
       </div>
     )
   }
 
   if (!data || chartData.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )
@@ -85,7 +88,7 @@ export function PaymentMethodsWidget({
   return (
     <div className={cn('flex h-full flex-col gap-4', className)}>
       {/* Pie Chart */}
-      <div className="flex-1 min-h-[120px]">
+      <div className="min-h-[120px] flex-1">
         <ChartContainer config={chartConfig} className="h-full w-full">
           <PieChart>
             <ChartTooltip

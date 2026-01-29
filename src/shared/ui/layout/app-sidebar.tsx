@@ -3,7 +3,6 @@
 import * as React from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { usePathname, useRouter } from '@/shared/lib/navigation'
 
 import {
   IconCheck,
@@ -17,17 +16,13 @@ import {
   IconSunMoon,
   IconUserCircle,
 } from '@tabler/icons-react'
-import { useTheme } from './ThemeToggle/theme-provider'
 import { useTranslation } from 'react-i18next'
 
-import {
-  Language,
-  LANGUAGE_NAMES,
-  SUPPORTED_LANGUAGES,
-} from '@/shared/config/i18n'
-
 import logo from '@/shared/assets/logo.png'
-import { getNavItems, getSettingsNavItem } from '@/shared/config/data'
+import { getSettingsNavItem } from '@/shared/config/data'
+import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES } from '@/shared/config/i18n'
+import { useNavItems } from '@/shared/hooks/use-nav-items'
+import { usePathname, useRouter } from '@/shared/lib/navigation'
 import {
   hasPermissionAnyBranch,
   hasAllPermissionsAnyBranch,
@@ -75,12 +70,18 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 
 import { useAuthStore } from '@/entities/auth/auth/model/store'
-import { useGetAllBranches, useBranchStore } from '@/entities/organization/branch'
+import {
+  useGetAllBranches,
+  useBranchStore,
+} from '@/entities/organization/branch'
 import { AnalyticsSidebarSection } from '@/features/dashboard/analytics'
-import { useNavItems } from '@/shared/hooks/use-nav-items'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
+import { useTheme } from './ThemeToggle/theme-provider'
+
+import type { getNavItems } from '@/shared/config/data'
+import type { Language } from '@/shared/config/i18n'
 
 /**
  * Filter nav items based on user permissions
@@ -148,7 +149,9 @@ function NavItemWithSub({
 
   if (isCollapsed) {
     // In collapsed mode, show first sub-item icon or fallback
-    const FirstSubIcon = item.items?.[0]?.icon ? Icons[item.items[0].icon] : Icons.logo
+    const FirstSubIcon = item.items?.[0]?.icon
+      ? Icons[item.items[0].icon]
+      : Icons.logo
 
     return (
       <SidebarMenuItem>
@@ -166,7 +169,7 @@ function NavItemWithSub({
             className="w-48 p-1"
           >
             <div className="flex flex-col gap-0.5">
-              <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium tracking-wider uppercase">
                 {item.title}
               </div>
               {item.items?.map((subItem) => {
@@ -176,7 +179,8 @@ function NavItemWithSub({
                     key={subItem.title}
                     to={subItem.url}
                     className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
-                      pathname === subItem.url || pathname.startsWith(subItem.url + '/')
+                      pathname === subItem.url ||
+                      pathname.startsWith(`${subItem.url}/`)
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                         : ''
                     }`}
@@ -196,17 +200,23 @@ function NavItemWithSub({
   }
 
   return (
-    <Collapsible asChild defaultOpen={item.isActive} className="group/collapsible">
+    <Collapsible
+      asChild
+      defaultOpen={item.isActive}
+      className="group/collapsible"
+    >
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           {/* Group header - small, without icon */}
           <SidebarMenuButton tooltip={item.title} size="sm">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{item.title}</span>
+            <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+              {item.title}
+            </span>
             <IconChevronRight className="ml-auto h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <SidebarMenuSub className="!border-l-0 !ml-0 !pl-0">
+          <SidebarMenuSub className="!ml-0 !border-l-0 !pl-0">
             {item.items?.map((subItem) => {
               const SubIcon = subItem.icon ? Icons[subItem.icon] : null
               return (
@@ -214,12 +224,12 @@ function NavItemWithSub({
                   <SidebarMenuSubButton
                     className="!p-3"
                     asChild
-                    isActive={pathname === subItem.url || pathname.startsWith(subItem.url + '/')}
+                    isActive={
+                      pathname === subItem.url ||
+                      pathname.startsWith(`${subItem.url}/`)
+                    }
                   >
-                    <Link
-                      to={subItem.url}
-                      className="flex items-center gap-2"
-                    >
+                    <Link to={subItem.url} className="flex items-center gap-2">
                       {SubIcon && (
                         <SubIcon className="!h-[1.25rem] !w-[1.25rem]" />
                       )}
@@ -255,7 +265,8 @@ export default function AppSidebar() {
   )
 
   // Filter settings nav item
-  const showSettings = !settingsNavItem.permission ||
+  const showSettings =
+    !settingsNavItem.permission ||
     hasPermissionAnyBranch(user?.branchPermissions, settingsNavItem.permission)
 
   const { data: branchesData, isLoading: isBranchesLoading } =
@@ -285,11 +296,7 @@ export default function AppSidebar() {
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel className="my-4">
-            <img
-              className="w-40 overflow-hidden"
-              src={logo}
-              alt=""
-            />
+            <img className="w-40 overflow-hidden" src={logo} alt="" />
           </SidebarGroupLabel>
 
           <div className="mb-4 px-2 group-data-[collapsible=icon]:hidden">
@@ -324,7 +331,9 @@ export default function AppSidebar() {
                         isActive={pathname === item.url}
                       >
                         <Link to={item.url}>
-                          <Icon className={`!w-6 !h-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`} />
+                          <Icon
+                            className={`!h-6 !w-6 ${isDashboard ? 'text-[#fe4a49]' : ''}`}
+                          />
                           <span className="text-[17px]">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -434,17 +443,23 @@ export default function AppSidebar() {
                         <DropdownMenuItem onClick={() => setTheme('light')}>
                           <IconSun />
                           Светлая
-                          {theme === 'light' && <IconCheck className="ml-auto" />}
+                          {theme === 'light' && (
+                            <IconCheck className="ml-auto" />
+                          )}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setTheme('dark')}>
                           <IconMoon />
                           Тёмная
-                          {theme === 'dark' && <IconCheck className="ml-auto" />}
+                          {theme === 'dark' && (
+                            <IconCheck className="ml-auto" />
+                          )}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setTheme('system')}>
                           <IconSunMoon />
                           Системная
-                          {theme === 'system' && <IconCheck className="ml-auto" />}
+                          {theme === 'system' && (
+                            <IconCheck className="ml-auto" />
+                          )}
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>

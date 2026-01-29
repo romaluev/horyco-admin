@@ -1,8 +1,8 @@
 'use client'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { Eye } from 'lucide-react'
+
+import { useRouter } from '@/shared/lib/navigation'
 
 import { Button } from './base/button'
 

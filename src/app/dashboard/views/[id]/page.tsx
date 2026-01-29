@@ -1,11 +1,14 @@
 import * as React from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { SortBy, SortDirection } from '@/shared/api/graphql'
+import { useRouter } from '@/shared/lib/navigation'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useDeleteView, useUpdateView, useViewById } from '@/entities/dashboard/view'
+import {
+  useDeleteView,
+  useUpdateView,
+  useViewById,
+} from '@/entities/dashboard/view'
 import {
   FilterBar,
   DisplaySettings,
@@ -14,7 +17,11 @@ import {
 } from '@/features/dashboard/view-builder'
 import { ViewDataTable } from '@/widgets/views'
 
-import type { IFilter, IViewConfig, IViewDataParams } from '@/entities/dashboard/view'
+import type {
+  IFilter,
+  IViewConfig,
+  IViewDataParams,
+} from '@/entities/dashboard/view'
 import type { Dataset } from '@/shared/api/graphql'
 
 interface IViewPageProps {
@@ -29,13 +36,8 @@ export default function ViewPage({ id }: IViewPageProps) {
   const { mutate: updateView, isPending } = useUpdateView()
   const { mutate: deleteView, isPending: isDeleting } = useDeleteView()
 
-  const {
-    selectedDataset,
-    viewName,
-    workingConfig,
-    loadView,
-    resetConfig,
-  } = useViewBuilderStore()
+  const { selectedDataset, viewName, workingConfig, loadView, resetConfig } =
+    useViewBuilderStore()
 
   // Load view data into store
   React.useEffect(() => {
@@ -50,7 +52,9 @@ export default function ViewPage({ id }: IViewPageProps) {
         groupBy: view.config.groupBy,
         sorting: view.config.sorting
           ? {
-              field: Object.values(SortBy).includes(view.config.sorting.column as SortBy)
+              field: Object.values(SortBy).includes(
+                view.config.sorting.column as SortBy
+              )
                 ? (view.config.sorting.column as SortBy)
                 : SortBy.REVENUE,
               direction: view.config.sorting.direction,
@@ -137,7 +141,7 @@ export default function ViewPage({ id }: IViewPageProps) {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col gap-4 overflow-auto p-4 md:p-6">
       {/* Header with title/description and save */}
       <ViewHeader
         onSave={handleSave}
@@ -160,7 +164,7 @@ export default function ViewPage({ id }: IViewPageProps) {
 
 function ViewPageSkeleton() {
   return (
-    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col gap-4 overflow-auto p-4 md:p-6">
       <div className="flex items-center justify-between border-b pb-4">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />

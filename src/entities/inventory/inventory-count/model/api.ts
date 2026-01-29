@@ -25,11 +25,12 @@ export const inventoryCountApi = {
    * Get all inventory counts
    * GET /admin/inventory/counts
    */
-  async getCounts(params?: IGetInventoryCountsParams): Promise<IInventoryCount[]> {
-    const response = await api.get<ApiResponse<IInventoryCount[]> | IInventoryCount[]>(
-      '/admin/inventory/counts',
-      { params }
-    )
+  async getCounts(
+    params?: IGetInventoryCountsParams
+  ): Promise<IInventoryCount[]> {
+    const response = await api.get<
+      ApiResponse<IInventoryCount[]> | IInventoryCount[]
+    >('/admin/inventory/counts', { params })
     const data = response.data
     if (Array.isArray(data)) return data
     return data.data || []
@@ -85,7 +86,11 @@ export const inventoryCountApi = {
    * Update count item (enter counted quantity)
    * PATCH /admin/inventory/counts/:id/items/:countItemId
    */
-  async updateItem(countId: number, countItemId: number, data: IUpdateCountItemDto): Promise<ICountItem> {
+  async updateItem(
+    countId: number,
+    countItemId: number,
+    data: IUpdateCountItemDto
+  ): Promise<ICountItem> {
     const response = await api.patch<ApiResponse<ICountItem>>(
       `/admin/inventory/counts/${countId}/items/${countItemId}`,
       data

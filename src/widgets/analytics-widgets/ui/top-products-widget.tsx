@@ -24,10 +24,10 @@ export function TopProductsWidget({
             className="flex items-center justify-between gap-2 rounded-md px-2 py-2"
           >
             <div className="flex items-center gap-2">
-              <div className="h-4 w-4 animate-pulse rounded bg-muted" />
-              <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+              <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+              <div className="bg-muted h-4 w-32 animate-pulse rounded" />
             </div>
-            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-4 w-12 animate-pulse rounded" />
           </div>
         ))}
       </div>
@@ -36,7 +36,7 @@ export function TopProductsWidget({
 
   if (data.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )
@@ -49,17 +49,17 @@ export function TopProductsWidget({
       {data.map((item) => (
         <div
           key={item.id}
-          className="group relative flex items-center justify-between gap-2 rounded-md px-2 py-2 hover:bg-muted/50"
+          className="group hover:bg-muted/50 relative flex items-center justify-between gap-2 rounded-md px-2 py-2"
         >
           {/* Background progress bar */}
           <div
-            className="absolute inset-y-0 left-0 rounded-md bg-primary/10"
+            className="bg-primary/10 absolute inset-y-0 left-0 rounded-md"
             style={{ width: `${(item.percentage / maxPercentage) * 100}%` }}
           />
 
           {/* Content */}
           <div className="relative flex min-w-0 flex-1 items-center gap-2">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
+            <span className="bg-muted flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-medium">
               {item.rank}
             </span>
             <span className="truncate text-sm font-medium">{item.name}</span>
@@ -69,7 +69,7 @@ export function TopProductsWidget({
             <span className="text-sm font-medium tabular-nums">
               {item.formattedValue}
             </span>
-            <span className="w-10 text-right text-xs text-muted-foreground">
+            <span className="text-muted-foreground w-10 text-right text-xs">
               {item.percentage.toFixed(1)}%
             </span>
           </div>

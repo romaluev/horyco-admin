@@ -1403,7 +1403,7 @@ const DashboardLayoutInventoryPurchaseOrdersOrderIdRouteChildren: DashboardLayou
 
 const DashboardLayoutInventoryPurchaseOrdersOrderIdRouteWithChildren =
   DashboardLayoutInventoryPurchaseOrdersOrderIdRoute._addFileChildren(
-    DashboardLayoutInventoryPurchaseOrdersOrderIdRouteChildren,
+    DashboardLayoutInventoryPurchaseOrdersOrderIdRouteChildren
   )
 
 interface DashboardLayoutRouteRouteChildren {

@@ -31,9 +31,14 @@ export function WidgetCard({
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">{title}</CardTitle>
         </CardHeader>
-        <CardContent className={cn('flex flex-col items-center justify-center gap-2 text-center', contentClassName)}>
-          <AlertCircle className="h-8 w-8 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">
+        <CardContent
+          className={cn(
+            'flex flex-col items-center justify-center gap-2 text-center',
+            contentClassName
+          )}
+        >
+          <AlertCircle className="text-muted-foreground h-8 w-8" />
+          <p className="text-muted-foreground text-sm">
             Не удалось загрузить данные
           </p>
           {onRetry && (
@@ -53,7 +58,7 @@ export function WidgetCard({
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-medium">{title}</CardTitle>
           {isLoading && (
-            <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+            <RefreshCw className="text-muted-foreground h-4 w-4 animate-spin" />
           )}
         </div>
       </CardHeader>

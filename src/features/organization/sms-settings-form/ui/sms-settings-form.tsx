@@ -177,7 +177,9 @@ export const SmsSettingsForm = () => {
 
             {selectedProvider === 'playmobile' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">{t('smsSettings.playmobileSettings')}</h4>
+                <h4 className="font-medium">
+                  {t('smsSettings.playmobileSettings')}
+                </h4>
 
                 <FormField
                   control={form.control}
@@ -230,7 +232,9 @@ export const SmsSettingsForm = () => {
 
             {selectedProvider === 'eskiz' && (
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="font-medium">{t('smsSettings.eskizSettings')}</h4>
+                <h4 className="font-medium">
+                  {t('smsSettings.eskizSettings')}
+                </h4>
 
                 <FormField
                   control={form.control}
@@ -301,7 +305,9 @@ export const SmsSettingsForm = () => {
                   onClick={handleTest}
                   disabled={isTesting || !form.watch('smsEnabled')}
                 >
-                  {isTesting ? t('smsSettings.sending') : t('smsSettings.sendTest')}
+                  {isTesting
+                    ? t('smsSettings.sending')
+                    : t('smsSettings.sendTest')}
                 </Button>
               </div>
             </div>
@@ -310,7 +316,9 @@ export const SmsSettingsForm = () => {
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending ? t('common.actions.saving') : t('smsSettings.saveChanges')}
+            {isPending
+              ? t('common.actions.saving')
+              : t('smsSettings.saveChanges')}
           </Button>
         </div>
       </form>

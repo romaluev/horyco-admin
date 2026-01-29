@@ -1,8 +1,9 @@
 import { Suspense } from 'react'
 
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { Loader2 } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import logo from '@/shared/assets/logo.png'
 
@@ -25,7 +26,10 @@ function StaffInvitePage() {
     <>
       <Helmet>
         <title>Активация аккаунта сотрудника | Horyco Admin</title>
-        <meta name="description" content="Активируйте ваш аккаунт сотрудника Horyco" />
+        <meta
+          name="description"
+          content="Активируйте ваш аккаунт сотрудника Horyco"
+        />
       </Helmet>
       <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
         <div className="flex items-center justify-center p-4 text-lg font-medium">

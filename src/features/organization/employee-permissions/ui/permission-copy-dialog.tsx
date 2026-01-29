@@ -34,7 +34,6 @@ interface PermissionCopyDialogProps {
   onCopySuccess: (toBranchId: number, permissionIds: number[]) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
 export const PermissionCopyDialog = ({
   isOpen,
   onClose,
@@ -89,12 +88,10 @@ export const PermissionCopyDialog = ({
 
         <div className="space-y-4">
           {/* Source Branch Info */}
-          <div className="rounded-lg border bg-muted p-3">
-            <p className="text-xs font-medium text-muted-foreground">
-              Откуда
-            </p>
+          <div className="bg-muted rounded-lg border p-3">
+            <p className="text-muted-foreground text-xs font-medium">Откуда</p>
             <p className="text-sm font-semibold">{sourceBranch?.name}</p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-xs">
               {sourcePermissionIds.length} разрешений
             </p>
           </div>

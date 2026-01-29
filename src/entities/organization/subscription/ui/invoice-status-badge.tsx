@@ -9,7 +9,10 @@ interface InvoiceStatusBadgeProps {
 export const InvoiceStatusBadge = ({ status }: InvoiceStatusBadgeProps) => {
   const statusConfig: Record<
     InvoiceStatus,
-    { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
+    {
+      label: string
+      variant: 'default' | 'secondary' | 'destructive' | 'outline'
+    }
   > = {
     draft: { label: 'Черновик', variant: 'secondary' },
     open: { label: 'На ожидании платежа', variant: 'outline' },

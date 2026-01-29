@@ -2,10 +2,9 @@
 
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { IconArrowLeft, IconUpload } from '@tabler/icons-react'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'

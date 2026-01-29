@@ -103,11 +103,11 @@ export function OrdersByCategoryWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2 flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold">Total orders</h3>
-          <p className="text-sm text-muted-foreground">{totalSalesLabel}</p>
+          <p className="text-muted-foreground text-sm">{totalSalesLabel}</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -116,7 +116,9 @@ export function OrdersByCategoryWidget({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onViewDetails}>View Details</DropdownMenuItem>
+            <DropdownMenuItem onClick={onViewDetails}>
+              View Details
+            </DropdownMenuItem>
             <DropdownMenuItem>Export Data</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -125,7 +127,7 @@ export function OrdersByCategoryWidget({
       <div className="mb-4 flex items-center gap-6">
         <div>
           <span className="text-4xl font-bold">{formattedTotal}</span>
-          <p className="text-sm text-muted-foreground">Total orders</p>
+          <p className="text-muted-foreground text-sm">Total orders</p>
         </div>
 
         <div className="relative size-24">
@@ -149,7 +151,7 @@ export function OrdersByCategoryWidget({
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-lg font-bold">{weeklyPercentage}%</span>
-            <span className="text-[10px] text-muted-foreground">Weekly</span>
+            <span className="text-muted-foreground text-[10px]">Weekly</span>
           </div>
         </div>
       </div>
@@ -160,12 +162,14 @@ export function OrdersByCategoryWidget({
           return (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-muted p-2">
-                  <CategoryIcon className="size-4 text-muted-foreground" />
+                <div className="bg-muted rounded-lg p-2">
+                  <CategoryIcon className="text-muted-foreground size-4" />
                 </div>
                 <div>
                   <p className="text-sm font-medium">{category.name}</p>
-                  <p className="text-xs text-muted-foreground">{category.description}</p>
+                  <p className="text-muted-foreground text-xs">
+                    {category.description}
+                  </p>
                 </div>
               </div>
               <span className="text-sm font-semibold">
@@ -183,32 +187,32 @@ export function OrdersByCategoryWidget({
 
 function OrdersByCategoryWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2 flex items-start justify-between">
         <div className="space-y-1">
-          <div className="h-6 w-28 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-6 w-28 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-32 animate-pulse rounded" />
         </div>
-        <div className="size-8 animate-pulse rounded bg-muted" />
+        <div className="bg-muted size-8 animate-pulse rounded" />
       </div>
       <div className="mb-4 flex items-center gap-6">
         <div className="space-y-1">
-          <div className="h-10 w-20 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-10 w-20 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-24 animate-pulse rounded" />
         </div>
-        <div className="size-24 animate-pulse rounded-full bg-muted" />
+        <div className="bg-muted size-24 animate-pulse rounded-full" />
       </div>
       <div className="flex-1 space-y-3">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="size-9 animate-pulse rounded-lg bg-muted" />
+              <div className="bg-muted size-9 animate-pulse rounded-lg" />
               <div className="space-y-1">
-                <div className="h-4 w-20 animate-pulse rounded bg-muted" />
-                <div className="h-3 w-28 animate-pulse rounded bg-muted" />
+                <div className="bg-muted h-4 w-20 animate-pulse rounded" />
+                <div className="bg-muted h-3 w-28 animate-pulse rounded" />
               </div>
             </div>
-            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-4 w-12 animate-pulse rounded" />
           </div>
         ))}
       </div>

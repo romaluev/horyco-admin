@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
-import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import { Checkbox } from '@/shared/ui/base/checkbox'
@@ -34,7 +34,7 @@ interface PermissionsSelectorModalProps {
  * Simplified permissions selector modal for onboarding
  * Shows permissions grouped by category with checkboxes
  */
-// eslint-disable-next-line max-lines-per-function
+
 export const PermissionsSelectorModal = ({
   isOpen,
   onOpenChange,
@@ -85,7 +85,9 @@ export const PermissionsSelectorModal = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('pages.staffInvite.permissionsModal.title')} - {branchName}</DialogTitle>
+          <DialogTitle>
+            {t('pages.staffInvite.permissionsModal.title')} - {branchName}
+          </DialogTitle>
           <DialogDescription>
             {t('pages.staffInvite.permissionsModal.description')}
           </DialogDescription>

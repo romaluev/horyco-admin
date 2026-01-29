@@ -2,11 +2,17 @@
 
 import { Bell, Check } from 'lucide-react'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS } from '@/shared/types/inventory'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
-import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS } from '@/shared/types/inventory'
 
 import { useStockAlerts, useAcknowledgeAlert } from '@/entities/inventory/stock'
 
@@ -15,7 +21,10 @@ interface IStockAlertsWidgetProps {
   size?: number
 }
 
-export function StockAlertsWidget({ warehouseId, size = 5 }: IStockAlertsWidgetProps) {
+export function StockAlertsWidget({
+  warehouseId,
+  size = 5,
+}: IStockAlertsWidgetProps) {
   const { data: alerts, isLoading } = useStockAlerts({
     warehouseId,
     isAcknowledged: false,
@@ -46,7 +55,7 @@ export function StockAlertsWidget({ warehouseId, size = 5 }: IStockAlertsWidgetP
       </CardHeader>
       <CardContent>
         {!warehouseId ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Выберите склад для просмотра
           </p>
         ) : isLoading ? (
@@ -62,7 +71,7 @@ export function StockAlertsWidget({ warehouseId, size = 5 }: IStockAlertsWidgetP
             ))}
           </div>
         ) : !alerts?.length ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Нет активных уведомлений
           </p>
         ) : (
@@ -72,17 +81,20 @@ export function StockAlertsWidget({ warehouseId, size = 5 }: IStockAlertsWidgetP
                 key={alert.id}
                 className="flex items-center justify-between rounded-lg border p-3"
               >
-                <div className="space-y-1 flex-1">
+                <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium leading-none">{alert.item?.name}</p>
+                    <p className="leading-none font-medium">
+                      {alert.item?.name}
+                    </p>
                     <Badge variant={getAlertVariant(alert.alertType)}>
-                      {ALERT_TYPE_LABELS[alert.alertType as keyof typeof ALERT_TYPE_LABELS] ||
-                        alert.alertType}
+                      {ALERT_TYPE_LABELS[
+                        alert.alertType as keyof typeof ALERT_TYPE_LABELS
+                      ] || alert.alertType}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {alert.warehouse?.name} • Текущий: {alert.currentValue}, Порог:{' '}
-                    {alert.threshold}
+                  <p className="text-muted-foreground text-sm">
+                    {alert.warehouse?.name} • Текущий: {alert.currentValue},
+                    Порог: {alert.threshold}
                   </p>
                 </div>
                 <Button

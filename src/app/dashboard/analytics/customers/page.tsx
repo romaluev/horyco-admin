@@ -9,6 +9,7 @@
 'use client'
 
 import * as React from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
@@ -46,7 +47,9 @@ import type {
 
 export default function CustomersAnalyticsPage() {
   const { t } = useTranslation('analytics')
-  const [period, setPeriod] = React.useState<PeriodType>(PeriodType.LAST_30_DAYS)
+  const [period, setPeriod] = React.useState<PeriodType>(
+    PeriodType.LAST_30_DAYS
+  )
   const [activeTab, setActiveTab] = React.useState('overview')
 
   const handleExport = () => {
@@ -64,9 +67,13 @@ export default function CustomersAnalyticsPage() {
     >
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="overview">{t('customers.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="overview">
+            {t('customers.tabs.overview')}
+          </TabsTrigger>
           <TabsTrigger value="rfm">{t('customers.tabs.rfm')}</TabsTrigger>
-          <TabsTrigger value="cohorts">{t('customers.tabs.cohorts')}</TabsTrigger>
+          <TabsTrigger value="cohorts">
+            {t('customers.tabs.cohorts')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">
@@ -104,8 +111,20 @@ function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
   if (!data) return null
 
   // Extract data with defensive checks
-  const summary = data.summary ?? { totalCustomers: 0, activeCustomers: 0, newCustomers: 0, returningCustomers: 0, churnedCustomers: 0 }
-  const metrics = data.metrics ?? { activeRate: 0, retentionRate: 0, churnRate: 0, avgOrdersPerCustomer: 0, avgRevenuePerCustomer: 0 }
+  const summary = data.summary ?? {
+    totalCustomers: 0,
+    activeCustomers: 0,
+    newCustomers: 0,
+    returningCustomers: 0,
+    churnedCustomers: 0,
+  }
+  const metrics = data.metrics ?? {
+    activeRate: 0,
+    retentionRate: 0,
+    churnRate: 0,
+    avgOrdersPerCustomer: 0,
+    avgRevenuePerCustomer: 0,
+  }
   const segments = data.segments ?? []
 
   // Map summary fields
@@ -125,11 +144,23 @@ function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
     <div className="space-y-6">
       {/* Summary Metrics */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <MetricCard label={t('customers.overview.totalCustomers')} value={totalCustomers} />
-        <MetricCard label={t('customers.overview.active')} value={activeCustomers} />
+        <MetricCard
+          label={t('customers.overview.totalCustomers')}
+          value={totalCustomers}
+        />
+        <MetricCard
+          label={t('customers.overview.active')}
+          value={activeCustomers}
+        />
         <MetricCard label={t('customers.overview.new')} value={newCustomers} />
-        <MetricCard label={t('customers.overview.returning')} value={returningCustomers} />
-        <MetricCard label={t('customers.overview.churned')} value={churnedCustomers} />
+        <MetricCard
+          label={t('customers.overview.returning')}
+          value={returningCustomers}
+        />
+        <MetricCard
+          label={t('customers.overview.churned')}
+          value={churnedCustomers}
+        />
       </div>
 
       {/* Key Metrics */}
@@ -154,11 +185,13 @@ function CustomerOverviewTab({ period }: ICustomerOverviewTabProps) {
 
       {/* Segments Table */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">{t('customers.overview.segments')}</h3>
+        <h3 className="mb-3 text-sm font-medium">
+          {t('customers.overview.segments')}
+        </h3>
         {segments.length > 0 ? (
           <SegmentsTable segments={segments} />
         ) : (
-          <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
+          <div className="text-muted-foreground flex h-32 items-center justify-center rounded-lg border">
             {t('customers.overview.noSegmentData')}
           </div>
         )}
@@ -188,11 +221,13 @@ function RfmAnalysisTab() {
     <div className="space-y-6">
       {/* RFM Segments Table */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">{t('customers.rfm.segments')}</h3>
+        <h3 className="mb-3 text-sm font-medium">
+          {t('customers.rfm.segments')}
+        </h3>
         {segments.length > 0 ? (
           <RfmSegmentsTable segments={segments} />
         ) : (
-          <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
+          <div className="text-muted-foreground flex h-32 items-center justify-center rounded-lg border">
             {t('customers.rfm.noData')}
           </div>
         )}
@@ -200,7 +235,9 @@ function RfmAnalysisTab() {
 
       {/* RFM Distribution */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">{t('customers.rfm.distribution')}</h3>
+        <h3 className="mb-3 text-sm font-medium">
+          {t('customers.rfm.distribution')}
+        </h3>
         <RfmDistribution distribution={distribution} />
       </div>
     </div>
@@ -228,11 +265,13 @@ function CohortAnalysisTab() {
     <div className="space-y-6">
       {/* Cohort Grid */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">{t('customers.cohorts.retention')}</h3>
+        <h3 className="mb-3 text-sm font-medium">
+          {t('customers.cohorts.retention')}
+        </h3>
         {cohorts.length > 0 ? (
           <CohortGrid cohorts={cohorts} />
         ) : (
-          <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
+          <div className="text-muted-foreground flex h-32 items-center justify-center rounded-lg border">
             {t('customers.cohorts.noData')}
           </div>
         )}
@@ -240,11 +279,22 @@ function CohortAnalysisTab() {
 
       {/* Average Retention */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">{t('customers.cohorts.avgRetention')}</h3>
+        <h3 className="mb-3 text-sm font-medium">
+          {t('customers.cohorts.avgRetention')}
+        </h3>
         <div className="grid gap-4 sm:grid-cols-3">
-          <MetricCard label={t('customers.cohorts.period1')} value={`${(avgRetention.period1 ?? 0).toFixed(1)}%`} />
-          <MetricCard label={t('customers.cohorts.period3')} value={`${(avgRetention.period3 ?? 0).toFixed(1)}%`} />
-          <MetricCard label={t('customers.cohorts.period6')} value={`${(avgRetention.period6 ?? 0).toFixed(1)}%`} />
+          <MetricCard
+            label={t('customers.cohorts.period1')}
+            value={`${(avgRetention.period1 ?? 0).toFixed(1)}%`}
+          />
+          <MetricCard
+            label={t('customers.cohorts.period3')}
+            value={`${(avgRetention.period3 ?? 0).toFixed(1)}%`}
+          />
+          <MetricCard
+            label={t('customers.cohorts.period6')}
+            value={`${(avgRetention.period6 ?? 0).toFixed(1)}%`}
+          />
         </div>
       </div>
     </div>
@@ -263,7 +313,7 @@ interface IMetricCardProps {
 function MetricCard({ label, value }: IMetricCardProps) {
   return (
     <div className="rounded-lg border p-4">
-      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="text-muted-foreground text-sm">{label}</div>
       <div className="mt-1 text-2xl font-semibold">
         {typeof value === 'number' ? value.toLocaleString('ru-RU') : value}
       </div>
@@ -287,18 +337,32 @@ function SegmentsTable({ segments }: ISegmentsTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead>{t('customers.table.segment')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.count')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.share')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.revenue')}</TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.count')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.share')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.revenue')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {segments.map((segment) => (
             <TableRow key={segment.segment}>
-              <TableCell className="font-medium">{segment.segmentLabel ?? segment.segment}</TableCell>
-              <TableCell className="text-right">{(segment.count ?? 0).toLocaleString('ru-RU')}</TableCell>
-              <TableCell className="text-right">{segment.share ?? 0}%</TableCell>
-              <TableCell className="text-right font-medium">{formatPrice(segment.revenue ?? 0)}</TableCell>
+              <TableCell className="font-medium">
+                {segment.segmentLabel ?? segment.segment}
+              </TableCell>
+              <TableCell className="text-right">
+                {(segment.count ?? 0).toLocaleString('ru-RU')}
+              </TableCell>
+              <TableCell className="text-right">
+                {segment.share ?? 0}%
+              </TableCell>
+              <TableCell className="text-right font-medium">
+                {formatPrice(segment.revenue ?? 0)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -323,22 +387,42 @@ function RfmSegmentsTable({ segments }: IRfmSegmentsTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead>{t('customers.table.rfmSegment')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.count')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.share')}</TableHead>
-            <TableHead className="text-center">{t('customers.table.recency')}</TableHead>
-            <TableHead className="text-center">{t('customers.table.frequency')}</TableHead>
-            <TableHead className="text-center">{t('customers.table.monetary')}</TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.count')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.share')}
+            </TableHead>
+            <TableHead className="text-center">
+              {t('customers.table.recency')}
+            </TableHead>
+            <TableHead className="text-center">
+              {t('customers.table.frequency')}
+            </TableHead>
+            <TableHead className="text-center">
+              {t('customers.table.monetary')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {segments.map((segment) => (
             <TableRow key={segment.segment}>
-              <TableCell className="font-medium">{segment.segmentLabel}</TableCell>
-              <TableCell className="text-right">{segment.count.toLocaleString('ru-RU')}</TableCell>
+              <TableCell className="font-medium">
+                {segment.segmentLabel}
+              </TableCell>
+              <TableCell className="text-right">
+                {segment.count.toLocaleString('ru-RU')}
+              </TableCell>
               <TableCell className="text-right">{segment.share}%</TableCell>
-              <TableCell className="text-center">{(segment.avgR ?? 0).toFixed(1)}</TableCell>
-              <TableCell className="text-center">{(segment.avgF ?? 0).toFixed(1)}</TableCell>
-              <TableCell className="text-center">{(segment.avgM ?? 0).toFixed(1)}</TableCell>
+              <TableCell className="text-center">
+                {(segment.avgR ?? 0).toFixed(1)}
+              </TableCell>
+              <TableCell className="text-center">
+                {(segment.avgF ?? 0).toFixed(1)}
+              </TableCell>
+              <TableCell className="text-center">
+                {(segment.avgM ?? 0).toFixed(1)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -358,8 +442,14 @@ interface IRfmDistributionProps {
 function RfmDistribution({ distribution }: IRfmDistributionProps) {
   const metrics = [
     { label: 'Recency', values: distribution.recency ?? distribution.r ?? [] },
-    { label: 'Frequency', values: distribution.frequency ?? distribution.f ?? [] },
-    { label: 'Monetary', values: distribution.monetary ?? distribution.m ?? [] },
+    {
+      label: 'Frequency',
+      values: distribution.frequency ?? distribution.f ?? [],
+    },
+    {
+      label: 'Monetary',
+      values: distribution.monetary ?? distribution.m ?? [],
+    },
   ]
 
   return (
@@ -371,7 +461,7 @@ function RfmDistribution({ distribution }: IRfmDistributionProps) {
             {values.map((value, i) => (
               <div
                 key={i}
-                className="h-6 flex-1 rounded bg-primary/20"
+                className="bg-primary/20 h-6 flex-1 rounded"
                 style={{ opacity: 0.2 + (value / 100) * 0.8 }}
                 title={`Score ${i + 1}: ${value}%`}
               />
@@ -395,13 +485,16 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
   const { t } = useTranslation('analytics')
   if (!cohorts || cohorts.length === 0) {
     return (
-      <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
+      <div className="text-muted-foreground flex h-32 items-center justify-center rounded-lg border">
         {t('customers.cohorts.noData')}
       </div>
     )
   }
 
-  const maxPeriods = Math.max(...cohorts.map((c) => (c.retention ?? []).length), 0)
+  const maxPeriods = Math.max(
+    ...cohorts.map((c) => (c.retention ?? []).length),
+    0
+  )
 
   return (
     <div className="overflow-x-auto rounded-lg border">
@@ -409,9 +502,13 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
         <TableHeader>
           <TableRow>
             <TableHead>{t('customers.table.cohort')}</TableHead>
-            <TableHead className="text-right">{t('customers.table.size')}</TableHead>
+            <TableHead className="text-right">
+              {t('customers.table.size')}
+            </TableHead>
             {Array.from({ length: maxPeriods }).map((_, i) => (
-              <TableHead key={i} className="text-center">M{i}</TableHead>
+              <TableHead key={i} className="text-center">
+                M{i}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -420,8 +517,12 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
             const retention = cohort.retention ?? []
             return (
               <TableRow key={cohort.cohortDate}>
-                <TableCell className="font-medium">{cohort.cohortLabel ?? cohort.cohortDate}</TableCell>
-                <TableCell className="text-right">{cohort.initialSize ?? 0}</TableCell>
+                <TableCell className="font-medium">
+                  {cohort.cohortLabel ?? cohort.cohortDate}
+                </TableCell>
+                <TableCell className="text-right">
+                  {cohort.initialSize ?? 0}
+                </TableCell>
                 {retention.map((ret, i) => (
                   <TableCell key={i} className="text-center">
                     <span
@@ -435,9 +536,16 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
                   </TableCell>
                 ))}
                 {/* Fill empty cells */}
-                {Array.from({ length: maxPeriods - retention.length }).map((_, i) => (
-                  <TableCell key={`empty-${i}`} className="text-center text-muted-foreground">-</TableCell>
-                ))}
+                {Array.from({ length: maxPeriods - retention.length }).map(
+                  (_, i) => (
+                    <TableCell
+                      key={`empty-${i}`}
+                      className="text-muted-foreground text-center"
+                    >
+                      -
+                    </TableCell>
+                  )
+                )}
               </TableRow>
             )
           })}
@@ -448,9 +556,12 @@ function CohortGrid({ cohorts }: ICohortGridProps) {
 }
 
 function getRetentionColor(rate: number): string {
-  if (rate >= COHORT_RETENTION_COLORS.high.min) return COHORT_RETENTION_COLORS.high.color
-  if (rate >= COHORT_RETENTION_COLORS.medium.min) return COHORT_RETENTION_COLORS.medium.color
-  if (rate >= COHORT_RETENTION_COLORS.low.min) return COHORT_RETENTION_COLORS.low.color
+  if (rate >= COHORT_RETENTION_COLORS.high.min)
+    return COHORT_RETENTION_COLORS.high.color
+  if (rate >= COHORT_RETENTION_COLORS.medium.min)
+    return COHORT_RETENTION_COLORS.medium.color
+  if (rate >= COHORT_RETENTION_COLORS.low.min)
+    return COHORT_RETENTION_COLORS.low.color
   return COHORT_RETENTION_COLORS.veryLow.color
 }
 

@@ -96,8 +96,12 @@ export function StockLevelIndicator({
         <TooltipTrigger asChild>{content}</TooltipTrigger>
         <TooltipContent>
           <p>{config.label}</p>
-          {minLevel && <p className="text-xs text-muted-foreground">Мин: {minLevel}</p>}
-          {maxLevel && <p className="text-xs text-muted-foreground">Макс: {maxLevel}</p>}
+          {minLevel && (
+            <p className="text-muted-foreground text-xs">Мин: {minLevel}</p>
+          )}
+          {maxLevel && (
+            <p className="text-muted-foreground text-xs">Макс: {maxLevel}</p>
+          )}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

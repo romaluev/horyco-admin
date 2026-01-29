@@ -18,8 +18,8 @@ import {
   DialogTrigger,
 } from '@/shared/ui'
 
-import { useCreateEmployee } from '@/entities/organization/employee'
 import { GeneratePinDialog } from '@/entities/menu/pin'
+import { useCreateEmployee } from '@/entities/organization/employee'
 
 import { CreateBranchPermissionsManager } from './create-branch-permissions-manager'
 import { EmployeeFormBasic } from './employee-form-basic'
@@ -29,12 +29,20 @@ import type { CreateEmployeeFormData } from '../model/contract'
 import type { IEmployee } from '@/entities/organization/employee'
 
 // Steps will be defined in the component to use translations
-const getSteps = (t: any) => [
-  { number: 1, title: t('staff.form.steps.basicInfo'), description: t('staff.form.steps.step1') },
-  { number: 2, title: t('staff.form.steps.branchesPermissions'), description: t('staff.form.steps.step2') },
-] as const
+const getSteps = (t: any) =>
+  [
+    {
+      number: 1,
+      title: t('staff.form.steps.basicInfo'),
+      description: t('staff.form.steps.step1'),
+    },
+    {
+      number: 2,
+      title: t('staff.form.steps.branchesPermissions'),
+      description: t('staff.form.steps.step2'),
+    },
+  ] as const
 
-// eslint-disable-next-line max-lines-per-function
 export const CreateEmployeeDialog = () => {
   const { t } = useTranslation('organization')
   const [isOpen, setIsOpen] = useState(false)
@@ -68,28 +76,36 @@ export const CreateEmployeeDialog = () => {
     const activeBranchId = data.activeBranchId ?? data.branchIds[0]
 
     // Convert branchPermissions to the API format
-    const formattedBranchPermissions: Record<number, { permissionIds: number[] }> = {}
+    const formattedBranchPermissions: Record<
+      number,
+      { permissionIds: number[] }
+    > = {}
     Object.entries(branchPermissions).forEach(([branchId, permissionIds]) => {
       formattedBranchPermissions[Number(branchId)] = { permissionIds }
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    createEmployee({
-      ...data,
-      activeBranchId: activeBranchId!,
-      roleIds: data.roleIds || [],
-      branchPermissions: Object.keys(formattedBranchPermissions).length > 0 ? formattedBranchPermissions : undefined,
-    }, {
-      onSuccess: (employee) => {
-        // Close dialog and open PIN generation
-        setIsOpen(false)
-        form.reset()
-        setCurrentStep(1)
-        setBranchPermissions({})
-        setCreatedEmployee(employee)
-        setIsShowingPinDialog(true)
+    createEmployee(
+      {
+        ...data,
+        activeBranchId: activeBranchId!,
+        roleIds: data.roleIds || [],
+        branchPermissions:
+          Object.keys(formattedBranchPermissions).length > 0
+            ? formattedBranchPermissions
+            : undefined,
       },
-    })
+      {
+        onSuccess: (employee) => {
+          // Close dialog and open PIN generation
+          setIsOpen(false)
+          form.reset()
+          setCurrentStep(1)
+          setBranchPermissions({})
+          setCreatedEmployee(employee)
+          setIsShowingPinDialog(true)
+        },
+      }
+    )
   }
 
   const handleNext = async (): Promise<void> => {
@@ -135,7 +151,7 @@ export const CreateEmployeeDialog = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{STEPS[currentStep - 1]?.title}</DialogTitle>
           <DialogDescription>
@@ -189,7 +205,9 @@ export const CreateEmployeeDialog = () => {
             ) : (
               <Button type="submit" disabled={isPending}>
                 {isPending && <BaseLoading />}
-                {isPending ? t('common.actions.saving') : t('staff.form.submit.create')}
+                {isPending
+                  ? t('common.actions.saving')
+                  : t('staff.form.submit.create')}
               </Button>
             )}
           </DialogFooter>

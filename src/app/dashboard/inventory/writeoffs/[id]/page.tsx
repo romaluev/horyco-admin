@@ -1,10 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -16,8 +14,10 @@ import {
 } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -111,7 +111,8 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
   }
 
   const canEdit = writeoff.status === 'draft'
-  const canSubmit = writeoff.status === 'draft' && (writeoff.items?.length ?? 0) > 0
+  const canSubmit =
+    writeoff.status === 'draft' && (writeoff.items?.length ?? 0) > 0
   const canApprove = writeoff.status === 'pending'
   const canDelete = writeoff.status === 'draft'
 
@@ -216,8 +217,10 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                 <WriteoffStatusBadge status={writeoff.status} />
               </div>
               {writeoff.notes && (
-                <div className="pt-2 border-t">
-                  <span className="text-muted-foreground text-sm">Примечания:</span>
+                <div className="border-t pt-2">
+                  <span className="text-muted-foreground text-sm">
+                    Примечания:
+                  </span>
                   <p className="mt-1 text-sm">{writeoff.notes}</p>
                 </div>
               )}
@@ -241,9 +244,13 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Отправлено</span>
                   <span>
-                    {format(new Date(writeoff.submittedAt), 'dd MMM yyyy, HH:mm', {
-                      locale: ru,
-                    })}
+                    {format(
+                      new Date(writeoff.submittedAt),
+                      'dd MMM yyyy, HH:mm',
+                      {
+                        locale: ru,
+                      }
+                    )}
                   </span>
                 </div>
               )}
@@ -251,9 +258,13 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Одобрено</span>
                   <span>
-                    {format(new Date(writeoff.approvedAt), 'dd MMM yyyy, HH:mm', {
-                      locale: ru,
-                    })}
+                    {format(
+                      new Date(writeoff.approvedAt),
+                      'dd MMM yyyy, HH:mm',
+                      {
+                        locale: ru,
+                      }
+                    )}
                   </span>
                 </div>
               )}
@@ -262,17 +273,21 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Отклонено</span>
                     <span>
-                      {format(new Date(writeoff.rejectedAt), 'dd MMM yyyy, HH:mm', {
-                        locale: ru,
-                      })}
+                      {format(
+                        new Date(writeoff.rejectedAt),
+                        'dd MMM yyyy, HH:mm',
+                        {
+                          locale: ru,
+                        }
+                      )}
                     </span>
                   </div>
                   {writeoff.rejectReason && (
-                    <div className="pt-2 border-t">
+                    <div className="border-t pt-2">
                       <span className="text-muted-foreground text-sm">
                         Причина отклонения:
                       </span>
-                      <p className="mt-1 text-sm text-destructive">
+                      <p className="text-destructive mt-1 text-sm">
                         {writeoff.rejectReason}
                       </p>
                     </div>
@@ -291,16 +306,18 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Позиций: {writeoff.items?.length ?? 0}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Причина: {WRITEOFF_REASON_LABELS[writeoff.reason]}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Общая сумма списания</p>
-                <p className="text-2xl font-bold text-destructive">
+                <p className="text-muted-foreground text-sm">
+                  Общая сумма списания
+                </p>
+                <p className="text-destructive text-2xl font-bold">
                   {formatCurrency(writeoff.totalValue)}
                 </p>
               </div>
@@ -337,7 +354,7 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                   <TableRow>
                     <TableCell
                       colSpan={canEdit ? 6 : 5}
-                      className="text-center py-8"
+                      className="py-8 text-center"
                     >
                       Нет товаров для списания
                     </TableCell>
@@ -348,7 +365,7 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                       <TableCell>
                         <div>
                           <p className="font-medium">{item.itemName}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {item.itemUnit}
                           </p>
                         </div>
@@ -383,8 +400,8 @@ export default function WriteoffDetailPage({ id: paramId }: PageProps) {
                                   Удалить товар?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Товар &quot;{item.itemName}&quot; будет удалён из
-                                  списания.
+                                  Товар &quot;{item.itemName}&quot; будет удалён
+                                  из списания.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>

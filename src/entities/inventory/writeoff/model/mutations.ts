@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
+
+import { getErrorMessage } from '@/shared/lib/get-error-message'
+
+import { stockKeys } from '@/entities/inventory/stock/model/query-keys'
+import { movementKeys } from '@/entities/inventory/stock-movement/model/query-keys'
 
 import { writeoffApi } from './api'
 import { writeoffKeys } from './query-keys'
-import { stockKeys } from '@/entities/inventory/stock/model/query-keys'
-import { movementKeys } from '@/entities/inventory/stock-movement/model/query-keys'
-import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateWriteoffDto,
@@ -78,10 +81,17 @@ export const useAddWriteoffItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ writeoffId, data }: { writeoffId: number; data: ICreateWriteoffItemDto }) =>
-      writeoffApi.addItem(writeoffId, data),
+    mutationFn: ({
+      writeoffId,
+      data,
+    }: {
+      writeoffId: number
+      data: ICreateWriteoffItemDto
+    }) => writeoffApi.addItem(writeoffId, data),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар добавлен')
     },
     onError: (error) => {
@@ -107,7 +117,9 @@ export const useUpdateWriteoffItem = () => {
       data: IUpdateWriteoffItemDto
     }) => writeoffApi.updateItem(writeoffId, itemId, data),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар обновлен')
     },
     onError: (error) => {
@@ -123,10 +135,17 @@ export const useRemoveWriteoffItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ writeoffId, itemId }: { writeoffId: number; itemId: number }) =>
-      writeoffApi.removeItem(writeoffId, itemId),
+    mutationFn: ({
+      writeoffId,
+      itemId,
+    }: {
+      writeoffId: number
+      itemId: number
+    }) => writeoffApi.removeItem(writeoffId, itemId),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар удален')
     },
     onError: (error) => {

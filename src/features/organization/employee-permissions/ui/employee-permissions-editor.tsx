@@ -4,10 +4,16 @@ import { useEffect, useState } from 'react'
 
 import { Loader2 } from 'lucide-react'
 
-import { BaseError, BaseLoading, Button, Alert, AlertDescription } from '@/shared/ui'
+import {
+  BaseError,
+  BaseLoading,
+  Button,
+  Alert,
+  AlertDescription,
+} from '@/shared/ui'
 
-import { employeeApi } from '@/entities/organization/employee'
 import { useGetAllRoles } from '@/entities/auth/role'
+import { employeeApi } from '@/entities/organization/employee'
 
 import { BranchPermissionManager } from './branch-permission-manager'
 
@@ -25,8 +31,12 @@ export const EmployeePermissionsEditor = ({
   const { data: rolesResponse, isLoading: rolesLoading } = useGetAllRoles()
 
   const [permissionsLoading, setPermissionsLoading] = useState(true)
-  const [currentPermissions, setCurrentPermissions] = useState<Record<number, number[]>>({})
-  const [originalPermissions, setOriginalPermissions] = useState<Record<number, number[]>>({})
+  const [currentPermissions, setCurrentPermissions] = useState<
+    Record<number, number[]>
+  >({})
+  const [originalPermissions, setOriginalPermissions] = useState<
+    Record<number, number[]>
+  >({})
   const [hasChanges, setHasChanges] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -77,7 +87,10 @@ export const EmployeePermissionsEditor = ({
     loadPermissions()
   }, [employeeId, branches])
 
-  const handlePermissionsChange = (branchId: number, permissionIds: number[]) => {
+  const handlePermissionsChange = (
+    branchId: number,
+    permissionIds: number[]
+  ) => {
     setCurrentPermissions((prev) => ({
       ...prev,
       [branchId]: permissionIds,
@@ -121,9 +134,7 @@ export const EmployeePermissionsEditor = ({
   }
 
   if (branches.length === 0) {
-    return (
-      <BaseError message="Сотрудник не назначен ни одному филиалу" />
-    )
+    return <BaseError message="Сотрудник не назначен ни одному филиалу" />
   }
 
   return (
@@ -160,11 +171,11 @@ export const EmployeePermissionsEditor = ({
       )}
 
       {/* Info Box */}
-      <div className="rounded-lg bg-muted p-4">
-        <p className="text-sm text-muted-foreground">
+      <div className="bg-muted rounded-lg p-4">
+        <p className="text-muted-foreground text-sm">
           Вы можете настроить разрешения для каждого филиала отдельно.
-          Разрешения, выданные через роли при создании сотрудника,
-          могут быть изменены здесь в любое время.
+          Разрешения, выданные через роли при создании сотрудника, могут быть
+          изменены здесь в любое время.
         </p>
       </div>
 
@@ -176,7 +187,9 @@ export const EmployeePermissionsEditor = ({
             variant="outline"
             onClick={() => {
               // Reset to original values
-              setCurrentPermissions(JSON.parse(JSON.stringify(originalPermissions)))
+              setCurrentPermissions(
+                JSON.parse(JSON.stringify(originalPermissions))
+              )
               setHasChanges(false)
               setError(null)
             }}
@@ -184,11 +197,7 @@ export const EmployeePermissionsEditor = ({
           >
             Отменить
           </Button>
-          <Button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-          >
+          <Button type="button" onClick={handleSave} disabled={isSaving}>
             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isSaving ? 'Сохранение...' : 'Сохранить разрешения'}
           </Button>

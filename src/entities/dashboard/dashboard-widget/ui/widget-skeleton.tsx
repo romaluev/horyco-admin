@@ -1,6 +1,5 @@
 'use client'
 
-
 import { Card, CardContent, CardHeader } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
@@ -10,7 +9,9 @@ interface WidgetSkeletonProps {
   visualization?: WidgetVisualization
 }
 
-export function WidgetSkeleton({ visualization = 'number' }: WidgetSkeletonProps) {
+export function WidgetSkeleton({
+  visualization = 'number',
+}: WidgetSkeletonProps) {
   return (
     <Card className="flex h-full flex-col">
       <CardHeader className="pb-1">

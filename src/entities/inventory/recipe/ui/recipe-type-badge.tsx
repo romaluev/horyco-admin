@@ -10,7 +10,11 @@ interface IRecipeTypeBadgeProps {
   itemId: number | null
 }
 
-export function RecipeTypeBadge({ productId, modifierId, itemId }: IRecipeTypeBadgeProps) {
+export function RecipeTypeBadge({
+  productId,
+  modifierId,
+  itemId,
+}: IRecipeTypeBadgeProps) {
   if (productId) {
     return (
       <Badge variant="default" className="gap-1">

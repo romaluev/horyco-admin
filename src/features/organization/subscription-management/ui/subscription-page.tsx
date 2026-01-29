@@ -12,7 +12,7 @@ import { SubscriptionDashboard } from './subscription-dashboard'
 export const SubscriptionPage = () => {
   return (
     <PageContainer scrollable>
-      <div className="space-y-8 w-full">
+      <div className="w-full space-y-8">
         <div>
           <Heading
             title="Управление подпиской"
@@ -23,7 +23,9 @@ export const SubscriptionPage = () => {
 
         {/* Subscription Overview Section */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold leading-none">Статус подписки</h2>
+          <h2 className="text-xl leading-none font-semibold">
+            Статус подписки
+          </h2>
           <SubscriptionDashboard />
         </section>
 
@@ -31,9 +33,12 @@ export const SubscriptionPage = () => {
 
         {/* Module Catalog Section */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold leading-none">Доступные модули</h2>
-          <p className="text-sm text-muted-foreground">
-            Добавляйте или удаляйте модули из вашей подписки. Новые модули доступны с 7-дневным пробным периодом.
+          <h2 className="text-xl leading-none font-semibold">
+            Доступные модули
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Добавляйте или удаляйте модули из вашей подписки. Новые модули
+            доступны с 7-дневным пробным периодом.
           </p>
           <ModuleCatalog />
         </section>
@@ -42,8 +47,8 @@ export const SubscriptionPage = () => {
 
         {/* Invoices Section */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold leading-none">Счета-фактуры</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-xl leading-none font-semibold">Счета-фактуры</h2>
+          <p className="text-muted-foreground text-sm">
             История ваших счетов и квитанций
           </p>
           <InvoicesList />
@@ -53,8 +58,10 @@ export const SubscriptionPage = () => {
 
         {/* Payments Section */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold leading-none">История платежей</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-xl leading-none font-semibold">
+            История платежей
+          </h2>
+          <p className="text-muted-foreground text-sm">
             Запись всех произведенных платежей
           </p>
           <PaymentsHistory />

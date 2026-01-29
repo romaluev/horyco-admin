@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { WRITEOFF_REASON_LABELS, type WriteoffReason } from '../model/types'
 
 interface IWriteoffReasonBadgeProps {
@@ -8,9 +9,5 @@ interface IWriteoffReasonBadgeProps {
 }
 
 export function WriteoffReasonBadge({ reason }: IWriteoffReasonBadgeProps) {
-  return (
-    <Badge variant="outline">
-      {WRITEOFF_REASON_LABELS[reason]}
-    </Badge>
-  )
+  return <Badge variant="outline">{WRITEOFF_REASON_LABELS[reason]}</Badge>
 }

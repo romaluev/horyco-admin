@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { PO_STATUS_LABELS, type POStatus } from '../model/types'
 
 interface IPOStatusBadgeProps {
@@ -8,7 +9,10 @@ interface IPOStatusBadgeProps {
 }
 
 export function POStatusBadge({ status }: IPOStatusBadgeProps) {
-  const variants: Record<POStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  const variants: Record<
+    POStatus,
+    'default' | 'secondary' | 'destructive' | 'outline'
+  > = {
     draft: 'secondary',
     sent: 'outline',
     partial: 'default',
@@ -16,9 +20,5 @@ export function POStatusBadge({ status }: IPOStatusBadgeProps) {
     cancelled: 'destructive',
   }
 
-  return (
-    <Badge variant={variants[status]}>
-      {PO_STATUS_LABELS[status]}
-    </Badge>
-  )
+  return <Badge variant={variants[status]}>{PO_STATUS_LABELS[status]}</Badge>
 }

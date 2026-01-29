@@ -1,12 +1,19 @@
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { ArrowLeft, Send, Package, XCircle, Trash2, Loader2, Plus } from 'lucide-react'
+import {
+  ArrowLeft,
+  Send,
+  Package,
+  XCircle,
+  Trash2,
+  Loader2,
+  Plus,
+} from 'lucide-react'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,12 +38,20 @@ import {
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { usePurchaseOrderById, POStatusBadge } from '@/entities/inventory/purchase-order'
+import {
+  usePurchaseOrderById,
+  POStatusBadge,
+} from '@/entities/inventory/purchase-order'
 import {
   useSendPurchaseOrder,
   useDeletePurchaseOrder,
 } from '@/entities/inventory/purchase-order/model/mutations'
-import { SendPODialog , ReceivePODialog , CancelPODialog , AddPOItemDialog } from '@/features/inventory/purchase-order-workflow'
+import {
+  SendPODialog,
+  ReceivePODialog,
+  CancelPODialog,
+  AddPOItemDialog,
+} from '@/features/inventory/purchase-order-workflow'
 
 interface PageProps {
   id: string
@@ -89,8 +104,12 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
   const hasItems = (order.items?.length || 0) > 0
   const canSend = isDraft && hasItems
   const canReceive = order.status === 'sent' || order.status === 'partial'
-  const canCancel = order.status !== 'received' && order.status !== 'partial' && order.status !== 'cancelled'
-  const _isFinalized = order.status === 'received' || order.status === 'cancelled'
+  const canCancel =
+    order.status !== 'received' &&
+    order.status !== 'partial' &&
+    order.status !== 'cancelled'
+  const _isFinalized =
+    order.status === 'received' || order.status === 'cancelled'
 
   return (
     <PageContainer scrollable>
@@ -115,7 +134,10 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
           <div className="flex flex-wrap gap-2">
             {isDraft && (
               <>
-                <Button variant="outline" onClick={() => setAddItemDialogOpen(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setAddItemDialogOpen(true)}
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   Добавить товар
                 </Button>
@@ -146,7 +168,10 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
               </Button>
             )}
             {canCancel && !isDraft && (
-              <Button variant="destructive" onClick={() => setCancelDialogOpen(true)}>
+              <Button
+                variant="destructive"
+                onClick={() => setCancelDialogOpen(true)}
+              >
                 <XCircle className="mr-2 h-4 w-4" />
                 Отменить
               </Button>
@@ -166,14 +191,18 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Дата заказа:</span>
                 <span>
-                  {format(new Date(order.orderDate), 'dd MMM yyyy', { locale: ru })}
+                  {format(new Date(order.orderDate), 'dd MMM yyyy', {
+                    locale: ru,
+                  })}
                 </span>
               </div>
               {order.expectedDate && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Ожидается:</span>
                   <span>
-                    {format(new Date(order.expectedDate), 'dd MMM yyyy', { locale: ru })}
+                    {format(new Date(order.expectedDate), 'dd MMM yyyy', {
+                      locale: ru,
+                    })}
                   </span>
                 </div>
               )}
@@ -181,7 +210,9 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Получен:</span>
                   <span>
-                    {format(new Date(order.receivedDate), 'dd MMM yyyy', { locale: ru })}
+                    {format(new Date(order.receivedDate), 'dd MMM yyyy', {
+                      locale: ru,
+                    })}
                   </span>
                 </div>
               )}
@@ -319,7 +350,9 @@ export default function PurchaseOrderDetailPage({ id: paramId }: PageProps) {
                 {order.receives.map((receive) => (
                   <div key={receive.id} className="rounded-md border p-4">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="font-medium">{receive.receiveNumber}</span>
+                      <span className="font-medium">
+                        {receive.receiveNumber}
+                      </span>
                       <span className="text-muted-foreground text-sm">
                         {format(new Date(receive.receiveDate), 'dd MMM yyyy', {
                           locale: ru,

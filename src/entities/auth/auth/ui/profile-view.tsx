@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
+import { getFileById } from '@/shared/file/model/api'
 import { getNameInitials } from '@/shared/lib/utils'
 import { BaseLoading } from '@/shared/ui'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
@@ -35,7 +36,6 @@ import { Separator } from '@/shared/ui/base/separator'
 
 import { useAuthStore } from '@/entities/auth/auth/model/store'
 import { employeeApi } from '@/entities/organization/employee'
-import { getFileById } from '@/shared/file/model/api'
 
 import { authApi } from '../model/api'
 
@@ -252,10 +252,7 @@ export function ProfileView() {
           <div className="flex flex-wrap items-center gap-4 max-md:justify-center">
             <div className="group relative">
               <Avatar className="h-32 w-32">
-                <AvatarImage
-                  src={avatarUrl}
-                  alt={user.fullName}
-                />
+                <AvatarImage src={avatarUrl} alt={user.fullName} />
                 <AvatarFallback className="text-lg">
                   {getNameInitials(user.fullName) || <UploadIcon />}
                 </AvatarFallback>

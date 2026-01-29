@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconSearch, IconUpload } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
@@ -19,7 +19,10 @@ import { Separator } from '@/shared/ui/base/separator'
 import PageContainer from '@/shared/ui/layout/page-container'
 
 import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
-import { CreateItemDialog, categoryOptions } from '@/features/inventory/inventory-item-form'
+import {
+  CreateItemDialog,
+  categoryOptions,
+} from '@/features/inventory/inventory-item-form'
 import {
   EmptyItemsState,
   ItemsTable,
@@ -35,7 +38,8 @@ export default function InventoryItemsPage() {
   const [isActive, setIsActive] = useState<boolean | undefined>()
   const [itemType, setItemType] = useState<ItemType>('all')
 
-  const isSemiFinished = itemType === 'all' ? undefined : itemType === 'semi-finished'
+  const isSemiFinished =
+    itemType === 'all' ? undefined : itemType === 'semi-finished'
 
   const { data: items, isLoading } = useGetInventoryItems({
     search: search || undefined,
@@ -52,7 +56,8 @@ export default function InventoryItemsPage() {
 
   const renderContent = () => {
     if (isLoading) return <ItemsTableSkeleton />
-    if (filteredItems.length === 0) return <EmptyItemsState onImportCSV={handleImportCSV} />
+    if (filteredItems.length === 0)
+      return <EmptyItemsState onImportCSV={handleImportCSV} />
     return <ItemsTable items={filteredItems} />
   }
 
@@ -75,8 +80,8 @@ export default function InventoryItemsPage() {
         <Separator />
 
         <div className="flex flex-wrap gap-4">
-          <div className="relative flex-1 min-w-[200px]">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="relative min-w-[200px] flex-1">
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder={t('pages.items.searchItems')}
               value={search}
@@ -92,7 +97,9 @@ export default function InventoryItemsPage() {
               <SelectValue placeholder={t('pages.items.allCategories')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.items.allCategories')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.items.allCategories')}
+              </SelectItem>
               {categoryOptions.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
@@ -101,8 +108,12 @@ export default function InventoryItemsPage() {
             </SelectContent>
           </Select>
           <Select
-            value={isActive === undefined ? 'all' : isActive ? 'active' : 'inactive'}
-            onValueChange={(val) => setIsActive(val === 'all' ? undefined : val === 'active')}
+            value={
+              isActive === undefined ? 'all' : isActive ? 'active' : 'inactive'
+            }
+            onValueChange={(val) =>
+              setIsActive(val === 'all' ? undefined : val === 'active')
+            }
           >
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Статус" />
@@ -110,7 +121,9 @@ export default function InventoryItemsPage() {
             <SelectContent>
               <SelectItem value="all">{t('pages.items.all')}</SelectItem>
               <SelectItem value="active">{t('pages.items.active')}</SelectItem>
-              <SelectItem value="inactive">{t('pages.items.inactive')}</SelectItem>
+              <SelectItem value="inactive">
+                {t('pages.items.inactive')}
+              </SelectItem>
             </SelectContent>
           </Select>
           <Select
@@ -123,7 +136,9 @@ export default function InventoryItemsPage() {
             <SelectContent>
               <SelectItem value="all">{t('pages.items.allTypes')}</SelectItem>
               <SelectItem value="raw">{t('pages.items.raw')}</SelectItem>
-              <SelectItem value="semi-finished">{t('pages.items.semiFinished')}</SelectItem>
+              <SelectItem value="semi-finished">
+                {t('pages.items.semiFinished')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

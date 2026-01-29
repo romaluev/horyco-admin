@@ -84,7 +84,9 @@ export const uploadMultipleFiles = async (
       },
       onUploadProgress: (progressEvent) => {
         if (progressEvent.total) {
-          const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+          const progress = Math.round(
+            (progressEvent.loaded / progressEvent.total) * 100
+          )
           onProgress?.(progress)
         }
       },
@@ -128,7 +130,9 @@ export const listFiles = async (
 /**
  * Delete a file and all its variants
  */
-export const deleteFile = async (fileId: number): Promise<FileDeleteResponse> => {
+export const deleteFile = async (
+  fileId: number
+): Promise<FileDeleteResponse> => {
   const response = await api.delete<ApiResponse<FileDeleteResponse>>(
     `/files/${fileId}`
   )

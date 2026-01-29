@@ -3,12 +3,7 @@
 import { IconClock, IconUsers, IconCurrencyDollar } from '@tabler/icons-react'
 
 import { Badge } from '@/shared/ui/base/badge'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/base/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
 import { useTableSession } from '@/entities/organization/table'
 
@@ -23,7 +18,7 @@ export const SessionStatusCard = ({ tableId }: ISessionStatusCardProps) => {
     return (
       <Card className="bg-white shadow-sm">
         <CardContent className="pt-6">
-          <p className="text-sm text-muted-foreground">Loading session...</p>
+          <p className="text-muted-foreground text-sm">Loading session...</p>
         </CardContent>
       </Card>
     )
@@ -33,7 +28,7 @@ export const SessionStatusCard = ({ tableId }: ISessionStatusCardProps) => {
     return (
       <Card className="bg-white shadow-sm">
         <CardContent className="pt-6">
-          <p className="text-sm text-muted-foreground">No active session</p>
+          <p className="text-muted-foreground text-sm">No active session</p>
         </CardContent>
       </Card>
     )
@@ -43,7 +38,7 @@ export const SessionStatusCard = ({ tableId }: ISessionStatusCardProps) => {
     const date = new Date(dateString)
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -68,28 +63,33 @@ export const SessionStatusCard = ({ tableId }: ISessionStatusCardProps) => {
         {session.startedAt && (
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm">
-              <IconClock className="h-4 w-4 text-muted-foreground" />
+              <IconClock className="text-muted-foreground h-4 w-4" />
               <span className="text-muted-foreground">
-                Started: <strong className="text-foreground">{formatTime(session.startedAt)}</strong>
+                Started:{' '}
+                <strong className="text-foreground">
+                  {formatTime(session.startedAt)}
+                </strong>
               </span>
             </div>
-            <div className="text-xs text-muted-foreground pl-6">
+            <div className="text-muted-foreground pl-6 text-xs">
               ({getDuration(session.startedAt)} ago)
             </div>
           </div>
         )}
         {session.guestCount !== undefined && (
           <div className="flex items-center gap-2 text-sm">
-            <IconUsers className="h-4 w-4 text-muted-foreground" />
+            <IconUsers className="text-muted-foreground h-4 w-4" />
             <span className="text-muted-foreground">
-              Guests: <strong className="text-foreground">{session.guestCount}</strong>
+              Guests:{' '}
+              <strong className="text-foreground">{session.guestCount}</strong>
             </span>
           </div>
         )}
         {session.waiterName && (
           <div className="text-sm">
             <span className="text-muted-foreground">
-              Waiter: <strong className="text-foreground">{session.waiterName}</strong>
+              Waiter:{' '}
+              <strong className="text-foreground">{session.waiterName}</strong>
             </span>
           </div>
         )}
@@ -97,7 +97,8 @@ export const SessionStatusCard = ({ tableId }: ISessionStatusCardProps) => {
           <div className="rounded-md bg-blue-50 p-2 text-sm">
             <div className="font-medium text-blue-900">Orders:</div>
             <div className="text-xs text-blue-700">
-              {session.orderCount} {session.orderCount === 1 ? 'order' : 'orders'} placed
+              {session.orderCount}{' '}
+              {session.orderCount === 1 ? 'order' : 'orders'} placed
             </div>
           </div>
         )}

@@ -1,13 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useUpdateRecipeIngredient } from '@/entities/inventory/recipe/model/mutations'
-import type { IRecipeIngredient } from '@/entities/inventory/recipe/model/types'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,10 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
-import { Switch } from '@/shared/ui/base/switch'
 import {
   Form,
   FormControl,
@@ -29,6 +23,13 @@ import {
   FormMessage,
   FormDescription,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useUpdateRecipeIngredient } from '@/entities/inventory/recipe/model/mutations'
+
+import type { IRecipeIngredient } from '@/entities/inventory/recipe/model/types'
 
 const editIngredientSchema = z.object({
   quantity: z.number().min(0.001, 'Количество должно быть больше 0'),
@@ -98,13 +99,14 @@ export function EditIngredientDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Редактировать ингредиент</DialogTitle>
-          <DialogDescription>
-            {ingredient.itemName}
-          </DialogDescription>
+          <DialogDescription>{ingredient.itemName}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}

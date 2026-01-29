@@ -1,15 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
-import type { IPurchaseOrder, IPurchaseOrderItem } from '@/entities/inventory/purchase-order/model/types'
-
+import { Button } from '@/shared/ui/base/button'
+import { DatePicker } from '@/shared/ui/base/date-picker'
 import {
   Dialog,
   DialogContent,
@@ -18,9 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import { Label } from '@/shared/ui/base/label'
 import {
   Table,
@@ -30,15 +36,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/ui/base/form'
-import { DatePicker } from '@/shared/ui/base/date-picker'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
+
+import type {
+  IPurchaseOrder,
+  IPurchaseOrderItem,
+} from '@/entities/inventory/purchase-order/model/types'
 
 const receiveSchema = z.object({
   receiveDate: z.date({ required_error: 'Укажите дату приёмки' }),
@@ -116,7 +121,10 @@ export function ReceivePODialog({
     )
   }
 
-  const totalReceiving = Object.values(quantities).reduce((sum, qty) => sum + qty, 0)
+  const totalReceiving = Object.values(quantities).reduce(
+    (sum, qty) => sum + qty,
+    0
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -129,7 +137,10 @@ export function ReceivePODialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="receiveDate"
@@ -139,7 +150,9 @@ export function ReceivePODialog({
                   <FormControl>
                     <DatePicker
                       value={field.value}
-                      onChange={(dateStr) => field.onChange(dateStr ? new Date(dateStr) : undefined)}
+                      onChange={(dateStr) =>
+                        field.onChange(dateStr ? new Date(dateStr) : undefined)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -155,12 +168,15 @@ export function ReceivePODialog({
                     <TableHead className="text-right">Заказано</TableHead>
                     <TableHead className="text-right">Уже получено</TableHead>
                     <TableHead className="text-right">Осталось</TableHead>
-                    <TableHead className="w-[120px] text-right">Принять</TableHead>
+                    <TableHead className="w-[120px] text-right">
+                      Принять
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {order.items?.map((item) => {
-                    const remaining = item.quantityOrdered - item.quantityReceived
+                    const remaining =
+                      item.quantityOrdered - item.quantityReceived
                     const isFullyReceived = remaining <= 0
 
                     return (

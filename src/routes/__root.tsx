@@ -3,8 +3,9 @@ import { Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { HelmetProvider } from 'react-helmet-async'
+
 import NProgress from 'nprogress'
+import { HelmetProvider } from 'react-helmet-async'
 
 import '@/shared/config/i18n'
 import { BaseLoading } from '@/shared/ui'
@@ -34,7 +35,7 @@ function NotFoundComponent() {
       <div className="text-center">
         <h1 className="text-4xl font-bold">404</h1>
         <p className="text-muted-foreground mt-2">Страница не найдена</p>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           URL: {typeof window !== 'undefined' ? window.location.pathname : ''}
         </p>
       </div>
@@ -70,7 +71,9 @@ function RootLayout() {
           </QueryClientProvider>
         </ActiveThemeProvider>
       </ThemeProvider>
-      {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
+      {import.meta.env.DEV && (
+        <TanStackRouterDevtools position="bottom-right" />
+      )}
     </HelmetProvider>
   )
 }

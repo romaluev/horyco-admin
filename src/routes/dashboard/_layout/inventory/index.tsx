@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { RefreshCw } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
@@ -42,18 +43,25 @@ function InventoryDashboardPage() {
   const navigate = useNavigate()
   const { warehouseId: warehouseIdParam } = Route.useSearch()
 
-  const { data: warehouses, isLoading: isWarehousesLoading } = useGetWarehouses()
+  const { data: warehouses, isLoading: isWarehousesLoading } =
+    useGetWarehouses()
 
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | undefined>(
-    warehouseIdParam
-  )
+  const [selectedWarehouse, setSelectedWarehouse] = useState<
+    number | undefined
+  >(warehouseIdParam)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const { data: summary, refetch: refetchSummary } = useStockSummary(selectedWarehouse)
+  const { data: summary, refetch: refetchSummary } =
+    useStockSummary(selectedWarehouse)
 
   useEffect(() => {
-    if (warehouses && warehouses.length > 0 && !selectedWarehouse && !warehouseIdParam) {
+    if (
+      warehouses &&
+      warehouses.length > 0 &&
+      !selectedWarehouse &&
+      !warehouseIdParam
+    ) {
       const defaultWarehouse =
         warehouses.find((w) => w.isDefault) ||
         warehouses.find((w) => w.isActive) ||
@@ -110,10 +118,13 @@ function InventoryDashboardPage() {
               description="Контроль остатков, движений и уведомлений"
             />
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-2 text-xs">
                 <span>
                   Обновлено{' '}
-                  {formatDistanceToNow(lastRefresh, { addSuffix: true, locale: ru })}
+                  {formatDistanceToNow(lastRefresh, {
+                    addSuffix: true,
+                    locale: ru,
+                  })}
                 </span>
                 <Button
                   variant="ghost"
@@ -122,7 +133,9 @@ function InventoryDashboardPage() {
                   onClick={handleRefresh}
                   disabled={isRefreshing}
                 >
-                  <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
+                  />
                 </Button>
               </div>
               <Select

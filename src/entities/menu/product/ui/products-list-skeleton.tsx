@@ -17,7 +17,9 @@ interface ProductsListSkeletonProps {
   viewMode: 'table' | 'grid'
 }
 
-export const ProductsListSkeleton = ({ viewMode }: ProductsListSkeletonProps) => {
+export const ProductsListSkeleton = ({
+  viewMode,
+}: ProductsListSkeletonProps) => {
   if (viewMode === 'table') {
     return (
       <div className="overflow-hidden rounded-lg border">

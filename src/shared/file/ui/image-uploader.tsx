@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 
 import { Upload, Loader2, X, CheckCircle2 } from 'lucide-react'
 
+import { uploadFile, deleteFile } from '@/shared/file/model/file-api'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
 import { Card } from '@/shared/ui/base/card'
@@ -11,9 +12,10 @@ import { Input } from '@/shared/ui/base/input'
 import { Label } from '@/shared/ui/base/label'
 import { Progress } from '@/shared/ui/base/progress'
 
-import { uploadFile, deleteFile } from '@/shared/file/model/file-api'
-
-import type { EntityType, FileUploadResponse } from '@/shared/file/model/file-types'
+import type {
+  EntityType,
+  FileUploadResponse,
+} from '@/shared/file/model/file-types'
 
 interface ImageUploaderProps {
   entityType: EntityType
@@ -42,7 +44,9 @@ export function ImageUploader({
   const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
-  const [uploadedFile, setUploadedFile] = useState<FileUploadResponse | null>(null)
+  const [uploadedFile, setUploadedFile] = useState<FileUploadResponse | null>(
+    null
+  )
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -133,7 +137,7 @@ export function ImageUploader({
               variant="ghost"
               size="sm"
               onClick={handleDelete}
-              className="absolute -right-2 -top-2"
+              className="absolute -top-2 -right-2"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -148,15 +152,17 @@ export function ImageUploader({
           onDrop={handleDrop}
           className={cn(
             'rounded-lg border-2 border-dashed p-8 text-center transition-colors',
-            isDragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/25',
-            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            isDragging
+              ? 'border-primary bg-primary/5'
+              : 'border-muted-foreground/25',
+            disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
           )}
         >
-          <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+          <Upload className="text-muted-foreground mx-auto h-8 w-8" />
           <p className="mt-2 text-sm font-medium">
             {isLoading ? 'Uploading...' : 'Drag and drop your image here'}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             or click to select (max {(maxSize / (1024 * 1024)).toFixed(0)}MB)
           </p>
 

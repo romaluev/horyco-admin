@@ -1,10 +1,13 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
-import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
+
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
 
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
@@ -12,15 +15,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/inventory/writeoff'
 import {
   useGetInventoryCounts,
   COUNT_TYPE_LABELS,
 } from '@/entities/inventory/inventory-count'
+import {
+  useGetWriteoffs,
+  WRITEOFF_REASON_LABELS,
+} from '@/entities/inventory/writeoff'
 
 interface IPendingApprovalsWidgetProps {
   warehouseId?: number
@@ -103,7 +107,7 @@ export function PendingApprovalsWidget({
             ))}
           </div>
         ) : allPending.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Нет документов на согласовании
           </p>
         ) : (
@@ -112,7 +116,7 @@ export function PendingApprovalsWidget({
               <Link
                 key={`${item.type}-${item.id}`}
                 to={item.href}
-                className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
+                className="hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3 transition-colors"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -121,11 +125,11 @@ export function PendingApprovalsWidget({
                     ) : (
                       <ClipboardCheck className="h-4 w-4 text-blue-500" />
                     )}
-                    <span className="font-medium leading-none">
+                    <span className="leading-none font-medium">
                       {item.title}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {item.number} • {item.warehouse}
                   </p>
                 </div>
@@ -136,7 +140,7 @@ export function PendingApprovalsWidget({
                   >
                     {(item.value ?? 0).toLocaleString('ru-RU')} сум
                   </Badge>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
+                  <p className="text-muted-foreground flex items-center justify-end gap-1 text-xs">
                     <Clock className="h-3 w-3" />
                     {formatDistanceToNow(new Date(item.date), {
                       addSuffix: true,
@@ -151,7 +155,7 @@ export function PendingApprovalsWidget({
         {totalPending > size && (
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" asChild>
-              <Link to={"/dashboard/inventory/writeoffs?status=pending" as any}>
+              <Link to={'/dashboard/inventory/writeoffs?status=pending' as any}>
                 Показать все ({totalPending})
               </Link>
             </Button>

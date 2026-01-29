@@ -24,7 +24,7 @@ export default function SettingsPage() {
 
   return (
     <PageContainer scrollable>
-      <div className="space-y-4 w-full">
+      <div className="w-full space-y-4">
         <div className="flex items-start justify-between">
           <Heading
             title={t('settings.title')}
@@ -33,31 +33,45 @@ export default function SettingsPage() {
         </div>
         <Separator />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full space-y-6"
+        >
           <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="branding" className="w-full">{t('settings.tabs.branding')}</TabsTrigger>
-            <TabsTrigger value="features" className="w-full">{t('settings.tabs.features')}</TabsTrigger>
-            <TabsTrigger value="payment" className="w-full">{t('settings.tabs.payment')}</TabsTrigger>
-            <TabsTrigger value="sms" className="w-full">{t('settings.tabs.sms')}</TabsTrigger>
-            <TabsTrigger value="subscription" className="w-full">{t('settings.tabs.subscription')}</TabsTrigger>
-            <TabsTrigger value="appearance" className="w-full">{t('settings.tabs.appearance')}</TabsTrigger>
+            <TabsTrigger value="branding" className="w-full">
+              {t('settings.tabs.branding')}
+            </TabsTrigger>
+            <TabsTrigger value="features" className="w-full">
+              {t('settings.tabs.features')}
+            </TabsTrigger>
+            <TabsTrigger value="payment" className="w-full">
+              {t('settings.tabs.payment')}
+            </TabsTrigger>
+            <TabsTrigger value="sms" className="w-full">
+              {t('settings.tabs.sms')}
+            </TabsTrigger>
+            <TabsTrigger value="subscription" className="w-full">
+              {t('settings.tabs.subscription')}
+            </TabsTrigger>
+            <TabsTrigger value="appearance" className="w-full">
+              {t('settings.tabs.appearance')}
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="branding" className="space-y-4 w-full">
+          <TabsContent value="branding" className="w-full space-y-4">
             <div className="rounded-lg border p-6">
-              <BrandingSettingsForm
-                branchId={selectedBranchId ?? undefined}
-              />
+              <BrandingSettingsForm branchId={selectedBranchId ?? undefined} />
             </div>
           </TabsContent>
 
-          <TabsContent value="features" className="space-y-4 w-full">
+          <TabsContent value="features" className="w-full space-y-4">
             <div className="rounded-lg border p-6">
               <FeatureFlagsManager branchId={selectedBranchId ?? undefined} />
             </div>
           </TabsContent>
 
-          <TabsContent value="payment" className="space-y-4 w-full">
+          <TabsContent value="payment" className="w-full space-y-4">
             {selectedBranchId !== null && (
               <div className="rounded-lg border border-orange-500 bg-orange-50 p-4 dark:bg-orange-950/20">
                 <p className="text-sm text-orange-800 dark:text-orange-200">
@@ -70,7 +84,7 @@ export default function SettingsPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="sms" className="space-y-4 w-full">
+          <TabsContent value="sms" className="w-full space-y-4">
             {selectedBranchId !== null && (
               <div className="rounded-lg border border-orange-500 bg-orange-50 p-4 dark:bg-orange-950/20">
                 <p className="text-sm text-orange-800 dark:text-orange-200">
@@ -87,7 +101,7 @@ export default function SettingsPage() {
             <SubscriptionPage />
           </TabsContent>
 
-          <TabsContent value="appearance" className="space-y-4 w-full">
+          <TabsContent value="appearance" className="w-full space-y-4">
             <div className="rounded-lg border p-6">
               <ThemeSettings />
             </div>

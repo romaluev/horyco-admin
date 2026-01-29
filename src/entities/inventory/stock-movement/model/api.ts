@@ -11,7 +11,9 @@ export const stockMovementApi = {
    * GET /admin/inventory/movements
    * Get stock movements with filters (read-only)
    */
-  async getMovements(params?: IGetMovementsParams): Promise<IMovementListResponse> {
+  async getMovements(
+    params?: IGetMovementsParams
+  ): Promise<IMovementListResponse> {
     const response = await api.get<{
       success: boolean
       data: IStockMovement[]
@@ -19,7 +21,12 @@ export const stockMovementApi = {
     }>('/admin/inventory/movements', { params })
     return {
       data: response.data.data || [],
-      meta: response.data.meta || { total: 0, page: 0, size: 20, totalPages: 0 },
+      meta: response.data.meta || {
+        total: 0,
+        page: 0,
+        size: 20,
+        totalPages: 0,
+      },
     }
   },
 

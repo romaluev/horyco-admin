@@ -9,7 +9,12 @@ import { useEntitlements } from '@/entities/dashboard/dashboard'
 
 import { DEFAULT_VIEWS, PAGE_ACCESS_CONFIG, VIEW_LIMITS } from './constants'
 
-import type { AnalyticsPageCode, EntitlementTier, IDefaultView, IPageAccessConfig } from './types'
+import type {
+  AnalyticsPageCode,
+  EntitlementTier,
+  IDefaultView,
+  IPageAccessConfig,
+} from './types'
 
 // ============================================
 // PAGE ACCESS HOOK
@@ -45,7 +50,9 @@ export interface IPageAccessResult {
  * return <StaffAnalyticsPage />
  * ```
  */
-export function useAnalyticsPageAccess(pageCode: AnalyticsPageCode): IPageAccessResult {
+export function useAnalyticsPageAccess(
+  pageCode: AnalyticsPageCode
+): IPageAccessResult {
   const { data: entitlements, isLoading } = useEntitlements()
 
   const config = PAGE_ACCESS_CONFIG[pageCode]
@@ -162,10 +169,13 @@ export function useViewAccess(
     const hasReachedLimit = currentViewCount >= maxViews
 
     return {
-      canCreateViews: userTier === 'analytics_pro' || userTier === 'analytics_full',
-      canManageViews: userTier === 'analytics_pro' || userTier === 'analytics_full',
+      canCreateViews:
+        userTier === 'analytics_pro' || userTier === 'analytics_full',
+      canManageViews:
+        userTier === 'analytics_pro' || userTier === 'analytics_full',
       canShareViews: userTier === 'analytics_full',
-      canPinViews: userTier === 'analytics_pro' || userTier === 'analytics_full',
+      canPinViews:
+        userTier === 'analytics_pro' || userTier === 'analytics_full',
       maxViews: maxViews === Infinity ? -1 : maxViews,
       currentViewCount,
       hasReachedLimit,
@@ -205,7 +215,9 @@ export interface IDefaultViewsResult {
  * const allViews = [...defaultViews, ...customViews]
  * ```
  */
-export function useDefaultViews(pageCode: AnalyticsPageCode): IDefaultViewsResult {
+export function useDefaultViews(
+  pageCode: AnalyticsPageCode
+): IDefaultViewsResult {
   const defaultViews = React.useMemo(() => {
     return DEFAULT_VIEWS[pageCode] || []
   }, [pageCode])
@@ -264,7 +276,12 @@ export function useVisiblePages(): IVisiblePagesResult {
 
   const visiblePages = React.useMemo<AnalyticsPageCode[]>(() => {
     // Always visible (BASIC tier)
-    const pages: AnalyticsPageCode[] = ['sales', 'products', 'categories', 'payments']
+    const pages: AnalyticsPageCode[] = [
+      'sales',
+      'products',
+      'categories',
+      'payments',
+    ]
 
     // Debug: log entitlements in development
     if (process.env.NODE_ENV === 'development') {

@@ -24,10 +24,11 @@ import { Input } from '@/shared/ui/base/input'
 import { Switch } from '@/shared/ui/base/switch'
 
 import { useUpdateWarehouse } from '@/entities/inventory/warehouse'
+
 import { warehouseFormSchema } from '../model/schema'
 
-import type { IWarehouse } from '@/entities/inventory/warehouse'
 import type { WarehouseFormValues } from '../model/schema'
+import type { IWarehouse } from '@/entities/inventory/warehouse'
 
 interface UpdateWarehouseDialogProps {
   warehouse: IWarehouse
@@ -126,7 +127,10 @@ export function UpdateWarehouseDialog({
                     <FormLabel>Активен</FormLabel>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}

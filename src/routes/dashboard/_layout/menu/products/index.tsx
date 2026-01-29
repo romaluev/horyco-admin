@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import PageContainer from '@/shared/ui/layout/page-container'
 
+import { ProductsContent } from '@/app/dashboard/menu/products/products-content'
 import { useGetCategories } from '@/entities/menu/category'
 import { useGetProducts } from '@/entities/menu/product'
-
-import { ProductsContent } from '@/app/dashboard/menu/products/products-content'
 
 import type { ProductsPageState } from '@/app/dashboard/menu/products/products-content'
 import type { IProduct } from '@/entities/menu/product'

@@ -66,7 +66,7 @@ export const ProductsGridView = ({
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 space-y-3">
-              <div className="overflow-hidden rounded-lg bg-muted">
+              <div className="bg-muted overflow-hidden rounded-lg">
                 <ImageCell
                   imageUrls={product.imageUrls}
                   fileId={product.image}
@@ -76,10 +76,10 @@ export const ProductsGridView = ({
                 />
               </div>
               <div className="text-sm">
-                <p className="font-semibold text-foreground">
+                <p className="text-foreground font-semibold">
                   {product.price} UZS
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   {product.isAvailable ? 'Доступен' : 'Недоступен'}
                 </p>
               </div>
@@ -97,7 +97,7 @@ export const ProductsGridView = ({
                 variant="outline"
                 size="sm"
                 onClick={() => handleDelete(product.id)}
-                className="flex-1 text-destructive hover:text-destructive"
+                className="text-destructive hover:text-destructive flex-1"
               >
                 <Trash className="h-4 w-4" />
               </Button>
@@ -108,7 +108,7 @@ export const ProductsGridView = ({
 
       {/* Pagination */}
       <div className="flex items-center justify-between rounded-lg border px-4 py-3">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {page} / {totalPages || 1}
         </p>
         <div className="flex gap-2">

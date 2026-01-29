@@ -9,7 +9,6 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -17,6 +16,7 @@ import {
   IconMinus,
   IconSearch,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -51,7 +51,13 @@ import type { IStaffAnalyticsItem } from '@/features/dashboard/analytics'
 // TYPES
 // ============================================
 
-type SortColumn = 'name' | 'roleCode' | 'orders' | 'revenue' | 'tips' | 'avgCheck'
+type SortColumn =
+  | 'name'
+  | 'roleCode'
+  | 'orders'
+  | 'revenue'
+  | 'tips'
+  | 'avgCheck'
 type SortDirection = 'asc' | 'desc'
 
 // ============================================
@@ -64,7 +70,8 @@ export default function StaffAnalyticsPage() {
   const [search, setSearch] = React.useState('')
   const [roleFilter, setRoleFilter] = React.useState<string>('all')
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
+  const [sortDirection, setSortDirection] =
+    React.useState<SortDirection>('desc')
 
   const { data, isLoading, error, refetch } = useStaffAnalytics({
     period: { type: period },
@@ -81,7 +88,9 @@ export default function StaffAnalyticsPage() {
   // Get unique roles for filter
   const roles = React.useMemo(() => {
     if (staffList.length === 0) return []
-    const uniqueRoles = [...new Set(staffList.map((s) => s.roleCode).filter(Boolean))]
+    const uniqueRoles = [
+      ...new Set(staffList.map((s) => s.roleCode).filter(Boolean)),
+    ]
     return uniqueRoles.sort()
   }, [staffList])
 
@@ -94,7 +103,9 @@ export default function StaffAnalyticsPage() {
     // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase()
-      filtered = filtered.filter((s) => (s.name ?? '').toLowerCase().includes(searchLower))
+      filtered = filtered.filter((s) =>
+        (s.name ?? '').toLowerCase().includes(searchLower)
+      )
     }
 
     // Apply role filter
@@ -139,8 +150,8 @@ export default function StaffAnalyticsPage() {
     >
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-[300px]">
-          <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative max-w-[300px] min-w-[200px] flex-1">
+          <IconSearch className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
           <Input
             placeholder={t('staff.searchPlaceholder')}
             value={search}
@@ -179,7 +190,7 @@ export default function StaffAnalyticsPage() {
 
       {/* Summary */}
       {data && (
-        <div className="mt-4 text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-4 text-sm">
           {t('staff.summary', { count: filteredStaff.length })}
         </div>
       )}
@@ -250,24 +261,36 @@ function StaffTable({
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('staff.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {staff.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell
+                colSpan={7}
+                className="text-muted-foreground h-24 text-center"
+              >
                 {t('staff.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
             staff.map((member, index) => (
-              <TableRow key={member.employeeId ?? index} className="cursor-pointer hover:bg-muted/50">
-                <TableCell className="font-medium text-muted-foreground">
+              <TableRow
+                key={member.employeeId ?? index}
+                className="hover:bg-muted/50 cursor-pointer"
+              >
+                <TableCell className="text-muted-foreground font-medium">
                   {index + 1}
                 </TableCell>
-                <TableCell className="font-medium">{member.name ?? 'N/A'}</TableCell>
-                <TableCell className="text-muted-foreground">{member.roleCode ?? '-'}</TableCell>
+                <TableCell className="font-medium">
+                  {member.name ?? 'N/A'}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {member.roleCode ?? '-'}
+                </TableCell>
                 <TableCell className="text-right">
                   {(member.orders ?? 0).toLocaleString('ru-RU')}
                 </TableCell>
@@ -314,18 +337,22 @@ function SortableHeader({
 
   return (
     <TableHead
-      className={cn('cursor-pointer select-none hover:bg-muted/50', className)}
+      className={cn('hover:bg-muted/50 cursor-pointer select-none', className)}
       onClick={() => onSort(column)}
     >
-      <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end')}>
+      <div
+        className={cn(
+          'flex items-center gap-1',
+          className?.includes('text-right') && 'justify-end'
+        )}
+      >
         {label}
-        {isActive && (
-          sortDirection === 'asc' ? (
+        {isActive &&
+          (sortDirection === 'asc' ? (
             <IconArrowUp className="size-3" />
           ) : (
             <IconArrowDown className="size-3" />
-          )
-        )}
+          ))}
       </div>
     </TableHead>
   )
@@ -376,10 +403,18 @@ function StaffTableSkeleton() {
             <TableHead className="w-[60px]">#</TableHead>
             <TableHead>{t('staff.table.employee')}</TableHead>
             <TableHead>{t('staff.table.role')}</TableHead>
-            <TableHead className="text-right">{t('staff.table.orders')}</TableHead>
-            <TableHead className="text-right">{t('staff.table.revenue')}</TableHead>
-            <TableHead className="text-right">{t('staff.table.tips')}</TableHead>
-            <TableHead className="text-right">{t('staff.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('staff.table.orders')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('staff.table.revenue')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('staff.table.tips')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('staff.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

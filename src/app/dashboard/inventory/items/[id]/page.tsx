@@ -1,10 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   IconArrowLeft,
@@ -15,7 +13,9 @@ import {
 } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,7 +70,8 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
   const removeConversionMutation = useRemoveUnitConversion()
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isAddConversionDialogOpen, setIsAddConversionDialogOpen] = useState(false)
+  const [isAddConversionDialogOpen, setIsAddConversionDialogOpen] =
+    useState(false)
 
   const handleDelete = () => {
     deleteMutation.mutate(itemId, {
@@ -96,9 +97,13 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
     return (
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-muted-foreground">{t('pages.itemDetail.backToList')}</p>
+          <p className="text-muted-foreground">
+            {t('pages.itemDetail.backToList')}
+          </p>
           <Button asChild className="mt-4">
-            <Link to="/dashboard/inventory/items">{t('pages.itemDetail.backToList')}</Link>
+            <Link to="/dashboard/inventory/items">
+              {t('pages.itemDetail.backToList')}
+            </Link>
           </Button>
         </div>
       </PageContainer>
@@ -120,10 +125,14 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
               <div className="flex items-center gap-3">
                 <Heading title={item.name} description={item.sku || 'Товар'} />
                 <Badge variant={item.isActive ? 'default' : 'secondary'}>
-                  {item.isActive ? t('pages.itemDetail.active') : t('pages.itemDetail.inactive')}
+                  {item.isActive
+                    ? t('pages.itemDetail.active')
+                    : t('pages.itemDetail.inactive')}
                 </Badge>
                 {item.isSemiFinished && (
-                  <Badge variant="outline">{t('pages.itemDetail.semiFinished')}</Badge>
+                  <Badge variant="outline">
+                    {t('pages.itemDetail.semiFinished')}
+                  </Badge>
                 )}
               </div>
             </div>
@@ -143,7 +152,9 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>{t('pages.itemDetail.deleteConfirm')}</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    {t('pages.itemDetail.deleteConfirm')}
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
                     {t('pages.itemDetail.deleteDescription')}
                   </AlertDialogDescription>
@@ -204,14 +215,18 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t('pages.itemDetail.minLevel')}</span>
+                <span className="text-muted-foreground">
+                  {t('pages.itemDetail.minLevel')}
+                </span>
                 <span className="font-medium">
                   {item.minStockLevel} {item.unit}
                 </span>
               </div>
               {item.maxStockLevel && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('pages.itemDetail.maxLevel')}</span>
+                  <span className="text-muted-foreground">
+                    {t('pages.itemDetail.maxLevel')}
+                  </span>
                   <span className="font-medium">
                     {item.maxStockLevel} {item.unit}
                   </span>
@@ -219,7 +234,9 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
               )}
               {item.reorderPoint && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('pages.itemDetail.reorderPoint')}</span>
+                  <span className="text-muted-foreground">
+                    {t('pages.itemDetail.reorderPoint')}
+                  </span>
                   <span className="font-medium">
                     {item.reorderPoint} {item.unit}
                   </span>
@@ -227,7 +244,9 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
               )}
               {item.reorderQuantity && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('pages.itemDetail.reorderQuantity')}</span>
+                  <span className="text-muted-foreground">
+                    {t('pages.itemDetail.reorderQuantity')}
+                  </span>
                   <span className="font-medium">
                     {item.reorderQuantity} {item.unit}
                   </span>
@@ -243,22 +262,34 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
             <CardContent className="space-y-3">
               {item.shelfLifeDays && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('pages.itemDetail.shelfLife')}</span>
-                  <span className="font-medium">{item.shelfLifeDays} {t('pages.itemDetail.days')}</span>
+                  <span className="text-muted-foreground">
+                    {t('pages.itemDetail.shelfLife')}
+                  </span>
+                  <span className="font-medium">
+                    {item.shelfLifeDays} {t('pages.itemDetail.days')}
+                  </span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t('pages.itemDetail.taxRate')}</span>
+                <span className="text-muted-foreground">
+                  {t('pages.itemDetail.taxRate')}
+                </span>
                 <span className="font-medium">{item.taxRate}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t('pages.itemDetail.trackable')}</span>
+                <span className="text-muted-foreground">
+                  {t('pages.itemDetail.trackable')}
+                </span>
                 <span className="font-medium">
-                  {item.isTrackable ? t('pages.itemDetail.yes') : t('pages.itemDetail.no')}
+                  {item.isTrackable
+                    ? t('pages.itemDetail.yes')
+                    : t('pages.itemDetail.no')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t('pages.itemDetail.created')}</span>
+                <span className="text-muted-foreground">
+                  {t('pages.itemDetail.created')}
+                </span>
                 <span>
                   {format(new Date(item.createdAt), 'dd MMM yyyy', {
                     locale: ru,
@@ -266,8 +297,10 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
                 </span>
               </div>
               {item.notes && (
-                <div className="pt-2 border-t">
-                  <span className="text-muted-foreground text-sm">{t('pages.itemDetail.notes')}:</span>
+                <div className="border-t pt-2">
+                  <span className="text-muted-foreground text-sm">
+                    {t('pages.itemDetail.notes')}:
+                  </span>
                   <p className="mt-1 text-sm">{item.notes}</p>
                 </div>
               )}
@@ -280,7 +313,9 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <IconArrowsExchange className="h-5 w-5" />
-              <h3 className="text-lg font-semibold">{t('pages.itemDetail.conversions')}</h3>
+              <h3 className="text-lg font-semibold">
+                {t('pages.itemDetail.conversions')}
+              </h3>
             </div>
             <Button onClick={() => setIsAddConversionDialogOpen(true)}>
               <IconPlus className="mr-2 h-4 w-4" />
@@ -291,11 +326,11 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
           <Card>
             <CardContent className="pt-6">
               {!conversions?.length ? (
-                <div className="text-center py-8">
+                <div className="py-8 text-center">
                   <p className="text-muted-foreground">
                     {t('pages.itemDetail.noConversions')}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-muted-foreground mt-1 text-sm">
                     {t('pages.itemDetail.addConversionsInfo')}
                   </p>
                 </div>
@@ -305,7 +340,9 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
                     <TableRow>
                       <TableHead>{t('pages.itemDetail.fromUnit')}</TableHead>
                       <TableHead>{t('pages.itemDetail.toUnit')}</TableHead>
-                      <TableHead className="text-right">{t('pages.itemDetail.factor')}</TableHead>
+                      <TableHead className="text-right">
+                        {t('pages.itemDetail.factor')}
+                      </TableHead>
                       <TableHead>{t('pages.itemDetail.note')}</TableHead>
                       <TableHead className="w-[80px]" />
                     </TableRow>
@@ -321,8 +358,8 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
                         </TableCell>
                         <TableCell className="text-right">
                           <span className="font-mono">
-                            1 {conversion.fromUnit} = {conversion.conversionFactor}{' '}
-                            {conversion.toUnit}
+                            1 {conversion.fromUnit} ={' '}
+                            {conversion.conversionFactor} {conversion.toUnit}
                           </span>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
@@ -345,12 +382,15 @@ export default function InventoryItemDetailPage({ id: paramId }: PageProps) {
                                   {t('pages.itemDetail.deleteConversion')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  {t('pages.itemDetail.conversionDescription')} {conversion.fromUnit} → {conversion.toUnit}{' '}
+                                  {t('pages.itemDetail.conversionDescription')}{' '}
+                                  {conversion.fromUnit} → {conversion.toUnit}{' '}
                                   будет удалена.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                                <AlertDialogCancel>
+                                  {t('common.cancel')}
+                                </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() =>
                                     handleRemoveConversion(conversion.id)

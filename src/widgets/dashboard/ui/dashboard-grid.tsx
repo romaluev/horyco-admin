@@ -77,7 +77,9 @@ export function DashboardGrid({
       >
         {children}
       </GridLayoutComponent>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .react-grid-item.react-grid-placeholder {
           background: hsl(var(--primary) / 0.2);
           border: 2px dashed hsl(var(--primary));
@@ -102,7 +104,9 @@ export function DashboardGrid({
         .react-grid-item:hover > .react-resizable-handle::after {
           border-color: hsl(var(--primary));
         }
-      ` }} />
+      `,
+        }}
+      />
     </div>
   )
 }

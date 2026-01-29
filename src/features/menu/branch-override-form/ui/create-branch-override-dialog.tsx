@@ -8,9 +8,9 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -111,7 +111,9 @@ export const CreateBranchOverrideDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('components.branchOverride.create.title')}</DialogTitle>
+          <DialogTitle>
+            {t('components.branchOverride.create.title')}
+          </DialogTitle>
           <DialogDescription>
             {t('components.branchOverride.create.description')}
           </DialogDescription>
@@ -124,14 +126,20 @@ export const CreateBranchOverrideDialog = ({
                 name="productId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('components.branchOverride.create.productLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.branchOverride.create.productLabel')}
+                    </FormLabel>
                     <Select
                       value={field.value?.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t('components.branchOverride.create.productPlaceholder')} />
+                          <SelectValue
+                            placeholder={t(
+                              'components.branchOverride.create.productPlaceholder'
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -140,7 +148,11 @@ export const CreateBranchOverrideDialog = ({
                             key={product.id}
                             value={product.id.toString()}
                           >
-                            {product.name} ({t('components.branchOverride.create.basePricePrefix')} {product.price} сум)
+                            {product.name} (
+                            {t(
+                              'components.branchOverride.create.basePricePrefix'
+                            )}{' '}
+                            {product.price} сум)
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -157,14 +169,20 @@ export const CreateBranchOverrideDialog = ({
                 name="branchId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('components.branchOverride.create.branchLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.branchOverride.create.branchLabel')}
+                    </FormLabel>
                     <Select
                       value={field.value?.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t('components.branchOverride.create.branchPlaceholder')} />
+                          <SelectValue
+                            placeholder={t(
+                              'components.branchOverride.create.branchPlaceholder'
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -189,7 +207,9 @@ export const CreateBranchOverrideDialog = ({
               name="overridePrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.branchOverride.create.priceLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.branchOverride.create.priceLabel')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -220,9 +240,13 @@ export const CreateBranchOverrideDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">{t('components.branchOverride.create.availabilityLabel')}</FormLabel>
+                    <FormLabel className="text-base">
+                      {t('components.branchOverride.create.availabilityLabel')}
+                    </FormLabel>
                     <FormDescription>
-                      {t('components.branchOverride.create.availabilityDescription')}
+                      {t(
+                        'components.branchOverride.create.availabilityDescription'
+                      )}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -245,7 +269,9 @@ export const CreateBranchOverrideDialog = ({
                 {t('components.branchOverride.create.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('components.branchOverride.create.submitting') : t('components.branchOverride.create.submit')}
+                {isPending
+                  ? t('components.branchOverride.create.submitting')
+                  : t('components.branchOverride.create.submit')}
               </Button>
             </div>
           </form>

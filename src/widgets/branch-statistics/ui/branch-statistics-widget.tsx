@@ -47,7 +47,8 @@ export const BranchStatisticsWidget = ({
     return (
       <Alert variant="destructive">
         <AlertDescription>
-          Ошибка загрузки статистики: {error instanceof Error ? error.message : 'Попробуйте позже'}
+          Ошибка загрузки статистики:{' '}
+          {error instanceof Error ? error.message : 'Попробуйте позже'}
         </AlertDescription>
       </Alert>
     )
@@ -57,7 +58,10 @@ export const BranchStatisticsWidget = ({
 
   return (
     <div className="space-y-6">
-      <Tabs value={period} onValueChange={(value) => setPeriod(value as Period)}>
+      <Tabs
+        value={period}
+        onValueChange={(value) => setPeriod(value as Period)}
+      >
         <TabsList>
           <TabsTrigger value="today">Сегодня</TabsTrigger>
           <TabsTrigger value="week">Неделя</TabsTrigger>

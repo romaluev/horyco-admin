@@ -62,7 +62,9 @@ export function ProductFormAdditions() {
   return (
     <div className="space-y-4 md:col-span-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">{t('products.form.additions.title')}</h3>
+        <h3 className="text-lg font-medium">
+          {t('products.form.additions.title')}
+        </h3>
         <Button
           type="button"
           variant="outline"
@@ -113,9 +115,16 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.name`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('products.form.additions.name.label')}</FormLabel>
+                      <FormLabel>
+                        {t('products.form.additions.name.label')}
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder={t('products.form.additions.name.placeholder')} {...field} />
+                        <Input
+                          placeholder={t(
+                            'products.form.additions.name.placeholder'
+                          )}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -126,12 +135,16 @@ export function ProductFormAdditions() {
                   name={`additions.${index}.limit`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('products.form.additions.limit.label')}</FormLabel>
+                      <FormLabel>
+                        {t('products.form.additions.limit.label')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           min="1"
-                          placeholder={t('products.form.additions.limit.placeholder')}
+                          placeholder={t(
+                            'products.form.additions.limit.placeholder'
+                          )}
                           {...field}
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value) || 1)
@@ -156,7 +169,9 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>{t('products.form.additions.required.label')}</FormLabel>
+                      <FormLabel>
+                        {t('products.form.additions.required.label')}
+                      </FormLabel>
                     </FormItem>
                   )}
                 />
@@ -172,7 +187,9 @@ export function ProductFormAdditions() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>{t('products.form.additions.multiple.label')}</FormLabel>
+                      <FormLabel>
+                        {t('products.form.additions.multiple.label')}
+                      </FormLabel>
                     </FormItem>
                   )}
                 />
@@ -232,7 +249,12 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder={t('products.form.additions.items.name.placeholder')} {...field} />
+                      <Input
+                        placeholder={t(
+                          'products.form.additions.items.name.placeholder'
+                        )}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -246,7 +268,9 @@ function ProductAdditionItems({ additionIndex }: { additionIndex: number }) {
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder={t('products.form.additions.items.price.placeholder')}
+                        placeholder={t(
+                          'products.form.additions.items.price.placeholder'
+                        )}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />

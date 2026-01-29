@@ -28,7 +28,5 @@ export function ImageCell({
     return <div className={`${className} bg-muted rounded-md`} />
   }
 
-  return (
-    <img src={imageUrl} alt={alt} className={className} />
-  )
+  return <img src={imageUrl} alt={alt} className={className} />
 }

@@ -40,7 +40,11 @@ import {
   VISUALIZATION_RECOMMENDED_SIZES,
 } from '@/entities/dashboard/dashboard-widget'
 
-import type { WidgetConfig, WidgetSize, WidgetVisualization } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetSize,
+  WidgetVisualization,
+} from '@/entities/dashboard/dashboard-widget'
 
 interface WidgetConfigModalProps {
   widgetId: string | null
@@ -75,7 +79,8 @@ export function WidgetConfigModal({
   const updateWidget = useDashboardWidgetStore((s) => s.updateWidget)
 
   const [name, setName] = useState('')
-  const [visualization, setVisualization] = useState<WidgetVisualization>('number')
+  const [visualization, setVisualization] =
+    useState<WidgetVisualization>('number')
   const [size, setSize] = useState<WidgetSize>('1x1')
   const [source, setSource] = useState<string>('analytics')
   const [field, setField] = useState<string>('revenue')
@@ -170,7 +175,10 @@ export function WidgetConfigModal({
           {/* Size */}
           <div className="space-y-2">
             <Label>Размер</Label>
-            <Select value={size} onValueChange={(v) => setSize(v as WidgetSize)}>
+            <Select
+              value={size}
+              onValueChange={(v) => setSize(v as WidgetSize)}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -245,7 +253,7 @@ export function WidgetConfigModal({
                   type="checkbox"
                   checked={showTrend}
                   onChange={(e) => setShowTrend(e.target.checked)}
-                  className="rounded border-border"
+                  className="border-border rounded"
                 />
                 Показать тренд
               </label>
@@ -254,7 +262,7 @@ export function WidgetConfigModal({
                   type="checkbox"
                   checked={showAnimation}
                   onChange={(e) => setShowAnimation(e.target.checked)}
-                  className="rounded border-border"
+                  className="border-border rounded"
                 />
                 Анимация счётчика
               </label>

@@ -3,7 +3,10 @@
 import { useMemo } from 'react'
 
 import type { IDashboardAnalyticsResponse } from '@/entities/dashboard/analytics'
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+} from '@/entities/dashboard/dashboard-widget'
 
 interface UseWidgetDataOptions {
   widget: WidgetConfig
@@ -108,12 +111,24 @@ function formatChartLabel(timestamp: string, groupBy: string): string {
 
   switch (groupBy) {
     case 'hour':
-      return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+      return date.toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     case 'day':
-      return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+      return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short',
+      })
     case 'week':
-      return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+      return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short',
+      })
     default:
-      return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+      return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short',
+      })
   }
 }

@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react'
 
 import { UserIcon } from 'lucide-react'
 
+import { getFileById } from '@/shared/file/model/api'
 import { getNameInitials } from '@/shared/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
-
-import { getFileById } from '@/shared/file/model/api'
 
 import type { IUser } from '@/entities/auth/auth/model'
 
@@ -58,10 +57,7 @@ export function UserAvatarProfile({
   return (
     <div className="flex items-center gap-2">
       <Avatar className={className}>
-        <AvatarImage
-          src={avatarUrl}
-          alt={user?.fullName || ''}
-        />
+        <AvatarImage src={avatarUrl} alt={user?.fullName || ''} />
         <AvatarFallback className="rounded-lg">
           {getNameInitials(user?.fullName) || <UserIcon />}
         </AvatarFallback>

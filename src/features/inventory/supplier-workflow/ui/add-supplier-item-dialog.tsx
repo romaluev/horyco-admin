@@ -1,13 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useAddSupplierItem } from '@/entities/inventory/supplier/model/mutations'
-import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,10 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
-import { Switch } from '@/shared/ui/base/switch'
 import {
   Form,
   FormControl,
@@ -29,6 +23,7 @@ import {
   FormMessage,
   FormDescription,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
@@ -36,6 +31,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
+import { useAddSupplierItem } from '@/entities/inventory/supplier/model/mutations'
 
 const addItemSchema = z.object({
   itemId: z.string().min(1, 'Выберите товар'),
@@ -110,7 +110,10 @@ export function AddSupplierItemDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="itemId"

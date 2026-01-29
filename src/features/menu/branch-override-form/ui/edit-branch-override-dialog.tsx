@@ -8,9 +8,9 @@
 import { useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import { Button } from '@/shared/ui/base/button'
@@ -129,12 +129,16 @@ export const EditBranchOverrideDialog = ({
               name="overridePrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.branchOverride.edit.priceLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.branchOverride.edit.priceLabel')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder={
-                        basePrice ? `${t('components.branchOverride.edit.basePricePrefix')} ${basePrice}` : 'Введите цену'
+                        basePrice
+                          ? `${t('components.branchOverride.edit.basePricePrefix')} ${basePrice}`
+                          : 'Введите цену'
                       }
                       {...field}
                       value={field.value ?? ''}
@@ -158,9 +162,13 @@ export const EditBranchOverrideDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">{t('components.branchOverride.edit.availabilityLabel')}</FormLabel>
+                    <FormLabel className="text-base">
+                      {t('components.branchOverride.edit.availabilityLabel')}
+                    </FormLabel>
                     <FormDescription>
-                      {t('components.branchOverride.edit.availabilityDescription')}
+                      {t(
+                        'components.branchOverride.edit.availabilityDescription'
+                      )}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -183,7 +191,9 @@ export const EditBranchOverrideDialog = ({
                 {t('components.branchOverride.edit.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('components.branchOverride.edit.submitting') : t('components.branchOverride.edit.submit')}
+                {isPending
+                  ? t('components.branchOverride.edit.submitting')
+                  : t('components.branchOverride.edit.submit')}
               </Button>
             </div>
           </form>

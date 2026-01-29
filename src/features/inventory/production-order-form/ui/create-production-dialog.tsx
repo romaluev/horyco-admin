@@ -48,7 +48,9 @@ import type { ProductionOrderFormValues } from '../model/schema'
 export function CreateProductionDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const { mutate: createProduction, isPending } = useCreateProductionOrder()
-  const { data: recipes = [], isLoading: recipesLoading } = useGetRecipes({ isActive: true })
+  const { data: recipes = [], isLoading: recipesLoading } = useGetRecipes({
+    isActive: true,
+  })
 
   const form = useForm<ProductionOrderFormValues>({
     resolver: zodResolver(productionOrderFormSchema),
@@ -63,8 +65,14 @@ export function CreateProductionDialog() {
 
   // Watch form values for ingredients preview
   const watchedRecipeId = useWatch({ control: form.control, name: 'recipeId' })
-  const watchedWarehouseId = useWatch({ control: form.control, name: 'warehouseId' })
-  const watchedQuantity = useWatch({ control: form.control, name: 'quantityPlanned' })
+  const watchedWarehouseId = useWatch({
+    control: form.control,
+    name: 'warehouseId',
+  })
+  const watchedQuantity = useWatch({
+    control: form.control,
+    name: 'quantityPlanned',
+  })
 
   // Fetch recipe details when selected
   const { data: selectedRecipe } = useRecipeById(watchedRecipeId ?? 0)
@@ -95,11 +103,15 @@ export function CreateProductionDialog() {
     })
   }, [selectedRecipe, watchedQuantity, stockData])
 
-  const hasInsufficientIngredients = ingredientsWithAvailability.some((i) => !i.isSufficient)
+  const hasInsufficientIngredients = ingredientsWithAvailability.some(
+    (i) => !i.isSufficient
+  )
 
   const onSubmit = (data: ProductionOrderFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as ProductionOrderFormValues
 
     createProduction(cleanData, {
@@ -155,12 +167,19 @@ export function CreateProductionDialog() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={recipesLoading ? 'Загрузка...' : 'Выберите техкарту'} />
+                        <SelectValue
+                          placeholder={
+                            recipesLoading ? 'Загрузка...' : 'Выберите техкарту'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {recipes.map((recipe) => (
-                        <SelectItem key={recipe.id} value={recipe.id.toString()}>
+                        <SelectItem
+                          key={recipe.id}
+                          value={recipe.id.toString()}
+                        >
                           {recipe.name}
                         </SelectItem>
                       ))}
@@ -226,66 +245,85 @@ export function CreateProductionDialog() {
             />
 
             {/* Required Ingredients Preview */}
-            {selectedRecipe && watchedWarehouseId && ingredientsWithAvailability.length > 0 && (
-              <Card>
-                <CardHeader className="py-3">
-                  <CardTitle className="text-sm font-medium">
-                    Необходимые ингредиенты (для {watchedQuantity} {selectedRecipe.outputUnit || 'шт'})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="py-0 pb-3">
-                  {hasInsufficientIngredients && (
-                    <Alert variant="destructive" className="mb-3">
-                      <IconAlertTriangle className="h-4 w-4" />
-                      <AlertDescription>
-                        Недостаточно ингредиентов на складе для производства
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  <div className="space-y-2">
-                    {ingredientsWithAvailability.map((ing) => (
-                      <div
-                        key={ing.itemId}
-                        className="flex items-center justify-between text-sm border-b last:border-0 pb-2 last:pb-0"
-                      >
-                        <div className="flex-1">
-                          <span className="font-medium">{ing.itemName}</span>
+            {selectedRecipe &&
+              watchedWarehouseId &&
+              ingredientsWithAvailability.length > 0 && (
+                <Card>
+                  <CardHeader className="py-3">
+                    <CardTitle className="text-sm font-medium">
+                      Необходимые ингредиенты (для {watchedQuantity}{' '}
+                      {selectedRecipe.outputUnit || 'шт'})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="py-0 pb-3">
+                    {hasInsufficientIngredients && (
+                      <Alert variant="destructive" className="mb-3">
+                        <IconAlertTriangle className="h-4 w-4" />
+                        <AlertDescription>
+                          Недостаточно ингредиентов на складе для производства
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                    <div className="space-y-2">
+                      {ingredientsWithAvailability.map((ing) => (
+                        <div
+                          key={ing.itemId}
+                          className="flex items-center justify-between border-b pb-2 text-sm last:border-0 last:pb-0"
+                        >
+                          <div className="flex-1">
+                            <span className="font-medium">{ing.itemName}</span>
+                          </div>
+                          <div className="flex items-center gap-4 text-right">
+                            <div className="w-24">
+                              <span className="text-muted-foreground">
+                                Нужно:{' '}
+                              </span>
+                              <span>{ing.requiredQty.toFixed(2)}</span>
+                            </div>
+                            <div className="w-24">
+                              <span className="text-muted-foreground">
+                                Есть:{' '}
+                              </span>
+                              <span
+                                className={
+                                  !ing.isSufficient
+                                    ? 'text-destructive font-medium'
+                                    : ''
+                                }
+                              >
+                                {ing.availableQty.toFixed(2)}
+                              </span>
+                            </div>
+                            <div className="w-6">
+                              {ing.isSufficient ? (
+                                <IconCheck className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <IconAlertTriangle className="text-destructive h-4 w-4" />
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-4 text-right">
-                          <div className="w-24">
-                            <span className="text-muted-foreground">Нужно: </span>
-                            <span>{ing.requiredQty.toFixed(2)}</span>
-                          </div>
-                          <div className="w-24">
-                            <span className="text-muted-foreground">Есть: </span>
-                            <span className={!ing.isSufficient ? 'text-destructive font-medium' : ''}>
-                              {ing.availableQty.toFixed(2)}
-                            </span>
-                          </div>
-                          <div className="w-6">
-                            {ing.isSufficient ? (
-                              <IconCheck className="h-4 w-4 text-green-600" />
-                            ) : (
-                              <IconAlertTriangle className="h-4 w-4 text-destructive" />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {selectedRecipe.calculatedCost > 0 && (
-                    <div className="mt-3 pt-3 border-t text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Расч. себестоимость:</span>
-                        <span className="font-medium">
-                          {formatCurrency((selectedRecipe.calculatedCost / selectedRecipe.outputQuantity) * watchedQuantity)}
-                        </span>
-                      </div>
+                      ))}
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                    {selectedRecipe.calculatedCost > 0 && (
+                      <div className="mt-3 border-t pt-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">
+                            Расч. себестоимость:
+                          </span>
+                          <span className="font-medium">
+                            {formatCurrency(
+                              (selectedRecipe.calculatedCost /
+                                selectedRecipe.outputQuantity) *
+                                watchedQuantity
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
             <div className="flex gap-2 pt-4">
               <Button

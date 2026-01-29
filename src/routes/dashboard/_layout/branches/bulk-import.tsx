@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { IconArrowLeft, IconUpload } from '@tabler/icons-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
@@ -12,9 +13,11 @@ import PageContainer from '@/shared/ui/layout/page-container'
 
 import { BulkImportDialog } from '@/features/organization/branch-bulk-import'
 
-export const Route = createFileRoute('/dashboard/_layout/branches/bulk-import')({
-  component: BulkImportPage,
-})
+export const Route = createFileRoute('/dashboard/_layout/branches/bulk-import')(
+  {
+    component: BulkImportPage,
+  }
+)
 
 function BulkImportPage() {
   const navigate = useNavigate()

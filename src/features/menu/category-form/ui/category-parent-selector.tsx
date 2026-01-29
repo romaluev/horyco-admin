@@ -43,10 +43,14 @@ export const CategoryParentSelector = ({
       disabled={isLoading}
     >
       <SelectTrigger>
-        <SelectValue placeholder={t('components.categoryParentSelector.placeholder')} />
+        <SelectValue
+          placeholder={t('components.categoryParentSelector.placeholder')}
+        />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="null">{t('components.categoryParentSelector.noParent')}</SelectItem>
+        <SelectItem value="null">
+          {t('components.categoryParentSelector.noParent')}
+        </SelectItem>
         {availableCategories.map((category) => (
           <SelectItem key={category.id} value={category.id.toString()}>
             {category.name}

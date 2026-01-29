@@ -7,10 +7,10 @@
 'use client'
 
 import { useState } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { useRouter } from '@/shared/lib/navigation'
-
 import PageContainer from '@/shared/ui/layout/page-container'
 
 import { useGetCategories } from '@/entities/menu/category'

@@ -1,13 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useStartProduction } from '@/entities/inventory/production-order/model/mutations'
-import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,8 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
 import {
   Form,
   FormControl,
@@ -26,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Table,
   TableBody,
@@ -34,6 +31,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
+
+import { useStartProduction } from '@/entities/inventory/production-order/model/mutations'
+
+import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
 
 interface StartProductionDialogProps {
   order: IProductionOrder
@@ -108,7 +109,7 @@ export function StartProductionDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="bg-muted rounded-md p-3 text-sm space-y-1 mb-4">
+        <div className="bg-muted mb-4 space-y-1 rounded-md p-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Продукт:</span>
             <span className="font-medium">{order.outputItemName}</span>
@@ -122,14 +123,17 @@ export function StartProductionDialog({
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-            <div className="rounded-md border max-h-[300px] overflow-auto">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
+            <div className="max-h-[300px] overflow-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Ингредиент</TableHead>
                     <TableHead className="text-right">План</TableHead>
-                    <TableHead className="text-right w-[150px]">
+                    <TableHead className="w-[150px] text-right">
                       Факт. количество
                     </TableHead>
                   </TableRow>
@@ -140,7 +144,7 @@ export function StartProductionDialog({
                       <TableCell>
                         <div>
                           <p className="font-medium">{ingredient.itemName}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {ingredient.itemUnit}
                           </p>
                         </div>
@@ -162,7 +166,9 @@ export function StartProductionDialog({
                                   className="text-right"
                                   {...field}
                                   onChange={(e) =>
-                                    field.onChange(parseFloat(e.target.value) || 0)
+                                    field.onChange(
+                                      parseFloat(e.target.value) || 0
+                                    )
                                   }
                                 />
                               </FormControl>

@@ -9,11 +9,7 @@
 
 import api from '@/shared/lib/axios'
 
-import type {
-  EntityType,
-  IDeleteFileParams,
-  IFileResponse,
-} from './types'
+import type { EntityType, IDeleteFileParams, IFileResponse } from './types'
 
 /**
  * Get file metadata with all variants

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { IconArrowLeft } from '@tabler/icons-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/shared/ui/base/button'
 import { Separator } from '@/shared/ui/base/separator'
@@ -8,7 +9,9 @@ import PageContainer from '@/shared/ui/layout/page-container'
 
 import { FloorPlanContent } from '@/app/dashboard/halls/[hallId]/floor-plan/floor-plan-content'
 
-export const Route = createFileRoute('/dashboard/_layout/halls/$hallId/floor-plan')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/halls/$hallId/floor-plan'
+)({
   component: FloorPlanPage,
 })
 

@@ -35,7 +35,9 @@ export const UpdateProductDialog = ({
       <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('products.edit')}</DialogTitle>
-          <DialogDescription>{t('products.form.updateDescription')}</DialogDescription>
+          <DialogDescription>
+            {t('products.form.updateDescription')}
+          </DialogDescription>
         </DialogHeader>
         <UpdateProductForm productId={productId} onSuccess={onClose} />
       </DialogContent>

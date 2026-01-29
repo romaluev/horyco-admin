@@ -15,7 +15,10 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Form } from '@/shared/ui/base/form'
 
-import { useCreateBranch, type ICreateBranchDto } from '@/entities/organization/branch'
+import {
+  useCreateBranch,
+  type ICreateBranchDto,
+} from '@/entities/organization/branch'
 
 import { BranchFormFields } from './branch-form-fields'
 import { branchFormSchema, type BranchFormData } from '../model/schema'
@@ -84,7 +87,9 @@ export const CreateBranchDialog = ({
                 {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('branchForm.actions.creating') : t('branchForm.actions.create')}
+                {isPending
+                  ? t('branchForm.actions.creating')
+                  : t('branchForm.actions.create')}
               </Button>
             </DialogFooter>
           </form>

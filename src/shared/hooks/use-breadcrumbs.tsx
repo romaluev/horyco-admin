@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { usePathname } from '@/shared/lib/navigation'
@@ -36,22 +37,34 @@ export function useBreadcrumbs() {
       '/dashboard/menu/categories': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.menu'), link: '/dashboard/menu' },
-        { title: t('breadcrumbs.categories'), link: '/dashboard/menu/categories' },
+        {
+          title: t('breadcrumbs.categories'),
+          link: '/dashboard/menu/categories',
+        },
       ],
       '/dashboard/menu/additions': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.menu'), link: '/dashboard/menu' },
-        { title: t('breadcrumbs.additions'), link: '/dashboard/menu/additions' },
+        {
+          title: t('breadcrumbs.additions'),
+          link: '/dashboard/menu/additions',
+        },
       ],
       '/dashboard/menu/modifiers': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.menu'), link: '/dashboard/menu' },
-        { title: t('breadcrumbs.modifiers'), link: '/dashboard/menu/modifiers' },
+        {
+          title: t('breadcrumbs.modifiers'),
+          link: '/dashboard/menu/modifiers',
+        },
       ],
       '/dashboard/menu/branch-overrides': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.menu'), link: '/dashboard/menu' },
-        { title: 'Переопределения филиалов', link: '/dashboard/menu/branch-overrides' },
+        {
+          title: 'Переопределения филиалов',
+          link: '/dashboard/menu/branch-overrides',
+        },
       ],
       '/dashboard/staff': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
@@ -99,7 +112,10 @@ export function useBreadcrumbs() {
       '/dashboard/inventory/warehouses': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.warehouses'), link: '/dashboard/inventory/warehouses' },
+        {
+          title: t('breadcrumbs.warehouses'),
+          link: '/dashboard/inventory/warehouses',
+        },
       ],
       '/dashboard/inventory/items': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
@@ -114,27 +130,42 @@ export function useBreadcrumbs() {
       '/dashboard/inventory/movements': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.movements'), link: '/dashboard/inventory/movements' },
+        {
+          title: t('breadcrumbs.movements'),
+          link: '/dashboard/inventory/movements',
+        },
       ],
       '/dashboard/inventory/recipes': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.recipes'), link: '/dashboard/inventory/recipes' },
+        {
+          title: t('breadcrumbs.recipes'),
+          link: '/dashboard/inventory/recipes',
+        },
       ],
       '/dashboard/inventory/suppliers': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.suppliers'), link: '/dashboard/inventory/suppliers' },
+        {
+          title: t('breadcrumbs.suppliers'),
+          link: '/dashboard/inventory/suppliers',
+        },
       ],
       '/dashboard/inventory/purchase-orders': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.purchaseOrders'), link: '/dashboard/inventory/purchase-orders' },
+        {
+          title: t('breadcrumbs.purchaseOrders'),
+          link: '/dashboard/inventory/purchase-orders',
+        },
       ],
       '/dashboard/inventory/writeoffs': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.writeoffs'), link: '/dashboard/inventory/writeoffs' },
+        {
+          title: t('breadcrumbs.writeoffs'),
+          link: '/dashboard/inventory/writeoffs',
+        },
       ],
       '/dashboard/inventory/counts': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
@@ -144,7 +175,10 @@ export function useBreadcrumbs() {
       '/dashboard/inventory/production': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
         { title: t('breadcrumbs.inventory'), link: '/dashboard/inventory' },
-        { title: t('breadcrumbs.production'), link: '/dashboard/inventory/production' },
+        {
+          title: t('breadcrumbs.production'),
+          link: '/dashboard/inventory/production',
+        },
       ],
       '/dashboard/inventory/alerts': [
         { title: t('breadcrumbs.dashboard'), link: '/dashboard' },
@@ -153,14 +187,38 @@ export function useBreadcrumbs() {
       ],
     }
 
-    const inventoryDynamicRoutes: Record<string, { parent: string; parentTitle: string }> = {
-      items: { parent: '/dashboard/inventory/items', parentTitle: t('breadcrumbs.items') },
-      recipes: { parent: '/dashboard/inventory/recipes', parentTitle: t('breadcrumbs.recipes') },
-      suppliers: { parent: '/dashboard/inventory/suppliers', parentTitle: t('breadcrumbs.suppliers') },
-      'purchase-orders': { parent: '/dashboard/inventory/purchase-orders', parentTitle: t('breadcrumbs.purchaseOrders') },
-      writeoffs: { parent: '/dashboard/inventory/writeoffs', parentTitle: t('breadcrumbs.writeoffs') },
-      counts: { parent: '/dashboard/inventory/counts', parentTitle: t('breadcrumbs.counts') },
-      production: { parent: '/dashboard/inventory/production', parentTitle: t('breadcrumbs.production') },
+    const inventoryDynamicRoutes: Record<
+      string,
+      { parent: string; parentTitle: string }
+    > = {
+      items: {
+        parent: '/dashboard/inventory/items',
+        parentTitle: t('breadcrumbs.items'),
+      },
+      recipes: {
+        parent: '/dashboard/inventory/recipes',
+        parentTitle: t('breadcrumbs.recipes'),
+      },
+      suppliers: {
+        parent: '/dashboard/inventory/suppliers',
+        parentTitle: t('breadcrumbs.suppliers'),
+      },
+      'purchase-orders': {
+        parent: '/dashboard/inventory/purchase-orders',
+        parentTitle: t('breadcrumbs.purchaseOrders'),
+      },
+      writeoffs: {
+        parent: '/dashboard/inventory/writeoffs',
+        parentTitle: t('breadcrumbs.writeoffs'),
+      },
+      counts: {
+        parent: '/dashboard/inventory/counts',
+        parentTitle: t('breadcrumbs.counts'),
+      },
+      production: {
+        parent: '/dashboard/inventory/production',
+        parentTitle: t('breadcrumbs.production'),
+      },
     }
 
     if (routeMapping[pathname]) {
@@ -176,7 +234,9 @@ export function useBreadcrumbs() {
       ]
     }
 
-    const inventoryMatch = pathname.match(/^\/dashboard\/inventory\/([^/]+)\/(\d+)(\/(.+))?$/)
+    const inventoryMatch = pathname.match(
+      /^\/dashboard\/inventory\/([^/]+)\/(\d+)(\/(.+))?$/
+    )
     if (inventoryMatch) {
       const [, section, id, , subPage] = inventoryMatch
       const config = section ? inventoryDynamicRoutes[section] : undefined

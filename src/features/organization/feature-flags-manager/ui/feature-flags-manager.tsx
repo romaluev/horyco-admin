@@ -28,9 +28,7 @@ const extractValue = (setting: { value: boolean } | undefined): boolean => {
   return setting?.value ?? false
 }
 
-export const FeatureFlagsManager = ({
-  branchId,
-}: FeatureFlagsManagerProps) => {
+export const FeatureFlagsManager = ({ branchId }: FeatureFlagsManagerProps) => {
   const { data: featureFlags, isLoading } = useFeatureFlags(branchId)
   const { mutate: updateFeatures } = useUpdateFeatures(branchId)
 
@@ -71,35 +69,37 @@ export const FeatureFlagsManager = ({
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
-        {Object.entries(FEATURE_FLAG_LABELS).map(([key, { label, description }]) => (
-          <div
-            key={key}
-            className="flex items-center justify-between space-x-4 rounded-lg border p-4"
-          >
-            <div className="flex-1 space-y-1">
-              <Label htmlFor={key} className="cursor-pointer font-medium">
-                {label}
-              </Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <p className="text-muted-foreground text-sm">
-                      {description}
-                    </p>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">{description}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+        {Object.entries(FEATURE_FLAG_LABELS).map(
+          ([key, { label, description }]) => (
+            <div
+              key={key}
+              className="flex items-center justify-between space-x-4 rounded-lg border p-4"
+            >
+              <div className="flex-1 space-y-1">
+                <Label htmlFor={key} className="cursor-pointer font-medium">
+                  {label}
+                </Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <p className="text-muted-foreground text-sm">
+                        {description}
+                      </p>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-xs">{description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Switch
+                id={key}
+                checked={localFlags[key] ?? false}
+                onCheckedChange={(checked) => handleToggle(key, checked)}
+              />
             </div>
-            <Switch
-              id={key}
-              checked={localFlags[key] ?? false}
-              onCheckedChange={(checked) => handleToggle(key, checked)}
-            />
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   )

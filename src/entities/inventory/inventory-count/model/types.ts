@@ -4,7 +4,11 @@
  */
 
 export type CountType = 'full' | 'cycle' | 'spot'
-export type CountStatus = 'in_progress' | 'pending_approval' | 'completed' | 'cancelled'
+export type CountStatus =
+  | 'in_progress'
+  | 'pending_approval'
+  | 'completed'
+  | 'cancelled'
 
 export interface IInventoryCount {
   id: number

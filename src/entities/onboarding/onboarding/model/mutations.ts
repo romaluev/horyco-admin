@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
 
 import { onboardingApi } from './api'
@@ -51,7 +52,9 @@ export const useSubmitBusinessInfo = (
     mutationFn: async (data: BusinessInfoRequest) => {
       const result = await onboardingApi.submitBusinessInfo(data)
       // Wait for query invalidation to complete before returning
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: () => {
@@ -76,7 +79,9 @@ export const useSubmitBranchSetup = (
   return useMutation({
     mutationFn: async (data: BranchSetupRequest) => {
       const result = await onboardingApi.submitBranchSetup(data)
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: () => {
@@ -101,7 +106,9 @@ export const useSubmitMenuSetup = (
   return useMutation({
     mutationFn: async (data: MenuSetupRequest) => {
       const result = await onboardingApi.submitMenuSetup(data)
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: (data) => {
@@ -128,7 +135,9 @@ export const useSubmitStaffInvite = (
   return useMutation({
     mutationFn: async (data: StaffInviteRequest) => {
       const result = await onboardingApi.submitStaffInvite(data)
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: (data) => {
@@ -156,7 +165,9 @@ export const useCompleteOnboarding = (
   return useMutation({
     mutationFn: async () => {
       const result = await onboardingApi.complete()
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: () => {
@@ -181,7 +192,9 @@ export const useSkipStep = (
   return useMutation({
     mutationFn: async (data: SkipStepRequest) => {
       const result = await onboardingApi.skipStep(data)
-      await queryClient.invalidateQueries({ queryKey: onboardingKeys.progress() })
+      await queryClient.invalidateQueries({
+        queryKey: onboardingKeys.progress(),
+      })
       return result
     },
     onSuccess: () => {

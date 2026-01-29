@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import {
   AlertCircle,
   ArrowRight,
@@ -13,6 +11,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
@@ -53,7 +52,13 @@ export default function CompletePage() {
 
   // Trigger completion once validation passes
   useEffect(() => {
-    if (!isProgressLoading && progress && !isCompleting && !isCompleted && !isError) {
+    if (
+      !isProgressLoading &&
+      progress &&
+      !isCompleting &&
+      !isCompleted &&
+      !isError
+    ) {
       completeOnboarding()
     }
   }, [
@@ -97,8 +102,7 @@ export default function CompletePage() {
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               {(error as { response?: { data?: { message?: string } } })
-                ?.response?.data?.message ||
-                t('pages.complete.buttons.error')}
+                ?.response?.data?.message || t('pages.complete.buttons.error')}
             </AlertDescription>
           </Alert>
           <div className="mt-6 flex justify-center gap-4">
@@ -123,7 +127,9 @@ export default function CompletePage() {
                   <PartyPopper className="text-primary h-8 w-8" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">{t('pages.complete.successBanner.title')}</CardTitle>
+                  <CardTitle className="text-2xl">
+                    {t('pages.complete.successBanner.title')}
+                  </CardTitle>
                   <CardDescription className="mt-1 text-base">
                     {t('pages.complete.successBanner.description')}
                   </CardDescription>

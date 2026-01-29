@@ -43,7 +43,9 @@ export const ProductFormCategory = () => {
             >
               <FormControl>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t('products.form.category.placeholder')} />
+                  <SelectValue
+                    placeholder={t('products.form.category.placeholder')}
+                  />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>

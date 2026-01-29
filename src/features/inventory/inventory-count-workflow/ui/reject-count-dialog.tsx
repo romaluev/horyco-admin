@@ -1,12 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useCancelCount } from '@/entities/inventory/inventory-count/model/mutations'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -15,8 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Form,
   FormControl,
@@ -25,6 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useCancelCount } from '@/entities/inventory/inventory-count/model/mutations'
 
 const rejectSchema = z.object({
   reason: z.string().min(1, 'Укажите причину отклонения'),
@@ -78,7 +78,10 @@ export function RejectCountDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="reason"

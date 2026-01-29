@@ -31,8 +31,8 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { PERIOD_OPTIONS } from '@/features/dashboard/view-builder/model/constants'
 
-import { useAnalyticsPageAccess } from '../model/hooks'
 import { LockedPageState } from './locked-page-state'
+import { useAnalyticsPageAccess } from '../model/hooks'
 
 import type { AnalyticsPageCode } from '../model/types'
 import type { PeriodType } from '@/shared/api/graphql'
@@ -105,7 +105,12 @@ export function AnalyticsPageLayout({
   isLoading = false,
 }: IAnalyticsPageLayoutProps) {
   const { t } = useTranslation('dashboard')
-  const { canAccess, isLoading: isCheckingAccess, config, requiredTier } = useAnalyticsPageAccess(pageCode)
+  const {
+    canAccess,
+    isLoading: isCheckingAccess,
+    config,
+    requiredTier,
+  } = useAnalyticsPageAccess(pageCode)
   const finalBackLabel = backLabel || t('analytics.title')
 
   // Show loading skeleton while checking access
@@ -119,7 +124,7 @@ export function AnalyticsPageLayout({
   }
 
   return (
-    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:gap-6 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col gap-4 overflow-auto p-4 md:gap-6 md:p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
@@ -130,7 +135,7 @@ export function AnalyticsPageLayout({
           </Link>
           <div>
             <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
-            <p className="text-sm text-muted-foreground">{finalBackLabel}</p>
+            <p className="text-muted-foreground text-sm">{finalBackLabel}</p>
           </div>
         </div>
 
@@ -138,7 +143,10 @@ export function AnalyticsPageLayout({
           {headerActions}
 
           {/* Period Selector */}
-          <Select value={period} onValueChange={(value) => onPeriodChange(value as PeriodType)}>
+          <Select
+            value={period}
+            onValueChange={(value) => onPeriodChange(value as PeriodType)}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
@@ -154,7 +162,9 @@ export function AnalyticsPageLayout({
       </div>
 
       {/* Filters Row */}
-      {filters && <div className="flex flex-wrap items-center gap-2">{filters}</div>}
+      {filters && (
+        <div className="flex flex-wrap items-center gap-2">{filters}</div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1">{isLoading ? <ContentSkeleton /> : children}</div>
@@ -169,7 +179,9 @@ export function AnalyticsPageLayout({
             disabled={isExporting}
           >
             <IconDownload className="mr-1.5 size-4" />
-            {isExporting ? t('dashboard.common.loading') : t('dashboard.common.export')}
+            {isExporting
+              ? t('dashboard.common.loading')
+              : t('dashboard.common.export')}
           </Button>
         </div>
       )}
@@ -183,7 +195,7 @@ export function AnalyticsPageLayout({
 
 function AnalyticsPageSkeleton() {
   return (
-    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:gap-6 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col gap-4 overflow-auto p-4 md:gap-6 md:p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Skeleton className="size-8" />
@@ -239,7 +251,7 @@ export function AnalyticsPageHeader({
         <div>
           <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
           {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-sm">{description}</p>
           )}
         </div>
       </div>
@@ -268,13 +280,13 @@ export function AnalyticsEmptyState({
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-12 text-center">
       {icon && (
-        <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+        <div className="bg-muted flex size-12 items-center justify-center rounded-full">
           {icon}
         </div>
       )}
       <div className="space-y-1">
         <p className="font-medium">{title}</p>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
       </div>
       {action}
     </div>
@@ -301,10 +313,10 @@ export function AnalyticsErrorState({
   const finalDescription = description || t('analytics.dataUnavailable')
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-destructive/50 bg-destructive/5 p-12 text-center">
+    <div className="border-destructive/50 bg-destructive/5 flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-12 text-center">
       <div className="space-y-1">
-        <p className="font-medium text-destructive">{finalTitle}</p>
-        <p className="text-sm text-muted-foreground">{finalDescription}</p>
+        <p className="text-destructive font-medium">{finalTitle}</p>
+        <p className="text-muted-foreground text-sm">{finalDescription}</p>
       </div>
       {onRetry && (
         <Button variant="outline" size="sm" onClick={onRetry}>

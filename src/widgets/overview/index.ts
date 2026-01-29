@@ -18,10 +18,7 @@ export {
   AnalyticsMetrics,
   type AnalyticsMetrics as AnalyticsMetricsType,
 } from './components/analytics-metrics'
-export {
-  AnalyticsChart,
-  type ChartData,
-} from './components/analytics-chart'
+export { AnalyticsChart, type ChartData } from './components/analytics-chart'
 export { RecentOrders } from './components/recent-orders'
 export { TopProducts } from './components/top-products'
 export { BranchSelector } from './components/branch-selector'

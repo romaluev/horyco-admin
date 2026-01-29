@@ -142,7 +142,7 @@ function SidebarProvider({
             } as React.CSSProperties
           }
           className={cn(
-            'group/sidebar-wrapper flex min-h-svh w-full bg-sidebar',
+            'group/sidebar-wrapper bg-sidebar flex min-h-svh w-full',
             className
           )}
           {...props}
@@ -537,7 +537,7 @@ const SidebarMenuButton = React.forwardRef<
       return button
     }
 
-    let tooltipProps: React.ComponentProps<typeof TooltipContent> =
+    const tooltipProps: React.ComponentProps<typeof TooltipContent> =
       typeof tooltip === 'string' ? { children: tooltip } : tooltip
 
     return (

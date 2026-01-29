@@ -96,10 +96,10 @@ export async function graphqlRequest<T>(
   }
 }
 
-export async function executeQuery<TData, TVariables extends Variables = Variables>(
-  query: RequestDocument,
-  variables?: TVariables
-): Promise<TData> {
+export async function executeQuery<
+  TData,
+  TVariables extends Variables = Variables,
+>(query: RequestDocument, variables?: TVariables): Promise<TData> {
   return graphqlRequest<TData>(query, variables)
 }
 

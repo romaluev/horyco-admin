@@ -36,7 +36,11 @@ export const ImageUpload = ({
   currentImageUrls,
 }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null)
-  const resolvedImageUrl = useImageUrl(currentImageUrls, currentImageUrl, 'medium')
+  const resolvedImageUrl = useImageUrl(
+    currentImageUrls,
+    currentImageUrl,
+    'medium'
+  )
 
   useEffect(() => {
     if (value) {

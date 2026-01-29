@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
+
+import { getErrorMessage } from '@/shared/lib/get-error-message'
+
+import { stockKeys } from '@/entities/inventory/stock/model/query-keys'
+import { movementKeys } from '@/entities/inventory/stock-movement/model/query-keys'
 
 import { productionOrderApi } from './api'
 import { productionOrderKeys } from './query-keys'
-import { stockKeys } from '@/entities/inventory/stock/model/query-keys'
-import { movementKeys } from '@/entities/inventory/stock-movement/model/query-keys'
-import { getErrorMessage } from '@/shared/lib/get-error-message'
 
 import type {
   ICreateProductionOrderDto,
@@ -21,7 +24,8 @@ export const useCreateProductionOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateProductionOrderDto) => productionOrderApi.createProductionOrder(data),
+    mutationFn: (data: ICreateProductionOrderDto) =>
+      productionOrderApi.createProductionOrder(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
       toast.success('Заказ на производство создан')
@@ -39,11 +43,18 @@ export const useUpdateProductionOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IUpdateProductionOrderDto }) =>
-      productionOrderApi.updateProductionOrder(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number
+      data: IUpdateProductionOrderDto
+    }) => productionOrderApi.updateProductionOrder(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: productionOrderKeys.detail(id),
+      })
       toast.success('Заказ обновлен')
     },
     onError: (error) => {
@@ -81,7 +92,9 @@ export const useStartProduction = () => {
       productionOrderApi.startProduction(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: productionOrderKeys.detail(id),
+      })
       queryClient.invalidateQueries({ queryKey: stockKeys.all })
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство начато')
@@ -103,7 +116,9 @@ export const useCompleteProduction = () => {
       productionOrderApi.completeProduction(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: productionOrderKeys.detail(id),
+      })
       queryClient.invalidateQueries({ queryKey: stockKeys.all })
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство завершено')
@@ -124,7 +139,9 @@ export const useCancelProduction = () => {
     mutationFn: (id: number) => productionOrderApi.cancelProduction(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: productionOrderKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: productionOrderKeys.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: productionOrderKeys.detail(id),
+      })
       queryClient.invalidateQueries({ queryKey: stockKeys.all })
       queryClient.invalidateQueries({ queryKey: movementKeys.all })
       toast.success('Производство отменено')

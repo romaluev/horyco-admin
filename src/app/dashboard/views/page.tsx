@@ -18,7 +18,10 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
 import { useDeleteView, useViews } from '@/entities/dashboard/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
+import {
+  DATASET_CONFIG,
+  ViewTypeModal,
+} from '@/features/dashboard/view-builder'
 
 export default function ViewsPage() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -37,7 +40,7 @@ export default function ViewsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Представления</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Создавайте и управляйте аналитическими представлениями
           </p>
         </div>
@@ -72,18 +75,18 @@ export default function ViewsPage() {
 
             return (
               <Link key={view.id} to={`/dashboard/views/${view.id}` as any}>
-                <Card className="transition-colors hover:bg-muted/50">
+                <Card className="hover:bg-muted/50 transition-colors">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex size-8 items-center justify-center rounded-md bg-muted">
-                          <Icon className="size-4 text-muted-foreground" />
+                        <div className="bg-muted flex size-8 items-center justify-center rounded-md">
+                          <Icon className="text-muted-foreground size-4" />
                         </div>
                         <div>
                           <CardTitle className="text-base">
                             {view.name}
                             {view.isPinned && (
-                              <span className="ml-1 text-muted-foreground">
+                              <span className="text-muted-foreground ml-1">
                                 *
                               </span>
                             )}
@@ -96,7 +99,7 @@ export default function ViewsPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-8 text-muted-foreground hover:text-destructive"
+                        className="text-muted-foreground hover:text-destructive size-8"
                         onClick={(e) => handleDelete(view.id, e)}
                       >
                         <IconTrash className="size-4" />
@@ -104,7 +107,7 @@ export default function ViewsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Создано:{' '}
                       {new Date(view.createdAt).toLocaleDateString('ru-RU')}
                     </p>
@@ -116,12 +119,12 @@ export default function ViewsPage() {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-12">
-          <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-            <Icons.table className="size-6 text-muted-foreground" />
+          <div className="bg-muted flex size-12 items-center justify-center rounded-full">
+            <Icons.table className="text-muted-foreground size-6" />
           </div>
           <div className="text-center">
             <p className="font-medium">Нет представлений</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Создайте первое представление для анализа данных
             </p>
           </div>
@@ -133,7 +136,10 @@ export default function ViewsPage() {
       )}
 
       {/* Create View Modal */}
-      <ViewTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ViewTypeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   )
 }

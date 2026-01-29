@@ -5,7 +5,10 @@ import { CheckCircle2, AlertCircle, Clock } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Progress } from '@/shared/ui/base/progress'
 
-import type { IGoalsSummary, IGoalProgress } from '@/entities/dashboard/dashboard'
+import type {
+  IGoalsSummary,
+  IGoalProgress,
+} from '@/entities/dashboard/dashboard'
 
 interface GoalProgressWidgetProps {
   data: IGoalsSummary | null
@@ -13,11 +16,14 @@ interface GoalProgressWidgetProps {
   className?: string
 }
 
-const STATUS_CONFIG: Record<IGoalProgress['status'], {
-  icon: typeof CheckCircle2
-  className: string
-  label: string
-}> = {
+const STATUS_CONFIG: Record<
+  IGoalProgress['status'],
+  {
+    icon: typeof CheckCircle2
+    className: string
+    label: string
+  }
+> = {
   ON_TRACK: {
     icon: CheckCircle2,
     className: 'text-green-600',
@@ -46,10 +52,10 @@ export function GoalProgressWidget({
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="space-y-2">
             <div className="flex items-center justify-between">
-              <div className="h-4 w-32 animate-pulse rounded bg-muted" />
-              <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+              <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+              <div className="bg-muted h-4 w-12 animate-pulse rounded" />
             </div>
-            <div className="h-2 w-full animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-2 w-full animate-pulse rounded" />
           </div>
         ))}
       </div>
@@ -58,7 +64,7 @@ export function GoalProgressWidget({
 
   if (!data || data.goals.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет активных целей
       </div>
     )
@@ -94,12 +100,9 @@ export function GoalProgressWidget({
                 </span>
               </div>
 
-              <Progress
-                value={goal.percentage}
-                className="h-2"
-              />
+              <Progress value={goal.percentage} className="h-2" />
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="text-muted-foreground flex items-center justify-between text-xs">
                 <span>
                   {goal.current.toLocaleString('ru-RU')} /{' '}
                   {goal.target.toLocaleString('ru-RU')}

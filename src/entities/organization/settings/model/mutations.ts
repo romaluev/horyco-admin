@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { toast } from 'sonner'
 
 import { settingsApi } from './api'
@@ -25,7 +26,9 @@ export const useUpdateBranding = (branchId?: number) => {
       queryClient.invalidateQueries({
         queryKey: settingsKeys.branding(branchId),
       })
-      queryClient.invalidateQueries({ queryKey: settingsKeys.allSettings(branchId) })
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.allSettings(branchId),
+      })
       toast.success(
         branchId
           ? 'Настройки бренда филиала обновлены'
@@ -51,11 +54,11 @@ export const useUpdateFeatures = (branchId?: number) => {
       queryClient.invalidateQueries({
         queryKey: settingsKeys.features(branchId),
       })
-      queryClient.invalidateQueries({ queryKey: settingsKeys.allSettings(branchId) })
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.allSettings(branchId),
+      })
       toast.success(
-        branchId
-          ? 'Функции филиала обновлены'
-          : 'Функции обновлены'
+        branchId ? 'Функции филиала обновлены' : 'Функции обновлены'
       )
     },
     onError: (error: Error) => {

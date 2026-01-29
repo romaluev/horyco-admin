@@ -31,8 +31,8 @@ import {
 } from '@/shared/ui/base/select'
 import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useCreateWriteoff } from '@/entities/inventory/writeoff'
 import { WarehouseSelector } from '@/entities/inventory/warehouse'
+import { useCreateWriteoff } from '@/entities/inventory/writeoff'
 
 import { writeoffFormSchema, writeoffReasonOptions } from '../model/schema'
 
@@ -53,7 +53,9 @@ export function CreateWriteoffDialog() {
 
   const onSubmit = (data: WriteoffFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as WriteoffFormValues
 
     createWriteoff(cleanData, {

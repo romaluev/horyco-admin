@@ -9,7 +9,6 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconArrowDown,
@@ -19,6 +18,7 @@ import {
   IconDeviceMobile,
   IconWallet,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -45,7 +45,10 @@ import type { IPaymentMethodItem } from '@/features/dashboard/analytics'
 // CONSTANTS
 // ============================================
 
-const PAYMENT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+const PAYMENT_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   CASH: IconCash,
   CARD: IconCreditCard,
   PAYME: IconDeviceMobile,
@@ -69,7 +72,8 @@ export default function PaymentsAnalyticsPage() {
   const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('amount')
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
+  const [sortDirection, setSortDirection] =
+    React.useState<SortDirection>('desc')
 
   const { data, isLoading, error, refetch } = usePaymentMethodsAnalytics({
     period: { type: period },
@@ -138,14 +142,16 @@ export default function PaymentsAnalyticsPage() {
           />
 
           {/* Summary */}
-          <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-4 flex items-center justify-between text-sm">
             <span>
               {t('payments.summary', {
                 amount: formatPrice(data.summary?.totalAmount ?? 0),
                 count: data.summary?.totalTransactions ?? 0,
               })}
             </span>
-            {data.summary?.changes && <ChangeSummary changes={data.summary.changes} />}
+            {data.summary?.changes && (
+              <ChangeSummary changes={data.summary.changes} />
+            )}
           </div>
         </>
       ) : null}
@@ -221,7 +227,10 @@ function PaymentsTable({
         <TableBody>
           {methods.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="text-muted-foreground h-24 text-center"
+              >
                 {t('payments.table.noData')}
               </TableCell>
             </TableRow>
@@ -233,10 +242,12 @@ function PaymentsTable({
                 <TableRow key={method.method ?? index}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
+                      <div className="bg-muted flex size-8 items-center justify-center rounded-lg">
                         <Icon className="size-4" />
                       </div>
-                      <span className="font-medium">{method.label ?? method.method ?? 'N/A'}</span>
+                      <span className="font-medium">
+                        {method.label ?? method.method ?? 'N/A'}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
@@ -272,9 +283,9 @@ interface IShareBarProps {
 function ShareBar({ value }: IShareBarProps) {
   return (
     <div className="flex items-center justify-end gap-2">
-      <div className="h-2 w-16 overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted h-2 w-16 overflow-hidden rounded-full">
         <div
-          className="h-full bg-primary transition-all"
+          className="bg-primary h-full transition-all"
           style={{ width: `${value}%` }}
         />
       </div>
@@ -301,10 +312,22 @@ function ChangeSummary({ changes }: IChangeSummaryProps) {
 
   return (
     <div className="flex items-center gap-4">
-      <ChangeChip label={t('payments.summary_label.total')} value={changes?.total ?? 0} />
-      <ChangeChip label={t('payments.summary_label.cash')} value={changes?.cash ?? 0} />
-      <ChangeChip label={t('payments.summary_label.card')} value={changes?.card ?? 0} />
-      <ChangeChip label={t('payments.summary_label.online')} value={changes?.online ?? 0} />
+      <ChangeChip
+        label={t('payments.summary_label.total')}
+        value={changes?.total ?? 0}
+      />
+      <ChangeChip
+        label={t('payments.summary_label.cash')}
+        value={changes?.cash ?? 0}
+      />
+      <ChangeChip
+        label={t('payments.summary_label.card')}
+        value={changes?.card ?? 0}
+      />
+      <ChangeChip
+        label={t('payments.summary_label.online')}
+        value={changes?.online ?? 0}
+      />
     </div>
   )
 }
@@ -362,18 +385,22 @@ function SortableHeader({
 
   return (
     <TableHead
-      className={cn('cursor-pointer select-none hover:bg-muted/50', className)}
+      className={cn('hover:bg-muted/50 cursor-pointer select-none', className)}
       onClick={() => onSort(column)}
     >
-      <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end')}>
+      <div
+        className={cn(
+          'flex items-center gap-1',
+          className?.includes('text-right') && 'justify-end'
+        )}
+      >
         {label}
-        {isActive && (
-          sortDirection === 'asc' ? (
+        {isActive &&
+          (sortDirection === 'asc' ? (
             <IconArrowUp className="size-3" />
           ) : (
             <IconArrowDown className="size-3" />
-          )
-        )}
+          ))}
       </div>
     </TableHead>
   )
@@ -392,10 +419,18 @@ function PaymentsTableSkeleton() {
         <TableHeader>
           <TableRow>
             <TableHead>{t('payments.table.method')}</TableHead>
-            <TableHead className="text-right">{t('payments.table.transactions')}</TableHead>
-            <TableHead className="text-right">{t('payments.table.amount')}</TableHead>
-            <TableHead className="text-right">{t('payments.table.share')}</TableHead>
-            <TableHead className="text-right">{t('payments.table.avgAmount')}</TableHead>
+            <TableHead className="text-right">
+              {t('payments.table.transactions')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('payments.table.amount')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('payments.table.share')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('payments.table.avgAmount')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

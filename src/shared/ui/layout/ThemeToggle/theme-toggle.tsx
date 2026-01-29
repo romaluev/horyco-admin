@@ -5,6 +5,7 @@ import * as React from 'react'
 import { IconBrightness } from '@tabler/icons-react'
 
 import { Button } from '@/shared/ui/base/button'
+
 import { useTheme } from './theme-provider'
 
 export function ModeToggle() {

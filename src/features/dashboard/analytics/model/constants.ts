@@ -8,7 +8,11 @@
 
 import { PeriodType, SortBy, SortDirection } from '@/shared/api/graphql'
 
-import type { AnalyticsPageCode, IDefaultView, IPageAccessConfig } from './types'
+import type {
+  AnalyticsPageCode,
+  IDefaultView,
+  IPageAccessConfig,
+} from './types'
 
 // ============================================
 // PAGE ACCESS CONFIGURATION
@@ -18,159 +22,169 @@ import type { AnalyticsPageCode, IDefaultView, IPageAccessConfig } from './types
  * Defines which entitlement tier is required for each analytics page
  * Per docs/25-analytics-pages.md - Page Access by Tier table
  */
-export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> = {
-  // BASIC tier pages (analytics_basic)
-  sales: {
-    pageCode: 'sales',
-    requiredTier: 'analytics_basic',
-    title: 'sales',
-    titleEn: 'Sales Overview',
-    description: 'Сводка по продажам и выручке',
-    icon: 'chartBar',
-    upgradeFeatures: [],
-  },
-  products: {
-    pageCode: 'products',
-    requiredTier: 'analytics_basic',
-    title: 'products',
-    titleEn: 'Products',
-    description: 'Анализ продаж по продуктам',
-    icon: 'package',
-    upgradeFeatures: [],
-  },
-  categories: {
-    pageCode: 'categories',
-    requiredTier: 'analytics_basic',
-    title: 'categories',
-    titleEn: 'Categories',
-    description: 'Анализ продаж по категориям',
-    icon: 'category',
-    upgradeFeatures: [],
-  },
-  payments: {
-    pageCode: 'payments',
-    requiredTier: 'analytics_basic',
-    title: 'payments',
-    titleEn: 'Payments',
-    description: 'Анализ по способам оплаты',
-    icon: 'billing',
-    upgradeFeatures: [],
-  },
+export const PAGE_ACCESS_CONFIG: Record<AnalyticsPageCode, IPageAccessConfig> =
+  {
+    // BASIC tier pages (analytics_basic)
+    sales: {
+      pageCode: 'sales',
+      requiredTier: 'analytics_basic',
+      title: 'sales',
+      titleEn: 'Sales Overview',
+      description: 'Сводка по продажам и выручке',
+      icon: 'chartBar',
+      upgradeFeatures: [],
+    },
+    products: {
+      pageCode: 'products',
+      requiredTier: 'analytics_basic',
+      title: 'products',
+      titleEn: 'Products',
+      description: 'Анализ продаж по продуктам',
+      icon: 'package',
+      upgradeFeatures: [],
+    },
+    categories: {
+      pageCode: 'categories',
+      requiredTier: 'analytics_basic',
+      title: 'categories',
+      titleEn: 'Categories',
+      description: 'Анализ продаж по категориям',
+      icon: 'category',
+      upgradeFeatures: [],
+    },
+    payments: {
+      pageCode: 'payments',
+      requiredTier: 'analytics_basic',
+      title: 'payments',
+      titleEn: 'Payments',
+      description: 'Анализ по способам оплаты',
+      icon: 'billing',
+      upgradeFeatures: [],
+    },
 
-  // PRO tier pages (analytics_pro)
-  staff: {
-    pageCode: 'staff',
-    requiredTier: 'analytics_pro',
-    title: 'staff',
-    titleEn: 'Staff',
-    description: 'Анализ эффективности персонала',
-    icon: 'users',
-    upgradeFeatures: [
-      'Отслеживание производительности сотрудников',
-      'Аналитика клиентов',
-      'Тепловая карта',
-      'И многое другое...',
-    ],
-  },
-  customers: {
-    pageCode: 'customers',
-    requiredTier: 'analytics_pro',
-    title: 'customers',
-    titleEn: 'Customers',
-    description: 'Анализ клиентской базы',
-    icon: 'user',
-    upgradeFeatures: [
-      'RFM-сегментация',
-      'Когортный анализ',
-      'Анализ жизненной ценности клиента',
-    ],
-  },
-  heatmap: {
-    pageCode: 'heatmap',
-    requiredTier: 'analytics_pro',
-    title: 'heatmap',
-    titleEn: 'Heatmap',
-    description: 'Анализ нагрузки по часам и дням',
-    icon: 'layoutGrid',
-    upgradeFeatures: [
-      'Визуализация пиковых часов',
-      'Оптимизация расписания',
-    ],
-  },
-  channels: {
-    pageCode: 'channels',
-    requiredTier: 'analytics_pro',
-    title: 'channels',
-    titleEn: 'Channels',
-    description: 'Анализ по каналам продаж',
-    icon: 'arrowsExchange',
-    upgradeFeatures: [
-      'Сравнение каналов',
-      'Динамика по каналам',
-    ],
-  },
+    // PRO tier pages (analytics_pro)
+    staff: {
+      pageCode: 'staff',
+      requiredTier: 'analytics_pro',
+      title: 'staff',
+      titleEn: 'Staff',
+      description: 'Анализ эффективности персонала',
+      icon: 'users',
+      upgradeFeatures: [
+        'Отслеживание производительности сотрудников',
+        'Аналитика клиентов',
+        'Тепловая карта',
+        'И многое другое...',
+      ],
+    },
+    customers: {
+      pageCode: 'customers',
+      requiredTier: 'analytics_pro',
+      title: 'customers',
+      titleEn: 'Customers',
+      description: 'Анализ клиентской базы',
+      icon: 'user',
+      upgradeFeatures: [
+        'RFM-сегментация',
+        'Когортный анализ',
+        'Анализ жизненной ценности клиента',
+      ],
+    },
+    heatmap: {
+      pageCode: 'heatmap',
+      requiredTier: 'analytics_pro',
+      title: 'heatmap',
+      titleEn: 'Heatmap',
+      description: 'Анализ нагрузки по часам и дням',
+      icon: 'layoutGrid',
+      upgradeFeatures: ['Визуализация пиковых часов', 'Оптимизация расписания'],
+    },
+    channels: {
+      pageCode: 'channels',
+      requiredTier: 'analytics_pro',
+      title: 'channels',
+      titleEn: 'Channels',
+      description: 'Анализ по каналам продаж',
+      icon: 'arrowsExchange',
+      upgradeFeatures: ['Сравнение каналов', 'Динамика по каналам'],
+    },
 
-  // ULTRA tier pages (analytics_full)
-  branches: {
-    pageCode: 'branches',
-    requiredTier: 'analytics_full',
-    title: 'branches',
-    titleEn: 'Branches',
-    description: 'Сравнение и бенчмаркинг филиалов',
-    icon: 'hierarchy',
-    upgradeFeatures: [
-      'Сравнение филиалов',
-      'Бенчмаркинг',
-      'Тренды по филиалам',
-    ],
-  },
-  financial: {
-    pageCode: 'financial',
-    requiredTier: 'analytics_full',
-    title: 'financial',
-    titleEn: 'Financial',
-    description: 'Финансовая аналитика и отчетность',
-    icon: 'billing',
-    upgradeFeatures: [
-      'Отчет о прибылях и убытках',
-      'Анализ маржинальности',
-      'Движение денежных средств',
-    ],
-  },
-  forecasting: {
-    pageCode: 'forecasting',
-    requiredTier: 'analytics_full',
-    title: 'forecasting',
-    titleEn: 'Forecasting',
-    description: 'Прогноз продаж и спроса',
-    icon: 'chartPie',
-    upgradeFeatures: [
-      'Прогноз выручки',
-      'Прогноз заказов',
-      'Сезонные тренды',
-    ],
-  },
-  alerts: {
-    pageCode: 'alerts',
-    requiredTier: 'analytics_full',
-    title: 'alerts',
-    titleEn: 'Alerts',
-    description: 'Уведомления о важных событиях',
-    icon: 'warning',
-    upgradeFeatures: [
-      'Автоматические оповещения',
-      'Обнаружение аномалий',
-      'Пороговые значения',
-    ],
-  },
-}
+    // ULTRA tier pages (analytics_full)
+    branches: {
+      pageCode: 'branches',
+      requiredTier: 'analytics_full',
+      title: 'branches',
+      titleEn: 'Branches',
+      description: 'Сравнение и бенчмаркинг филиалов',
+      icon: 'hierarchy',
+      upgradeFeatures: [
+        'Сравнение филиалов',
+        'Бенчмаркинг',
+        'Тренды по филиалам',
+      ],
+    },
+    financial: {
+      pageCode: 'financial',
+      requiredTier: 'analytics_full',
+      title: 'financial',
+      titleEn: 'Financial',
+      description: 'Финансовая аналитика и отчетность',
+      icon: 'billing',
+      upgradeFeatures: [
+        'Отчет о прибылях и убытках',
+        'Анализ маржинальности',
+        'Движение денежных средств',
+      ],
+    },
+    forecasting: {
+      pageCode: 'forecasting',
+      requiredTier: 'analytics_full',
+      title: 'forecasting',
+      titleEn: 'Forecasting',
+      description: 'Прогноз продаж и спроса',
+      icon: 'chartPie',
+      upgradeFeatures: [
+        'Прогноз выручки',
+        'Прогноз заказов',
+        'Сезонные тренды',
+      ],
+    },
+    alerts: {
+      pageCode: 'alerts',
+      requiredTier: 'analytics_full',
+      title: 'alerts',
+      titleEn: 'Alerts',
+      description: 'Уведомления о важных событиях',
+      icon: 'warning',
+      upgradeFeatures: [
+        'Автоматические оповещения',
+        'Обнаружение аномалий',
+        'Пороговые значения',
+      ],
+    },
+  }
 
 /**
  * List of pages by tier for easy filtering
  */
-export const BASIC_TIER_PAGES: AnalyticsPageCode[] = ['sales', 'products', 'categories', 'payments']
-export const PRO_TIER_PAGES: AnalyticsPageCode[] = ['staff', 'customers', 'heatmap', 'channels']
-export const ULTRA_TIER_PAGES: AnalyticsPageCode[] = ['branches', 'financial', 'forecasting', 'alerts']
+export const BASIC_TIER_PAGES: AnalyticsPageCode[] = [
+  'sales',
+  'products',
+  'categories',
+  'payments',
+]
+export const PRO_TIER_PAGES: AnalyticsPageCode[] = [
+  'staff',
+  'customers',
+  'heatmap',
+  'channels',
+]
+export const ULTRA_TIER_PAGES: AnalyticsPageCode[] = [
+  'branches',
+  'financial',
+  'forecasting',
+  'alerts',
+]
 
 // ============================================
 // DEFAULT VIEWS (HARDCODED - NOT IN DATABASE)
@@ -405,7 +419,8 @@ export const UPGRADE_PROMPTS = {
   viewLimit: {
     title: 'Достигнут лимит представлений',
     titleEn: 'View limit reached',
-    description: 'Вы достигли максимума в 3 представления на плане PRO. Удалите представление или перейдите на ULTRA для неограниченного количества.',
+    description:
+      'Вы достигли максимума в 3 представления на плане PRO. Удалите представление или перейдите на ULTRA для неограниченного количества.',
     buttonText: 'Перейти на ULTRA',
     buttonTextEn: 'Upgrade to ULTRA',
   },
@@ -438,7 +453,8 @@ export const HEATMAP_LEVEL_CONFIG = {
 
 export const MARGIN_CLASS_COLORS = {
   HIGH: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
-  MEDIUM: 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30',
+  MEDIUM:
+    'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30',
   LOW: 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30',
   NEGATIVE: 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30',
 } as const
@@ -449,7 +465,8 @@ export const MARGIN_CLASS_COLORS = {
 
 export const BENCHMARK_STATUS_COLORS = {
   ABOVE: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
-  AVERAGE: 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30',
+  AVERAGE:
+    'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30',
   BELOW: 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30',
 } as const
 
@@ -458,8 +475,10 @@ export const BENCHMARK_STATUS_COLORS = {
 // ============================================
 
 export const ALERT_SEVERITY_COLORS = {
-  CRITICAL: 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30 border-red-200 dark:border-red-800',
-  WARNING: 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800',
+  CRITICAL:
+    'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30 border-red-200 dark:border-red-800',
+  WARNING:
+    'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800',
   INFO: 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800',
 } as const
 

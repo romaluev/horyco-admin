@@ -15,11 +15,14 @@ interface AlertsWidgetProps {
   className?: string
 }
 
-const ALERT_CONFIG: Record<IAlert['severity'], {
-  icon: typeof AlertCircle
-  className: string
-  badgeVariant: 'default' | 'destructive' | 'outline'
-}> = {
+const ALERT_CONFIG: Record<
+  IAlert['severity'],
+  {
+    icon: typeof AlertCircle
+    className: string
+    badgeVariant: 'default' | 'destructive' | 'outline'
+  }
+> = {
   CRITICAL: {
     icon: AlertCircle,
     className: 'text-destructive',
@@ -52,10 +55,10 @@ export function AlertsWidget({
       <div className={cn('space-y-2', className)}>
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex gap-2 rounded-md border p-2">
-            <div className="h-5 w-5 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-5 w-5 animate-pulse rounded" />
             <div className="flex-1 space-y-1">
-              <div className="h-4 w-full animate-pulse rounded bg-muted" />
-              <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+              <div className="bg-muted h-4 w-full animate-pulse rounded" />
+              <div className="bg-muted h-3 w-20 animate-pulse rounded" />
             </div>
           </div>
         ))}
@@ -65,7 +68,7 @@ export function AlertsWidget({
 
   if (!data || data.alerts.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 text-sm">
         <Bell className="h-8 w-8 opacity-50" />
         <span>Нет уведомлений</span>
       </div>
@@ -96,10 +99,12 @@ export function AlertsWidget({
                 !alert.isRead && 'bg-muted/50'
               )}
             >
-              <Icon className={cn('h-5 w-5 shrink-0 mt-0.5', config.className)} />
+              <Icon
+                className={cn('mt-0.5 h-5 w-5 shrink-0', config.className)}
+              />
               <div className="min-w-0 flex-1 space-y-1">
                 <p className="text-sm leading-snug">{alert.message}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   {formatDistanceToNow(new Date(alert.timestamp), {
                     addSuffix: true,
                     locale: ru,

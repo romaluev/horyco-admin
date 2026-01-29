@@ -1,13 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useCompleteProduction } from '@/entities/inventory/production-order/model/mutations'
-import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,9 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Form,
   FormControl,
@@ -27,6 +22,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useCompleteProduction } from '@/entities/inventory/production-order/model/mutations'
+
+import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
 
 const completeSchema = z.object({
   actualQuantity: z.number().min(0.01, 'Количество должно быть больше 0'),
@@ -87,12 +88,12 @@ export function CompleteProductionDialog({
         <DialogHeader>
           <DialogTitle>Завершить производство</DialogTitle>
           <DialogDescription>
-            Укажите фактическое количество произведённого продукта. Продукт будет
-            добавлен на склад.
+            Укажите фактическое количество произведённого продукта. Продукт
+            будет добавлен на склад.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="bg-muted rounded-md p-3 text-sm space-y-1 mb-4">
+        <div className="bg-muted mb-4 space-y-1 rounded-md p-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Продукт:</span>
             <span className="font-medium">{order.outputItemName}</span>
@@ -106,13 +107,18 @@ export function CompleteProductionDialog({
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="actualQuantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Фактическое количество ({order.outputUnit})</FormLabel>
+                  <FormLabel>
+                    Фактическое количество ({order.outputUnit})
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -141,7 +147,8 @@ export function CompleteProductionDialog({
                   <span>Отклонение:</span>
                   <span className="font-medium">
                     {variance > 0 ? '+' : ''}
-                    {variance.toFixed(2)} {order.outputUnit} ({variancePercent}%)
+                    {variance.toFixed(2)} {order.outputUnit} ({variancePercent}
+                    %)
                   </span>
                 </div>
               </div>

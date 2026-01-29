@@ -1,11 +1,11 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { Button } from '@/shared/ui/base/button'
@@ -35,9 +35,18 @@ export function DashboardPeriodSelector({
 
   const PERIOD_OPTIONS: { value: PeriodType; label: string }[] = [
     { value: PeriodType.TODAY, label: t('dashboard.overview.periods.today') },
-    { value: PeriodType.YESTERDAY, label: t('dashboard.overview.periods.yesterday') },
-    { value: PeriodType.THIS_WEEK, label: t('dashboard.overview.periods.week') },
-    { value: PeriodType.THIS_MONTH, label: t('dashboard.overview.periods.month') },
+    {
+      value: PeriodType.YESTERDAY,
+      label: t('dashboard.overview.periods.yesterday'),
+    },
+    {
+      value: PeriodType.THIS_WEEK,
+      label: t('dashboard.overview.periods.week'),
+    },
+    {
+      value: PeriodType.THIS_MONTH,
+      label: t('dashboard.overview.periods.month'),
+    },
   ]
   const [isCustomPickerOpen, setIsCustomPickerOpen] = React.useState(false)
   const [tempRange, setTempRange] = React.useState<DateRange | undefined>(
@@ -99,7 +108,9 @@ export function DashboardPeriodSelector({
         <PopoverContent className="w-auto p-0" align="start">
           <div className="space-y-4 p-4">
             <div>
-              <h4 className="mb-3 text-sm font-medium">{t('dashboard.overview.selectPeriod')}</h4>
+              <h4 className="mb-3 text-sm font-medium">
+                {t('dashboard.overview.selectPeriod')}
+              </h4>
               <Calendar
                 mode="range"
                 defaultMonth={tempRange?.from}

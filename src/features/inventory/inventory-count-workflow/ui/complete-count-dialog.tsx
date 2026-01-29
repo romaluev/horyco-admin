@@ -2,9 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useCompleteCount } from '@/entities/inventory/inventory-count/model/mutations'
-import type { IInventoryCount, ICountVarianceSummary } from '@/entities/inventory/inventory-count/model/types'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +12,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useCompleteCount } from '@/entities/inventory/inventory-count/model/mutations'
+
+import type {
+  IInventoryCount,
+  ICountVarianceSummary,
+} from '@/entities/inventory/inventory-count/model/types'
 
 interface CompleteCountDialogProps {
   count: IInventoryCount
@@ -61,8 +65,8 @@ export function CompleteCountDialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                Инвентаризация <strong>{count.countNumber}</strong> будет завершена
-                и отправлена на согласование.
+                Инвентаризация <strong>{count.countNumber}</strong> будет
+                завершена и отправлена на согласование.
               </p>
               {uncountedItems > 0 && (
                 <p className="text-destructive">
@@ -70,7 +74,7 @@ export function CompleteCountDialog({
                   считаться с нулевым остатком.
                 </p>
               )}
-              <div className="bg-muted mt-4 rounded-md p-3 space-y-1">
+              <div className="bg-muted mt-4 space-y-1 rounded-md p-3">
                 <div className="flex justify-between text-sm">
                   <span>Подсчитано товаров:</span>
                   <span>
@@ -80,16 +84,20 @@ export function CompleteCountDialog({
                 <div className="flex justify-between text-sm">
                   <span>Недостача:</span>
                   <span className="text-destructive">
-                    {formatCurrency(variance?.shortageValue || count.shortageValue)}
+                    {formatCurrency(
+                      variance?.shortageValue || count.shortageValue
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Излишек:</span>
                   <span className="text-green-600">
-                    {formatCurrency(variance?.surplusValue || count.surplusValue)}
+                    {formatCurrency(
+                      variance?.surplusValue || count.surplusValue
+                    )}
                   </span>
                 </div>
-                <div className="flex justify-between font-medium border-t pt-1">
+                <div className="flex justify-between border-t pt-1 font-medium">
                   <span>Итого расхождение:</span>
                   <span
                     className={

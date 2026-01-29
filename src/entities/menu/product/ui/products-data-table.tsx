@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+
 import { Pencil, Trash } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
@@ -221,7 +222,10 @@ export const ProductsDataTable = ({
   return (
     <>
       <DataTable table={table} />
-      <Dialog open={deleteProductId !== null} onOpenChange={() => setDeleteProductId(null)}>
+      <Dialog
+        open={deleteProductId !== null}
+        onOpenChange={() => setDeleteProductId(null)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Удалить продукт?</DialogTitle>

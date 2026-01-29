@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter, useSearchParams } from '@/shared/lib/navigation'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertCircle,
@@ -17,6 +15,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 import { BaseLoading } from '@/shared/ui'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
@@ -43,17 +42,18 @@ import { useAuthStore } from '@/entities/auth/auth/model/store'
 import type { VerifyInviteResponse } from '@/entities/auth/auth/model/types'
 
 // Helper to extract error message from API response
-const extractErrorMessage = (
-  err: unknown,
-  defaultMessage: string
-): string => {
+const extractErrorMessage = (err: unknown, defaultMessage: string): string => {
   if (typeof err !== 'object' || err === null || !('response' in err)) {
     return defaultMessage
   }
 
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
-  if (typeof response !== 'object' || response === null || !('data' in response)) {
+  if (
+    typeof response !== 'object' ||
+    response === null ||
+    !('data' in response)
+  ) {
     return defaultMessage
   }
 
@@ -68,23 +68,27 @@ const extractErrorMessage = (
 }
 
 // Password schema matching API requirements
-const passwordSchema = z.object({
-  password: z
-    .string()
-    .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
-    .max(50, { message: 'Пароль должен содержать максимум 50 символов' })
-    .regex(/[A-Z]/, {
-      message: 'Пароль должен содержать хотя бы одну заглавную букву',
-    })
-    .regex(/[a-z]/, {
-      message: 'Пароль должен содержать хотя бы одну строчную букву',
-    })
-    .regex(/[0-9]/, { message: 'Пароль должен содержать хотя бы одну цифру' }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Пароли не совпадают',
-  path: ['confirmPassword'],
-})
+const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
+      .max(50, { message: 'Пароль должен содержать максимум 50 символов' })
+      .regex(/[A-Z]/, {
+        message: 'Пароль должен содержать хотя бы одну заглавную букву',
+      })
+      .regex(/[a-z]/, {
+        message: 'Пароль должен содержать хотя бы одну строчную букву',
+      })
+      .regex(/[0-9]/, {
+        message: 'Пароль должен содержать хотя бы одну цифру',
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Пароли не совпадают',
+    path: ['confirmPassword'],
+  })
 
 type PasswordFormValues = z.infer<typeof passwordSchema>
 
@@ -98,7 +102,9 @@ const InviteForm = () => {
   const { me, loadFullProfile } = useAuthStore()
 
   const [state, setState] = useState<InviteState>('loading')
-  const [inviteData, setInviteData] = useState<VerifyInviteResponse | null>(null)
+  const [inviteData, setInviteData] = useState<VerifyInviteResponse | null>(
+    null
+  )
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -126,7 +132,10 @@ const InviteForm = () => {
           setInviteData(response)
           setState('valid')
         } else {
-          setError(response.message || 'Недействительный или истекший токен приглашения')
+          setError(
+            response.message ||
+              'Недействительный или истекший токен приглашения'
+          )
           setState('invalid')
         }
       } catch {
@@ -212,7 +221,10 @@ const InviteForm = () => {
           <CardDescription>{error}</CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <Button variant="outline" onClick={() => router.push('/auth/sign-in')}>
+          <Button
+            variant="outline"
+            onClick={() => router.push('/auth/sign-in')}
+          >
             Перейти к входу
           </Button>
         </CardContent>
@@ -247,9 +259,7 @@ const InviteForm = () => {
         <CardTitle className="text-2xl font-bold">
           Добро пожаловать в Horyco!
         </CardTitle>
-        <CardDescription>
-          Установите пароль для вашего аккаунта
-        </CardDescription>
+        <CardDescription>Установите пароль для вашего аккаунта</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Invitation info */}
@@ -267,7 +277,9 @@ const InviteForm = () => {
                 <Phone className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="text-sm font-medium">{inviteData.ownerPhone}</p>
-                  <p className="text-muted-foreground text-xs">Номер телефона</p>
+                  <p className="text-muted-foreground text-xs">
+                    Номер телефона
+                  </p>
                 </div>
               </div>
             )}

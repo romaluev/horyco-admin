@@ -144,7 +144,9 @@ export const UpdateTableDialog = ({
                       <Button
                         key={shape.value}
                         type="button"
-                        variant={field.value === shape.value ? 'default' : 'outline'}
+                        variant={
+                          field.value === shape.value ? 'default' : 'outline'
+                        }
                         className="flex-1"
                         onClick={() => field.onChange(shape.value)}
                       >

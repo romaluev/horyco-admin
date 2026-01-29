@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { useRouter } from '@/shared/lib/navigation'
 import {
   Button,
   FormControl,
@@ -113,7 +112,10 @@ export const UpdateProductForm = ({
               <FormItem className="md:col-span-3">
                 <FormLabel>{t('products.form.name.label')}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('products.form.name.placeholder')} {...field} />
+                  <Input
+                    placeholder={t('products.form.name.placeholder')}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,7 +148,9 @@ export const UpdateProductForm = ({
             name="preparationTime"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>{t('products.form.preparationTime.label')}</FormLabel>
+                <FormLabel>
+                  {t('products.form.preparationTime.label')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="number"

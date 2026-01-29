@@ -12,9 +12,9 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconInfoCircle, IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
@@ -113,7 +113,9 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
   // Calculate opening and closing balance from daily flow
   const firstDay = dailyFlow[0]
   const lastDay = dailyFlow[dailyFlow.length - 1]
-  const openingBalance = firstDay ? firstDay.runningBalance - firstDay.netFlow : 0
+  const openingBalance = firstDay
+    ? firstDay.runningBalance - firstDay.netFlow
+    : 0
   const closingBalance = lastDay ? lastDay.runningBalance : 0
 
   // Get last 7 days for chart
@@ -147,20 +149,26 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
 
       {/* Balance Projection */}
       <div className="rounded-lg border p-6">
-        <h3 className="mb-4 text-sm font-medium">{t('forecasting.balance.title')}</h3>
+        <h3 className="mb-4 text-sm font-medium">
+          {t('forecasting.balance.title')}
+        </h3>
         <div className="flex items-center justify-between">
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">{t('forecasting.balance.opening')}</div>
+            <div className="text-muted-foreground text-sm">
+              {t('forecasting.balance.opening')}
+            </div>
             <div className="mt-1 text-2xl font-semibold">
               {formatPrice(openingBalance)}
             </div>
           </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2">
             <IconTrendingUp className="size-5" />
             <span className="text-sm">→</span>
           </div>
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">{t('forecasting.balance.closing')}</div>
+            <div className="text-muted-foreground text-sm">
+              {t('forecasting.balance.closing')}
+            </div>
             <div className="mt-1 text-2xl font-semibold">
               {formatPrice(closingBalance)}
             </div>
@@ -171,9 +179,13 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
       {/* Peak Day */}
       {peakDay && (
         <div className="rounded-lg border p-4">
-          <h3 className="mb-2 text-sm font-medium">{t('forecasting.peakDay')}</h3>
+          <h3 className="mb-2 text-sm font-medium">
+            {t('forecasting.peakDay')}
+          </h3>
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">{new Date(peakDay.date).toLocaleDateString('ru-RU')}</span>
+            <span className="text-muted-foreground">
+              {new Date(peakDay.date).toLocaleDateString('ru-RU')}
+            </span>
             <span className="text-xl font-semibold text-green-600 dark:text-green-500">
               {formatPrice(peakDay.amount)}
             </span>
@@ -190,7 +202,9 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
           {last7Days.map((day, index) => (
             <div key={index} className="flex items-center justify-between p-4">
               <div>
-                <span className="font-medium">{new Date(day.date).toLocaleDateString('ru-RU')}</span>
+                <span className="font-medium">
+                  {new Date(day.date).toLocaleDateString('ru-RU')}
+                </span>
               </div>
               <div className="flex items-center gap-6 text-sm">
                 <span className="text-green-600 dark:text-green-500">
@@ -199,17 +213,22 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
                 <span className="text-red-600 dark:text-red-500">
                   -{formatPrice(day.outflow)}
                 </span>
-                <span className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
-                  {day.netFlow >= 0 ? '+' : ''}{formatPrice(day.netFlow)}
+                <span
+                  className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}
+                >
+                  {day.netFlow >= 0 ? '+' : ''}
+                  {formatPrice(day.netFlow)}
                 </span>
                 <span className="text-muted-foreground">
-                  {t('forecasting.balanceText', { amount: formatPrice(day.runningBalance) })}
+                  {t('forecasting.balanceText', {
+                    amount: formatPrice(day.runningBalance),
+                  })}
                 </span>
               </div>
             </div>
           ))}
           {last7Days.length === 0 && (
-            <div className="p-4 text-center text-muted-foreground">
+            <div className="text-muted-foreground p-4 text-center">
               {t('forecasting.noFlowData')}
             </div>
           )}
@@ -224,9 +243,14 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
           </summary>
           <div className="divide-y">
             {dailyFlow.map((day, index) => (
-              <div key={index} className="flex items-center justify-between p-4">
+              <div
+                key={index}
+                className="flex items-center justify-between p-4"
+              >
                 <div>
-                  <span className="font-medium">{new Date(day.date).toLocaleDateString('ru-RU')}</span>
+                  <span className="font-medium">
+                    {new Date(day.date).toLocaleDateString('ru-RU')}
+                  </span>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
                   <span className="text-green-600 dark:text-green-500">
@@ -235,8 +259,11 @@ function ForecastContent({ data: rawData }: IForecastContentProps) {
                   <span className="text-red-600 dark:text-red-500">
                     -{formatPrice(day.outflow)}
                   </span>
-                  <span className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
-                    {day.netFlow >= 0 ? '+' : ''}{formatPrice(day.netFlow)}
+                  <span
+                    className={`font-medium ${day.netFlow >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}
+                  >
+                    {day.netFlow >= 0 ? '+' : ''}
+                    {formatPrice(day.netFlow)}
                   </span>
                   <span className="text-muted-foreground">
                     {formatPrice(day.runningBalance)}
@@ -274,7 +301,7 @@ interface ISummaryCardProps {
 function SummaryCard({ label, value, trend }: ISummaryCardProps) {
   return (
     <div className="rounded-lg border p-4">
-      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="text-muted-foreground text-sm">{label}</div>
       <div
         className={`mt-1 text-2xl font-semibold ${
           trend === 'UP'

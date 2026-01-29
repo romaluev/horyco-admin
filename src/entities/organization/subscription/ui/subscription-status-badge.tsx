@@ -6,10 +6,15 @@ interface SubscriptionStatusBadgeProps {
   status: SubscriptionStatus
 }
 
-export const SubscriptionStatusBadge = ({ status }: SubscriptionStatusBadgeProps) => {
+export const SubscriptionStatusBadge = ({
+  status,
+}: SubscriptionStatusBadgeProps) => {
   const statusConfig: Record<
     SubscriptionStatus,
-    { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
+    {
+      label: string
+      variant: 'default' | 'secondary' | 'destructive' | 'outline'
+    }
   > = {
     trialing: { label: 'Пробный период', variant: 'secondary' },
     active: { label: 'Активна', variant: 'default' },
