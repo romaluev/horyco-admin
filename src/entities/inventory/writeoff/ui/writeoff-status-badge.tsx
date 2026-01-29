@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { WRITEOFF_STATUS_LABELS, type WriteoffStatus } from '../model/types'
 
 interface IWriteoffStatusBadgeProps {

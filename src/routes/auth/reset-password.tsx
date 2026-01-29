@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import logo from '@/shared/assets/logo.png'

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ArrowLeft, Send, Package, XCircle, Trash2, Loader2, Plus } from 'lucide-react'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,

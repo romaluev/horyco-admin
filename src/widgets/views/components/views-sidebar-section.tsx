@@ -3,10 +3,10 @@
 import * as React from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus, IconTable } from '@tabler/icons-react'
 
+import { usePathname } from '@/shared/lib/navigation'
 import {
   Collapsible,
   CollapsibleContent,

@@ -2,8 +2,8 @@
 
 import { Phone, Mail, MapPin, Clock, Package } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Badge } from '@/shared/ui/base/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
 import type { ISupplier } from '../model/types'
 

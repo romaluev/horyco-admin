@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 
+import { Dataset } from '@/shared/api/graphql'
 import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
-import { Dataset } from '@/shared/api/graphql'
 
 import { useCreateView } from '@/entities/dashboard/view'
 import {

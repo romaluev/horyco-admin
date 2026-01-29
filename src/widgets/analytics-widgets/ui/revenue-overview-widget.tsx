@@ -7,8 +7,8 @@ import {
   IconTrendingDown,
   IconArrowUpRight,
 } from '@tabler/icons-react'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { useTranslation } from 'react-i18next'
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'

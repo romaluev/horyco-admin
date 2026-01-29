@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { useTranslation } from 'react-i18next'
+
 import { BaseLoading, ViewModeToggler } from '@/shared/ui'
 import PageContainer from '@/shared/ui/layout/page-container'
 

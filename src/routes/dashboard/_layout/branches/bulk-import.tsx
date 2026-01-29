@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { IconArrowLeft, IconUpload } from '@tabler/icons-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'

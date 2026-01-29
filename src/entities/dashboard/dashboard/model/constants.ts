@@ -20,7 +20,12 @@ import {
 
 import { KpiType } from '@/shared/api/graphql'
 
-import type { WidgetType } from './types'
+import type { WidgetType , ChartType } from './types'
+
+// ============================================
+// CHART TYPE OPTIONS
+// ============================================
+
 
 // ============================================
 // KPI CONFIGURATION
@@ -386,12 +391,6 @@ export function getWidgetsByCategory(category: WidgetCategory): WidgetType[] {
     .filter(([, config]) => config.category === category)
     .map(([type]) => type)
 }
-
-// ============================================
-// CHART TYPE OPTIONS
-// ============================================
-
-import type { ChartType } from './types'
 
 export interface IChartTypeOption {
   value: ChartType

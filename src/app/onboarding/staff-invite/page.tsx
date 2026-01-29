@@ -3,16 +3,16 @@
 
 import { useState, useCallback } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { getNextStep } from '@/shared/config/onboarding'
 import { useFormPersist } from '@/shared/hooks/use-form-persist'
 import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,12 +44,12 @@ import { Input } from '@/shared/ui/base/input'
 import { PhoneInput } from '@/shared/ui/base/phone-input'
 import { OnboardingLayout } from '@/shared/ui/onboarding'
 
+import { useGetAllPermissions } from '@/entities/auth/role'
 import {
   useSubmitStaffInvite,
   useSkipStep,
   useStepValidation,
 } from '@/entities/onboarding/onboarding'
-import { useGetAllPermissions } from '@/entities/auth/role'
 import {
   staffInviteSchema,
   type StaffInviteFormValues,

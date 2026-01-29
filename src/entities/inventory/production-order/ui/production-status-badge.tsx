@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { PRODUCTION_STATUS_LABELS, type ProductionStatus } from '../model/types'
 
 interface IProductionStatusBadgeProps {

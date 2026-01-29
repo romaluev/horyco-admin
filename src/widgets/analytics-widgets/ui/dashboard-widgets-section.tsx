@@ -2,8 +2,9 @@
 
 import { useMemo, type ComponentType } from 'react'
 
-import { KpiType } from '@/shared/api/graphql'
 import { useTranslation } from 'react-i18next'
+
+import { KpiType } from '@/shared/api/graphql'
 
 import {
   useRankedList,

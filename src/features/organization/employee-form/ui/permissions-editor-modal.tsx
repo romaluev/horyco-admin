@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Copy, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import {
   Alert,
@@ -139,7 +139,7 @@ export const PermissionsEditorModal = ({
     if (!acc[perm.category]) {
       acc[perm.category] = []
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     acc[perm.category]!.push(perm)
     return acc
   }, {})

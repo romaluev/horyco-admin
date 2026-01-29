@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { WRITEOFF_REASON_LABELS, type WriteoffReason } from '../model/types'
 
 interface IWriteoffReasonBadgeProps {

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import {
   IconChartBar,
   IconChartPie,
@@ -14,6 +14,7 @@ import {
   IconUsers,
   IconUsersGroup,
 } from '@tabler/icons-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'

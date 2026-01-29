@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 
 import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconChefHat } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { formatCurrency } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'

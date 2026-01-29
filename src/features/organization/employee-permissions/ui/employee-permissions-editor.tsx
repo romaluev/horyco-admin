@@ -6,8 +6,8 @@ import { Loader2 } from 'lucide-react'
 
 import { BaseError, BaseLoading, Button, Alert, AlertDescription } from '@/shared/ui'
 
-import { employeeApi } from '@/entities/organization/employee'
 import { useGetAllRoles } from '@/entities/auth/role'
+import { employeeApi } from '@/entities/organization/employee'
 
 import { BranchPermissionManager } from './branch-permission-manager'
 

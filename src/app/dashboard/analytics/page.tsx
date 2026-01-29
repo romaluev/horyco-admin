@@ -8,7 +8,6 @@
 import * as React from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconChartBar,
@@ -24,6 +23,8 @@ import {
   IconUsers,
   IconUsersGroup,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'

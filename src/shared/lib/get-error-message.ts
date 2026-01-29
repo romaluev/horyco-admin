@@ -43,7 +43,7 @@ export const getErrorMessage = (error: unknown, defaultMessage: string): string 
 
         // Check for validation errors first
         if ('validationErrors' in apiError && Array.isArray(apiError.validationErrors)) {
-          const validationErrors = apiError.validationErrors as Array<{ messages?: string[] }>
+          const validationErrors = apiError.validationErrors as { messages?: string[] }[]
           const firstError = validationErrors[0]
           if (firstError?.messages?.[0]) {
             const message = firstError.messages[0]

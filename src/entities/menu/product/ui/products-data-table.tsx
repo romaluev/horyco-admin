@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+
 import { Pencil, Trash } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'

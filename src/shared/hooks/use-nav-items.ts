@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+
 import { PERMISSIONS } from '@/shared/lib/permissions'
+
 import type { NavItem } from '../types'
 
 export function useNavItems() {

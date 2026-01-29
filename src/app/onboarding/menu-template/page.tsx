@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import { Checkbox } from '@/shared/ui/base/checkbox'
 import {

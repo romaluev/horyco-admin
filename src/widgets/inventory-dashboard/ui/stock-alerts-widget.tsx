@@ -2,11 +2,11 @@
 
 import { Bell, Check } from 'lucide-react'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS } from '@/shared/types/inventory'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
-import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS } from '@/shared/types/inventory'
 
 import { useStockAlerts, useAcknowledgeAlert } from '@/entities/inventory/stock'
 

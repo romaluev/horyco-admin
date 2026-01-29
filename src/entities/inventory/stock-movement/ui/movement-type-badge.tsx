@@ -13,12 +13,12 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
-import { Badge } from '@/shared/ui/base/badge'
 import {
   MOVEMENT_TYPES,
   MOVEMENT_TYPE_LABELS,
   type MovementType,
 } from '@/shared/types/inventory'
+import { Badge } from '@/shared/ui/base/badge'
 
 interface IMovementTypeBadgeProps {
   type: MovementType

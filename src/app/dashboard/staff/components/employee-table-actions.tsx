@@ -1,7 +1,6 @@
 'use client'
 
 import { MoreHorizontal } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -12,14 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui'
 
+import { GenerateInviteLinkButton } from '@/features/auth/staff-invite'
+import { GeneratePinButton } from '@/features/menu/pin-actions'
 import {
   ActivateEmployeeButton,
   DeactivateEmployeeButton,
   DeleteEmployeeButton,
 } from '@/features/organization/employee-actions'
 import { UpdateEmployeeDialog } from '@/features/organization/employee-form'
-import { GeneratePinButton } from '@/features/menu/pin-actions'
-import { GenerateInviteLinkButton } from '@/features/auth/staff-invite'
 
 import type { IEmployee } from '@/entities/organization/employee'
 import type { JSX } from 'react'

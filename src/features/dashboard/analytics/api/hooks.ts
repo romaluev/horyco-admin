@@ -5,8 +5,6 @@
 
 import { useQuery } from '@tanstack/react-query'
 
-import type { IPeriodInput } from '@/shared/api/graphql'
-
 import {
   getSalesOverview,
   getProductAnalytics,
@@ -26,6 +24,9 @@ import {
   getAlertSummary,
   getAlerts,
 } from './client'
+
+import type { IPeriodInput } from '@/shared/api/graphql'
+
 
 // 5 minute stale time as per API caching spec
 const FIVE_MINUTES = 5 * 60 * 1000

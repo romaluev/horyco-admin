@@ -1,13 +1,12 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useAddCountItem } from '@/entities/inventory/inventory-count/model/mutations'
-import { useGetStock } from '@/entities/inventory/stock/model/queries'
 
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
 import {
   Form,
   FormControl,
@@ -26,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Select,
   SelectContent,
@@ -33,6 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/base/select'
+
+import { useAddCountItem } from '@/entities/inventory/inventory-count/model/mutations'
+import { useGetStock } from '@/entities/inventory/stock/model/queries'
 
 const addItemSchema = z.object({
   itemId: z.string().min(1, 'Выберите товар'),

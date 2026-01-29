@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import { Link } from '@tanstack/react-router'
-import { usePathname, useRouter } from '@/shared/lib/navigation'
+
 
 import {
   IconCheck,
@@ -17,17 +17,16 @@ import {
   IconSunMoon,
   IconUserCircle,
 } from '@tabler/icons-react'
-import { useTheme } from './ThemeToggle/theme-provider'
 import { useTranslation } from 'react-i18next'
 
+import logo from '@/shared/assets/logo.png'
+import { getSettingsNavItem } from '@/shared/config/data'
 import {
-  Language,
   LANGUAGE_NAMES,
   SUPPORTED_LANGUAGES,
 } from '@/shared/config/i18n'
-
-import logo from '@/shared/assets/logo.png'
-import { getNavItems, getSettingsNavItem } from '@/shared/config/data'
+import { useNavItems } from '@/shared/hooks/use-nav-items'
+import { usePathname, useRouter } from '@/shared/lib/navigation'
 import {
   hasPermissionAnyBranch,
   hasAllPermissionsAnyBranch,
@@ -77,10 +76,14 @@ import { UserAvatarProfile } from '@/shared/ui/user-avatar-profile'
 import { useAuthStore } from '@/entities/auth/auth/model/store'
 import { useGetAllBranches, useBranchStore } from '@/entities/organization/branch'
 import { AnalyticsSidebarSection } from '@/features/dashboard/analytics'
-import { useNavItems } from '@/shared/hooks/use-nav-items'
 
 import { BranchSelector } from '../branch-selector'
 import { Icons } from '../icons'
+import { useTheme } from './ThemeToggle/theme-provider'
+
+import type { getNavItems} from '@/shared/config/data';
+import type {
+  Language} from '@/shared/config/i18n';
 
 /**
  * Filter nav items based on user permissions
@@ -176,7 +179,7 @@ function NavItemWithSub({
                     key={subItem.title}
                     to={subItem.url}
                     className={`hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
-                      pathname === subItem.url || pathname.startsWith(subItem.url + '/')
+                      pathname === subItem.url || pathname.startsWith(`${subItem.url  }/`)
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
                         : ''
                     }`}
@@ -214,7 +217,7 @@ function NavItemWithSub({
                   <SidebarMenuSubButton
                     className="!p-3"
                     asChild
-                    isActive={pathname === subItem.url || pathname.startsWith(subItem.url + '/')}
+                    isActive={pathname === subItem.url || pathname.startsWith(`${subItem.url  }/`)}
                   >
                     <Link
                       to={subItem.url}

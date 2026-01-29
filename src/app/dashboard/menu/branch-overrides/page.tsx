@@ -6,9 +6,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 
 import { Building2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@/shared/ui/base/badge'
 import {
@@ -35,9 +36,9 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetAllBranches } from '@/entities/organization/branch'
 import { useGetProductBranchOverrides } from '@/entities/menu/branch-override'
 import { useGetProducts } from '@/entities/menu/product'
+import { useGetAllBranches } from '@/entities/organization/branch'
 import {
   CreateBranchOverrideDialog,
   EditBranchOverrideDialog,

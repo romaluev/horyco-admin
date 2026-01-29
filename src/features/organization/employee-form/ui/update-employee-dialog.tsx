@@ -20,8 +20,8 @@ import {
   TabsTrigger,
 } from '@/shared/ui'
 
-import { useUpdateEmployee } from '@/entities/organization/employee'
 import { PinManagementSection } from '@/entities/menu/pin'
+import { useUpdateEmployee } from '@/entities/organization/employee'
 
 import { UpdateBranchPermissionsManager } from './update-branch-permissions-manager'
 import { UpdateEmployeeFormBasic } from './update-employee-form-basic'
@@ -63,7 +63,7 @@ export const UpdateEmployeeDialog = ({
   }
 
   const [selectedBranchIds, setSelectedBranchIds] = useState<number[]>(
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+     
     getInitialBranchIds()
   )
 

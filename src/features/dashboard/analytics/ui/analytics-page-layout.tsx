@@ -31,8 +31,8 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { PERIOD_OPTIONS } from '@/features/dashboard/view-builder/model/constants'
 
-import { useAnalyticsPageAccess } from '../model/hooks'
 import { LockedPageState } from './locked-page-state'
+import { useAnalyticsPageAccess } from '../model/hooks'
 
 import type { AnalyticsPageCode } from '../model/types'
 import type { PeriodType } from '@/shared/api/graphql'

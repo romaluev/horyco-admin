@@ -1,12 +1,12 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useCancelPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
 
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -15,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Textarea } from '@/shared/ui/base/textarea'
 import {
   Form,
   FormControl,
@@ -25,6 +23,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useCancelPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
 
 const cancelSchema = z.object({
   reason: z.string().min(1, 'Укажите причину отмены'),

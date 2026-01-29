@@ -2,9 +2,10 @@
 
 import { Toaster as Sonner } from 'sonner'
 
+import { useTheme } from '@/shared/ui/layout/ThemeToggle/theme-provider'
+
 import type { ToasterProps } from 'sonner'
 
-import { useTheme } from '@/shared/ui/layout/ThemeToggle/theme-provider'
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme } = useTheme()

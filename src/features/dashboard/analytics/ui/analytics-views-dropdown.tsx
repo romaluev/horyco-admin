@@ -13,9 +13,10 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconCheck, IconPin, IconPlus, IconSettings } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
+
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -30,8 +31,8 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useViews } from '@/entities/dashboard/view'
 
-import { useDefaultViews, useViewAccess } from '../model/hooks'
 import { ViewsUpgradePrompt } from './locked-page-state'
+import { useDefaultViews, useViewAccess } from '../model/hooks'
 
 import type { AnalyticsPageCode, IDefaultView } from '../model/types'
 import type { IView } from '@/shared/api/graphql'

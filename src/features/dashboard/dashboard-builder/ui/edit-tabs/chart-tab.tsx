@@ -2,7 +2,6 @@
 
 import { useTranslation } from 'react-i18next'
 
-import { KpiType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import {
   Card,
@@ -22,6 +21,8 @@ import {
 import { KPI_CONFIG, CHART_TYPE_OPTIONS, type ChartType } from '@/entities/dashboard/dashboard'
 
 import { ChartTypePreview, MainChartPreview } from '../chart-previews'
+
+import type { KpiType } from '@/shared/api/graphql'
 
 interface IChartTabProps {
   chartType: ChartType

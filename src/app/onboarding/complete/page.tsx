@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   AlertCircle,
@@ -13,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import ProductionDetailPage from '@/app/dashboard/inventory/production/[id]/page'

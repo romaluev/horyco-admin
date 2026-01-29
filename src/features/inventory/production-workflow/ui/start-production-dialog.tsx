@@ -1,13 +1,12 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useStartProduction } from '@/entities/inventory/production-order/model/mutations'
-import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
 
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
 import {
   Form,
   FormControl,
@@ -26,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
 import {
   Table,
   TableBody,
@@ -34,6 +32,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
+
+import { useStartProduction } from '@/entities/inventory/production-order/model/mutations'
+
+import type { IProductionOrder } from '@/entities/inventory/production-order/model/types'
 
 interface StartProductionDialogProps {
   order: IProductionOrder

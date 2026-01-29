@@ -1,10 +1,13 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
-import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
+
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { ClipboardCheck, FileWarning, Clock } from 'lucide-react'
 
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
@@ -12,15 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/inventory/writeoff'
 import {
   useGetInventoryCounts,
   COUNT_TYPE_LABELS,
 } from '@/entities/inventory/inventory-count'
+import { useGetWriteoffs, WRITEOFF_REASON_LABELS } from '@/entities/inventory/writeoff'
 
 interface IPendingApprovalsWidgetProps {
   warehouseId?: number

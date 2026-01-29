@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'

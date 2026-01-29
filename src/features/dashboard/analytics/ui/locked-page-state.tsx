@@ -8,12 +8,11 @@
 'use client'
 
 import * as React from 'react'
+
+import { IconLock } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
 import { useRouter } from '@/shared/lib/navigation'
-
-import { IconLock } from '@tabler/icons-react'
-
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,

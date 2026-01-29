@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
 import { BaseError, BaseLoading } from '@/shared/ui'
 
+import { EmployeeTableActions } from '@/app/dashboard/staff/components/employee-table-actions'
 import {
   useGetEmployees,
   EmployeeTable,
@@ -13,7 +15,6 @@ import {
 } from '@/entities/organization/employee'
 import { CreateEmployeeDialog } from '@/features/organization/employee-form'
 
-import { EmployeeTableActions } from '@/app/dashboard/staff/components/employee-table-actions'
 
 export const Route = createFileRoute('/dashboard/_layout/staff/employees')({
   component: EmployeesPage,

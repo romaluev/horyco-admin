@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import {
   ArrowRight,
   Building2,
@@ -8,6 +8,7 @@ import {
   Plus,
   Settings,
 } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/shared/ui/base/button'
 import {

@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 
 import { Upload, Loader2, X, CheckCircle2 } from 'lucide-react'
 
+import { uploadFile, deleteFile } from '@/shared/file/model/file-api'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
 import { Card } from '@/shared/ui/base/card'
@@ -11,7 +12,6 @@ import { Input } from '@/shared/ui/base/input'
 import { Label } from '@/shared/ui/base/label'
 import { Progress } from '@/shared/ui/base/progress'
 
-import { uploadFile, deleteFile } from '@/shared/file/model/file-api'
 
 import type { EntityType, FileUploadResponse } from '@/shared/file/model/file-types'
 

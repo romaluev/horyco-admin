@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
@@ -10,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { formatCurrency } from '@/shared/lib/format'
+import { useRouter } from '@/shared/lib/navigation'
 import {
   AlertDialog,
   AlertDialogAction,

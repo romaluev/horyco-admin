@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import {
   KBarAnimator,
@@ -13,6 +12,7 @@ import {
 } from 'kbar'
 
 import { getNavItems } from '@/shared/config/data'
+import { useRouter } from '@/shared/lib/navigation'
 
 import RenderResults from './render-result'
 

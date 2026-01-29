@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react'
 
-import { useTranslation } from 'react-i18next'
 import { IconTrendingDown, IconTrendingUp, IconMinus } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { KpiType } from '@/shared/api/graphql'

@@ -1,15 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
-import type { IPurchaseOrder, IPurchaseOrderItem } from '@/entities/inventory/purchase-order/model/types'
-
+import { Button } from '@/shared/ui/base/button'
+import { DatePicker } from '@/shared/ui/base/date-picker'
 import {
   Dialog,
   DialogContent,
@@ -18,9 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
 import { Label } from '@/shared/ui/base/label'
 import {
   Table,
@@ -30,15 +36,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/ui/base/table'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/ui/base/form'
-import { DatePicker } from '@/shared/ui/base/date-picker'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
+
+import type { IPurchaseOrder, IPurchaseOrderItem } from '@/entities/inventory/purchase-order/model/types'
+
 
 const receiveSchema = z.object({
   receiveDate: z.date({ required_error: 'Укажите дату приёмки' }),

@@ -1,10 +1,10 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
-import { format } from 'date-fns'
 import { IconCrown, IconPencil } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { GroupBy, PeriodType } from '@/shared/api/graphql'
@@ -20,14 +20,13 @@ import {
   type IDashboardConfig,
   type IPeriodInput,
 } from '@/entities/dashboard/dashboard'
-
 import { DashboardEditMode } from '@/features/dashboard/dashboard-builder'
 import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
-import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'
-import { DashboardKpiCards } from './dashboard-kpi-cards'
-import { DashboardPeriodSelector } from './dashboard-period-selector'
 import { DashboardBranchSelector } from './dashboard-branch-selector'
+import { DashboardKpiCards } from './dashboard-kpi-cards'
+import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'
+import { DashboardPeriodSelector } from './dashboard-period-selector'
 
 export function AnalyticsOverview() {
   const { t } = useTranslation('dashboard')
@@ -146,7 +145,7 @@ export function AnalyticsOverview() {
             ) {
               toast.error(t('dashboard.overview.messages.proOnly'))
             } else {
-              toast.error(t('dashboard.overview.messages.saveFailed') + ': ' + errorMessage)
+              toast.error(`${t('dashboard.overview.messages.saveFailed')  }: ${  errorMessage}`)
             }
           },
         }

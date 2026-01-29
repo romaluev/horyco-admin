@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 
 import { UserIcon } from 'lucide-react'
 
+import { getFileById } from '@/shared/file/model/api'
 import { getNameInitials } from '@/shared/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 
-import { getFileById } from '@/shared/file/model/api'
 
 import type { IUser } from '@/entities/auth/auth/model'
 

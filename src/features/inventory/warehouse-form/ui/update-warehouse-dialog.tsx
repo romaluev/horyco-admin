@@ -24,10 +24,11 @@ import { Input } from '@/shared/ui/base/input'
 import { Switch } from '@/shared/ui/base/switch'
 
 import { useUpdateWarehouse } from '@/entities/inventory/warehouse'
+
 import { warehouseFormSchema } from '../model/schema'
 
-import type { IWarehouse } from '@/entities/inventory/warehouse'
 import type { WarehouseFormValues } from '../model/schema'
+import type { IWarehouse } from '@/entities/inventory/warehouse'
 
 interface UpdateWarehouseDialogProps {
   warehouse: IWarehouse

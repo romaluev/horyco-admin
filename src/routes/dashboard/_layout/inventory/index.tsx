@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { RefreshCw } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'

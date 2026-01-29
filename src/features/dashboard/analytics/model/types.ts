@@ -454,7 +454,7 @@ export interface IBranchComparisonData {
 }
 
 export interface IBranchBenchmarkData {
-  branches: Array<{
+  branches: {
     id: number
     name: string
     metrics: {
@@ -464,7 +464,7 @@ export interface IBranchBenchmarkData {
       customerCount: number
       retentionRate: number
     }
-  }>
+  }[]
 }
 
 export interface IBranchTrendPoint {
@@ -474,11 +474,11 @@ export interface IBranchTrendPoint {
 }
 
 export interface IBranchTrendsData {
-  branches: Array<{
+  branches: {
     id: number
     name: string
     trend: IBranchTrendPoint[]
-  }>
+  }[]
 }
 
 // ============================================

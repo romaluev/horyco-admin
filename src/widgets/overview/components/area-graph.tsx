@@ -1,7 +1,7 @@
 'use client'
 
-import { useTranslation } from 'react-i18next'
 import { IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
 import {

@@ -1,8 +1,9 @@
 import { Suspense } from 'react'
 
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Helmet } from 'react-helmet-async'
+
 import { Loader2 } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import logo from '@/shared/assets/logo.png'
 

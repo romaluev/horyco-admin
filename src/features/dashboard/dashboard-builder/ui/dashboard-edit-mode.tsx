@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconLayoutDashboard,
@@ -10,14 +9,17 @@ import {
   IconSettings,
   IconCheck,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
-import { KpiType } from '@/shared/api/graphql'
+
 import { Button } from '@/shared/ui/base/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 
-import type { IDashboardConfig, IKpiSlot, IDashboardWidget, ChartType } from '@/entities/dashboard/dashboard'
-
 import { KpiTab, ChartTab, WidgetsTab } from './edit-tabs'
+
+import type { IDashboardConfig, IKpiSlot, IDashboardWidget, ChartType } from '@/entities/dashboard/dashboard'
+import type { KpiType } from '@/shared/api/graphql'
+
 
 interface IDashboardEditModeProps {
   config: IDashboardConfig

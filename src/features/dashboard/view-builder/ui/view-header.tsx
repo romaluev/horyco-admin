@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { IconCheck, IconTrash, IconX } from '@tabler/icons-react'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
 

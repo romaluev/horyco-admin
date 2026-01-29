@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -18,6 +17,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 import { BaseLoading } from '@/shared/ui'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'

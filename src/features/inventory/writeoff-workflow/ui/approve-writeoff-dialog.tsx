@@ -2,9 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useApproveWriteoff } from '@/entities/inventory/writeoff/model/mutations'
-import { WRITEOFF_REASON_LABELS, type IWriteoff } from '@/entities/inventory/writeoff/model/types'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +12,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useApproveWriteoff } from '@/entities/inventory/writeoff/model/mutations'
+import { WRITEOFF_REASON_LABELS, type IWriteoff } from '@/entities/inventory/writeoff/model/types'
+
 
 interface ApproveWriteoffDialogProps {
   writeoff: IWriteoff

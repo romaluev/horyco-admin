@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 
 import { Plus } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/shared/ui/base/button'
 
 export function ProductsHeader() {

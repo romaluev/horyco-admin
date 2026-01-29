@@ -12,9 +12,9 @@ import {
   Switch,
 } from '@/shared/ui'
 
+import { useGetAllRoles } from '@/entities/auth/role'
 import { useGetAllBranches } from '@/entities/organization/branch'
 import { employeeApi } from '@/entities/organization/employee'
-import { useGetAllRoles } from '@/entities/auth/role'
 import { PermissionCopyDialog } from '@/features/organization/employee-permissions/ui/permission-copy-dialog'
 
 import { PermissionsEditorModal } from './permissions-editor-modal'

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 
+import { ONBOARDING_STEPS, getStepRoute } from '@/shared/config/onboarding'
 import { useRouter } from '@/shared/lib/navigation'
 
-import { ONBOARDING_STEPS, getStepRoute } from '@/shared/config/onboarding'
 
 import { useGetOnboardingProgress } from './queries'
 

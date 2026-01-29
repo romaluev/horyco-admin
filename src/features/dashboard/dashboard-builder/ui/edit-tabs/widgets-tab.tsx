@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+
 
 import {
   DndContext,
@@ -20,6 +20,7 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/shared/lib/utils'
 import {

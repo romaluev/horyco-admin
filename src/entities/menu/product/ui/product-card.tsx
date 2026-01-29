@@ -1,9 +1,8 @@
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { Pen } from 'lucide-react'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,

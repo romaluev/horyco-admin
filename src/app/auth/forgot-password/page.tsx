@@ -1,6 +1,7 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
+
 import { useTranslation } from 'react-i18next'
 
 import logo from '@/shared/assets/logo.png'

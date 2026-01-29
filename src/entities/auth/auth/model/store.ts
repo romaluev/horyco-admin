@@ -2,6 +2,7 @@ import { toast } from 'sonner'
 import { create } from 'zustand'
 
 import { clearTokens } from '@/shared/lib/token-manager'
+
 import { authApi } from '@/entities/auth/auth/model/api'
 import { useBranchStore } from '@/entities/organization/branch'
 

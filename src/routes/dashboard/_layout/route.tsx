@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 
-import Cookies from 'js-cookie'
-
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
 
-import { SidebarInset, SidebarProvider } from '@/shared/ui/base/sidebar'
-import KBar from '@/shared/ui/kbar'
-import AppSidebar from '@/shared/ui/layout/app-sidebar'
-import Header from '@/shared/ui/layout/header'
+import Cookies from 'js-cookie'
+
 
 import {
   getAccessToken,
   getOnboardingProgress,
   getRouteForStep,
 } from '@/shared/lib/auth-guard'
+import { SidebarInset, SidebarProvider } from '@/shared/ui/base/sidebar'
+import KBar from '@/shared/ui/kbar'
+import AppSidebar from '@/shared/ui/layout/app-sidebar'
+import Header from '@/shared/ui/layout/header'
+
 
 import { OnboardingReminderDialog } from '@/widgets/onboarding-reminder-dialog'
 

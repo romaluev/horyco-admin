@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import FinancialAnalyticsPage from '@/app/dashboard/analytics/financial/page'

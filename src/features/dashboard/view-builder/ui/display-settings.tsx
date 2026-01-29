@@ -23,6 +23,11 @@ import {
 import { Separator } from '@/shared/ui/base/separator'
 
 import { GROUP_BY_OPTIONS } from '../model/constants'
+import {
+  selectAvailableColumns,
+  selectDatasetConfig,
+  useViewBuilderStore,
+} from '../model/store'
 
 const SORT_BY_LABELS: Record<SortBy, string> = {
   [SortBy.REVENUE]: 'Выручка',
@@ -33,11 +38,6 @@ const SORT_BY_LABELS: Record<SortBy, string> = {
   [SortBy.CUSTOMERS]: 'Клиенты',
   [SortBy.GROWTH]: 'Рост',
 }
-import {
-  selectAvailableColumns,
-  selectDatasetConfig,
-  useViewBuilderStore,
-} from '../model/store'
 
 export function DisplaySettings() {
   const [isOpen, setIsOpen] = React.useState(false)

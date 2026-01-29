@@ -1,8 +1,7 @@
 import * as React from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { SortBy, SortDirection } from '@/shared/api/graphql'
+import { useRouter } from '@/shared/lib/navigation'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useDeleteView, useUpdateView, useViewById } from '@/entities/dashboard/view'

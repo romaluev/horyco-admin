@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
 
 import logo from '@/shared/assets/logo.png'

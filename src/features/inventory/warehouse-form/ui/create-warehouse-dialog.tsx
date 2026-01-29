@@ -3,9 +3,9 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import { IconPlus } from '@tabler/icons-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 import {
@@ -33,8 +33,8 @@ import {
 } from '@/shared/ui/base/select'
 import { Switch } from '@/shared/ui/base/switch'
 
-import { useGetAllBranches } from '@/entities/organization/branch'
 import { useCreateWarehouse } from '@/entities/inventory/warehouse'
+import { useGetAllBranches } from '@/entities/organization/branch'
 
 import { warehouseFormSchema } from '../model/schema'
 

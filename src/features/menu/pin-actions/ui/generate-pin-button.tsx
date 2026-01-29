@@ -7,8 +7,8 @@
 
 import { useState } from 'react'
 
-import { useTranslation } from 'react-i18next'
 import { KeyRound } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/base/button'
 

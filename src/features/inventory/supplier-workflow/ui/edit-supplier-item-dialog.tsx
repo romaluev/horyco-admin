@@ -1,13 +1,11 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useUpdateSupplierItem } from '@/entities/inventory/supplier/model/mutations'
-import type { ISupplierItem } from '@/entities/inventory/supplier/model/types'
-
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -16,10 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
-import { Textarea } from '@/shared/ui/base/textarea'
-import { Switch } from '@/shared/ui/base/switch'
 import {
   Form,
   FormControl,
@@ -29,6 +23,14 @@ import {
   FormMessage,
   FormDescription,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+import { Switch } from '@/shared/ui/base/switch'
+import { Textarea } from '@/shared/ui/base/textarea'
+
+import { useUpdateSupplierItem } from '@/entities/inventory/supplier/model/mutations'
+
+import type { ISupplierItem } from '@/entities/inventory/supplier/model/types'
+
 
 const editItemSchema = z.object({
   supplierSku: z.string().optional(),

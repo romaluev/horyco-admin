@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 
 import { Link } from '@tanstack/react-router'
 
 import { IconBell, IconCheck, IconAlertTriangle, IconPackageOff, IconChecks } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
 import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS, type AlertType } from '@/shared/types/inventory'
 import { Badge } from '@/shared/ui/base/badge'

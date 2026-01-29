@@ -2,9 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useSendPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
-import type { IPurchaseOrder } from '@/entities/inventory/purchase-order/model/types'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useSendPurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
+
+import type { IPurchaseOrder } from '@/entities/inventory/purchase-order/model/types'
+
 
 interface SendPODialogProps {
   order: IPurchaseOrder

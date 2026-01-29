@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 
+import { useSearch, useNavigate } from '@tanstack/react-router'
 import {
   type ColumnFiltersState,
   type PaginationState,
@@ -20,7 +21,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useSearch, useNavigate } from '@tanstack/react-router'
 
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback'
 

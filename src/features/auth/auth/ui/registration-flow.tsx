@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2, Check, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Alert, AlertDescription } from '@/shared/ui/base/alert'
 import { Button } from '@/shared/ui/base/button'
 import {

@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { StarsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Input, Textarea } from '@/shared/ui'
 import { Button } from '@/shared/ui/base/button'
 import {

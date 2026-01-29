@@ -12,9 +12,10 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { IconInfoCircle, IconTrendingUp } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
+
 
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'

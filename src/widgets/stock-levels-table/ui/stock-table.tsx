@@ -4,9 +4,9 @@ import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
 
-import { ChevronDown, ChevronRight } from 'lucide-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 
 import { formatPrice } from '@/shared/lib/format'
 import { Button } from '@/shared/ui/base/button'

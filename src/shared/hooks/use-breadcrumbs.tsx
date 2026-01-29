@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { usePathname } from '@/shared/lib/navigation'

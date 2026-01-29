@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
@@ -13,6 +12,7 @@ import { getNextStep, getPreviousStep } from '@/shared/config/onboarding'
 import { UZBEKISTAN_CITIES } from '@/shared/config/uzbekistan-locations'
 import { useFormPersist } from '@/shared/hooks/use-form-persist'
 import { useUnsavedChangesWarning } from '@/shared/hooks/use-unsaved-changes-warning'
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import {
   Card,

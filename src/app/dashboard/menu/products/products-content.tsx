@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+
 import { ProductsDataTable } from '@/entities/menu/product/ui/products-data-table'
 import { ProductsGridView } from '@/entities/menu/product/ui/products-grid-view'
 import { ProductsListSkeleton } from '@/entities/menu/product/ui/products-list-skeleton'

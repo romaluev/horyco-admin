@@ -34,9 +34,9 @@ import {
 } from '@/shared/ui/base/select'
 import { Textarea } from '@/shared/ui/base/textarea'
 
+import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
 import { useAdjustStock } from '@/entities/inventory/stock'
 import { useGetWarehouses } from '@/entities/inventory/warehouse'
-import { useGetInventoryItems } from '@/entities/inventory/inventory-item'
 
 import { stockAdjustmentSchema, adjustmentReasons } from '../model/schema'
 

@@ -2,9 +2,6 @@
 
 import { Loader2 } from 'lucide-react'
 
-import { useCompleteCount } from '@/entities/inventory/inventory-count/model/mutations'
-import type { IInventoryCount, ICountVarianceSummary } from '@/entities/inventory/inventory-count/model/types'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/base/alert-dialog'
+
+import { useCompleteCount } from '@/entities/inventory/inventory-count/model/mutations'
+
+import type { IInventoryCount, ICountVarianceSummary } from '@/entities/inventory/inventory-count/model/types'
+
 
 interface CompleteCountDialogProps {
   count: IInventoryCount

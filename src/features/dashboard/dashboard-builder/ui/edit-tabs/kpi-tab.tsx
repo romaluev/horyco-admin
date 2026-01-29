@@ -22,7 +22,6 @@ import {
 import { IconTrendingUp } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-import { KpiType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import {
   Card,
@@ -36,6 +35,8 @@ import { KPI_CONFIG, type IKpiSlot } from '@/entities/dashboard/dashboard'
 
 import { MiniSparkline } from '../chart-previews'
 import { SortableKpiCard, KpiCardOverlay } from '../sortable-cards'
+
+import type { KpiType } from '@/shared/api/graphql'
 
 interface IKpiTabProps {
   kpiSlots: IKpiSlot[]

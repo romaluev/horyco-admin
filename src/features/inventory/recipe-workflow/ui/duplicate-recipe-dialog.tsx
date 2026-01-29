@@ -1,14 +1,12 @@
 'use client'
 
-import { useRouter } from '@/shared/lib/navigation'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { useDuplicateRecipe } from '@/entities/inventory/recipe/model/mutations'
-import type { IRecipe } from '@/entities/inventory/recipe/model/types'
-
+import { useRouter } from '@/shared/lib/navigation'
+import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
   DialogContent,
@@ -17,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/base/dialog'
-import { Button } from '@/shared/ui/base/button'
-import { Input } from '@/shared/ui/base/input'
 import {
   Form,
   FormControl,
@@ -27,6 +23,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/base/form'
+import { Input } from '@/shared/ui/base/input'
+
+import { useDuplicateRecipe } from '@/entities/inventory/recipe/model/mutations'
+
+import type { IRecipe } from '@/entities/inventory/recipe/model/types'
 
 const duplicateSchema = z.object({
   name: z.string().min(1, 'Введите название'),

@@ -15,8 +15,8 @@ import {
   Settings,
   Trash2,
 } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
+
 import { BaseLoading } from '@/shared/ui'
 import {
   Accordion,

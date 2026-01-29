@@ -3,8 +3,9 @@ import { Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { HelmetProvider } from 'react-helmet-async'
+
 import NProgress from 'nprogress'
+import { HelmetProvider } from 'react-helmet-async'
 
 import '@/shared/config/i18n'
 import { BaseLoading } from '@/shared/ui'

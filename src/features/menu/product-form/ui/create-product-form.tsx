@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StarsIcon } from 'lucide-react'
@@ -10,6 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+import { useRouter } from '@/shared/lib/navigation'
 import {
   Button,
   FormControl,

@@ -7,13 +7,13 @@
 'use client'
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Link } from '@tanstack/react-router'
-import { usePathname } from '@/shared/lib/navigation'
 
 import { IconChevronRight, IconPlus } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 
+import { usePathname } from '@/shared/lib/navigation'
 import {
   Collapsible,
   CollapsibleContent,

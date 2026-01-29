@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { useRouter } from '@/shared/lib/navigation'
-
 import { X, Filter } from 'lucide-react'
 
+import { useRouter } from '@/shared/lib/navigation'
 import { Button } from '@/shared/ui/base/button'
 import { Input } from '@/shared/ui/base/input'
 import {

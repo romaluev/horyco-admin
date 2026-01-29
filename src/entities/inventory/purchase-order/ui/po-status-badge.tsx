@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { PO_STATUS_LABELS, type POStatus } from '../model/types'
 
 interface IPOStatusBadgeProps {

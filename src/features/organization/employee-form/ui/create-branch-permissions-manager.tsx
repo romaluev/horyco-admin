@@ -12,8 +12,8 @@ import {
   Switch,
 } from '@/shared/ui'
 
-import { useGetAllBranches } from '@/entities/organization/branch'
 import { useGetAllRoles } from '@/entities/auth/role'
+import { useGetAllBranches } from '@/entities/organization/branch'
 
 import { PermissionsEditorModal } from './permissions-editor-modal'
 
@@ -22,7 +22,7 @@ import type { IPermission } from '@/entities/organization/employee'
 interface CreateBranchPermissionsManagerProps {
   selectedBranchIds: number[]
   onBranchesChange: (branchIds: number[]) => void
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   onPermissionsChange?: (branchId: number, permissionIds: number[]) => void
   branchPermissions: Record<number, number[]> // branchId -> permissionIds
 }
@@ -31,7 +31,7 @@ interface CreateBranchPermissionsManagerProps {
 export const CreateBranchPermissionsManager = ({
   selectedBranchIds,
   onBranchesChange,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   onPermissionsChange,
   branchPermissions,
 }: CreateBranchPermissionsManagerProps) => {

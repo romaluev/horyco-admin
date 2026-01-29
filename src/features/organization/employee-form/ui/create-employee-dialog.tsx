@@ -18,8 +18,8 @@ import {
   DialogTrigger,
 } from '@/shared/ui'
 
-import { useCreateEmployee } from '@/entities/organization/employee'
 import { GeneratePinDialog } from '@/entities/menu/pin'
+import { useCreateEmployee } from '@/entities/organization/employee'
 
 import { CreateBranchPermissionsManager } from './create-branch-permissions-manager'
 import { EmployeeFormBasic } from './employee-form-basic'
@@ -73,7 +73,7 @@ export const CreateEmployeeDialog = () => {
       formattedBranchPermissions[Number(branchId)] = { permissionIds }
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     createEmployee({
       ...data,
       activeBranchId: activeBranchId!,

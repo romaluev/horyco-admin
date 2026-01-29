@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   IconTrendingDown,
@@ -20,6 +19,7 @@ import {
   IconPercentage,
   IconActivity,
 } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, ResponsiveContainer } from 'recharts'
 
 import { KpiType, Trend } from '@/shared/api/graphql'

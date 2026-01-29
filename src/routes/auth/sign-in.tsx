@@ -1,9 +1,11 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
+
 import { Helmet } from 'react-helmet-async'
+
+import { getAccessToken } from '@/shared/lib/auth-guard'
 
 import SignInViewPage from '@/entities/auth/auth/ui/sign-in-view'
 
-import { getAccessToken } from '@/shared/lib/auth-guard'
 
 export const Route = createFileRoute('/auth/sign-in')({
   validateSearch: (search: Record<string, unknown>) => ({

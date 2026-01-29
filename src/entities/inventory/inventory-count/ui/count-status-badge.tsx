@@ -1,6 +1,7 @@
 'use client'
 
 import { Badge } from '@/shared/ui/base/badge'
+
 import { COUNT_STATUS_LABELS, type CountStatus } from '../model/types'
 
 interface ICountStatusBadgeProps {

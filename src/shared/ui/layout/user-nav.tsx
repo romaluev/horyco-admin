@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
-import { useRouter } from '@/shared/lib/navigation'
 
 import { LogOut, User as UserIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
+import { getFileById } from '@/shared/file/model/api'
+import { useRouter } from '@/shared/lib/navigation'
 import { getNameInitials } from '@/shared/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import { Button } from '@/shared/ui/base/button'
@@ -21,7 +21,7 @@ import {
 } from '@/shared/ui/base/dropdown-menu'
 
 import { useAuthStore } from '@/entities/auth/auth/model/store'
-import { getFileById } from '@/shared/file/model/api'
+
 
 export function UserNav() {
   const { t } = useTranslation('common')

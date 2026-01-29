@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/base/avatar'
 import {
   Card,

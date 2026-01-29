@@ -1,10 +1,13 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
-import { Truck, Calendar, Clock, AlertCircle } from 'lucide-react'
+
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { Truck, Calendar, Clock, AlertCircle } from 'lucide-react'
 
+import { Badge } from '@/shared/ui/base/badge'
+import { Button } from '@/shared/ui/base/button'
 import {
   Card,
   CardContent,
@@ -12,8 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/base/card'
-import { Badge } from '@/shared/ui/base/badge'
-import { Button } from '@/shared/ui/base/button'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/inventory/purchase-order'

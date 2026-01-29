@@ -1,10 +1,11 @@
 'use client'
 
-import { ArrowLeftRight } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { ArrowLeftRight } from 'lucide-react'
+
 import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
 import { useGetMovements, MovementTypeBadge } from '@/entities/inventory/stock-movement'

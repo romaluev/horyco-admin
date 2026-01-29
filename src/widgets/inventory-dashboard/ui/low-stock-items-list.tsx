@@ -1,11 +1,12 @@
 'use client'
 
-import { AlertTriangle } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import { AlertTriangle } from 'lucide-react'
+
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Progress } from '@/shared/ui/base/progress'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
