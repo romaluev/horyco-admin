@@ -7,3 +7,5 @@ build
 *.config.ts
 .eslintrc.js
 .lintstagedrc.js
+**/*.d.ts
+src/shared/hooks/use-callback-ref.tsx

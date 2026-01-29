@@ -2,9 +2,6 @@
  * View Entity Types
  */
 
-import type {
-
-  SortBy} from '@/shared/api/graphql';
 import {
   type Dataset,
   type GroupBy,
@@ -12,7 +9,9 @@ import {
   type IViewConfigInput,
   type IViewConfigOutput,
   type PeriodType,
-  type SortDirection} from '@/shared/api/graphql'
+  type SortDirection,
+
+  SortBy} from '@/shared/api/graphql'
 
 // Re-export from GraphQL types for convenience
 export type { IView, IViewConfigOutput }
