@@ -38,9 +38,10 @@ export default function StaffInvitePage() {
           </Suspense>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            {t('pages.staffInvite.title')} {' '}
+            {t('pages.staffInvite.title')}{' '}
             <Link
-              to="/auth/sign-in" search={{ redirect: undefined }}
+              to="/auth/sign-in"
+              search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
               {t('pages.staffInvite.description')}
@@ -48,7 +49,7 @@ export default function StaffInvitePage() {
           </p>
 
           <p className="text-muted-foreground px-8 text-center text-sm">
-            {t('pages.staffInvite.title')} {' '}
+            {t('pages.staffInvite.title')}{' '}
             <a
               href="#"
               className="hover:text-primary underline underline-offset-4"

@@ -13,9 +13,11 @@ import PageContainer from '@/shared/ui/layout/page-container'
 
 import { BulkImportDialog } from '@/features/organization/branch-bulk-import'
 
-export const Route = createFileRoute('/dashboard/_layout/branches/bulk-import')({
-  component: BulkImportPage,
-})
+export const Route = createFileRoute('/dashboard/_layout/branches/bulk-import')(
+  {
+    component: BulkImportPage,
+  }
+)
 
 function BulkImportPage() {
   const navigate = useNavigate()

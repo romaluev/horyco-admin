@@ -56,7 +56,9 @@ export function CreateCountDialog() {
 
   const onSubmit = (data: InventoryCountFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as InventoryCountFormValues
 
     createCount(cleanData, {

@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 
-
 import { Link } from '@tanstack/react-router'
-
 
 import {
   IconArrowLeft,
@@ -78,7 +76,9 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const [addIngredientDialogOpen, setAddIngredientDialogOpen] = useState(false)
-  const [editingIngredient, setEditingIngredient] = useState<number | null>(null)
+  const [editingIngredient, setEditingIngredient] = useState<number | null>(
+    null
+  )
 
   const handleDelete = () => {
     deleteMutation.mutate(recipeId, {
@@ -121,10 +121,13 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
   const totalIngredients = recipe.ingredients?.length ?? 0
   const totalCost =
     recipe.ingredients?.reduce((sum, ing) => sum + ing.lineCost, 0) ?? 0
-  const costPerUnit = recipe.outputQuantity > 0 ? totalCost / recipe.outputQuantity : 0
+  const costPerUnit =
+    recipe.outputQuantity > 0 ? totalCost / recipe.outputQuantity : 0
 
   // Get the ingredient being edited
-  const ingredientToEdit = recipe.ingredients?.find((ing) => ing.id === editingIngredient)
+  const ingredientToEdit = recipe.ingredients?.find(
+    (ing) => ing.id === editingIngredient
+  )
 
   return (
     <PageContainer scrollable>
@@ -156,7 +159,10 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
               <IconRefresh className="mr-2 h-4 w-4" />
               Пересчитать
             </Button>
-            <Button variant="outline" onClick={() => setDuplicateDialogOpen(true)}>
+            <Button
+              variant="outline"
+              onClick={() => setDuplicateDialogOpen(true)}
+            >
               <IconCopy className="mr-2 h-4 w-4" />
               Дублировать
             </Button>
@@ -222,8 +228,12 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
               </div>
               {recipe.prepTimeMinutes && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Время приготовления</span>
-                  <span className="font-medium">{recipe.prepTimeMinutes} мин</span>
+                  <span className="text-muted-foreground">
+                    Время приготовления
+                  </span>
+                  <span className="font-medium">
+                    {recipe.prepTimeMinutes} мин
+                  </span>
                 </div>
               )}
               <div className="flex justify-between">
@@ -231,8 +241,10 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
                 <span className="font-medium">v{recipe.version}</span>
               </div>
               {recipe.notes && (
-                <div className="pt-2 border-t">
-                  <span className="text-muted-foreground text-sm">Примечания:</span>
+                <div className="border-t pt-2">
+                  <span className="text-muted-foreground text-sm">
+                    Примечания:
+                  </span>
                   <p className="mt-1 text-sm">{recipe.notes}</p>
                 </div>
               )}
@@ -245,22 +257,30 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Расчётная себестоимость</span>
+                <span className="text-muted-foreground">
+                  Расчётная себестоимость
+                </span>
                 <span className="text-xl font-bold">
                   {formatCurrency(recipe.calculatedCost)}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">За единицу</span>
-                <span className="font-medium">{formatCurrency(costPerUnit)}</span>
+                <span className="font-medium">
+                  {formatCurrency(costPerUnit)}
+                </span>
               </div>
               {recipe.costUpdatedAt && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Обновлено</span>
                   <span>
-                    {format(new Date(recipe.costUpdatedAt), 'dd MMM yyyy, HH:mm', {
-                      locale: ru,
-                    })}
+                    {format(
+                      new Date(recipe.costUpdatedAt),
+                      'dd MMM yyyy, HH:mm',
+                      {
+                        locale: ru,
+                      }
+                    )}
                   </span>
                 </div>
               )}
@@ -284,16 +304,20 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Всего ингредиентов: {totalIngredients}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Выход: {recipe.outputQuantity} {recipe.outputUnit || 'шт'}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Итого себестоимость</p>
-                <p className="text-2xl font-bold">{formatCurrency(totalCost)}</p>
+                <p className="text-muted-foreground text-sm">
+                  Итого себестоимость
+                </p>
+                <p className="text-2xl font-bold">
+                  {formatCurrency(totalCost)}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -308,7 +332,9 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Цена продажи</span>
-                <span className="font-medium">{formatCurrency(recipe.productPrice)}</span>
+                <span className="font-medium">
+                  {formatCurrency(recipe.productPrice)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Себестоимость</span>
@@ -379,7 +405,7 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
               <TableBody>
                 {!recipe.ingredients?.length ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
+                    <TableCell colSpan={7} className="py-8 text-center">
                       Нет ингредиентов
                     </TableCell>
                   </TableRow>
@@ -393,7 +419,7 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
                         <div className="flex items-center gap-2">
                           <div>
                             <p className="font-medium">{ingredient.itemName}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               {ingredient.itemUnit}
                             </p>
                           </div>
@@ -441,14 +467,16 @@ export default function RecipeDetailPage({ id: paramId }: PageProps) {
                                   Удалить ингредиент?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Ингредиент &quot;{ingredient.itemName}&quot; будет
-                                  удалён из техкарты.
+                                  Ингредиент &quot;{ingredient.itemName}&quot;
+                                  будет удалён из техкарты.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Отмена</AlertDialogCancel>
                                 <AlertDialogAction
-                                  onClick={() => handleRemoveIngredient(ingredient.id)}
+                                  onClick={() =>
+                                    handleRemoveIngredient(ingredient.id)
+                                  }
                                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
                                   Удалить

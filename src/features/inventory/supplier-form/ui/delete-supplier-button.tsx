@@ -47,7 +47,7 @@ export function DeleteSupplierButton({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <Button variant={variant} size={size}>
-          <IconTrash className="h-4 w-4 text-destructive" />
+          <IconTrash className="text-destructive h-4 w-4" />
           {size !== 'icon' && <span className="ml-2">Удалить</span>}
         </Button>
       </AlertDialogTrigger>
@@ -55,8 +55,8 @@ export function DeleteSupplierButton({
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить поставщика?</AlertDialogTitle>
           <AlertDialogDescription>
-            Вы уверены, что хотите удалить поставщика &quot;{supplierName}&quot;?
-            Это действие нельзя отменить.
+            Вы уверены, что хотите удалить поставщика &quot;{supplierName}
+            &quot;? Это действие нельзя отменить.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

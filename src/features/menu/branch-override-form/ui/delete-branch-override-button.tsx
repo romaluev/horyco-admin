@@ -52,17 +52,22 @@ export const DeleteBranchOverrideButton = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('branchOverrides.delete.title')}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t('branchOverrides.delete.title')}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            {productName && branchName ? (
-              t('branchOverrides.delete.withNames', { productName, branchName })
-            ) : (
-              t('branchOverrides.delete.withoutNames')
-            )}
+            {productName && branchName
+              ? t('branchOverrides.delete.withNames', {
+                  productName,
+                  branchName,
+                })
+              : t('branchOverrides.delete.withoutNames')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{t('common.cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {t('common.cancel')}
+          </AlertDialogCancel>
           <AlertDialogAction onClick={handleDelete} disabled={isPending}>
             {isPending ? t('common.loading') : t('common.delete')}
           </AlertDialogAction>

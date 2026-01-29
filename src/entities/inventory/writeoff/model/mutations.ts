@@ -10,7 +10,6 @@ import { movementKeys } from '@/entities/inventory/stock-movement/model/query-ke
 import { writeoffApi } from './api'
 import { writeoffKeys } from './query-keys'
 
-
 import type {
   ICreateWriteoffDto,
   IUpdateWriteoffDto,
@@ -82,10 +81,17 @@ export const useAddWriteoffItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ writeoffId, data }: { writeoffId: number; data: ICreateWriteoffItemDto }) =>
-      writeoffApi.addItem(writeoffId, data),
+    mutationFn: ({
+      writeoffId,
+      data,
+    }: {
+      writeoffId: number
+      data: ICreateWriteoffItemDto
+    }) => writeoffApi.addItem(writeoffId, data),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар добавлен')
     },
     onError: (error) => {
@@ -111,7 +117,9 @@ export const useUpdateWriteoffItem = () => {
       data: IUpdateWriteoffItemDto
     }) => writeoffApi.updateItem(writeoffId, itemId, data),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар обновлен')
     },
     onError: (error) => {
@@ -127,10 +135,17 @@ export const useRemoveWriteoffItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ writeoffId, itemId }: { writeoffId: number; itemId: number }) =>
-      writeoffApi.removeItem(writeoffId, itemId),
+    mutationFn: ({
+      writeoffId,
+      itemId,
+    }: {
+      writeoffId: number
+      itemId: number
+    }) => writeoffApi.removeItem(writeoffId, itemId),
     onSuccess: (_, { writeoffId }) => {
-      queryClient.invalidateQueries({ queryKey: writeoffKeys.detail(writeoffId) })
+      queryClient.invalidateQueries({
+        queryKey: writeoffKeys.detail(writeoffId),
+      })
       toast.success('Товар удален')
     },
     onError: (error) => {

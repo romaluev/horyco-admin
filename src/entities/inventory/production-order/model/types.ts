@@ -3,7 +3,11 @@
  * Based on Inventory Management System documentation
  */
 
-export type ProductionStatus = 'planned' | 'in_progress' | 'completed' | 'cancelled'
+export type ProductionStatus =
+  | 'planned'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
 
 export interface IProductionOrder {
   id: number

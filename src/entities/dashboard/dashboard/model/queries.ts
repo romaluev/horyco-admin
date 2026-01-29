@@ -78,8 +78,18 @@ export const KPI_METRICS_QUERY = gql`
 // ============================================
 
 export const TIME_SERIES_QUERY = gql`
-  query TimeSeries($metric: KpiType!, $period: PeriodInput!, $groupBy: GroupBy, $branchId: Int) {
-    timeSeries(metric: $metric, period: $period, groupBy: $groupBy, branchId: $branchId) {
+  query TimeSeries(
+    $metric: KpiType!
+    $period: PeriodInput!
+    $groupBy: GroupBy
+    $branchId: Int
+  ) {
+    timeSeries(
+      metric: $metric
+      period: $period
+      groupBy: $groupBy
+      branchId: $branchId
+    ) {
       metric
       groupBy
       totalValue
@@ -99,8 +109,20 @@ export const TIME_SERIES_QUERY = gql`
 // ============================================
 
 export const RANKED_LIST_QUERY = gql`
-  query RankedList($dataset: Dataset!, $period: PeriodInput!, $sortBy: SortBy, $limit: Int, $branchId: Int) {
-    rankedList(dataset: $dataset, period: $period, sortBy: $sortBy, limit: $limit, branchId: $branchId) {
+  query RankedList(
+    $dataset: Dataset!
+    $period: PeriodInput!
+    $sortBy: SortBy
+    $limit: Int
+    $branchId: Int
+  ) {
+    rankedList(
+      dataset: $dataset
+      period: $period
+      sortBy: $sortBy
+      limit: $limit
+      branchId: $branchId
+    ) {
       rank
       id
       name
@@ -114,7 +136,11 @@ export const RANKED_LIST_QUERY = gql`
 `
 
 export const PROPORTIONS_QUERY = gql`
-  query Proportions($dimension: String!, $period: PeriodInput!, $branchId: Int) {
+  query Proportions(
+    $dimension: String!
+    $period: PeriodInput!
+    $branchId: Int
+  ) {
     proportions(dimension: $dimension, period: $period, branchId: $branchId) {
       total
       formattedTotal

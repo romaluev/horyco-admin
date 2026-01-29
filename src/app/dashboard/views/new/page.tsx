@@ -5,7 +5,6 @@ import * as React from 'react'
 import { Dataset } from '@/shared/api/graphql'
 import { useRouter, useSearchParams } from '@/shared/lib/navigation'
 
-
 import { useCreateView } from '@/entities/dashboard/view'
 import {
   DATASET_CONFIG,
@@ -21,15 +20,12 @@ import type { IViewDataParams } from '@/entities/dashboard/view'
 export default function NewViewPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const typeParam = searchParams.get('type')?.toUpperCase() as Dataset | undefined
+  const typeParam = searchParams.get('type')?.toUpperCase() as
+    | Dataset
+    | undefined
 
-  const {
-    selectedDataset,
-    setDataset,
-    viewName,
-    workingConfig,
-    resetConfig,
-  } = useViewBuilderStore()
+  const { selectedDataset, setDataset, viewName, workingConfig, resetConfig } =
+    useViewBuilderStore()
 
   const { mutate: createView, isPending } = useCreateView()
 
@@ -92,9 +88,7 @@ export default function NewViewPage() {
       }
     : null
 
-  const datasetConfig = selectedDataset
-    ? DATASET_CONFIG[selectedDataset]
-    : null
+  const datasetConfig = selectedDataset ? DATASET_CONFIG[selectedDataset] : null
 
   if (!selectedDataset || !datasetConfig) {
     return (
@@ -105,7 +99,7 @@ export default function NewViewPage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-52px)] flex-col overflow-auto gap-4 p-4 md:p-6">
+    <div className="flex h-[calc(100dvh-52px)] flex-col gap-4 overflow-auto p-4 md:p-6">
       {/* Header with title/description and save */}
       <ViewHeader onSave={handleSave} isPending={isPending} />
 

@@ -75,7 +75,7 @@ function MetricCard({
       }}
       className={cn(
         isInteractive &&
-          'hover:bg-muted/40 focus-visible:ring-ring/50 cursor-pointer outline-none transition-colors focus-visible:ring-[3px]',
+          'hover:bg-muted/40 focus-visible:ring-ring/50 cursor-pointer transition-colors outline-none focus-visible:ring-[3px]',
         isSelected && 'border-primary ring-primary/15 ring-2'
       )}
     >
@@ -133,10 +133,14 @@ function TopDishCard({ dish, period, formatCurrency }: TopDishCardProps) {
           {dish.name}
         </div>
         <div className="mt-1 flex justify-between text-sm">
-          <span>{dish.quantity} {t('analytics.quantity')}</span>
+          <span>
+            {dish.quantity} {t('analytics.quantity')}
+          </span>
           <span>{formatCurrency(dish.revenue)}</span>
         </div>
-        <div className="text-muted-foreground mt-1 text-xs">{t('analytics.forPeriod', { period })}</div>
+        <div className="text-muted-foreground mt-1 text-xs">
+          {t('analytics.forPeriod', { period })}
+        </div>
       </CardContent>
     </Card>
   )

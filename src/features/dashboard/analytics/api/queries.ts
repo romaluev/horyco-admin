@@ -45,8 +45,18 @@ export const SALES_OVERVIEW_QUERY = gql`
 // ============================================
 
 export const PRODUCT_ANALYTICS_QUERY = gql`
-  query ProductAnalytics($period: PeriodInput!, $branchId: Int, $offset: Int, $limit: Int) {
-    productAnalytics(period: $period, branchId: $branchId, offset: $offset, limit: $limit) {
+  query ProductAnalytics(
+    $period: PeriodInput!
+    $branchId: Int
+    $offset: Int
+    $limit: Int
+  ) {
+    productAnalytics(
+      period: $period
+      branchId: $branchId
+      offset: $offset
+      limit: $limit
+    ) {
       scope
       period {
         type
@@ -390,8 +400,16 @@ export const BRANCH_TRENDS_QUERY = gql`
 // ============================================
 
 export const PROFIT_LOSS_QUERY = gql`
-  query ProfitLoss($period: PeriodInput!, $branchId: Int, $comparePreviousPeriod: Boolean) {
-    profitLoss(period: $period, branchId: $branchId, comparePreviousPeriod: $comparePreviousPeriod)
+  query ProfitLoss(
+    $period: PeriodInput!
+    $branchId: Int
+    $comparePreviousPeriod: Boolean
+  ) {
+    profitLoss(
+      period: $period
+      branchId: $branchId
+      comparePreviousPeriod: $comparePreviousPeriod
+    )
   }
 `
 
@@ -420,8 +438,18 @@ export const CASH_FLOW_QUERY = gql`
 `
 
 export const REVENUE_BREAKDOWN_QUERY = gql`
-  query RevenueBreakdown($period: PeriodInput!, $groupBy: String, $topN: Int, $branchId: Int) {
-    revenueBreakdown(period: $period, groupBy: $groupBy, topN: $topN, branchId: $branchId)
+  query RevenueBreakdown(
+    $period: PeriodInput!
+    $groupBy: String
+    $topN: Int
+    $branchId: Int
+  ) {
+    revenueBreakdown(
+      period: $period
+      groupBy: $groupBy
+      topN: $topN
+      branchId: $branchId
+    )
   }
 `
 
@@ -432,8 +460,18 @@ export const REVENUE_BREAKDOWN_QUERY = gql`
 // ============================================
 
 export const ALERTS_QUERY = gql`
-  query Alerts($severity: String, $status: String, $type: String, $branchId: Int) {
-    alerts(severity: $severity, status: $status, type: $type, branchId: $branchId)
+  query Alerts(
+    $severity: String
+    $status: String
+    $type: String
+    $branchId: Int
+  ) {
+    alerts(
+      severity: $severity
+      status: $status
+      type: $type
+      branchId: $branchId
+    )
   }
 `
 
@@ -450,7 +488,12 @@ export const ALERT_THRESHOLDS_QUERY = gql`
 `
 
 export const DETECT_ANOMALIES_QUERY = gql`
-  query DetectAnomalies($startDate: String!, $endDate: String!, $sensitivity: Int, $branchId: Int) {
+  query DetectAnomalies(
+    $startDate: String!
+    $endDate: String!
+    $sensitivity: Int
+    $branchId: Int
+  ) {
     detectAnomalies(
       startDate: $startDate
       endDate: $endDate
@@ -519,8 +562,18 @@ export const KPI_METRICS_QUERY = gql`
 // ============================================
 
 export const TIME_SERIES_QUERY = gql`
-  query TimeSeries($metric: KpiType!, $period: PeriodInput!, $groupBy: GroupBy, $branchId: Int) {
-    timeSeries(metric: $metric, period: $period, groupBy: $groupBy, branchId: $branchId) {
+  query TimeSeries(
+    $metric: KpiType!
+    $period: PeriodInput!
+    $groupBy: GroupBy
+    $branchId: Int
+  ) {
+    timeSeries(
+      metric: $metric
+      period: $period
+      groupBy: $groupBy
+      branchId: $branchId
+    ) {
       metric
       groupBy
       totalValue
@@ -574,7 +627,11 @@ export const RANKED_LIST_QUERY = gql`
 // ============================================
 
 export const PROPORTIONS_QUERY = gql`
-  query Proportions($dimension: String!, $period: PeriodInput!, $branchId: Int) {
+  query Proportions(
+    $dimension: String!
+    $period: PeriodInput!
+    $branchId: Int
+  ) {
     proportions(dimension: $dimension, period: $period, branchId: $branchId) {
       total
       formattedTotal

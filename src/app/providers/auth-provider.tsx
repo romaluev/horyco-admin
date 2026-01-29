@@ -22,7 +22,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setToken(token)
       me().catch((e: unknown) => console.error('Failed to load auth:', e))
       // Load full profile with avatar on app startup (non-blocking)
-      void loadFullProfile().catch((e: unknown) => console.warn('Failed to load profile:', e))
+      void loadFullProfile().catch((e: unknown) =>
+        console.warn('Failed to load profile:', e)
+      )
     }
   }, [me, loadFullProfile, setToken])
 

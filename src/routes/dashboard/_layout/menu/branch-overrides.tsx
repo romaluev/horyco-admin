@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import BranchOverridesPage from '@/app/dashboard/menu/branch-overrides/page'
 
-export const Route = createFileRoute('/dashboard/_layout/menu/branch-overrides')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/menu/branch-overrides'
+)({
   component: BranchOverridesRoute,
 })
 

@@ -7,7 +7,6 @@ import { Link } from '@tanstack/react-router'
 import { IconPlus, IconUpload } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-
 import { cn } from '@/shared/lib/utils'
 import { Button, buttonVariants } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
@@ -39,7 +38,8 @@ export default function Page() {
                   'text-xs md:text-sm'
                 )}
               >
-                <IconUpload className="mr-2 h-4 w-4" /> {t('branches.actions.import')}
+                <IconUpload className="mr-2 h-4 w-4" />{' '}
+                {t('branches.actions.import')}
               </Link>
               <Button
                 onClick={() => setIsCreateDialogOpen(true)}

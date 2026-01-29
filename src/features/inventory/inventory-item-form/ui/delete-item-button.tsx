@@ -49,7 +49,7 @@ export const DeleteItemButton = ({
       <AlertDialogTrigger asChild>
         {trigger || (
           <Button variant="ghost" size="icon">
-            <IconTrash className="h-4 w-4 text-destructive" />
+            <IconTrash className="text-destructive h-4 w-4" />
           </Button>
         )}
       </AlertDialogTrigger>
@@ -57,8 +57,8 @@ export const DeleteItemButton = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить товар?</AlertDialogTitle>
           <AlertDialogDescription>
-            Вы уверены, что хотите удалить товар &quot;{itemName}&quot;? Это действие
-            нельзя отменить.
+            Вы уверены, что хотите удалить товар &quot;{itemName}&quot;? Это
+            действие нельзя отменить.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

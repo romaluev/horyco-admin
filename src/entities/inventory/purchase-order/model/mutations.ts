@@ -10,7 +10,6 @@ import { movementKeys } from '@/entities/inventory/stock-movement/model/query-ke
 import { purchaseOrderApi } from './api'
 import { purchaseOrderKeys } from './query-keys'
 
-
 import type {
   ICreatePurchaseOrderDto,
   IUpdatePurchaseOrderDto,
@@ -27,7 +26,8 @@ export const useCreatePurchaseOrder = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreatePurchaseOrderDto) => purchaseOrderApi.createPurchaseOrder(data),
+    mutationFn: (data: ICreatePurchaseOrderDto) =>
+      purchaseOrderApi.createPurchaseOrder(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.lists() })
       toast.success('Заказ поставщику создан')
@@ -86,7 +86,9 @@ export const useAddPOItem = () => {
     mutationFn: ({ poId, data }: { poId: number; data: ICreatePOItemDto }) =>
       purchaseOrderApi.addItem(poId, data),
     onSuccess: (_, { poId }) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      queryClient.invalidateQueries({
+        queryKey: purchaseOrderKeys.detail(poId),
+      })
       toast.success('Товар добавлен')
     },
     onError: (error) => {
@@ -102,10 +104,19 @@ export const useUpdatePOItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ poId, poItemId, data }: { poId: number; poItemId: number; data: IUpdatePOItemDto }) =>
-      purchaseOrderApi.updateItem(poId, poItemId, data),
+    mutationFn: ({
+      poId,
+      poItemId,
+      data,
+    }: {
+      poId: number
+      poItemId: number
+      data: IUpdatePOItemDto
+    }) => purchaseOrderApi.updateItem(poId, poItemId, data),
     onSuccess: (_, { poId }) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      queryClient.invalidateQueries({
+        queryKey: purchaseOrderKeys.detail(poId),
+      })
       toast.success('Товар обновлен')
     },
     onError: (error) => {
@@ -124,7 +135,9 @@ export const useRemovePOItem = () => {
     mutationFn: ({ poId, poItemId }: { poId: number; poItemId: number }) =>
       purchaseOrderApi.removeItem(poId, poItemId),
     onSuccess: (_, { poId }) => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(poId) })
+      queryClient.invalidateQueries({
+        queryKey: purchaseOrderKeys.detail(poId),
+      })
       toast.success('Товар удален')
     },
     onError: (error) => {

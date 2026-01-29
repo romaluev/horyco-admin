@@ -10,10 +10,7 @@ import { toast } from 'sonner'
 import { additionApi } from './api'
 import { additionKeys } from './query-keys'
 
-import type {
-  ICreateAdditionDto,
-  IUpdateAdditionDto,
-} from './types'
+import type { ICreateAdditionDto, IUpdateAdditionDto } from './types'
 
 /**
  * Create addition mutation

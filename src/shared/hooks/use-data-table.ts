@@ -70,7 +70,10 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   // Parse URL params
   const urlPage = typeof search.page === 'number' ? search.page : 1
-  const urlPerPage = typeof search.perPage === 'number' ? search.perPage : (initialState?.pagination?.pageSize ?? 10)
+  const urlPerPage =
+    typeof search.perPage === 'number'
+      ? search.perPage
+      : (initialState?.pagination?.pageSize ?? 10)
   const urlSort = search.sort as ExtendedColumnSort<TData>[] | undefined
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(
@@ -81,9 +84,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const [page, setPageState] = React.useState(urlPage)
   const [perPage, setPerPageState] = React.useState(urlPerPage)
-  const [sorting, setSortingState] = React.useState<ExtendedColumnSort<TData>[]>(
-    urlSort ?? initialState?.sorting ?? []
-  )
+  const [sorting, setSortingState] = React.useState<
+    ExtendedColumnSort<TData>[]
+  >(urlSort ?? initialState?.sorting ?? [])
 
   // Update URL when state changes
   const updateUrl = React.useCallback(
@@ -160,8 +163,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     [sorting, setSorting]
   )
 
-  const [columnFilters, setColumnFilters] =
-    React.useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
 
   const debouncedSetFilterValues = useDebouncedCallback(
     (_values: Record<string, unknown>) => {

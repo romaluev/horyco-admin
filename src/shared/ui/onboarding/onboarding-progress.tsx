@@ -1,6 +1,5 @@
 'use client'
 
-
 import { Check, Slash } from 'lucide-react'
 
 import { getStepConfig } from '@/shared/config/onboarding'
@@ -77,8 +76,7 @@ export function OnboardingProgress({
         baseClasses,
         'border-primary bg-[#fff6f6] text-primary ring-primary border-2 ring-2'
       )
-    if (isSkipped)
-      return cn(baseClasses, 'bg-muted text-muted-foreground')
+    if (isSkipped) return cn(baseClasses, 'bg-muted text-muted-foreground')
     if (isUpcoming)
       return cn(
         baseClasses,
@@ -147,9 +145,7 @@ export function OnboardingProgress({
                     <div
                       className={cn(
                         'h-full w-full transition-colors',
-                        isCompleted || isSkipped
-                          ? 'bg-primary/60'
-                          : 'bg-muted'
+                        isCompleted || isSkipped ? 'bg-primary/60' : 'bg-muted'
                       )}
                     />
                   </div>

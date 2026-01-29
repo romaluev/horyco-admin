@@ -95,8 +95,8 @@ export const AdjustStockDialog = ({
         <DialogHeader>
           <DialogTitle>Корректировка остатка</DialogTitle>
           <DialogDescription>
-            Введите количество для изменения. Положительное значение увеличит остаток,
-            отрицательное — уменьшит.
+            Введите количество для изменения. Положительное значение увеличит
+            остаток, отрицательное — уменьшит.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -118,7 +118,10 @@ export const AdjustStockDialog = ({
                     </FormControl>
                     <SelectContent>
                       {warehouses?.map((warehouse) => (
-                        <SelectItem key={warehouse.id} value={String(warehouse.id)}>
+                        <SelectItem
+                          key={warehouse.id}
+                          value={String(warehouse.id)}
+                        >
                           {warehouse.name}
                         </SelectItem>
                       ))}
@@ -236,7 +239,10 @@ export const AdjustStockDialog = ({
                 <FormItem>
                   <FormLabel>Примечание</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Причина корректировки..." {...field} />
+                    <Textarea
+                      placeholder="Причина корректировки..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

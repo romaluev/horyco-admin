@@ -31,7 +31,6 @@ import { useUpdateSupplierItem } from '@/entities/inventory/supplier/model/mutat
 
 import type { ISupplierItem } from '@/entities/inventory/supplier/model/types'
 
-
 const editItemSchema = z.object({
   supplierSku: z.string().optional(),
   unitPrice: z.number().min(0, 'Цена не может быть отрицательной'),
@@ -97,13 +96,14 @@ export function EditSupplierItemDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Редактировать товар</DialogTitle>
-          <DialogDescription>
-            {item.itemName}
-          </DialogDescription>
+          <DialogDescription>{item.itemName}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}

@@ -68,7 +68,10 @@ export const supplierApi = {
    * Update supplier
    * PATCH /admin/inventory/suppliers/:id
    */
-  async updateSupplier(id: number, data: IUpdateSupplierDto): Promise<ISupplier> {
+  async updateSupplier(
+    id: number,
+    data: IUpdateSupplierDto
+  ): Promise<ISupplier> {
     const response = await api.patch<ApiResponse<ISupplier>>(
       `/admin/inventory/suppliers/${id}`,
       data
@@ -121,7 +124,10 @@ export const supplierApi = {
    * Add item to supplier catalog
    * POST /admin/inventory/suppliers/:id/items
    */
-  async addSupplierItem(id: number, data: ICreateSupplierItemDto): Promise<ISupplierItem> {
+  async addSupplierItem(
+    id: number,
+    data: ICreateSupplierItemDto
+  ): Promise<ISupplierItem> {
     const response = await api.post<ApiResponse<ISupplierItem>>(
       `/admin/inventory/suppliers/${id}/items`,
       data
@@ -157,7 +163,10 @@ export const supplierApi = {
    * Get price history for supplier
    * GET /admin/inventory/suppliers/:id/price-history
    */
-  async getPriceHistory(id: number, params?: IGetPriceHistoryParams): Promise<IPriceHistory[]> {
+  async getPriceHistory(
+    id: number,
+    params?: IGetPriceHistoryParams
+  ): Promise<IPriceHistory[]> {
     const response = await api.get<ApiResponse<IPriceHistory[]>>(
       `/admin/inventory/suppliers/${id}/price-history`,
       { params }

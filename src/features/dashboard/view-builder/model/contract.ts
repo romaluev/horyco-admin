@@ -5,7 +5,12 @@
 
 import { z } from 'zod'
 
-import { Dataset, GroupBy, PeriodType, SortDirection } from '@/shared/api/graphql'
+import {
+  Dataset,
+  GroupBy,
+  PeriodType,
+  SortDirection,
+} from '@/shared/api/graphql'
 
 // ============================================
 // FILTER SCHEMA
@@ -92,7 +97,10 @@ export const createViewSchema = z.object({
     .string()
     .min(2, 'Название должно содержать минимум 2 символа')
     .max(100, 'Название не должно превышать 100 символов'),
-  description: z.string().max(500, 'Описание не должно превышать 500 символов').optional(),
+  description: z
+    .string()
+    .max(500, 'Описание не должно превышать 500 символов')
+    .optional(),
   pageCode: z.nativeEnum(Dataset),
   isPinned: z.boolean().optional(),
 })

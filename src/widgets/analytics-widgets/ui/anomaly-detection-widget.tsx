@@ -59,18 +59,18 @@ export function AnomalyDetectionWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-bold">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
         </div>
         <div className="rounded-lg bg-amber-100 p-2 dark:bg-amber-900/30">
           <IconAlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
         </div>
       </div>
 
-      <div className="mb-4 flex-1 min-h-[140px]">
+      <div className="mb-4 min-h-[140px] flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} barSize={16}>
             <XAxis dataKey="index" hide />
@@ -93,7 +93,7 @@ export function AnomalyDetectionWidget({
       <div className="flex items-end justify-between border-t pt-4">
         <div>
           <span className="text-4xl font-bold">{actualValue}%</span>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Prediction {predictionPercent}%
           </p>
         </div>
@@ -108,21 +108,21 @@ export function AnomalyDetectionWidget({
 
 function AnomalyDetectionWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1 space-y-1">
-          <div className="h-6 w-36 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-full animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-6 w-36 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-full animate-pulse rounded" />
         </div>
-        <div className="size-9 animate-pulse rounded-lg bg-muted" />
+        <div className="bg-muted size-9 animate-pulse rounded-lg" />
       </div>
-      <div className="mb-4 h-[140px] animate-pulse rounded bg-muted" />
+      <div className="bg-muted mb-4 h-[140px] animate-pulse rounded" />
       <div className="flex items-end justify-between border-t pt-4">
         <div className="space-y-1">
-          <div className="h-10 w-20 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-28 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-10 w-20 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-28 animate-pulse rounded" />
         </div>
-        <div className="h-9 w-28 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-9 w-28 animate-pulse rounded" />
       </div>
     </div>
   )

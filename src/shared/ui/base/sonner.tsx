@@ -6,7 +6,6 @@ import { useTheme } from '@/shared/ui/layout/ThemeToggle/theme-provider'
 
 import type { ToasterProps } from 'sonner'
 
-
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme } = useTheme()
 

@@ -11,7 +11,11 @@ import { Button } from '@/shared/ui/base/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 import { Separator } from '@/shared/ui/base/separator'
 
-import { type IModuleCatalogItem, useAddModule, useGetModuleCatalog } from '@/entities/organization/subscription'
+import {
+  type IModuleCatalogItem,
+  useAddModule,
+  useGetModuleCatalog,
+} from '@/entities/organization/subscription'
 
 export const ModuleCatalog = () => {
   const { t } = useTranslation('organization')
@@ -20,7 +24,10 @@ export const ModuleCatalog = () => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
 
   if (isLoading) return <BaseLoading className="py-10" />
-  if (error) return <BaseError className="py-10" message={t('moduleCatalog.loadError')} />
+  if (error)
+    return (
+      <BaseError className="py-10" message={t('moduleCatalog.loadError')} />
+    )
   if (!catalog) return null
 
   const renderModuleItem = (item: IModuleCatalogItem) => (
@@ -30,7 +37,9 @@ export const ModuleCatalog = () => {
           <div className="flex-1">
             <CardTitle className="text-base">{item.name}</CardTitle>
             {item.description && (
-              <p className="text-sm text-muted-foreground">{item.description}</p>
+              <p className="text-muted-foreground text-sm">
+                {item.description}
+              </p>
             )}
           </div>
           {item.isSubscribed && <Badge>{t('moduleCatalog.active')}</Badge>}
@@ -39,10 +48,14 @@ export const ModuleCatalog = () => {
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold">
-            {item.priceMonthly === 0 ? t('moduleCatalog.free') : formatPrice(item.priceMonthly)}
+            {item.priceMonthly === 0
+              ? t('moduleCatalog.free')
+              : formatPrice(item.priceMonthly)}
           </span>
           {item.trialDays && (
-            <Badge variant="secondary">{item.trialDays} {t('moduleCatalog.trial')}</Badge>
+            <Badge variant="secondary">
+              {item.trialDays} {t('moduleCatalog.trial')}
+            </Badge>
           )}
         </div>
 
@@ -50,10 +63,12 @@ export const ModuleCatalog = () => {
           <>
             <Separator />
             <div>
-              <p className="mb-2 text-xs font-medium text-muted-foreground">{t('moduleCatalog.features')}</p>
+              <p className="text-muted-foreground mb-2 text-xs font-medium">
+                {t('moduleCatalog.features')}
+              </p>
               <ul className="space-y-1">
                 {item.features.map((feature) => (
-                  <li key={feature} className="text-sm text-foreground">
+                  <li key={feature} className="text-foreground text-sm">
                     • {feature}
                   </li>
                 ))}
@@ -81,7 +96,7 @@ export const ModuleCatalog = () => {
             <Separator />
             <div className="space-y-1">
               {item.activationBlockers.map((blocker) => (
-                <p key={blocker} className="text-xs text-destructive">
+                <p key={blocker} className="text-destructive text-xs">
                   ⚠ {blocker}
                 </p>
               ))}
@@ -91,7 +106,9 @@ export const ModuleCatalog = () => {
 
         <Separator />
         <Button
-          onClick={() => handleAddModule({ moduleKey: item.key, startTrial: true })}
+          onClick={() =>
+            handleAddModule({ moduleKey: item.key, startTrial: true })
+          }
           disabled={!item.canActivate || isPending || item.isSubscribed}
           className="w-full"
         >
@@ -110,7 +127,9 @@ export const ModuleCatalog = () => {
       {/* Plans Section */}
       {catalog.plans.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.plans')}</h3>
+          <h3 className="mb-4 text-lg font-semibold">
+            {t('moduleCatalog.sections.plans')}
+          </h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.plans.map(renderModuleItem)}
           </div>
@@ -120,7 +139,9 @@ export const ModuleCatalog = () => {
       {/* Core Modules Section */}
       {catalog.core.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.coreModules')}</h3>
+          <h3 className="mb-4 text-lg font-semibold">
+            {t('moduleCatalog.sections.coreModules')}
+          </h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.core.map(renderModuleItem)}
           </div>
@@ -130,7 +151,9 @@ export const ModuleCatalog = () => {
       {/* Add-ons Section */}
       {catalog.addons.length > 0 && (
         <div>
-          <h3 className="mb-4 text-lg font-semibold">{t('moduleCatalog.sections.addons')}</h3>
+          <h3 className="mb-4 text-lg font-semibold">
+            {t('moduleCatalog.sections.addons')}
+          </h3>
           <div className="grid gap-4 md:grid-cols-2">
             {catalog.addons.map(renderModuleItem)}
           </div>

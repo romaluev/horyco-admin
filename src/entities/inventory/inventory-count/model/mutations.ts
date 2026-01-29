@@ -10,7 +10,6 @@ import { movementKeys } from '@/entities/inventory/stock-movement/model/query-ke
 import { inventoryCountApi } from './api'
 import { inventoryCountKeys } from './query-keys'
 
-
 import type {
   ICreateInventoryCountDto,
   ICreateCountItemDto,
@@ -24,7 +23,8 @@ export const useCreateInventoryCount = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: ICreateInventoryCountDto) => inventoryCountApi.createCount(data),
+    mutationFn: (data: ICreateInventoryCountDto) =>
+      inventoryCountApi.createCount(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: inventoryCountKeys.lists() })
       toast.success('Инвентаризация создана')
@@ -42,10 +42,17 @@ export const useAddCountItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ countId, data }: { countId: number; data: ICreateCountItemDto }) =>
-      inventoryCountApi.addItem(countId, data),
+    mutationFn: ({
+      countId,
+      data,
+    }: {
+      countId: number
+      data: ICreateCountItemDto
+    }) => inventoryCountApi.addItem(countId, data),
     onSuccess: (_, { countId }) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(countId) })
+      queryClient.invalidateQueries({
+        queryKey: inventoryCountKeys.detail(countId),
+      })
       toast.success('Товар добавлен')
     },
     onError: (error) => {
@@ -71,8 +78,12 @@ export const useUpdateCountItem = () => {
       data: IUpdateCountItemDto
     }) => inventoryCountApi.updateItem(countId, countItemId, data),
     onSuccess: (_, { countId }) => {
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.detail(countId) })
-      queryClient.invalidateQueries({ queryKey: inventoryCountKeys.variance(countId) })
+      queryClient.invalidateQueries({
+        queryKey: inventoryCountKeys.detail(countId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: inventoryCountKeys.variance(countId),
+      })
       toast.success('Данные сохранены')
     },
     onError: (error) => {
@@ -95,7 +106,9 @@ export const useCompleteCount = () => {
       toast.success('Инвентаризация завершена и отправлена на согласование')
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, 'Ошибка при завершении инвентаризации'))
+      toast.error(
+        getErrorMessage(error, 'Ошибка при завершении инвентаризации')
+      )
     },
   })
 }

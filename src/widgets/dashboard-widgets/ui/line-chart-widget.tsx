@@ -10,7 +10,10 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+} from '@/entities/dashboard/dashboard-widget'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface LineChartWidgetProps {
@@ -38,7 +41,7 @@ export function LineChartWidget({ data, config }: LineChartWidgetProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )

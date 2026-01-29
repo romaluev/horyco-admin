@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/base/card'
 
 import type { ReactNode } from 'react'
 
-
 interface WidgetCardProps {
   id: string
   name: string
@@ -32,7 +31,7 @@ export function WidgetCard({
     <Card
       className={cn(
         'group relative flex h-full flex-col overflow-hidden transition-all',
-        isEditMode && 'ring-2 ring-dashed ring-border hover:ring-primary/50',
+        isEditMode && 'ring-dashed ring-border hover:ring-primary/50 ring-2',
         isSelected && 'ring-primary',
         className
       )}
@@ -43,7 +42,7 @@ export function WidgetCard({
           {dragHandle}
           <div
             className={cn(
-              'absolute right-2 top-2 z-10 flex gap-1',
+              'absolute top-2 right-2 z-10 flex gap-1',
               'opacity-0 transition-opacity group-hover:opacity-100'
             )}
           >
@@ -53,7 +52,7 @@ export function WidgetCard({
       )}
 
       <CardHeader className="flex-shrink-0 pb-1">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardTitle className="text-muted-foreground text-sm font-medium">
           {name}
         </CardTitle>
       </CardHeader>

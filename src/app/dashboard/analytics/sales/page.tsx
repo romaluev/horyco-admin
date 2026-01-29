@@ -117,7 +117,10 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
   const previousOrders = calcPrevious(orderCount, ordersChange)
   const previousAvgCheck = calcPrevious(avgCheck, avgCheckChange)
   const previousDiscounts = calcPrevious(discounts, discountsChange)
-  const previousGrossSales = previousNetRevenue + previousDiscounts + calcPrevious(refunds, revenueChange)
+  const previousGrossSales =
+    previousNetRevenue +
+    previousDiscounts +
+    calcPrevious(refunds, revenueChange)
 
   const rows = [
     {
@@ -179,10 +182,18 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">{t('sales.table.metric')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.today')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.yesterday')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.change')}</TableHead>
+            <TableHead className="w-[200px]">
+              {t('sales.table.metric')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.today')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.yesterday')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -197,7 +208,7 @@ function SalesOverviewContent({ data }: ISalesOverviewContentProps) {
                   ? formatPrice(row.current)
                   : row.current.toLocaleString('ru-RU')}
               </TableCell>
-              <TableCell className="text-right text-muted-foreground">
+              <TableCell className="text-muted-foreground text-right">
                 {row.format === 'currency'
                   ? formatPrice(row.previous)
                   : Math.round(row.previous).toLocaleString('ru-RU')}
@@ -253,10 +264,18 @@ function SalesOverviewSkeleton() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">{t('sales.table.metric')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.today')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.yesterday')}</TableHead>
-            <TableHead className="text-right">{t('sales.table.change')}</TableHead>
+            <TableHead className="w-[200px]">
+              {t('sales.table.metric')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.today')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.yesterday')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('sales.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

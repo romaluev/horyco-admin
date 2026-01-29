@@ -8,7 +8,10 @@ import PageContainer from '@/shared/ui/layout/page-container'
 
 import { useBranchStore } from '@/entities/organization/branch'
 import { HallList } from '@/entities/organization/hall'
-import { CreateHallDialog, UpdateHallDialog } from '@/features/organization/hall-form'
+import {
+  CreateHallDialog,
+  UpdateHallDialog,
+} from '@/features/organization/hall-form'
 
 import type { IHall } from '@/entities/organization/hall'
 

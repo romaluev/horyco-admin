@@ -13,7 +13,6 @@ import { selectAvailableFilters, useViewBuilderStore } from '../model/store'
 
 import type { IFilter } from '@/entities/dashboard/view'
 
-
 interface IFilterDropdownItemProps {
   filter: IFilter
   index: number
@@ -59,7 +58,7 @@ function FilterDropdownItem({ filter, index }: IFilterDropdownItemProps) {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="rounded-md border border-border px-2 py-1 text-sm hover:bg-muted"
+          className="border-border hover:bg-muted rounded-md border px-2 py-1 text-sm"
         >
           {getLabel()}
         </button>
@@ -69,7 +68,7 @@ function FilterDropdownItem({ filter, index }: IFilterDropdownItemProps) {
           {filterDef.options.map((option) => (
             <label
               key={option.value}
-              className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 hover:bg-muted"
+              className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5"
             >
               <Checkbox
                 checked={selectedValues.includes(option.value)}

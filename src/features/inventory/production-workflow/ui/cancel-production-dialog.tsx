@@ -15,7 +15,6 @@ import {
 
 import { useCancelProduction } from '@/entities/inventory/production-order/model/mutations'
 
-
 interface CancelProductionDialogProps {
   orderId: number
   open: boolean

@@ -43,12 +43,12 @@ function ErrorState({ error }: { error: Error | null }): JSX.Element {
   const { t } = useTranslation('menu')
 
   return (
-    <div className="rounded-lg border border-destructive bg-destructive/5 p-6">
+    <div className="border-destructive bg-destructive/5 rounded-lg border p-6">
       <div className="text-center">
-        <p className="text-lg font-medium text-destructive">
+        <p className="text-destructive text-lg font-medium">
           {t('pages.products.messages.loadError')}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {error?.message || t('pages.products.messages.error')}
         </p>
       </div>
@@ -62,10 +62,10 @@ function EmptyState(): JSX.Element {
   return (
     <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
       <div className="text-center">
-        <p className="text-lg font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-lg font-medium">
           {t('pages.products.empty.notFound')}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t('pages.products.empty.createFirst')}
         </p>
       </div>

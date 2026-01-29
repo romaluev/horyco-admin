@@ -70,7 +70,9 @@ export const DeleteAdditionButton = ({
             </p>
             {hasItems && (
               <p className="text-warning">
-                {t('additions.delete.warningItems', { count: addition.itemsCount })}
+                {t('additions.delete.warningItems', {
+                  count: addition.itemsCount,
+                })}
               </p>
             )}
             <p>{t('additions.delete.irreversible')}</p>

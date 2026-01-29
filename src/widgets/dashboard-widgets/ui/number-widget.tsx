@@ -7,7 +7,10 @@ import { cn } from '@/shared/lib/utils'
 
 import { COUNTER_ANIMATION_DURATION } from '@/entities/dashboard/dashboard-widget'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+} from '@/entities/dashboard/dashboard-widget'
 
 interface NumberWidgetProps {
   data: WidgetData
@@ -16,13 +19,13 @@ interface NumberWidgetProps {
 
 function formatValue(value: number, isCurrency = false): string {
   if (isCurrency) {
-    return `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')  } UZS`
+    return `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} UZS`
   }
   if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(1)  }M`
+    return `${(value / 1000000).toFixed(1)}M`
   }
   if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)  }K`
+    return `${(value / 1000).toFixed(1)}K`
   }
   return value.toString()
 }
@@ -50,24 +53,26 @@ export function NumberWidget({ data, config }: NumberWidgetProps) {
         {formatValue(displayValue, isCurrency)}
       </div>
 
-      {config.showTrend && changePercent !== undefined && changePercent !== null && (
-        <div
-          className={cn(
-            'mt-1 flex items-center text-sm',
-            isPositive ? 'text-green-600' : 'text-red-600'
-          )}
-        >
-          {isPositive ? (
-            <IconTrendingUp className="mr-1 h-4 w-4" />
-          ) : (
-            <IconTrendingDown className="mr-1 h-4 w-4" />
-          )}
-          <span>
-            {isPositive ? '+' : ''}
-            {changePercent.toFixed(1)}%
-          </span>
-        </div>
-      )}
+      {config.showTrend &&
+        changePercent !== undefined &&
+        changePercent !== null && (
+          <div
+            className={cn(
+              'mt-1 flex items-center text-sm',
+              isPositive ? 'text-green-600' : 'text-red-600'
+            )}
+          >
+            {isPositive ? (
+              <IconTrendingUp className="mr-1 h-4 w-4" />
+            ) : (
+              <IconTrendingDown className="mr-1 h-4 w-4" />
+            )}
+            <span>
+              {isPositive ? '+' : ''}
+              {changePercent.toFixed(1)}%
+            </span>
+          </div>
+        )}
     </div>
   )
 }

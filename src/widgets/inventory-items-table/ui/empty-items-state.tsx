@@ -13,9 +13,9 @@ interface IEmptyItemsStateProps {
 export const EmptyItemsState = ({ onImportCSV }: IEmptyItemsStateProps) => {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-      <IconPackage className="h-12 w-12 text-muted-foreground/50" />
+      <IconPackage className="text-muted-foreground/50 h-12 w-12" />
       <h3 className="mt-4 text-lg font-semibold">Нет товаров в номенклатуре</h3>
-      <p className="mt-2 text-center text-sm text-muted-foreground max-w-sm">
+      <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
         Добавьте сырьё и полуфабрикаты для начала учёта запасов.
       </p>
       <div className="mt-6 flex gap-2">

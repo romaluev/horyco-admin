@@ -136,9 +136,8 @@ export const getTaxRate = async (
     url += `&branchId=${branchId}`
   }
 
-  const response = await api.get<
-    ApiResponse<{ rate: number; configs: TaxConfig[] }>
-  >(url)
+  const response =
+    await api.get<ApiResponse<{ rate: number; configs: TaxConfig[] }>>(url)
   return response.data.data
 }
 

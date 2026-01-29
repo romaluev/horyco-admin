@@ -63,7 +63,10 @@ export const writeoffApi = {
    * Update writeoff (draft only)
    * PATCH /admin/inventory/writeoffs/:id
    */
-  async updateWriteoff(id: number, data: IUpdateWriteoffDto): Promise<IWriteoff> {
+  async updateWriteoff(
+    id: number,
+    data: IUpdateWriteoffDto
+  ): Promise<IWriteoff> {
     const response = await api.patch<ApiResponse<IWriteoff>>(
       `/admin/inventory/writeoffs/${id}`,
       data
@@ -83,7 +86,10 @@ export const writeoffApi = {
    * Add item to writeoff
    * POST /admin/inventory/writeoffs/:id/items
    */
-  async addItem(id: number, data: ICreateWriteoffItemDto): Promise<IWriteoffItem> {
+  async addItem(
+    id: number,
+    data: ICreateWriteoffItemDto
+  ): Promise<IWriteoffItem> {
     const response = await api.post<ApiResponse<IWriteoffItem>>(
       `/admin/inventory/writeoffs/${id}/items`,
       data
@@ -95,7 +101,11 @@ export const writeoffApi = {
    * Update writeoff item
    * PATCH /admin/inventory/writeoffs/:id/items/:itemId
    */
-  async updateItem(writeoffId: number, itemId: number, data: IUpdateWriteoffItemDto): Promise<IWriteoffItem> {
+  async updateItem(
+    writeoffId: number,
+    itemId: number,
+    data: IUpdateWriteoffItemDto
+  ): Promise<IWriteoffItem> {
     const response = await api.patch<ApiResponse<IWriteoffItem>>(
       `/admin/inventory/writeoffs/${writeoffId}/items/${itemId}`,
       data
@@ -137,7 +147,10 @@ export const writeoffApi = {
    * Reject writeoff
    * POST /admin/inventory/writeoffs/:id/reject
    */
-  async rejectWriteoff(id: number, data: IRejectWriteoffDto): Promise<IWriteoff> {
+  async rejectWriteoff(
+    id: number,
+    data: IRejectWriteoffDto
+  ): Promise<IWriteoff> {
     const response = await api.post<ApiResponse<IWriteoff>>(
       `/admin/inventory/writeoffs/${id}/reject`,
       data

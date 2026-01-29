@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import ForecastingAnalyticsPage from '@/app/dashboard/analytics/forecasting/page'
 
-export const Route = createFileRoute('/dashboard/_layout/analytics/forecasting')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/analytics/forecasting'
+)({
   component: ForecastingAnalyticsRoute,
 })
 

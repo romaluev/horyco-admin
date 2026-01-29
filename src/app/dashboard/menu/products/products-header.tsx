@@ -22,7 +22,7 @@ export function ProductsHeader() {
       <Link to="/dashboard/menu/products/create">
         <Button>
           <Plus className="h-4 w-4" />
-          <span className="hidden md:inline ml-2">
+          <span className="ml-2 hidden md:inline">
             {t('pages.products.actions.create')}
           </span>
         </Button>

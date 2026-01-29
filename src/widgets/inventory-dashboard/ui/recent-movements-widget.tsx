@@ -5,10 +5,19 @@ import { Link } from '@tanstack/react-router'
 import { ArrowLeftRight } from 'lucide-react'
 
 import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetMovements, MovementTypeBadge } from '@/entities/inventory/stock-movement'
+import {
+  useGetMovements,
+  MovementTypeBadge,
+} from '@/entities/inventory/stock-movement'
 
 interface IRecentMovementsWidgetProps {
   warehouseId?: number
@@ -42,7 +51,7 @@ export function RecentMovementsWidget({
       </CardHeader>
       <CardContent className="max-h-[320px] overflow-auto">
         {!warehouseId ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Выберите склад для просмотра
           </p>
         ) : isLoading ? (
@@ -58,7 +67,7 @@ export function RecentMovementsWidget({
             ))}
           </div>
         ) : !movements.length ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Нет движений товаров
           </p>
         ) : (
@@ -69,8 +78,10 @@ export function RecentMovementsWidget({
                 className="flex items-center justify-between rounded-lg border p-3"
               >
                 <div className="space-y-1">
-                  <p className="font-medium leading-none">{movement.item?.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="leading-none font-medium">
+                    {movement.item?.name}
+                  </p>
+                  <p className="text-muted-foreground text-sm">
                     {movement.warehouse?.name} •{' '}
                     {movement.quantity > 0 ? '+' : ''}
                     {movement.quantity} {movement.item?.unit}

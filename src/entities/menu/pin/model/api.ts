@@ -5,7 +5,11 @@
 import api from '@/shared/lib/axios'
 import { storeTokens } from '@/shared/lib/token-manager'
 
-import type { IPinGenerateResponse, IPinStatusResponse, IPinLoginResponse } from './types'
+import type {
+  IPinGenerateResponse,
+  IPinStatusResponse,
+  IPinLoginResponse,
+} from './types'
 
 // ============================================================================
 // Types
@@ -22,21 +26,33 @@ interface ApiResponse<T> {
 // PIN API
 // ============================================================================
 
-export const generatePin = async (employeeId: number): Promise<IPinGenerateResponse> => {
-  const response = await api.post<ApiResponse<IPinGenerateResponse>>('/auth/generate-pin', {
-    employeeId,
-  })
+export const generatePin = async (
+  employeeId: number
+): Promise<IPinGenerateResponse> => {
+  const response = await api.post<ApiResponse<IPinGenerateResponse>>(
+    '/auth/generate-pin',
+    {
+      employeeId,
+    }
+  )
   return response.data.data
 }
 
-export const refreshOwnPin = async (currentPassword: string): Promise<IPinGenerateResponse> => {
-  const response = await api.post<ApiResponse<IPinGenerateResponse>>('/auth/refresh-pin', {
-    currentPassword,
-  })
+export const refreshOwnPin = async (
+  currentPassword: string
+): Promise<IPinGenerateResponse> => {
+  const response = await api.post<ApiResponse<IPinGenerateResponse>>(
+    '/auth/refresh-pin',
+    {
+      currentPassword,
+    }
+  )
   return response.data.data
 }
 
-export const getPinStatus = async (employeeId: number): Promise<IPinStatusResponse> => {
+export const getPinStatus = async (
+  employeeId: number
+): Promise<IPinStatusResponse> => {
   const response = await api.get<ApiResponse<IPinStatusResponse>>(
     `/auth/pin-status/${employeeId}`
   )

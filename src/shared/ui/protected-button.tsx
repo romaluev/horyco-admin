@@ -66,35 +66,24 @@ export const ProtectedButton = React.forwardRef<
       }
 
       const tooltip =
-        deniedTooltip ||
-        `You don't have permission to perform this action`
+        deniedTooltip || `You don't have permission to perform this action`
 
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                ref={ref}
-                disabled
-                {...props}
-              >
+              <Button ref={ref} disabled {...props}>
                 {children}
               </Button>
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs">
-              {tooltip}
-            </TooltipContent>
+            <TooltipContent className="max-w-xs">{tooltip}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )
     }
 
     return (
-      <Button
-        ref={ref}
-        disabled={disabled}
-        {...props}
-      >
+      <Button ref={ref} disabled={disabled} {...props}>
         {children}
       </Button>
     )

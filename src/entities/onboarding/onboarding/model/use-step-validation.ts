@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react'
 import { ONBOARDING_STEPS, getStepRoute } from '@/shared/config/onboarding'
 import { useRouter } from '@/shared/lib/navigation'
 
-
 import { useGetOnboardingProgress } from './queries'
 
 import type { OnboardingStep } from './types'
@@ -33,11 +32,7 @@ export const useStepValidation = (
   }
 ) => {
   const router = useRouter()
-  const {
-    data: progress,
-    isLoading,
-    isFetching,
-  } = useGetOnboardingProgress()
+  const { data: progress, isLoading, isFetching } = useGetOnboardingProgress()
 
   // Track if we've already validated to prevent loops
   const hasValidatedRef = useRef(false)

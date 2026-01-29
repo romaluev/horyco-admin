@@ -53,7 +53,9 @@ export function CreateWriteoffDialog() {
 
   const onSubmit = (data: WriteoffFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as WriteoffFormValues
 
     createWriteoff(cleanData, {

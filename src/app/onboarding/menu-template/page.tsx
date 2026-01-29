@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 
-
 import { Loader2, Plus, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -74,10 +73,9 @@ export default function MenuTemplatePage() {
   const { progress } = useStepValidation('menu_template')
 
   // Fetch default products based on business type from stepData
-  const businessType = (
-    (progress?.stepData?.business_identity as { businessType?: string })
-      ?.businessType || 'restaurant'
-  ) as string
+  const businessType = ((
+    progress?.stepData?.business_identity as { businessType?: string }
+  )?.businessType || 'restaurant') as string
   const {
     data: defaultProducts,
     isLoading: isProductsLoading,
@@ -345,8 +343,7 @@ export default function MenuTemplatePage() {
   }
 
   const selectedProductsCount = categories.reduce(
-    (total, cat) =>
-      total + cat.products.filter((p) => p.isSelected).length,
+    (total, cat) => total + cat.products.filter((p) => p.isSelected).length,
     0
   )
 
@@ -390,7 +387,7 @@ export default function MenuTemplatePage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           {selectedProductsCount > 0 && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {t('pages.menuTemplate.selected')} {selectedCategoriesCount}{' '}
               {selectedCategoriesCount === 1
                 ? t('pages.menuTemplate.category')
@@ -415,7 +412,9 @@ export default function MenuTemplatePage() {
       {/* Empty state with option to create */}
       {categories.length === 0 && !isProductsLoading && (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-          <h3 className="mb-2 text-xl font-semibold">{t('pages.menuTemplate.emptyState.title')}</h3>
+          <h3 className="mb-2 text-xl font-semibold">
+            {t('pages.menuTemplate.emptyState.title')}
+          </h3>
           <p className="text-muted-foreground mb-6 max-w-md">
             {t('pages.menuTemplate.emptyState.description')}
           </p>
@@ -445,21 +444,20 @@ export default function MenuTemplatePage() {
                   onCheckedChange={() => toggleCategorySelect(category.id)}
                   className="mt-1"
                 />
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg">
-                        {category.name}
-                      </h3>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-lg font-semibold">{category.name}</h3>
                       {category.description && (
-                        <p className="text-muted-foreground text-sm mt-1">
+                        <p className="text-muted-foreground mt-1 text-sm">
                           {category.description}
                         </p>
                       )}
-                      <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
                         <span>
                           {category.products.filter((p) => p.isSelected).length}{' '}
-                          {t('pages.menuTemplate.categoryCard.selected')} {category.products.length}
+                          {t('pages.menuTemplate.categoryCard.selected')}{' '}
+                          {category.products.length}
                         </span>
                       </div>
                     </div>
@@ -478,7 +476,7 @@ export default function MenuTemplatePage() {
                         onClick={() => handleDeleteCategory(category.id)}
                         className="h-8 w-8 p-0"
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2 className="text-destructive h-4 w-4" />
                       </Button>
                       <Button
                         size="sm"
@@ -499,8 +497,8 @@ export default function MenuTemplatePage() {
 
               {/* Products Grid - Show when expanded */}
               {category.isExpanded && (
-                <div className="border-t p-4 bg-muted/30">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div className="bg-muted/30 border-t p-4">
+                  <div className="mb-3 grid grid-cols-1 gap-3 md:grid-cols-2">
                     {category.products.map((product) => (
                       <div
                         key={product.id}
@@ -518,12 +516,12 @@ export default function MenuTemplatePage() {
                             }
                             className="mt-1"
                           />
-                          <div className="flex-1 min-w-0">
+                          <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-2">
-                              <div className="flex-1 min-w-0">
+                              <div className="min-w-0 flex-1">
                                 <p className="font-medium">{product.name}</p>
                                 {product.description && (
-                                  <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
+                                  <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
                                     {product.description}
                                   </p>
                                 )}
@@ -551,7 +549,7 @@ export default function MenuTemplatePage() {
                                   }
                                   className="h-8 w-8 p-0"
                                 >
-                                  <Trash2 className="h-3 w-3 text-destructive" />
+                                  <Trash2 className="text-destructive h-3 w-3" />
                                 </Button>
                               </div>
                             </div>
@@ -623,7 +621,9 @@ export default function MenuTemplatePage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {isNewProduct ? t('pages.menuTemplate.productDialog.add') : t('pages.menuTemplate.productDialog.edit')}
+              {isNewProduct
+                ? t('pages.menuTemplate.productDialog.add')
+                : t('pages.menuTemplate.productDialog.edit')}
             </DialogTitle>
             <DialogDescription>
               {isNewProduct
@@ -643,7 +643,9 @@ export default function MenuTemplatePage() {
                 id="edit-product-name"
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                placeholder={t('pages.menuTemplate.productDialog.namePlaceholder')}
+                placeholder={t(
+                  'pages.menuTemplate.productDialog.namePlaceholder'
+                )}
               />
             </div>
             <div>
@@ -658,7 +660,9 @@ export default function MenuTemplatePage() {
                 type="number"
                 value={editedPrice}
                 onChange={(e) => setEditedPrice(e.target.value)}
-                placeholder={t('pages.menuTemplate.productDialog.pricePlaceholder')}
+                placeholder={t(
+                  'pages.menuTemplate.productDialog.pricePlaceholder'
+                )}
               />
             </div>
             <div>
@@ -672,7 +676,9 @@ export default function MenuTemplatePage() {
                 id="edit-product-description"
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
-                placeholder={t('pages.menuTemplate.productDialog.descriptionPlaceholder')}
+                placeholder={t(
+                  'pages.menuTemplate.productDialog.descriptionPlaceholder'
+                )}
                 rows={3}
               />
             </div>
@@ -688,18 +694,25 @@ export default function MenuTemplatePage() {
               onClick={handleSaveEdit}
               disabled={!editedName.trim() || !editedPrice.trim()}
             >
-              {isNewProduct ? t('pages.menuTemplate.productDialog.add_button') : t('pages.menuTemplate.productDialog.save')}
+              {isNewProduct
+                ? t('pages.menuTemplate.productDialog.add_button')
+                : t('pages.menuTemplate.productDialog.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Edit/Add Category Dialog */}
-      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+      <Dialog
+        open={isCategoryDialogOpen}
+        onOpenChange={setIsCategoryDialogOpen}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {isNewCategory ? t('pages.menuTemplate.categoryDialog.add') : t('pages.menuTemplate.categoryDialog.edit')}
+              {isNewCategory
+                ? t('pages.menuTemplate.categoryDialog.add')
+                : t('pages.menuTemplate.categoryDialog.edit')}
             </DialogTitle>
             <DialogDescription>
               {isNewCategory
@@ -719,7 +732,9 @@ export default function MenuTemplatePage() {
                 id="edit-category-name"
                 value={editedCategoryName}
                 onChange={(e) => setEditedCategoryName(e.target.value)}
-                placeholder={t('pages.menuTemplate.categoryDialog.namePlaceholder')}
+                placeholder={t(
+                  'pages.menuTemplate.categoryDialog.namePlaceholder'
+                )}
               />
             </div>
             <div>
@@ -733,7 +748,9 @@ export default function MenuTemplatePage() {
                 id="edit-category-desc"
                 value={editedCategoryDesc}
                 onChange={(e) => setEditedCategoryDesc(e.target.value)}
-                placeholder={t('pages.menuTemplate.categoryDialog.descriptionPlaceholder')}
+                placeholder={t(
+                  'pages.menuTemplate.categoryDialog.descriptionPlaceholder'
+                )}
                 rows={3}
               />
             </div>
@@ -749,7 +766,9 @@ export default function MenuTemplatePage() {
               onClick={handleSaveCategoryEdit}
               disabled={!editedCategoryName.trim()}
             >
-              {isNewCategory ? t('pages.menuTemplate.categoryDialog.create') : t('pages.menuTemplate.categoryDialog.save')}
+              {isNewCategory
+                ? t('pages.menuTemplate.categoryDialog.create')
+                : t('pages.menuTemplate.categoryDialog.save')}
             </Button>
           </DialogFooter>
         </DialogContent>

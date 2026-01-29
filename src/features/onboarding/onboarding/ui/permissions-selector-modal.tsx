@@ -34,7 +34,7 @@ interface PermissionsSelectorModalProps {
  * Simplified permissions selector modal for onboarding
  * Shows permissions grouped by category with checkboxes
  */
- 
+
 export const PermissionsSelectorModal = ({
   isOpen,
   onOpenChange,
@@ -85,7 +85,9 @@ export const PermissionsSelectorModal = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('pages.staffInvite.permissionsModal.title')} - {branchName}</DialogTitle>
+          <DialogTitle>
+            {t('pages.staffInvite.permissionsModal.title')} - {branchName}
+          </DialogTitle>
           <DialogDescription>
             {t('pages.staffInvite.permissionsModal.description')}
           </DialogDescription>

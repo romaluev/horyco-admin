@@ -68,7 +68,10 @@ export function StockSummaryCards({ warehouseId }: IStockSummaryCardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.title} className={card.alert ? 'border-destructive' : ''}>
+        <Card
+          key={card.title}
+          className={card.alert ? 'border-destructive' : ''}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
             <card.icon
@@ -77,7 +80,7 @@ export function StockSummaryCards({ warehouseId }: IStockSummaryCardsProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{card.value}</div>
-            <p className="text-xs text-muted-foreground">{card.description}</p>
+            <p className="text-muted-foreground text-xs">{card.description}</p>
           </CardContent>
         </Card>
       ))}

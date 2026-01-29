@@ -9,7 +9,7 @@ interface TextWidgetProps {
 export function TextWidget({ data }: TextWidgetProps) {
   if (!data.text) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет текста
       </div>
     )
@@ -17,7 +17,7 @@ export function TextWidget({ data }: TextWidgetProps) {
 
   return (
     <div className="flex h-full flex-col overflow-auto">
-      <p className="whitespace-pre-wrap text-sm text-foreground">{data.text}</p>
+      <p className="text-foreground text-sm whitespace-pre-wrap">{data.text}</p>
     </div>
   )
 }

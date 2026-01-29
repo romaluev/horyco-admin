@@ -2,10 +2,14 @@
  * Common error message translations
  */
 const ERROR_TRANSLATIONS: Record<string, string> = {
-  'already has an active count in progress': 'На этом складе уже есть активная инвентаризация',
-  'Warehouse already exists for branch': 'Склад для этого филиала уже существует',
-  'Cannot delete warehouse with existing stock': 'Нельзя удалить склад с остатками. Сначала перенесите или спишите товары.',
-  'Cannot delete supplier with existing purchase orders': 'Нельзя удалить поставщика с заказами. Деактивируйте его вместо удаления.',
+  'already has an active count in progress':
+    'На этом складе уже есть активная инвентаризация',
+  'Warehouse already exists for branch':
+    'Склад для этого филиала уже существует',
+  'Cannot delete warehouse with existing stock':
+    'Нельзя удалить склад с остатками. Сначала перенесите или спишите товары.',
+  'Cannot delete supplier with existing purchase orders':
+    'Нельзя удалить поставщика с заказами. Деактивируйте его вместо удаления.',
 }
 
 /**
@@ -24,7 +28,10 @@ const translateError = (message: string): string => {
  * Extract error message from API error response
  * Handles various error response formats from the backend
  */
-export const getErrorMessage = (error: unknown, defaultMessage: string): string => {
+export const getErrorMessage = (
+  error: unknown,
+  defaultMessage: string
+): string => {
   if (typeof error !== 'object' || error === null) {
     return defaultMessage
   }
@@ -38,12 +45,21 @@ export const getErrorMessage = (error: unknown, defaultMessage: string): string 
       const errorData = data as Record<string, unknown>
 
       // Handle our API error format: { error: { message: string, details: { originalError: string }, validationErrors: [] } }
-      if ('error' in errorData && typeof errorData.error === 'object' && errorData.error !== null) {
+      if (
+        'error' in errorData &&
+        typeof errorData.error === 'object' &&
+        errorData.error !== null
+      ) {
         const apiError = errorData.error as Record<string, unknown>
 
         // Check for validation errors first
-        if ('validationErrors' in apiError && Array.isArray(apiError.validationErrors)) {
-          const validationErrors = apiError.validationErrors as { messages?: string[] }[]
+        if (
+          'validationErrors' in apiError &&
+          Array.isArray(apiError.validationErrors)
+        ) {
+          const validationErrors = apiError.validationErrors as {
+            messages?: string[]
+          }[]
           const firstError = validationErrors[0]
           if (firstError?.messages?.[0]) {
             const message = firstError.messages[0]
@@ -55,9 +71,16 @@ export const getErrorMessage = (error: unknown, defaultMessage: string): string 
         }
 
         // Check for originalError in details
-        if ('details' in apiError && typeof apiError.details === 'object' && apiError.details !== null) {
+        if (
+          'details' in apiError &&
+          typeof apiError.details === 'object' &&
+          apiError.details !== null
+        ) {
           const details = apiError.details as Record<string, unknown>
-          if ('originalError' in details && typeof details.originalError === 'string') {
+          if (
+            'originalError' in details &&
+            typeof details.originalError === 'string'
+          ) {
             return translateError(details.originalError)
           }
         }

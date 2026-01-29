@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 
-
 import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconBuildingWarehouse } from '@tabler/icons-react'
@@ -32,7 +31,10 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetWarehouses, useWarehouseStockSummary } from '@/entities/inventory/warehouse'
+import {
+  useGetWarehouses,
+  useWarehouseStockSummary,
+} from '@/entities/inventory/warehouse'
 import {
   CreateWarehouseDialog,
   DeleteWarehouseButton,
@@ -65,7 +67,9 @@ export default function WarehousesPage() {
   const { t } = useTranslation('inventory')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [editingWarehouse, setEditingWarehouse] = useState<IWarehouse | null>(null)
+  const [editingWarehouse, setEditingWarehouse] = useState<IWarehouse | null>(
+    null
+  )
 
   const { data: warehouses, isLoading } = useGetWarehouses(
     statusFilter !== 'all' ? { isActive: statusFilter === 'active' } : undefined
@@ -93,8 +97,8 @@ export default function WarehousesPage() {
         <Separator />
 
         <div className="flex flex-wrap gap-4">
-          <div className="relative flex-1 min-w-[200px]">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="relative min-w-[200px] flex-1">
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder={t('pages.warehouses.searchWarehouse')}
               value={search}
@@ -107,9 +111,15 @@ export default function WarehousesPage() {
               <SelectValue placeholder="Статус" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('pages.warehouses.allStatuses')}</SelectItem>
-              <SelectItem value="active">{t('pages.warehouses.active')}</SelectItem>
-              <SelectItem value="inactive">{t('pages.warehouses.inactive')}</SelectItem>
+              <SelectItem value="all">
+                {t('pages.warehouses.allStatuses')}
+              </SelectItem>
+              <SelectItem value="active">
+                {t('pages.warehouses.active')}
+              </SelectItem>
+              <SelectItem value="inactive">
+                {t('pages.warehouses.inactive')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -122,9 +132,11 @@ export default function WarehousesPage() {
           </div>
         ) : !filteredWarehouses?.length ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <IconBuildingWarehouse className="h-12 w-12 text-muted-foreground mb-4" />
+            <IconBuildingWarehouse className="text-muted-foreground mb-4 h-12 w-12" />
             <h3 className="text-lg font-medium">
-              {search ? t('pages.warehouses.notFound') : t('pages.warehouses.noWarehouses')}
+              {search
+                ? t('pages.warehouses.notFound')
+                : t('pages.warehouses.noWarehouses')}
             </h3>
             <p className="text-muted-foreground mt-1 mb-4">
               {search
@@ -140,8 +152,12 @@ export default function WarehousesPage() {
                 <TableRow>
                   <TableHead>{t('pages.warehouses.columnName')}</TableHead>
                   <TableHead>{t('pages.warehouses.columnBranch')}</TableHead>
-                  <TableHead className="text-right">{t('pages.warehouses.columnItems')}</TableHead>
-                  <TableHead className="text-right">{t('pages.warehouses.columnCost')}</TableHead>
+                  <TableHead className="text-right">
+                    {t('pages.warehouses.columnItems')}
+                  </TableHead>
+                  <TableHead className="text-right">
+                    {t('pages.warehouses.columnCost')}
+                  </TableHead>
                   <TableHead>{t('pages.warehouses.columnStatus')}</TableHead>
                   <TableHead className="w-[100px]" />
                 </TableRow>
@@ -157,12 +173,15 @@ export default function WarehousesPage() {
                       <div>
                         <p className="font-medium">{warehouse.name}</p>
                         {warehouse.code && (
-                          <p className="text-xs text-muted-foreground">{warehouse.code}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {warehouse.code}
+                          </p>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {warehouse.branchName || `${t('pages.warehouses.branchNumber')}${warehouse.branchId}`}
+                      {warehouse.branchName ||
+                        `${t('pages.warehouses.branchNumber')}${warehouse.branchId}`}
                     </TableCell>
                     <TableCell className="text-right">
                       <WarehouseItemsCell warehouseId={warehouse.id} />
@@ -171,8 +190,12 @@ export default function WarehousesPage() {
                       <WarehouseValueCell warehouseId={warehouse.id} />
                     </TableCell>
                     <TableCell>
-                      <Badge variant={warehouse.isActive ? 'default' : 'secondary'}>
-                        {warehouse.isActive ? t('pages.warehouses.active') : t('pages.warehouses.inactive')}
+                      <Badge
+                        variant={warehouse.isActive ? 'default' : 'secondary'}
+                      >
+                        {warehouse.isActive
+                          ? t('pages.warehouses.active')
+                          : t('pages.warehouses.inactive')}
                       </Badge>
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>

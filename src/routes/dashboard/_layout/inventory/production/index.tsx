@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import ProductionPage from '@/app/dashboard/inventory/production/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/production/')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/inventory/production/'
+)({
   component: ProductionRoute,
 })
 

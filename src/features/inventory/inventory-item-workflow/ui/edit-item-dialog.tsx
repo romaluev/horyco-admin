@@ -7,7 +7,6 @@ import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-
 import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
@@ -35,12 +34,7 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 import { Switch } from '@/shared/ui/base/switch'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/ui/base/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useUpdateInventoryItem } from '@/entities/inventory/inventory-item/model/mutations'
@@ -177,14 +171,17 @@ export function EditItemDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-auto">
+      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Редактировать товар</DialogTitle>
           <DialogDescription>Измените параметры товара</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <Tabs defaultValue="general" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="general">Основное</TabsTrigger>
@@ -192,7 +189,7 @@ export function EditItemDialog({
                 <TabsTrigger value="extra">Дополнительно</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="general" className="space-y-4 mt-4">
+              <TabsContent value="general" className="mt-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -255,7 +252,10 @@ export function EditItemDialog({
                           </FormControl>
                           <SelectContent>
                             {categoryOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
@@ -283,7 +283,10 @@ export function EditItemDialog({
                           </FormControl>
                           <SelectContent>
                             {unitOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
@@ -296,7 +299,7 @@ export function EditItemDialog({
                 </div>
               </TabsContent>
 
-              <TabsContent value="stock" className="space-y-4 mt-4">
+              <TabsContent value="stock" className="mt-4 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -314,7 +317,9 @@ export function EditItemDialog({
                             }
                           />
                         </FormControl>
-                        <FormDescription>Уведомление при достижении</FormDescription>
+                        <FormDescription>
+                          Уведомление при достижении
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -333,7 +338,9 @@ export function EditItemDialog({
                             value={field.value ?? ''}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? parseInt(e.target.value) : undefined
+                                e.target.value
+                                  ? parseInt(e.target.value)
+                                  : undefined
                               )
                             }
                           />
@@ -358,7 +365,9 @@ export function EditItemDialog({
                             value={field.value ?? ''}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? parseInt(e.target.value) : undefined
+                                e.target.value
+                                  ? parseInt(e.target.value)
+                                  : undefined
                               )
                             }
                           />
@@ -381,7 +390,9 @@ export function EditItemDialog({
                             value={field.value ?? ''}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? parseInt(e.target.value) : undefined
+                                e.target.value
+                                  ? parseInt(e.target.value)
+                                  : undefined
                               )
                             }
                           />
@@ -393,7 +404,7 @@ export function EditItemDialog({
                 </div>
               </TabsContent>
 
-              <TabsContent value="extra" className="space-y-4 mt-4">
+              <TabsContent value="extra" className="mt-4 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -430,7 +441,9 @@ export function EditItemDialog({
                             value={field.value ?? ''}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? parseInt(e.target.value) : undefined
+                                e.target.value
+                                  ? parseInt(e.target.value)
+                                  : undefined
                               )
                             }
                           />

@@ -21,7 +21,6 @@ import {
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-
 import { PeriodType } from '@/shared/api/graphql'
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -47,7 +46,10 @@ import type { IChannelItem } from '@/features/dashboard/analytics'
 // CONSTANTS
 // ============================================
 
-const CHANNEL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+const CHANNEL_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   DINE_IN: IconBuildingStore,
   DELIVERY: IconMotorbike,
   TAKEAWAY: IconShoppingBag,
@@ -69,7 +71,8 @@ export default function ChannelsAnalyticsPage() {
   const { t } = useTranslation('analytics')
   const [period, setPeriod] = React.useState<PeriodType>(PeriodType.THIS_WEEK)
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
+  const [sortDirection, setSortDirection] =
+    React.useState<SortDirection>('desc')
 
   const { data, isLoading, error, refetch } = useChannelsAnalytics({
     period: { type: period },
@@ -136,7 +139,7 @@ export default function ChannelsAnalyticsPage() {
           />
 
           {/* Summary */}
-          <div className="mt-4 text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-4 text-sm">
             {t('channels.summary', {
               revenue: formatPrice(data.totalRevenue ?? 0),
               orders: (data.totalOrders ?? 0).toLocaleString('ru-RU'),
@@ -211,13 +214,18 @@ function ChannelsTable({
               onSort={onSort}
               className="text-right"
             />
-            <TableHead className="text-right">{t('channels.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {channels.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+              <TableCell
+                colSpan={6}
+                className="text-muted-foreground h-24 text-center"
+              >
                 {t('channels.table.noData')}
               </TableCell>
             </TableRow>
@@ -229,10 +237,12 @@ function ChannelsTable({
                 <TableRow key={channel.channel}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
+                      <div className="bg-muted flex size-8 items-center justify-center rounded-lg">
                         <Icon className="size-4" />
                       </div>
-                      <span className="font-medium">{channel.label ?? channel.channel}</span>
+                      <span className="font-medium">
+                        {channel.label ?? channel.channel}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
@@ -248,7 +258,9 @@ function ChannelsTable({
                     {formatPrice(channel.avgCheck ?? 0)}
                   </TableCell>
                   <TableCell className="text-right">
-                    <ChangeIndicator value={channel.ordersChange?.percent ?? 0} />
+                    <ChangeIndicator
+                      value={channel.ordersChange?.percent ?? 0}
+                    />
                   </TableCell>
                 </TableRow>
               )
@@ -271,9 +283,9 @@ interface IShareBarProps {
 function ShareBar({ value }: IShareBarProps) {
   return (
     <div className="flex items-center justify-end gap-2">
-      <div className="h-2 w-16 overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted h-2 w-16 overflow-hidden rounded-full">
         <div
-          className="h-full bg-primary transition-all"
+          className="bg-primary h-full transition-all"
           style={{ width: `${value}%` }}
         />
       </div>
@@ -337,18 +349,22 @@ function SortableHeader({
 
   return (
     <TableHead
-      className={cn('cursor-pointer select-none hover:bg-muted/50', className)}
+      className={cn('hover:bg-muted/50 cursor-pointer select-none', className)}
       onClick={() => onSort(column)}
     >
-      <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end')}>
+      <div
+        className={cn(
+          'flex items-center gap-1',
+          className?.includes('text-right') && 'justify-end'
+        )}
+      >
         {label}
-        {isActive && (
-          sortDirection === 'asc' ? (
+        {isActive &&
+          (sortDirection === 'asc' ? (
             <IconArrowUp className="size-3" />
           ) : (
             <IconArrowDown className="size-3" />
-          )
-        )}
+          ))}
       </div>
     </TableHead>
   )
@@ -367,11 +383,21 @@ function ChannelsTableSkeleton() {
         <TableHeader>
           <TableRow>
             <TableHead>{t('channels.table.channel')}</TableHead>
-            <TableHead className="text-right">{t('channels.table.orders')}</TableHead>
-            <TableHead className="text-right">{t('channels.table.revenue')}</TableHead>
-            <TableHead className="text-right">{t('channels.table.share')}</TableHead>
-            <TableHead className="text-right">{t('channels.table.avgCheck')}</TableHead>
-            <TableHead className="text-right">{t('channels.table.change')}</TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.orders')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.revenue')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.share')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.avgCheck')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('channels.table.change')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

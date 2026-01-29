@@ -201,8 +201,12 @@ export const viewApi = {
   /**
    * Create a new view
    */
-  createView: async (input: ICreateViewInput): Promise<{ id: string; name: string }> => {
-    const response = await executeQuery<ICreateViewResponse>(CREATE_VIEW, { input })
+  createView: async (
+    input: ICreateViewInput
+  ): Promise<{ id: string; name: string }> => {
+    const response = await executeQuery<ICreateViewResponse>(CREATE_VIEW, {
+      input,
+    })
     return response.createView
   },
 
@@ -213,7 +217,10 @@ export const viewApi = {
     id: string,
     input: IUpdateViewInput
   ): Promise<{ id: string; name: string }> => {
-    const response = await executeQuery<IUpdateViewResponse>(UPDATE_VIEW, { id, input })
+    const response = await executeQuery<IUpdateViewResponse>(UPDATE_VIEW, {
+      id,
+      input,
+    })
     return response.updateView
   },
 
@@ -221,7 +228,9 @@ export const viewApi = {
    * Delete a view
    */
   deleteView: async (id: string): Promise<{ success: boolean }> => {
-    const response = await executeQuery<IDeleteViewResponse>(DELETE_VIEW, { id })
+    const response = await executeQuery<IDeleteViewResponse>(DELETE_VIEW, {
+      id,
+    })
     return response.deleteView
   },
 }

@@ -11,16 +11,15 @@ import { Separator } from '@/shared/ui/base/separator'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetBranchById, BranchInfoDisplay } from '@/entities/organization/branch'
+import {
+  useGetBranchById,
+  BranchInfoDisplay,
+} from '@/entities/organization/branch'
 import { DeleteBranchDialog } from '@/features/organization/branch-delete'
 import { UpdateBranchDialog } from '@/features/organization/branch-form'
 import { BranchStatisticsWidget } from '@/widgets/branch-statistics'
 
-export default function BranchDetailPage({
-  branchId,
-}: {
-  branchId: string
-}) {
+export default function BranchDetailPage({ branchId }: { branchId: string }) {
   const { t } = useTranslation('organization')
   const router = useRouter()
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -68,7 +67,10 @@ export default function BranchDetailPage({
                 >
                   <IconArrowLeft className="h-4 w-4" />
                 </Button>
-                <Heading title={branch.name} description={t('branches.detail.description')} />
+                <Heading
+                  title={branch.name}
+                  description={t('branches.detail.description')}
+                />
               </div>
             </div>
             <div className="flex gap-2">
@@ -90,7 +92,10 @@ export default function BranchDetailPage({
           <BranchInfoDisplay branch={branch} />
 
           <div className="space-y-4">
-            <Heading title={t('branches.detail.statistics')} description={t('branches.detail.statisticsDescription')} />
+            <Heading
+              title={t('branches.detail.statistics')}
+              description={t('branches.detail.statisticsDescription')}
+            />
             <BranchStatisticsWidget branchId={parseInt(branchId)} />
           </div>
         </div>

@@ -58,47 +58,47 @@ export const EmployeePermissionGrid = ({
         if (!categoryPermissions) return null
 
         return (
-        <div key={category} className="rounded-lg border p-4">
-          <h3 className="mb-4 text-sm font-semibold capitalize">
-            {category}
-          </h3>
-          <div className="space-y-3">
-            {categoryPermissions.map((permission) => (
-              <div key={permission.id} className="flex items-start gap-3">
-                <Checkbox
-                  id={`perm-${permission.id}`}
-                  checked={selectedPermissionIds.includes(permission.id)}
-                  onCheckedChange={(checked) =>
-                    onPermissionChange(permission.id, checked as boolean)
-                  }
-                  disabled={disabled}
-                  className="mt-1"
-                />
-                <div className="flex-1">
-                  <label
-                    htmlFor={`perm-${permission.id}`}
-                    className={cn(
-                      'cursor-pointer text-sm font-medium',
-                      disabled && 'opacity-50'
+          <div key={category} className="rounded-lg border p-4">
+            <h3 className="mb-4 text-sm font-semibold capitalize">
+              {category}
+            </h3>
+            <div className="space-y-3">
+              {categoryPermissions.map((permission) => (
+                <div key={permission.id} className="flex items-start gap-3">
+                  <Checkbox
+                    id={`perm-${permission.id}`}
+                    checked={selectedPermissionIds.includes(permission.id)}
+                    onCheckedChange={(checked) =>
+                      onPermissionChange(permission.id, checked as boolean)
+                    }
+                    disabled={disabled}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <label
+                      htmlFor={`perm-${permission.id}`}
+                      className={cn(
+                        'cursor-pointer text-sm font-medium',
+                        disabled && 'opacity-50'
+                      )}
+                    >
+                      {permission.name}
+                    </label>
+                    {permission.description && (
+                      <p className="text-muted-foreground text-xs">
+                        {permission.description}
+                      </p>
                     )}
-                  >
-                    {permission.name}
-                  </label>
-                  {permission.description && (
-                    <p className="text-muted-foreground text-xs">
-                      {permission.description}
-                    </p>
-                  )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
         )
       })}
 
       {categories.length === 0 && (
-        <div className="text-muted-foreground text-center text-sm py-8">
+        <div className="text-muted-foreground py-8 text-center text-sm">
           Нет доступных разрешений
         </div>
       )}

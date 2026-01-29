@@ -59,11 +59,17 @@ interface ILockedPageStateProps {
  * +------------------------------------------------------------------+
  * ```
  */
-export function LockedPageState({ config, requiredTier }: ILockedPageStateProps) {
+export function LockedPageState({
+  config,
+  requiredTier,
+}: ILockedPageStateProps) {
   const { t } = useTranslation('analytics')
   const router = useRouter()
 
-  const prompt = requiredTier === 'analytics_full' ? UPGRADE_PROMPTS.ultra : UPGRADE_PROMPTS.pro
+  const prompt =
+    requiredTier === 'analytics_full'
+      ? UPGRADE_PROMPTS.ultra
+      : UPGRADE_PROMPTS.pro
   const targetPlan = requiredTier === 'analytics_full' ? 'ULTRA' : 'PRO'
 
   const handleUpgrade = () => {
@@ -75,8 +81,8 @@ export function LockedPageState({ config, requiredTier }: ILockedPageStateProps)
     <div className="flex min-h-[60vh] items-center justify-center p-4">
       <Card className="max-w-md text-center">
         <CardHeader className="space-y-4">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-muted">
-            <IconLock className="size-8 text-muted-foreground" />
+          <div className="bg-muted mx-auto flex size-16 items-center justify-center rounded-full">
+            <IconLock className="text-muted-foreground size-8" />
           </div>
           <CardTitle className="text-xl">{config.title}</CardTitle>
           <CardDescription className="text-base">
@@ -86,16 +92,16 @@ export function LockedPageState({ config, requiredTier }: ILockedPageStateProps)
         <CardContent className="space-y-6">
           {config.upgradeFeatures.length > 0 && (
             <div className="text-left">
-              <p className="mb-3 text-sm font-medium text-muted-foreground">
+              <p className="text-muted-foreground mb-3 text-sm font-medium">
                 {t('lockedPage.upgradeNow')}
               </p>
               <ul className="space-y-2">
                 {config.upgradeFeatures.map((feature, index) => (
                   <li
                     key={index}
-                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                    className="text-muted-foreground flex items-start gap-2 text-sm"
                   >
-                    <span className="mt-0.5 text-primary">•</span>
+                    <span className="text-primary mt-0.5">•</span>
                     {feature}
                   </li>
                 ))}
@@ -145,13 +151,13 @@ export function ViewLimitReachedState({
 
   return (
     <div className="space-y-4 p-4 text-center">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-muted">
-        <IconLock className="size-6 text-muted-foreground" />
+      <div className="bg-muted mx-auto flex size-12 items-center justify-center rounded-full">
+        <IconLock className="text-muted-foreground size-6" />
       </div>
 
       <div className="space-y-1">
         <h3 className="font-medium">{UPGRADE_PROMPTS.viewLimit.title}</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t('lockedPage.viewLimitReached', { maxViews })}
         </p>
       </div>
@@ -190,7 +196,7 @@ export function ViewsUpgradePrompt() {
 
   return (
     <div className="border-t p-3 text-center">
-      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
         <IconLock className="size-4" />
         <span>{t('views.saveViews')}</span>
       </div>

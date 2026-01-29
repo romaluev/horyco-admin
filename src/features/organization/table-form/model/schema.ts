@@ -9,8 +9,14 @@ export const tableFormSchema = z.object({
   number: z.number().min(1, 'Table number is required'),
   capacity: z.number().min(1, 'Capacity must be greater than 0'),
   shape: z.enum(['round', 'square', 'rectangle', 'oval']),
-  xPosition: z.number().min(0, 'X position must be at least 0').max(CANVAS_WIDTH, `X position cannot exceed ${CANVAS_WIDTH}`),
-  yPosition: z.number().min(0, 'Y position must be at least 0').max(CANVAS_HEIGHT, `Y position cannot exceed ${CANVAS_HEIGHT}`),
+  xPosition: z
+    .number()
+    .min(0, 'X position must be at least 0')
+    .max(CANVAS_WIDTH, `X position cannot exceed ${CANVAS_WIDTH}`),
+  yPosition: z
+    .number()
+    .min(0, 'Y position must be at least 0')
+    .max(CANVAS_HEIGHT, `Y position cannot exceed ${CANVAS_HEIGHT}`),
   rotation: z.number().min(0).max(360),
 })
 

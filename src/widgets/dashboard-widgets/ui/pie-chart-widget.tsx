@@ -12,7 +12,10 @@ import {
   ChartTooltipContent,
 } from '@/shared/ui/base/chart'
 
-import type { WidgetConfig, WidgetData } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+} from '@/entities/dashboard/dashboard-widget'
 import type { ChartConfig } from '@/shared/ui/base/chart'
 
 interface PieChartWidgetProps {
@@ -33,11 +36,13 @@ const COLORS = [
 
 export function PieChartWidget({ data, config }: PieChartWidgetProps) {
   const chartData = useMemo(() => {
-    return (data.chartData ?? []).slice(0, config.limit ?? 5).map((item, i) => ({
-      name: item.label,
-      value: item.value,
-      fill: COLORS[i % COLORS.length],
-    }))
+    return (data.chartData ?? [])
+      .slice(0, config.limit ?? 5)
+      .map((item, i) => ({
+        name: item.label,
+        value: item.value,
+        fill: COLORS[i % COLORS.length],
+      }))
   }, [data.chartData, config.limit])
 
   const chartConfig: ChartConfig = useMemo(() => {
@@ -55,7 +60,7 @@ export function PieChartWidget({ data, config }: PieChartWidgetProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )

@@ -9,7 +9,9 @@ import PageContainer from '@/shared/ui/layout/page-container'
 
 import { FloorPlanContent } from '@/app/dashboard/halls/[hallId]/floor-plan/floor-plan-content'
 
-export const Route = createFileRoute('/dashboard/_layout/halls/$hallId/floor-plan')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/halls/$hallId/floor-plan'
+)({
   component: FloorPlanPage,
 })
 

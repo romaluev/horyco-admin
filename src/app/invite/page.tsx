@@ -35,7 +35,8 @@ export default function InvitePage() {
           <p className="text-muted-foreground px-8 text-center text-sm">
             Уже есть аккаунт?{' '}
             <Link
-              to="/auth/sign-in" search={{ redirect: undefined }}
+              to="/auth/sign-in"
+              search={{ redirect: undefined }}
               className="hover:text-primary font-medium underline underline-offset-4"
             >
               Войти

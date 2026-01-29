@@ -39,7 +39,9 @@ export const DeleteProductButton = ({ id }: { id: number }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('products.delete.confirmTitle')}</DialogTitle>
-          <DialogDescription>{t('products.delete.confirmDescription')}</DialogDescription>
+          <DialogDescription>
+            {t('products.delete.confirmDescription')}
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>

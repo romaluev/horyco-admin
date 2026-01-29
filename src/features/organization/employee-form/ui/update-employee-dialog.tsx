@@ -34,7 +34,6 @@ interface UpdateEmployeeDialogProps {
   employee: IEmployee
 }
 
- 
 export const UpdateEmployeeDialog = ({
   employee,
 }: UpdateEmployeeDialogProps) => {
@@ -46,8 +45,8 @@ export const UpdateEmployeeDialog = ({
     if (Array.isArray(employee.branchPermissions)) {
       const branchIds = Array.from(
         new Set(
-          employee.branchPermissions.map((bp) =>
-            (bp as { branchId: number }).branchId
+          employee.branchPermissions.map(
+            (bp) => (bp as { branchId: number }).branchId
           )
         )
       )
@@ -63,7 +62,6 @@ export const UpdateEmployeeDialog = ({
   }
 
   const [selectedBranchIds, setSelectedBranchIds] = useState<number[]>(
-     
     getInitialBranchIds()
   )
 
@@ -125,9 +123,11 @@ export const UpdateEmployeeDialog = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t('staff.form.title.edit', { name: employee.fullName })}</DialogTitle>
+          <DialogTitle>
+            {t('staff.form.title.edit', { name: employee.fullName })}
+          </DialogTitle>
           <DialogDescription>
             {t('staff.form.description.update', { name: employee.fullName })}
           </DialogDescription>
@@ -136,7 +136,9 @@ export const UpdateEmployeeDialog = ({
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="info">{t('staff.form.tabs.info')}</TabsTrigger>
-            <TabsTrigger value="branches-permissions">{t('staff.form.tabs.branches')}</TabsTrigger>
+            <TabsTrigger value="branches-permissions">
+              {t('staff.form.tabs.branches')}
+            </TabsTrigger>
             <TabsTrigger value="pin">PIN</TabsTrigger>
           </TabsList>
 
@@ -156,8 +158,12 @@ export const UpdateEmployeeDialog = ({
                   {t('common.cancel')}
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isPending ? t('common.actions.saving') : t('staff.form.saveChanges')}
+                  {isPending && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {isPending
+                    ? t('common.actions.saving')
+                    : t('staff.form.saveChanges')}
                 </Button>
               </DialogFooter>
             </form>
@@ -182,8 +188,13 @@ export const UpdateEmployeeDialog = ({
                 >
                   {t('common.cancel')}
                 </Button>
-                <Button type="submit" disabled={isPending || !isBranchesChanged}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button
+                  type="submit"
+                  disabled={isPending || !isBranchesChanged}
+                >
+                  {isPending && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   {isPending ? 'Сохранение...' : 'Сохранить изменения'}
                 </Button>
               </DialogFooter>

@@ -67,7 +67,11 @@ const extractTokenData = (response: unknown): TokenData | null => {
 const saveTokensFromResponse = (response: unknown): void => {
   const tokenData = extractTokenData(response)
   if (tokenData) {
-    storeTokens(tokenData.accessToken, tokenData.refreshToken, tokenData.expiresIn)
+    storeTokens(
+      tokenData.accessToken,
+      tokenData.refreshToken,
+      tokenData.expiresIn
+    )
   }
 }
 
@@ -88,15 +92,20 @@ export const authApi = {
   },
 
   // Refresh Token
-  refreshToken: async (data: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
-    const response = await api.post<RefreshTokenResponse | ApiResponse<RefreshTokenResponse>>(
-      '/auth/refresh',
-      data
-    )
+  refreshToken: async (
+    data: RefreshTokenRequest
+  ): Promise<RefreshTokenResponse> => {
+    const response = await api.post<
+      RefreshTokenResponse | ApiResponse<RefreshTokenResponse>
+    >('/auth/refresh', data)
 
     const tokenData = extractTokenData(response.data)
     if (tokenData) {
-      storeTokens(tokenData.accessToken, tokenData.refreshToken, tokenData.expiresIn)
+      storeTokens(
+        tokenData.accessToken,
+        tokenData.refreshToken,
+        tokenData.expiresIn
+      )
       return tokenData as RefreshTokenResponse
     }
 
@@ -105,12 +114,18 @@ export const authApi = {
 
   // Registration Flow
   sendOTP: async (data: SendOTPRequest): Promise<SendOTPResponse> => {
-    const response = await api.post<SendOTPResponse>('/auth/register/request-otp', data)
+    const response = await api.post<SendOTPResponse>(
+      '/auth/register/request-otp',
+      data
+    )
     return response.data
   },
 
   verifyOTP: async (data: VerifyOTPRequest): Promise<VerifyOTPResponse> => {
-    const response = await api.post<VerifyOTPResponse>('/auth/register/verify-otp', data)
+    const response = await api.post<VerifyOTPResponse>(
+      '/auth/register/verify-otp',
+      data
+    )
     return response.data
   },
 
@@ -154,7 +169,9 @@ export const authApi = {
   },
 
   // Owner Invite
-  verifyInvite: async (data: VerifyInviteRequest): Promise<VerifyInviteResponse> => {
+  verifyInvite: async (
+    data: VerifyInviteRequest
+  ): Promise<VerifyInviteResponse> => {
     const response = await api.post<ApiResponse<VerifyInviteResponse>>(
       '/auth/invite/verify',
       data
@@ -162,7 +179,9 @@ export const authApi = {
     return response.data.data
   },
 
-  completeInvite: async (data: CompleteInviteRequest): Promise<CompleteInviteResponse> => {
+  completeInvite: async (
+    data: CompleteInviteRequest
+  ): Promise<CompleteInviteResponse> => {
     const response = await api.post<ApiResponse<CompleteInviteResponse>>(
       '/auth/invite/complete',
       data

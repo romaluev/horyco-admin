@@ -4,7 +4,12 @@
  * This module provides convenience hooks for common navigation patterns.
  */
 
-import { useNavigate as useTanStackNavigate, useLocation, useSearch, useParams as useTanStackParams } from '@tanstack/react-router'
+import {
+  useNavigate as useTanStackNavigate,
+  useLocation,
+  useSearch,
+  useParams as useTanStackParams,
+} from '@tanstack/react-router'
 
 /**
  * Router hook for navigation
@@ -19,8 +24,10 @@ export function useRouter() {
   const location = useLocation()
 
   return {
-    push: (path: string, _options?: { scroll?: boolean }) => navigate({ to: path as any }),
-    replace: (path: string, _options?: { scroll?: boolean }) => navigate({ to: path as any, replace: true }),
+    push: (path: string, _options?: { scroll?: boolean }) =>
+      navigate({ to: path as any }),
+    replace: (path: string, _options?: { scroll?: boolean }) =>
+      navigate({ to: path as any, replace: true }),
     back: () => window.history.back(),
     forward: () => window.history.forward(),
     refresh: () => window.location.reload(),
@@ -57,10 +64,14 @@ export function useSearchParams() {
       return []
     },
     has: (key: string) => key in search,
-    entries: () => Object.entries(search).map(([k, v]) => [k, String(v)] as [string, string]),
+    entries: () =>
+      Object.entries(search).map(
+        ([k, v]) => [k, String(v)] as [string, string]
+      ),
     keys: () => Object.keys(search),
-    values: () => Object.values(search).map(v => String(v)),
-    toString: () => new URLSearchParams(search as Record<string, string>).toString(),
+    values: () => Object.values(search).map((v) => String(v)),
+    toString: () =>
+      new URLSearchParams(search as Record<string, string>).toString(),
   }
 }
 

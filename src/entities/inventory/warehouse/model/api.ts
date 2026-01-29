@@ -14,10 +14,9 @@ export const warehouseApi = {
    * Get all warehouses
    */
   async getWarehouses(params?: IGetWarehousesParams): Promise<IWarehouse[]> {
-    const response = await api.get<{ success: boolean; data: IWarehouse[] } | IWarehouse[]>(
-      '/admin/inventory/warehouses',
-      { params }
-    )
+    const response = await api.get<
+      { success: boolean; data: IWarehouse[] } | IWarehouse[]
+    >('/admin/inventory/warehouses', { params })
     // Handle both wrapped and unwrapped response formats
     const data = response.data
     if (Array.isArray(data)) {

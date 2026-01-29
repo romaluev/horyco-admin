@@ -2,7 +2,12 @@
 
 import { useMemo } from 'react'
 
-import { IconStar, IconStarFilled, IconStarHalfFilled, IconDotsVertical } from '@tabler/icons-react'
+import {
+  IconStar,
+  IconStarFilled,
+  IconStarHalfFilled,
+  IconDotsVertical,
+} from '@tabler/icons-react'
 import { Line, LineChart, ResponsiveContainer, XAxis, Tooltip } from 'recharts'
 
 import { cn } from '@/shared/lib/utils'
@@ -40,33 +45,26 @@ const DEFAULT_CHART_DATA: IRatingChartPoint[] = [
   { month: 'Jul', current: 4.5, previous: 4.0 },
 ]
 
-function StarRating({ rating, maxRating = 5 }: { rating: number; maxRating?: number }) {
+function StarRating({
+  rating,
+  maxRating = 5,
+}: {
+  rating: number
+  maxRating?: number
+}) {
   const stars = []
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5
 
   for (let i = 0; i < maxRating; i++) {
     if (i < fullStars) {
-      stars.push(
-        <IconStarFilled
-          key={i}
-          className="size-5 text-amber-500"
-        />
-      )
+      stars.push(<IconStarFilled key={i} className="size-5 text-amber-500" />)
     } else if (i === fullStars && hasHalfStar) {
       stars.push(
-        <IconStarHalfFilled
-          key={i}
-          className="size-5 text-amber-500"
-        />
+        <IconStarHalfFilled key={i} className="size-5 text-amber-500" />
       )
     } else {
-      stars.push(
-        <IconStar
-          key={i}
-          className="size-5 text-amber-200"
-        />
-      )
+      stars.push(<IconStar key={i} className="size-5 text-amber-200" />)
     }
   }
 
@@ -97,7 +95,7 @@ export function CustomerRatingsWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
         <h3 className="text-lg font-semibold">Customer Ratings</h3>
         <DropdownMenu>
@@ -107,7 +105,9 @@ export function CustomerRatingsWidget({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onViewDetails}>View Details</DropdownMenuItem>
+            <DropdownMenuItem onClick={onViewDetails}>
+              View Details
+            </DropdownMenuItem>
             <DropdownMenuItem>Export Data</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -127,14 +127,18 @@ export function CustomerRatingsWidget({
               : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
           )}
         >
-          {isPositive ? '+' : ''}{changePoints.toFixed(1)}
+          {isPositive ? '+' : ''}
+          {changePoints.toFixed(1)}
         </span>
-        <span className="text-sm text-muted-foreground">{comparisonLabel}</span>
+        <span className="text-muted-foreground text-sm">{comparisonLabel}</span>
       </div>
 
-      <div className="flex-1 min-h-[140px]">
+      <div className="min-h-[140px] flex-1">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={formattedChartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+          <LineChart
+            data={formattedChartData}
+            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+          >
             <XAxis
               dataKey="month"
               axisLine={false}
@@ -145,18 +149,26 @@ export function CustomerRatingsWidget({
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length > 0) {
                   return (
-                    <div className="rounded-lg border bg-background px-3 py-2 shadow-lg">
+                    <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
                       <p className="mb-1 text-xs font-medium">{label}</p>
                       {payload.map((entry, index) => (
-                        <div key={index} className="flex items-center gap-2 text-xs">
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 text-xs"
+                        >
                           <div
                             className="size-2 rounded-full"
                             style={{ backgroundColor: entry.color }}
                           />
                           <span className="text-muted-foreground">
-                            {entry.dataKey === 'currentScaled' ? 'Current' : 'Previous'}:
+                            {entry.dataKey === 'currentScaled'
+                              ? 'Current'
+                              : 'Previous'}
+                            :
                           </span>
-                          <span className="font-medium">{Number(entry.value).toFixed(1)}</span>
+                          <span className="font-medium">
+                            {Number(entry.value).toFixed(1)}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -195,24 +207,24 @@ export function CustomerRatingsWidget({
 
 function CustomerRatingsWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
-        <div className="h-6 w-36 animate-pulse rounded bg-muted" />
-        <div className="size-8 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-6 w-36 animate-pulse rounded" />
+        <div className="bg-muted size-8 animate-pulse rounded" />
       </div>
       <div className="mb-4 flex items-center gap-3">
-        <div className="h-10 w-16 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-10 w-16 animate-pulse rounded" />
         <div className="flex gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="size-5 animate-pulse rounded bg-muted" />
+            <div key={i} className="bg-muted size-5 animate-pulse rounded" />
           ))}
         </div>
       </div>
       <div className="mb-6 flex items-center gap-2">
-        <div className="h-7 w-14 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-7 w-14 animate-pulse rounded" />
+        <div className="bg-muted h-4 w-32 animate-pulse rounded" />
       </div>
-      <div className="h-[140px] animate-pulse rounded bg-muted" />
+      <div className="bg-muted h-[140px] animate-pulse rounded" />
     </div>
   )
 }

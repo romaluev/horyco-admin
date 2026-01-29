@@ -28,7 +28,10 @@ export const VisualFloorPlan = ({
   const canvasRef = useRef<HTMLDivElement>(null)
   const [draggingTable, setDraggingTable] = useState<number | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null)
+  const [dragPosition, setDragPosition] = useState<{
+    x: number
+    y: number
+  } | null>(null)
 
   const handleMouseDown = (e: React.MouseEvent, table: ITable) => {
     if (!table.position || !canvasRef.current) return
@@ -42,8 +45,10 @@ export const VisualFloorPlan = ({
     const scrollContainer = canvas.parentElement
 
     // Calculate mouse position in canvas coordinates
-    const mouseX = e.clientX - canvasRect.left + (scrollContainer?.scrollLeft || 0)
-    const mouseY = e.clientY - canvasRect.top + (scrollContainer?.scrollTop || 0)
+    const mouseX =
+      e.clientX - canvasRect.left + (scrollContainer?.scrollLeft || 0)
+    const mouseY =
+      e.clientY - canvasRect.top + (scrollContainer?.scrollTop || 0)
 
     // Calculate offset from table's top-left corner
     setDragOffset({
@@ -64,8 +69,10 @@ export const VisualFloorPlan = ({
     const scrollContainer = canvas.parentElement
 
     // Calculate mouse position in canvas coordinates
-    const mouseX = e.clientX - canvasRect.left + (scrollContainer?.scrollLeft || 0)
-    const mouseY = e.clientY - canvasRect.top + (scrollContainer?.scrollTop || 0)
+    const mouseX =
+      e.clientX - canvasRect.left + (scrollContainer?.scrollLeft || 0)
+    const mouseY =
+      e.clientY - canvasRect.top + (scrollContainer?.scrollTop || 0)
 
     // Find the dragging table to get its dimensions
     const table = tables.find((t) => t.id === draggingTable)
@@ -73,7 +80,9 @@ export const VisualFloorPlan = ({
 
     const width = table.position.width || TABLE_SIZE
     const height =
-      table.shape === 'rectangle' ? table.position.height || TABLE_SIZE * 1.5 : table.position.height || TABLE_SIZE
+      table.shape === 'rectangle'
+        ? table.position.height || TABLE_SIZE * 1.5
+        : table.position.height || TABLE_SIZE
 
     // Canvas boundaries (min-h-[800px] min-w-[800px])
     const CANVAS_WIDTH = 800
@@ -95,7 +104,11 @@ export const VisualFloorPlan = ({
     if (draggingTable === null || !dragPosition) return
 
     // Use the final drag position
-    onTableDrop(draggingTable, Math.round(dragPosition.x), Math.round(dragPosition.y))
+    onTableDrop(
+      draggingTable,
+      Math.round(dragPosition.x),
+      Math.round(dragPosition.y)
+    )
 
     // Clear drag state
     setDraggingTable(null)
@@ -165,8 +178,10 @@ export const VisualFloorPlan = ({
 
       {/* Warning for tables without position */}
       {tablesWithoutPosition.length > 0 && (
-        <div className="absolute left-4 top-4 z-10 rounded-lg border border-yellow-300 bg-yellow-50 p-3 shadow-sm">
-          <div className="text-xs font-semibold text-yellow-800">⚠️ Предупреждение</div>
+        <div className="absolute top-4 left-4 z-10 rounded-lg border border-yellow-300 bg-yellow-50 p-3 shadow-sm">
+          <div className="text-xs font-semibold text-yellow-800">
+            ⚠️ Предупреждение
+          </div>
           <div className="mt-1 text-xs text-yellow-700">
             {tablesWithoutPosition.length} стол(ов) без данных о позиции.
             <br />
@@ -176,7 +191,7 @@ export const VisualFloorPlan = ({
       )}
 
       {/* Legend */}
-      <div className="absolute right-4 top-4 z-10 rounded-lg border bg-white p-3 shadow-sm">
+      <div className="absolute top-4 right-4 z-10 rounded-lg border bg-white p-3 shadow-sm">
         <div className="space-y-1 text-xs">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-green-500" />
@@ -200,7 +215,8 @@ export const VisualFloorPlan = ({
           }
 
           const isDragging = draggingTable === table.id
-          const position = isDragging && dragPosition ? dragPosition : table.position
+          const position =
+            isDragging && dragPosition ? dragPosition : table.position
 
           const width = table.position.width || TABLE_SIZE
           const height =
@@ -228,7 +244,7 @@ export const VisualFloorPlan = ({
                   getStatusColor(table.status),
                   getShapeClass(table.shape),
                   selectedTableId === table.id && 'ring-4 ring-blue-500',
-                  isDragging && 'opacity-70 ring-4 ring-blue-400 shadow-2xl',
+                  isDragging && 'opacity-70 shadow-2xl ring-4 ring-blue-400',
                   !isDragging && 'transition-all'
                 )}
                 style={{
@@ -241,7 +257,7 @@ export const VisualFloorPlan = ({
               >
                 {/* Colored status line at bottom */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 h-1"
+                  className="absolute right-0 bottom-0 left-0 h-1"
                   style={{
                     backgroundColor: getStatusLineColor(table.status),
                   }}

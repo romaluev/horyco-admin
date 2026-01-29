@@ -91,12 +91,16 @@ export function serializeFiltersState<TData>(
 }
 
 // Legacy export for compatibility
-export const getSortingStateParser = <TData>(_columnIds?: string[] | Set<string>) => ({
+export const getSortingStateParser = <TData>(
+  _columnIds?: string[] | Set<string>
+) => ({
   parse: (value: string) => parseSortingState<TData>(value, _columnIds),
   serialize: serializeSortingState,
 })
 
-export const getFiltersStateParser = <TData>(_columnIds?: string[] | Set<string>) => ({
+export const getFiltersStateParser = <TData>(
+  _columnIds?: string[] | Set<string>
+) => ({
   parse: (value: string) => parseFiltersState<TData>(value, _columnIds),
   serialize: serializeFiltersState,
 })

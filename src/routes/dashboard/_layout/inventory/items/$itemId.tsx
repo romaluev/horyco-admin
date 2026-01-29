@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import InventoryItemDetailPage from '@/app/dashboard/inventory/items/[id]/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/items/$itemId')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/inventory/items/$itemId'
+)({
   component: InventoryItemDetailRoute,
 })
 

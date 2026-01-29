@@ -9,9 +9,5 @@ interface IWriteoffReasonBadgeProps {
 }
 
 export function WriteoffReasonBadge({ reason }: IWriteoffReasonBadgeProps) {
-  return (
-    <Badge variant="outline">
-      {WRITEOFF_REASON_LABELS[reason]}
-    </Badge>
-  )
+  return <Badge variant="outline">{WRITEOFF_REASON_LABELS[reason]}</Badge>
 }

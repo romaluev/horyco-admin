@@ -47,9 +47,9 @@ export function HourlyBreakdownWidget({
   if (isLoading) {
     return (
       <div className={cn('space-y-2', className)}>
-        <div className="h-4 w-full animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-4 w-full animate-pulse rounded" />
         {Array.from({ length: 7 }).map((_, i) => (
-          <div key={i} className="h-4 w-full animate-pulse rounded bg-muted" />
+          <div key={i} className="bg-muted h-4 w-full animate-pulse rounded" />
         ))}
       </div>
     )
@@ -57,7 +57,7 @@ export function HourlyBreakdownWidget({
 
   if (!data || !heatmapGrid) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
         Нет данных
       </div>
     )
@@ -71,7 +71,7 @@ export function HourlyBreakdownWidget({
         {HOURS.filter((h) => h % 2 === 0).map((hour) => (
           <div
             key={hour}
-            className="flex-1 text-center text-[10px] text-muted-foreground"
+            className="text-muted-foreground flex-1 text-center text-[10px]"
           >
             {hour.toString().padStart(2, '0')}
           </div>
@@ -81,7 +81,7 @@ export function HourlyBreakdownWidget({
       {/* Heatmap grid */}
       {DAYS.map((day, dayIndex) => (
         <div key={day} className="flex gap-0.5">
-          <div className="w-8 shrink-0 text-xs text-muted-foreground flex items-center">
+          <div className="text-muted-foreground flex w-8 shrink-0 items-center text-xs">
             {day}
           </div>
           <div className="flex flex-1 gap-0.5">
@@ -103,15 +103,15 @@ export function HourlyBreakdownWidget({
       ))}
 
       {/* Legend */}
-      <div className="mt-2 flex items-center justify-end gap-1 text-xs text-muted-foreground">
+      <div className="text-muted-foreground mt-2 flex items-center justify-end gap-1 text-xs">
         <span>Меньше</span>
         <div className="flex gap-0.5">
-          <div className="h-3 w-3 rounded-sm bg-muted" />
-          <div className="h-3 w-3 rounded-sm bg-primary/20" />
-          <div className="h-3 w-3 rounded-sm bg-primary/40" />
-          <div className="h-3 w-3 rounded-sm bg-primary/60" />
-          <div className="h-3 w-3 rounded-sm bg-primary/80" />
-          <div className="h-3 w-3 rounded-sm bg-primary" />
+          <div className="bg-muted h-3 w-3 rounded-sm" />
+          <div className="bg-primary/20 h-3 w-3 rounded-sm" />
+          <div className="bg-primary/40 h-3 w-3 rounded-sm" />
+          <div className="bg-primary/60 h-3 w-3 rounded-sm" />
+          <div className="bg-primary/80 h-3 w-3 rounded-sm" />
+          <div className="bg-primary h-3 w-3 rounded-sm" />
         </div>
         <span>Больше</span>
       </div>

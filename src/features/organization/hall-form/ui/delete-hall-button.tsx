@@ -64,13 +64,15 @@ export const DeleteHallButton = ({
             <AlertDialogDescription>
               {canDelete ? (
                 <>
-                  Are you sure you want to delete hall &ldquo;{hall.name}&rdquo;?
-                  Это действие нельзя отменить.
+                  Are you sure you want to delete hall &ldquo;{hall.name}
+                  &rdquo;? Это действие нельзя отменить.
                 </>
               ) : (
                 <>
                   Cannot delete hall &ldquo;{hall.name}&rdquo;.
-                  {blockingReason && <div className="mt-2">{blockingReason}</div>}
+                  {blockingReason && (
+                    <div className="mt-2">{blockingReason}</div>
+                  )}
                 </>
               )}
             </AlertDialogDescription>

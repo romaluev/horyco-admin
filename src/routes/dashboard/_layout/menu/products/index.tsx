@@ -10,7 +10,6 @@ import { ProductsContent } from '@/app/dashboard/menu/products/products-content'
 import { useGetCategories } from '@/entities/menu/category'
 import { useGetProducts } from '@/entities/menu/product'
 
-
 import type { ProductsPageState } from '@/app/dashboard/menu/products/products-content'
 import type { IProduct } from '@/entities/menu/product'
 

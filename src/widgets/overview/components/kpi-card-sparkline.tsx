@@ -128,7 +128,8 @@ function generateSparklineData(baseValue: number, trend: Trend): number[] {
   let value = baseValue * 0.7
 
   for (let i = 0; i < points; i++) {
-    const trendFactor = trend === Trend.UP ? 1.05 : trend === Trend.DOWN ? 0.95 : 1
+    const trendFactor =
+      trend === Trend.UP ? 1.05 : trend === Trend.DOWN ? 0.95 : 1
     const randomFactor = 0.9 + Math.random() * 0.2
     value = value * trendFactor * randomFactor
     data.push(Math.round(value))
@@ -152,7 +153,8 @@ export function KpiCardSparkline({
   const changeValue = metric.changePercent ?? 0
 
   const chartData = useMemo(() => {
-    const rawData = sparklineData ?? generateSparklineData(metric.value, metric.trend)
+    const rawData =
+      sparklineData ?? generateSparklineData(metric.value, metric.trend)
     return rawData.map((value, index) => ({ value, index }))
   }, [sparklineData, metric.value, metric.trend])
 
@@ -163,7 +165,12 @@ export function KpiCardSparkline({
       : CHART_NEUTRAL
 
   return (
-    <Card className={cn('overflow-hidden transition-all hover:shadow-md', className)}>
+    <Card
+      className={cn(
+        'overflow-hidden transition-all hover:shadow-md',
+        className
+      )}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-2">
@@ -171,7 +178,7 @@ export function KpiCardSparkline({
               <div className={cn('rounded-lg p-2', config.bgColor)}>
                 <Icon className={cn('size-4', config.color)} />
               </div>
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-muted-foreground text-sm font-medium">
                 {label}
               </span>
             </div>
@@ -185,20 +192,26 @@ export function KpiCardSparkline({
                 <div
                   className={cn(
                     'flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium',
-                    isPositive && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-                    isNegative && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-                    !isPositive && !isNegative && 'bg-muted text-muted-foreground'
+                    isPositive &&
+                      'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+                    isNegative &&
+                      'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                    !isPositive &&
+                      !isNegative &&
+                      'bg-muted text-muted-foreground'
                   )}
                 >
                   {isPositive && <IconTrendingUp className="size-3" />}
                   {isNegative && <IconTrendingDown className="size-3" />}
-                  {!isPositive && !isNegative && <IconMinus className="size-3" />}
+                  {!isPositive && !isNegative && (
+                    <IconMinus className="size-3" />
+                  )}
                   <span>
                     {changeValue > 0 ? '+' : ''}
                     {changeValue.toFixed(1)}%
                   </span>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-muted-foreground text-xs">
                   {metric.comparisonLabel}
                 </span>
               </div>
@@ -207,11 +220,28 @@ export function KpiCardSparkline({
 
           <div className="h-16 w-24 shrink-0">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+              <AreaChart
+                data={chartData}
+                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+              >
                 <defs>
-                  <linearGradient id={`gradient-${metric.type}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={strokeColor} stopOpacity={0.3} />
-                    <stop offset="100%" stopColor={strokeColor} stopOpacity={0} />
+                  <linearGradient
+                    id={`gradient-${metric.type}`}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0%"
+                      stopColor={strokeColor}
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor={strokeColor}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <Area
@@ -239,15 +269,15 @@ export function KpiCardSparklineSkeleton() {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
-              <div className="size-8 animate-pulse rounded-lg bg-muted" />
-              <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+              <div className="bg-muted size-8 animate-pulse rounded-lg" />
+              <div className="bg-muted h-4 w-20 animate-pulse rounded" />
             </div>
             <div className="space-y-1">
-              <div className="h-8 w-28 animate-pulse rounded bg-muted" />
-              <div className="h-5 w-24 animate-pulse rounded bg-muted" />
+              <div className="bg-muted h-8 w-28 animate-pulse rounded" />
+              <div className="bg-muted h-5 w-24 animate-pulse rounded" />
             </div>
           </div>
-          <div className="h-16 w-24 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-16 w-24 animate-pulse rounded" />
         </div>
       </CardContent>
     </Card>

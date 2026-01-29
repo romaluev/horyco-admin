@@ -7,7 +7,6 @@
 
 import { useMemo, useState } from 'react'
 
-
 import { Building2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -163,10 +162,14 @@ export default function BranchOverridesPage(): JSX.Element {
                   onValueChange={setSelectedProduct}
                 >
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder={t('branchOverrides.page.table.allProducts')} />
+                    <SelectValue
+                      placeholder={t('branchOverrides.page.table.allProducts')}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t('branchOverrides.page.table.allProducts')}</SelectItem>
+                    <SelectItem value="all">
+                      {t('branchOverrides.page.table.allProducts')}
+                    </SelectItem>
                     {products.map((product) => (
                       <SelectItem
                         key={product.id}
@@ -182,10 +185,14 @@ export default function BranchOverridesPage(): JSX.Element {
                   onValueChange={setSelectedBranch}
                 >
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder={t('branchOverrides.page.table.allBranches')} />
+                    <SelectValue
+                      placeholder={t('branchOverrides.page.table.allBranches')}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t('branchOverrides.page.table.allBranches')}</SelectItem>
+                    <SelectItem value="all">
+                      {t('branchOverrides.page.table.allBranches')}
+                    </SelectItem>
                     {branches.map((branch: { id: number; name: string }) => (
                       <SelectItem key={branch.id} value={branch.id.toString()}>
                         {branch.name}
@@ -215,11 +222,21 @@ export default function BranchOverridesPage(): JSX.Element {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t('branchOverrides.page.table.columns.product')}</TableHead>
-                    <TableHead>{t('branchOverrides.page.table.columns.branch')}</TableHead>
-                    <TableHead>{t('branchOverrides.page.table.columns.price')}</TableHead>
-                    <TableHead>{t('branchOverrides.page.table.columns.availability')}</TableHead>
-                    <TableHead className="w-[100px]">{t('branchOverrides.page.table.columns.actions')}</TableHead>
+                    <TableHead>
+                      {t('branchOverrides.page.table.columns.product')}
+                    </TableHead>
+                    <TableHead>
+                      {t('branchOverrides.page.table.columns.branch')}
+                    </TableHead>
+                    <TableHead>
+                      {t('branchOverrides.page.table.columns.price')}
+                    </TableHead>
+                    <TableHead>
+                      {t('branchOverrides.page.table.columns.availability')}
+                    </TableHead>
+                    <TableHead className="w-[100px]">
+                      {t('branchOverrides.page.table.columns.actions')}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -242,18 +259,24 @@ export default function BranchOverridesPage(): JSX.Element {
                           {override.overridePrice !== null ? (
                             <div className="flex items-center gap-2">
                               <span className="font-semibold">
-                                {override.overridePrice} {t('branchOverrides.page.price.override')}
+                                {override.overridePrice}{' '}
+                                {t('branchOverrides.page.price.override')}
                               </span>
                               {basePrice &&
                                 override.overridePrice !== basePrice && (
                                   <span className="text-muted-foreground text-xs">
-                                    ({t('branchOverrides.page.price.base')} {basePrice} {t('branchOverrides.page.price.override')})
+                                    ({t('branchOverrides.page.price.base')}{' '}
+                                    {basePrice}{' '}
+                                    {t('branchOverrides.page.price.override')})
                                   </span>
                                 )}
                             </div>
                           ) : (
                             <span className="text-muted-foreground">
-                              {t('branchOverrides.page.badges.default')}{basePrice ? `: ${basePrice} ${t('branchOverrides.page.price.override')}` : ''}
+                              {t('branchOverrides.page.badges.default')}
+                              {basePrice
+                                ? `: ${basePrice} ${t('branchOverrides.page.price.override')}`
+                                : ''}
                             </span>
                           )}
                         </TableCell>
@@ -271,7 +294,9 @@ export default function BranchOverridesPage(): JSX.Element {
                                 : t('branchOverrides.page.badges.unavailable')}
                             </Badge>
                           ) : (
-                            <Badge variant="outline">{t('branchOverrides.page.badges.default')}</Badge>
+                            <Badge variant="outline">
+                              {t('branchOverrides.page.badges.default')}
+                            </Badge>
                           )}
                         </TableCell>
                         <TableCell>

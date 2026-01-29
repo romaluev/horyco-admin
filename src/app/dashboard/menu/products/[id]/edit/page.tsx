@@ -52,7 +52,8 @@ export default function EditProductPage({
               {t('pages.products.page.edit.title')}
             </h2>
             <p className="text-muted-foreground">
-              {product?.name || t('pages.products.page.edit.descriptionFallback')}
+              {product?.name ||
+                t('pages.products.page.edit.descriptionFallback')}
             </p>
           </div>
         </div>

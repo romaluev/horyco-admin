@@ -26,7 +26,10 @@ function StaffInvitePage() {
     <>
       <Helmet>
         <title>Активация аккаунта сотрудника | Horyco Admin</title>
-        <meta name="description" content="Активируйте ваш аккаунт сотрудника Horyco" />
+        <meta
+          name="description"
+          content="Активируйте ваш аккаунт сотрудника Horyco"
+        />
       </Helmet>
       <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
         <div className="flex items-center justify-center p-4 text-lg font-medium">

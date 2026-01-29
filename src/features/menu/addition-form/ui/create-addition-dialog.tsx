@@ -83,12 +83,14 @@ export const CreateAdditionDialog = ({
   const handleSubmit = async (values: AdditionFormValues): Promise<void> => {
     try {
       // First create the addition
-      const createdAddition = await new Promise<{ id: number }>((resolve, reject) => {
-        createAddition(values, {
-          onSuccess: (addition) => resolve(addition),
-          onError: (error) => reject(error),
-        })
-      })
+      const createdAddition = await new Promise<{ id: number }>(
+        (resolve, reject) => {
+          createAddition(values, {
+            onSuccess: (addition) => resolve(addition),
+            onError: (error) => reject(error),
+          })
+        }
+      )
 
       // Upload image if provided
       if (imageFile && createdAddition?.id) {
@@ -147,7 +149,11 @@ export const CreateAdditionDialog = ({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t('additions.form.product.placeholder')} />
+                          <SelectValue
+                            placeholder={t(
+                              'additions.form.product.placeholder'
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -174,7 +180,10 @@ export const CreateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>{t('additions.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('additions.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t('additions.form.name.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,7 +197,10 @@ export const CreateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>{t('additions.form.description.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder={t('additions.form.description.placeholder')} {...field} />
+                    <Textarea
+                      placeholder={t('additions.form.description.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,7 +208,9 @@ export const CreateAdditionDialog = ({
             />
 
             <div>
-              <FormLabel className="pb-2">{t('additions.form.image.label')}</FormLabel>
+              <FormLabel className="pb-2">
+                {t('additions.form.image.label')}
+              </FormLabel>
               <ImageUpload value={imageFile} onChange={setImageFile} />
             </div>
 
@@ -206,7 +220,9 @@ export const CreateAdditionDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('additions.form.minSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.minSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -224,7 +240,9 @@ export const CreateAdditionDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('additions.form.maxSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.maxSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -265,7 +283,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isRequired.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isRequired.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isRequired.description')}
                     </FormDescription>
@@ -286,7 +306,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isMultiple.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isMultiple.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isMultiple.description')}
                     </FormDescription>
@@ -307,7 +329,9 @@ export const CreateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isCountable.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isCountable.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isCountable.description')}
                     </FormDescription>
@@ -353,7 +377,9 @@ export const CreateAdditionDialog = ({
                 {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('common.loading') : t('additions.form.title.create')}
+                {isPending
+                  ? t('common.loading')
+                  : t('additions.form.title.create')}
               </Button>
             </div>
           </form>

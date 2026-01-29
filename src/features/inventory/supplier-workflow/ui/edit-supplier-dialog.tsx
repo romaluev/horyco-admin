@@ -5,7 +5,6 @@ import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-
 import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
@@ -24,12 +23,7 @@ import {
   FormMessage,
 } from '@/shared/ui/base/form'
 import { Input } from '@/shared/ui/base/input'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/ui/base/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/base/tabs'
 import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useUpdateSupplier } from '@/entities/inventory/supplier/model/mutations'
@@ -122,7 +116,7 @@ export function EditSupplierDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-auto">
+      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Редактировать поставщика</DialogTitle>
           <DialogDescription>
@@ -131,7 +125,10 @@ export function EditSupplierDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <Tabs defaultValue="general" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="general">Основное</TabsTrigger>
@@ -139,7 +136,7 @@ export function EditSupplierDialog({
                 <TabsTrigger value="bank">Банк</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="general" className="space-y-4 mt-4">
+              <TabsContent value="general" className="mt-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -248,7 +245,7 @@ export function EditSupplierDialog({
                 </div>
               </TabsContent>
 
-              <TabsContent value="contacts" className="space-y-4 mt-4">
+              <TabsContent value="contacts" className="mt-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="contactName"
@@ -308,7 +305,7 @@ export function EditSupplierDialog({
                 />
               </TabsContent>
 
-              <TabsContent value="bank" className="space-y-4 mt-4">
+              <TabsContent value="bank" className="mt-4 space-y-4">
                 <FormField
                   control={form.control}
                   name="bankName"
@@ -344,7 +341,10 @@ export function EditSupplierDialog({
                     <FormItem>
                       <FormLabel>Условия оплаты</FormLabel>
                       <FormControl>
-                        <Input placeholder="Например: 100% предоплата" {...field} />
+                        <Input
+                          placeholder="Например: 100% предоплата"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

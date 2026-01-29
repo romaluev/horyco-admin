@@ -10,7 +10,11 @@ interface IRecipeCostDisplayProps {
   lastUpdated?: string | null
 }
 
-export function RecipeCostDisplay({ cost, sellingPrice, lastUpdated }: IRecipeCostDisplayProps) {
+export function RecipeCostDisplay({
+  cost,
+  sellingPrice,
+  lastUpdated,
+}: IRecipeCostDisplayProps) {
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('ru-RU', {
       style: 'currency',
@@ -18,7 +22,9 @@ export function RecipeCostDisplay({ cost, sellingPrice, lastUpdated }: IRecipeCo
       maximumFractionDigits: 0,
     }).format(value)
 
-  const margin = sellingPrice ? ((sellingPrice - cost) / sellingPrice) * 100 : null
+  const margin = sellingPrice
+    ? ((sellingPrice - cost) / sellingPrice) * 100
+    : null
 
   const getMarginVariant = (marginPct: number) => {
     if (marginPct >= 60) return 'default'

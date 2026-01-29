@@ -1,7 +1,9 @@
 'use client'
 
-
-import { MOVEMENT_TYPE_LABELS, type MovementType } from '@/shared/types/inventory'
+import {
+  MOVEMENT_TYPE_LABELS,
+  type MovementType,
+} from '@/shared/types/inventory'
 import { DateRangePicker } from '@/shared/ui/base/date-range-picker'
 import {
   Select,
@@ -41,7 +43,9 @@ export const MovementsFilters = ({
   <div className="flex flex-wrap items-center gap-4">
     <Select
       value={warehouseId ? String(warehouseId) : 'all'}
-      onValueChange={(v) => onWarehouseChange(v === 'all' ? undefined : Number(v))}
+      onValueChange={(v) =>
+        onWarehouseChange(v === 'all' ? undefined : Number(v))
+      }
     >
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Все склады" />
@@ -57,12 +61,18 @@ export const MovementsFilters = ({
     </Select>
 
     <div className="w-[220px]">
-      <ItemSelector value={itemId} onChange={onItemChange} placeholder="Все товары" />
+      <ItemSelector
+        value={itemId}
+        onChange={onItemChange}
+        placeholder="Все товары"
+      />
     </div>
 
     <Select
       value={movementType || 'all'}
-      onValueChange={(v) => onMovementTypeChange(v === 'all' ? '' : (v as MovementType))}
+      onValueChange={(v) =>
+        onMovementTypeChange(v === 'all' ? '' : (v as MovementType))
+      }
     >
       <SelectTrigger className="w-[220px]">
         <SelectValue placeholder="Все типы операций" />
@@ -77,6 +87,10 @@ export const MovementsFilters = ({
       </SelectContent>
     </Select>
 
-    <DateRangePicker value={dateRange} onChange={onDateRangeChange} placeholder="Период" />
+    <DateRangePicker
+      value={dateRange}
+      onChange={onDateRangeChange}
+      placeholder="Период"
+    />
   </div>
 )

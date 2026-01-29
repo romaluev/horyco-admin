@@ -110,7 +110,10 @@ export function MovementTypeBadge({
   const label = MOVEMENT_TYPE_LABELS[type] || type
 
   return (
-    <Badge variant="outline" className={cn('gap-1', config.colorClass, className)}>
+    <Badge
+      variant="outline"
+      className={cn('gap-1', config.colorClass, className)}
+    >
       {showIcon && <Icon className="h-3 w-3" />}
       <span>{label}</span>
     </Badge>

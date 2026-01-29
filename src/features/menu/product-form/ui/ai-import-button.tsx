@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 
-
 import { StarsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -88,7 +87,11 @@ export const AiImportButton = () => {
       const data = await response.json()
       setProducts(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('products.aiImport.messages.unknownError'))
+      setError(
+        err instanceof Error
+          ? err.message
+          : t('products.aiImport.messages.unknownError')
+      )
       toast.error(t('products.aiImport.messages.extractError'))
     } finally {
       setLoading(false)
@@ -158,7 +161,9 @@ export const AiImportButton = () => {
           <ScrollArea className="max-h-[50vh] overflow-y-auto">
             {products.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">{t('products.aiImport.extractedSection')}</h3>
+                <h3 className="text-lg font-semibold">
+                  {t('products.aiImport.extractedSection')}
+                </h3>
                 <div className="space-y-4">
                   {products.map((product, index) => (
                     <div key={index} className="rounded-lg border p-4">
@@ -181,7 +186,9 @@ export const AiImportButton = () => {
                           />
                         </div>
                         <div>
-                          <label className="text-sm font-medium">{t('products.aiImport.fields.price')}</label>
+                          <label className="text-sm font-medium">
+                            {t('products.aiImport.fields.price')}
+                          </label>
                           <Input
                             type="number"
                             value={product.price}
@@ -235,7 +242,9 @@ export const AiImportButton = () => {
               onClick={handleCreateProduct}
               disabled={creating}
             >
-              {creating ? t('products.aiImport.buttons.saving') : t('products.aiImport.buttons.saveProducts')}
+              {creating
+                ? t('products.aiImport.buttons.saving')
+                : t('products.aiImport.buttons.saveProducts')}
             </Button>
           ) : (
             <Button
@@ -247,7 +256,9 @@ export const AiImportButton = () => {
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
               <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl">
                 <StarsIcon size={16} />
-                {loading ? t('products.aiImport.buttons.processing') : t('products.aiImport.buttons.startProcessing')}
+                {loading
+                  ? t('products.aiImport.buttons.processing')
+                  : t('products.aiImport.buttons.startProcessing')}
               </span>
             </Button>
           )}

@@ -22,7 +22,6 @@ import {
 
 import { useAuthStore } from '@/entities/auth/auth/model/store'
 
-
 export function UserNav() {
   const { t } = useTranslation('common')
   const { user, logout } = useAuthStore()
@@ -71,10 +70,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar>
-            <AvatarImage
-              src={avatarUrl}
-              alt={user?.fullName}
-            />
+            <AvatarImage src={avatarUrl} alt={user?.fullName} />
             <AvatarFallback>{userInitials || <UserIcon />}</AvatarFallback>
           </Avatar>
         </Button>

@@ -69,7 +69,10 @@ export {
 } from './model/constants'
 
 // Re-export aliases for backwards compatibility
-export { KPI_LABEL_KEYS as KPI_LABELS, WIDGET_CATEGORY_LABEL_KEYS as WIDGET_CATEGORY_LABELS } from './model/constants'
+export {
+  KPI_LABEL_KEYS as KPI_LABELS,
+  WIDGET_CATEGORY_LABEL_KEYS as WIDGET_CATEGORY_LABELS,
+} from './model/constants'
 
 export type {
   IKpiConfig,

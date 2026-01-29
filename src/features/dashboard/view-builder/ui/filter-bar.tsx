@@ -92,7 +92,7 @@ export function FilterBar() {
                     key={filter.field}
                     type="button"
                     onClick={() => handleAddFilter(filter.field)}
-                    className="flex w-full items-center rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                    className="hover:bg-muted flex w-full items-center rounded-md px-2 py-1.5 text-sm"
                   >
                     {filter.label}
                   </button>

@@ -21,13 +21,13 @@ export function ProductsStats({
   return (
     <div className="grid gap-6 md:grid-cols-4">
       <div className="rounded-lg border px-6 py-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-sm font-medium">
           {t('pages.products.stats.total')}
         </p>
         <p className="text-2xl font-bold">{total}</p>
       </div>
       <div className="rounded-lg border px-6 py-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-sm font-medium">
           {t('pages.products.stats.available')}
         </p>
         <p className="text-2xl font-bold">
@@ -35,7 +35,7 @@ export function ProductsStats({
         </p>
       </div>
       <div className="rounded-lg border px-6 py-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-sm font-medium">
           {t('pages.products.stats.unavailable')}
         </p>
         <p className="text-2xl font-bold">
@@ -43,7 +43,7 @@ export function ProductsStats({
         </p>
       </div>
       <div className="rounded-lg border px-6 py-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground text-sm font-medium">
           {t('pages.products.stats.page')}
         </p>
         <p className="text-2xl font-bold">

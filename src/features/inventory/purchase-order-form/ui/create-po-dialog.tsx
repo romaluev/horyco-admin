@@ -55,7 +55,9 @@ export function CreatePODialog() {
 
   const onSubmit = (data: PurchaseOrderFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as PurchaseOrderFormValues
 
     createPO(cleanData, {

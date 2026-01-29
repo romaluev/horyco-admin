@@ -1,6 +1,9 @@
 'use client'
 
-import { WidgetCard, WidgetSkeleton } from '@/entities/dashboard/dashboard-widget'
+import {
+  WidgetCard,
+  WidgetSkeleton,
+} from '@/entities/dashboard/dashboard-widget'
 import {
   WidgetActions,
   WidgetDragHandle,
@@ -14,7 +17,11 @@ import {
   TextWidget,
 } from '@/widgets/dashboard-widgets'
 
-import type { WidgetConfig, WidgetData, WidgetVisualization } from '@/entities/dashboard/dashboard-widget'
+import type {
+  WidgetConfig,
+  WidgetData,
+  WidgetVisualization,
+} from '@/entities/dashboard/dashboard-widget'
 
 interface WidgetRendererProps {
   widget: WidgetConfig
@@ -31,7 +38,10 @@ type VisualizationComponent = React.ComponentType<{
   config: WidgetConfig
 }>
 
-const VISUALIZATION_COMPONENTS: Record<WidgetVisualization, VisualizationComponent> = {
+const VISUALIZATION_COMPONENTS: Record<
+  WidgetVisualization,
+  VisualizationComponent
+> = {
   number: NumberWidget,
   'line-chart': LineChartWidget,
   'bar-chart': BarChartWidget,
@@ -66,7 +76,11 @@ export function WidgetRenderer({
       isSelected={isSelected}
       onSelect={onSelect}
       dragHandle={isEditMode ? <WidgetDragHandle /> : undefined}
-      actions={isEditMode ? <WidgetActions widgetId={widget.id} onEdit={onEdit} /> : undefined}
+      actions={
+        isEditMode ? (
+          <WidgetActions widgetId={widget.id} onEdit={onEdit} />
+        ) : undefined
+      }
     >
       {shouldShowSkeleton ? (
         <SkeletonContent visualization={widget.visualization} />
@@ -78,12 +92,16 @@ export function WidgetRenderer({
 }
 
 // Skeleton content for use inside WidgetCard
-function SkeletonContent({ visualization }: { visualization: WidgetVisualization }) {
+function SkeletonContent({
+  visualization,
+}: {
+  visualization: WidgetVisualization
+}) {
   if (visualization === 'number') {
     return (
       <div className="flex flex-1 flex-col justify-center">
-        <div className="mb-2 h-8 w-32 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+        <div className="bg-muted mb-2 h-8 w-32 animate-pulse rounded" />
+        <div className="bg-muted h-4 w-16 animate-pulse rounded" />
       </div>
     )
   }
@@ -94,8 +112,8 @@ function SkeletonContent({ visualization }: { visualization: WidgetVisualization
         {Array.from({ length: 7 }).map((_, i) => (
           <div
             key={i}
-            className="flex-1 animate-pulse rounded bg-muted"
-            style={{ height: `${30 + (i * 10) % 50}%` }}
+            className="bg-muted flex-1 animate-pulse rounded"
+            style={{ height: `${30 + ((i * 10) % 50)}%` }}
           />
         ))}
       </div>
@@ -105,7 +123,7 @@ function SkeletonContent({ visualization }: { visualization: WidgetVisualization
   if (visualization === 'pie-chart') {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="h-24 w-24 animate-pulse rounded-full bg-muted" />
+        <div className="bg-muted h-24 w-24 animate-pulse rounded-full" />
       </div>
     )
   }
@@ -115,8 +133,8 @@ function SkeletonContent({ visualization }: { visualization: WidgetVisualization
       <div className="flex flex-1 flex-col gap-2">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-center gap-2">
-            <div className="h-4 flex-1 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-4 flex-1 animate-pulse rounded" />
+            <div className="bg-muted h-4 w-12 animate-pulse rounded" />
           </div>
         ))}
       </div>
@@ -126,9 +144,9 @@ function SkeletonContent({ visualization }: { visualization: WidgetVisualization
   // text
   return (
     <div className="flex flex-1 flex-col gap-2">
-      <div className="h-4 w-full animate-pulse rounded bg-muted" />
-      <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-      <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+      <div className="bg-muted h-4 w-full animate-pulse rounded" />
+      <div className="bg-muted h-4 w-3/4 animate-pulse rounded" />
+      <div className="bg-muted h-4 w-1/2 animate-pulse rounded" />
     </div>
   )
 }

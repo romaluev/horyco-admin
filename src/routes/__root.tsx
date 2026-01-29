@@ -35,7 +35,7 @@ function NotFoundComponent() {
       <div className="text-center">
         <h1 className="text-4xl font-bold">404</h1>
         <p className="text-muted-foreground mt-2">Страница не найдена</p>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           URL: {typeof window !== 'undefined' ? window.location.pathname : ''}
         </p>
       </div>
@@ -71,7 +71,9 @@ function RootLayout() {
           </QueryClientProvider>
         </ActiveThemeProvider>
       </ThemeProvider>
-      {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
+      {import.meta.env.DEV && (
+        <TanStackRouterDevtools position="bottom-right" />
+      )}
     </HelmetProvider>
   )
 }

@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import WriteoffDetailPage from '@/app/dashboard/inventory/writeoffs/[id]/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/writeoffs/$writeoffId')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/inventory/writeoffs/$writeoffId'
+)({
   component: WriteoffDetailRoute,
 })
 

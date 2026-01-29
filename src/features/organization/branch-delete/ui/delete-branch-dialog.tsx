@@ -57,7 +57,9 @@ export const DeleteBranchDialog = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {canDelete ? t('branches.delete.title') : t('branches.delete.cannotDelete')}
+            {canDelete
+              ? t('branches.delete.title')
+              : t('branches.delete.cannotDelete')}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {canDelete ? (
@@ -95,14 +97,18 @@ export const DeleteBranchDialog = ({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{t('common.cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {t('common.cancel')}
+          </AlertDialogCancel>
           {canDelete && (
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isPending || isCheckingDelete}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {isPending ? t('branches.delete.deleting') : t('branches.delete.delete')}
+              {isPending
+                ? t('branches.delete.deleting')
+                : t('branches.delete.delete')}
             </AlertDialogAction>
           )}
         </AlertDialogFooter>

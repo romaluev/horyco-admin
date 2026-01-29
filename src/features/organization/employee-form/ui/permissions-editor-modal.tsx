@@ -37,7 +37,6 @@ interface PermissionsEditorModalProps {
   onSave?: () => void
 }
 
- 
 export const PermissionsEditorModal = ({
   isOpen,
   onClose,
@@ -69,7 +68,9 @@ export const PermissionsEditorModal = ({
         ? perms
         : perms.permissions || []
       setSelectedPermissions(
-        permissionsArray.map((p) => (p as { permissionId: number }).permissionId)
+        permissionsArray.map(
+          (p) => (p as { permissionId: number }).permissionId
+        )
       )
     } catch (err) {
       // Branch might not exist yet - start with empty permissions
@@ -139,7 +140,7 @@ export const PermissionsEditorModal = ({
     if (!acc[perm.category]) {
       acc[perm.category] = []
     }
-     
+
     acc[perm.category]!.push(perm)
     return acc
   }, {})
@@ -149,7 +150,7 @@ export const PermissionsEditorModal = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('permissions.title')}</DialogTitle>
             <DialogDescription>
@@ -180,7 +181,7 @@ export const PermissionsEditorModal = ({
                   onClick={() => setIsShowingCopyDialog(true)}
                   disabled={isSaving}
                 >
-                  <Copy className="h-4 w-4 mr-2" />
+                  <Copy className="mr-2 h-4 w-4" />
                   {t('permissions.copyFromBranch')}
                 </Button>
               )}
@@ -193,11 +194,8 @@ export const PermissionsEditorModal = ({
                   </p>
                 ) : (
                   categories.map((category) => (
-                    <div
-                      key={category}
-                      className="rounded-lg border p-4"
-                    >
-                      <h3 className="font-semibold text-sm mb-4 capitalize">
+                    <div key={category} className="rounded-lg border p-4">
+                      <h3 className="mb-4 text-sm font-semibold capitalize">
                         {category}
                       </h3>
                       <div className="space-y-3">
@@ -219,7 +217,7 @@ export const PermissionsEditorModal = ({
                               />
                               <label
                                 htmlFor={`perm-${permission.id}`}
-                                className="text-sm font-medium cursor-pointer flex-1"
+                                className="flex-1 cursor-pointer text-sm font-medium"
                               >
                                 {permission.name}
                               </label>
@@ -233,8 +231,8 @@ export const PermissionsEditorModal = ({
               </div>
 
               {/* Info Box */}
-              <div className="rounded-lg bg-muted p-4">
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-muted-foreground text-sm">
                   {t('permissions.info')}
                 </p>
               </div>

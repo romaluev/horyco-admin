@@ -1,11 +1,12 @@
 'use client'
 
-
-import { KpiCardSparkline, KpiCardSparklineSkeleton } from './kpi-card-sparkline'
+import {
+  KpiCardSparkline,
+  KpiCardSparklineSkeleton,
+} from './kpi-card-sparkline'
 
 import type { IKpiMetricValue } from '@/entities/dashboard/dashboard'
 import type { KpiType } from '@/shared/api/graphql'
-
 
 interface IDashboardKpiCardsProps {
   metrics: IKpiMetricValue[]

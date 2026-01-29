@@ -46,9 +46,7 @@ export const productSchema = z.object({
   }),
   categoryId: z.number().min(1, { message: 'Укажите категорию' }),
   productTypeId: z.number().optional().default(1),
-  price: z
-    .number()
-    .min(0.01, { message: 'Цена должна быть больше 0' }),
+  price: z.number().min(0.01, { message: 'Цена должна быть больше 0' }),
   description: z.string(),
   preparationTime: z.number().min(0).optional(),
   calories: z.number().min(0).optional(),

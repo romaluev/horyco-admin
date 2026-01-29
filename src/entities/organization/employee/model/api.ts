@@ -393,10 +393,7 @@ export const employeeApi = {
     employeeId: number,
     data: ICopyPermissionsDto
   ): Promise<void> => {
-    await api.post(
-      `${BASE_URL}/${employeeId}/permissions/copy`,
-      data
-    )
+    await api.post(`${BASE_URL}/${employeeId}/permissions/copy`, data)
   },
 
   // ============================================

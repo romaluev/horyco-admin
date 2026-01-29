@@ -57,7 +57,9 @@ export function CreateRecipeDialog() {
 
   const onSubmit = (data: RecipeFormValues) => {
     const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== '' && value !== undefined)
+      Object.entries(data).filter(
+        ([, value]) => value !== '' && value !== undefined
+      )
     ) as RecipeFormValues
 
     createRecipe(cleanData, {
@@ -155,7 +157,9 @@ export function CreateRecipeDialog() {
                       min={0}
                       value={field.value ?? ''}
                       onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                        field.onChange(
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
                       }
                     />
                   </FormControl>
@@ -173,7 +177,10 @@ export function CreateRecipeDialog() {
                     <FormLabel>Активна</FormLabel>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}

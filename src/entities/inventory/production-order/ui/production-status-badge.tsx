@@ -9,7 +9,10 @@ interface IProductionStatusBadgeProps {
 }
 
 export function ProductionStatusBadge({ status }: IProductionStatusBadgeProps) {
-  const variants: Record<ProductionStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  const variants: Record<
+    ProductionStatus,
+    'default' | 'secondary' | 'destructive' | 'outline'
+  > = {
     planned: 'secondary',
     in_progress: 'outline',
     completed: 'default',
@@ -17,8 +20,6 @@ export function ProductionStatusBadge({ status }: IProductionStatusBadgeProps) {
   }
 
   return (
-    <Badge variant={variants[status]}>
-      {PRODUCTION_STATUS_LABELS[status]}
-    </Badge>
+    <Badge variant={variants[status]}>{PRODUCTION_STATUS_LABELS[status]}</Badge>
   )
 }

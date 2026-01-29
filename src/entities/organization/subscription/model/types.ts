@@ -6,7 +6,11 @@
 /**
  * Subscription status
  */
-export type SubscriptionStatus = 'trialing' | 'active' | 'suspended' | 'canceled'
+export type SubscriptionStatus =
+  | 'trialing'
+  | 'active'
+  | 'suspended'
+  | 'canceled'
 
 /**
  * Payment flow type

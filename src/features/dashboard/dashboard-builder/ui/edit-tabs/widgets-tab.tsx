@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo } from 'react'
 
-
 import {
   DndContext,
   DragOverlay,
@@ -49,11 +48,26 @@ interface IWidgetsTabProps {
   onActiveWidgetIdChange: (id: string | null) => void
 }
 
-const WIDGET_CATEGORIES: WidgetCategory[] = ['charts', 'analytics', 'data', 'insights']
+const WIDGET_CATEGORIES: WidgetCategory[] = [
+  'charts',
+  'analytics',
+  'data',
+  'insights',
+]
 
 // Get displayable widget options (exclude legacy/internal widgets)
-const WIDGET_OPTIONS = (Object.entries(WIDGET_CONFIG) as [WidgetType, typeof WIDGET_CONFIG[WidgetType]][])
-  .filter(([type]) => !['CUSTOMER_SEGMENTS', 'BRANCH_COMPARISON', 'RECENT_ORDERS'].includes(type))
+const WIDGET_OPTIONS = (
+  Object.entries(WIDGET_CONFIG) as [
+    WidgetType,
+    (typeof WIDGET_CONFIG)[WidgetType],
+  ][]
+)
+  .filter(
+    ([type]) =>
+      !['CUSTOMER_SEGMENTS', 'BRANCH_COMPARISON', 'RECENT_ORDERS'].includes(
+        type
+      )
+  )
   .map(([type, config]) => ({ type, ...config }))
 
 export function WidgetsTab({
@@ -87,7 +101,9 @@ export function WidgetsTab({
         const newIndex = widgets.findIndex((item) => item.id === over.id)
         if (oldIndex === -1 || newIndex === -1) return
         const newItems = arrayMove(widgets, oldIndex, newIndex)
-        onWidgetsChange(newItems.map((item, idx) => ({ ...item, position: idx })))
+        onWidgetsChange(
+          newItems.map((item, idx) => ({ ...item, position: idx }))
+        )
       }
     },
     [widgets, onWidgetsChange, onActiveWidgetIdChange]
@@ -104,12 +120,17 @@ export function WidgetsTab({
   const handleAddWidget = useCallback(
     (type: WidgetType) => {
       const newId = `w${Date.now()}`
-      onWidgetsChange([...widgets, { id: newId, type, position: widgets.length, config: null }])
+      onWidgetsChange([
+        ...widgets,
+        { id: newId, type, position: widgets.length, config: null },
+      ])
     },
     [widgets, onWidgetsChange]
   )
 
-  const activeWidget = activeWidgetId ? widgets.find((w) => w.id === activeWidgetId) : null
+  const activeWidget = activeWidgetId
+    ? widgets.find((w) => w.id === activeWidgetId)
+    : null
 
   return (
     <div className="space-y-6">
@@ -117,7 +138,9 @@ export function WidgetsTab({
       <Card>
         <CardHeader>
           <CardTitle>{t('widgets.widgetsTab.activeWidgets')}</CardTitle>
-          <CardDescription>{t('widgets.widgetsTab.reorderHint')}</CardDescription>
+          <CardDescription>
+            {t('widgets.widgetsTab.reorderHint')}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <DndContext
@@ -145,7 +168,9 @@ export function WidgetsTab({
                 </div>
               )}
             </SortableContext>
-            <DragOverlay>{activeWidget && <WidgetCardOverlay widget={activeWidget} />}</DragOverlay>
+            <DragOverlay>
+              {activeWidget && <WidgetCardOverlay widget={activeWidget} />}
+            </DragOverlay>
           </DndContext>
         </CardContent>
       </Card>
@@ -154,16 +179,20 @@ export function WidgetsTab({
       <Card>
         <CardHeader>
           <CardTitle>{t('widgets.widgetsTab.widgetGallery')}</CardTitle>
-          <CardDescription>{t('widgets.widgetsTab.selectWidgets')}</CardDescription>
+          <CardDescription>
+            {t('widgets.widgetsTab.selectWidgets')}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {WIDGET_CATEGORIES.map((category) => {
-            const categoryWidgets = WIDGET_OPTIONS.filter((w) => w.category === category)
+            const categoryWidgets = WIDGET_OPTIONS.filter(
+              (w) => w.category === category
+            )
             if (categoryWidgets.length === 0) return null
 
             return (
               <div key={category} className="mb-6 last:mb-0">
-                <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                <h4 className="text-muted-foreground mb-3 text-sm font-semibold tracking-wide uppercase">
                   {t(WIDGET_CATEGORY_LABEL_KEYS[category])}
                 </h4>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -176,25 +205,29 @@ export function WidgetsTab({
                         onClick={() => !isUsed && handleAddWidget(opt.type)}
                         disabled={isUsed}
                         className={cn(
-                          'group overflow-hidden rounded-xl border bg-card text-left transition-all',
+                          'group bg-card overflow-hidden rounded-xl border text-left transition-all',
                           isUsed
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:border-primary hover:shadow-lg'
                         )}
                       >
-                        <div className="h-24 border-b bg-muted/30 p-3">
+                        <div className="bg-muted/30 h-24 border-b p-3">
                           <WidgetPreviewChart type={opt.preview} />
                         </div>
                         <div className="p-3">
                           <div className="flex items-center justify-between">
-                            <span className="font-medium">{t(opt.titleKey)}</span>
+                            <span className="font-medium">
+                              {t(opt.titleKey)}
+                            </span>
                             {isUsed && (
-                              <span className="rounded bg-muted px-1.5 py-0.5 text-xs">
+                              <span className="bg-muted rounded px-1.5 py-0.5 text-xs">
                                 {t('widgets.widgetsTab.added')}
                               </span>
                             )}
                           </div>
-                          <p className="mt-0.5 text-xs text-muted-foreground">{t(opt.descriptionKey)}</p>
+                          <p className="text-muted-foreground mt-0.5 text-xs">
+                            {t(opt.descriptionKey)}
+                          </p>
                         </div>
                       </button>
                     )

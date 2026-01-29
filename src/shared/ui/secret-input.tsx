@@ -67,16 +67,14 @@ export const SecretInput = ({
           className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
         >
           {isVisible ? (
-            <IconEyeOff className="h-4 w-4 text-muted-foreground" />
+            <IconEyeOff className="text-muted-foreground h-4 w-4" />
           ) : (
-            <IconEye className="h-4 w-4 text-muted-foreground" />
+            <IconEye className="text-muted-foreground h-4 w-4" />
           )}
-          <span className="sr-only">
-            {isVisible ? 'Скрыть' : 'Показать'}
-          </span>
+          <span className="sr-only">{isVisible ? 'Скрыть' : 'Показать'}</span>
         </Button>
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
   )
 }

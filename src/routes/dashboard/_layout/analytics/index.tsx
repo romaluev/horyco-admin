@@ -16,10 +16,19 @@ import {
 } from '@tabler/icons-react'
 import { Helmet } from 'react-helmet-async'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useVisiblePages, PAGE_ACCESS_CONFIG } from '@/features/dashboard/analytics'
+import {
+  useVisiblePages,
+  PAGE_ACCESS_CONFIG,
+} from '@/features/dashboard/analytics'
 
 import type { AnalyticsPageCode } from '@/features/dashboard/analytics'
 import type { ReactNode, ComponentType } from 'react'
@@ -28,7 +37,10 @@ export const Route = createFileRoute('/dashboard/_layout/analytics/')({
   component: AnalyticsPage,
 })
 
-const PAGE_ICONS: Record<AnalyticsPageCode, ComponentType<{ className?: string }>> = {
+const PAGE_ICONS: Record<
+  AnalyticsPageCode,
+  ComponentType<{ className?: string }>
+> = {
   sales: IconReceipt,
   products: IconPackage,
   categories: IconChartPie,
@@ -88,7 +100,7 @@ function AnalyticsPage() {
       <div className="p-4 md:p-6">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold">Аналитика</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Исследуйте данные вашего бизнеса
           </p>
         </div>
@@ -117,7 +129,9 @@ function AnalyticsPage() {
                 title={config.title}
                 description={config.description}
                 icon={<Icon className="size-5" />}
-                requiredTier={config.requiredTier === 'analytics_full' ? 'ULTRA' : 'PRO'}
+                requiredTier={
+                  config.requiredTier === 'analytics_full' ? 'ULTRA' : 'PRO'
+                }
               />
             )
           })}
@@ -133,19 +147,25 @@ interface IAnalyticsPageCardProps {
   icon: ReactNode
 }
 
-function AnalyticsPageCard({ title, description, icon }: IAnalyticsPageCardProps) {
+function AnalyticsPageCard({
+  title,
+  description,
+  icon,
+}: IAnalyticsPageCardProps) {
   return (
-    <Card className="transition-colors hover:bg-muted/50">
+    <Card className="hover:bg-muted/50 transition-colors">
       <CardHeader className="pb-2">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
             {icon}
           </div>
           <CardTitle className="text-base">{title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
-        <CardDescription className="line-clamp-2">{description}</CardDescription>
+        <CardDescription className="line-clamp-2">
+          {description}
+        </CardDescription>
       </CardContent>
     </Card>
   )
@@ -166,19 +186,21 @@ function LockedAnalyticsPageCard({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+            <div className="bg-muted text-muted-foreground flex size-10 items-center justify-center rounded-lg">
               {icon}
             </div>
             <CardTitle className="text-base">{title}</CardTitle>
           </div>
-          <div className="flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+          <div className="bg-muted text-muted-foreground flex items-center gap-1 rounded-full px-2 py-0.5 text-xs">
             <IconLock className="size-3" />
             {requiredTier}
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <CardDescription className="line-clamp-2">{description}</CardDescription>
+        <CardDescription className="line-clamp-2">
+          {description}
+        </CardDescription>
       </CardContent>
     </Card>
   )

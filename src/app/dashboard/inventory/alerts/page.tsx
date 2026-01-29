@@ -2,16 +2,31 @@
 
 import { useState } from 'react'
 
-
 import { Link } from '@tanstack/react-router'
 
-import { IconBell, IconCheck, IconAlertTriangle, IconPackageOff, IconChecks } from '@tabler/icons-react'
+import {
+  IconBell,
+  IconCheck,
+  IconAlertTriangle,
+  IconPackageOff,
+  IconChecks,
+} from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-import { ALERT_TYPE_LABELS, ALERT_TYPE_COLORS, type AlertType } from '@/shared/types/inventory'
+import {
+  ALERT_TYPE_LABELS,
+  ALERT_TYPE_COLORS,
+  type AlertType,
+} from '@/shared/types/inventory'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import { Heading } from '@/shared/ui/base/heading'
 import {
   Select,
@@ -24,7 +39,11 @@ import { Separator } from '@/shared/ui/base/separator'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useStockAlerts, useAcknowledgeAlert, useAcknowledgeAllAlerts } from '@/entities/inventory/stock'
+import {
+  useStockAlerts,
+  useAcknowledgeAlert,
+  useAcknowledgeAllAlerts,
+} from '@/entities/inventory/stock'
 import { WarehouseSelector } from '@/entities/inventory/warehouse'
 
 function getAlertTypeOptions(t: any) {
@@ -47,7 +66,7 @@ function getStatusOptions(t: any) {
 
 function getAlertIcon(alertType: string) {
   if (alertType === 'OUT_OF_STOCK') {
-    return <IconPackageOff className="h-5 w-5 text-destructive" />
+    return <IconPackageOff className="text-destructive h-5 w-5" />
   }
   return <IconAlertTriangle className="h-5 w-5 text-yellow-500" />
 }
@@ -73,8 +92,10 @@ export default function AlertsPage() {
     isAcknowledged: status === 'all' ? undefined : status === 'acknowledged',
   })
 
-  const { mutate: acknowledgeAlert, isPending: isAcknowledging } = useAcknowledgeAlert()
-  const { mutate: acknowledgeAllAlerts, isPending: isAcknowledgingAll } = useAcknowledgeAllAlerts()
+  const { mutate: acknowledgeAlert, isPending: isAcknowledging } =
+    useAcknowledgeAlert()
+  const { mutate: acknowledgeAllAlerts, isPending: isAcknowledgingAll } =
+    useAcknowledgeAllAlerts()
 
   const handleAcknowledge = (id: number) => {
     acknowledgeAlert(id)
@@ -90,10 +111,12 @@ export default function AlertsPage() {
 
   // Group alerts by type for summary
   const alertSummary = {
-    outOfStock: alerts?.filter((a) => a.alertType === 'OUT_OF_STOCK').length || 0,
+    outOfStock:
+      alerts?.filter((a) => a.alertType === 'OUT_OF_STOCK').length || 0,
     lowStock: alerts?.filter((a) => a.alertType === 'LOW_STOCK').length || 0,
     overstock: alerts?.filter((a) => a.alertType === 'OVERSTOCK').length || 0,
-    expiring: alerts?.filter((a) => a.alertType === 'EXPIRING_SOON').length || 0,
+    expiring:
+      alerts?.filter((a) => a.alertType === 'EXPIRING_SOON').length || 0,
   }
 
   const alertTypeOptions = getAlertTypeOptions(t)
@@ -157,8 +180,10 @@ export default function AlertsPage() {
         {!warehouseId ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <IconBell className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">{t('pages.alerts.selectWarehouse')}</h3>
+              <IconBell className="text-muted-foreground mb-4 h-12 w-12" />
+              <h3 className="text-lg font-medium">
+                {t('pages.alerts.selectWarehouse')}
+              </h3>
               <p className="text-muted-foreground mt-1">
                 {t('pages.alerts.selectWarehouseMessage')}
               </p>
@@ -170,15 +195,19 @@ export default function AlertsPage() {
             <div className="grid gap-4 md:grid-cols-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>{t('pages.alerts.outOfStockCount')}</CardDescription>
-                  <CardTitle className="text-2xl text-destructive">
+                  <CardDescription>
+                    {t('pages.alerts.outOfStockCount')}
+                  </CardDescription>
+                  <CardTitle className="text-destructive text-2xl">
                     {alertSummary.outOfStock}
                   </CardTitle>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>{t('pages.alerts.lowStockCount')}</CardDescription>
+                  <CardDescription>
+                    {t('pages.alerts.lowStockCount')}
+                  </CardDescription>
                   <CardTitle className="text-2xl text-yellow-500">
                     {alertSummary.lowStock}
                   </CardTitle>
@@ -186,7 +215,9 @@ export default function AlertsPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>{t('pages.alerts.overstockCount')}</CardDescription>
+                  <CardDescription>
+                    {t('pages.alerts.overstockCount')}
+                  </CardDescription>
                   <CardTitle className="text-2xl text-blue-500">
                     {alertSummary.overstock}
                   </CardTitle>
@@ -194,7 +225,9 @@ export default function AlertsPage() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>{t('pages.alerts.expiringCount')}</CardDescription>
+                  <CardDescription>
+                    {t('pages.alerts.expiringCount')}
+                  </CardDescription>
                   <CardTitle className="text-2xl text-yellow-500">
                     {alertSummary.expiring}
                   </CardTitle>
@@ -212,8 +245,10 @@ export default function AlertsPage() {
             ) : !alerts?.length ? (
               <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                  <IconChecks className="h-12 w-12 text-green-500 mb-4" />
-                  <h3 className="text-lg font-medium">{t('pages.alerts.everythingOk')}</h3>
+                  <IconChecks className="mb-4 h-12 w-12 text-green-500" />
+                  <h3 className="text-lg font-medium">
+                    {t('pages.alerts.everythingOk')}
+                  </h3>
                   <p className="text-muted-foreground mt-1">
                     {t('pages.alerts.noNotifications')}
                   </p>
@@ -222,12 +257,18 @@ export default function AlertsPage() {
             ) : (
               <div className="space-y-3">
                 {/* Critical Alerts */}
-                {alerts.filter((a) => a.alertType === 'OUT_OF_STOCK').length > 0 && (
+                {alerts.filter((a) => a.alertType === 'OUT_OF_STOCK').length >
+                  0 && (
                   <Card className="border-destructive/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-base flex items-center gap-2 text-destructive">
+                      <CardTitle className="text-destructive flex items-center gap-2 text-base">
                         <IconPackageOff className="h-4 w-4" />
-                        {t('pages.alerts.critical')} ({alerts.filter((a) => a.alertType === 'OUT_OF_STOCK').length})
+                        {t('pages.alerts.critical')} (
+                        {
+                          alerts.filter((a) => a.alertType === 'OUT_OF_STOCK')
+                            .length
+                        }
+                        )
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -236,35 +277,48 @@ export default function AlertsPage() {
                         .map((alert) => (
                           <div
                             key={alert.id}
-                            className="flex items-center justify-between rounded-lg border border-destructive/30 bg-destructive/5 p-3"
+                            className="border-destructive/30 bg-destructive/5 flex items-center justify-between rounded-lg border p-3"
                           >
-                            <div className="flex items-center gap-3 flex-1">
+                            <div className="flex flex-1 items-center gap-3">
                               {getAlertIcon(alert.alertType)}
                               <div className="space-y-1">
                                 <div className="flex items-center gap-2">
-                                  <p className="font-medium">{alert.item?.name}</p>
-                                  <Badge variant={getAlertBadgeVariant(alert.alertType)}>
-                                    {ALERT_TYPE_LABELS[alert.alertType as AlertType] ||
-                                      alert.alertType}
+                                  <p className="font-medium">
+                                    {alert.item?.name}
+                                  </p>
+                                  <Badge
+                                    variant={getAlertBadgeVariant(
+                                      alert.alertType
+                                    )}
+                                  >
+                                    {ALERT_TYPE_LABELS[
+                                      alert.alertType as AlertType
+                                    ] || alert.alertType}
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {alert.warehouse?.name} • {t('pages.alerts.current')}{' '}
+                                <p className="text-muted-foreground text-sm">
+                                  {alert.warehouse?.name} •{' '}
+                                  {t('pages.alerts.current')}{' '}
                                   <span
                                     className={
-                                      alert.currentValue <= 0 ? 'text-destructive font-medium' : ''
+                                      alert.currentValue <= 0
+                                        ? 'text-destructive font-medium'
+                                        : ''
                                     }
                                   >
                                     {alert.currentValue}
                                   </span>
-                                  , {t('pages.alerts.minimum')}: {alert.threshold}
+                                  , {t('pages.alerts.minimum')}:{' '}
+                                  {alert.threshold}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
                                 <Link
-                                  to={`/dashboard/inventory/purchase-orders?itemId=${alert.itemId}` as any}
+                                  to={
+                                    `/dashboard/inventory/purchase-orders?itemId=${alert.itemId}` as any
+                                  }
                                 >
                                   {t('pages.alerts.order')}
                                 </Link>
@@ -296,7 +350,7 @@ export default function AlertsPage() {
                 ).length > 0 && (
                   <Card className="border-yellow-500/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-base flex items-center gap-2 text-yellow-600">
+                      <CardTitle className="flex items-center gap-2 text-base text-yellow-600">
                         <IconAlertTriangle className="h-4 w-4" />
                         {t('pages.alerts.warnings')} (
                         {
@@ -323,28 +377,43 @@ export default function AlertsPage() {
                             key={alert.id}
                             className="flex items-center justify-between rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3"
                           >
-                            <div className="flex items-center gap-3 flex-1">
+                            <div className="flex flex-1 items-center gap-3">
                               {getAlertIcon(alert.alertType)}
                               <div className="space-y-1">
                                 <div className="flex items-center gap-2">
-                                  <p className="font-medium">{alert.item?.name}</p>
-                                  <Badge variant={getAlertBadgeVariant(alert.alertType)}>
-                                    {ALERT_TYPE_LABELS[alert.alertType as AlertType] ||
-                                      alert.alertType}
+                                  <p className="font-medium">
+                                    {alert.item?.name}
+                                  </p>
+                                  <Badge
+                                    variant={getAlertBadgeVariant(
+                                      alert.alertType
+                                    )}
+                                  >
+                                    {ALERT_TYPE_LABELS[
+                                      alert.alertType as AlertType
+                                    ] || alert.alertType}
                                   </Badge>
                                   {alert.isAcknowledged && (
-                                    <Badge variant="secondary">{t('pages.alerts.read')}</Badge>
+                                    <Badge variant="secondary">
+                                      {t('pages.alerts.read')}
+                                    </Badge>
                                   )}
                                 </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {alert.warehouse?.name} • {t('pages.alerts.current')}: {alert.currentValue},
+                                <p className="text-muted-foreground text-sm">
+                                  {alert.warehouse?.name} •{' '}
+                                  {t('pages.alerts.current')}:{' '}
+                                  {alert.currentValue},
                                   {t('pages.alerts.minimum')}: {alert.threshold}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
-                                <Link to={`/dashboard/inventory/stock?itemId=${alert.itemId}` as any}>
+                                <Link
+                                  to={
+                                    `/dashboard/inventory/stock?itemId=${alert.itemId}` as any
+                                  }
+                                >
                                   {t('pages.alerts.stock')}
                                 </Link>
                               </Button>

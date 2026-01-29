@@ -17,7 +17,6 @@ import { useSendPurchaseOrder } from '@/entities/inventory/purchase-order/model/
 
 import type { IPurchaseOrder } from '@/entities/inventory/purchase-order/model/types'
 
-
 interface SendPODialogProps {
   order: IPurchaseOrder
   open: boolean
@@ -57,8 +56,8 @@ export function SendPODialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                Заказ <strong>{order.poNumber}</strong> будет отправлен поставщику{' '}
-                <strong>{order.supplierName}</strong>.
+                Заказ <strong>{order.poNumber}</strong> будет отправлен
+                поставщику <strong>{order.supplierName}</strong>.
               </p>
               <p>После отправки заказ нельзя будет редактировать.</p>
               <div className="bg-muted mt-4 rounded-md p-3">

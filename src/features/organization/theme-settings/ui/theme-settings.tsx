@@ -27,7 +27,7 @@ export function ThemeSettings() {
     <div className="space-y-4">
       <div>
         <h3 className="text-lg font-medium">{t('theme.title')}</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t('theme.description')}
         </p>
       </div>

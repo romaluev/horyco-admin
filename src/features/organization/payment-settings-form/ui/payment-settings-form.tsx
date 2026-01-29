@@ -117,7 +117,9 @@ export const PaymentSettingsForm = () => {
   }
 
   const isPaymeKeyMasked = isMasked(extractValue(paymentSettings?.paymeKey))
-  const isClickKeyMasked = isMasked(extractValue(paymentSettings?.clickSecretKey))
+  const isClickKeyMasked = isMasked(
+    extractValue(paymentSettings?.clickSecretKey)
+  )
   const isUzumKeyMasked = isMasked(extractValue(paymentSettings?.uzumSecretKey))
 
   return (
@@ -129,7 +131,9 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>PayMe</CardTitle>
-                <CardDescription>{t('paymentSettings.providers.payme.description')}</CardDescription>
+                <CardDescription>
+                  {t('paymentSettings.providers.payme.description')}
+                </CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -188,7 +192,9 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('payme')}
               disabled={isTesting || !form.watch('paymeEnabled')}
             >
-              {testingProvider === 'payme' ? t('paymentSettings.testing') : t('paymentSettings.test')}
+              {testingProvider === 'payme'
+                ? t('paymentSettings.testing')
+                : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
@@ -199,7 +205,9 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Click</CardTitle>
-                <CardDescription>{t('paymentSettings.providers.click.description')}</CardDescription>
+                <CardDescription>
+                  {t('paymentSettings.providers.click.description')}
+                </CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -258,7 +266,9 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('click')}
               disabled={isTesting || !form.watch('clickEnabled')}
             >
-              {testingProvider === 'click' ? t('paymentSettings.testing') : t('paymentSettings.test')}
+              {testingProvider === 'click'
+                ? t('paymentSettings.testing')
+                : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
@@ -269,7 +279,9 @@ export const PaymentSettingsForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Uzum</CardTitle>
-                <CardDescription>{t('paymentSettings.providers.uzum.description')}</CardDescription>
+                <CardDescription>
+                  {t('paymentSettings.providers.uzum.description')}
+                </CardDescription>
               </div>
               <FormField
                 control={form.control}
@@ -328,14 +340,18 @@ export const PaymentSettingsForm = () => {
               onClick={() => handleTest('uzum')}
               disabled={isTesting || !form.watch('uzumEnabled')}
             >
-              {testingProvider === 'uzum' ? t('paymentSettings.testing') : t('paymentSettings.test')}
+              {testingProvider === 'uzum'
+                ? t('paymentSettings.testing')
+                : t('paymentSettings.test')}
             </Button>
           </CardContent>
         </Card>
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending ? t('common.actions.saving') : t('paymentSettings.saveChanges')}
+            {isPending
+              ? t('common.actions.saving')
+              : t('paymentSettings.saveChanges')}
           </Button>
         </div>
       </form>

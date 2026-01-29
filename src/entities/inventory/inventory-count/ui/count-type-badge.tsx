@@ -9,9 +9,5 @@ interface ICountTypeBadgeProps {
 }
 
 export function CountTypeBadge({ type }: ICountTypeBadgeProps) {
-  return (
-    <Badge variant="outline">
-      {COUNT_TYPE_LABELS[type]}
-    </Badge>
-  )
+  return <Badge variant="outline">{COUNT_TYPE_LABELS[type]}</Badge>
 }

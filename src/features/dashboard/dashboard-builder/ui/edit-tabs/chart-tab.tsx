@@ -18,7 +18,11 @@ import {
   SelectValue,
 } from '@/shared/ui/base/select'
 
-import { KPI_CONFIG, CHART_TYPE_OPTIONS, type ChartType } from '@/entities/dashboard/dashboard'
+import {
+  KPI_CONFIG,
+  CHART_TYPE_OPTIONS,
+  type ChartType,
+} from '@/entities/dashboard/dashboard'
 
 import { ChartTypePreview, MainChartPreview } from '../chart-previews'
 
@@ -60,11 +64,14 @@ export function ChartTab({
                     'group flex flex-col items-center rounded-xl border-2 p-4 transition-all',
                     isSelected
                       ? 'border-primary bg-primary/5 shadow-lg'
-                      : 'border-transparent bg-muted/30 hover:border-primary/50 hover:bg-muted/50'
+                      : 'bg-muted/30 hover:border-primary/50 hover:bg-muted/50 border-transparent'
                   )}
                 >
-                  <div className="mb-3 h-20 w-full overflow-hidden rounded-lg bg-background p-2">
-                    <ChartTypePreview type={opt.value} isSelected={isSelected} />
+                  <div className="bg-background mb-3 h-20 w-full overflow-hidden rounded-lg p-2">
+                    <ChartTypePreview
+                      type={opt.value}
+                      isSelected={isSelected}
+                    />
                   </div>
                   <span
                     className={cn(
@@ -85,10 +92,12 @@ export function ChartTab({
       <Card>
         <CardHeader>
           <CardTitle>Предпросмотр графика</CardTitle>
-          <CardDescription>Так будет выглядеть ваш основной график</CardDescription>
+          <CardDescription>
+            Так будет выглядеть ваш основной график
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64 rounded-xl border bg-background p-4">
+          <div className="bg-background h-64 rounded-xl border p-4">
             <MainChartPreview type={chartType} />
           </div>
         </CardContent>
@@ -98,10 +107,15 @@ export function ChartTab({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Метрика для графика</CardTitle>
-          <CardDescription>Выберите показатель для отображения на графике</CardDescription>
+          <CardDescription>
+            Выберите показатель для отображения на графике
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Select value={chartMetric} onValueChange={(v) => onChartMetricChange(v as KpiType)}>
+          <Select
+            value={chartMetric}
+            onValueChange={(v) => onChartMetricChange(v as KpiType)}
+          >
             <SelectTrigger className="w-full max-w-xs">
               <SelectValue />
             </SelectTrigger>

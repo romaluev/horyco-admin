@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -237,7 +236,9 @@ const RegisterForm = () => {
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          {step === 'initial' ? t('register.initial.title') : t('register.otp.title')}
+          {step === 'initial'
+            ? t('register.initial.title')
+            : t('register.otp.title')}
         </CardTitle>
         <CardDescription>
           {step === 'initial'
@@ -288,7 +289,9 @@ const RegisterForm = () => {
                     <FormLabel>{t('register.initial.businessName')}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t('register.initial.businessNamePlaceholder')}
+                        placeholder={t(
+                          'register.initial.businessNamePlaceholder'
+                        )}
                         {...field}
                         disabled={isLoading}
                       />
@@ -410,7 +413,9 @@ const RegisterForm = () => {
                     <FormLabel>{t('register.otp.confirmPassword')}</FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder={t('register.otp.confirmPasswordPlaceholder')}
+                        placeholder={t(
+                          'register.otp.confirmPasswordPlaceholder'
+                        )}
                         {...field}
                         disabled={isLoading}
                       />
@@ -428,7 +433,9 @@ const RegisterForm = () => {
                   onClick={handleResendOTP}
                   disabled={!canResend || isLoading}
                 >
-                  {canResend ? t('register.otp.resend') : t('register.otp.waiting')}
+                  {canResend
+                    ? t('register.otp.resend')
+                    : t('register.otp.waiting')}
                 </Button>
                 <Button type="submit" className="flex-1" disabled={isLoading}>
                   {isLoading ? (

@@ -89,7 +89,10 @@ export function DuplicateRecipeDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -104,11 +107,9 @@ export function DuplicateRecipeDialog({
               )}
             />
 
-            <div className="bg-muted rounded-md p-3 text-sm space-y-1">
-              <p className="text-muted-foreground">
-                Будут скопированы:
-              </p>
-              <ul className="list-disc list-inside text-muted-foreground">
+            <div className="bg-muted space-y-1 rounded-md p-3 text-sm">
+              <p className="text-muted-foreground">Будут скопированы:</p>
+              <ul className="text-muted-foreground list-inside list-disc">
                 <li>Все параметры техкарты</li>
                 <li>Все ингредиенты ({recipe.ingredients?.length ?? 0})</li>
               </ul>

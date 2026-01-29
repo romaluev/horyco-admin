@@ -95,24 +95,18 @@ export function showPermissionError(
 /**
  * Handle permission error with logging
  */
-export function handlePermissionError(
-  error: unknown,
-  context?: string
-): void {
+export function handlePermissionError(error: unknown, context?: string): void {
   if (!isPermissionError(error)) return
 
   const details = getPermissionErrorDetails(error)
   const requestId = (error.response?.data as any)?.requestId
 
-  console.warn(
-    `Permission Denied${context ? ` (${context})` : ''}:`,
-    {
-      message: details?.message,
-      requiredPermissions: details?.details?.requiredPermissions,
-      suggestion: details?.suggestion,
-      requestId,
-    }
-  )
+  console.warn(`Permission Denied${context ? ` (${context})` : ''}:`, {
+    message: details?.message,
+    requiredPermissions: details?.details?.requiredPermissions,
+    suggestion: details?.suggestion,
+    requestId,
+  })
 
   showPermissionError(error)
 }

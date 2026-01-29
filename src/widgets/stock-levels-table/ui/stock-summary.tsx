@@ -16,7 +16,7 @@ export const StockSummary = ({
   totalValue,
 }: IStockSummaryProps) => {
   return (
-    <div className="flex flex-wrap items-center gap-6 rounded-lg border bg-muted/50 px-4 py-3 text-sm">
+    <div className="bg-muted/50 flex flex-wrap items-center gap-6 rounded-lg border px-4 py-3 text-sm">
       <div>
         <span className="text-muted-foreground">Всего позиций:</span>{' '}
         <span className="font-medium">{totalItems}</span>
@@ -27,7 +27,7 @@ export const StockSummary = ({
       </div>
       <div>
         <span className="text-muted-foreground">Нет в наличии:</span>{' '}
-        <span className="font-medium text-destructive">{outOfStockCount}</span>
+        <span className="text-destructive font-medium">{outOfStockCount}</span>
       </div>
       <div className="ml-auto">
         <span className="text-muted-foreground">Общая стоимость:</span>{' '}

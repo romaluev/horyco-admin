@@ -80,7 +80,9 @@ export function CreateWarehouseDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t('components.warehouseForm.create.title')}</DialogTitle>
+          <DialogTitle>
+            {t('components.warehouseForm.create.title')}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -89,9 +91,16 @@ export function CreateWarehouseDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.warehouseForm.create.nameLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.warehouseForm.create.nameLabel')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('components.warehouseForm.create.namePlaceholder')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'components.warehouseForm.create.namePlaceholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,9 +112,16 @@ export function CreateWarehouseDialog() {
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.warehouseForm.create.codeLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.warehouseForm.create.codeLabel')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('components.warehouseForm.create.codePlaceholder')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'components.warehouseForm.create.codePlaceholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,19 +133,28 @@ export function CreateWarehouseDialog() {
               name="branchId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('components.warehouseForm.create.branchLabel')}</FormLabel>
+                  <FormLabel>
+                    {t('components.warehouseForm.create.branchLabel')}
+                  </FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
                     value={field.value?.toString()}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={t('components.warehouseForm.create.branchPlaceholder')} />
+                        <SelectValue
+                          placeholder={t(
+                            'components.warehouseForm.create.branchPlaceholder'
+                          )}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {branches?.items.map((branch) => (
-                        <SelectItem key={branch.id} value={branch.id.toString()}>
+                        <SelectItem
+                          key={branch.id}
+                          value={branch.id.toString()}
+                        >
                           {branch.name}
                         </SelectItem>
                       ))}
@@ -146,10 +171,15 @@ export function CreateWarehouseDialog() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('components.warehouseForm.create.activeLabel')}</FormLabel>
+                    <FormLabel>
+                      {t('components.warehouseForm.create.activeLabel')}
+                    </FormLabel>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -165,7 +195,9 @@ export function CreateWarehouseDialog() {
                 {t('components.warehouseForm.create.cancel')}
               </Button>
               <Button type="submit" className="flex-1" disabled={isPending}>
-                {isPending ? t('components.warehouseForm.create.submitting') : t('components.warehouseForm.create.submit')}
+                {isPending
+                  ? t('components.warehouseForm.create.submitting')
+                  : t('components.warehouseForm.create.submit')}
               </Button>
             </div>
           </form>

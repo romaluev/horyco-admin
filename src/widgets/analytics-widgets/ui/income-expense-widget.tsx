@@ -64,13 +64,13 @@ export function IncomeExpenseWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="grid flex-1 lg:grid-cols-[1fr,auto]">
-        <div className="border-b p-5 lg:border-b-0 lg:border-r">
+        <div className="border-b p-5 lg:border-r lg:border-b-0">
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h3 className="text-lg font-semibold">Финансы</h3>
-              <p className="text-sm text-muted-foreground">Годовой обзор</p>
+              <p className="text-muted-foreground text-sm">Годовой обзор</p>
             </div>
           </div>
 
@@ -87,15 +87,20 @@ export function IncomeExpenseWidget({
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="rounded-lg border bg-background px-3 py-2 shadow-lg">
+                        <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
                           <p className="mb-1 text-xs font-medium">{label}</p>
                           {payload.map((entry, index) => (
-                            <div key={index} className="flex items-center gap-2 text-xs">
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 text-xs"
+                            >
                               <div
                                 className="size-2 rounded-full"
                                 style={{ backgroundColor: entry.color }}
                               />
-                              <span className="text-muted-foreground">{entry.name}:</span>
+                              <span className="text-muted-foreground">
+                                {entry.name}:
+                              </span>
                               <span className="font-medium">{entry.value}</span>
                             </div>
                           ))}
@@ -134,7 +139,7 @@ export function IncomeExpenseWidget({
         <div className="flex flex-col p-5 lg:w-56">
           <div className="mb-4">
             <h4 className="font-semibold">Отчет</h4>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Средн. {formatPrice(monthlyAverage, { short: true })}
             </p>
           </div>
@@ -193,7 +198,7 @@ function ReportCard({ icon, label, value, color, bgColor }: IReportCardProps) {
         <IconComponent className={cn('size-4', color)} />
       </div>
       <div>
-        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-muted-foreground text-xs">{label}</p>
         <p className="font-semibold">{formatPrice(value)}</p>
       </div>
     </div>
@@ -202,26 +207,26 @@ function ReportCard({ icon, label, value, color, bgColor }: IReportCardProps) {
 
 function IncomeExpenseWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="grid flex-1 lg:grid-cols-[1fr,auto]">
-        <div className="border-b p-5 lg:border-b-0 lg:border-r">
+        <div className="border-b p-5 lg:border-r lg:border-b-0">
           <div className="mb-4 space-y-2">
-            <div className="h-6 w-24 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-6 w-24 animate-pulse rounded" />
+            <div className="bg-muted h-4 w-32 animate-pulse rounded" />
           </div>
-          <div className="h-[200px] animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-[200px] animate-pulse rounded" />
         </div>
         <div className="flex flex-col p-5 lg:w-56">
           <div className="mb-4 space-y-2">
-            <div className="h-5 w-16 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-5 w-16 animate-pulse rounded" />
+            <div className="bg-muted h-4 w-24 animate-pulse rounded" />
           </div>
           <div className="flex flex-1 flex-col gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-14 animate-pulse rounded-lg bg-muted" />
+              <div key={i} className="bg-muted h-14 animate-pulse rounded-lg" />
             ))}
           </div>
-          <div className="mt-4 h-9 animate-pulse rounded bg-muted" />
+          <div className="bg-muted mt-4 h-9 animate-pulse rounded" />
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -144,152 +143,161 @@ export default function BusinessInfoPage() {
       description={t('pages.businessInfo.description')}
     >
       <Card>
-          <CardHeader>
-            <CardTitle>{t('pages.businessInfo.cardTitle')}</CardTitle>
-            <CardDescription>
-              {t('pages.businessInfo.cardDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
-                <FormField
-                  control={form.control}
-                  name="businessName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('pages.businessInfo.businessName')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={t('pages.businessInfo.businessNamePlaceholder')}
-                          {...field}
-                          disabled={isSubmitting}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {t('pages.businessInfo.businessNameDescription')}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="businessType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('pages.businessInfo.businessType')}</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
+        <CardHeader>
+          <CardTitle>{t('pages.businessInfo.cardTitle')}</CardTitle>
+          <CardDescription>
+            {t('pages.businessInfo.cardDescription')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="businessName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('pages.businessInfo.businessName')}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          'pages.businessInfo.businessNamePlaceholder'
+                        )}
+                        {...field}
                         disabled={isSubmitting}
-                      >
-                        <FormControl className="w-60">
-                          <SelectTrigger>
-                            <SelectValue placeholder={t('pages.businessInfo.businessTypeSelect')} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {BUSINESS_TYPES.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>
-                        {t('pages.businessInfo.businessTypeDescription')}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('pages.businessInfo.businessNameDescription')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('pages.businessInfo.slug')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={t('pages.businessInfo.slugPlaceholder')}
-                          {...field}
-                          disabled={isSubmitting || isUploading}
-                        />
+              <FormField
+                control={form.control}
+                name="businessType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('pages.businessInfo.businessType')}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isSubmitting}
+                    >
+                      <FormControl className="w-60">
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t(
+                              'pages.businessInfo.businessTypeSelect'
+                            )}
+                          />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormDescription>
-                        {t('pages.businessInfo.slugDescription')}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <SelectContent>
+                        {BUSINESS_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      {t('pages.businessInfo.businessTypeDescription')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="logoUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('pages.businessInfo.logo')}</FormLabel>
-                      <FormControl>
-                        <FileUploader
-                          value={logoFiles}
-                          onValueChange={setLogoFiles}
-                          maxFiles={1}
-                          maxSize={5 * 1024 * 1024}
-                          accept={{
-                            'image/*': ['.jpg', '.jpeg', '.png', '.webp'],
-                          }}
-                          disabled={isSubmitting || isUploading}
-                          variant="image"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {t('pages.businessInfo.logoDescription')}
-                      </FormDescription>
-                      {field.value && (
-                        <p className="text-muted-foreground text-sm">
-                          {t('pages.businessInfo.currentLogo')} {field.value}
-                        </p>
-                      )}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('pages.businessInfo.slug')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('pages.businessInfo.slugPlaceholder')}
+                        {...field}
+                        disabled={isSubmitting || isUploading}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('pages.businessInfo.slugDescription')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <div className="flex justify-end gap-4 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      if (confirmNavigation()) {
-                        router.back()
-                      }
-                    }}
-                    disabled={isSubmitting || isUploading}
-                  >
-                    {t('pages.businessInfo.buttons.back')}
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting || isUploading}>
-                    {isSubmitting || isUploading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {isUploading ? t('pages.businessInfo.buttons.uploading') : t('pages.businessInfo.buttons.saving')}
-                      </>
-                    ) : (
-                      t('pages.businessInfo.buttons.next')
+              <FormField
+                control={form.control}
+                name="logoUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('pages.businessInfo.logo')}</FormLabel>
+                    <FormControl>
+                      <FileUploader
+                        value={logoFiles}
+                        onValueChange={setLogoFiles}
+                        maxFiles={1}
+                        maxSize={5 * 1024 * 1024}
+                        accept={{
+                          'image/*': ['.jpg', '.jpeg', '.png', '.webp'],
+                        }}
+                        disabled={isSubmitting || isUploading}
+                        variant="image"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('pages.businessInfo.logoDescription')}
+                    </FormDescription>
+                    {field.value && (
+                      <p className="text-muted-foreground text-sm">
+                        {t('pages.businessInfo.currentLogo')} {field.value}
+                      </p>
                     )}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end gap-4 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (confirmNavigation()) {
+                      router.back()
+                    }
+                  }}
+                  disabled={isSubmitting || isUploading}
+                >
+                  {t('pages.businessInfo.buttons.back')}
+                </Button>
+                <Button type="submit" disabled={isSubmitting || isUploading}>
+                  {isSubmitting || isUploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {isUploading
+                        ? t('pages.businessInfo.buttons.uploading')
+                        : t('pages.businessInfo.buttons.saving')}
+                    </>
+                  ) : (
+                    t('pages.businessInfo.buttons.next')
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </OnboardingLayout>
   )
 }

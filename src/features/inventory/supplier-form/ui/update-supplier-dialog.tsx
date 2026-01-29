@@ -31,7 +31,10 @@ import {
 import { Switch } from '@/shared/ui/base/switch'
 import { Textarea } from '@/shared/ui/base/textarea'
 
-import { useUpdateSupplier, type ISupplier } from '@/entities/inventory/supplier'
+import {
+  useUpdateSupplier,
+  type ISupplier,
+} from '@/entities/inventory/supplier'
 
 import { supplierFormSchema, paymentTermsOptions } from '../model/schema'
 
@@ -150,7 +153,10 @@ export function UpdateSupplierDialog({
                   <FormItem>
                     <FormLabel>Юридическое название</FormLabel>
                     <FormControl>
-                      <Input placeholder="Полное юридическое название" {...field} />
+                      <Input
+                        placeholder="Полное юридическое название"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +212,11 @@ export function UpdateSupplierDialog({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="supplier@example.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="supplier@example.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -220,7 +230,10 @@ export function UpdateSupplierDialog({
                   <FormItem className="col-span-2">
                     <FormLabel>Адрес</FormLabel>
                     <FormControl>
-                      <Input placeholder="г. Ташкент, ул. Примерная, 1" {...field} />
+                      <Input
+                        placeholder="г. Ташкент, ул. Примерная, 1"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -311,7 +324,9 @@ export function UpdateSupplierDialog({
                         min={0}
                         value={field.value ?? ''}
                         onChange={(e) =>
-                          field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -329,7 +344,10 @@ export function UpdateSupplierDialog({
                       <FormLabel>Активен</FormLabel>
                     </div>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

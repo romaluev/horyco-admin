@@ -16,22 +16,30 @@ export const MovementsSummary = ({
   totalAdjustments,
 }: IMovementsSummaryProps) => {
   return (
-    <div className="flex flex-wrap items-center gap-6 rounded-lg border bg-muted/50 px-4 py-3 text-sm">
+    <div className="bg-muted/50 flex flex-wrap items-center gap-6 rounded-lg border px-4 py-3 text-sm">
       <div>
         <span className="text-muted-foreground">Закупки:</span>{' '}
-        <span className="font-medium text-emerald-600">+{formatCurrency(totalPurchases)}</span>
+        <span className="font-medium text-emerald-600">
+          +{formatCurrency(totalPurchases)}
+        </span>
       </div>
       <div>
         <span className="text-muted-foreground">Продажи:</span>{' '}
-        <span className="font-medium text-destructive">-{formatCurrency(totalSales)}</span>
+        <span className="text-destructive font-medium">
+          -{formatCurrency(totalSales)}
+        </span>
       </div>
       <div>
         <span className="text-muted-foreground">Списания:</span>{' '}
-        <span className="font-medium text-destructive">-{formatCurrency(totalWriteoffs)}</span>
+        <span className="text-destructive font-medium">
+          -{formatCurrency(totalWriteoffs)}
+        </span>
       </div>
       <div>
         <span className="text-muted-foreground">Корректировки:</span>{' '}
-        <span className="font-medium text-muted-foreground">{formatCurrency(totalAdjustments)}</span>
+        <span className="text-muted-foreground font-medium">
+          {formatCurrency(totalAdjustments)}
+        </span>
       </div>
     </div>
   )

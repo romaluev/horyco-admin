@@ -33,7 +33,7 @@ interface OnboardingBranchPermissionsManagerProps {
  * Allows selecting branches and assigning permissions to each branch
  * Does not support permission copy - simpler UI for onboarding
  */
- 
+
 export const OnboardingBranchPermissionsManager = ({
   branches,
   onBranchPermissionsChange,

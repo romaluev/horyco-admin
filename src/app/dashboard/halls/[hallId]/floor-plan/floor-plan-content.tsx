@@ -6,10 +6,18 @@ import { Heading } from '@/shared/ui/base/heading'
 import { ScrollArea } from '@/shared/ui/base/scroll-area'
 
 import { useHallById } from '@/entities/organization/hall'
-import { useTableList, useDeleteTable, useUpdateTablePosition, type ITable } from '@/entities/organization/table'
+import {
+  useTableList,
+  useDeleteTable,
+  useUpdateTablePosition,
+  type ITable,
+} from '@/entities/organization/table'
 import { CreateTableDialog } from '@/features/organization/table-form'
 import { UpdateTableDialog } from '@/features/organization/table-form/ui/update-table-dialog'
-import { SessionStatusCard, CloseSessionDialog } from '@/features/organization/table-session'
+import {
+  SessionStatusCard,
+  CloseSessionDialog,
+} from '@/features/organization/table-session'
 
 import { TableListItem } from './table-list-item'
 import { VisualFloorPlan } from './visual-floor-plan'
@@ -94,10 +102,8 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
         <div className="space-y-4">
           <div className="rounded-lg border bg-white shadow-sm">
             <div className="border-b p-4">
-              <h3 className="font-semibold">
-                Столы ({tables?.length || 0})
-              </h3>
-              <p className="text-xs text-muted-foreground">
+              <h3 className="font-semibold">Столы ({tables?.length || 0})</h3>
+              <p className="text-muted-foreground text-xs">
                 Нажмите для выбора, перетащите на холсте для перемещения
               </p>
             </div>
@@ -115,7 +121,7 @@ export const FloorPlanContent = ({ hallId }: IFloorPlanContentProps) => {
                     />
                   ))
                 ) : (
-                  <div className="py-8 text-center text-sm text-muted-foreground">
+                  <div className="text-muted-foreground py-8 text-center text-sm">
                     Столов пока нет. Создайте свой первый стол.
                   </div>
                 )}

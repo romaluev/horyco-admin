@@ -95,9 +95,16 @@ export const CreateModifierGroupDialog = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.create.form.name.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.create.form.name.label')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('modifiers.groups.create.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t(
+                        'modifiers.groups.create.form.name.placeholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,9 +116,16 @@ export const CreateModifierGroupDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.create.form.description.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.create.form.description.label')}
+                  </FormLabel>
                   <FormControl>
-                    <Textarea placeholder={t('modifiers.groups.create.form.description.placeholder')} {...field} />
+                    <Textarea
+                      placeholder={t(
+                        'modifiers.groups.create.form.description.placeholder'
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,7 +138,9 @@ export const CreateModifierGroupDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('modifiers.groups.create.form.minSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.create.form.minSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -133,7 +149,9 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('modifiers.groups.create.form.minSelection.description')}
+                      {t(
+                        'modifiers.groups.create.form.minSelection.description'
+                      )}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +163,9 @@ export const CreateModifierGroupDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('modifiers.groups.create.form.maxSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.create.form.maxSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -154,7 +174,9 @@ export const CreateModifierGroupDialog = ({
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('modifiers.groups.create.form.maxSelection.description')}
+                      {t(
+                        'modifiers.groups.create.form.maxSelection.description'
+                      )}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -167,7 +189,9 @@ export const CreateModifierGroupDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.groups.create.form.sortOrder.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.groups.create.form.sortOrder.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -175,7 +199,9 @@ export const CreateModifierGroupDialog = ({
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>{t('modifiers.groups.create.form.sortOrder.description')}</FormDescription>
+                  <FormDescription>
+                    {t('modifiers.groups.create.form.sortOrder.description')}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -187,7 +213,9 @@ export const CreateModifierGroupDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('modifiers.groups.create.form.isRequired.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.groups.create.form.isRequired.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('modifiers.groups.create.form.isRequired.description')}
                     </FormDescription>
@@ -211,7 +239,9 @@ export const CreateModifierGroupDialog = ({
                 {t('modifiers.groups.create.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('modifiers.groups.create.form.actions.saving') : t('modifiers.groups.create.form.actions.save')}
+                {isPending
+                  ? t('modifiers.groups.create.form.actions.saving')
+                  : t('modifiers.groups.create.form.actions.save')}
               </Button>
             </div>
           </form>

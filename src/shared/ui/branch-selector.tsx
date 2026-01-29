@@ -41,7 +41,7 @@ export const BranchSelector = ({
   const selectedValue = value === undefined ? 'all' : String(value)
 
   return (
-    <div className='flex items-center gap-1.5'>
+    <div className="flex items-center gap-1.5">
       <IconHierarchy />
       <Select
         value={selectedValue}

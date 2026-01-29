@@ -23,7 +23,8 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
     <div className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="fullName">
-          {t('employee.form.basicInfo.fullNameRequired')} <span className="text-destructive">*</span>
+          {t('employee.form.basicInfo.fullNameRequired')}{' '}
+          <span className="text-destructive">*</span>
         </Label>
         <Input
           id="fullName"
@@ -39,7 +40,8 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="phone">
-            {t('employee.form.basicInfo.phoneRequired')} <span className="text-destructive">*</span>
+            {t('employee.form.basicInfo.phoneRequired')}{' '}
+            <span className="text-destructive">*</span>
           </Label>
           <Controller
             name="phone"
@@ -79,7 +81,8 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="password">
-          {t('employee.form.basicInfo.passwordRequired')} <span className="text-destructive">*</span>
+          {t('employee.form.basicInfo.passwordRequired')}{' '}
+          <span className="text-destructive">*</span>
         </Label>
         <Input
           id="password"
@@ -95,7 +98,9 @@ export const EmployeeFormBasic = ({ form }: EmployeeFormBasicProps) => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="birthDate">{t('employee.form.basicInfo.birthDate')}</Label>
+          <Label htmlFor="birthDate">
+            {t('employee.form.basicInfo.birthDate')}
+          </Label>
           <Controller
             name="birthDate"
             control={control}

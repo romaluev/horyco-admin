@@ -30,8 +30,12 @@ const getDeleteErrorMessage = (error: ApiError): string => {
   const apiMessage = error.response?.data?.error?.message
   const originalError = error.response?.data?.error?.details?.originalError
 
-  if (originalError?.includes('Cannot delete supplier with existing purchase orders') ||
-      apiMessage?.includes('Cannot delete supplier')) {
+  if (
+    originalError?.includes(
+      'Cannot delete supplier with existing purchase orders'
+    ) ||
+    apiMessage?.includes('Cannot delete supplier')
+  ) {
     return 'Нельзя удалить поставщика с заказами. Деактивируйте его вместо удаления.'
   }
   return apiMessage || error.message || 'Ошибка при удалении поставщика'
@@ -138,11 +142,20 @@ export const useAddSupplierItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ supplierId, data }: { supplierId: number; data: ICreateSupplierItemDto }) =>
-      supplierApi.addSupplierItem(supplierId, data),
+    mutationFn: ({
+      supplierId,
+      data,
+    }: {
+      supplierId: number
+      data: ICreateSupplierItemDto
+    }) => supplierApi.addSupplierItem(supplierId, data),
     onSuccess: (_, { supplierId }) => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
-      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.items(supplierId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.detail(supplierId),
+      })
       toast.success('Товар добавлен к поставщику')
     },
     onError: () => {
@@ -168,8 +181,12 @@ export const useUpdateSupplierItem = () => {
       data: IUpdateSupplierItemDto
     }) => supplierApi.updateSupplierItem(supplierId, itemId, data),
     onSuccess: (_, { supplierId }) => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
-      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.items(supplierId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.detail(supplierId),
+      })
       toast.success('Товар поставщика обновлен')
     },
     onError: () => {
@@ -185,11 +202,20 @@ export const useRemoveSupplierItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ supplierId, itemId }: { supplierId: number; itemId: number }) =>
-      supplierApi.removeSupplierItem(supplierId, itemId),
+    mutationFn: ({
+      supplierId,
+      itemId,
+    }: {
+      supplierId: number
+      itemId: number
+    }) => supplierApi.removeSupplierItem(supplierId, itemId),
     onSuccess: (_, { supplierId }) => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.items(supplierId) })
-      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(supplierId) })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.items(supplierId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: supplierKeys.detail(supplierId),
+      })
       toast.success('Товар удален от поставщика')
     },
     onError: () => {

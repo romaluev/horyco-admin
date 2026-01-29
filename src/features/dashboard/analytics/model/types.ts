@@ -3,7 +3,12 @@
  * Based on docs: 23-analytics-reporting.md, 29-analytics-integration-guide.md (updated 2025-12-28)
  */
 
-import type { GroupBy, PeriodType, SortBy, SortDirection } from '@/shared/api/graphql'
+import type {
+  GroupBy,
+  PeriodType,
+  SortBy,
+  SortDirection,
+} from '@/shared/api/graphql'
 
 // ============================================
 // PAGE CODES
@@ -27,7 +32,10 @@ export type AnalyticsPageCode =
 // ENTITLEMENT TIERS
 // ============================================
 
-export type EntitlementTier = 'analytics_basic' | 'analytics_pro' | 'analytics_full'
+export type EntitlementTier =
+  | 'analytics_basic'
+  | 'analytics_pro'
+  | 'analytics_full'
 
 export interface IPageAccessConfig {
   pageCode: AnalyticsPageCode

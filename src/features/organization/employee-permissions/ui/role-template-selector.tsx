@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react'
 
-import { BaseError, BaseLoading, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui'
+import {
+  BaseError,
+  BaseLoading,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui'
 
 interface RoleTemplateOption {
   id: number
@@ -45,10 +54,8 @@ export const RoleTemplateSelector = ({
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">
-        Шаблон роли (опционально)
-      </label>
-      <p className="text-xs text-muted-foreground">
+      <label className="text-sm font-medium">Шаблон роли (опционально)</label>
+      <p className="text-muted-foreground text-xs">
         Выбор роли автоматически заполнит разрешения. Вы сможете их
         отредактировать после выбора.
       </p>
@@ -65,7 +72,7 @@ export const RoleTemplateSelector = ({
               <div>
                 <div className="font-medium">{role.name}</div>
                 {role.description && (
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     {role.description}
                   </div>
                 )}

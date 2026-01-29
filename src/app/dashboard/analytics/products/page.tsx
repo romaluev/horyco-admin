@@ -66,7 +66,8 @@ export default function ProductsAnalyticsPage() {
   const [search, setSearch] = React.useState('')
   const [categoryFilter, setCategoryFilter] = React.useState<string>('all')
   const [sortColumn, setSortColumn] = React.useState<SortColumn>('revenue')
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>('desc')
+  const [sortDirection, setSortDirection] =
+    React.useState<SortDirection>('desc')
 
   const { data, isLoading, error, refetch } = useProductAnalytics({
     period: { type: period },
@@ -84,7 +85,9 @@ export default function ProductsAnalyticsPage() {
   // Get unique categories for filter
   const categories = React.useMemo(() => {
     if (products.length === 0) return []
-    const uniqueCategories = [...new Set(products.map((p) => p.categoryName).filter(Boolean))]
+    const uniqueCategories = [
+      ...new Set(products.map((p) => p.categoryName).filter(Boolean)),
+    ]
     return uniqueCategories.sort()
   }, [products])
 
@@ -97,7 +100,9 @@ export default function ProductsAnalyticsPage() {
     // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase()
-      filtered = filtered.filter((p) => (p.name ?? '').toLowerCase().includes(searchLower))
+      filtered = filtered.filter((p) =>
+        (p.name ?? '').toLowerCase().includes(searchLower)
+      )
     }
 
     // Apply category filter
@@ -142,8 +147,8 @@ export default function ProductsAnalyticsPage() {
     >
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-[300px]">
-          <IconSearch className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative max-w-[300px] min-w-[200px] flex-1">
+          <IconSearch className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
           <Input
             placeholder={t('products.filters.searchPlaceholder')}
             value={search}
@@ -156,7 +161,9 @@ export default function ProductsAnalyticsPage() {
             <SelectValue placeholder={t('products.filters.allCategories')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{t('products.filters.allCategories')}</SelectItem>
+            <SelectItem value="all">
+              {t('products.filters.allCategories')}
+            </SelectItem>
             {categories.map((cat) => (
               <SelectItem key={cat} value={cat}>
                 {cat}
@@ -182,8 +189,11 @@ export default function ProductsAnalyticsPage() {
 
       {/* Pagination info */}
       {data && (
-        <div className="mt-4 text-sm text-muted-foreground">
-          {t('products.pagination', { count: filteredProducts.length, total: data.pagination?.total ?? products.length })}
+        <div className="text-muted-foreground mt-4 text-sm">
+          {t('products.pagination', {
+            count: filteredProducts.length,
+            total: data.pagination?.total ?? products.length,
+          })}
         </div>
       )}
     </AnalyticsPageLayout>
@@ -209,11 +219,13 @@ function ProductsTable({
 }: IProductsTableProps) {
   const { t } = useTranslation('analytics')
   return (
-    <div className="rounded-lg border h-[calc(100vh-350px)] overflow-auto [&_[data-slot=table-container]]:overflow-visible">
+    <div className="h-[calc(100vh-350px)] overflow-auto rounded-lg border [&_[data-slot=table-container]]:overflow-visible">
       <Table>
-        <TableHeader className="sticky top-0 bg-gray-50 z-10">
+        <TableHeader className="sticky top-0 z-10 bg-gray-50">
           <TableRow>
-            <TableHead className="w-[60px]">{t('products.table.index')}</TableHead>
+            <TableHead className="w-[60px]">
+              {t('products.table.index')}
+            </TableHead>
             <SortableHeader
               column="name"
               label={t('products.table.product')}
@@ -253,26 +265,34 @@ function ProductsTable({
               onSort={onSort}
               className="text-center"
             />
-            <TableHead className="text-right">{t('products.table.trend')}</TableHead>
+            <TableHead className="text-right">
+              {t('products.table.trend')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {products.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell
+                colSpan={7}
+                className="text-muted-foreground h-24 text-center"
+              >
                 {t('products.table.noData')}
               </TableCell>
             </TableRow>
           ) : (
             products.map((product, index) => (
-              <TableRow key={product.id ?? index} className="cursor-pointer hover:bg-muted/50">
-                <TableCell className="font-medium text-muted-foreground">
+              <TableRow
+                key={product.id ?? index}
+                className="hover:bg-muted/50 cursor-pointer"
+              >
+                <TableCell className="text-muted-foreground font-medium">
                   {index + 1}
                 </TableCell>
                 <TableCell>
                   <div>
                     <div className="font-medium">{product.name ?? 'N/A'}</div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-muted-foreground text-xs">
                       {product.categoryName ?? '-'}
                     </div>
                   </div>
@@ -283,7 +303,9 @@ function ProductsTable({
                 <TableCell className="text-right font-medium">
                   {formatPrice(product.revenue ?? 0)}
                 </TableCell>
-                <TableCell className="text-right">{product.share ?? 0}%</TableCell>
+                <TableCell className="text-right">
+                  {product.share ?? 0}%
+                </TableCell>
                 <TableCell className="text-center">
                   <AbcBadge abcClass={product.abcClass ?? 'C'} />
                 </TableCell>
@@ -324,18 +346,23 @@ function SortableHeader({
 
   return (
     <TableHead
-      className={cn('cursor-pointer select-none hover:bg-muted/50', className)}
+      className={cn('hover:bg-muted/50 cursor-pointer select-none', className)}
       onClick={() => onSort(column)}
     >
-      <div className={cn('flex items-center gap-1', className?.includes('text-right') && 'justify-end', className?.includes('text-center') && 'justify-center')}>
+      <div
+        className={cn(
+          'flex items-center gap-1',
+          className?.includes('text-right') && 'justify-end',
+          className?.includes('text-center') && 'justify-center'
+        )}
+      >
         {label}
-        {isActive && (
-          sortDirection === 'asc' ? (
+        {isActive &&
+          (sortDirection === 'asc' ? (
             <IconArrowUp className="size-3" />
           ) : (
             <IconArrowDown className="size-3" />
-          )
-        )}
+          ))}
       </div>
     </TableHead>
   )
@@ -396,13 +423,25 @@ function ProductsTableSkeleton() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[60px]">{t('products.table.index')}</TableHead>
+            <TableHead className="w-[60px]">
+              {t('products.table.index')}
+            </TableHead>
             <TableHead>{t('products.table.product')}</TableHead>
-            <TableHead className="text-right">{t('products.table.quantity')}</TableHead>
-            <TableHead className="text-right">{t('products.table.revenue')}</TableHead>
-            <TableHead className="text-right">{t('products.table.share')}</TableHead>
-            <TableHead className="text-center">{t('products.table.abc')}</TableHead>
-            <TableHead className="text-right">{t('products.table.trend')}</TableHead>
+            <TableHead className="text-right">
+              {t('products.table.quantity')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('products.table.revenue')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('products.table.share')}
+            </TableHead>
+            <TableHead className="text-center">
+              {t('products.table.abc')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('products.table.trend')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

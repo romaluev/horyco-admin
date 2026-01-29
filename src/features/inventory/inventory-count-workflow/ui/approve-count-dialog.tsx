@@ -17,8 +17,10 @@ import {
 
 import { useApproveCount } from '@/entities/inventory/inventory-count/model/mutations'
 
-import type { IInventoryCount, ICountVarianceSummary } from '@/entities/inventory/inventory-count/model/types'
-
+import type {
+  IInventoryCount,
+  ICountVarianceSummary,
+} from '@/entities/inventory/inventory-count/model/types'
 
 interface ApproveCountDialogProps {
   count: IInventoryCount
@@ -115,14 +117,14 @@ export function ApproveCountDialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                При одобрении инвентаризации <strong>{count.countNumber}</strong>{' '}
-                остатки на складе будут скорректированы согласно результатам
-                подсчёта.
+                При одобрении инвентаризации{' '}
+                <strong>{count.countNumber}</strong> остатки на складе будут
+                скорректированы согласно результатам подсчёта.
               </p>
               <p className="text-destructive font-medium">
                 Это действие нельзя отменить!
               </p>
-              <div className="bg-muted mt-4 rounded-md p-3 space-y-1">
+              <div className="bg-muted mt-4 space-y-1 rounded-md p-3">
                 <div className="flex justify-between text-sm">
                   <span>Товаров с расхождениями:</span>
                   <span>{calculatedValues.itemsWithVariance}</span>
@@ -139,7 +141,7 @@ export function ApproveCountDialog({
                     {formatCurrency(calculatedValues.surplusValue)}
                   </span>
                 </div>
-                <div className="flex justify-between font-medium border-t pt-1">
+                <div className="flex justify-between border-t pt-1 font-medium">
                   <span>Итого корректировка:</span>
                   <span
                     className={
@@ -152,12 +154,12 @@ export function ApproveCountDialog({
                     {formatCurrency(calculatedValues.netAdjustmentValue)}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm text-muted-foreground pt-1">
+                <div className="text-muted-foreground flex justify-between pt-1 text-sm">
                   <span>Подсчитано товаров:</span>
                   <span>{calculatedValues.totalCounted}</span>
                 </div>
                 {variance && (
-                  <div className="flex justify-between text-sm text-muted-foreground">
+                  <div className="text-muted-foreground flex justify-between text-sm">
                     <span>Точность инвентаризации:</span>
                     <span>{variance.accuracyPct.toFixed(1)}%</span>
                   </div>

@@ -31,7 +31,6 @@ import { useUpdateRecipe } from '@/entities/inventory/recipe/model/mutations'
 
 import type { IRecipe } from '@/entities/inventory/recipe/model/types'
 
-
 const editRecipeSchema = z.object({
   name: z.string().min(1, 'Введите название'),
   outputQuantity: z.number().min(0.01, 'Количество должно быть больше 0'),
@@ -97,13 +96,14 @@ export function EditRecipeDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Редактировать техкарту</DialogTitle>
-          <DialogDescription>
-            Измените параметры техкарты
-          </DialogDescription>
+          <DialogDescription>Измените параметры техкарты</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"

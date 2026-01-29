@@ -1,12 +1,9 @@
 import { useState } from 'react'
 
-
-
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ArrowLeft, CheckCircle, XCircle, Loader2, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
 
 import { formatCurrency } from '@/shared/lib/format'
 import { useRouter } from '@/shared/lib/navigation'
@@ -74,7 +71,9 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
 
   // Local state for editing counted quantities
-  const [editingQuantities, setEditingQuantities] = useState<Record<number, number>>({})
+  const [editingQuantities, setEditingQuantities] = useState<
+    Record<number, number>
+  >({})
 
   const handleQuantityChange = (itemId: number, value: string) => {
     const numValue = parseFloat(value)
@@ -126,7 +125,8 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
 
   const isInProgress = count.status === 'in_progress'
   const isPendingApproval = count.status === 'pending_approval'
-  const _isFinalized = count.status === 'completed' || count.status === 'cancelled'
+  const _isFinalized =
+    count.status === 'completed' || count.status === 'cancelled'
 
   const countedItems = count.items?.filter((i) => i.isCounted).length || 0
   const totalItems = count.items?.length || 0
@@ -156,7 +156,10 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
           <div className="flex flex-wrap gap-2">
             {isInProgress && (
               <>
-                <Button variant="outline" onClick={() => setIsAddItemDialogOpen(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddItemDialogOpen(true)}
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   {t('components.inventoryCountWorkflow.addItem.title')}
                 </Button>
@@ -164,7 +167,10 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
                   <CheckCircle className="mr-2 h-4 w-4" />
                   {t('components.inventoryCountWorkflow.complete.title')}
                 </Button>
-                <Button variant="destructive" onClick={() => setIsCancelDialogOpen(true)}>
+                <Button
+                  variant="destructive"
+                  onClick={() => setIsCancelDialogOpen(true)}
+                >
                   <XCircle className="mr-2 h-4 w-4" />
                   {t('common.cancel')}
                 </Button>
@@ -176,10 +182,16 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
                   <CheckCircle className="mr-2 h-4 w-4" />
                   {t('components.inventoryCountWorkflow.approve.title')}
                 </Button>
-                <Button variant="outline" onClick={() => setIsRejectDialogOpen(true)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsRejectDialogOpen(true)}
+                >
                   {t('components.inventoryCountWorkflow.reject.title')}
                 </Button>
-                <Button variant="destructive" onClick={() => setIsCancelDialogOpen(true)}>
+                <Button
+                  variant="destructive"
+                  onClick={() => setIsCancelDialogOpen(true)}
+                >
                   <XCircle className="mr-2 h-4 w-4" />
                   {t('common.cancel')}
                 </Button>
@@ -194,7 +206,9 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">{t('pages.counts.columnVariance')}</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {t('pages.counts.columnVariance')}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -209,13 +223,17 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">{t('pages.counts.columnVariance')}</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {t('pages.counts.columnVariance')}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">недостача:</span>
                 <span className="text-destructive">
-                  {formatCurrency(variance?.shortageValue || count.shortageValue)}
+                  {formatCurrency(
+                    variance?.shortageValue || count.shortageValue
+                  )}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -229,7 +247,9 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
                 <span>Итого:</span>
                 <span
                   className={
-                    count.netAdjustmentValue < 0 ? 'text-destructive' : 'text-emerald-600 dark:text-emerald-500'
+                    count.netAdjustmentValue < 0
+                      ? 'text-destructive'
+                      : 'text-emerald-600 dark:text-emerald-500'
                   }
                 >
                   {count.netAdjustmentValue >= 0 ? '+' : ''}
@@ -247,14 +267,18 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Дата:</span>
                 <span>
-                  {format(new Date(count.countDate), 'dd MMM yyyy', { locale: ru })}
+                  {format(new Date(count.countDate), 'dd MMM yyyy', {
+                    locale: ru,
+                  })}
                 </span>
               </div>
               {count.startedAt && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Начата:</span>
                   <span>
-                    {format(new Date(count.startedAt), 'dd MMM HH:mm', { locale: ru })}
+                    {format(new Date(count.startedAt), 'dd MMM HH:mm', {
+                      locale: ru,
+                    })}
                   </span>
                 </div>
               )}
@@ -262,7 +286,9 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Завершена:</span>
                   <span>
-                    {format(new Date(count.completedAt), 'dd MMM HH:mm', { locale: ru })}
+                    {format(new Date(count.completedAt), 'dd MMM HH:mm', {
+                      locale: ru,
+                    })}
                   </span>
                 </div>
               )}
@@ -298,7 +324,11 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
                     <TableHead className="text-right">Подсчитано</TableHead>
                     <TableHead className="text-right">Расхождение</TableHead>
                     <TableHead className="text-right">Сумма</TableHead>
-                    {isInProgress && <TableHead className="w-[100px]">{t('common.actions')}</TableHead>}
+                    {isInProgress && (
+                      <TableHead className="w-[100px]">
+                        {t('common.actions')}
+                      </TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -458,13 +488,17 @@ export default function InventoryCountDetailPage({ id: paramId }: PageProps) {
         onOpenChange={setIsAddItemDialogOpen}
       />
 
-      <AlertDialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+      <AlertDialog
+        open={isCancelDialogOpen}
+        onOpenChange={setIsCancelDialogOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Отменить инвентаризацию?</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('pages.counts.columnVariance')} {count.countNumber} будет отменена. Все внесённые данные
-              будут сохранены, но корректировки остатков не будут применены.
+              {t('pages.counts.columnVariance')} {count.countNumber} будет
+              отменена. Все внесённые данные будут сохранены, но корректировки
+              остатков не будут применены.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

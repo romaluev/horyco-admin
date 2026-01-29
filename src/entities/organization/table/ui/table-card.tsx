@@ -34,7 +34,7 @@ export const TableCard = ({
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <CardTitle>Table {table.number}</CardTitle>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-1 text-sm">
               <IconUsers className="h-4 w-4" />
               <span>{table.capacity} seats</span>
             </div>
@@ -44,7 +44,9 @@ export const TableCard = ({
       </CardHeader>
       <CardContent className="space-y-2">
         {table.hallName && (
-          <p className="text-sm text-muted-foreground">Hall: {table.hallName}</p>
+          <p className="text-muted-foreground text-sm">
+            Hall: {table.hallName}
+          </p>
         )}
         {table.hasActiveSession && (
           <Button
@@ -59,11 +61,7 @@ export const TableCard = ({
       </CardContent>
       <CardFooter className="flex gap-2">
         {onShowQR && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onShowQR(table)}
-          >
+          <Button variant="outline" size="sm" onClick={() => onShowQR(table)}>
             <IconQrcode className="h-4 w-4" />
           </Button>
         )}

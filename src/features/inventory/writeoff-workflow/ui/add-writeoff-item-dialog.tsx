@@ -5,7 +5,6 @@ import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-
 import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
@@ -117,7 +116,10 @@ export function AddWriteoffItemDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="itemId"
@@ -141,7 +143,8 @@ export function AddWriteoffItemDialog({
                             key={stock.itemId}
                             value={stock.itemId.toString()}
                           >
-                            {stock.item?.name || 'Товар'} (в наличии: {stock.quantity})
+                            {stock.item?.name || 'Товар'} (в наличии:{' '}
+                            {stock.quantity})
                           </SelectItem>
                         ))
                       )}
@@ -153,7 +156,7 @@ export function AddWriteoffItemDialog({
             />
 
             {selectedStock && (
-              <div className="bg-muted rounded-md p-3 text-sm space-y-1">
+              <div className="bg-muted space-y-1 rounded-md p-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">В наличии:</span>
                   <span>

@@ -124,7 +124,10 @@ export const CreateCategoryDialog = ({
                 <FormItem>
                   <FormLabel>{t('categories.form.name.label')} *</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('categories.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t('categories.form.name.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -136,7 +139,9 @@ export const CreateCategoryDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('categories.form.description.label')}</FormLabel>
+                  <FormLabel>
+                    {t('categories.form.description.label')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={t('categories.form.description.placeholder')}
@@ -166,7 +171,9 @@ export const CreateCategoryDialog = ({
             />
 
             <div>
-              <FormLabel className="pb-2">{t('categories.form.image.label')}</FormLabel>
+              <FormLabel className="pb-2">
+                {t('categories.form.image.label')}
+              </FormLabel>
               <ImageUpload value={imageFile} onChange={setImageFile} />
             </div>
 

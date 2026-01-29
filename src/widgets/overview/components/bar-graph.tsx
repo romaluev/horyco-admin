@@ -172,7 +172,9 @@ export function BarGraph() {
             <span className="hidden @[540px]/card:block">
               {t('widgets.barGraph.description')}
             </span>
-            <span className="@[540px]/card:hidden">{t('widgets.barGraph.descriptionShort')}</span>
+            <span className="@[540px]/card:hidden">
+              {t('widgets.barGraph.descriptionShort')}
+            </span>
           </CardDescription>
         </div>
         <div className="flex">

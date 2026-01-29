@@ -40,8 +40,10 @@ import { Textarea } from '@/shared/ui/base/textarea'
 
 import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
 
-import type { IPurchaseOrder, IPurchaseOrderItem } from '@/entities/inventory/purchase-order/model/types'
-
+import type {
+  IPurchaseOrder,
+  IPurchaseOrderItem,
+} from '@/entities/inventory/purchase-order/model/types'
 
 const receiveSchema = z.object({
   receiveDate: z.date({ required_error: 'Укажите дату приёмки' }),
@@ -119,7 +121,10 @@ export function ReceivePODialog({
     )
   }
 
-  const totalReceiving = Object.values(quantities).reduce((sum, qty) => sum + qty, 0)
+  const totalReceiving = Object.values(quantities).reduce(
+    (sum, qty) => sum + qty,
+    0
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -132,7 +137,10 @@ export function ReceivePODialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="receiveDate"
@@ -142,7 +150,9 @@ export function ReceivePODialog({
                   <FormControl>
                     <DatePicker
                       value={field.value}
-                      onChange={(dateStr) => field.onChange(dateStr ? new Date(dateStr) : undefined)}
+                      onChange={(dateStr) =>
+                        field.onChange(dateStr ? new Date(dateStr) : undefined)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -158,12 +168,15 @@ export function ReceivePODialog({
                     <TableHead className="text-right">Заказано</TableHead>
                     <TableHead className="text-right">Уже получено</TableHead>
                     <TableHead className="text-right">Осталось</TableHead>
-                    <TableHead className="w-[120px] text-right">Принять</TableHead>
+                    <TableHead className="w-[120px] text-right">
+                      Принять
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {order.items?.map((item) => {
-                    const remaining = item.quantityOrdered - item.quantityReceived
+                    const remaining =
+                      item.quantityOrdered - item.quantityReceived
                     const isFullyReceived = remaining <= 0
 
                     return (

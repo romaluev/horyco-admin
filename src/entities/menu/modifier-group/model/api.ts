@@ -106,10 +106,9 @@ export const modifierGroupApi = {
     productId: number,
     groupId: number
   ): Promise<void> {
-    await api.post(
-      `/admin/menu/products/${productId}/attach-modifier-group`,
-      { groupId }
-    )
+    await api.post(`/admin/menu/products/${productId}/attach-modifier-group`, {
+      groupId,
+    })
   },
 
   /**

@@ -20,7 +20,7 @@ interface AdditionCardProps {
 export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
   return (
     <Card
-      className="cursor-pointer overflow-hidden transition-colors hover:bg-accent"
+      className="hover:bg-accent cursor-pointer overflow-hidden transition-colors"
       onClick={onClick}
     >
       {/* Image Section */}
@@ -34,8 +34,8 @@ export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
           />
         </div>
       ) : (
-        <div className="flex aspect-video w-full items-center justify-center bg-muted">
-          <ImageIcon className="h-12 w-12 text-muted-foreground/50" />
+        <div className="bg-muted flex aspect-video w-full items-center justify-center">
+          <ImageIcon className="text-muted-foreground/50 h-12 w-12" />
         </div>
       )}
 
@@ -43,13 +43,13 @@ export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
         <div className="flex items-start justify-between">
           <h3 className="font-semibold">{addition.name}</h3>
           {addition.isActive ? (
-            <CheckCircle2 className="h-4 w-4 text-success" />
+            <CheckCircle2 className="text-success h-4 w-4" />
           ) : (
-            <XCircle className="h-4 w-4 text-muted-foreground" />
+            <XCircle className="text-muted-foreground h-4 w-4" />
           )}
         </div>
         {addition.description && (
-          <p className="text-muted-foreground text-sm line-clamp-2">
+          <p className="text-muted-foreground line-clamp-2 text-sm">
             {addition.description}
           </p>
         )}
@@ -76,9 +76,7 @@ export const AdditionCard = ({ addition, onClick }: AdditionCardProps) => {
           <span>
             Выбор: {addition.minSelection} - {addition.maxSelection}
           </span>
-          <span>
-            Позиций: {addition.itemsCount ?? 0}
-          </span>
+          <span>Позиций: {addition.itemsCount ?? 0}</span>
         </div>
       </CardContent>
     </Card>

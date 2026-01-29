@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertCircle,
@@ -44,17 +43,18 @@ import { useAuthStore } from '@/entities/auth/auth/model/store'
 import type { VerifyStaffInviteResponse } from '@/entities/auth/auth/model/types'
 
 // Helper to extract error message from API response
-const extractErrorMessage = (
-  err: unknown,
-  defaultMessage: string
-): string => {
+const extractErrorMessage = (err: unknown, defaultMessage: string): string => {
   if (typeof err !== 'object' || err === null || !('response' in err)) {
     return defaultMessage
   }
 
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
-  if (typeof response !== 'object' || response === null || !('data' in response)) {
+  if (
+    typeof response !== 'object' ||
+    response === null ||
+    !('data' in response)
+  ) {
     return defaultMessage
   }
 
@@ -69,23 +69,27 @@ const extractErrorMessage = (
 }
 
 // Password schema matching API requirements
-const passwordSchema = z.object({
-  password: z
-    .string()
-    .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
-    .max(50, { message: 'Пароль должен содержать максимум 50 символов' })
-    .regex(/[A-Z]/, {
-      message: 'Пароль должен содержать хотя бы одну заглавную букву',
-    })
-    .regex(/[a-z]/, {
-      message: 'Пароль должен содержать хотя бы одну строчную букву',
-    })
-    .regex(/[0-9]/, { message: 'Пароль должен содержать хотя бы одну цифру' }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Пароли не совпадают',
-  path: ['confirmPassword'],
-})
+const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
+      .max(50, { message: 'Пароль должен содержать максимум 50 символов' })
+      .regex(/[A-Z]/, {
+        message: 'Пароль должен содержать хотя бы одну заглавную букву',
+      })
+      .regex(/[a-z]/, {
+        message: 'Пароль должен содержать хотя бы одну строчную букву',
+      })
+      .regex(/[0-9]/, {
+        message: 'Пароль должен содержать хотя бы одну цифру',
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Пароли не совпадают',
+    path: ['confirmPassword'],
+  })
 
 type PasswordFormValues = z.infer<typeof passwordSchema>
 
@@ -99,7 +103,8 @@ const StaffInviteForm = () => {
   const { me, loadFullProfile } = useAuthStore()
 
   const [state, setState] = useState<InviteState>('loading')
-  const [inviteData, setInviteData] = useState<VerifyStaffInviteResponse | null>(null)
+  const [inviteData, setInviteData] =
+    useState<VerifyStaffInviteResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -127,7 +132,10 @@ const StaffInviteForm = () => {
           setInviteData(response)
           setState('valid')
         } else {
-          setError(response.message || 'Недействительный или истекший токен приглашения')
+          setError(
+            response.message ||
+              'Недействительный или истекший токен приглашения'
+          )
           setState('invalid')
         }
       } catch {
@@ -213,7 +221,10 @@ const StaffInviteForm = () => {
           <CardDescription>{error}</CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <Button variant="outline" onClick={() => router.push('/auth/sign-in')}>
+          <Button
+            variant="outline"
+            onClick={() => router.push('/auth/sign-in')}
+          >
             Перейти к входу
           </Button>
         </CardContent>
@@ -248,9 +259,7 @@ const StaffInviteForm = () => {
         <CardTitle className="text-2xl font-bold">
           Добро пожаловать в команду!
         </CardTitle>
-        <CardDescription>
-          Установите пароль для вашего аккаунта
-        </CardDescription>
+        <CardDescription>Установите пароль для вашего аккаунта</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Invitation info */}
@@ -260,7 +269,9 @@ const StaffInviteForm = () => {
               <div className="flex items-center gap-3">
                 <User className="text-muted-foreground h-5 w-5" />
                 <div>
-                  <p className="text-sm font-medium">{inviteData.employeeName}</p>
+                  <p className="text-sm font-medium">
+                    {inviteData.employeeName}
+                  </p>
                   <p className="text-muted-foreground text-xs">Ваше имя</p>
                 </div>
               </div>
@@ -269,8 +280,12 @@ const StaffInviteForm = () => {
               <div className="flex items-center gap-3">
                 <Phone className="text-muted-foreground h-5 w-5" />
                 <div>
-                  <p className="text-sm font-medium">{inviteData.employeePhone}</p>
-                  <p className="text-muted-foreground text-xs">Номер телефона</p>
+                  <p className="text-sm font-medium">
+                    {inviteData.employeePhone}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    Номер телефона
+                  </p>
                 </div>
               </div>
             )}
@@ -279,7 +294,9 @@ const StaffInviteForm = () => {
                 <Building2 className="text-muted-foreground h-5 w-5" />
                 <div>
                   <p className="text-sm font-medium">Ваша организация</p>
-                  <p className="text-muted-foreground text-xs">ID: {inviteData.tenantId}</p>
+                  <p className="text-muted-foreground text-xs">
+                    ID: {inviteData.tenantId}
+                  </p>
                 </div>
               </div>
             )}

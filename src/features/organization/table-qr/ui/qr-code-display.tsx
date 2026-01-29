@@ -10,7 +10,6 @@ import {
 
 import { useTableById } from '@/entities/organization/table'
 
-
 interface IQRCodeDisplayProps {
   tableId: number
   tableNumber: number
@@ -26,9 +25,7 @@ export const QRCodeDisplay = ({
     <Card className="bg-white shadow-lg">
       <CardHeader>
         <CardTitle>QR Code - Table {tableNumber}</CardTitle>
-        <CardDescription>
-          QR code for customer orders
-        </CardDescription>
+        <CardDescription>QR code for customer orders</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center gap-4">
         {table?.qrCodeUrl ? (
@@ -38,13 +35,13 @@ export const QRCodeDisplay = ({
               alt={`QR code for table ${tableNumber}`}
               className="h-64 w-64 object-contain"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Code: {table.qrCode}
             </p>
           </div>
         ) : (
           <div className="flex h-64 w-64 items-center justify-center rounded border border-dashed">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               QR code will be generated automatically
             </p>
           </div>

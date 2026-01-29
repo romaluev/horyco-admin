@@ -10,9 +10,9 @@ interface ThemeProviderState {
   resolvedTheme: 'light' | 'dark'
 }
 
-const ThemeProviderContext = React.createContext<ThemeProviderState | undefined>(
-  undefined
-)
+const ThemeProviderContext = React.createContext<
+  ThemeProviderState | undefined
+>(undefined)
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -44,12 +44,14 @@ export default function ThemeProvider({
     return stored || defaultTheme
   })
 
-  const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') return 'light'
-    const stored = localStorage.getItem(storageKey) as Theme | null
-    const currentTheme = stored || defaultTheme
-    return currentTheme === 'system' ? getSystemTheme() : currentTheme
-  })
+  const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>(
+    () => {
+      if (typeof window === 'undefined') return 'light'
+      const stored = localStorage.getItem(storageKey) as Theme | null
+      const currentTheme = stored || defaultTheme
+      return currentTheme === 'system' ? getSystemTheme() : currentTheme
+    }
+  )
 
   const applyTheme = React.useCallback(
     (newTheme: Theme) => {

@@ -6,7 +6,6 @@ import { getAccessToken } from '@/shared/lib/auth-guard'
 
 import SignInViewPage from '@/entities/auth/auth/ui/sign-in-view'
 
-
 export const Route = createFileRoute('/auth/sign-in')({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: (search.redirect as string) || undefined,

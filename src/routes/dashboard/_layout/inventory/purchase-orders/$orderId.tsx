@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet-async'
 
 import PurchaseOrderDetailPage from '@/app/dashboard/inventory/purchase-orders/[id]/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/purchase-orders/$orderId')({
+export const Route = createFileRoute(
+  '/dashboard/_layout/inventory/purchase-orders/$orderId'
+)({
   component: PurchaseOrderDetailRoute,
 })
 

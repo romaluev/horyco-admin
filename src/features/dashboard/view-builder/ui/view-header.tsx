@@ -17,7 +17,12 @@ interface IViewHeaderProps {
   isDeleting?: boolean
 }
 
-export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHeaderProps) {
+export function ViewHeader({
+  onSave,
+  onDelete,
+  isPending,
+  isDeleting,
+}: IViewHeaderProps) {
   const router = useRouter()
   const {
     viewName,
@@ -56,9 +61,11 @@ export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHea
       return true
     }
     // Compare name change (use ref to get initial value)
-    const isNameChanged = initialNameRef.current !== null && viewName !== initialNameRef.current
+    const isNameChanged =
+      initialNameRef.current !== null && viewName !== initialNameRef.current
     // Compare config change
-    const isConfigChanged = JSON.stringify(workingConfig) !== JSON.stringify(savedConfig)
+    const isConfigChanged =
+      JSON.stringify(workingConfig) !== JSON.stringify(savedConfig)
     return isNameChanged || isConfigChanged
   }, [viewName, workingConfig, savedConfig])
 
@@ -128,7 +135,7 @@ export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHea
   }, [viewDescription, isEditingDescription, adjustTextareaHeight])
 
   return (
-    <div className="flex flex-col gap-2 border-b border-border pb-4">
+    <div className="border-border flex flex-col gap-2 border-b pb-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-1">
           {/* Title - seamless input/display */}
@@ -140,13 +147,13 @@ export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHea
               onBlur={handleTitleBlur}
               onKeyDown={handleTitleKeyDown}
               placeholder="Название представления"
-              className="w-full bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground"
+              className="placeholder:text-muted-foreground w-full bg-transparent text-2xl font-semibold outline-none"
             />
           ) : (
             <button
               type="button"
               onClick={handleTitleClick}
-              className="w-full text-left text-2xl font-semibold hover:text-muted-foreground"
+              className="hover:text-muted-foreground w-full text-left text-2xl font-semibold"
             >
               {viewName || 'Новое представление'}
             </button>
@@ -168,7 +175,7 @@ export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHea
                 }
               }}
               placeholder="Добавить описание..."
-              className="w-full resize-none overflow-hidden bg-transparent text-sm text-muted-foreground outline-none placeholder:text-muted-foreground"
+              className="text-muted-foreground placeholder:text-muted-foreground w-full resize-none overflow-hidden bg-transparent text-sm outline-none"
               rows={1}
             />
           ) : (
@@ -176,8 +183,10 @@ export function ViewHeader({ onSave, onDelete, isPending, isDeleting }: IViewHea
               type="button"
               onClick={handleDescriptionClick}
               className={cn(
-                'w-full text-left text-sm hover:text-foreground',
-                viewDescription ? 'text-muted-foreground' : 'text-muted-foreground/50'
+                'hover:text-foreground w-full text-left text-sm',
+                viewDescription
+                  ? 'text-muted-foreground'
+                  : 'text-muted-foreground/50'
               )}
             >
               {viewDescription || 'Добавить описание...'}

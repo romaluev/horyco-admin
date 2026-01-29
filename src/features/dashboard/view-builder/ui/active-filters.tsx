@@ -55,7 +55,7 @@ export function ActiveFilters() {
           <button
             type="button"
             onClick={() => removeFilter(index)}
-            className="ml-1 rounded-full p-0.5 hover:bg-muted-foreground/20"
+            className="hover:bg-muted-foreground/20 ml-1 rounded-full p-0.5"
           >
             <IconX className="size-3" />
           </button>

@@ -4,13 +4,7 @@ import { useState } from 'react'
 
 import { Edit2 } from 'lucide-react'
 
-import {
-  BaseError,
-  BaseLoading,
-  Button,
-  Label,
-  Switch,
-} from '@/shared/ui'
+import { BaseError, BaseLoading, Button, Label, Switch } from '@/shared/ui'
 
 import { useGetAllRoles } from '@/entities/auth/role'
 import { useGetAllBranches } from '@/entities/organization/branch'
@@ -25,13 +19,13 @@ interface UpdateBranchPermissionsManagerProps {
   onBranchesChange: (branchIds: number[]) => void
 }
 
- 
 export const UpdateBranchPermissionsManager = ({
   employeeId,
   selectedBranchIds,
   onBranchesChange,
 }: UpdateBranchPermissionsManagerProps) => {
-  const { data: branchesData, isLoading: isBranchesLoading } = useGetAllBranches()
+  const { data: branchesData, isLoading: isBranchesLoading } =
+    useGetAllBranches()
   const { data: rolesData } = useGetAllRoles()
 
   const [selectedBranchId, setSelectedBranchId] = useState<number | null>(null)
@@ -62,7 +56,9 @@ export const UpdateBranchPermissionsManager = ({
         ? perms
         : perms.permissions || []
       setCurrentPermissionIds(
-        permissionsArray.map((p) => (p as { permissionId: number }).permissionId)
+        permissionsArray.map(
+          (p) => (p as { permissionId: number }).permissionId
+        )
       )
     } catch (err) {
       setCurrentPermissionIds([])
@@ -96,7 +92,6 @@ export const UpdateBranchPermissionsManager = ({
     setSelectedBranchId(null)
   }
 
-
   if (isBranchesLoading) {
     return <BaseLoading />
   }
@@ -113,8 +108,9 @@ export const UpdateBranchPermissionsManager = ({
         <Label className="text-base font-semibold">
           Филиалы и разрешения <span className="text-destructive">*</span>
         </Label>
-        <p className="text-muted-foreground text-sm mt-2">
-          Сотрудник может работать в нескольких филиалах. Разрешения можно настроить для каждого филиала отдельно.
+        <p className="text-muted-foreground mt-2 text-sm">
+          Сотрудник может работать в нескольких филиалах. Разрешения можно
+          настроить для каждого филиала отдельно.
         </p>
       </div>
 
@@ -128,7 +124,7 @@ export const UpdateBranchPermissionsManager = ({
               key={branch.id}
               className="flex items-center justify-between rounded-lg border p-4"
             >
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex flex-1 items-center gap-4">
                 <Switch
                   id={`branch-${branch.id}`}
                   checked={isAssigned}
@@ -139,7 +135,7 @@ export const UpdateBranchPermissionsManager = ({
                 <div className="flex-1">
                   <label
                     htmlFor={`branch-${branch.id}`}
-                    className="text-sm font-medium cursor-pointer"
+                    className="cursor-pointer text-sm font-medium"
                   >
                     {branch.name}
                   </label>

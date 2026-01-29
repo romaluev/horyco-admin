@@ -6,14 +6,20 @@ export const inventoryItemFormSchema = z.object({
   barcode: z.string().optional(),
   category: z.string().optional(),
   unit: z.string().min(1, 'Единица измерения обязательна'),
-  minStockLevel: z.number().min(0, 'Минимальный остаток не может быть отрицательным').default(0),
+  minStockLevel: z
+    .number()
+    .min(0, 'Минимальный остаток не может быть отрицательным')
+    .default(0),
   maxStockLevel: z.number().min(0).optional(),
   reorderPoint: z.number().min(0).optional(),
   reorderQuantity: z.number().min(0).optional(),
   isActive: z.boolean().default(true),
   isSemiFinished: z.boolean().default(false),
   isTrackable: z.boolean().default(true),
-  shelfLifeDays: z.number().min(0, 'Срок годности не может быть отрицательным').optional(),
+  shelfLifeDays: z
+    .number()
+    .min(0, 'Срок годности не может быть отрицательным')
+    .optional(),
   defaultSupplierId: z.number().optional(),
   taxRate: z.number().min(0).max(100).default(0),
   notes: z.string().optional(),

@@ -11,9 +11,5 @@ export const ModuleTrialIndicator = ({
 }: ModuleTrialIndicatorProps) => {
   if (!isInTrial) return null
 
-  return (
-    <Badge variant="secondary">
-      Пробный период: {daysRemaining} дн.
-    </Badge>
-  )
+  return <Badge variant="secondary">Пробный период: {daysRemaining} дн.</Badge>
 }

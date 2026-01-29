@@ -54,7 +54,9 @@ export function RecentSales() {
     <Card className="h-full">
       <CardHeader>
         <CardTitle>{t('widgets.recentSales.title')}</CardTitle>
-        <CardDescription>{t('widgets.recentSales.description')}</CardDescription>
+        <CardDescription>
+          {t('widgets.recentSales.description')}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-8">

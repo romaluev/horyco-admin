@@ -2,7 +2,11 @@
  * Analytics UI Exports
  */
 
-export { LockedPageState, ViewLimitReachedState, ViewsUpgradePrompt } from './locked-page-state'
+export {
+  LockedPageState,
+  ViewLimitReachedState,
+  ViewsUpgradePrompt,
+} from './locked-page-state'
 export {
   AnalyticsPageLayout,
   AnalyticsPageHeader,

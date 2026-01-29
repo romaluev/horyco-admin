@@ -92,7 +92,9 @@ export function EditProductModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('pages.menuTemplate.productDialog.edit')}</DialogTitle>
+          <DialogTitle>
+            {t('pages.menuTemplate.productDialog.edit')}
+          </DialogTitle>
           <DialogDescription>
             {t('pages.menuTemplate.productDialog.editDescription')}
           </DialogDescription>
@@ -103,7 +105,9 @@ export function EditProductModal({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Left column - Image preview */}
               <div>
-                <FormLabel>{t('pages.menuTemplate.productDialog.image')}</FormLabel>
+                <FormLabel>
+                  {t('pages.menuTemplate.productDialog.image')}
+                </FormLabel>
                 <div className="bg-muted relative mt-2 h-48 w-full overflow-hidden rounded-lg border">
                   {imageUrl ? (
                     <img
@@ -125,7 +129,12 @@ export function EditProductModal({
                   render={({ field }) => (
                     <FormItem className="mt-2">
                       <FormControl>
-                        <Input placeholder={t('pages.menuTemplate.productDialog.imagePlaceholder')} {...field} />
+                        <Input
+                          placeholder={t(
+                            'pages.menuTemplate.productDialog.imagePlaceholder'
+                          )}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -140,9 +149,16 @@ export function EditProductModal({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('pages.menuTemplate.productDialog.name')}</FormLabel>
+                      <FormLabel>
+                        {t('pages.menuTemplate.productDialog.name')}
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder={t('pages.menuTemplate.productDialog.namePlaceholder')} {...field} />
+                        <Input
+                          placeholder={t(
+                            'pages.menuTemplate.productDialog.namePlaceholder'
+                          )}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -154,11 +170,15 @@ export function EditProductModal({
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('pages.menuTemplate.productDialog.price')}</FormLabel>
+                      <FormLabel>
+                        {t('pages.menuTemplate.productDialog.price')}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder={t('pages.menuTemplate.productDialog.pricePlaceholder')}
+                          placeholder={t(
+                            'pages.menuTemplate.productDialog.pricePlaceholder'
+                          )}
                           {...field}
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))
@@ -175,14 +195,20 @@ export function EditProductModal({
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('pages.menuTemplate.productDialog.category')}</FormLabel>
+                      <FormLabel>
+                        {t('pages.menuTemplate.productDialog.category')}
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('pages.menuTemplate.productDialog.categorySelect')} />
+                            <SelectValue
+                              placeholder={t(
+                                'pages.menuTemplate.productDialog.categorySelect'
+                              )}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -205,10 +231,14 @@ export function EditProductModal({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('pages.menuTemplate.productDialog.description')}</FormLabel>
+                  <FormLabel>
+                    {t('pages.menuTemplate.productDialog.description')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('pages.menuTemplate.productDialog.descriptionPlaceholder')}
+                      placeholder={t(
+                        'pages.menuTemplate.productDialog.descriptionPlaceholder'
+                      )}
                       className="resize-none"
                       rows={3}
                       {...field}
@@ -227,7 +257,9 @@ export function EditProductModal({
               >
                 {t('pages.menuTemplate.productDialog.cancel')}
               </Button>
-              <Button type="submit">{t('pages.menuTemplate.productDialog.save')}</Button>
+              <Button type="submit">
+                {t('pages.menuTemplate.productDialog.save')}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

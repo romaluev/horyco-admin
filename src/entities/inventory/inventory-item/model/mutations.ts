@@ -82,8 +82,13 @@ export const useAddUnitConversion = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: ICreateUnitConversionDto }) =>
-      inventoryItemApi.addConversion(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number
+      data: ICreateUnitConversionDto
+    }) => inventoryItemApi.addConversion(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemKeys.conversions(id),

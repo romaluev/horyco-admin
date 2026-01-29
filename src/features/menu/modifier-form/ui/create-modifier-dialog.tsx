@@ -65,12 +65,14 @@ export const CreateModifierDialog = ({
   const onSubmit = async (data: ModifierFormValues): Promise<void> => {
     try {
       // Create modifier first
-      const createdModifier = await new Promise<{ id: number }>((resolve, reject) => {
-        createModifier(data, {
-          onSuccess: (modifier) => resolve(modifier),
-          onError: (error) => reject(error),
-        })
-      })
+      const createdModifier = await new Promise<{ id: number }>(
+        (resolve, reject) => {
+          createModifier(data, {
+            onSuccess: (modifier) => resolve(modifier),
+            onError: (error) => reject(error),
+          })
+        }
+      )
 
       // Upload image if provided
       if (imageFile && createdModifier?.id) {

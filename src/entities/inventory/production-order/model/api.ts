@@ -24,11 +24,12 @@ export const productionOrderApi = {
    * Get all production orders
    * GET /admin/inventory/production
    */
-  async getProductionOrders(params?: IGetProductionOrdersParams): Promise<IProductionOrder[]> {
-    const response = await api.get<ApiResponse<IProductionOrder[]> | IProductionOrder[]>(
-      '/admin/inventory/production',
-      { params }
-    )
+  async getProductionOrders(
+    params?: IGetProductionOrdersParams
+  ): Promise<IProductionOrder[]> {
+    const response = await api.get<
+      ApiResponse<IProductionOrder[]> | IProductionOrder[]
+    >('/admin/inventory/production', { params })
     const data = response.data
     if (Array.isArray(data)) return data
     return data.data || []
@@ -49,7 +50,9 @@ export const productionOrderApi = {
    * Create production order
    * POST /admin/inventory/production
    */
-  async createProductionOrder(data: ICreateProductionOrderDto): Promise<IProductionOrder> {
+  async createProductionOrder(
+    data: ICreateProductionOrderDto
+  ): Promise<IProductionOrder> {
     const response = await api.post<ApiResponse<IProductionOrder>>(
       '/admin/inventory/production',
       data
@@ -61,7 +64,10 @@ export const productionOrderApi = {
    * Update production order (planned only)
    * PATCH /admin/inventory/production/:id
    */
-  async updateProductionOrder(id: number, data: IUpdateProductionOrderDto): Promise<IProductionOrder> {
+  async updateProductionOrder(
+    id: number,
+    data: IUpdateProductionOrderDto
+  ): Promise<IProductionOrder> {
     const response = await api.patch<ApiResponse<IProductionOrder>>(
       `/admin/inventory/production/${id}`,
       data
@@ -81,7 +87,10 @@ export const productionOrderApi = {
    * Start production (deducts ingredients)
    * POST /admin/inventory/production/:id/start
    */
-  async startProduction(id: number, data?: IStartProductionDto): Promise<IProductionOrder> {
+  async startProduction(
+    id: number,
+    data?: IStartProductionDto
+  ): Promise<IProductionOrder> {
     const response = await api.post<ApiResponse<IProductionOrder>>(
       `/admin/inventory/production/${id}/start`,
       data
@@ -93,7 +102,10 @@ export const productionOrderApi = {
    * Complete production (adds output to stock)
    * POST /admin/inventory/production/:id/complete
    */
-  async completeProduction(id: number, data: ICompleteProductionDto): Promise<IProductionOrder> {
+  async completeProduction(
+    id: number,
+    data: ICompleteProductionDto
+  ): Promise<IProductionOrder> {
     const response = await api.post<ApiResponse<IProductionOrder>>(
       `/admin/inventory/production/${id}/complete`,
       data

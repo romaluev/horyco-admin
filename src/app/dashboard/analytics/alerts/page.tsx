@@ -18,7 +18,6 @@ import {
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
-
 import { PeriodType } from '@/shared/api/graphql'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/base/button'
@@ -48,7 +47,12 @@ export default function AlertsPage() {
   const { data: summaryData } = useAlertSummary({})
 
   // Use alerts query for alerts list (has status param)
-  const { data: alertsData, isLoading, error, refetch } = useAlerts({
+  const {
+    data: alertsData,
+    isLoading,
+    error,
+    refetch,
+  } = useAlerts({
     status: activeTab === 'active' ? 'ACTIVE' : undefined,
   })
 
@@ -59,7 +63,9 @@ export default function AlertsPage() {
 
   // Calculate total active from summary (with defensive checks)
   const totalActive = summaryData?.activeAlerts
-    ? (summaryData.activeAlerts.critical ?? 0) + (summaryData.activeAlerts.warning ?? 0) + (summaryData.activeAlerts.info ?? 0)
+    ? (summaryData.activeAlerts.critical ?? 0) +
+      (summaryData.activeAlerts.warning ?? 0) +
+      (summaryData.activeAlerts.info ?? 0)
     : 0
 
   return (
@@ -88,7 +94,9 @@ export default function AlertsPage() {
             <AlertsSkeleton />
           ) : error ? (
             <AnalyticsErrorState onRetry={() => refetch()} />
-          ) : !alertsData || !Array.isArray(alertsData) || alertsData.length === 0 ? (
+          ) : !alertsData ||
+            !Array.isArray(alertsData) ||
+            alertsData.length === 0 ? (
             <EmptyAlertsState />
           ) : (
             <AlertsList alerts={alertsData} />
@@ -100,7 +108,9 @@ export default function AlertsPage() {
             <AlertsSkeleton />
           ) : error ? (
             <AnalyticsErrorState onRetry={() => refetch()} />
-          ) : !alertsData || !Array.isArray(alertsData) || alertsData.length === 0 ? (
+          ) : !alertsData ||
+            !Array.isArray(alertsData) ||
+            alertsData.length === 0 ? (
             <EmptyAlertsState />
           ) : (
             <AlertsList alerts={alertsData} />
@@ -164,13 +174,23 @@ function AlertCard({ alert }: IAlertCardProps) {
           <Icon className="mt-0.5 size-5 shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium">{getSeverityLabel(alert.severity, t)}</span>
+              <span className="font-medium">
+                {getSeverityLabel(alert.severity, t)}
+              </span>
               <span className="text-sm">- {alert.title}</span>
             </div>
             <p className="mt-1 text-sm opacity-90">{alert.message}</p>
             <div className="mt-2 flex items-center gap-4 text-xs opacity-70">
-              <span>{t('alerts.card.detected', { time: formatDateTime(alert.detectedAt, t) })}</span>
-              {alert.branchName && <span>{t('alerts.card.branch', { name: alert.branchName })}</span>}
+              <span>
+                {t('alerts.card.detected', {
+                  time: formatDateTime(alert.detectedAt, t),
+                })}
+              </span>
+              {alert.branchName && (
+                <span>
+                  {t('alerts.card.branch', { name: alert.branchName })}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -202,7 +222,10 @@ function formatDateTime(dateStr: string, t: any): string {
   const isToday = date.toDateString() === today.toDateString()
 
   if (isToday) {
-    const timeStr = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    const timeStr = date.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
     return t('alerts.timeFormat', { time: timeStr })
   }
 
@@ -222,9 +245,9 @@ function EmptyAlertsState() {
   const { t } = useTranslation('analytics')
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
-      <IconInfoCircle className="size-12 text-muted-foreground/50" />
+      <IconInfoCircle className="text-muted-foreground/50 size-12" />
       <h3 className="mt-4 text-lg font-medium">{t('alerts.empty.title')}</h3>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <p className="text-muted-foreground mt-2 text-sm">
         {t('alerts.empty.description')}
       </p>
     </div>

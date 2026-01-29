@@ -2,7 +2,11 @@
  * React Query mutations for subscription management
  */
 
-import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationResult,
+} from '@tanstack/react-query'
 
 import { toast } from 'sonner'
 
@@ -33,7 +37,9 @@ export const useAddModule = (): UseMutationResult<
     mutationFn: (request: IAddModuleRequest) => addModule(request),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.current() })
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.moduleCatalog() })
+      queryClient.invalidateQueries({
+        queryKey: subscriptionKeys.moduleCatalog(),
+      })
 
       const message = data.data.isInTrial
         ? `Модуль добавлен (пробный период: 7 дней)`
@@ -60,7 +66,9 @@ export const useRemoveModule = (): UseMutationResult<void, Error, string> => {
     mutationFn: (moduleKey: string) => removeModule(moduleKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.current() })
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.moduleCatalog() })
+      queryClient.invalidateQueries({
+        queryKey: subscriptionKeys.moduleCatalog(),
+      })
       toast.success('Модуль удален')
     },
     onError: (error: Error) => {

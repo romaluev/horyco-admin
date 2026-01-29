@@ -7,7 +7,14 @@ import {
   IconWallet,
   IconArrowUpRight,
 } from '@tabler/icons-react'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from 'recharts'
 
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -58,39 +65,42 @@ export function TransactionsSummaryWidget({
   const totalValue = data?.totalValue ?? 243000
   const changePercent = data?.changePercent ?? 94.13
 
-  const summaryCards: ISummaryCard[] = useMemo(() => [
-    {
-      icon: IconCurrencyDollar,
-      label: 'Эта неделя',
-      sublabel: '+82.46%',
-      value: totalValue * 0.4,
-      trend: 'up',
-      color: 'text-red-500',
-      bgColor: 'bg-red-100 dark:bg-red-900/30',
-    },
-    {
-      icon: IconWallet,
-      label: 'Эта неделя',
-      sublabel: '-24.8%',
-      value: totalValue * 0.6,
-      trend: 'down',
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-    },
-  ], [totalValue])
+  const summaryCards: ISummaryCard[] = useMemo(
+    () => [
+      {
+        icon: IconCurrencyDollar,
+        label: 'Эта неделя',
+        sublabel: '+82.46%',
+        value: totalValue * 0.4,
+        trend: 'up',
+        color: 'text-red-500',
+        bgColor: 'bg-red-100 dark:bg-red-900/30',
+      },
+      {
+        icon: IconWallet,
+        label: 'Эта неделя',
+        sublabel: '-24.8%',
+        value: totalValue * 0.6,
+        trend: 'down',
+        color: 'text-emerald-500',
+        bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
+      },
+    ],
+    [totalValue]
+  )
 
   if (isLoading) {
     return <TransactionsSummaryWidgetSkeleton />
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="grid flex-1 lg:grid-cols-[1fr,auto]">
-        <div className="border-b p-5 lg:border-b-0 lg:border-r">
+        <div className="border-b p-5 lg:border-r lg:border-b-0">
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h3 className="text-lg font-semibold">Транзакции</h3>
-              <p className="text-sm text-muted-foreground">Обзор за неделю</p>
+              <p className="text-muted-foreground text-sm">Обзор за неделю</p>
             </div>
           </div>
 
@@ -107,9 +117,13 @@ export function TransactionsSummaryWidget({
                 <Tooltip
                   content={({ active, payload }) => {
                     const firstPayload = payload?.[0]
-                    if (active && firstPayload?.value !== undefined && firstPayload.value !== null) {
+                    if (
+                      active &&
+                      firstPayload?.value !== undefined &&
+                      firstPayload.value !== null
+                    ) {
                       return (
-                        <div className="rounded-lg border bg-background px-3 py-2 shadow-lg">
+                        <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
                           <p className="text-sm font-medium">
                             {formatPrice(Number(firstPayload.value))}
                           </p>
@@ -133,7 +147,7 @@ export function TransactionsSummaryWidget({
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h4 className="font-semibold">Отчет</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 За месяц {formatPrice(totalValue / 10)}
               </p>
             </div>
@@ -149,7 +163,7 @@ export function TransactionsSummaryWidget({
                   <card.icon className={cn('size-4', card.color)} />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-muted-foreground">{card.label}</p>
+                  <p className="text-muted-foreground text-xs">{card.label}</p>
                   <p
                     className={cn(
                       'text-lg font-bold',
@@ -165,8 +179,12 @@ export function TransactionsSummaryWidget({
 
           <div className="mt-4 border-t pt-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Эффективность</span>
-              <span className="font-semibold text-emerald-600">+{changePercent.toFixed(2)}%</span>
+              <span className="text-muted-foreground text-sm">
+                Эффективность
+              </span>
+              <span className="font-semibold text-emerald-600">
+                +{changePercent.toFixed(2)}%
+              </span>
             </div>
             <Button
               variant="outline"
@@ -185,27 +203,27 @@ export function TransactionsSummaryWidget({
 
 function TransactionsSummaryWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card">
+    <div className="bg-card flex h-full flex-col rounded-xl border">
       <div className="grid flex-1 lg:grid-cols-[1fr,auto]">
-        <div className="border-b p-5 lg:border-b-0 lg:border-r">
+        <div className="border-b p-5 lg:border-r lg:border-b-0">
           <div className="mb-4 space-y-2">
-            <div className="h-6 w-32 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+            <div className="bg-muted h-4 w-24 animate-pulse rounded" />
           </div>
-          <div className="h-[200px] animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-[200px] animate-pulse rounded" />
         </div>
         <div className="flex flex-col p-5 lg:w-56">
           <div className="mb-4 space-y-2">
-            <div className="h-5 w-20 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-28 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-5 w-20 animate-pulse rounded" />
+            <div className="bg-muted h-4 w-28 animate-pulse rounded" />
           </div>
           <div className="flex flex-1 flex-col gap-3">
             {[1, 2].map((i) => (
-              <div key={i} className="h-16 animate-pulse rounded-lg bg-muted" />
+              <div key={i} className="bg-muted h-16 animate-pulse rounded-lg" />
             ))}
           </div>
           <div className="mt-4 border-t pt-4">
-            <div className="h-8 animate-pulse rounded bg-muted" />
+            <div className="bg-muted h-8 animate-pulse rounded" />
           </div>
         </div>
       </div>

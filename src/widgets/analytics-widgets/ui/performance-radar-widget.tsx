@@ -58,21 +58,18 @@ export function PerformanceRadarWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2">
         <h3 className="text-lg font-semibold">Эффективность</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Анализ ключевых показателей
         </p>
       </div>
 
-      <div className="flex-1 min-h-[200px]">
+      <div className="min-h-[200px] flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
-            <PolarGrid
-              stroke="hsl(var(--border))"
-              strokeDasharray="3 3"
-            />
+            <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
             <PolarAngleAxis
               dataKey="subject"
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
@@ -97,7 +94,7 @@ export function PerformanceRadarWidget({
 
       <div className="mt-2 flex items-center justify-between border-t pt-3">
         <div>
-          <p className="text-sm text-muted-foreground">Общий балл</p>
+          <p className="text-muted-foreground text-sm">Общий балл</p>
           <p className="text-2xl font-bold">{overallScore}%</p>
         </div>
         <div
@@ -114,7 +111,8 @@ export function PerformanceRadarWidget({
             <IconTrendingDown className="size-4" />
           )}
           <span className="text-sm font-medium">
-            {isPositive ? '+' : ''}{scoreDiff} vs пред. период
+            {isPositive ? '+' : ''}
+            {scoreDiff} vs пред. период
           </span>
         </div>
       </div>
@@ -124,18 +122,18 @@ export function PerformanceRadarWidget({
 
 function PerformanceRadarWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-2 space-y-2">
-        <div className="h-6 w-32 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-48 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+        <div className="bg-muted h-4 w-48 animate-pulse rounded" />
       </div>
-      <div className="flex-1 min-h-[200px] animate-pulse rounded bg-muted" />
+      <div className="bg-muted min-h-[200px] flex-1 animate-pulse rounded" />
       <div className="mt-2 flex items-center justify-between border-t pt-3">
         <div className="space-y-1">
-          <div className="h-4 w-20 animate-pulse rounded bg-muted" />
-          <div className="h-8 w-16 animate-pulse rounded bg-muted" />
+          <div className="bg-muted h-4 w-20 animate-pulse rounded" />
+          <div className="bg-muted h-8 w-16 animate-pulse rounded" />
         </div>
-        <div className="h-8 w-32 animate-pulse rounded-full bg-muted" />
+        <div className="bg-muted h-8 w-32 animate-pulse rounded-full" />
       </div>
     </div>
   )

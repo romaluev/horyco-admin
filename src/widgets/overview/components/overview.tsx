@@ -35,7 +35,9 @@ export default function OverViewPage() {
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="overview">{t('widgets.overview.tabs.overview')}</TabsTrigger>
+            <TabsTrigger value="overview">
+              {t('widgets.overview.tabs.overview')}
+            </TabsTrigger>
             <TabsTrigger value="analytics" disabled>
               {t('widgets.overview.tabs.analytics')}
             </TabsTrigger>
@@ -44,7 +46,9 @@ export default function OverViewPage() {
             <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>{t('widgets.overview.kpiCards.totalRevenue.title')}</CardDescription>
+                  <CardDescription>
+                    {t('widgets.overview.kpiCards.totalRevenue.title')}
+                  </CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                     {t('widgets.overview.kpiCards.totalRevenue.value')}
                   </CardTitle>
@@ -57,7 +61,8 @@ export default function OverViewPage() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    {t('widgets.overview.kpiCards.totalRevenue.description')} <IconTrendingUp className="size-4" />
+                    {t('widgets.overview.kpiCards.totalRevenue.description')}{' '}
+                    <IconTrendingUp className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
                     {t('widgets.overview.kpiCards.totalRevenue.subdescription')}
@@ -66,7 +71,9 @@ export default function OverViewPage() {
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>{t('widgets.overview.kpiCards.newCustomers.title')}</CardDescription>
+                  <CardDescription>
+                    {t('widgets.overview.kpiCards.newCustomers.title')}
+                  </CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                     {t('widgets.overview.kpiCards.newCustomers.value')}
                   </CardTitle>
@@ -79,7 +86,8 @@ export default function OverViewPage() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    {t('widgets.overview.kpiCards.newCustomers.description')} <IconTrendingDown className="size-4" />
+                    {t('widgets.overview.kpiCards.newCustomers.description')}{' '}
+                    <IconTrendingDown className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
                     {t('widgets.overview.kpiCards.newCustomers.subdescription')}
@@ -88,7 +96,9 @@ export default function OverViewPage() {
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>{t('widgets.overview.kpiCards.activeAccounts.title')}</CardDescription>
+                  <CardDescription>
+                    {t('widgets.overview.kpiCards.activeAccounts.title')}
+                  </CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                     {t('widgets.overview.kpiCards.activeAccounts.value')}
                   </CardTitle>
@@ -101,16 +111,21 @@ export default function OverViewPage() {
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                   <div className="line-clamp-1 flex gap-2 font-medium">
-                    {t('widgets.overview.kpiCards.activeAccounts.description')} <IconTrendingUp className="size-4" />
+                    {t('widgets.overview.kpiCards.activeAccounts.description')}{' '}
+                    <IconTrendingUp className="size-4" />
                   </div>
                   <div className="text-muted-foreground">
-                    {t('widgets.overview.kpiCards.activeAccounts.subdescription')}
+                    {t(
+                      'widgets.overview.kpiCards.activeAccounts.subdescription'
+                    )}
                   </div>
                 </CardFooter>
               </Card>
               <Card className="@container/card">
                 <CardHeader>
-                  <CardDescription>{t('widgets.overview.kpiCards.growthRate.title')}</CardDescription>
+                  <CardDescription>
+                    {t('widgets.overview.kpiCards.growthRate.title')}
+                  </CardDescription>
                   <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                     {t('widgets.overview.kpiCards.growthRate.value')}
                   </CardTitle>

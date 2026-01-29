@@ -4,9 +4,11 @@ import { Helmet } from 'react-helmet-async'
 
 import SuppliersPage from '@/app/dashboard/inventory/suppliers/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/suppliers/')({
-  component: SuppliersRoute,
-})
+export const Route = createFileRoute('/dashboard/_layout/inventory/suppliers/')(
+  {
+    component: SuppliersRoute,
+  }
+)
 
 function SuppliersRoute() {
   return (

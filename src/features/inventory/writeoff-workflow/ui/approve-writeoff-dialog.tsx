@@ -14,8 +14,10 @@ import {
 } from '@/shared/ui/base/alert-dialog'
 
 import { useApproveWriteoff } from '@/entities/inventory/writeoff/model/mutations'
-import { WRITEOFF_REASON_LABELS, type IWriteoff } from '@/entities/inventory/writeoff/model/types'
-
+import {
+  WRITEOFF_REASON_LABELS,
+  type IWriteoff,
+} from '@/entities/inventory/writeoff/model/types'
 
 interface ApproveWriteoffDialogProps {
   writeoff: IWriteoff
@@ -59,7 +61,7 @@ export function ApproveWriteoffDialog({
                 После одобрения товары будут списаны со склада. Это действие
                 нельзя отменить.
               </p>
-              <div className="bg-muted rounded-md p-3 space-y-2 text-sm">
+              <div className="bg-muted space-y-2 rounded-md p-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Номер:</span>
                   <span className="font-medium">{writeoff.writeoffNumber}</span>
@@ -76,9 +78,9 @@ export function ApproveWriteoffDialog({
                   <span className="text-muted-foreground">Позиций:</span>
                   <span>{writeoff.items?.length ?? 0}</span>
                 </div>
-                <div className="flex justify-between border-t pt-2 mt-2">
+                <div className="mt-2 flex justify-between border-t pt-2">
                   <span className="text-muted-foreground">Сумма списания:</span>
-                  <span className="font-bold text-destructive">
+                  <span className="text-destructive font-bold">
                     {formatCurrency(writeoff.totalValue)}
                   </span>
                 </div>

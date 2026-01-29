@@ -100,7 +100,9 @@ export const useCloseSession = () => {
       queryClient.invalidateQueries({
         queryKey: tableKeys.session(variables.id),
       })
-      queryClient.invalidateQueries({ queryKey: tableKeys.detail(variables.id) })
+      queryClient.invalidateQueries({
+        queryKey: tableKeys.detail(variables.id),
+      })
       queryClient.invalidateQueries({ queryKey: tableKeys.lists() })
       toast.success('Session closed successfully')
     },

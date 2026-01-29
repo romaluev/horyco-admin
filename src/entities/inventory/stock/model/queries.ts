@@ -3,7 +3,11 @@ import { useQuery } from '@tanstack/react-query'
 import { stockApi } from './api'
 import { stockKeys } from './query-keys'
 
-import type { IGetStockParams, IStockAlertParams, IGetStockAlertsParams } from './types'
+import type {
+  IGetStockParams,
+  IStockAlertParams,
+  IGetStockAlertsParams,
+} from './types'
 
 /**
  * Get stock levels with filters

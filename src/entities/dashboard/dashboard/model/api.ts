@@ -41,17 +41,18 @@ import type {
 // ============================================
 
 export async function getDashboardConfig(): Promise<IDashboardConfig | null> {
-  const result = await executeQuery<{ dashboardConfig: IDashboardConfig | null }>(
-    DASHBOARD_CONFIG_QUERY
-  )
+  const result = await executeQuery<{
+    dashboardConfig: IDashboardConfig | null
+  }>(DASHBOARD_CONFIG_QUERY)
   return result.dashboardConfig
 }
 
-export async function saveDashboardConfig(config: IDashboardConfigInput): Promise<boolean> {
-  const result = await executeQuery<{ saveDashboardConfig: { success: boolean } }>(
-    SAVE_DASHBOARD_CONFIG_MUTATION,
-    { config }
-  )
+export async function saveDashboardConfig(
+  config: IDashboardConfigInput
+): Promise<boolean> {
+  const result = await executeQuery<{
+    saveDashboardConfig: { success: boolean }
+  }>(SAVE_DASHBOARD_CONFIG_MUTATION, { config })
   return result.saveDashboardConfig.success
 }
 
@@ -70,7 +71,9 @@ export async function getEntitlements(): Promise<IEntitlements> {
 // KPI METRICS API
 // ============================================
 
-export async function getKpiMetrics(params: IKpiMetricsParams): Promise<IKpiMetricValue[]> {
+export async function getKpiMetrics(
+  params: IKpiMetricsParams
+): Promise<IKpiMetricValue[]> {
   const result = await executeQuery<{ kpiMetrics: IKpiMetricValue[] }>(
     KPI_METRICS_QUERY,
     params
@@ -82,7 +85,9 @@ export async function getKpiMetrics(params: IKpiMetricsParams): Promise<IKpiMetr
 // TIME SERIES API
 // ============================================
 
-export async function getTimeSeries(params: ITimeSeriesParams): Promise<ITimeSeriesData> {
+export async function getTimeSeries(
+  params: ITimeSeriesParams
+): Promise<ITimeSeriesData> {
   const result = await executeQuery<{ timeSeries: ITimeSeriesData }>(
     TIME_SERIES_QUERY,
     params
@@ -94,7 +99,9 @@ export async function getTimeSeries(params: ITimeSeriesParams): Promise<ITimeSer
 // WIDGET DATA API
 // ============================================
 
-export async function getRankedList(params: IRankedListParams): Promise<IRankedItem[]> {
+export async function getRankedList(
+  params: IRankedListParams
+): Promise<IRankedItem[]> {
   const result = await executeQuery<{ rankedList: IRankedItem[] }>(
     RANKED_LIST_QUERY,
     params
@@ -102,7 +109,9 @@ export async function getRankedList(params: IRankedListParams): Promise<IRankedI
   return result.rankedList
 }
 
-export async function getProportions(params: IProportionsParams): Promise<IProportionsData> {
+export async function getProportions(
+  params: IProportionsParams
+): Promise<IProportionsData> {
   const result = await executeQuery<{ proportions: IProportionsData }>(
     PROPORTIONS_QUERY,
     params
@@ -110,7 +119,9 @@ export async function getProportions(params: IProportionsParams): Promise<IPropo
   return result.proportions
 }
 
-export async function getHeatmap(params: IHeatmapParams): Promise<IHeatmapData> {
+export async function getHeatmap(
+  params: IHeatmapParams
+): Promise<IHeatmapData> {
   const result = await executeQuery<{ heatmap: IHeatmapData }>(
     HEATMAP_QUERY,
     params
@@ -118,7 +129,9 @@ export async function getHeatmap(params: IHeatmapParams): Promise<IHeatmapData> 
   return result.heatmap
 }
 
-export async function getGoalsSummary(branchId?: number): Promise<IGoalsSummary> {
+export async function getGoalsSummary(
+  branchId?: number
+): Promise<IGoalsSummary> {
   const result = await executeQuery<{ goalsSummary: IGoalsSummary }>(
     GOALS_SUMMARY_QUERY,
     { branchId }
@@ -126,7 +139,9 @@ export async function getGoalsSummary(branchId?: number): Promise<IGoalsSummary>
   return result.goalsSummary
 }
 
-export async function getAlertSummary(branchId?: number): Promise<IAlertSummary> {
+export async function getAlertSummary(
+  branchId?: number
+): Promise<IAlertSummary> {
   const result = await executeQuery<{ alertSummary: IAlertSummary }>(
     ALERT_SUMMARY_QUERY,
     { branchId }

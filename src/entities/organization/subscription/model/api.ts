@@ -36,12 +36,13 @@ interface ApiResponse<T> {
  *
  * @returns Promise with current subscription information
  */
-export const getCurrentSubscription = async (): Promise<ISubscriptionDetails> => {
-  const response = await api.get<ApiResponse<ISubscriptionDetails>>(
-    '/admin/subscription/current'
-  )
-  return response.data.data
-}
+export const getCurrentSubscription =
+  async (): Promise<ISubscriptionDetails> => {
+    const response = await api.get<ApiResponse<ISubscriptionDetails>>(
+      '/admin/subscription/current'
+    )
+    return response.data.data
+  }
 
 /**
  * Get available modules catalog
@@ -113,7 +114,9 @@ export const getInvoices = async (
  * @param invoiceId - ID of invoice
  * @returns Promise with detailed invoice information
  */
-export const getInvoiceDetails = async (invoiceId: number): Promise<IInvoiceDetails> => {
+export const getInvoiceDetails = async (
+  invoiceId: number
+): Promise<IInvoiceDetails> => {
   const response = await api.get<ApiResponse<IInvoiceDetails>>(
     `/admin/subscription/invoices/${invoiceId}`
   )

@@ -41,7 +41,8 @@ export function ViewModeToggler<T extends ViewMode = ViewMode>({
   showLabels = true,
 }: ViewModeTogglerProps<T>) {
   // Determine which options to use
-  const modeOptions = options ?? (value === 'tree' ? treeGridOptions : defaultOptions)
+  const modeOptions =
+    options ?? (value === 'tree' ? treeGridOptions : defaultOptions)
 
   return (
     <div className="flex w-fit gap-1 rounded-lg border p-1">
@@ -56,7 +57,9 @@ export function ViewModeToggler<T extends ViewMode = ViewMode>({
             className="gap-2"
           >
             <Icon className="h-4 w-4" />
-            {showLabels && <span className="hidden md:inline">{option.label}</span>}
+            {showLabels && (
+              <span className="hidden md:inline">{option.label}</span>
+            )}
           </Button>
         )
       })}

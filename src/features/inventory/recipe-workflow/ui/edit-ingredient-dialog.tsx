@@ -31,7 +31,6 @@ import { useUpdateRecipeIngredient } from '@/entities/inventory/recipe/model/mut
 
 import type { IRecipeIngredient } from '@/entities/inventory/recipe/model/types'
 
-
 const editIngredientSchema = z.object({
   quantity: z.number().min(0.001, 'Количество должно быть больше 0'),
   unit: z.string().min(1, 'Укажите единицу измерения'),
@@ -100,13 +99,14 @@ export function EditIngredientDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Редактировать ингредиент</DialogTitle>
-          <DialogDescription>
-            {ingredient.itemName}
-          </DialogDescription>
+          <DialogDescription>{ingredient.itemName}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}

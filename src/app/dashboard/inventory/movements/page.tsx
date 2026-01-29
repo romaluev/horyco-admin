@@ -2,11 +2,9 @@
 
 import { useState, useMemo } from 'react'
 
-
 import { format, subDays } from 'date-fns'
 import { Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
 
 import { Button } from '@/shared/ui/base/button'
 import { Heading } from '@/shared/ui/base/heading'
@@ -42,7 +40,9 @@ export default function MovementsPage() {
     warehouseId,
     itemId,
     type: movementType || undefined,
-    dateFrom: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+    dateFrom: dateRange?.from
+      ? format(dateRange.from, 'yyyy-MM-dd')
+      : undefined,
     dateTo: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
   })
 
@@ -55,7 +55,10 @@ export default function MovementsPage() {
       if (m.type === 'PURCHASE_RECEIVE') result.purchases += cost
       else if (m.type === 'SALE_DEDUCTION') result.sales += cost
       else if (m.type === 'WRITEOFF') result.writeoffs += cost
-      else if (m.type === 'MANUAL_ADJUSTMENT' || m.type === 'COUNT_ADJUSTMENT') {
+      else if (
+        m.type === 'MANUAL_ADJUSTMENT' ||
+        m.type === 'COUNT_ADJUSTMENT'
+      ) {
         result.adjustments += cost
       }
     })
@@ -65,7 +68,10 @@ export default function MovementsPage() {
   const handleClearFilters = () => {
     setItemId(undefined)
     setMovementType('')
-    setDateRange({ from: subDays(new Date(), DEFAULT_DAYS_BACK), to: new Date() })
+    setDateRange({
+      from: subDays(new Date(), DEFAULT_DAYS_BACK),
+      to: new Date(),
+    })
   }
 
   const hasActiveFilters = Boolean(itemId || movementType)
@@ -74,7 +80,10 @@ export default function MovementsPage() {
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
-          <Heading title={t('pages.movements.title')} description={t('pages.movements.description')} />
+          <Heading
+            title={t('pages.movements.title')}
+            description={t('pages.movements.description')}
+          />
           <Button variant="outline" size="sm" disabled>
             <Download className="mr-2 h-4 w-4" />
             {t('pages.movements.export')}
@@ -114,8 +123,9 @@ export default function MovementsPage() {
         />
 
         {warehouseId && movements.length > 0 && movementsData?.meta && (
-          <div className="text-right text-sm text-muted-foreground">
-            {t('pages.movements.page')} {movementsData.meta.page} {t('pages.movements.of')} {movementsData.meta.totalPages} (всего{' '}
+          <div className="text-muted-foreground text-right text-sm">
+            {t('pages.movements.page')} {movementsData.meta.page}{' '}
+            {t('pages.movements.of')} {movementsData.meta.totalPages} (всего{' '}
             {movementsData.meta.total} {t('pages.movements.records')})
           </div>
         )}

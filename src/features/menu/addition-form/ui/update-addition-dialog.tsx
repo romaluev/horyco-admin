@@ -149,7 +149,10 @@ export const UpdateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>{t('additions.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('additions.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t('additions.form.name.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,7 +166,10 @@ export const UpdateAdditionDialog = ({
                 <FormItem>
                   <FormLabel>{t('additions.form.description.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder={t('additions.form.description.placeholder')} {...field} />
+                    <Textarea
+                      placeholder={t('additions.form.description.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,7 +177,9 @@ export const UpdateAdditionDialog = ({
             />
 
             <div>
-              <FormLabel className="pb-2">{t('additions.form.image.label')}</FormLabel>
+              <FormLabel className="pb-2">
+                {t('additions.form.image.label')}
+              </FormLabel>
               <ImageUpload
                 value={imageFile}
                 onChange={setImageFile}
@@ -185,7 +193,9 @@ export const UpdateAdditionDialog = ({
                 name="minSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('additions.form.minSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.minSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -203,7 +213,9 @@ export const UpdateAdditionDialog = ({
                 name="maxSelection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('additions.form.maxSelection.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.maxSelection.label')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -244,7 +256,9 @@ export const UpdateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isRequired.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isRequired.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isRequired.description')}
                     </FormDescription>
@@ -265,7 +279,9 @@ export const UpdateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isMultiple.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isMultiple.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isMultiple.description')}
                     </FormDescription>
@@ -286,7 +302,9 @@ export const UpdateAdditionDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('additions.form.isCountable.label')}</FormLabel>
+                    <FormLabel>
+                      {t('additions.form.isCountable.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('additions.form.isCountable.description')}
                     </FormDescription>
@@ -323,11 +341,18 @@ export const UpdateAdditionDialog = ({
             />
 
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={isPending}
+              >
                 {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('common.loading') : t('additions.actions.update')}
+                {isPending
+                  ? t('common.loading')
+                  : t('additions.actions.update')}
               </Button>
             </div>
           </form>

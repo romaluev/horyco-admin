@@ -69,7 +69,7 @@ export function WidgetActions({ widgetId, onEdit }: WidgetActionsProps) {
           <Button
             variant="secondary"
             size="icon"
-            className="h-7 w-7 hover:bg-destructive hover:text-destructive-foreground"
+            className="hover:bg-destructive hover:text-destructive-foreground h-7 w-7"
             onClick={handleDelete}
           >
             <IconTrash className="h-3.5 w-3.5" />

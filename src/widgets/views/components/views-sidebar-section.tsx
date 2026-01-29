@@ -23,7 +23,10 @@ import { Skeleton } from '@/shared/ui/base/skeleton'
 import { Icons } from '@/shared/ui/icons'
 
 import { useViews } from '@/entities/dashboard/view'
-import { DATASET_CONFIG, ViewTypeModal } from '@/features/dashboard/view-builder'
+import {
+  DATASET_CONFIG,
+  ViewTypeModal,
+} from '@/features/dashboard/view-builder'
 
 export function ViewsSidebarSection() {
   const pathname = usePathname()
@@ -88,7 +91,7 @@ export function ViewsSidebarSection() {
                     <React.Fragment key={pageCode}>
                       {/* Dataset Label */}
                       <SidebarMenuSubItem>
-                        <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium uppercase text-muted-foreground">
+                        <div className="text-muted-foreground flex items-center gap-2 px-3 py-1.5 text-xs font-medium uppercase">
                           <Icon className="size-3" />
                           {datasetConfig?.label || pageCode}
                         </div>
@@ -100,12 +103,14 @@ export function ViewsSidebarSection() {
                           <SidebarMenuSubButton
                             className="!p-3"
                             asChild
-                            isActive={pathname === `/dashboard/views/${view.id}`}
+                            isActive={
+                              pathname === `/dashboard/views/${view.id}`
+                            }
                           >
                             <Link to={`/dashboard/views/${view.id}` as any}>
                               <span className="text-[17px]">{view.name}</span>
                               {view.isPinned && (
-                                <span className="ml-auto text-xs text-muted-foreground">
+                                <span className="text-muted-foreground ml-auto text-xs">
                                   *
                                 </span>
                               )}
@@ -120,7 +125,7 @@ export function ViewsSidebarSection() {
               {/* Empty State */}
               {!isLoading && !hasViews && (
                 <SidebarMenuSubItem>
-                  <div className="px-3 py-2 text-sm text-muted-foreground">
+                  <div className="text-muted-foreground px-3 py-2 text-sm">
                     Нет сохраненных представлений
                   </div>
                 </SidebarMenuSubItem>
@@ -129,7 +134,7 @@ export function ViewsSidebarSection() {
               {/* Add View Button - at the end */}
               <SidebarMenuSubItem>
                 <SidebarMenuSubButton
-                  className="!p-3 text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground !p-3"
                   onClick={() => setIsModalOpen(true)}
                 >
                   <IconPlus className="mr-1 size-4" />
@@ -142,7 +147,10 @@ export function ViewsSidebarSection() {
       </Collapsible>
 
       {/* Modal for creating new view */}
-      <ViewTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ViewTypeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   )
 }

@@ -7,7 +7,6 @@ import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-
 import { Button } from '@/shared/ui/base/button'
 import {
   Dialog,
@@ -127,17 +126,17 @@ export function AddPOItemDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="itemId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Товар</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={handleItemChange}
-                  >
+                  <Select value={field.value} onValueChange={handleItemChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите товар" />
@@ -175,7 +174,9 @@ export function AddPOItemDialog({
                         min={0.01}
                         step="any"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -211,7 +212,9 @@ export function AddPOItemDialog({
                         min={0}
                         step="100"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -232,7 +235,9 @@ export function AddPOItemDialog({
                         max={100}
                         step="1"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />

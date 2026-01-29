@@ -19,11 +19,7 @@ function ForgotPasswordPage() {
       </Helmet>
       <div className="relative grid h-screen grid-rows-[auto_1fr] items-center justify-center lg:max-w-none">
         <div className="flex items-center justify-center p-4 text-lg font-medium">
-          <img
-            className="w-32 overflow-hidden"
-            src={logo}
-            alt=""
-          />
+          <img className="w-32 overflow-hidden" src={logo} alt="" />
         </div>
         <div className="flex h-full w-full items-center justify-center p-4 lg:p-8">
           <div className="flex w-full flex-col items-center justify-center space-y-6">

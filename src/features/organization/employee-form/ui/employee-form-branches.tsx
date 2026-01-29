@@ -71,7 +71,8 @@ export const EmployeeFormBranches = ({ form }: EmployeeFormBranchesProps) => {
           Выберите филиалы <span className="text-destructive">*</span>
         </Label>
         <p className="text-muted-foreground text-sm">
-          Сотрудник может работать в нескольких филиалах. Разрешения можно настроить для каждого филиала отдельно на следующем шаге.
+          Сотрудник может работать в нескольких филиалах. Разрешения можно
+          настроить для каждого филиала отдельно на следующем шаге.
         </p>
       </div>
 

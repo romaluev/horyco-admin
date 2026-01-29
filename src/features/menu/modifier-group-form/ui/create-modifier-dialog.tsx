@@ -96,7 +96,10 @@ export const CreateModifierDialog = ({
                 <FormItem>
                   <FormLabel>{t('modifiers.create.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('modifiers.create.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t('modifiers.create.form.name.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,10 +111,14 @@ export const CreateModifierDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.create.form.description.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.create.form.description.label')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('modifiers.create.form.description.placeholder')}
+                      placeholder={t(
+                        'modifiers.create.form.description.placeholder'
+                      )}
                       {...field}
                     />
                   </FormControl>
@@ -125,7 +132,9 @@ export const CreateModifierDialog = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.create.form.price.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.create.form.price.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -147,7 +156,9 @@ export const CreateModifierDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.create.form.sortOrder.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.create.form.sortOrder.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -169,7 +180,9 @@ export const CreateModifierDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('modifiers.create.form.isActive.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.create.form.isActive.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('modifiers.create.form.isActive.description')}
                     </FormDescription>
@@ -193,7 +206,9 @@ export const CreateModifierDialog = ({
                 {t('modifiers.create.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('modifiers.create.form.actions.saving') : t('modifiers.create.form.actions.save')}
+                {isPending
+                  ? t('modifiers.create.form.actions.saving')
+                  : t('modifiers.create.form.actions.save')}
               </Button>
             </div>
           </form>

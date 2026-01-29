@@ -3,7 +3,12 @@
  * Based on documentation: /.claude/docs/24-analytics-dashboard.md
  */
 
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query'
 
 import { KpiType } from '@/shared/api/graphql'
 

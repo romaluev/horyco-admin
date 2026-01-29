@@ -6,7 +6,13 @@ import { AlertTriangle } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/base/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/base/card'
 import { Progress } from '@/shared/ui/base/progress'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
@@ -17,7 +23,10 @@ interface ILowStockItemsListProps {
   size?: number
 }
 
-export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListProps) {
+export function LowStockItemsList({
+  warehouseId,
+  size = 5,
+}: ILowStockItemsListProps) {
   const { data: lowStockItems, isLoading } = useLowStock({
     warehouseId,
     size,
@@ -34,12 +43,12 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
           <CardDescription>Товары требующие пополнения</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link to={"/dashboard/inventory/stock?filter=low" as any}>Все</Link>
+          <Link to={'/dashboard/inventory/stock?filter=low' as any}>Все</Link>
         </Button>
       </CardHeader>
       <CardContent className="max-h-[320px] overflow-auto">
         {!warehouseId ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Выберите склад для просмотра
           </p>
         ) : isLoading ? (
@@ -55,31 +64,35 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
             ))}
           </div>
         ) : !lowStockItems?.length ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Нет товаров с низким остатком
           </p>
         ) : (
           <div className="space-y-3">
             {lowStockItems.map((stock) => {
               const minLevel = stock.item?.minStockLevel ?? 1
-              const percent = Math.min(100, Math.round((stock.quantity / minLevel) * 100))
+              const percent = Math.min(
+                100,
+                Math.round((stock.quantity / minLevel) * 100)
+              )
               const isOutOfStock = stock.quantity <= 0
 
               return (
-                <div
-                  key={stock.id}
-                  className="rounded-lg border p-3 space-y-2"
-                >
+                <div key={stock.id} className="space-y-2 rounded-lg border p-3">
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <p className="font-medium leading-none">{stock.item?.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="leading-none font-medium">
+                        {stock.item?.name}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
                         {stock.warehouse?.name}
                       </p>
                     </div>
                     <Badge
                       variant="outline"
-                      className={isOutOfStock ? 'text-destructive' : 'text-amber-500'}
+                      className={
+                        isOutOfStock ? 'text-destructive' : 'text-amber-500'
+                      }
                     >
                       {stock.quantity} / {minLevel} {stock.item?.unit}
                     </Badge>
@@ -89,7 +102,9 @@ export function LowStockItemsList({ warehouseId, size = 5 }: ILowStockItemsListP
                       value={percent}
                       className={`h-2 ${isOutOfStock ? '[&>div]:bg-destructive' : '[&>div]:bg-amber-500'}`}
                     />
-                    <span className={`text-xs font-medium ${isOutOfStock ? 'text-destructive' : 'text-amber-500'}`}>
+                    <span
+                      className={`text-xs font-medium ${isOutOfStock ? 'text-destructive' : 'text-amber-500'}`}
+                    >
                       {percent}%
                     </span>
                   </div>

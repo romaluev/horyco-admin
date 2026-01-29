@@ -6,7 +6,6 @@ import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 
-
 import { cn } from '@/shared/lib/utils'
 
 import { Button } from './button'

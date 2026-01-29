@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 
 import { Link } from '@tanstack/react-router'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, Check, Loader2, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -107,7 +106,11 @@ const extractErrorMessage = (err: unknown): string => {
   const errorObj = err as Record<string, unknown>
   const response = errorObj.response
 
-  if (typeof response !== 'object' || response === null || !('data' in response)) {
+  if (
+    typeof response !== 'object' ||
+    response === null ||
+    !('data' in response)
+  ) {
     return ''
   }
 
@@ -116,7 +119,11 @@ const extractErrorMessage = (err: unknown): string => {
 
   if (!data) return ''
 
-  if ('error' in data && typeof data.error === 'object' && data.error !== null) {
+  if (
+    'error' in data &&
+    typeof data.error === 'object' &&
+    data.error !== null
+  ) {
     const errorData = data.error as Record<string, unknown>
     if ('message' in errorData && typeof errorData.message === 'string') {
       return errorData.message
@@ -226,7 +233,10 @@ interface PasswordStrengthIndicatorProps {
   t: (key: string) => string
 }
 
-const PasswordStrengthIndicator = ({ strength, t }: PasswordStrengthIndicatorProps) => (
+const PasswordStrengthIndicator = ({
+  strength,
+  t,
+}: PasswordStrengthIndicatorProps) => (
   <div className="mt-2 space-y-2">
     <div className="flex items-center justify-between">
       <span className="text-sm">{t('resetPassword.strength')}</span>
@@ -319,14 +329,19 @@ const ResetPasswordForm = () => {
   return (
     <Card className="w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">{t('resetPassword.title')}</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {t('resetPassword.title')}
+        </CardTitle>
         <CardDescription>
           {t('resetPassword.description', { email })}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 w-full">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="w-full space-y-4"
+          >
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -367,7 +382,10 @@ const ResetPasswordForm = () => {
                     />
                   </FormControl>
                   {passwordStrength && (
-                    <PasswordStrengthIndicator strength={passwordStrength} t={t} />
+                    <PasswordStrengthIndicator
+                      strength={passwordStrength}
+                      t={t}
+                    />
                   )}
                   <FormMessage />
                 </FormItem>
@@ -382,7 +400,9 @@ const ResetPasswordForm = () => {
                   <FormLabel>{t('resetPassword.confirmPassword')}</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder={t('resetPassword.confirmPasswordPlaceholder')}
+                      placeholder={t(
+                        'resetPassword.confirmPasswordPlaceholder'
+                      )}
                       autoComplete="new-password"
                       {...field}
                       disabled={isLoading}

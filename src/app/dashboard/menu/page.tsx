@@ -5,7 +5,6 @@
 
 'use client'
 
-
 import { Link } from '@tanstack/react-router'
 
 import {
@@ -115,9 +114,7 @@ export default function MenuPage(): JSX.Element {
         <h1 className="text-3xl font-bold tracking-tight">
           {t('pages.menu.title')}
         </h1>
-        <p className="text-muted-foreground">
-          {t('pages.menu.description')}
-        </p>
+        <p className="text-muted-foreground">{t('pages.menu.description')}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">

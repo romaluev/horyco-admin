@@ -20,12 +20,11 @@ import {
 
 import { KpiType } from '@/shared/api/graphql'
 
-import type { WidgetType , ChartType } from './types'
+import type { WidgetType, ChartType } from './types'
 
 // ============================================
 // CHART TYPE OPTIONS
 // ============================================
-
 
 // ============================================
 // KPI CONFIGURATION

@@ -7,7 +7,14 @@ import {
   IconGlobe,
   IconBuildingStore,
 } from '@tabler/icons-react'
-import { Bar, Line, ComposedChart, ResponsiveContainer, XAxis, Tooltip } from 'recharts'
+import {
+  Bar,
+  Line,
+  ComposedChart,
+  ResponsiveContainer,
+  XAxis,
+  Tooltip,
+} from 'recharts'
 
 import { formatPrice } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -34,14 +41,17 @@ export function DailyComparisonWidget({
   isLoading = false,
   onViewDetails,
 }: IDailyComparisonWidgetProps) {
-  const chartData = useMemo(() => [
-    { time: '10:00', bar: 3000, line: 3200 },
-    { time: '12:00', bar: 4500, line: 4200 },
-    { time: '14:00', bar: 3800, line: 3500 },
-    { time: '16:00', bar: 2500, line: 2800 },
-    { time: '18:00', bar: 4200, line: 4800 },
-    { time: '20:00', bar: 5200, line: 5500 },
-  ], [])
+  const chartData = useMemo(
+    () => [
+      { time: '10:00', bar: 3000, line: 3200 },
+      { time: '12:00', bar: 4500, line: 4200 },
+      { time: '14:00', bar: 3800, line: 3500 },
+      { time: '16:00', bar: 2500, line: 2800 },
+      { time: '18:00', bar: 4200, line: 4800 },
+      { time: '20:00', bar: 5200, line: 5500 },
+    ],
+    []
+  )
 
   const isPositive = changePercent >= 0
 
@@ -50,7 +60,7 @@ export function DailyComparisonWidget({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-100 p-2 dark:bg-emerald-900/30">
@@ -73,40 +83,47 @@ export function DailyComparisonWidget({
               : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
           )}
         >
-          {isPositive ? '+' : ''}{changePercent}%
+          {isPositive ? '+' : ''}
+          {changePercent}%
         </span>
       </div>
 
       <div className="mb-4 flex gap-4 border-y py-3">
         <div className="flex items-center gap-2">
-          <IconGlobe className="size-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Онлайн</span>
-          <span className="font-semibold">{formatPrice(onlineValue, { short: true })}</span>
+          <IconGlobe className="text-muted-foreground size-4" />
+          <span className="text-muted-foreground text-sm">Онлайн</span>
+          <span className="font-semibold">
+            {formatPrice(onlineValue, { short: true })}
+          </span>
           <span
             className={cn(
               'text-xs font-medium',
               onlineChange >= 0 ? 'text-emerald-600' : 'text-red-600'
             )}
           >
-            {onlineChange >= 0 ? '+' : ''}{onlineChange}%
+            {onlineChange >= 0 ? '+' : ''}
+            {onlineChange}%
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <IconBuildingStore className="size-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Оффлайн</span>
-          <span className="font-semibold">{formatPrice(offlineValue, { short: true })}</span>
+          <IconBuildingStore className="text-muted-foreground size-4" />
+          <span className="text-muted-foreground text-sm">Оффлайн</span>
+          <span className="font-semibold">
+            {formatPrice(offlineValue, { short: true })}
+          </span>
           <span
             className={cn(
               'text-xs font-medium',
               offlineChange >= 0 ? 'text-emerald-600' : 'text-red-600'
             )}
           >
-            {offlineChange >= 0 ? '+' : ''}{offlineChange}%
+            {offlineChange >= 0 ? '+' : ''}
+            {offlineChange}%
           </span>
         </div>
       </div>
 
-      <div className="flex-1 min-h-[120px]">
+      <div className="min-h-[120px] flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartData}>
             <XAxis
@@ -118,10 +135,16 @@ export function DailyComparisonWidget({
             <Tooltip
               content={({ active, payload, label }) => {
                 const firstPayload = payload?.[0]
-                if (active && firstPayload?.value !== undefined && firstPayload.value !== null) {
+                if (
+                  active &&
+                  firstPayload?.value !== undefined &&
+                  firstPayload.value !== null
+                ) {
                   return (
-                    <div className="rounded-lg border bg-background px-3 py-2 shadow-lg">
-                      <p className="mb-1 text-xs text-muted-foreground">{label}</p>
+                    <div className="bg-background rounded-lg border px-3 py-2 shadow-lg">
+                      <p className="text-muted-foreground mb-1 text-xs">
+                        {label}
+                      </p>
                       <p className="text-sm font-medium">
                         {formatPrice(Number(firstPayload.value))}
                       </p>
@@ -153,23 +176,23 @@ export function DailyComparisonWidget({
 
 function DailyComparisonWidgetSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-xl border bg-card p-5">
+    <div className="bg-card flex h-full flex-col rounded-xl border p-5">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="size-9 animate-pulse rounded-lg bg-muted" />
-          <div className="h-5 w-28 animate-pulse rounded bg-muted" />
+          <div className="bg-muted size-9 animate-pulse rounded-lg" />
+          <div className="bg-muted h-5 w-28 animate-pulse rounded" />
         </div>
-        <div className="h-8 w-16 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-8 w-16 animate-pulse rounded" />
       </div>
       <div className="mb-4 flex items-baseline gap-3">
-        <div className="h-9 w-36 animate-pulse rounded bg-muted" />
-        <div className="h-6 w-12 animate-pulse rounded-full bg-muted" />
+        <div className="bg-muted h-9 w-36 animate-pulse rounded" />
+        <div className="bg-muted h-6 w-12 animate-pulse rounded-full" />
       </div>
       <div className="mb-4 flex gap-4 border-y py-3">
-        <div className="h-5 w-32 animate-pulse rounded bg-muted" />
-        <div className="h-5 w-32 animate-pulse rounded bg-muted" />
+        <div className="bg-muted h-5 w-32 animate-pulse rounded" />
+        <div className="bg-muted h-5 w-32 animate-pulse rounded" />
       </div>
-      <div className="h-[120px] animate-pulse rounded bg-muted" />
+      <div className="bg-muted h-[120px] animate-pulse rounded" />
     </div>
   )
 }

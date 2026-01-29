@@ -38,7 +38,11 @@ export const validateImportData = (data: ParsedCsvRow[]): ValidatedData => {
     const phoneNumber = row.phoneNumber || row.phone || row.телефон || ''
     const email = row.email || row.Email || row.почта || ''
 
-    if (!name || name.length < BRANCH_NAME_MIN_LENGTH || name.length > BRANCH_NAME_MAX_LENGTH) {
+    if (
+      !name ||
+      name.length < BRANCH_NAME_MIN_LENGTH ||
+      name.length > BRANCH_NAME_MAX_LENGTH
+    ) {
       errors.push({
         row: rowNumber,
         field: 'name',
@@ -46,7 +50,11 @@ export const validateImportData = (data: ParsedCsvRow[]): ValidatedData => {
       })
     }
 
-    if (!address || address.length < BRANCH_ADDRESS_MIN_LENGTH || address.length > BRANCH_ADDRESS_MAX_LENGTH) {
+    if (
+      !address ||
+      address.length < BRANCH_ADDRESS_MIN_LENGTH ||
+      address.length > BRANCH_ADDRESS_MAX_LENGTH
+    ) {
       errors.push({
         row: rowNumber,
         field: 'address',

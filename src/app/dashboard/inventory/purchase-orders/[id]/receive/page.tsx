@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -22,7 +21,13 @@ import {
 } from '@/shared/ui/base/alert-dialog'
 import { Badge } from '@/shared/ui/base/badge'
 import { Button } from '@/shared/ui/base/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/base/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/shared/ui/base/card'
 import { DatePicker } from '@/shared/ui/base/date-picker'
 import {
   Form,
@@ -46,7 +51,10 @@ import { Textarea } from '@/shared/ui/base/textarea'
 import BaseLoading from '@/shared/ui/base-loading'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { usePurchaseOrderById, POStatusBadge } from '@/entities/inventory/purchase-order'
+import {
+  usePurchaseOrderById,
+  POStatusBadge,
+} from '@/entities/inventory/purchase-order'
 import { useReceivePurchaseOrder } from '@/entities/inventory/purchase-order/model/mutations'
 
 const receiveSchema = z.object({
@@ -167,12 +175,17 @@ export default function ReceivePage({ id: paramId }: PageProps) {
     return (
       <PageContainer>
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Check className="h-12 w-12 text-green-500 mb-4" />
+          <Check className="mb-4 h-12 w-12 text-green-500" />
           <h3 className="text-lg font-medium">Заказ полностью получен</h3>
           <p className="text-muted-foreground mt-1 mb-4">
             Все товары по этому заказу уже были приняты.
           </p>
-          <Button variant="outline" onClick={() => router.push(`/dashboard/inventory/purchase-orders/${order.id}`)}>
+          <Button
+            variant="outline"
+            onClick={() =>
+              router.push(`/dashboard/inventory/purchase-orders/${order.id}`)
+            }
+          >
             Просмотреть заказ
           </Button>
         </div>
@@ -181,27 +194,37 @@ export default function ReceivePage({ id: paramId }: PageProps) {
   }
 
   // Calculate totals
-  const totalReceiving = Object.values(quantities).reduce((sum, qty) => sum + qty, 0)
+  const totalReceiving = Object.values(quantities).reduce(
+    (sum, qty) => sum + qty,
+    0
+  )
   const totalValue = Object.entries(quantities).reduce((sum, [itemId, qty]) => {
     const price = prices[parseInt(itemId)] || 0
     return sum + qty * price
   }, 0)
 
   // Check for price variance
-  const priceVariances = order.items
-    ?.map((item) => {
-      const newPrice = prices[item.id] || item.unitPrice
-      const variance = ((newPrice - item.unitPrice) / item.unitPrice) * 100
-      return { item, newPrice, variance }
-    })
-    .filter((v) => Math.abs(v.variance) > 5) || []
+  const priceVariances =
+    order.items
+      ?.map((item) => {
+        const newPrice = prices[item.id] || item.unitPrice
+        const variance = ((newPrice - item.unitPrice) / item.unitPrice) * 100
+        return { item, newPrice, variance }
+      })
+      .filter((v) => Math.abs(v.variance) > 5) || []
 
   return (
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/inventory/purchase-orders/${order.id}`)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              router.push(`/dashboard/inventory/purchase-orders/${order.id}`)
+            }
+          >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
@@ -224,24 +247,28 @@ export default function ReceivePage({ id: paramId }: PageProps) {
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-4">
             <div>
-              <p className="text-sm text-muted-foreground">Поставщик</p>
+              <p className="text-muted-foreground text-sm">Поставщик</p>
               <p className="font-medium">{order.supplierName}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Склад</p>
+              <p className="text-muted-foreground text-sm">Склад</p>
               <p className="font-medium">{order.warehouseName}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Дата заказа</p>
+              <p className="text-muted-foreground text-sm">Дата заказа</p>
               <p className="font-medium">
-                {format(new Date(order.orderDate), 'dd MMM yyyy', { locale: ru })}
+                {format(new Date(order.orderDate), 'dd MMM yyyy', {
+                  locale: ru,
+                })}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Ожидаемая дата</p>
+              <p className="text-muted-foreground text-sm">Ожидаемая дата</p>
               <p className="font-medium">
                 {order.expectedDate
-                  ? format(new Date(order.expectedDate), 'dd MMM yyyy', { locale: ru })
+                  ? format(new Date(order.expectedDate), 'dd MMM yyyy', {
+                      locale: ru,
+                    })
                   : '—'}
               </p>
             </div>
@@ -250,7 +277,10 @@ export default function ReceivePage({ id: paramId }: PageProps) {
 
         {/* Receive Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Дата приёмки</CardTitle>
@@ -266,7 +296,9 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                         <DatePicker
                           value={field.value}
                           onChange={(dateStr) =>
-                            field.onChange(dateStr ? new Date(dateStr) : undefined)
+                            field.onChange(
+                              dateStr ? new Date(dateStr) : undefined
+                            )
                           }
                         />
                       </FormControl>
@@ -281,7 +313,9 @@ export default function ReceivePage({ id: paramId }: PageProps) {
             {order.receives && order.receives.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Предыдущие приёмки</CardTitle>
+                  <CardTitle className="text-base">
+                    Предыдущие приёмки
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="rounded-md border">
@@ -300,9 +334,13 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                               {receive.receiveNumber}
                             </TableCell>
                             <TableCell>
-                              {format(new Date(receive.receiveDate), 'dd MMM yyyy', {
-                                locale: ru,
-                              })}
+                              {format(
+                                new Date(receive.receiveDate),
+                                'dd MMM yyyy',
+                                {
+                                  locale: ru,
+                                }
+                              )}
                             </TableCell>
                             <TableCell className="text-right">
                               {receive.items?.length || 0}
@@ -333,16 +371,23 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                         <TableHead className="text-right">Заказано</TableHead>
                         <TableHead className="text-right">Получено</TableHead>
                         <TableHead className="text-right">Осталось</TableHead>
-                        <TableHead className="w-[120px] text-right">Принять</TableHead>
-                        <TableHead className="w-[140px] text-right">Цена</TableHead>
+                        <TableHead className="w-[120px] text-right">
+                          Принять
+                        </TableHead>
+                        <TableHead className="w-[140px] text-right">
+                          Цена
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {order.items?.map((item) => {
-                        const remaining = item.quantityOrdered - item.quantityReceived
+                        const remaining =
+                          item.quantityOrdered - item.quantityReceived
                         const isFullyReceived = remaining <= 0
                         const currentPrice = prices[item.id] || item.unitPrice
-                        const priceVariance = ((currentPrice - item.unitPrice) / item.unitPrice) * 100
+                        const priceVariance =
+                          ((currentPrice - item.unitPrice) / item.unitPrice) *
+                          100
 
                         return (
                           <TableRow
@@ -351,7 +396,9 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                           >
                             <TableCell>
                               <div>
-                                <span className="font-medium">{item.itemName}</span>
+                                <span className="font-medium">
+                                  {item.itemName}
+                                </span>
                                 {item.notes && (
                                   <p className="text-muted-foreground text-xs">
                                     {item.notes}
@@ -395,18 +442,19 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                                   disabled={isFullyReceived}
                                   className="h-8 w-full text-right"
                                 />
-                                {Math.abs(priceVariance) > 5 && !isFullyReceived && (
-                                  <p
-                                    className={`text-xs ${
-                                      priceVariance > 0
-                                        ? 'text-destructive'
-                                        : 'text-green-600'
-                                    }`}
-                                  >
-                                    {priceVariance > 0 ? '+' : ''}
-                                    {priceVariance.toFixed(1)}%
-                                  </p>
-                                )}
+                                {Math.abs(priceVariance) > 5 &&
+                                  !isFullyReceived && (
+                                    <p
+                                      className={`text-xs ${
+                                        priceVariance > 0
+                                          ? 'text-destructive'
+                                          : 'text-green-600'
+                                      }`}
+                                    >
+                                      {priceVariance > 0 ? '+' : ''}
+                                      {priceVariance.toFixed(1)}%
+                                    </p>
+                                  )}
                               </div>
                             </TableCell>
                           </TableRow>
@@ -422,7 +470,7 @@ export default function ReceivePage({ id: paramId }: PageProps) {
             {priceVariances.length > 0 && (
               <Card className="border-yellow-500/50">
                 <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2 text-yellow-600">
+                  <CardTitle className="flex items-center gap-2 text-base text-yellow-600">
                     <AlertTriangle className="h-4 w-4" />
                     Отклонение цен
                   </CardTitle>
@@ -430,15 +478,18 @@ export default function ReceivePage({ id: paramId }: PageProps) {
                 <CardContent>
                   <div className="space-y-2">
                     {priceVariances.map(({ item, newPrice, variance }) => (
-                      <div key={item.id} className="flex items-center justify-between text-sm">
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between text-sm"
+                      >
                         <span>{item.itemName}</span>
                         <span
                           className={
                             variance > 0 ? 'text-destructive' : 'text-green-600'
                           }
                         >
-                          {formatCurrency(item.unitPrice)} → {formatCurrency(newPrice)} (
-                          {variance > 0 ? '+' : ''}
+                          {formatCurrency(item.unitPrice)} →{' '}
+                          {formatCurrency(newPrice)} ({variance > 0 ? '+' : ''}
                           {variance.toFixed(1)}%)
                         </span>
                       </div>
@@ -480,18 +531,26 @@ export default function ReceivePage({ id: paramId }: PageProps) {
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-3">
                   <div>
-                    <p className="text-sm text-muted-foreground">Позиций к приёмке</p>
+                    <p className="text-muted-foreground text-sm">
+                      Позиций к приёмке
+                    </p>
                     <p className="text-2xl font-bold">
                       {Object.values(quantities).filter((q) => q > 0).length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Общее количество</p>
-                    <p className="text-2xl font-bold">{totalReceiving.toFixed(2)}</p>
+                    <p className="text-muted-foreground text-sm">
+                      Общее количество
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {totalReceiving.toFixed(2)}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Сумма</p>
-                    <p className="text-2xl font-bold">{formatCurrency(totalValue)}</p>
+                    <p className="text-muted-foreground text-sm">Сумма</p>
+                    <p className="text-2xl font-bold">
+                      {formatCurrency(totalValue)}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -502,7 +561,11 @@ export default function ReceivePage({ id: paramId }: PageProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push(`/dashboard/inventory/purchase-orders/${order.id}`)}
+                onClick={() =>
+                  router.push(
+                    `/dashboard/inventory/purchase-orders/${order.id}`
+                  )
+                }
               >
                 Отмена
               </Button>
@@ -516,27 +579,31 @@ export default function ReceivePage({ id: paramId }: PageProps) {
 
       {/* Confirmation Dialog */}
       {order && (
-        <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialog
+          open={confirmDialogOpen}
+          onOpenChange={setConfirmDialogOpen}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Подтвердить приёмку?</AlertDialogTitle>
               <AlertDialogDescription className="space-y-2">
                 <p>Вы собираетесь принять товары:</p>
-                <ul className="list-disc pl-4 space-y-1">
+                <ul className="list-disc space-y-1 pl-4">
                   {(order.items ?? [])
                     .filter((item) => (quantities[item.id] ?? 0) > 0)
                     .map((item) => (
                       <li key={item.id}>
-                        {item.itemName}: {quantities[item.id] ?? 0} {item.unit} @{' '}
-                        {formatCurrency(prices[item.id] ?? item.unitPrice)}
+                        {item.itemName}: {quantities[item.id] ?? 0} {item.unit}{' '}
+                        @ {formatCurrency(prices[item.id] ?? item.unitPrice)}
                       </li>
                     ))}
                 </ul>
-                <p className="font-medium pt-2">
+                <p className="pt-2 font-medium">
                   Итого: {formatCurrency(totalValue)}
                 </p>
-                <p className="text-sm pt-2">
-                  Это действие обновит остатки на складе и пересчитает среднюю стоимость.
+                <p className="pt-2 text-sm">
+                  Это действие обновит остатки на складе и пересчитает среднюю
+                  стоимость.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>

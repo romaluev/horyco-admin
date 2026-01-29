@@ -25,19 +25,33 @@ import { DashboardWidgetsSection } from '@/widgets/analytics-widgets'
 
 import { DashboardBranchSelector } from './dashboard-branch-selector'
 import { DashboardKpiCards } from './dashboard-kpi-cards'
-import { DashboardMainChart, DashboardMainChartSkeleton } from './dashboard-main-chart'
+import {
+  DashboardMainChart,
+  DashboardMainChartSkeleton,
+} from './dashboard-main-chart'
 import { DashboardPeriodSelector } from './dashboard-period-selector'
 
 export function AnalyticsOverview() {
   const { t } = useTranslation('dashboard')
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(PeriodType.TODAY)
-  const [customRange, setCustomRange] = useState<{ start?: string; end?: string }>({})
-  const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(undefined)
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(
+    PeriodType.TODAY
+  )
+  const [customRange, setCustomRange] = useState<{
+    start?: string
+    end?: string
+  }>({})
+  const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(
+    undefined
+  )
   const [isEditMode, setIsEditMode] = useState(false)
   const [localGroupBy, setLocalGroupBy] = useState<GroupBy | null>(null)
 
   const periodInput = useMemo<IPeriodInput>(() => {
-    if (selectedPeriod === PeriodType.CUSTOM && customRange.start && customRange.end) {
+    if (
+      selectedPeriod === PeriodType.CUSTOM &&
+      customRange.start &&
+      customRange.end
+    ) {
       return {
         type: PeriodType.CUSTOM,
         customStart: customRange.start,
@@ -47,7 +61,8 @@ export function AnalyticsOverview() {
     return { type: selectedPeriod }
   }, [selectedPeriod, customRange])
 
-  const { data: dashboardConfig, isLoading: isConfigLoading } = useDashboardConfig()
+  const { data: dashboardConfig, isLoading: isConfigLoading } =
+    useDashboardConfig()
   const config = dashboardConfig ?? getDefaultDashboardConfig()
   const canCustomize = useCanCustomizeDashboard()
 
@@ -138,14 +153,17 @@ export function AnalyticsOverview() {
             setLocalGroupBy(null)
           },
           onError: (error) => {
-            const errorMessage = error instanceof Error ? error.message : t('common.error')
+            const errorMessage =
+              error instanceof Error ? error.message : t('common.error')
             if (
               errorMessage.includes('ENTITLEMENT_REQUIRED') ||
               errorMessage.includes('PRO')
             ) {
               toast.error(t('dashboard.overview.messages.proOnly'))
             } else {
-              toast.error(`${t('dashboard.overview.messages.saveFailed')  }: ${  errorMessage}`)
+              toast.error(
+                `${t('dashboard.overview.messages.saveFailed')}: ${errorMessage}`
+              )
             }
           },
         }
@@ -174,7 +192,9 @@ export function AnalyticsOverview() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">{t('dashboard.overview.title')}</h2>
+            <h2 className="text-3xl font-bold tracking-tight">
+              {t('dashboard.overview.title')}
+            </h2>
             <p className="text-muted-foreground">
               {t('dashboard.overview.description')}
             </p>
@@ -204,7 +224,7 @@ export function AnalyticsOverview() {
             customRange={customRange}
             onCustomRangeChange={handleCustomRangeChange}
           />
-          <div className="h-8 w-px bg-border" />
+          <div className="bg-border h-8 w-px" />
           <DashboardBranchSelector
             selectedBranchId={selectedBranchId}
             onBranchChange={handleBranchChange}
@@ -213,8 +233,8 @@ export function AnalyticsOverview() {
       </div>
 
       {hasError && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
-          <p className="text-sm text-destructive">
+        <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-4 text-center">
+          <p className="text-destructive text-sm">
             {t('dashboard.overview.messages.loadFailed')}
           </p>
         </div>

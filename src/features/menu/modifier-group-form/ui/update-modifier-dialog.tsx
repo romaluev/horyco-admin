@@ -94,7 +94,9 @@ export const UpdateModifierDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('modifiers.update.title')}</DialogTitle>
-          <DialogDescription>{t('modifiers.update.description')}</DialogDescription>
+          <DialogDescription>
+            {t('modifiers.update.description')}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -109,7 +111,10 @@ export const UpdateModifierDialog = ({
                 <FormItem>
                   <FormLabel>{t('modifiers.update.form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('modifiers.update.form.name.placeholder')} {...field} />
+                    <Input
+                      placeholder={t('modifiers.update.form.name.placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,10 +126,14 @@ export const UpdateModifierDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.update.form.description.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.update.form.description.label')}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('modifiers.update.form.description.placeholder')}
+                      placeholder={t(
+                        'modifiers.update.form.description.placeholder'
+                      )}
                       {...field}
                     />
                   </FormControl>
@@ -138,7 +147,9 @@ export const UpdateModifierDialog = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.update.form.price.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.update.form.price.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -160,7 +171,9 @@ export const UpdateModifierDialog = ({
               name="sortOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('modifiers.update.form.sortOrder.label')}</FormLabel>
+                  <FormLabel>
+                    {t('modifiers.update.form.sortOrder.label')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -182,7 +195,9 @@ export const UpdateModifierDialog = ({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <FormLabel>{t('modifiers.update.form.isActive.label')}</FormLabel>
+                    <FormLabel>
+                      {t('modifiers.update.form.isActive.label')}
+                    </FormLabel>
                     <FormDescription>
                       {t('modifiers.update.form.isActive.description')}
                     </FormDescription>
@@ -202,7 +217,9 @@ export const UpdateModifierDialog = ({
                 {t('modifiers.update.form.actions.cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? t('modifiers.update.form.actions.saving') : t('modifiers.update.form.actions.save')}
+                {isPending
+                  ? t('modifiers.update.form.actions.saving')
+                  : t('modifiers.update.form.actions.save')}
               </Button>
             </div>
           </form>

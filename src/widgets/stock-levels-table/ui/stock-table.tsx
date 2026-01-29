@@ -71,12 +71,16 @@ export const StockTable = ({ items }: IStockTableProps) => {
               <Collapsible key={stock.id} open={isExpanded} asChild>
                 <>
                   <TableRow
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="hover:bg-muted/50 cursor-pointer"
                     onClick={() => toggleRow(stock.id)}
                   >
                     <TableCell className="w-[40px]">
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                        >
                           {isExpanded ? (
                             <ChevronDown className="h-4 w-4" />
                           ) : (
@@ -94,7 +98,7 @@ export const StockTable = ({ items }: IStockTableProps) => {
                         />
                         <div>
                           <div className="font-medium">{stock.item?.name}</div>
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-muted-foreground text-xs">
                             {stock.item?.sku || '—'}
                           </div>
                         </div>
@@ -103,7 +107,7 @@ export const StockTable = ({ items }: IStockTableProps) => {
                     <TableCell className="text-right">
                       {available.toFixed(2)} {stock.item?.unit}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground">
+                    <TableCell className="text-muted-foreground text-right">
                       {stock.reservedQuantity.toFixed(2)} {stock.item?.unit}
                     </TableCell>
                     <TableCell className="text-right">
@@ -114,7 +118,11 @@ export const StockTable = ({ items }: IStockTableProps) => {
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dashboard/inventory/movements?itemId=${stock.itemId}` as any}>
+                        <Link
+                          to={
+                            `/dashboard/inventory/movements?itemId=${stock.itemId}` as any
+                          }
+                        >
                           История
                         </Link>
                       </Button>
@@ -151,8 +159,8 @@ function StockRowDetails({ stock }: StockRowDetailsProps) {
     <div className="grid gap-4 md:grid-cols-3">
       {/* Stock Details */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-muted-foreground">Остатки</h4>
-        <div className="rounded-md border bg-background p-3 space-y-2 text-sm">
+        <h4 className="text-muted-foreground text-sm font-semibold">Остатки</h4>
+        <div className="bg-background space-y-2 rounded-md border p-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Всего:</span>
             <span className="font-medium">
@@ -164,7 +172,7 @@ function StockRowDetails({ stock }: StockRowDetailsProps) {
             <span>
               {stock.reservedQuantity.toFixed(2)} {stock.item?.unit}
               {stock.reservedQuantity > 0 && (
-                <span className="text-xs text-muted-foreground ml-1">
+                <span className="text-muted-foreground ml-1 text-xs">
                   (для заказов)
                 </span>
               )}
@@ -181,19 +189,27 @@ function StockRowDetails({ stock }: StockRowDetailsProps) {
 
       {/* Cost Information */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-muted-foreground">Себестоимость</h4>
-        <div className="rounded-md border bg-background p-3 space-y-2 text-sm">
+        <h4 className="text-muted-foreground text-sm font-semibold">
+          Себестоимость
+        </h4>
+        <div className="bg-background space-y-2 rounded-md border p-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Средняя (WAC):</span>
-            <span className="font-medium">{formatPrice(stock.averageCost)}/{stock.item?.unit}</span>
+            <span className="font-medium">
+              {formatPrice(stock.averageCost)}/{stock.item?.unit}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Посл. закупка:</span>
             <span>
               {formatPrice(stock.lastCost)}/{stock.item?.unit}
               {stock.lastMovementAt && (
-                <span className="text-xs text-muted-foreground ml-1">
-                  ({format(new Date(stock.lastMovementAt), 'dd MMM', { locale: ru })})
+                <span className="text-muted-foreground ml-1 text-xs">
+                  (
+                  {format(new Date(stock.lastMovementAt), 'dd MMM', {
+                    locale: ru,
+                  })}
+                  )
                 </span>
               )}
             </span>
@@ -207,24 +223,47 @@ function StockRowDetails({ stock }: StockRowDetailsProps) {
 
       {/* Thresholds */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-muted-foreground">Пороговые значения</h4>
-        <div className="rounded-md border bg-background p-3 space-y-2 text-sm">
+        <h4 className="text-muted-foreground text-sm font-semibold">
+          Пороговые значения
+        </h4>
+        <div className="bg-background space-y-2 rounded-md border p-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Мин. уровень:</span>
-            <span className={stock.quantity <= (stock.item?.minStockLevel ?? 0) ? 'text-destructive font-medium' : ''}>
-              {stock.item?.minStockLevel ?? '—'} {stock.item?.minStockLevel ? stock.item.unit : ''}
+            <span
+              className={
+                stock.quantity <= (stock.item?.minStockLevel ?? 0)
+                  ? 'text-destructive font-medium'
+                  : ''
+              }
+            >
+              {stock.item?.minStockLevel ?? '—'}{' '}
+              {stock.item?.minStockLevel ? stock.item.unit : ''}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Точка заказа:</span>
-            <span className={stock.quantity <= (stock.item?.reorderPoint ?? 0) ? 'text-amber-600 font-medium' : ''}>
-              {stock.item?.reorderPoint ?? '—'} {stock.item?.reorderPoint ? stock.item.unit : ''}
+            <span
+              className={
+                stock.quantity <= (stock.item?.reorderPoint ?? 0)
+                  ? 'font-medium text-amber-600'
+                  : ''
+              }
+            >
+              {stock.item?.reorderPoint ?? '—'}{' '}
+              {stock.item?.reorderPoint ? stock.item.unit : ''}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Макс. уровень:</span>
-            <span className={stock.quantity > (stock.item?.maxStockLevel ?? Infinity) ? 'text-amber-600 font-medium' : ''}>
-              {stock.item?.maxStockLevel ?? '—'} {stock.item?.maxStockLevel ? stock.item.unit : ''}
+            <span
+              className={
+                stock.quantity > (stock.item?.maxStockLevel ?? Infinity)
+                  ? 'font-medium text-amber-600'
+                  : ''
+              }
+            >
+              {stock.item?.maxStockLevel ?? '—'}{' '}
+              {stock.item?.maxStockLevel ? stock.item.unit : ''}
             </span>
           </div>
         </div>

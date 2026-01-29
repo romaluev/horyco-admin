@@ -4,9 +4,11 @@ import { Helmet } from 'react-helmet-async'
 
 import MovementsPage from '@/app/dashboard/inventory/movements/page'
 
-export const Route = createFileRoute('/dashboard/_layout/inventory/movements/')({
-  component: MovementsRoute,
-})
+export const Route = createFileRoute('/dashboard/_layout/inventory/movements/')(
+  {
+    component: MovementsRoute,
+  }
+)
 
 function MovementsRoute() {
   return (

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StarsIcon } from 'lucide-react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -142,7 +141,10 @@ export const CreateProductForm = () => {
               <FormItem className="md:col-span-3">
                 <FormLabel>{t('products.form.name.label')}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t('products.form.name.placeholder')} {...field} />
+                  <Input
+                    placeholder={t('products.form.name.placeholder')}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,7 +177,9 @@ export const CreateProductForm = () => {
             name="preparationTime"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>{t('products.form.preparationTime.label')}</FormLabel>
+                <FormLabel>
+                  {t('products.form.preparationTime.label')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -243,7 +247,9 @@ export const CreateProductForm = () => {
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#023055_0%,#fe4a49_50%,#023055_100%)]" />
               <span className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 text-sm font-medium text-[#023055] backdrop-blur-3xl transition hover:text-[#fe4a49]">
                 <StarsIcon size={16} />
-                {expandLoading ? t('products.form.expandDescription.loading') : t('products.form.expandDescription.button')}
+                {expandLoading
+                  ? t('products.form.expandDescription.loading')
+                  : t('products.form.expandDescription.button')}
               </span>
             </Button>
           )}

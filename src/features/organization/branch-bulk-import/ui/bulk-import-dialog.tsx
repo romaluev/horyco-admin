@@ -14,7 +14,11 @@ import {
 } from '@/shared/ui/base/dialog'
 import { Input } from '@/shared/ui/base/input'
 
-import { useBulkCreateBranches, type IBulkBranchItem, type IBulkImportResponse } from '@/entities/organization/branch'
+import {
+  useBulkCreateBranches,
+  type IBulkBranchItem,
+  type IBulkImportResponse,
+} from '@/entities/organization/branch'
 
 import { ImportPreviewTable } from './import-preview-table'
 import { ImportResults } from './import-results'

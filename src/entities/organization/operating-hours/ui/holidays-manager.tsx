@@ -32,7 +32,15 @@ interface HolidaysManagerProps {
 }
 
 export function HolidaysManager({ branchId }: HolidaysManagerProps) {
-  const { holidays, isLoading, error, fetchHolidays, createHoliday, deleteHoliday, clearError } = useOperatingHoursStore()
+  const {
+    holidays,
+    isLoading,
+    error,
+    fetchHolidays,
+    createHoliday,
+    deleteHoliday,
+    clearError,
+  } = useOperatingHoursStore()
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
     date: '',
@@ -157,7 +165,7 @@ export function HolidaysManager({ branchId }: HolidaysManagerProps) {
                   }
                   className="h-4 w-4"
                 />
-                <Label htmlFor="closed" className="font-normal cursor-pointer">
+                <Label htmlFor="closed" className="cursor-pointer font-normal">
                   Fully closed
                 </Label>
               </div>
@@ -206,10 +214,7 @@ export function HolidaysManager({ branchId }: HolidaysManagerProps) {
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
-            <button
-              onClick={clearError}
-              className="ml-auto text-sm underline"
-            >
+            <button onClick={clearError} className="ml-auto text-sm underline">
               Dismiss
             </button>
           </Alert>
@@ -224,7 +229,7 @@ export function HolidaysManager({ branchId }: HolidaysManagerProps) {
               >
                 <div className="flex-1">
                   <p className="font-medium">{holiday.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {new Date(holiday.date).toLocaleDateString()}
                     {holiday.isClosed
                       ? ' • Fully closed'
@@ -242,7 +247,7 @@ export function HolidaysManager({ branchId }: HolidaysManagerProps) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             No holidays configured yet
           </p>
         )}

@@ -13,9 +13,9 @@ export function WidgetDragHandle({ className }: WidgetDragHandleProps) {
     <div
       className={cn(
         'widget-drag-handle',
-        'absolute left-2 top-2 z-10 cursor-grab p-1',
-        'rounded-md text-muted-foreground transition-colors',
-        'opacity-0 hover:bg-muted hover:text-foreground group-hover:opacity-100',
+        'absolute top-2 left-2 z-10 cursor-grab p-1',
+        'text-muted-foreground rounded-md transition-colors',
+        'hover:bg-muted hover:text-foreground opacity-0 group-hover:opacity-100',
         'active:cursor-grabbing',
         className
       )}

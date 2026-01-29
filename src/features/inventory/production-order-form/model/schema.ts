@@ -9,4 +9,6 @@ export const productionOrderFormSchema = z.object({
   notes: z.string().optional(),
 })
 
-export type ProductionOrderFormValues = z.infer<typeof productionOrderFormSchema>
+export type ProductionOrderFormValues = z.infer<
+  typeof productionOrderFormSchema
+>

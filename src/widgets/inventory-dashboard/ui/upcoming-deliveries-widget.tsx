@@ -2,7 +2,13 @@
 
 import { Link } from '@tanstack/react-router'
 
-import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from 'date-fns'
+import {
+  format,
+  formatDistanceToNow,
+  isPast,
+  isToday,
+  isTomorrow,
+} from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { Truck, Calendar, Clock, AlertCircle } from 'lucide-react'
 
@@ -17,7 +23,10 @@ import {
 } from '@/shared/ui/base/card'
 import { Skeleton } from '@/shared/ui/base/skeleton'
 
-import { useGetPurchaseOrders, PO_STATUS_LABELS } from '@/entities/inventory/purchase-order'
+import {
+  useGetPurchaseOrders,
+  PO_STATUS_LABELS,
+} from '@/entities/inventory/purchase-order'
 
 interface IUpcomingDeliveriesWidgetProps {
   warehouseId?: number
@@ -41,10 +50,7 @@ export function UpcomingDeliveriesWidget({
 
   const isLoading = sentLoading || partialLoading
 
-  const allDeliveries = [
-    ...(sentOrders || []),
-    ...(partialOrders || []),
-  ]
+  const allDeliveries = [...(sentOrders || []), ...(partialOrders || [])]
     .filter((po) => po.expectedDate)
     .sort(
       (a, b) =>
@@ -66,7 +72,10 @@ export function UpcomingDeliveriesWidget({
     if (isTomorrow(date)) {
       return { label: 'Завтра', variant: 'secondary' as const }
     }
-    return { label: formatDistanceToNow(date, { addSuffix: true, locale: ru }), variant: 'outline' as const }
+    return {
+      label: formatDistanceToNow(date, { addSuffix: true, locale: ru }),
+      variant: 'outline' as const,
+    }
   }
 
   return (
@@ -85,7 +94,7 @@ export function UpcomingDeliveriesWidget({
           <CardDescription>Заказы поставщикам в пути</CardDescription>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link to={"/dashboard/inventory/purchase-orders?status=sent" as any}>
+          <Link to={'/dashboard/inventory/purchase-orders?status=sent' as any}>
             Все заказы
           </Link>
         </Button>
@@ -104,7 +113,7 @@ export function UpcomingDeliveriesWidget({
             ))}
           </div>
         ) : allDeliveries.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             Нет ожидаемых поставок
           </p>
         ) : (
@@ -119,21 +128,21 @@ export function UpcomingDeliveriesWidget({
                 <Link
                   key={po.id}
                   to={`/dashboard/inventory/purchase-orders/${po.id}` as any}
-                  className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50 transition-colors"
+                  className="hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3 transition-colors"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       {isOverdue && (
-                        <AlertCircle className="h-4 w-4 text-destructive" />
+                        <AlertCircle className="text-destructive h-4 w-4" />
                       )}
-                      <span className="font-medium leading-none">
+                      <span className="leading-none font-medium">
                         {po.supplierName}
                       </span>
                       <Badge variant="outline" className="text-xs">
                         {PO_STATUS_LABELS[po.status]}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {po.poNumber} • {po.warehouseName}
                     </p>
                   </div>
@@ -141,7 +150,7 @@ export function UpcomingDeliveriesWidget({
                     <Badge variant={deliveryStatus.variant} className="mb-1">
                       {deliveryStatus.label}
                     </Badge>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
+                    <p className="text-muted-foreground flex items-center justify-end gap-1 text-xs">
                       <Calendar className="h-3 w-3" />
                       {format(new Date(po.expectedDate!), 'd MMM', {
                         locale: ru,
@@ -156,7 +165,9 @@ export function UpcomingDeliveriesWidget({
         {totalPending > size && (
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" asChild>
-              <Link to={"/dashboard/inventory/purchase-orders?status=sent" as any}>
+              <Link
+                to={'/dashboard/inventory/purchase-orders?status=sent' as any}
+              >
                 Показать все ({totalPending})
               </Link>
             </Button>

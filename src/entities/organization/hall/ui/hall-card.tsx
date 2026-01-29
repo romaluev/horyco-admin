@@ -36,19 +36,21 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        <p className="text-sm text-muted-foreground">{hall.description}</p>
+        <p className="text-muted-foreground text-sm">{hall.description}</p>
         <div className="flex items-center gap-2 text-sm">
-          <IconUsers className="h-4 w-4 text-muted-foreground" />
+          <IconUsers className="text-muted-foreground h-4 w-4" />
           <span className="text-muted-foreground">
-            Вместимость: <strong className="text-foreground">{hall.capacity}</strong>
+            Вместимость:{' '}
+            <strong className="text-foreground">{hall.capacity}</strong>
           </span>
         </div>
         <div className="text-sm">
           <span className="text-muted-foreground">
             {hall.tableCount} {hall.tableCount === 1 ? 'table' : 'tables'}
-            {hall.activeTableCount !== undefined && hall.activeTableCount > 0 && (
-              <> ({hall.activeTableCount} occupied)</>
-            )}
+            {hall.activeTableCount !== undefined &&
+              hall.activeTableCount > 0 && (
+                <> ({hall.activeTableCount} occupied)</>
+              )}
           </span>
         </div>
       </CardContent>
@@ -64,7 +66,11 @@ export const HallCard = ({ hall, onEdit, onDelete }: IHallCardProps) => {
           </Button>
         )}
         {onDelete && (
-          <Button variant="destructive" size="sm" onClick={() => onDelete(hall)}>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => onDelete(hall)}
+          >
             Delete
           </Button>
         )}

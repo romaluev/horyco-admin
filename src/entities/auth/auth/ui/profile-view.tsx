@@ -252,10 +252,7 @@ export function ProfileView() {
           <div className="flex flex-wrap items-center gap-4 max-md:justify-center">
             <div className="group relative">
               <Avatar className="h-32 w-32">
-                <AvatarImage
-                  src={avatarUrl}
-                  alt={user.fullName}
-                />
+                <AvatarImage src={avatarUrl} alt={user.fullName} />
                 <AvatarFallback className="text-lg">
                   {getNameInitials(user.fullName) || <UploadIcon />}
                 </AvatarFallback>

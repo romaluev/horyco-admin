@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 
-
 import { Link } from '@tanstack/react-router'
 
 import { IconSearch, IconChefHat } from '@tabler/icons-react'
@@ -33,11 +32,21 @@ import {
 } from '@/shared/ui/base/table'
 import PageContainer from '@/shared/ui/layout/page-container'
 
-import { useGetRecipes, RecipeTypeBadge, type RecipeType, type IRecipe } from '@/entities/inventory/recipe'
+import {
+  useGetRecipes,
+  RecipeTypeBadge,
+  type RecipeType,
+  type IRecipe,
+} from '@/entities/inventory/recipe'
 import { CreateRecipeDialog } from '@/features/inventory/recipe-form'
 
 type StatusFilter = 'all' | 'active' | 'inactive'
-type LinkedFilter = 'all' | 'product' | 'modifier' | 'semi-finished' | 'unlinked'
+type LinkedFilter =
+  | 'all'
+  | 'product'
+  | 'modifier'
+  | 'semi-finished'
+  | 'unlinked'
 
 export default function RecipesPage() {
   const { t } = useTranslation('inventory')
@@ -72,7 +81,10 @@ export default function RecipesPage() {
     <PageContainer scrollable>
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-start justify-between">
-          <Heading title={t('pages.recipes.title')} description={t('pages.recipes.description')} />
+          <Heading
+            title={t('pages.recipes.title')}
+            description={t('pages.recipes.description')}
+          />
           <CreateRecipeDialog />
         </div>
         <Separator />
@@ -80,7 +92,7 @@ export default function RecipesPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4">
           <div className="relative min-w-[200px] flex-1">
-            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <IconSearch className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Поиск техкарты..."
               value={search}
@@ -128,7 +140,11 @@ export default function RecipesPage() {
             ))}
           </div>
         ) : !filteredRecipes?.length ? (
-          <EmptyRecipesState hasFilters={Boolean(search || statusFilter !== 'all' || linkedFilter !== 'all')} />
+          <EmptyRecipesState
+            hasFilters={Boolean(
+              search || statusFilter !== 'all' || linkedFilter !== 'all'
+            )}
+          />
         ) : (
           <div className="rounded-md border">
             <Table>
@@ -162,20 +178,32 @@ export default function RecipesPage() {
                       {formatCurrency(recipe.calculatedCost)}
                     </TableCell>
                     <TableCell
-                      className={cn('text-right font-medium', getMarginColor(recipe.marginPercent))}
+                      className={cn(
+                        'text-right font-medium',
+                        getMarginColor(recipe.marginPercent)
+                      )}
                     >
-                      {recipe.marginPercent !== null && recipe.marginPercent !== undefined
+                      {recipe.marginPercent !== null &&
+                      recipe.marginPercent !== undefined
                         ? `${recipe.marginPercent.toFixed(0)}%`
                         : '—'}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={recipe.isActive ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={recipe.isActive ? 'default' : 'secondary'}
+                      >
                         {recipe.isActive ? 'Активна' : 'Неактивна'}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dashboard/inventory/recipes/${recipe.id}` as any}>Открыть</Link>
+                        <Link
+                          to={
+                            `/dashboard/inventory/recipes/${recipe.id}` as any
+                          }
+                        >
+                          Открыть
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -191,11 +219,11 @@ export default function RecipesPage() {
 
 const EmptyRecipesState = ({ hasFilters }: { hasFilters: boolean }) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-    <IconChefHat className="h-12 w-12 text-muted-foreground/50" />
+    <IconChefHat className="text-muted-foreground/50 h-12 w-12" />
     <h3 className="mt-4 text-lg font-semibold">
       {hasFilters ? 'Техкарты не найдены' : 'Нет техкарт'}
     </h3>
-    <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+    <p className="text-muted-foreground mt-2 max-w-sm text-center text-sm">
       {hasFilters
         ? 'Попробуйте изменить параметры поиска или фильтры.'
         : 'Создайте техкарты для отслеживания себестоимости и автоматического списания.'}

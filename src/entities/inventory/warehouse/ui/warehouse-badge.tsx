@@ -11,7 +11,10 @@ interface WarehouseBadgeProps {
   className?: string
 }
 
-export const WarehouseBadge = ({ isActive, className }: WarehouseBadgeProps) => {
+export const WarehouseBadge = ({
+  isActive,
+  className,
+}: WarehouseBadgeProps) => {
   return (
     <Badge
       variant={isActive ? 'default' : 'secondary'}

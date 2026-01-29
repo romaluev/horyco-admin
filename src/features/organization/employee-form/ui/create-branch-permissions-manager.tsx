@@ -4,13 +4,7 @@ import { useState } from 'react'
 
 import { Edit2 } from 'lucide-react'
 
-import {
-  BaseError,
-  BaseLoading,
-  Button,
-  Label,
-  Switch,
-} from '@/shared/ui'
+import { BaseError, BaseLoading, Button, Label, Switch } from '@/shared/ui'
 
 import { useGetAllRoles } from '@/entities/auth/role'
 import { useGetAllBranches } from '@/entities/organization/branch'
@@ -22,16 +16,15 @@ import type { IPermission } from '@/entities/organization/employee'
 interface CreateBranchPermissionsManagerProps {
   selectedBranchIds: number[]
   onBranchesChange: (branchIds: number[]) => void
-   
+
   onPermissionsChange?: (branchId: number, permissionIds: number[]) => void
   branchPermissions: Record<number, number[]> // branchId -> permissionIds
 }
 
- 
 export const CreateBranchPermissionsManager = ({
   selectedBranchIds,
   onBranchesChange,
-   
+
   onPermissionsChange,
   branchPermissions,
 }: CreateBranchPermissionsManagerProps) => {
@@ -96,8 +89,9 @@ export const CreateBranchPermissionsManager = ({
         <Label className="text-base font-semibold">
           Филиалы и разрешения <span className="text-destructive">*</span>
         </Label>
-        <p className="text-muted-foreground text-sm mt-2">
-          Выберите филиалы, в которых будет работать сотрудник. При включении филиала откроется окно для выбора разрешений.
+        <p className="text-muted-foreground mt-2 text-sm">
+          Выберите филиалы, в которых будет работать сотрудник. При включении
+          филиала откроется окно для выбора разрешений.
         </p>
       </div>
 
@@ -112,7 +106,7 @@ export const CreateBranchPermissionsManager = ({
               key={branch.id}
               className="flex items-center justify-between rounded-lg border p-4"
             >
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex flex-1 items-center gap-4">
                 <Switch
                   id={`branch-${branch.id}`}
                   checked={isAssigned}
@@ -123,7 +117,7 @@ export const CreateBranchPermissionsManager = ({
                 <div className="flex-1">
                   <label
                     htmlFor={`branch-${branch.id}`}
-                    className="text-sm font-medium cursor-pointer"
+                    className="cursor-pointer text-sm font-medium"
                   >
                     {branch.name}
                   </label>
@@ -133,7 +127,7 @@ export const CreateBranchPermissionsManager = ({
                     </p>
                   )}
                   {isAssigned && hasPermissions && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-xs">
                       Разрешений: {(branchPermissions[branch.id] || []).length}
                     </p>
                   )}
@@ -158,9 +152,12 @@ export const CreateBranchPermissionsManager = ({
       </div>
 
       {/* Info Box */}
-      <div className="rounded-lg bg-muted p-4">
-        <p className="text-sm text-muted-foreground">
-          Выбранные филиалы: {selectedBranchIds.length > 0 ? selectedBranchIds.length : 'не выбраны'}
+      <div className="bg-muted rounded-lg p-4">
+        <p className="text-muted-foreground text-sm">
+          Выбранные филиалы:{' '}
+          {selectedBranchIds.length > 0
+            ? selectedBranchIds.length
+            : 'не выбраны'}
         </p>
       </div>
 

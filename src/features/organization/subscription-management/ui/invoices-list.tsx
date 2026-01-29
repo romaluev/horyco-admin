@@ -22,7 +22,10 @@ import {
   TableRow,
 } from '@/shared/ui/base/table'
 
-import { InvoiceStatusBadge, useGetInvoices } from '@/entities/organization/subscription'
+import {
+  InvoiceStatusBadge,
+  useGetInvoices,
+} from '@/entities/organization/subscription'
 
 import { InvoiceDetailDialog } from './invoice-detail-dialog'
 
@@ -30,24 +33,34 @@ const INVOICES_PER_PAGE = 10
 
 export const InvoicesList = () => {
   const [page, setPage] = useState(1)
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(null)
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
+    null
+  )
 
-  const { data: invoiceList, isLoading, error } = useGetInvoices(page, INVOICES_PER_PAGE)
+  const {
+    data: invoiceList,
+    isLoading,
+    error,
+  } = useGetInvoices(page, INVOICES_PER_PAGE)
 
   if (isLoading) return <BaseLoading className="py-10" />
   if (error)
-    return <BaseError className="py-10" message="Ошибка загрузки счетов-фактур" />
+    return (
+      <BaseError className="py-10" message="Ошибка загрузки счетов-фактур" />
+    )
   if (!invoiceList || invoiceList.data.length === 0) {
     return (
       <div className="rounded-lg border p-8 text-center">
-        <p className="text-sm text-muted-foreground">Счета-фактуры не найдены</p>
+        <p className="text-muted-foreground text-sm">
+          Счета-фактуры не найдены
+        </p>
       </div>
     )
   }
 
   return (
     <>
-      <div className="rounded-lg border overflow-hidden">
+      <div className="overflow-hidden rounded-lg border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -61,7 +74,9 @@ export const InvoicesList = () => {
           <TableBody>
             {invoiceList.data.map((invoice) => (
               <TableRow key={invoice.id}>
-                <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
+                <TableCell className="font-medium">
+                  {invoice.invoiceNumber}
+                </TableCell>
                 <TableCell className="text-sm">
                   {new Date(invoice.periodStart).toLocaleDateString('ru-RU')} -{' '}
                   {new Date(invoice.periodEnd).toLocaleDateString('ru-RU')}
@@ -97,9 +112,15 @@ export const InvoicesList = () => {
               </PaginationItem>
             )}
 
-            {Array.from({ length: invoiceList.totalPages }, (_, i) => i + 1).map((p) => (
+            {Array.from(
+              { length: invoiceList.totalPages },
+              (_, i) => i + 1
+            ).map((p) => (
               <PaginationItem key={p}>
-                <PaginationLink isActive={page === p} onClick={() => setPage(p)}>
+                <PaginationLink
+                  isActive={page === p}
+                  onClick={() => setPage(p)}
+                >
                   {p}
                 </PaginationLink>
               </PaginationItem>

@@ -87,7 +87,10 @@ export const recipeApi = {
    * Duplicate recipe
    * POST /admin/inventory/recipes/:id/duplicate
    */
-  async duplicateRecipe(id: number, data: IDuplicateRecipeDto): Promise<IRecipe> {
+  async duplicateRecipe(
+    id: number,
+    data: IDuplicateRecipeDto
+  ): Promise<IRecipe> {
     const response = await api.post<ApiResponse<IRecipe>>(
       `/admin/inventory/recipes/${id}/duplicate`,
       data
@@ -121,7 +124,10 @@ export const recipeApi = {
    * Add ingredient to recipe
    * POST /admin/inventory/recipes/:id/ingredients
    */
-  async addIngredient(id: number, data: ICreateRecipeIngredientDto): Promise<IRecipeIngredient> {
+  async addIngredient(
+    id: number,
+    data: ICreateRecipeIngredientDto
+  ): Promise<IRecipeIngredient> {
     const response = await api.post<ApiResponse<IRecipeIngredient>>(
       `/admin/inventory/recipes/${id}/ingredients`,
       data
@@ -149,7 +155,12 @@ export const recipeApi = {
    * Remove ingredient from recipe
    * DELETE /admin/inventory/recipes/:id/ingredients/:ingredientId
    */
-  async removeIngredient(recipeId: number, ingredientId: number): Promise<void> {
-    await api.delete(`/admin/inventory/recipes/${recipeId}/ingredients/${ingredientId}`)
+  async removeIngredient(
+    recipeId: number,
+    ingredientId: number
+  ): Promise<void> {
+    await api.delete(
+      `/admin/inventory/recipes/${recipeId}/ingredients/${ingredientId}`
+    )
   },
 }
