@@ -34,7 +34,7 @@ const getSteps = (t: any) => [
   { number: 2, title: t('staff.form.steps.branchesPermissions'), description: t('staff.form.steps.step2') },
 ] as const
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const CreateEmployeeDialog = () => {
   const { t } = useTranslation('organization')
   const [isOpen, setIsOpen] = useState(false)

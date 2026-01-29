@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+ 
 'use client'
 
 import { useState, useCallback } from 'react'
@@ -62,7 +62,7 @@ interface InvitationPermissions {
   permissionIds: number[]
 }
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export default function StaffInvitePage() {
   const router = useRouter()
   const { t } = useTranslation('onboarding')
@@ -229,7 +229,7 @@ export default function StaffInvitePage() {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {/* eslint-disable-next-line max-lines-per-function */}
+                      { }
                       {fields.map((field, index) => (
                         <Card key={field.id} className="gap-2">
                           <CardHeader className="flex items-center justify-between">

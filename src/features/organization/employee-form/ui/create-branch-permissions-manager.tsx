@@ -27,7 +27,7 @@ interface CreateBranchPermissionsManagerProps {
   branchPermissions: Record<number, number[]> // branchId -> permissionIds
 }
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const CreateBranchPermissionsManager = ({
   selectedBranchIds,
   onBranchesChange,

@@ -34,7 +34,7 @@ interface PermissionCopyDialogProps {
   onCopySuccess: (toBranchId: number, permissionIds: number[]) => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const PermissionCopyDialog = ({
   isOpen,
   onClose,

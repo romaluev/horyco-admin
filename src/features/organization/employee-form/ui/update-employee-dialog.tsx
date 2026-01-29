@@ -34,7 +34,7 @@ interface UpdateEmployeeDialogProps {
   employee: IEmployee
 }
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const UpdateEmployeeDialog = ({
   employee,
 }: UpdateEmployeeDialogProps) => {

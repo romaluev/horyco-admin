@@ -37,7 +37,7 @@ interface PermissionsEditorModalProps {
   onSave?: () => void
 }
 
-// eslint-disable-next-line max-lines-per-function
+ 
 export const PermissionsEditorModal = ({
   isOpen,
   onClose,

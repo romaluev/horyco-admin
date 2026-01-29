@@ -25,7 +25,7 @@ interface UpdateBranchPermissionsManagerProps {
   onBranchesChange: (branchIds: number[]) => void
 }
 
-// eslint-disable-next-line max-lines-per-function, complexity
+ 
 export const UpdateBranchPermissionsManager = ({
   employeeId,
   selectedBranchIds,

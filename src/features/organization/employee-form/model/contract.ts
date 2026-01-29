@@ -22,7 +22,7 @@ export const createEmployeeSchema = z.object({
   activeBranchId: z.number().optional(),
 
   // Credentials
-  // eslint-disable-next-line no-magic-numbers
+   
   password: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
 })
 

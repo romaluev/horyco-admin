@@ -34,7 +34,7 @@ interface PermissionsSelectorModalProps {
  * Simplified permissions selector modal for onboarding
  * Shows permissions grouped by category with checkboxes
  */
-// eslint-disable-next-line max-lines-per-function
+ 
 export const PermissionsSelectorModal = ({
   isOpen,
   onOpenChange,
