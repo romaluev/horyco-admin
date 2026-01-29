@@ -7,15 +7,14 @@
 
 import { useState } from 'react'
 
-import type {
- DragEndEvent, DragStartEvent ,
+import {
   DndContext,
   DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
-  type UniqueIdentifier
-                              } from '@dnd-kit/core';
+} from '@dnd-kit/core'
+import type { DragEndEvent, DragStartEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { CategoryTreeItem } from './category-tree-item'
