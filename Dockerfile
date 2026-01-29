@@ -1,7 +1,7 @@
 # ===========================================
-# Stage 1: Dependencies
+# Stage 1: Build
 # ===========================================
-FROM node:20-alpine AS deps
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -14,18 +14,7 @@ COPY package.json pnpm-lock.yaml* ./
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# ===========================================
-# Stage 2: Builder
-# ===========================================
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy dependencies from deps stage
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source
 COPY . .
 
 # Build arguments for environment variables
@@ -42,22 +31,24 @@ ENV VITE_APP_ENV=$VITE_APP_ENV
 RUN pnpm run build
 
 # ===========================================
-# Stage 3: Production
+# Stage 2: Production
 # ===========================================
-FROM nginx:alpine AS production
+FROM node:20-alpine
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Install serve globally
+RUN npm install -g serve
+
+WORKDIR /app
 
 # Copy built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Add healthcheck (use 127.0.0.1 to avoid IPv6 resolution issues in Alpine)
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:80/health || exit 1
+COPY --from=builder /app/dist .
 
 # Expose port
-EXPOSE 80
+EXPOSE 3000
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/ || exit 1
+
+# Start server
+CMD ["serve", "-s", ".", "-l", "3000"]
