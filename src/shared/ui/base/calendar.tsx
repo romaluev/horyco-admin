@@ -1,27 +1,27 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { DayPicker } from 'react-day-picker';
-import type { ComponentProps } from 'react';
+import * as React from 'react'
+import { DayPicker } from 'react-day-picker'
+import type { ComponentProps } from 'react'
 
-import { cn } from '@/shared/lib/utils';
-import { buttonVariants } from '@/shared/ui/base/button';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { cn } from '@/shared/lib/utils'
+import { buttonVariants } from '@/shared/ui/base/button'
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 
 // Custom icons that meet the DayPicker requirements
 const Chevron = ({
-  orientation
+  orientation,
 }: {
-  className?: string;
-  size?: number;
-  disabled?: boolean;
-  orientation?: 'left' | 'right' | 'up' | 'down';
+  className?: string
+  size?: number
+  disabled?: boolean
+  orientation?: 'left' | 'right' | 'up' | 'down'
 }) => {
   if (orientation === 'left') {
-    return <ChevronLeftIcon className='size-4' />;
+    return <ChevronLeftIcon className="size-4" />
   }
-  return <ChevronRightIcon className='size-4' />;
-};
+  return <ChevronRightIcon className="size-4" />
+}
 
 function Calendar({
   className,
@@ -73,14 +73,14 @@ function Calendar({
         day_range_middle:
           'aria-selected:bg-accent aria-selected:text-accent-foreground',
         day_hidden: 'invisible',
-        ...classNames
+        ...classNames,
       }}
       components={{
-        Chevron
+        Chevron,
       }}
       {...props}
     />
-  );
+  )
 }
 
-export { Calendar };
+export { Calendar }
